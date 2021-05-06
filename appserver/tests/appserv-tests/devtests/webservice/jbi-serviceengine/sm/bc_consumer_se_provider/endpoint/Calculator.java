@@ -25,12 +25,12 @@ import jakarta.jws.WebMethod;
     targetNamespace="http://example.com/Calculator"
 )
 public class Calculator {
-    public Calculator() {}
+        public Calculator() {}
 
-    @WebMethod(operationName="add", action="urn:Add")
-    public int add(int i, int j) throws Exception {
+        @WebMethod(operationName="add", action="urn:Add")
+        public int add(int i, int j) throws Exception {
                 int k = i +j ;
                 System.out.println(i + "+" + j +" = " + k);
-        return k;
-    }
+                return k;
+        }
 }

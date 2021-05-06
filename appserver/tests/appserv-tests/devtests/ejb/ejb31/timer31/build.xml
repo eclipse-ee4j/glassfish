@@ -90,17 +90,17 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-timer tests)
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-timer tests)
 
-            ant nonpersistenttimer (Executes the non-persistent ejb-timer test)
-            ant schedule_exp (Executes the schedule_exp ejb-timer test)
-            ant schedule_ann (Executes the schedule_ann ejb-timer test)
-            ant schedule_on_ejb_timeout (Executes the schedule_on_ejb_timeout ejb-timer test)
-            ant aroundtimeout (Executes the aroundtimeout ejb-timer test)
-            ant mdb (Executes the mdb ejb-timer test)
+                        ant nonpersistenttimer (Executes the non-persistent ejb-timer test)
+                        ant schedule_exp (Executes the schedule_exp ejb-timer test)
+                        ant schedule_ann (Executes the schedule_ann ejb-timer test)
+                        ant schedule_on_ejb_timeout (Executes the schedule_on_ejb_timeout ejb-timer test)
+                        ant aroundtimeout (Executes the aroundtimeout ejb-timer test)
+                        ant mdb (Executes the mdb ejb-timer test)
 
-    </echo>
+        </echo>
     </target>
 </project>

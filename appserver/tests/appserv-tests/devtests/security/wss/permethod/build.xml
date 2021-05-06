@@ -35,11 +35,11 @@
 
 <!-- ======== Targets by execution granularity ========== -->
     <target name="all">
-    <antcall target="setup"/>
+        <antcall target="setup"/>
         <antcall target="runwstargets">
             <param name="ws-target" value="all"/>
         </antcall>
-    <antcall target="unsetup"/>
+        <antcall target="unsetup"/>
     </target>
 
     <target name="run-test">
@@ -79,8 +79,8 @@
     </target>
 
     <target name="setup" depends="init-common">
-    <!-- exports certdb stuff and imports into keystore -->
-    <antcall target="prepare-store-nickname-common">
+        <!-- exports certdb stuff and imports into keystore -->
+        <antcall target="prepare-store-nickname-common">
             <param name="cert.nickname" value="s1as"/>
         </antcall>
     </target>
@@ -101,7 +101,7 @@
         <record name="security-wss.output" action="stop" />
     </target>
     <target name="usage">
-    <echo> Usage:
+        <echo> Usage:
     ======== Targets by execution granularity =========
 
     ant clean (Cleans all ws tests)
@@ -123,6 +123,6 @@
             % ant servletws -Dws-target=clean
 
     to run the 'clean' target for 'servletws' tests
-    </echo>
+        </echo>
     </target>
 </project>

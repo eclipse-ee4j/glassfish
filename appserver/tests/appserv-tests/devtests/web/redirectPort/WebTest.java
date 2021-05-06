@@ -128,6 +128,6 @@ public class WebTest {
 
         public boolean verify(String hostname, SSLSession session) {
             return true;
-    }
+        }
     }
 }

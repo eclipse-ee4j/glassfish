@@ -33,7 +33,7 @@ import javax.transaction.xa.XAResource;
 
 /**
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class WorkDispatcher implements Work {
 

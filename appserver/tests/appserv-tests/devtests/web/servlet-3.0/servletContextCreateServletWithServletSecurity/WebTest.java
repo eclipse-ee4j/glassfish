@@ -51,7 +51,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-        stat.printSummary();
+            stat.printSummary();
     }
 
     public boolean run() throws Exception {

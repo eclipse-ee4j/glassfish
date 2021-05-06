@@ -35,10 +35,10 @@
       <resource-ref>
         <res-ref-name>jms/MyQueueConnectionFactory_CM</res-ref-name>
         <jndi-name>jms/jdbcjmsauth_QCF2</jndi-name>
-    <default-resource-principal>
-      <name>guest</name>
-      <password>guest</password>
-    </default-resource-principal>
+        <default-resource-principal>
+          <name>guest</name>
+          <password>guest</password>
+        </default-resource-principal>
       </resource-ref>
     </ejb>
 

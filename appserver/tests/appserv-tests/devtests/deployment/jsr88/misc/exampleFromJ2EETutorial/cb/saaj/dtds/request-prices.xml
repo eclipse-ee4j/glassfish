@@ -22,6 +22,6 @@
 
 <request-prices>
     <request>
-        "Send current price list."
-    </request>
+                "Send current price list."
+        </request>
 </request-prices>

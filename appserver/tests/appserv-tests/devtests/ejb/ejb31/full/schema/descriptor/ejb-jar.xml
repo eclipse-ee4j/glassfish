@@ -24,10 +24,10 @@
     <enterprise-beans>
       <session>
         <ejb-name>SingletonBean</ejb-name>
-    <local-bean/>
-    <ejb-class>com.acme.SingletonBean</ejb-class>
-    <session-type>Singleton</session-type>
-    <timer>
+        <local-bean/>
+        <ejb-class>com.acme.SingletonBean</ejb-class>
+        <session-type>Singleton</session-type>
+        <timer>
           <description>Sample timer</description>
           <schedule>
             <second>1</second>
@@ -36,132 +36,132 @@
             <day-of-month>Last Tue</day-of-month>
             <month>Feb</month>
             <year>2010</year>
-      </schedule>
+          </schedule>
           <start>2002-10-10T12:00:00</start>
           <end>2002-10-10T12:00:00</end>
           <timeout-method>
             <method-name>mytimeout2</method-name>
-      </timeout-method>
+          </timeout-method>
           <persistent>false</persistent>
           <timezone>America/New_York</timezone>
           <info>some info</info>
-    </timer>
-    <timer>
+        </timer>
+        <timer>
           <description>Sample timer1</description>
           <schedule>
             <second>*/2</second>
             <minute>*</minute>
             <hour>*</hour>
-      </schedule>
+          </schedule>
           <timeout-method>
             <method-name>mytimeout1</method-name>
-      </timeout-method>
+          </timeout-method>
           <persistent>false</persistent>
           <timezone>America/New_York</timezone>
           <info>some info</info>
-    </timer>
-    <timer>
+        </timer>
+        <timer>
           <description>Sample timer2</description>
           <schedule>
             <second>*/7</second>
             <minute>*</minute>
             <hour>*</hour>
             <day-of-month>*</day-of-month>
-      </schedule>
+          </schedule>
           <timeout-method>
             <method-name>mytimeout</method-name>
-        <method-params>
-          <method-param>jakarta.ejb.Timer</method-param>
-        </method-params>
-      </timeout-method>
+            <method-params>
+              <method-param>jakarta.ejb.Timer</method-param>
+            </method-params>
+          </timeout-method>
           <persistent>true</persistent>
           <info>info</info>
-    </timer>
-    <init-on-startup>true</init-on-startup>
-    <concurrency-management-type>Bean</concurrency-management-type>
-    <concurrent-method>
-      <method>
+        </timer>
+        <init-on-startup>true</init-on-startup>
+        <concurrency-management-type>Bean</concurrency-management-type>
+        <concurrent-method>
+          <method>
             <method-name>foo</method-name>
-      </method>
+          </method>
           <lock>Write</lock>
           <access-timeout>
-        <timeout>19876</timeout>
-        <unit>Seconds</unit>
-      </access-timeout>
-    </concurrent-method>
-    <depends-on>
+            <timeout>19876</timeout>
+            <unit>Seconds</unit>
+          </access-timeout>
+        </concurrent-method>
+        <depends-on>
           <ejb-name>SingletonBean2</ejb-name>
-    </depends-on>
-    <async-method>
-      <method-name>foo</method-name>
-    </async-method>
+        </depends-on>
+        <async-method>
+          <method-name>foo</method-name>
+        </async-method>
         <ejb-ref>
           <ejb-ref-name>ejb/lookup1</ejb-ref-name>
           <ejb-ref-type>Session</ejb-ref-type>
           <remote>com.acme.RemoteSingleton</remote>
-      <lookup-name>java:module/SingletonBean!com.acme.RemoteSingleton</lookup-name>
+          <lookup-name>java:module/SingletonBean!com.acme.RemoteSingleton</lookup-name>
         </ejb-ref>
         <ejb-local-ref>
           <ejb-ref-name>ejb/lookup2</ejb-ref-name>
           <ejb-ref-type>Session</ejb-ref-type>
           <local>com.acme.SingletonBean2</local>
-      <lookup-name>java:module/SingletonBean2</lookup-name>
+          <lookup-name>java:module/SingletonBean2</lookup-name>
         </ejb-local-ref>
       </session>
       <session>
         <ejb-name>SingletonBean2</ejb-name>
-    <local-bean/>
-    <ejb-class>com.acme.SingletonBean2</ejb-class>
-    <session-type>Singleton</session-type>
-    <timer>
+        <local-bean/>
+        <ejb-class>com.acme.SingletonBean2</ejb-class>
+        <session-type>Singleton</session-type>
+        <timer>
           <description>Sample timer</description>
           <schedule>
             <minute>*</minute>
-      </schedule>
+          </schedule>
           <timeout-method>
             <method-name>myTimeout</method-name>
-      </timeout-method>
-    </timer>
-    <concurrent-method>
-      <method>
+          </timeout-method>
+        </timer>
+        <concurrent-method>
+          <method>
             <method-name>foo</method-name>
-      </method>
+          </method>
           <lock>Write</lock>
           <access-timeout>
-        <timeout>5</timeout>
-        <unit>Seconds</unit>
-      </access-timeout>
-    </concurrent-method>
+            <timeout>5</timeout>
+            <unit>Seconds</unit>
+          </access-timeout>
+        </concurrent-method>
        <concurrent-method>
-      <method>
+          <method>
             <method-name>foo2</method-name>
-      </method>
+          </method>
           <lock>Read</lock>
-    </concurrent-method>
+        </concurrent-method>
        <concurrent-method>
-      <method>
+          <method>
             <method-name>fooAsync</method-name>
             <method-params>
             <method-param>int</method-param>
-      </method-params>
-      </method>
+          </method-params>
+          </method>
           <lock>Read</lock>
-    </concurrent-method>
-    <async-method>
-      <method-name>fooAsync</method-name>
+        </concurrent-method>
+        <async-method>
+          <method-name>fooAsync</method-name>
           <method-params>
             <method-param>int</method-param>
-      </method-params>
-    </async-method>
+          </method-params>
+        </async-method>
         <transaction-type>Container</transaction-type>
         <post-construct>
           <lifecycle-callback-class>com.acme.SingletonBean2</lifecycle-callback-class>
           <lifecycle-callback-method>init</lifecycle-callback-method>
-    </post-construct>
+        </post-construct>
         <pre-destroy>
           <lifecycle-callback-class>com.acme.SingletonBean2</lifecycle-callback-class>
           <lifecycle-callback-method>destroy</lifecycle-callback-method>
-    </pre-destroy>
+        </pre-destroy>
       </session>
       <session>
         <ejb-name>StatelessBean</ejb-name>
@@ -170,7 +170,7 @@
         </async-method>
       </session>
       <session>
-     <ejb-name>MultiBean</ejb-name>
+         <ejb-name>MultiBean</ejb-name>
            <env-entry>
            <env-entry-name>multi</env-entry-name>
            <env-entry-type>java.lang.String</env-entry-type>
@@ -179,9 +179,9 @@
       </session>
       <session>
         <ejb-name>MultiBean2</ejb-name>
-    <local-bean/>
-    <ejb-class>com.acme.MultiBean</ejb-class>
-    <session-type>Singleton</session-type>
+        <local-bean/>
+        <ejb-class>com.acme.MultiBean</ejb-class>
+        <session-type>Singleton</session-type>
            <env-entry>
            <env-entry-name>multi</env-entry-name>
            <env-entry-type>java.lang.String</env-entry-type>
@@ -190,9 +190,9 @@
       </session>
       <session>
         <ejb-name>MultiBean3</ejb-name>
-    <local-bean/>
-    <ejb-class>com.acme.MultiBean</ejb-class>
-    <session-type>Singleton</session-type>
+        <local-bean/>
+        <ejb-class>com.acme.MultiBean</ejb-class>
+        <session-type>Singleton</session-type>
            <env-entry>
            <env-entry-name>multi</env-entry-name>
            <env-entry-type>java.lang.String</env-entry-type>
@@ -202,29 +202,29 @@
 
       <session>
         <ejb-name>StatefulBean</ejb-name>
-    <local-bean/>
-    <ejb-class>com.acme.StatefulBean</ejb-class>
-    <session-type>Stateful</session-type>
-    <stateful-timeout>
-       <timeout>1001</timeout>
+        <local-bean/>
+        <ejb-class>com.acme.StatefulBean</ejb-class>
+        <session-type>Stateful</session-type>
+        <stateful-timeout>
+           <timeout>1001</timeout>
            <unit>Minutes</unit>
-    </stateful-timeout>
-    <concurrency-management-type>Container</concurrency-management-type>
-    <async-method>
-      <method-name>foo</method-name>
-    </async-method>
+        </stateful-timeout>
+        <concurrency-management-type>Container</concurrency-management-type>
+        <async-method>
+          <method-name>foo</method-name>
+        </async-method>
         <after-begin-method>
-      <method-name>afterBegin</method-name>
-    </after-begin-method>
+          <method-name>afterBegin</method-name>
+        </after-begin-method>
         <before-completion-method>
-      <method-name>beforeCompletion</method-name>
-    </before-completion-method>
+          <method-name>beforeCompletion</method-name>
+        </before-completion-method>
         <after-completion-method>
-      <method-name>afterCompletion</method-name>
+          <method-name>afterCompletion</method-name>
           <method-params>
             <method-param>boolean</method-param>
-      </method-params>
-    </after-completion-method>
+          </method-params>
+        </after-completion-method>
       </session>
 
     </enterprise-beans>

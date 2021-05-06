@@ -45,23 +45,23 @@ public class Client {
     public void doTest() {
         try {
             (new InitialContext()).lookup("java:comp/env/ejb/GG");
-        long executionId = sless.submitJob();
-        System.out.println("************************************************");
-        System.out.println("******* JobID: " + executionId + " ******************");
-        System.out.println("************************************************");
-        String jobBatchStatus = "";
-        for (int sec=10; sec>0; sec--) {
-            try {
-            jobBatchStatus = sless.getJobExitStatus(executionId);
-            if (! "COMPLETED".equals(jobBatchStatus)) {
-                System.out.println("Will sleep for " + sec + " more seconds...: " + jobBatchStatus);
-                Thread.currentThread().sleep(1000);
+            long executionId = sless.submitJob();
+            System.out.println("************************************************");
+            System.out.println("******* JobID: " + executionId + " ******************");
+            System.out.println("************************************************");
+            String jobBatchStatus = "";
+            for (int sec=10; sec>0; sec--) {
+                try {
+                    jobBatchStatus = sless.getJobExitStatus(executionId);
+                    if (! "COMPLETED".equals(jobBatchStatus)) {
+                        System.out.println("Will sleep for " + sec + " more seconds...: " + jobBatchStatus);
+                        Thread.currentThread().sleep(1000);
+                    }
+                } catch (Exception ex) {
+                }
             }
-        } catch (Exception ex) {
-        }
-        }
             stat.addStatus("batch-chunk-stateless", ("COMPLETED".equals(jobBatchStatus) ? stat.PASS : stat.FAIL));
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("batch-chunk-stateless", stat.FAIL);
         }
     }

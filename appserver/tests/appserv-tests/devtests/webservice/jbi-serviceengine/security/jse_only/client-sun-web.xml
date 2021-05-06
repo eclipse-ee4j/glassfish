@@ -29,15 +29,15 @@
   <service-ref>
     <service-ref-name>sun-web.serviceref/HelloEJBService</service-ref-name>
     <port-info>
-    <service-endpoint-interface>endpoint.ejb.Hello</service-endpoint-interface>
-    <wsdl-port>
-          <namespaceURI>http://endpoint/ejb</namespaceURI>
-          <localpart>HelloEJBPort</localpart>
-    </wsdl-port>
-        <stub-property>
-      <name>jbi-enabled</name>
-      <value>true</value>
-    </stub-property>
+        <service-endpoint-interface>endpoint.ejb.Hello</service-endpoint-interface>
+        <wsdl-port>
+              <namespaceURI>http://endpoint/ejb</namespaceURI>
+              <localpart>HelloEJBPort</localpart>
+        </wsdl-port>
+            <stub-property>
+          <name>jbi-enabled</name>
+          <value>true</value>
+        </stub-property>
     </port-info>
     <wsdl-override>http://localhost:8080/HelloEJBService/HelloEJB?WSDL</wsdl-override>
   </service-ref>

@@ -25,17 +25,17 @@ public class SingletonNoIntf {
 
     @PostConstruct
     public void init() {
-    System.out.println("In SingletonNoIntf::init()");
+        System.out.println("In SingletonNoIntf::init()");
     }
 
     public String hello() {
-    System.out.println("In SingletonNoIntf::hello()");
-    return "hello, world\n";
+        System.out.println("In SingletonNoIntf::hello()");
+        return "hello, world\n";
     }
 
     @PreDestroy
     public void destroy() {
-    System.out.println("In SingletonNoIntf::destroy()");
+        System.out.println("In SingletonNoIntf::destroy()");
     }
 
 

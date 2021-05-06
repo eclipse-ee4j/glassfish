@@ -46,8 +46,8 @@
 
     <target name="build" depends="compile">
 
-    <!--build and package .war first so it doesn't contain ejb bean !-->
-    <!--classes that have @Stateless/@Stateul !-->
+        <!--build and package .war first so it doesn't contain ejb bean !-->
+        <!--classes that have @Stateless/@Stateul !-->
         <antcall target="webclient-war-common">
           <param name="hasWebclient" value="true"/>
         </antcall>

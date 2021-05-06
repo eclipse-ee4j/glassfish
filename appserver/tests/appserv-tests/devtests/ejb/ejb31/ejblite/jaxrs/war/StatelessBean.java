@@ -31,23 +31,23 @@ public class StatelessBean {
 
     @PostConstruct
     private void init() {
-    System.out.println("In StatelessBean:init()");
+        System.out.println("In StatelessBean:init()");
     }
 
     public void hello() {
-    System.out.println("In StatelessBean::hello()");
+        System.out.println("In StatelessBean::hello()");
     }
 
 
     public void assertInterceptorBinding() {
-    if( !interceptorWasHere ) {
-        throw new EJBException("interceptor was not here");
-    }
+        if( !interceptorWasHere ) {
+            throw new EJBException("interceptor was not here");
+        }
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In StatelessBean:destroy()");
+        System.out.println("In StatelessBean:destroy()");
     }
 
 

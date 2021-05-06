@@ -109,7 +109,7 @@ public class Client {
             stat.addStatus("standaloneclient main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     private void setupInitialContext( String host, String port )

@@ -54,7 +54,7 @@ public class Client {
         stat.addStatus("Foo: ejbs/Foo_BMT", (result)? stat.PASS : stat.FAIL);
 
 
-    /** TODO
+        /** TODO
         result = wrapper.doMessageDrivenTest("jms/TimerMDBQueue_CMT", doJms);
         System.out.println("Message-driven test jms/TimerMDBQueue_CMT"
                 + ((result)? " passed!!" : "failed!!"));
@@ -66,10 +66,10 @@ public class Client {
                 + ((result)? " passed!!" : "failed!!"));
         stat.addStatus("Message-driven test: jms/TimerMDBQueue_BMT",
                 (result)? stat.PASS : stat.FAIL);
-    **/
+        **/
 
         try {
-         wrapper.removeFoo();
+             wrapper.removeFoo();
         } catch(Exception e) {
             e.printStackTrace();
         }

@@ -37,13 +37,13 @@ public class AppClient {
 
 
     public static void main(String[] args) {
-    System.out.println("args ->"+ args);
-    System.out.println("args0 ->"+ args[0]);
-    testSuiteID = args[0];
+        System.out.println("args ->"+ args);
+        System.out.println("args0 ->"+ args[0]);
+        testSuiteID = args[0];
         AppClient test = new AppClient();
-    status.addDescription("Testing  JPA packaging scenarious.."+testSuiteID);
-    test.runTest();
-    status.printSummary(testSuiteID);
+        status.addDescription("Testing  JPA packaging scenarious.."+testSuiteID);
+        test.runTest();
+        status.printSummary(testSuiteID);
     }
 
 
@@ -51,18 +51,18 @@ public class AppClient {
 
 
         // Persist all entities
-    String testInsert = sb.testInsert();
+        String testInsert = sb.testInsert();
         System.out.println("Inserting Customer and Orders... " + testInsert);
-    if("OK".equals(testInsert)) {
-        status.addStatus(testSuiteID + "-InsertCustomer", status.PASS);
-    } else {
-        status.addStatus(testSuiteID + "-InsertCustomer", status.FAIL);
+        if("OK".equals(testInsert)) {
+                status.addStatus(testSuiteID + "-InsertCustomer", status.PASS);
+        } else {
+                status.addStatus(testSuiteID + "-InsertCustomer", status.FAIL);
         }
 
-    String verInsert = sb.verifyInsert();
+        String verInsert = sb.verifyInsert();
         // Test query and navigation
         System.out.println("Verifying that all are inserted... " + verInsert);
-    if("OK".equals(verInsert)) {
+        if("OK".equals(verInsert)) {
                 status.addStatus(testSuiteID + "-VerifyCustomerInsert", status.PASS);
         } else {
                 status.addStatus(testSuiteID + "-VerifyCustomerInsert", status.FAIL);
@@ -70,20 +70,20 @@ public class AppClient {
 
         // Get a detached instance
         String c = "Joe Smith";
-    String testDelete = sb.testDelete(c);
+        String testDelete = sb.testDelete(c);
 
         // Remove all entities
         System.out.println("Removing all... " + testDelete);
-    if("OK".equals(testDelete)) {
+        if("OK".equals(testDelete)) {
                 status.addStatus(testSuiteID + "-DeleteCustomer", status.PASS);
         } else {
                 status.addStatus(testSuiteID + "-DeleteCustomer", status.FAIL);
         }
 
-    String verDelete = sb.verifyDelete();
+        String verDelete = sb.verifyDelete();
         // Query the results
         System.out.println("Verifying that all are removed... " + verDelete);
-    if("OK".equals(verDelete)) {
+        if("OK".equals(verDelete)) {
                 status.addStatus(testSuiteID + "-VerifyDeleteCustomer", status.PASS);
         } else {
                 status.addStatus(testSuiteID + "-VerifyDeleteCustomer", status.FAIL);

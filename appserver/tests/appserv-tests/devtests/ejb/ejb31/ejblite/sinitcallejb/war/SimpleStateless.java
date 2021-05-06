@@ -24,24 +24,24 @@ public class SimpleStateless {
 
      @PostConstruct
      private void init() {
-     System.out.println("In SimpleStateless:init()");
+         System.out.println("In SimpleStateless:init()");
      }
 
     public void hello() {
-     System.out.println("In SimpleStateless:hello()");
+         System.out.println("In SimpleStateless:hello()");
     }
 
     protected void helloProtected() {
-     System.out.println("In SimpleStateless:helloProtected()");
+         System.out.println("In SimpleStateless:helloProtected()");
     }
 
     void helloPackage() {
-     System.out.println("In SimpleStateless:helloPackage()");
+         System.out.println("In SimpleStateless:helloPackage()");
     }
 
      @PreDestroy
      private void destroy() {
-     System.out.println("In SimpleStateless:destroy()");
+         System.out.println("In SimpleStateless:destroy()");
      }
 
 

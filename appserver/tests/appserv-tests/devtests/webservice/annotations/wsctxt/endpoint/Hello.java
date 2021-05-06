@@ -30,16 +30,16 @@ public class Hello {
     @Resource WebServiceContext wsc;
 
     public String sayHello(String param) {
-    System.out.println("wsctxt-servlet wsc = " + wsc);
-    if(wsc != null) {
+        System.out.println("wsctxt-servlet wsc = " + wsc);
+        if(wsc != null) {
                  ServletContext sc =
 (ServletContext)wsc.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
                 String a = null;
                 if (sc!= null ) {
                  a = sc.getServletContextName();
                 }
-        return "Hello " + param +a;
+                return "Hello " + param +a;
         }
-    return "WebService Context injection failed";
+        return "WebService Context injection failed";
     }
 }

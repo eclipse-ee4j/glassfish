@@ -207,7 +207,7 @@ public class SimpleBMPBean
                 Statement stmt = conns[i].createStatement();
                 stmt.executeUpdate("insert into o_customer values (" + i + ",'a')");
         }
-    } catch (Exception e) {
+        } catch (Exception e) {
                 if(expectSuccess){
                     passed = false;
                 }

@@ -29,34 +29,34 @@ public class Client extends HttpServlet {
        @WebServiceRef(name="sun-web.serviceref/calculator") AddNumberService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
               throws jakarta.servlet.ServletException {
-        PrintWriter out=null;
+            PrintWriter out=null;
             try {
                 System.out.println(" Service is :" + service);
                 resp.setContentType("text/html");
-                out = resp.getWriter();
+                    out = resp.getWriter();
                 AddNumber port = service.getAddNumberPort();
                 int ret = port.add(1, 2);
-        printSuccess(out,ret);
+                printSuccess(out,ret);
             } catch(java.lang.Exception e) {
-        //e.printStackTrace();
-            printFailure(out, e.getMessage());
+                //e.printStackTrace();
+                    printFailure(out, e.getMessage());
             } finally {
-        if(out != null) {
+                if(out != null) {
                     out.flush();
                     out.close();
-        }
-        }
+                }
+            }
        }
 
        public void printFailure(PrintWriter out, String errMsg) {
-        if(out == null) return;
-        out.println("<html>");
+                if(out == null) return;
+                out.println("<html>");
                 out.println("<head>");
                 out.println("<title>TestServlet</title>");
                 out.println("</head>");
@@ -69,7 +69,7 @@ public class Client extends HttpServlet {
        }
 
        public void printSuccess(PrintWriter out, int result) {
-        if(out == null) return;
+                if(out == null) return;
                 out.println("<html>");
                 out.println("<head>");
                 out.println("<title>TestServlet</title>");

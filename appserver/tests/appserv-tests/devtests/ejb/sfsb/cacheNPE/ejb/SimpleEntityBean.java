@@ -56,8 +56,8 @@ public class SimpleEntityBean
         Connection c = null;
         PreparedStatement ps = null;
         try {
-            c = ds.getConnection();
-             ps = c.prepareStatement(
+                c = ds.getConnection();
+                 ps = c.prepareStatement(
                 "INSERT INTO SimpleEntity (keyid, name) VALUES (?,?)");
             ps.setString(1, key);
             ps.setString(2, name);
@@ -94,10 +94,10 @@ public class SimpleEntityBean
         throws FinderException
     {
         Connection c = null;
-         PreparedStatement ps = null;
-        try {
-            c = ds.getConnection();
-             ps = c.prepareStatement(
+             PreparedStatement ps = null;
+            try {
+                c = ds.getConnection();
+                 ps = c.prepareStatement(
                 "SELECT keyid from SimpleEntity where keyid = ?");
             ps.setString(1, key);
             ResultSet rs = ps.executeQuery();
@@ -125,68 +125,68 @@ public class SimpleEntityBean
             ps = c.prepareStatement(
                 "SELECT name from SimpleEntity where keyid = ?");
             ps.setString(1, key);
-        ResultSet rs = ps.executeQuery();
-        if (!rs.next())
-           throw new NoSuchEntityException("No cust for " + key);
-        this.name = rs.getString(1);
-    } catch (SQLException e)  {
-        throw new NoSuchEntityException("SQL exception " + e);
-    } finally {
-        try {
-        if (ps != null)
-            ps.close();
-        if (c != null)
-            c.close();
-        } catch (Exception e) {}
-    }
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next())
+               throw new NoSuchEntityException("No cust for " + key);
+            this.name = rs.getString(1);
+        } catch (SQLException e)  {
+            throw new NoSuchEntityException("SQL exception " + e);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (c != null)
+                    c.close();
+            } catch (Exception e) {}
+        }
     }
 
     public void ejbStore() {
-    Connection c = null;
-         PreparedStatement ps = null;
-    try {
-        c = ds.getConnection();
-             ps = c.prepareStatement(
-        "UPDATE SimpleEntity SET name = ? WHERE keyid = ?");
-        ps.setString(1, name);
-        ps.setString(2, key);
-        if (ps.executeUpdate() != 1)
-        throw new EJBException("Didnt store ejb");
-    } catch (SQLException e)  {
-        throw new EJBException("SQL exception " + e);
-    } finally {
+        Connection c = null;
+             PreparedStatement ps = null;
         try {
-        if (ps != null)
-            ps.close();
-        if (c != null)
-            c.close();
-        } catch (Exception e) {}
-    }
+            c = ds.getConnection();
+                 ps = c.prepareStatement(
+                "UPDATE SimpleEntity SET name = ? WHERE keyid = ?");
+            ps.setString(1, name);
+            ps.setString(2, key);
+            if (ps.executeUpdate() != 1)
+                throw new EJBException("Didnt store ejb");
+        } catch (SQLException e)  {
+            throw new EJBException("SQL exception " + e);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (c != null)
+                    c.close();
+            } catch (Exception e) {}
+        }
     }
 
     public void ejbRemove() throws RemoveException {
-    Connection c = null;
-         PreparedStatement ps = null;
-    try {
+        Connection c = null;
+             PreparedStatement ps = null;
+        try {
             System.out.println("[**SimpleEntityBean**] ejbRemove called for key = " + this.key);
-        c = ds.getConnection();
-             ps = c.prepareStatement(
-        "DELETE FROM SimpleEntity WHERE keyid = ?");
-        ps.setString(1, name);
-        if (ps.executeUpdate() != 1)
-        throw new RemoveException("Didnt remove ejb");
+            c = ds.getConnection();
+                 ps = c.prepareStatement(
+                "DELETE FROM SimpleEntity WHERE keyid = ?");
+            ps.setString(1, name);
+            if (ps.executeUpdate() != 1)
+                throw new RemoveException("Didnt remove ejb");
             System.out.println("[**SimpleEntityBean**] ejbRemove for key = "
                 + this.key + " succeeded");
-    } catch (SQLException e)  {
-        throw new RemoveException("SQL exception " + e);
-    } finally {
-        try {
-        if (ps != null)
-            ps.close();
-        if (c != null)
-            c.close();
-        } catch (Exception e) {}
-    }
+        } catch (SQLException e)  {
+            throw new RemoveException("SQL exception " + e);
+        } finally {
+            try {
+                if (ps != null)
+                    ps.close();
+                if (c != null)
+                    c.close();
+            } catch (Exception e) {}
+        }
     }
 
     public void ejbActivate() {

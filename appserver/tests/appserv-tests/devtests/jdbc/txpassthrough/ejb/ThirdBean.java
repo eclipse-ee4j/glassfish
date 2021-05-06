@@ -45,10 +45,10 @@ public class ThirdBean implements SessionBean {
     public void ejbPassivate() {}
 
     public boolean test1() {
-    System.out.println(" @@@@ Entering Bean 3 @@@@");
-    Connection conn = null;
-    Statement stmt = null;
-    ResultSet rs = null;
+        System.out.println(" @@@@ Entering Bean 3 @@@@");
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
         try {
 
@@ -56,13 +56,13 @@ public class ThirdBean implements SessionBean {
             ds = (javax.sql.DataSource) ctx.lookup("java:comp/env/jdbc/txpassthrough");
             conn = ds.getConnection("dbuser", "dbpassword");
             stmt = conn.createStatement();
-                String query1 = "SELECT * FROM ONLYGETCONNECTION";
+                    String query1 = "SELECT * FROM ONLYGETCONNECTION";
             rs = stmt.executeQuery(query1);
-        return true;
+            return true;
         } catch (Exception e) {
-        System.out.println("Caught Exception in 3rd Bean---");
-        e.printStackTrace();
-        return false;
+            System.out.println("Caught Exception in 3rd Bean---");
+            e.printStackTrace();
+            return false;
         } finally {
             if (rs != null ) {
                 try { rs.close(); } catch( Exception e1) {}
@@ -74,7 +74,7 @@ public class ThirdBean implements SessionBean {
                 try {conn.close();} catch( Exception e1) {}
             }
             System.out.println(" @@@@ Exiting Bean 3 @@@@");
-           }
+               }
     }
 
 

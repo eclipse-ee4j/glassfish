@@ -35,7 +35,7 @@ public class SFSB1 implements Hello1 {
     }
 
     public String test() throws EJBException {
-    System.out.println("In SFSB1::test()");
+        System.out.println("In SFSB1::test()");
         return "SFSB1";
     }
 

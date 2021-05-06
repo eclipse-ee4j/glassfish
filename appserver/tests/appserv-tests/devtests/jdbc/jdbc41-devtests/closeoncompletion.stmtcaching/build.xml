@@ -19,9 +19,9 @@
 -->
 
 <!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
-    <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+        <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
-    <!ENTITY run SYSTEM "./../../../../config/run.xml">
+        <!ENTITY run SYSTEM "./../../../../config/run.xml">
         ]>
 
 <project name="jdbc41-close-on-completion" default="usage" basedir=".">
@@ -69,7 +69,7 @@
     </target>
 
     <target name="undeploy" depends="init-common">
-    <antcall target="execute-sql-common">
+        <antcall target="execute-sql-common">
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
 
@@ -92,13 +92,13 @@
 
 
 
-    <antcall target="asadmin-common">
+        <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching-pool.statement_cache_size=5"/>
-    </antcall>
+        </antcall>
 
-    <antcall target="asadmin-common">
+        <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching-pool.wrap_jdbc_objects=true"/>

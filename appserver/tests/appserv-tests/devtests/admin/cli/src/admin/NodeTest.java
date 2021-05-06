@@ -97,9 +97,9 @@ public class NodeTest extends AdminBaseDevTest {
         testLocalHostNode();
         testCreateNodeSsh();
         testCreateNodeConfig();
-    testCreateOfflineConfig();
-    testUpdateNodes();
-    testListNodes();
+        testCreateOfflineConfig();
+        testUpdateNodes();
+        testListNodes();
         testValidateNodeCommand();
         testBasicCluster();
         stopDomain();
@@ -265,7 +265,7 @@ public class NodeTest extends AdminBaseDevTest {
         final String testNamePrefixValidate = "validateOfflineConfig-";
         final String testNamePrefixValidateDelete = "validateDeleteOfflineConfig-";
         final String nodeNamePrefix = "n_config_";
-    final String instanceName = "offline-config-ins";
+        final String instanceName = "offline-config-ins";
 
         String nodeName = String.format("%s%d", nodeNamePrefix, 0);
 
@@ -277,21 +277,21 @@ public class NodeTest extends AdminBaseDevTest {
         testName = testNamePrefixValidate + "0";
         report(testName, asadmin("get", propPrefix + nodeName + "." + "name"));
 
-    // Update the node hostname using create-local-instance
-    testName = testNamePrefixCreateInstance + "0";
-    report(testName, asadmin("create-local-instance", "--node", nodeName, instanceName));
+        // Update the node hostname using create-local-instance
+        testName = testNamePrefixCreateInstance + "0";
+        report(testName, asadmin("create-local-instance", "--node", nodeName, instanceName));
 
-    // Make sure hostname is filled in
-    testName = testNamePrefixValidate + "1";
-    report (testName, asadmin("get", propPrefix+nodeName+"."+"node-host"));
+        // Make sure hostname is filled in
+        testName = testNamePrefixValidate + "1";
+        report (testName, asadmin("get", propPrefix+nodeName+"."+"node-host"));
 
-    // Make sure installdir is filled in
-    testName = testNamePrefixValidate + "2";
-    report (testName, asadmin("get", propPrefix+nodeName+"."+"install-dir"));
+        // Make sure installdir is filled in
+        testName = testNamePrefixValidate + "2";
+        report (testName, asadmin("get", propPrefix+nodeName+"."+"install-dir"));
 
-    // Delete the instance
-    testName = testNamePrefixDelete + "0";
-    report (testName, asadmin("delete-local-instance", "--node", nodeName, instanceName));
+        // Delete the instance
+        testName = testNamePrefixDelete + "0";
+        report (testName, asadmin("delete-local-instance", "--node", nodeName, instanceName));
 
         // Delete it
         testName = testNamePrefixDelete + "1";
@@ -321,17 +321,17 @@ public class NodeTest extends AdminBaseDevTest {
         testName = testNamePrefixValidate + "0";
         report(testName, asadmin("get", propPrefix + nodeName + "." + "name"));
 
-    testName = testNamePrefixUpdateConfig + "0";
-    report(testName, asadmin("update-node-config", "--nodehost", "localhost", nodeName));
+        testName = testNamePrefixUpdateConfig + "0";
+        report(testName, asadmin("update-node-config", "--nodehost", "localhost", nodeName));
 
-    testName  = testNamePrefixUpdateConfig + "1";
-    AsadminReturn ret = asadminWithOutput("get", propPrefix+nodeName+"."+"node-host");
+        testName  = testNamePrefixUpdateConfig + "1";
+        AsadminReturn ret = asadminWithOutput("get", propPrefix+nodeName+"."+"node-host");
         boolean success = ret.outAndErr.indexOf("localhost") >=0;
         report(testName, success);
 
         // Create an ssh node with no hostname or installdir
         testName = testNamePrefixCreate + "1";
-    String nodeName1 = String.format("%s%d", nodeNamePrefix, 1);
+        String nodeName1 = String.format("%s%d", nodeNamePrefix, 1);
         report(testName, asadmin("create-node-ssh", "--nodehost", "acb", "--force", nodeName1));
 
         // Make sure it is there by getting its name
@@ -339,7 +339,7 @@ public class NodeTest extends AdminBaseDevTest {
         report(testName, asadmin("get", propPrefix + nodeName1 + "." + "name"));
 
         testName  = testNamePrefixUpdateConfig + "2";
-    report(testName, asadmin("update-node-config", "--nodehost", "abc", nodeName1));
+        report(testName, asadmin("update-node-config", "--nodehost", "abc", nodeName1));
 
         testName  = testNamePrefixUpdateConfig + "3";
         ret = asadminWithOutput("get", propPrefix+nodeName1+"."+"node-host");
@@ -352,7 +352,7 @@ public class NodeTest extends AdminBaseDevTest {
         report(testName, success);
 
         testName  = testNamePrefixUpdateSsh + "0";
-    report(testName, asadmin("update-node-ssh", "--nodehost", "abc", "--force", nodeName1));
+        report(testName, asadmin("update-node-ssh", "--nodehost", "abc", "--force", nodeName1));
         testName  = testNamePrefixUpdateSsh + "1";
         ret = asadminWithOutput("get", propPrefix+nodeName1+"."+"type");
         success = ret.outAndErr.indexOf("SSH") >=0;
@@ -389,11 +389,11 @@ public class NodeTest extends AdminBaseDevTest {
 
         String nodeName = String.format("%s%d", nodeNamePrefix, 0);
 
-    // List the nodes should see the default node
+        // List the nodes should see the default node
         String testName = testNamePrefixList + "0";
-    AsadminReturn ret = asadminWithOutput("list-nodes");
-    boolean success = ret.outAndErr.indexOf("localhost-domain1") >=0;
-    report(testName, success);
+        AsadminReturn ret = asadminWithOutput("list-nodes");
+        boolean success = ret.outAndErr.indexOf("localhost-domain1") >=0;
+        report(testName, success);
 
         // Create a config node, default is a CONFIG node
         testName = testNamePrefixCONFIGList + "0";
@@ -403,46 +403,46 @@ public class NodeTest extends AdminBaseDevTest {
         testName = testNamePrefixValidate + "0";
         report(testName, asadmin("get", propPrefix + nodeName + "." + "name"));
 
-    // List the nodes, should be 2
-    testName = testNamePrefixList + "1";
-    ret = asadminWithOutput("list-nodes");
+        // List the nodes, should be 2
+        testName = testNamePrefixList + "1";
+        ret = asadminWithOutput("list-nodes");
         success = ret.outAndErr.indexOf("localhost-domain1") >=0;
-    boolean success2 = ret.outAndErr.indexOf(nodeName)>=0;
-    if (success && success2)
-        report(testName, true);
-    else
-            report(testName, false);
+        boolean success2 = ret.outAndErr.indexOf(nodeName)>=0;
+        if (success && success2)
+                report(testName, true);
+        else
+                report(testName, false);
 
-    // List the nodes using list-nodes-config, should be 2
-    testName = testNamePrefixCONFIGList + "1";
-    ret = asadminWithOutput("list-nodes-config");
+        // List the nodes using list-nodes-config, should be 2
+        testName = testNamePrefixCONFIGList + "1";
+        ret = asadminWithOutput("list-nodes-config");
         success = ret.outAndErr.indexOf("localhost-domain1") >=0;
-    success2 = ret.outAndErr.indexOf(nodeName)>=0;
-    if (success && success2)
-        report(testName, true);
-    else
-            report(testName, false);
+        success2 = ret.outAndErr.indexOf(nodeName)>=0;
+        if (success && success2)
+                report(testName, true);
+        else
+                report(testName, false);
 
-    // Create an ssh node (force) and list again, should be 3
-    testName = testNamePrefixSSHList + "0";
+        // Create an ssh node (force) and list again, should be 3
+        testName = testNamePrefixSSHList + "0";
         String nodeName1 = String.format("%s%d", nodeNamePrefix, 1);
-    report (testName, asadmin("create-node-ssh","--force", "--nodehost", "abc", nodeName1));
+        report (testName, asadmin("create-node-ssh","--force", "--nodehost", "abc", nodeName1));
 
-    testName = testNamePrefixList + "2";
-    ret = asadminWithOutput("list-nodes");
+        testName = testNamePrefixList + "2";
+        ret = asadminWithOutput("list-nodes");
         success = ret.outAndErr.indexOf("localhost-domain1") >=0;
-    success2 = ret.outAndErr.indexOf(nodeName)>=0;
-    boolean success3 = ret.outAndErr.indexOf(nodeName1)>=0;
-    if (success && success2 && success3)
-        report(testName, true);
-    else
-            report(testName, false);
+        success2 = ret.outAndErr.indexOf(nodeName)>=0;
+        boolean success3 = ret.outAndErr.indexOf(nodeName1)>=0;
+        if (success && success2 && success3)
+                report(testName, true);
+        else
+                report(testName, false);
 
-    // List the nodes using list-nodes-ssh, should be 1
-    testName = testNamePrefixSSHList + "1";
-    ret = asadminWithOutput("list-nodes-ssh");
+        // List the nodes using list-nodes-ssh, should be 1
+        testName = testNamePrefixSSHList + "1";
+        ret = asadminWithOutput("list-nodes-ssh");
         success = ret.outAndErr.indexOf(nodeName1) >=0;
-           report(testName, success);
+               report(testName, success);
 
         // Delete config node
         testName = testNamePrefixDelete + "0";
@@ -452,17 +452,17 @@ public class NodeTest extends AdminBaseDevTest {
         testName = testNamePrefixValidateDelete + "0";
         report(testName, !asadmin("get", propPrefix + nodeName + "." + "name"));
 
-    // List the nodes, should be 2
-    testName = testNamePrefixList + "3";
-    ret = asadminWithOutput("list-nodes");
+        // List the nodes, should be 2
+        testName = testNamePrefixList + "3";
+        ret = asadminWithOutput("list-nodes");
         success = ret.outAndErr.indexOf("localhost-domain1") >=0;
-    success2 =  ret.outAndErr.indexOf(nodeName)>=0;
-    success3 = ret.outAndErr.indexOf(nodeName1)>=0;
-    if (success2)
-        report(testName, false);
-    else if (success && success3)
-        report(testName, true);
-    else
+        success2 =  ret.outAndErr.indexOf(nodeName)>=0;
+        success3 = ret.outAndErr.indexOf(nodeName1)>=0;
+        if (success2)
+            report(testName, false);
+        else if (success && success3)
+            report(testName, true);
+        else
             report(testName, false);
 
         // Delete ssh node

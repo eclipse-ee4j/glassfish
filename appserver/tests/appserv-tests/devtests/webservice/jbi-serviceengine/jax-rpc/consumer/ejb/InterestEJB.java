@@ -30,7 +30,7 @@ public class InterestEJB implements SessionBean {
     public InterestEJB(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In InterestEJB::ejbCreate !!");
+        System.out.println("In InterestEJB::ejbCreate !!");
     }
 
     public double calculateInterest(double balance, double period) {

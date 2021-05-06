@@ -35,7 +35,7 @@ public class TransactionInterceptor {
     public Object manageTransaction(InvocationContext ctx) throws Exception {
         System.out.println("TransactionInterceptor::AroundInvoke");
         if (tb == null) errorMessage="Dependency Injection " +
-                "into TransactionInterceptor failed";
+                        "into TransactionInterceptor failed";
         aroundInvokeCalled = true;
         aroundInvokeInvocationCount ++;
         return ctx.proceed();

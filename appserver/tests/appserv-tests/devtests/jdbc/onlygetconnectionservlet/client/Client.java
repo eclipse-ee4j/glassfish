@@ -30,8 +30,8 @@ public class Client {
     public static void main(String[] args)
         throws Exception {
 
-     //SimpleReporterAdapter stat = new SimpleReporterAdapter();
-    String testSuite = "jdbc-onlygetconnection ";
+         //SimpleReporterAdapter stat = new SimpleReporterAdapter();
+        String testSuite = "jdbc-onlygetconnection ";
 
         HttpURLConnection conn =(HttpURLConnection) new URL("http://localhost:8080/" +
             "onlygetconnectionservlet/onlygetconnectionservlet").openConnection();
@@ -52,12 +52,12 @@ public class Client {
 
         /*
         if ( bean.test1() ) {
-        stat.addStatus(testSuite+" test1 : ", stat.PASS);
-    } else {
-        stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-    }
+            stat.addStatus(testSuite+" test1 : ", stat.PASS);
+        } else {
+            stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+        }
 
-    stat.printSummary();
+        stat.printSummary();
         */
 
     }

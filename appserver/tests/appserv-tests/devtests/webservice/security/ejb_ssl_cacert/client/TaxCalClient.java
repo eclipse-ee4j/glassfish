@@ -70,7 +70,7 @@ public class TaxCalClient {
         double deductions = 5000.00;
 
         //String targetEndpointAddress =
-        //    "http://localhost:1024/taxcalculator";
+        //        "http://localhost:1024/taxcalculator";
 
         try {
 

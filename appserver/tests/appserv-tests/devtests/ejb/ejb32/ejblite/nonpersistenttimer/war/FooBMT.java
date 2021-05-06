@@ -51,7 +51,7 @@ public class FooBMT extends TimerStuffImpl implements Foo {
 
     @PostConstruct
     private void init() throws EJBException {
-    System.out.println("In ejblite.timer.Foo::init !!");
+        System.out.println("In ejblite.timer.Foo::init !!");
         isBMT = true;
         setContext(sc);
         getTimerService("init", true);

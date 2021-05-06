@@ -61,7 +61,7 @@ public class Client {
     public void doTest() {
         initSFSBList();     //create SFSBs
         accessSFSB();       //access the SFBS
-    removeTest();
+        removeTest();
     }
 
     private void initSFSBList() {
@@ -91,47 +91,47 @@ public class Client {
 
     public void accessSFSB() {
         try {
-        System.out.println("Waiting for 10 seconds before accessing...");
-        for (int i=0; i<10; i++) {
-        System.out.println("" + (10 - i) + " seconds left...");
-        try {
-            Thread.currentThread().sleep(1*1000);
-        } catch (Exception ex) {
-        }
-        }
+            System.out.println("Waiting for 10 seconds before accessing...");
+            for (int i=0; i<10; i++) {
+                System.out.println("" + (10 - i) + " seconds left...");
+                try {
+                    Thread.currentThread().sleep(1*1000);
+                } catch (Exception ex) {
+                }
+            }
 
             boolean passed = true;
             for (int i=0; i < MAX_SFSBS; i++) {
                 try {
-        SFSB sfsb = (SFSB) sfsbList.get(i);
+                SFSB sfsb = (SFSB) sfsbList.get(i);
                 String sfsbName = _sfsbPrefix+i;
-        String retrievedName = sfsb.getName();
+                String retrievedName = sfsb.getName();
 
                 boolean ok = sfsb.isOK(sfsbName);
-        int actCount = sfsb.getActivationCount();
-        int pasCount = sfsb.getPassivationCount();
+                int actCount = sfsb.getActivationCount();
+                int pasCount = sfsb.getPassivationCount();
 
-        boolean activationTest = (actCount != 0);
-        boolean passivationTest = (pasCount != 0);
+                boolean activationTest = (actCount != 0);
+                boolean passivationTest = (pasCount != 0);
 
                 System.out.println("Bean[" + i + "/" + MAX_SFSBS + "] name: " + sfsbName
-            + "; retrievedName: " + retrievedName
-            + "; ok: " + ok
-            + "; " + activationTest + " (" + actCount + ")"
-            + "; " + passivationTest + " (" + pasCount + ")"
-        );
+                    + "; retrievedName: " + retrievedName
+                    + "; ok: " + ok
+                    + "; " + activationTest + " (" + actCount + ")"
+                    + "; " + passivationTest + " (" + pasCount + ")"
+                );
 
                 passed = passed & sfsbName.equals(retrievedName)
                     && ok
-            && activationTest && passivationTest;
+                    && activationTest && passivationTest;
 
                 if (! passed) {
                     //break;
                 }
-        sfsb.sleepForSeconds(1);
-        } catch (Exception ex) {
-            System.out.println("Bean[" + i + "] Got exception: " + ex);
-        }
+                sfsb.sleepForSeconds(1);
+                } catch (Exception ex) {
+                    System.out.println("Bean[" + i + "] Got exception: " + ex);
+                }
             }
 
             if (passed) {
@@ -145,44 +145,44 @@ public class Client {
                 String sfsbName = _sfsbPrefix+i;
 
                 sfsb.makeStateNonSerializable();
-        }
+            }
 
-        //Creating these many SFSBs should force passivation of the above
-        //    non-serializable beans
+            //Creating these many SFSBs should force passivation of the above
+            //        non-serializable beans
             for (int i=0; i < MAX_SFSBS; i++) {
-        home.create(_sfsbPrefix + (i+1)*1000);
-        }
+                home.create(_sfsbPrefix + (i+1)*1000);
+            }
 
-        System.out.println("Waiting for 10 seconds for passivation to complete...");
+            System.out.println("Waiting for 10 seconds for passivation to complete...");
 
-        for (int i=0; i<10; i++) {
-        System.out.println("" + (10 - i) + " seconds left...");
-        try {
-            Thread.currentThread().sleep(1*1000);
-        } catch (Exception ex) {
-        }
-        }
+            for (int i=0; i<10; i++) {
+                System.out.println("" + (10 - i) + " seconds left...");
+                try {
+                    Thread.currentThread().sleep(1*1000);
+                } catch (Exception ex) {
+                }
+            }
 
             for (int i=0; i < MAX_SFSBS; i++) {
                 SFSB sfsb = (SFSB) sfsbList.get(i);
                 String sfsbName = _sfsbPrefix+i;
 
                 try {
-            System.out.print("Expecting exception for: " + sfsbName);
-            String nm = sfsb.getName();
-            System.out.println("ERROR. Didn't get expected exception. "
-                + "Got: " + nm);
-            passed = false;
-            break;
-        } catch (Exception ex) {
-            System.out.println("[**Got Exception**]");
-        }
-        }
-        if (passed) {
-        stat.addStatus("ejbclient non-serializable-state", stat.PASS);
-        } else {
-        stat.addStatus("ejbclient non-serializable-state", stat.FAIL);
-        }
+                    System.out.print("Expecting exception for: " + sfsbName);
+                    String nm = sfsb.getName();
+                    System.out.println("ERROR. Didn't get expected exception. "
+                            + "Got: " + nm);
+                    passed = false;
+                    break;
+                } catch (Exception ex) {
+                    System.out.println("[**Got Exception**]");
+                }
+            }
+            if (passed) {
+                stat.addStatus("ejbclient non-serializable-state", stat.PASS);
+            } else {
+                stat.addStatus("ejbclient non-serializable-state", stat.FAIL);
+            }
         } catch (Exception ex) {
             stat.addStatus("ejbclient accessSFSB", stat.FAIL);
 
@@ -191,29 +191,29 @@ public class Client {
 
 
     public void removeTest() {
-    SFSB sfsb = null;
-    try {
-        String myName = "_2_" + _sfsbPrefix + "_2_";
-        sfsb = (SFSB) home.create(myName);
-        String retrievedName = sfsb.getName();
-        boolean nameOK = myName.equalsIgnoreCase(retrievedName);
-        boolean gotException = false;
-        sfsb.remove();
-        Exception excep = null;
+        SFSB sfsb = null;
         try {
-        sfsb.getName();
-        gotException = false;        //Expecting an exception
-        } catch (Exception ex) {
-        gotException = true;
-        excep = ex;
-        }
+            String myName = "_2_" + _sfsbPrefix + "_2_";
+            sfsb = (SFSB) home.create(myName);
+            String retrievedName = sfsb.getName();
+            boolean nameOK = myName.equalsIgnoreCase(retrievedName);
+            boolean gotException = false;
+            sfsb.remove();
+            Exception excep = null;
+            try {
+                sfsb.getName();
+                gotException = false;            //Expecting an exception
+            } catch (Exception ex) {
+                gotException = true;
+                excep = ex;
+            }
 
-        String resultStr = "(" + nameOK + " @@@ " + gotException + ")";
+            String resultStr = "(" + nameOK + " @@@ " + gotException + ")";
             if (nameOK && gotException) {
                 stat.addStatus("ejbclient removeTest " + resultStr, stat.PASS);
             } else {
                 System.err.println("======> FAIL 2 because: nameOK: " + nameOK + " gotException: " + gotException);
-        stat.addStatus("ejbclient removeTest " + resultStr, stat.FAIL);
+                stat.addStatus("ejbclient removeTest " + resultStr, stat.FAIL);
             }
 
         } catch (Exception ex) {

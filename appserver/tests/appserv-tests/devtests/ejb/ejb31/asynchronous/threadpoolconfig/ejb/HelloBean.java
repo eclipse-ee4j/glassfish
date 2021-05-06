@@ -31,6 +31,6 @@ public class HelloBean implements Hello {
         } catch (InterruptedException e) {
         }
         Thread th = Thread.currentThread();
-    return new AsyncResult<String>(th.getName() + " " + System.identityHashCode(th));
+        return new AsyncResult<String>(th.getName() + " " + System.identityHashCode(th));
     }
 }

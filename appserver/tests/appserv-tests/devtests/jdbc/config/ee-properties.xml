@@ -19,8 +19,8 @@
 <property environment="env"/>
 
 <target name="init-common"
-    depends="setdefaultmode, setToolProperty,setS1ASclassPath,setS1AS80classPath,setS1WSclassPath,
-            setJWSDPclassPath,setTimeStamp">
+        depends="setdefaultmode, setToolProperty,setS1ASclassPath,setS1AS80classPath,setS1WSclassPath,
+                        setJWSDPclassPath,setTimeStamp">
 
     <exec executable="uname" outputproperty="hostname">
        <arg line="-n"/>
@@ -118,13 +118,13 @@
 
     <property name="test.base" value="pe"/>
     <property name="base.report.dir"
-    value="${env.APS_HOME}/reports/${test.base}-${execution.mode}"/>
+        value="${env.APS_HOME}/reports/${test.base}-${execution.mode}"/>
 <!--
     <property name="results.golden.list.file"
-    value="${env.APS_HOME}/build-config/results_baseline.properties"/>
+        value="${env.APS_HOME}/build-config/results_baseline.properties"/>
     <property name="results.analysis.file" value="test_analysis"/>
     <property name="results.list.file"
-    value="${env.rPS_HOME}/build-config/results.properties"/>
+        value="${env.rPS_HOME}/build-config/results.properties"/>
     <property name="results.summary.file" value="summaryreport"/>
 -->
 <!-- Test Harness properties for WebTest ============ -->

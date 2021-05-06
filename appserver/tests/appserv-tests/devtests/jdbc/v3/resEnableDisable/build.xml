@@ -51,12 +51,12 @@
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
-            value="**/ejb/*.class"/>
+                    value="**/ejb/*.class"/>
             <param name="appclientjar.classes"
-            value="**/client/*.class"/>
-        <param name="war.classes"
-            value="**/servlet/*.class"/>
-        <param  name="hasWebclient" value="true"/>
+                    value="**/client/*.class"/>
+            <param name="war.classes"
+                    value="**/servlet/*.class"/>
+            <param  name="hasWebclient" value="true"/>
         </antcall>
         <javac
           srcdir="."
@@ -85,8 +85,8 @@
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
         <antcall target="delete-jdbc-stuff"/>
-    <antcall target="undeploy-common"/>
-    <delete file="client/WebTest.class"/>
+        <antcall target="undeploy-common"/>
+        <delete file="client/WebTest.class"/>
     </target>
 
     <target name="usage">
@@ -124,8 +124,8 @@
         <java classname="client.WebTest">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
-        <arg value="${contextroot}"/>
-        <arg value="${TEST.FAIL}"/>
+            <arg value="${contextroot}"/>
+            <arg value="${TEST.FAIL}"/>
             <classpath>
                 <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
                 <pathelement location="."/>
@@ -139,8 +139,8 @@
         <java classname="client.WebTest">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
-        <arg value="${contextroot}"/>
-        <arg value="${TEST.PASS}"/>
+            <arg value="${contextroot}"/>
+            <arg value="${TEST.PASS}"/>
             <classpath>
                 <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
                 <pathelement location="."/>
@@ -149,13 +149,13 @@
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
-            value="servers.server.server.resource-ref.${resourcename}.enabled=false"/>
+                    value="servers.server.server.resource-ref.${resourcename}.enabled=false"/>
         </antcall>
         <java classname="client.WebTest">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
-        <arg value="${contextroot}"/>
-        <arg value="${TEST.FAIL}"/>
+            <arg value="${contextroot}"/>
+            <arg value="${TEST.FAIL}"/>
             <classpath>
                 <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
                 <pathelement location="."/>
@@ -164,13 +164,13 @@
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
-            value="servers.server.server.resource-ref.${resourcename}.enabled=true"/>
+                    value="servers.server.server.resource-ref.${resourcename}.enabled=true"/>
         </antcall>
         <java classname="client.WebTest">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
-        <arg value="${contextroot}"/>
-        <arg value="${TEST.PASS}"/>
+            <arg value="${contextroot}"/>
+            <arg value="${TEST.PASS}"/>
             <classpath>
                 <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
                 <pathelement location="."/>

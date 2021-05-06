@@ -41,8 +41,8 @@ import java.util.logging.Level;
 /**
  * <code>ManagedConnection</code> implementation for Generic JDBC Connector.
  *
- * @version    1.0, 02/07/22
- * @author    Evani Sai Surya Kiran
+ * @version        1.0, 02/07/22
+ * @author        Evani Sai Surya Kiran
  */
 public class ManagedConnection implements jakarta.resource.spi.ManagedConnection {
 
@@ -86,18 +86,18 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * is expected to be null in the case where the datasource object is a
      * connection pool datasource or an xa datasource.
      *
-     * @param    pooledConn    <code>PooledConnection</code> object in case the
-     *                physical connection is to be obtained from a pooled
-     *                <code>DataSource</code>; null otherwise
-     * @param    sqlConn    <code>java.sql.Connection</code> object in case the physical
-     *            connection is to be obtained from a non pooled <code>DataSource</code>;
-     *            null otherwise
-     * @param    passwdCred    object conatining the
-     *                user and password for allocating the connection
-     * @throws    ResourceException    if the <code>ManagedConnectionFactory</code> object
-     *                    that created this <code>ManagedConnection</code> object
-     *                    is not the same as returned by <code>PasswordCredential</code>
-     *                    object passed
+     * @param        pooledConn        <code>PooledConnection</code> object in case the
+     *                                physical connection is to be obtained from a pooled
+     *                                <code>DataSource</code>; null otherwise
+     * @param        sqlConn        <code>java.sql.Connection</code> object in case the physical
+     *                        connection is to be obtained from a non pooled <code>DataSource</code>;
+     *                        null otherwise
+     * @param        passwdCred        object conatining the
+     *                                user and password for allocating the connection
+     * @throws        ResourceException        if the <code>ManagedConnectionFactory</code> object
+     *                                        that created this <code>ManagedConnection</code> object
+     *                                        is not the same as returned by <code>PasswordCredential</code>
+     *                                        object passed
      */
     public ManagedConnection(PooledConnection pooledConn, java.sql.Connection sqlConn,
         PasswordCredential passwdCred, jakarta.resource.spi.ManagedConnectionFactory mcf) throws ResourceException {
@@ -105,9 +105,9 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
             throw new ResourceException("Connection object cannot be null");
         }
 
-    if (connectionType == ISNOTAPOOLEDCONNECTION ) {
-        actualConnection = sqlConn;
-    }
+        if (connectionType == ISNOTAPOOLEDCONNECTION ) {
+            actualConnection = sqlConn;
+        }
 
         pc = pooledConn;
         connectionHandles = new Hashtable();
@@ -121,27 +121,27 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
         }
         logWriter = mcf.getLogWriter();
         activeConnectionHandle = null;
-    ce = new ConnectionEvent(this, ConnectionEvent.CONNECTION_CLOSED);
+        ce = new ConnectionEvent(this, ConnectionEvent.CONNECTION_CLOSED);
     }
 
     /**
      * Adds a connection event listener to the ManagedConnection instance.
      *
-     * @param    listener    <code>ConnectionEventListener</code>
+     * @param        listener        <code>ConnectionEventListener</code>
      * @see <code>removeConnectionEventListener</code>
      */
     public void addConnectionEventListener(ConnectionEventListener listener) {
-    this.listener = listener;
+        this.listener = listener;
     }
 
     /**
      * Used by the container to change the association of an application-level
      * connection handle with a <code>ManagedConnection</code> instance.
      *
-     * @param    connection    <code>ConnectionHolder</code> to be associated with
-     *                this <code>ManagedConnection</code> instance
-     * @throws    ResourceException    if the physical connection is no more
-     *                    valid or the connection handle passed is null
+     * @param        connection        <code>ConnectionHolder</code> to be associated with
+     *                                this <code>ManagedConnection</code> instance
+     * @throws        ResourceException        if the physical connection is no more
+     *                                        valid or the connection handle passed is null
      */
     public void associateConnection(Object connection) throws ResourceException {
         if(logWriter != null) {
@@ -154,8 +154,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
         ConnectionHolder ch = (ConnectionHolder) connection;
 
         com.sun.jdbcra.spi.ManagedConnection mc = (com.sun.jdbcra.spi.ManagedConnection)ch.getManagedConnection();
-    mc.activeConnectionHandle = null;
-    isClean = false;
+        mc.activeConnectionHandle = null;
+        isClean = false;
 
         ch.associateConnection(actualConnection, this);
         /**
@@ -179,7 +179,7 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * <code>ManagedConnection</code> instance. This method calls the invalidate
      * method on all ConnectionHandles associated with this <code>ManagedConnection</code>.
      *
-     * @throws    ResourceException    if the physical connection is no more valid
+     * @throws        ResourceException        if the physical connection is no more valid
      */
     public void cleanup() throws ResourceException {
         if(logWriter != null) {
@@ -191,8 +191,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
          * may need to set the autocommit to true for the non-pooled case.
          */
         //GJCINT
-    //if (actualConnection != null) {
-    if (connectionType == ISNOTAPOOLEDCONNECTION ) {
+        //if (actualConnection != null) {
+        if (connectionType == ISNOTAPOOLEDCONNECTION ) {
         try {
             isolationLevelWhenCleaned = actualConnection.getTransactionIsolation();
         } catch(SQLException sqle) {
@@ -210,8 +210,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * of connection handles and invalidates all of them so that any
      * operation on those connection handles throws an exception.
      *
-     * @throws    ResourceException    if there is a problem in retrieving
-     *                                 the connection handles
+     * @throws        ResourceException        if there is a problem in retrieving
+     *                                         the connection handles
      */
     private void invalidateAllConnectionHandles() throws ResourceException {
         Set handles = connectionHandles.keySet();
@@ -230,18 +230,18 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     /**
      * Destroys the physical connection to the underlying resource manager.
      *
-     * @throws    ResourceException    if there is an error in closing the physical connection
+     * @throws        ResourceException        if there is an error in closing the physical connection
      */
     public void destroy() throws ResourceException{
         if(logWriter != null) {
             logWriter.println("In destroy");
         }
-    //GJCINT
-    if(isDestroyed == true) {
-        return;
-    }
+        //GJCINT
+        if(isDestroyed == true) {
+            return;
+        }
 
-    activeConnectionHandle = null;
+        activeConnectionHandle = null;
         try {
             if(connectionType == ISXACONNECTION || connectionType == ISPOOLEDCONNECTION) {
                 pc.close();
@@ -267,14 +267,14 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * Creates a new connection handle for the underlying physical
      * connection represented by the <code>ManagedConnection</code> instance.
      *
-     * @param    subject    <code>Subject</code> parameter needed for authentication
-     * @param    cxReqInfo    <code>ConnectionRequestInfo</code> carries the user
-     *                        and password required for getting this connection.
-     * @return    Connection    the connection handle <code>Object</code>
-     * @throws    ResourceException    if there is an error in allocating the
-     *                                 physical connection from the pooled connection
-     * @throws    SecurityException    if there is a mismatch between the
-     *                                 password credentials or reauthentication is requested
+     * @param        subject        <code>Subject</code> parameter needed for authentication
+     * @param        cxReqInfo        <code>ConnectionRequestInfo</code> carries the user
+     *                                and password required for getting this connection.
+     * @return        Connection        the connection handle <code>Object</code>
+     * @throws        ResourceException        if there is an error in allocating the
+     *                                         physical connection from the pooled connection
+     * @throws        SecurityException        if there is a mismatch between the
+     *                                         password credentials or reauthentication is requested
      */
     public Object getConnection(Subject sub, jakarta.resource.spi.ConnectionRequestInfo cxReqInfo)
         throws ResourceException {
@@ -304,7 +304,7 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
 
 
         ConnectionHolder connHolderObject = new ConnectionHolder(actualConnection, this);
-    isClean=false;
+        isClean=false;
 
         if(activeConnectionHandle != null) {
             activeConnectionHandle.setActive(false);
@@ -321,8 +321,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * Returns an <code>LocalTransaction</code> instance. The <code>LocalTransaction</code> interface
      * is used by the container to manage local transactions for a RM instance.
      *
-     * @return    <code>LocalTransaction</code> instance
-     * @throws    ResourceException    if the physical connection is not valid
+     * @return        <code>LocalTransaction</code> instance
+     * @throws        ResourceException        if the physical connection is not valid
      */
     public jakarta.resource.spi.LocalTransaction getLocalTransaction() throws ResourceException {
         if(logWriter != null) {
@@ -335,9 +335,9 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     /**
      * Gets the log writer for this <code>ManagedConnection</code> instance.
      *
-     * @return    <code>PrintWriter</code> instance associated with this
-     *        <code>ManagedConnection</code> instance
-     * @throws    ResourceException    if the physical connection is not valid
+     * @return        <code>PrintWriter</code> instance associated with this
+     *                <code>ManagedConnection</code> instance
+     * @throws        ResourceException        if the physical connection is not valid
      * @see <code>setLogWriter</code>
      */
     public PrintWriter getLogWriter() throws ResourceException {
@@ -353,8 +353,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * Gets the metadata information for this connection's underlying EIS
      * resource manager instance.
      *
-     * @return    <code>ManagedConnectionMetaData</code> instance
-     * @throws    ResourceException    if the physical connection is not valid
+     * @return        <code>ManagedConnectionMetaData</code> instance
+     * @throws        ResourceException        if the physical connection is not valid
      */
     public jakarta.resource.spi.ManagedConnectionMetaData getMetaData() throws ResourceException {
         if(logWriter != null) {
@@ -368,12 +368,12 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     /**
      * Returns an <code>XAResource</code> instance.
      *
-     * @return    <code>XAResource</code> instance
-     * @throws    ResourceException    if the physical connection is not valid or
-     *                    there is an error in allocating the
-     *                    <code>XAResource</code> instance
-     * @throws    NotSupportedException    if underlying datasource is not an
-     *                    <code>XADataSource</code>
+     * @return        <code>XAResource</code> instance
+     * @throws        ResourceException        if the physical connection is not valid or
+     *                                        there is an error in allocating the
+     *                                        <code>XAResource</code> instance
+     * @throws        NotSupportedException        if underlying datasource is not an
+     *                                        <code>XADataSource</code>
      */
     public XAResource getXAResource() throws ResourceException {
         if(logWriter != null) {
@@ -384,7 +384,7 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
         if(connectionType == ISXACONNECTION) {
             try {
                 if(xar == null) {
-            /**
+                    /**
                      * Using the wrapper XAResource.
                      */
                     xar = new com.sun.jdbcra.spi.XAResourceImpl(((XAConnection)pc).getXAResource(), this);
@@ -402,11 +402,11 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * Removes an already registered connection event listener from the
      * <code>ManagedConnection</code> instance.
      *
-     * @param    listener    <code>ConnectionEventListener</code> to be removed
+     * @param        listener        <code>ConnectionEventListener</code> to be removed
      * @see <code>addConnectionEventListener</code>
      */
     public void removeConnectionEventListener(ConnectionEventListener listener) {
-    listener = null;
+        listener = null;
     }
 
     /**
@@ -415,7 +415,7 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * LocalTransaction object when its begin() method is called.
      */
     void transactionStarted() {
-    transactionInProgress = true;
+        transactionInProgress = true;
     }
 
     /**
@@ -424,16 +424,16 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * LocalTransaction object when its end() method is called.
      */
     void transactionCompleted() {
-    transactionInProgress = false;
-    if(connectionType == ISPOOLEDCONNECTION || connectionType == ISXACONNECTION) {
+        transactionInProgress = false;
+        if(connectionType == ISPOOLEDCONNECTION || connectionType == ISXACONNECTION) {
             try {
                 isolationLevelWhenCleaned = actualConnection.getTransactionIsolation();
             } catch(SQLException sqle) {
-            //check what to do in this case!!
-        _logger.log(Level.WARNING, "jdbc.notgot_tx_isolvl");
+                //check what to do in this case!!
+                _logger.log(Level.WARNING, "jdbc.notgot_tx_isolvl");
             }
 
-        try {
+            try {
                 actualConnection.close();
                 actualConnection = null;
             } catch(SQLException sqle) {
@@ -453,15 +453,15 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * or not.
      */
     public boolean isTransactionInProgress() {
-    return transactionInProgress;
+        return transactionInProgress;
     }
 
     /**
      * Sets the log writer for this <code>ManagedConnection</code> instance.
      *
-     * @param    out    <code>PrintWriter</code> to be associated with this
-     *            <code>ManagedConnection</code> instance
-     * @throws    ResourceException    if the physical connection is not valid
+     * @param        out        <code>PrintWriter</code> to be associated with this
+     *                        <code>ManagedConnection</code> instance
+     * @throws        ResourceException        if the physical connection is not valid
      * @see <code>getLogWriter</code>
      */
     public void setLogWriter(PrintWriter out) throws ResourceException {
@@ -473,8 +473,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * This method determines the type of the connection being held
      * in this <code>ManagedConnection</code>.
      *
-     * @param    pooledConn    <code>PooledConnection</code>
-     * @return    connection type
+     * @param        pooledConn        <code>PooledConnection</code>
+     * @return        connection type
      */
     private int getConnectionType(PooledConnection pooledConn) {
         if(pooledConn == null) {
@@ -490,8 +490,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * Returns the <code>ManagedConnectionFactory</code> instance that
      * created this <code>ManagedConnection</code> instance.
      *
-     * @return    <code>ManagedConnectionFactory</code> instance that created this
-     *        <code>ManagedConnection</code> instance
+     * @return        <code>ManagedConnectionFactory</code> instance that created this
+     *                <code>ManagedConnection</code> instance
      */
     ManagedConnectionFactory getManagedConnectionFactory() {
         return (com.sun.jdbcra.spi.ManagedConnectionFactory)mcf;
@@ -500,7 +500,7 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     /**
      * Returns the actual sql connection for this <code>ManagedConnection</code>.
      *
-     * @return    the physical <code>java.sql.Connection</code>
+     * @return        the physical <code>java.sql.Connection</code>
      */
     //GJCINT
     java.sql.Connection getActualConnection() throws ResourceException {
@@ -509,7 +509,7 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
             try {
                 if(actualConnection == null) {
                     actualConnection = pc.getConnection();
-        }
+                }
 
             } catch(SQLException sqle) {
                 sqle.printStackTrace();
@@ -522,8 +522,8 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     /**
      * Returns the <code>PasswordCredential</code> object associated with this <code>ManagedConnection</code>.
      *
-     * @return    <code>PasswordCredential</code> associated with this
-     *        <code>ManagedConnection</code> instance
+     * @return        <code>PasswordCredential</code> associated with this
+     *                <code>ManagedConnection</code> instance
      */
     PasswordCredential getPasswordCredential() {
         return passwdCredential;
@@ -535,9 +535,9 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * destroy has not been called and no physical connection error has
      * occurred rendering the physical connection unusable.
      *
-     * @throws    ResourceException    if <code>destroy</code> has been called on this
-     *                    <code>ManagedConnection</code> instance or if a
-     *                                 physical connection error occurred rendering it unusable
+     * @throws        ResourceException        if <code>destroy</code> has been called on this
+     *                                        <code>ManagedConnection</code> instance or if a
+     *                                         physical connection error occurred rendering it unusable
      */
     //GJCINT
     void checkIfValid() throws ResourceException {
@@ -552,11 +552,11 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * called. This <code>ManagedConnection</code> instance  invalidates the connection handle
      * and sends a CONNECTION_CLOSED event to all the registered event listeners.
      *
-     * @param    e    Exception that may have occured while closing the connection handle
-     * @param    connHolderObject    <code>ConnectionHolder</code> that has been closed
-     * @throws    SQLException    in case closing the sql connection got out of
-     *                             <code>getConnection</code> on the underlying
-     *                <code>PooledConnection</code> throws an exception
+     * @param        e        Exception that may have occured while closing the connection handle
+     * @param        connHolderObject        <code>ConnectionHolder</code> that has been closed
+     * @throws        SQLException        in case closing the sql connection got out of
+     *                                     <code>getConnection</code> on the underlying
+     *                                <code>PooledConnection</code> throws an exception
      */
     void connectionClosed(Exception e, ConnectionHolder connHolderObject) throws SQLException {
         connHolderObject.invalidate();
@@ -572,9 +572,9 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * This method is called by the <code>ConnectionHolder</code> when it detects a connecion
      * related error.
      *
-     * @param    e    Exception that has occurred during an operation on the physical connection
-     * @param    connHolderObject    <code>ConnectionHolder</code> that detected the physical
-     *                    connection error
+     * @param        e        Exception that has occurred during an operation on the physical connection
+     * @param        connHolderObject        <code>ConnectionHolder</code> that detected the physical
+     *                                        connection error
      */
     void connectionErrorOccurred(Exception e,
             com.sun.jdbcra.spi.ConnectionHolder connHolderObject) {
@@ -629,11 +629,11 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
      * Connection Handle object to this object if the active Connection
      * Handle is null.
      *
-     * @param    ch    <code>ConnectionHolder</code> that requests this
-     *            <code>ManagedConnection</code> instance whether
-     *            it can be active or not
-     * @throws    SQLException    in case the physical is not valid or
-     *                there is already an active connection handle
+     * @param        ch        <code>ConnectionHolder</code> that requests this
+     *                        <code>ManagedConnection</code> instance whether
+     *                        it can be active or not
+     * @throws        SQLException        in case the physical is not valid or
+     *                                there is already an active connection handle
      */
 
     void checkIfActive(ConnectionHolder ch) throws SQLException {

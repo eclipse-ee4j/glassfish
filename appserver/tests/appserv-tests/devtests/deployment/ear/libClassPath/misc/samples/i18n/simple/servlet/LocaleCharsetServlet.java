@@ -30,7 +30,7 @@ import java.net.*;
 
  * @author  Chand Basha
 
- * @version    1.0
+ * @version        1.0
 
  */
 
@@ -52,15 +52,15 @@ public class LocaleCharsetServlet extends HttpServlet {
 
 
 
-        String name            =    req.getParameter("name");
+        String name                        =        req.getParameter("name");
 
-        String charsetval    =    req.getCharacterEncoding();
+        String charsetval        =        req.getCharacterEncoding();
 
         if (charsetval != null) {
 
-            res.setContentType("text/html;charset=" + charsetval + "");
+                res.setContentType("text/html;charset=" + charsetval + "");
 
-        } else res.setContentType("text/html;charset=UTF-8");
+                } else res.setContentType("text/html;charset=UTF-8");
 
         PrintWriter out = res.getWriter();
 
@@ -82,9 +82,9 @@ public class LocaleCharsetServlet extends HttpServlet {
 
         out.println("<br>");
 
-        out.println("<P><BR><A HREF=\"/i18n-simple\">Back to sample home</A></P>");
+                out.println("<P><BR><A HREF=\"/i18n-simple\">Back to sample home</A></P>");
 
-        out.println("</body></html>");
+                out.println("</body></html>");
 
         out.close();
 

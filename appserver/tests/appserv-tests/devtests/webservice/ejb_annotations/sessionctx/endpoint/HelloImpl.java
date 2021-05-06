@@ -30,9 +30,9 @@ public class HelloImpl {
     @Resource SessionContext ejbsc;
 
     public String sayHello(String who) {
-    System.out.println("EJB WSCTXT wsc = " + ejbsc);
-    if(ejbsc != null)
-            return "WebSvcTest-Hello " + ejbsc.getCallerPrincipal();
+        System.out.println("EJB WSCTXT wsc = " + ejbsc);
+        if(ejbsc != null)
+                return "WebSvcTest-Hello " + ejbsc.getCallerPrincipal();
         return "EJB WebServiceContext injection failed";
     }
 }

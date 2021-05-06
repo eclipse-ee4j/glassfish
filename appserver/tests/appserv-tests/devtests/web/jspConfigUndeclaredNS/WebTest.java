@@ -48,7 +48,7 @@ public class WebTest {
         WebTest webTest = new WebTest(args);
         webTest.doTest();
         webTest.doTest2();
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() {

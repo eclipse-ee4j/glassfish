@@ -56,6 +56,6 @@ public class WebTest{
             stat.addStatus(TEST_NAME, stat.PASS);
         }
 
-    stat.printSummary();
+        stat.printSummary();
     }
 }

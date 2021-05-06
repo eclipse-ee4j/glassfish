@@ -53,14 +53,14 @@ public class Client {
 
         try {
 
-        String lookupStr =
-        "java:comp/env/com.sun.s1asdev.ejb.ejb30.clientview.adapted.client.Client/hr";
+            String lookupStr =
+                "java:comp/env/com.sun.s1asdev.ejb.ejb30.clientview.adapted.client.Client/hr";
 
-        if( hr == null ) {
-        System.out.println("In stand-alone mode");
-        lookupStr = "ejb/ejb_ejb30_clientview_adapted_Hello";
-        hr = (Hello) new InitialContext().lookup(lookupStr);
-        }
+            if( hr == null ) {
+                System.out.println("In stand-alone mode");
+                lookupStr = "ejb/ejb_ejb30_clientview_adapted_Hello";
+                hr = (Hello) new InitialContext().lookup(lookupStr);
+            }
 
             hellos.add(hr);
             InitialContext ic = new InitialContext();
@@ -78,7 +78,7 @@ public class Client {
             for(Hello next : hellos) {
 
 
-           if( next.hasBeenPassivatedActivated() ) {
+                   if( next.hasBeenPassivatedActivated() ) {
                     numPassivatedActivated++;
                 }
 
@@ -100,25 +100,25 @@ public class Client {
                 throw new Exception("Passivation/Activation could not be tested.  No Passivation/Activation occurred");
             }
 
-        System.out.println("Hellos.size() : " + hellos.size() + " passivationCount: " + numPassivatedActivated);
+            System.out.println("Hellos.size() : " + hellos.size() + " passivationCount: " + numPassivatedActivated);
 
-        stat.addStatus("local main", stat.PASS);
+            stat.addStatus("local main", stat.PASS);
 
-        boolean refResult1 = hr.checkSlessLocalReferences();
-        stat.addStatus("local checkSlessReferences",
-            (refResult1 == true) ? stat.PASS : stat.FAIL);
+            boolean refResult1 = hr.checkSlessLocalReferences();
+            stat.addStatus("local checkSlessReferences",
+                    (refResult1 == true) ? stat.PASS : stat.FAIL);
 
-        boolean refResult2 = hr.checkSfulLocalReferences();
-        stat.addStatus("local checkSfulLocalReferences",
-            (refResult2 == true) ? stat.PASS : stat.FAIL);
+            boolean refResult2 = hr.checkSfulLocalReferences();
+            stat.addStatus("local checkSfulLocalReferences",
+                    (refResult2 == true) ? stat.PASS : stat.FAIL);
 
             boolean refSlessResult = hr.checkSlessRemoteReferences();
-        stat.addStatus("local checkSlessRemoteReferences",
-            (refSlessResult == true) ? stat.PASS : stat.FAIL);
+            stat.addStatus("local checkSlessRemoteReferences",
+                    (refSlessResult == true) ? stat.PASS : stat.FAIL);
 
             boolean refResult3 = hr.checkSfulRemoteReferences();
-        stat.addStatus("local checkSfulRemoteReferences",
-            (refResult3 == true) ? stat.PASS : stat.FAIL);
+            stat.addStatus("local checkSfulRemoteReferences",
+                    (refResult3 == true) ? stat.PASS : stat.FAIL);
 
             DummyRemote ref1 = hr.getSfulRemoteBusiness(1);
             DummyRemote ref2 = hr.getSfulRemoteBusiness(2);
@@ -141,32 +141,32 @@ public class Client {
                 && (refResult11 == false);
 
             stat.addStatus("local compareRemoteReferences",
-            (refResult3 == true) ? stat.PASS : stat.FAIL);
+                    (refResult3 == true) ? stat.PASS : stat.FAIL);
 
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
 
 
     private void runTests(int type, Hello hr)
-    throws Exception
+        throws Exception
     {
 
         hr.notSupported(type, true);
         hr.notSupported(type, false);
         hr.supports(type, true);
-    hr.supports(type, false);
+        hr.supports(type, false);
         hr.required(type, true);
-    hr.required(type, false);
+        hr.required(type, false);
         hr.requiresNew(type, true);
-    hr.requiresNew(type, false);
+        hr.requiresNew(type, false);
         hr.mandatory(type, true);
-    hr.never(type, false);
+        hr.never(type, false);
     }
 }
 

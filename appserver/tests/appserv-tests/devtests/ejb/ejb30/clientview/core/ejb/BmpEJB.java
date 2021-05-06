@@ -27,7 +27,7 @@ public class BmpEJB implements EntityBean
     public String ejbCreate(String s) {
 
         System.out.println("ec_ == " + ec_);
-    return s;
+        return s;
     }
 
     public void ejbPostCreate(String s) {}
@@ -63,7 +63,7 @@ public class BmpEJB implements EntityBean
     {}
 
     public String ejbFindByPrimaryKey(String s) {
-    return s;
+        return s;
     }
 
     public void testException1() throws Exception {

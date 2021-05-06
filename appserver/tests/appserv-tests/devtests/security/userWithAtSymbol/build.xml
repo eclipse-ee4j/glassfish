@@ -38,10 +38,10 @@
 
     <target name="setup" depends="init-common">
         <property environment="env"/>
-    <echo message="file=${env.S1AS_HOME}/domains/domain1/config/keyfile2" file="temp.txt"/>
-    <replace file="temp.txt" token=":" value="\:"/>
-    <replace file="temp.txt" token="\" value="\\"/>
-    <loadproperties srcFile="temp.txt"/>
+        <echo message="file=${env.S1AS_HOME}/domains/domain1/config/keyfile2" file="temp.txt"/>
+        <replace file="temp.txt" token=":" value="\:"/>
+        <replace file="temp.txt" token="\" value="\\"/>
+        <loadproperties srcFile="temp.txt"/>
         <echo message="${file}"/>
         <delete file="temp.txt"/>
 
@@ -51,7 +51,7 @@
         </antcall>
       <!--  <antcall target="reconfig-common"/>-->
 
-    <echo message="Creating user with an @ symbol: harpreet@foobar.com"/>
+        <echo message="Creating user with an @ symbol: harpreet@foobar.com"/>
         <antcall target="create-user-common">
             <param name="user" value="harpreet@foobar.com"/>
             <param name="password" value="harpreet"/>
@@ -89,7 +89,7 @@
     </target>
 
     <target name="build" depends="compile">
-<!--    <property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
+<!--        <property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
 -->
         <antcall target="build-ear-common"/>
     </target>

@@ -60,7 +60,7 @@
 
     <target name="deploy" depends="init-common">
       <antcall target="deploy-jdbc-driver-oracle-common">
-      <param name="oracle.resource.type" value="${oracle.resource.type}"/>
+          <param name="oracle.resource.type" value="${oracle.resource.type}"/>
       </antcall>
 
       <antcall target="deploy-common"/>

@@ -25,7 +25,7 @@
   <property name="src" value="src" />
 
   <target name="prepare" depends="init"
-       description="Create build directories.">
+           description="Create build directories.">
     <mkdir dir="${build}" />
   </target>
 

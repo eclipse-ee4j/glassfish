@@ -115,7 +115,7 @@ public class Client {
         throws Exception {
         sendMsgs((jakarta.jms.Queue) msgBeanQueue, num);
 
-    //Now attempt to receive responses to our message
+        //Now attempt to receive responses to our message
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);
         if( recvdmessage != null ) {

@@ -85,7 +85,7 @@ public class WebTest {
 
             System.out.println("session id = " + id);
             return id;
-        } finally {
+            } finally {
             if (bis != null) {
                 try {
                     bis.close();

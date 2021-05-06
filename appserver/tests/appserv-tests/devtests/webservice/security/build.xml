@@ -189,11 +189,11 @@
      </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the webservice security tests)
+        <echo>
+                Usage:
+                        ant all (Executes all the webservice security tests)
 
-            ant ejb_ssl_cacert (Executes the client certificate ejb ssl endpoint test)
-    </echo>
+                        ant ejb_ssl_cacert (Executes the client certificate ejb ssl endpoint test)
+        </echo>
     </target>
 </project>

@@ -36,7 +36,7 @@ public class TestClientCert extends HttpServlet {
                getServletContext().log(cert.toString());
             }
             clName = certs.getClass().getName();
-    } else {
+        } else {
             clName = "cert is null";
         }
         res.getWriter().print(clName);

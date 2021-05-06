@@ -41,7 +41,7 @@ public class TestDeplOrder {
             } else {
               fail();
             }
-    } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }

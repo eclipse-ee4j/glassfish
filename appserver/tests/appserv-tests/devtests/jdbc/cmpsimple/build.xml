@@ -56,7 +56,7 @@
       <antcall target="package-jar"/>
       <antcall target="appclient-jar-common">
         <param name="appclientjar.classes"
-        value="**/BlobTest.class, **/BlobTestHome.class,**/*Client*.class" />
+                value="**/BlobTest.class, **/BlobTestHome.class,**/*Client*.class" />
       </antcall>
       <antcall target="package-ear"/>
     </target>

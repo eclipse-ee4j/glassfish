@@ -39,8 +39,8 @@ public class JAXRRemover {
     /**
      * Establishes a connection to a registry.
      *
-     * @param queryUrl    the URL of the query registry
-     * @param publishUrl    the URL of the publish registry
+     * @param queryUrl        the URL of the query registry
+     * @param publishUrl        the URL of the publish registry
      */
     public void makeConnection(String queryUrl,
         String publishUrl) {
@@ -82,9 +82,9 @@ public class JAXRRemover {
      * program, verifying it by checking that the key strings
      * match.
      *
-     * @param keyStr    the key of the published organization
+     * @param keyStr        the key of the published organization
      *
-     * @return    the key of the organization found
+     * @return        the key of the organization found
      */
     public javax.xml.registry.infomodel.Key createOrgKey(String keyStr) {
 
@@ -114,7 +114,7 @@ public class JAXRRemover {
     /**
      * Removes the organization with the specified key value.
      *
-     * @param key    the Key of the organization
+     * @param key        the Key of the organization
      */
     public void executeRemove(javax.xml.registry.infomodel.Key key,
         String username, String password) {

@@ -29,9 +29,9 @@
 
     <target name="all">
         <record name="reconfig.output" action="start" />
-    <ant dir="maxpoolsize" target="all"/>
-    <ant dir="poolauth" target="all"/>
-    <ant dir="poolauth-2" target="all"/>
+        <ant dir="maxpoolsize" target="all"/>
+        <ant dir="poolauth" target="all"/>
+        <ant dir="poolauth-2" target="all"/>
         <record name="reconfig.output" action="stop" />
     </target>
 
@@ -60,9 +60,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the reconfig tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the reconfig tests)
+        </echo>
     </target>
 </project>

@@ -84,7 +84,7 @@ public class RetailPriceList implements Serializable {
         // At end, close connection to registry
         if (connection != null) {
           try {
-              connection.close();
+                  connection.close();
           } catch (JAXRException je) {}
         }
       }
@@ -100,7 +100,7 @@ public class RetailPriceList implements Serializable {
         retailPriceItems.add(rpi);
       }
       distributors.add(SAAJOrderURL);
-         }
+                 }
 
     public ArrayList getItems() {
         return retailPriceItems;

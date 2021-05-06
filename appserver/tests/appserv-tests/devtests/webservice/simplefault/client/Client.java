@@ -39,11 +39,11 @@ public class Client {
     }
 
     public void doTest(String[] args) {
-        try {
+            try {
 
            String targetEndpointAddress = args[0];
 
-        Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
             Service testService = (Service) ic.lookup("java:comp/env/service/soapfault");
             SimpleSoapFaultSEI test = (SimpleSoapFaultSEI)
@@ -62,11 +62,11 @@ public class Client {
             }
 
             stat.addStatus("soapfaultsclient main", stat.PASS);
-        } catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("soapfaults client test failed");
             ex.printStackTrace();
             stat.addStatus("soapfaultsclient main", stat.FAIL);
             //System.exit(15);
-    }
+        }
     }
 }

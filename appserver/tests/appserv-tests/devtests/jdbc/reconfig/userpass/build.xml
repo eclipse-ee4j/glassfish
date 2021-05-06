@@ -61,14 +61,14 @@
 
     <target name="deploy" depends="init-common">
       <antcall target="execute-sql-oracle-common">
-          <param name="oracle.user" value="${oracle.user.1}"/>
-          <param name="oracle.password" value="${oracle.password.1}"/>
-          <param name="sql.file" value="sql/create_pointbase.sql"/>
+              <param name="oracle.user" value="${oracle.user.1}"/>
+              <param name="oracle.password" value="${oracle.password.1}"/>
+              <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
       <antcall target="execute-sql-oracle-common">
-          <param name="oracle.user" value="${oracle.user.2}"/>
-          <param name="oracle.password" value="${oracle.password.2}"/>
-          <param name="sql.file" value="sql/create_pointbase1.sql"/>
+              <param name="oracle.user" value="${oracle.user.2}"/>
+              <param name="oracle.password" value="${oracle.password.2}"/>
+              <param name="sql.file" value="sql/create_pointbase1.sql"/>
       </antcall>
       <antcall target="deploy-jdbc-oracle-common">
         <param name="oracle.conpool.name" value="jdbc-oracle-pool"/>
@@ -90,7 +90,7 @@
       </antcall>
       <antcall target="undeploy-jdbc-oracle-common">
         <param name="oracle.pool.name" value="jdbc-oracle-pool"/>
-    <param name="oracle.resource.name" value="jdbc/s1qeDB-oracle"/>
+        <param name="oracle.resource.name" value="jdbc/s1qeDB-oracle"/>
       </antcall>
       <antcall target="undeploy-common"/>
     </target>

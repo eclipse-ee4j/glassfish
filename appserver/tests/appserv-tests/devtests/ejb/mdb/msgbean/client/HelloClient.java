@@ -143,7 +143,7 @@ public class HelloClient {
             doTests(onePhaseCommitTests, numIter);
             doTests(twoPhaseCommitTests, numIter);
             doTests(localTxTests, numIter);
-        doTests(rollbackTests, numIter);
+            doTests(rollbackTests, numIter);
         } else {
             userSpecifiedTxTest[0][0] = args[0];
             numIter = Integer.parseInt(args[1]);
@@ -297,7 +297,7 @@ public class HelloClient {
      * Generate testname. (Try to keep synched with target names in Makefile.)
      */
     private String generateTestName(String destName, boolean doJdbc,
-                    boolean expectReply, boolean rollbackEnabled)
+                                    boolean expectReply, boolean rollbackEnabled)
     {
         String testName = destName.toLowerCase();
         if (doJdbc) {

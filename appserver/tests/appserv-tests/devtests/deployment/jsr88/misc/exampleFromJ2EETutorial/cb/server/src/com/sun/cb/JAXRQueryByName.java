@@ -61,8 +61,8 @@ public class JAXRQueryByName {
     /**
      * Establishes a connection to a registry.
      *
-     * @param queryUrl    the URL of the query registry
-     * @param publishUrl    the URL of the publish registry
+     * @param queryUrl        the URL of the query registry
+     * @param publishUrl        the URL of the publish registry
      * @return the connection
      */
     public Connection makeConnection(String queryUrl,
@@ -114,7 +114,7 @@ public class JAXRQueryByName {
     /**
      * Returns  organizations containing a string.
      *
-     * @param qString    the string argument
+     * @param qString        the string argument
      * @return a collection of organizations
      */
     public Collection executeQuery(String qString) {
@@ -152,8 +152,8 @@ public class JAXRQueryByName {
     /**
      * Returns the name value for a registry object.
      *
-     * @param ro    a RegistryObject
-     * @return        the String value
+     * @param ro        a RegistryObject
+     * @return                the String value
      */
     public String getName(RegistryObject ro)
         throws JAXRException {
@@ -168,8 +168,8 @@ public class JAXRQueryByName {
     /**
      * Returns the description value for a registry object.
      *
-     * @param ro    a RegistryObject
-     * @return        the String value
+     * @param ro        a RegistryObject
+     * @return                the String value
      */
     public String getDescription(RegistryObject ro)
         throws JAXRException {
@@ -183,8 +183,8 @@ public class JAXRQueryByName {
     /**
      * Returns the key id value for a registry object.
      *
-     * @param ro    a RegistryObject
-     * @return        the String value
+     * @param ro        a RegistryObject
+     * @return                the String value
      */
     public String getKey(RegistryObject ro)
         throws JAXRException {

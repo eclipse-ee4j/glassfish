@@ -28,7 +28,7 @@ public class WebTest {
     private static SimpleReporterAdapter stat
         = new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME =
-        "portable-extensions-process-injection-target";
+                "portable-extensions-process-injection-target";
     private static final String EXPECTED_RESPONSE = "Hello from Servlet 3.0.";
 
     private final String host;

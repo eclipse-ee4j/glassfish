@@ -19,9 +19,9 @@
 -->
 
         <!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
-    <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+        <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
-    <!ENTITY run SYSTEM "./../../config/run.xml">
+        <!ENTITY run SYSTEM "./../../config/run.xml">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -54,12 +54,12 @@
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
-            value="**/ejb/*.class"/>
+                    value="**/ejb/*.class"/>
             <param name="appclientjar.classes"
-            value="**/client/*.class"/>
-        <param name="war.classes"
-            value="**/servlet/*.class"/>
-        <param  name="hasWebclient" value="true"/>
+                    value="**/client/*.class"/>
+            <param name="war.classes"
+                    value="**/servlet/*.class"/>
+            <param  name="hasWebclient" value="true"/>
         </antcall>
         <javac
           srcdir="."
@@ -88,8 +88,8 @@
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
         <antcall target="delete-jdbc-stuff"/>
-    <antcall target="undeploy-common"/>
-    <delete file="client/WebTest.class"/>
+        <antcall target="undeploy-common"/>
+        <delete file="client/WebTest.class"/>
     </target>
 
     <target name="usage">
@@ -129,7 +129,7 @@
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.${poolname}.connection_leak_reclaim=true"/>
         </antcall>
-    <antcall target="asadmin-common">
+        <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.${poolname}.non_transactional_connections=true"/>

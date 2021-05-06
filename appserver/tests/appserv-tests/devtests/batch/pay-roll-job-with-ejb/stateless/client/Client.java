@@ -45,12 +45,12 @@ public class Client {
     public void doTest() {
         try {
             (new InitialContext()).lookup("java:comp/env/ejb/GG");
-        long result = sless.submitJob();
-        System.out.println("************************************************");
-        System.out.println("******* JobID: " + result + " ******************");
-        System.out.println("************************************************");
+            long result = sless.submitJob();
+            System.out.println("************************************************");
+            System.out.println("******* JobID: " + result + " ******************");
+            System.out.println("************************************************");
             stat.addStatus("batch payroll", stat.PASS);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("batch payroll", stat.FAIL);
         }
     }

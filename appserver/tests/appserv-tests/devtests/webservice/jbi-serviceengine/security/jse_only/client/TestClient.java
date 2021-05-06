@@ -48,7 +48,7 @@ public class TestClient {
         try {
             int code = invokeServlet(url,passwd);
             report(code);
-    } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -57,9 +57,9 @@ public class TestClient {
     private int invokeServlet(String url, String userPassword) throws Exception {
         log("Invoking url = " + url+", password = " + userPassword);
         URL u = new URL(url);
-    String encoding = new sun.misc.BASE64Encoder().encode (userPassword.getBytes());
+        String encoding = new sun.misc.BASE64Encoder().encode (userPassword.getBytes());
         HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
-    c1.setRequestProperty ("Authorization", "Basic " + encoding);
+        c1.setRequestProperty ("Authorization", "Basic " + encoding);
         int code = c1.getResponseCode();
         InputStream is = c1.getInputStream();
         BufferedReader input = new BufferedReader (new InputStreamReader(is));
@@ -67,9 +67,9 @@ public class TestClient {
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.indexOf("So the RESULT OF EJB webservice IS") != -1)
-        found1 = true;
+                found1 = true;
             if(line.indexOf("[JBI-SecurityTest PrincipalSent=user PrincipalGot=user]") != -1)
-        found2 = true;
+                found2 = true;
         }
         return code;
     }

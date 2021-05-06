@@ -38,7 +38,7 @@
 <target name="setup" depends="init-common">
    <copy file="${persistence.xml}_el" tofile="${persistence.xml}"
                overwrite="true" failonerror="false"/>
-          <replace file="${persistence.xml}" token="@DBPROVIDER@" value="${persistence.provider}"/>
+              <replace file="${persistence.xml}" token="@DBPROVIDER@" value="${persistence.provider}"/>
    <antcall target="create-jdbc-persistence-connpool-common"/>
    <antcall target="create-jdbc-resource-common"/>
 </target>

@@ -36,18 +36,18 @@ public class SomeManagedBean3 extends BaseBean {
 
     @PostConstruct
     private void init3() {
-    System.out.println("In SomeManagedBean3::init3() " + this);
+        System.out.println("In SomeManagedBean3::init3() " + this);
     }
 
 
     @Interceptors(InterceptorA.class)
     public void foo3() {
-    System.out.println("In SomeManagedBean3::foo3() ");
-    verifyA("SomeManagedBean3");
+        System.out.println("In SomeManagedBean3::foo3() ");
+        verifyA("SomeManagedBean3");
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In SomeManagedBean3::destroy() ");
+        System.out.println("In SomeManagedBean3::destroy() ");
     }
 }

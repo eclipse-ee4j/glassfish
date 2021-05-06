@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="-source 1.1.2 ${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
   <target name="build" depends="init-common, clean">

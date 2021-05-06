@@ -75,7 +75,7 @@ public class MessageBean implements MessageListener {
             QueueSender sender = session.createSender(queue);
             TextMessage tmessage = session.createTextMessage();
             tmessage.setText("mdb() invoked. Interceptor count: "
-            + BaseInterceptor.getCount());
+                    + BaseInterceptor.getCount());
             System.out.println("Sending message");
             sender.send(tmessage);
             System.out.println("message sent");

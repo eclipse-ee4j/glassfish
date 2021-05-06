@@ -68,7 +68,7 @@ public class WebTest {
         stat.addDescription("Unit test for issue 9481");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-        stat.printSummary();
+            stat.printSummary();
     }
 
     public void doTest() {

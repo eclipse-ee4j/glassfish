@@ -34,15 +34,15 @@
       </resource-ref>
       <resource-ref>
         <res-ref-name>jms/SampleQueue</res-ref-name>
-    <jndi-name>jms/SampleQueue</jndi-name>
+        <jndi-name>jms/SampleQueue</jndi-name>
       </resource-ref>
       <resource-ref>
         <res-ref-name>jms/jms-jdbc-res-1</res-ref-name>
-    <jndi-name>jms/jms-jdbc-res-1</jndi-name>
+        <jndi-name>jms/jms-jdbc-res-1</jndi-name>
       </resource-ref>
       <resource-ref>
         <res-ref-name>test-res-3</res-ref-name>
-    <jndi-name>test-res-3</jndi-name>
+        <jndi-name>test-res-3</jndi-name>
       </resource-ref>
   </ejb>
   </enterprise-beans>

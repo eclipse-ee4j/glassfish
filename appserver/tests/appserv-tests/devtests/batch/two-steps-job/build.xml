@@ -59,8 +59,8 @@
     </target>
 
     <target name="copy-batch-sql" depends="build">
-        <echo message="***** Copy ${batch_derby.sql} to Target dir: ${env.S1AS_HOME}/lib"/>
-        <copy file="${batch_derby.sql}" todir="${env.S1AS_HOME}/lib"/>
+            <echo message="***** Copy ${batch_derby.sql} to Target dir: ${env.S1AS_HOME}/lib"/>
+            <copy file="${batch_derby.sql}" todir="${env.S1AS_HOME}/lib"/>
     </target>
 
     <target name="deploy"

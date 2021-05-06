@@ -35,10 +35,10 @@
    &commonSecurity;
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all standalone programmatic login tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all standalone programmatic login tests)
+        </echo>
     </target>
 
     <target name="all" depends="build, setup, deploy,run, undeploy, unsetup">

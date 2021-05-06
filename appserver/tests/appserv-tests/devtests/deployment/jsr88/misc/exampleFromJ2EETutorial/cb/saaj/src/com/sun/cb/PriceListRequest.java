@@ -98,7 +98,7 @@ public class PriceListRequest {
 
             PriceItemBean[] priceItems = new PriceItemBean[items.size()];
             int i=0;
-                  for (Iterator it=items.iterator(); it.hasNext(); ) {
+                              for (Iterator it=items.iterator(); it.hasNext(); ) {
               priceItems[i] = (PriceItemBean)it.next();
               i++;
             }

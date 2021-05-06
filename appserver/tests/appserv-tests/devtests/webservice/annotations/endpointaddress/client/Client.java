@@ -30,10 +30,10 @@ public class Client {
 
 
         public static void main(String[] args) {
-        stat.addDescription("endpointaddress");
+            stat.addDescription("endpointaddress");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("endpointaddress");
+            stat.printSummary("endpointaddress");
        }
 
        public void doTest(String[] args) {

@@ -13,8 +13,8 @@ Drop table sql_trace;
 
 CREATE TABLE sql_trace (
     classname        char(100),
-    methodname         char(100),
-    args         char(200)
+    methodname             char(100),
+    args             char(200)
 );
 
 Drop table null_entry_table;
@@ -29,7 +29,7 @@ Drop table expected_sql_trace;
 CREATE TABLE expected_sql_trace (
     classname        char(100),
     methodname       char(100),
-    args         char(200)
+    args             char(200)
 );
 
 

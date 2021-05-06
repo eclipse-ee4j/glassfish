@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="-source 1.1.2 ${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
   <target name="compile" depends="">
@@ -43,7 +43,7 @@
       <param name="src" value="client"/>
     </antcall>
     <antcall target="compile-common">
-    <param name="src" value="mejbclient"/>
+        <param name="src" value="mejbclient"/>
     </antcall>
     <antcall target="compile-common">
       <param name="src" value="ejb"/>
@@ -88,14 +88,14 @@
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="GoogleMapping_appclient.xml"/>
+         file="GoogleMapping_appclient.xml"/>
     <antcall target="appclient-jar-common">
       <param name="appclientjar.classes"
              value="GoogleMapping_appclient.xml,META-INF/wsdl/**,google/*.class" />
 
     </antcall>
     <copy todir="${build.classes.dir}"
-     file="GoogleMapping_ejb.xml"/>
+         file="GoogleMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
       <param name="ejbjar.classes"
              value="GoogleMapping_ejb.xml,META-INF/wsdl/**,googleejb/*.class" />
@@ -109,9 +109,9 @@
     <copy file="mejbclient/sun-application-client.xml" tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
     <mkdir dir="${assemble.dir}"/>
     <jar destfile="${assemble.dir}/mejbclient.jar" manifest="mejbclient/MANIFEST.MF">
-    <fileset dir="${build.classes.dir}"
-        includes="google/MEJBClient.class META-INF/application-client.xml META-INF/sun-application-client.xml"
-    />
+        <fileset dir="${build.classes.dir}"
+                includes="google/MEJBClient.class META-INF/application-client.xml META-INF/sun-application-client.xml"
+        />
     </jar>
    </target>
 
@@ -131,13 +131,13 @@
     </target>
 
     <target name="run-mejbclient" depends="init-common">
-      <exec executable="${APPCLIENT}" failonerror="true">
-            <arg line="-client ${assemble.dir}/mejbclient.jar"/>
-        <arg line="-textauth"/>
-        <arg line="-user j2ee"/>
-            <arg line="-password j2ee"/>
-            <arg line="${appclient.application.args}"/>
-      </exec>
+          <exec executable="${APPCLIENT}" failonerror="true">
+                    <arg line="-client ${assemble.dir}/mejbclient.jar"/>
+                <arg line="-textauth"/>
+                <arg line="-user j2ee"/>
+                    <arg line="-password j2ee"/>
+                    <arg line="${appclient.application.args}"/>
+          </exec>
     </target>
 
     <target name="run" depends="init-common">
@@ -171,10 +171,10 @@
   </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes the WebServices test)
-            ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+                        ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
+        </echo>
     </target>
 </project>

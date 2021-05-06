@@ -34,7 +34,7 @@ public class HelloBean implements SessionBean {
     public HelloBean() {}
 
     public void ejbCreate(String str) throws RemoteException {
-    System.out.println("In ejbCreate !!");
+        System.out.println("In ejbCreate !!");
         this.str = str;
         try {
             Context context = new InitialContext();
@@ -143,7 +143,7 @@ public class HelloBean implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public void ejbRemove() throws RemoteException {}

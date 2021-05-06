@@ -70,30 +70,30 @@ public class HelloEJB implements Hello  {
 
     jakarta.transaction.UserTransaction ut;
 
-    @EJB private SlessBusiness    refSless_1;
-    @EJB private SlessBusiness    refSless_2;
-    @EJB private SlessBusiness2    refSless2_1;
-    @EJB private SlessBusiness2    refSless2_2;
+    @EJB private SlessBusiness        refSless_1;
+    @EJB private SlessBusiness        refSless_2;
+    @EJB private SlessBusiness2        refSless2_1;
+    @EJB private SlessBusiness2        refSless2_2;
 
-    @EJB private SfulBusiness    refSful_1;
-    @EJB private SfulBusiness    refSful_2;
-    @EJB private SfulBusiness2    refSful2_1;
-    @EJB private SfulBusiness2    refSful2_2;
+    @EJB private SfulBusiness        refSful_1;
+    @EJB private SfulBusiness        refSful_2;
+    @EJB private SfulBusiness2        refSful2_1;
+    @EJB private SfulBusiness2        refSful2_2;
 
-    @EJB private DummySlessRemote    refRemoteSless_1;
-    @EJB private DummySlessRemote    refRemoteSless_2;
-    @EJB private DummySlessRemote2    refRemoteSless2_1;
-    @EJB private DummySlessRemote2    refRemoteSless2_2;
+    @EJB private DummySlessRemote        refRemoteSless_1;
+    @EJB private DummySlessRemote        refRemoteSless_2;
+    @EJB private DummySlessRemote2        refRemoteSless2_1;
+    @EJB private DummySlessRemote2        refRemoteSless2_2;
 
-    @EJB private DummyRemote    refRemoteSful_1;
-    @EJB private DummyRemote    refRemoteSful_2;
-    @EJB private DummyRemote2    refRemoteSful2_1;
-    @EJB private DummyRemote2    refRemoteSful2_2;
+    @EJB private DummyRemote        refRemoteSful_1;
+    @EJB private DummyRemote        refRemoteSful_2;
+    @EJB private DummyRemote2        refRemoteSful2_1;
+    @EJB private DummyRemote2        refRemoteSful2_2;
 
     @PostConstruct
     public void create() {
 
-    try {
+        try {
 
             slessBusiness2.foo();
             sfulBusiness2.foo();
@@ -114,10 +114,10 @@ public class HelloEJB implements Hello  {
             sfulRemoteBusiness2.bar();
 
             sful = sfulHome.create();
-        System.out.println("Created local sful objs via homes.");
+            System.out.println("Created local sful objs via homes.");
 
             sless = slessHome.create();
-        System.out.println("Created local sless objs via homes.");
+            System.out.println("Created local sless objs via homes.");
 
             // There are two create<METHOD> methods with the same signature.
             // The first is mapped to an @Init  method that ignores its input
@@ -143,18 +143,18 @@ public class HelloEJB implements Hello  {
             }
 
             slessRemote = slessRemoteHome.create();
-        System.out.println("Created remote sless objs via homes.");
+            System.out.println("Created remote sless objs via homes.");
 
             ut = context.getUserTransaction();
 
-    System.out.println("**1** refSlessBusiness_1 : " + refSless_1);
-    System.out.println("**1** refSlessBusiness_2 : " + refSless_2);
-    System.out.println("**1** refSlessBusiness2_1 : " + refSless2_1);
-    System.out.println("**1** refSlessBusiness2_2 : " + refSless2_2);
-    System.out.println("**1** checkLocalReferences() ==> " + checkSlessLocalReferences());
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
+        System.out.println("**1** refSlessBusiness_1 : " + refSless_1);
+        System.out.println("**1** refSlessBusiness_2 : " + refSless_2);
+        System.out.println("**1** refSlessBusiness2_1 : " + refSless2_1);
+        System.out.println("**1** refSlessBusiness2_2 : " + refSless2_2);
+        System.out.println("**1** checkLocalReferences() ==> " + checkSlessLocalReferences());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @PrePassivate public void prePassivate() {
@@ -165,8 +165,8 @@ public class HelloEJB implements Hello  {
     @PostActivate public void postActivate() {
         System.out.println("In HelloEJB::postActivate");
 
-    // @@@ temporary workaround until UserTransaction serialization is fixed
-    ut = context.getUserTransaction();
+        // @@@ temporary workaround until UserTransaction serialization is fixed
+        ut = context.getUserTransaction();
 
         activateCount++;
     }
@@ -296,59 +296,59 @@ public class HelloEJB implements Hello  {
     private void warmup(int type, boolean tx, boolean businessView)
         throws Exception {
 
-    // get Hotspot warmed up
-    Common bean = pre(type, tx, businessView);
-    CommonRemote beanRemote = preRemote(type, tx, businessView);
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.requiresNew();
+        // get Hotspot warmed up
+        Common bean = pre(type, tx, businessView);
+        CommonRemote beanRemote = preRemote(type, tx, businessView);
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.requiresNew();
             beanRemote.requiresNew();
-        bean.notSupported();
+            bean.notSupported();
             beanRemote.notSupported();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.required();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.required();
             beanRemote.required();
-        if ( tx ) {
-        bean.mandatory();
+            if ( tx ) {
+                bean.mandatory();
                 beanRemote.mandatory();
             } else {
-        bean.never();
+                bean.never();
                 beanRemote.never();
             }
-        bean.supports();
+            bean.supports();
             beanRemote.supports();
-    }
-    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        }
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
     }
 
     private Common pre(int type, boolean tx, boolean businessView)
     {
-    if ( tx ) try { ut.begin(); } catch ( Exception ex ) {
-        ex.printStackTrace();
-    }
+        if ( tx ) try { ut.begin(); } catch ( Exception ex ) {
+                ex.printStackTrace();
+        }
 
-    if ( type == Common.STATELESS )
+        if ( type == Common.STATELESS )
             return businessView ? slessBusiness : sless;
-    else
+        else
             return businessView ? sfulBusiness : sful;
     }
 
     private CommonRemote preRemote(int type, boolean tx, boolean businessView)
     {
-    if ( type == Common.STATELESS ) {
-        return businessView ? slessRemoteBusiness : slessRemote;
+        if ( type == Common.STATELESS ) {
+            return businessView ? slessRemoteBusiness : slessRemote;
         } else {
-        return businessView ? sfulRemoteBusiness : sfulRemote;
+            return businessView ? sfulRemoteBusiness : sfulRemote;
         }
     }
 
 
     private float post(long begin, long end, boolean tx)
     {
-    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {
-        ex.printStackTrace();
-        }
-    return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {
+                ex.printStackTrace();
+            }
+        return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
     }
 
     public float requiresNew(int type, boolean tx)
@@ -408,7 +408,7 @@ public class HelloEJB implements Hello  {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float required(int type, boolean tx)
@@ -439,7 +439,7 @@ public class HelloEJB implements Hello  {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float mandatory(int type, boolean tx)
@@ -470,7 +470,7 @@ public class HelloEJB implements Hello  {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float never(int type, boolean tx)
@@ -500,7 +500,7 @@ public class HelloEJB implements Hello  {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float supports(int type, boolean tx)
@@ -531,7 +531,7 @@ public class HelloEJB implements Hello  {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     // assumes lo1 and lo2 are do not have same client identity
@@ -607,7 +607,7 @@ public class HelloEJB implements Hello  {
         if( md == null ) {
             throw new EJBException("null md");
         }
-    System.out.println("md = " + md);
+        System.out.println("md = " + md);
 
         HomeHandle hh = home.getHomeHandle();
         if( hh == null ) {

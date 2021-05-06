@@ -23,7 +23,7 @@ import jakarta.resource.spi.work.WorkManager;
 
 /**
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class MyWork implements Work {
 

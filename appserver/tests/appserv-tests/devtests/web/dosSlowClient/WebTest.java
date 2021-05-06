@@ -18,30 +18,30 @@ import com.sun.appserv.test.util.results.SimpleReporterAdapter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class WebTest extends Thread{
-    private static String TEST_NAME = "dos-slow-client";
+        private static String TEST_NAME = "dos-slow-client";
 
-    public static final AtomicInteger count = new AtomicInteger();
+        public static final AtomicInteger count = new AtomicInteger();
 
-    static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests", TEST_NAME);
+        static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests", TEST_NAME);
 
-    public static void main(String args[]) throws InterruptedException {
+        public static void main(String args[]) throws InterruptedException {
 
-        // The stat reporter writes out the test info and results
-        // into the top-level quicklook directory during a run.
+                // The stat reporter writes out the test info and results
+                // into the top-level quicklook directory during a run.
 
-        stat.addDescription("Slow client bytes write");
+                stat.addDescription("Slow client bytes write");
 
-        String host = args[0];
-        int port = Integer.parseInt(args[1]);
-        int num = Integer.parseInt(args[2]);
+                String host = args[0];
+                int port = Integer.parseInt(args[1]);
+                int num = Integer.parseInt(args[2]);
 
-        for (int i=0; i < num; i++) {
-            new SlowClient(host, port, new WebTest());
+                for (int i=0; i < num; i++) {
+                        new SlowClient(host, port, new WebTest());
+                }
+                Thread.sleep(30000);
+
+                stat.addStatus(TEST_NAME, count.get() == num ? stat.PASS : stat.FAIL);
+                stat.printSummary(TEST_NAME);
         }
-        Thread.sleep(30000);
-
-        stat.addStatus(TEST_NAME, count.get() == num ? stat.PASS : stat.FAIL);
-        stat.printSummary(TEST_NAME);
-    }
 
 }

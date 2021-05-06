@@ -24,10 +24,10 @@ import java.rmi.RemoteException;
   */
   public interface SayHello  extends Remote {
 
-      /*
-       * @return a hello string
-       */
-       public String sayHello(String name) throws RemoteException;
+          /*
+           * @return a hello string
+           */
+           public String sayHello(String name) throws RemoteException;
 
   }
 

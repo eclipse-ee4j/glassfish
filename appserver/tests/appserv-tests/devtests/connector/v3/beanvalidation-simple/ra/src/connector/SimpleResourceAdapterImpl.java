@@ -45,7 +45,7 @@ import org.hibernate.validator.constraints.*;
 /**
  * This is a sample resource adapter
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class SimpleResourceAdapterImpl
 implements ResourceAdapter, java.io.Serializable {
@@ -75,12 +75,12 @@ implements ResourceAdapter, java.io.Serializable {
 
         //testing creat timer
         Timer timer = null;
-      try{
-          timer = ctx.createTimer();
-      } catch(UnavailableException ue) {
-          System.out.println("Error");
-          throw new ResourceAdapterInternalException("Error form bootstrap");
-      }
+          try{
+              timer = ctx.createTimer();
+          } catch(UnavailableException ue) {
+              System.out.println("Error");
+              throw new ResourceAdapterInternalException("Error form bootstrap");
+          }
         debug("004. Simple RA start...");
 
         debug("005. Simple RA start...");

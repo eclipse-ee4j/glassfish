@@ -53,7 +53,7 @@ public class NegClient extends AdminBaseDevTest {
             if (!ret.returnValue && ret.err.contains(expectedErr)) {
                 stat.addStatus("ejb-cli-negative-deploy", stat.PASS);
             } else {
-                  stat.addStatus("ejb-cli-negative-deploy", stat.FAIL);
+                      stat.addStatus("ejb-cli-negative-deploy", stat.FAIL);
             }
 
             //System.out.println(ret);

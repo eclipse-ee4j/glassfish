@@ -25,7 +25,7 @@ import jakarta.ejb.Stateless;
 public class HelloEJB implements Hello {
 
     public String sayHello(String who) {
-    System.out.println("**** EJB Called");
+        System.out.println("**** EJB Called");
         return "WebSvcTest-Hello " + who;
     }
 }

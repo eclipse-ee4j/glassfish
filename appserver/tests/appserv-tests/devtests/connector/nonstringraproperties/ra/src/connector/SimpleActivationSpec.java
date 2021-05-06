@@ -24,7 +24,7 @@ import jakarta.resource.spi.ResourceAdapter;
  * so that the app server can instantiate and configure
  * it at the runtime.
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class SimpleActivationSpec
     implements ActivationSpec, java.io.Serializable {

@@ -45,11 +45,11 @@ post_test_run(){
 }
 
 get_test_target(){
-    case ${1} in
-        webservice_all )
-            TARGET=all
-            export TARGET;;
-    esac
+        case ${1} in
+                webservice_all )
+                        TARGET=all
+                        export TARGET;;
+        esac
 }
 
 OPT=${1}

@@ -54,34 +54,34 @@ public class Client {
         stat.addDescription("Statement Caching Hit miss tests");
 
         if (simpleBMP.testHit() && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_HITS) == 1 && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_MISSES) == 5) {
-        System.out.println("HIT pass");
+            System.out.println("HIT pass");
             stat.addStatus(" Statement Caching  -  (Hit): ", stat.PASS);
         } else {
-        System.out.println("HIT fail");
+            System.out.println("HIT fail");
             stat.addStatus(" Statement Caching  -  (Hit): ", stat.FAIL);
         }
 
         if (simpleBMP.testMiss() && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_HITS) == 6 && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_MISSES) == 7) {
-        System.out.println("MISS pass");
+            System.out.println("MISS pass");
             stat.addStatus(" Statement Caching  -  (Miss): ", stat.PASS);
         } else {
-        System.out.println("MISS fail");
+            System.out.println("MISS fail");
             stat.addStatus(" Statement Caching  -  (Miss): ", stat.FAIL);
         }
 
         if (simpleBMP.testHitColumnIndexes() && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_HITS) == 7 && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_MISSES) == 12) {
-        System.out.println("columnIndexes pass");
+            System.out.println("columnIndexes pass");
             stat.addStatus(" Statement Caching  -  (hit columnIndexes) : ", stat.PASS);
         } else {
-        System.out.println("columnIndexes fail");
+            System.out.println("columnIndexes fail");
             stat.addStatus(" Statement Caching  -  (hit columnIndexes) : ", stat.FAIL);
         }
 
         if (simpleBMP.testHitColumnNames() && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_HITS) == 8 && getMonitorablePropertyOfConnectionPool("jdbc/jdbc-stmtcaching_hit_miss-pool",NUM_MISSES) == 17) {
-        System.out.println("columnNames pass");
+            System.out.println("columnNames pass");
             stat.addStatus(" Statement Caching  -  (hit columnNames) : ", stat.PASS);
         } else {
-        System.out.println("columnNames fail");
+            System.out.println("columnNames fail");
             stat.addStatus(" Statement Caching  -  (hit columnNames) : ", stat.FAIL);
         }
         stat.printSummary();
@@ -89,20 +89,20 @@ public class Client {
 
     public int getMonitorablePropertyOfConnectionPool(String poolName, String monitoringStat) throws Exception {
 
-    final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
+        final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
-    final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
-    final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
+        final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
+        final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName =
                 new ObjectName("amx:pp=/mon/server-mon[server],type=jdbcra-mon,name=resources/" + poolName);
 
-    javax.management.openmbean.CompositeDataSupport returnValue =
-        (javax.management.openmbean.CompositeDataSupport)
-        connection.getAttribute(objectName, monitoringStat);
+        javax.management.openmbean.CompositeDataSupport returnValue =
+                (javax.management.openmbean.CompositeDataSupport)
+                connection.getAttribute(objectName, monitoringStat);
 
-    System.out.println(">>>" + monitoringStat + "=" + returnValue.get("count"));
+        System.out.println(">>>" + monitoringStat + "=" + returnValue.get("count"));
         return new Integer(returnValue.get("count").toString());
     }
 

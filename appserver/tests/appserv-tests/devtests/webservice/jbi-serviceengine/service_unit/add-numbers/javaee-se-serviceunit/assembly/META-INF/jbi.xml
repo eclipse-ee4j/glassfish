@@ -28,7 +28,7 @@
       <name>client_web_calculator_service_assembly</name>
       <description>Client web calculator service assembly</description>
     </identification>
-    <service-unit>
+        <service-unit>
       <identification>
          <name>calc-web-client</name>
          <description>provider service</description>

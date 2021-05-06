@@ -83,33 +83,33 @@
 
     </target>
 
-    <target name="install" depends="init-common">
-        <copy file="${env.S1AS_HOME}/jbi/sharedlibraries/wsdl/installer/wsdlsl.jar" todir="${servicemix-autodeploy-dir}"/>
-        <echo message="Installing SunWSDLSharedLibrary..."/>
-        <sleep seconds="10"/>
-        <copy file="${env.S1AS_HOME}/jbi/components/javaeeserviceengine/installer/appserv-jbise.jar" todir="${servicemix-autodeploy-dir}"/>
-        <echo message="Installing Java EE Service Engine..."/>
-        <sleep seconds="15"/>
-    </target>
+        <target name="install" depends="init-common">
+                <copy file="${env.S1AS_HOME}/jbi/sharedlibraries/wsdl/installer/wsdlsl.jar" todir="${servicemix-autodeploy-dir}"/>
+                <echo message="Installing SunWSDLSharedLibrary..."/>
+                <sleep seconds="10"/>
+                <copy file="${env.S1AS_HOME}/jbi/components/javaeeserviceengine/installer/appserv-jbise.jar" todir="${servicemix-autodeploy-dir}"/>
+                <echo message="Installing Java EE Service Engine..."/>
+                <sleep seconds="15"/>
+        </target>
 
-    <target name="uninstall" depends="init-common">
-        <delete file="${servicemix-autodeploy-dir}/appserv-jbise.jar"/>
-        <echo message="Uninstalling Java EE Service Engine..."/>
-        <sleep seconds="10"/>
-        <delete file="${servicemix-autodeploy-dir}/wsdlsl.jar"/>
-        <echo message="Uninstalling SunWSDLSharedLibrary..."/>
-        <sleep seconds="10"/>
-    </target>
+        <target name="uninstall" depends="init-common">
+                <delete file="${servicemix-autodeploy-dir}/appserv-jbise.jar"/>
+                <echo message="Uninstalling Java EE Service Engine..."/>
+                <sleep seconds="10"/>
+                <delete file="${servicemix-autodeploy-dir}/wsdlsl.jar"/>
+                <echo message="Uninstalling SunWSDLSharedLibrary..."/>
+                <sleep seconds="10"/>
+        </target>
 
-    <target name="deploy" depends="assemble">
-        <copy file="${basedir}/service_assembly/${jbi-component-su-assembly}.zip" todir="${servicemix-autodeploy-dir}"/>
-        <sleep seconds="15"/>
-    </target>
+        <target name="deploy" depends="assemble">
+                <copy file="${basedir}/service_assembly/${jbi-component-su-assembly}.zip" todir="${servicemix-autodeploy-dir}"/>
+                <sleep seconds="15"/>
+        </target>
 
-    <target name="undeploy">
-        <delete file="${servicemix-autodeploy-dir}/${jbi-component-su-assembly}.zip"/>
-        <sleep seconds="15"/>
-    </target>
+        <target name="undeploy">
+                <delete file="${servicemix-autodeploy-dir}/${jbi-component-su-assembly}.zip"/>
+                <sleep seconds="15"/>
+        </target>
 
     <target name="compile" depends="init-common">
         <antcall target="compile-common">

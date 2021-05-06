@@ -38,31 +38,31 @@
     </target>
 
     <target name="clean-lib" depends="init-common">
-    <delete file="${env.S1AS_HOME}/lib/TestSharedLib1.jar"/>
-    <delete dir="./lib"/>
+        <delete file="${env.S1AS_HOME}/lib/TestSharedLib1.jar"/>
+        <delete dir="./lib"/>
         <antcall target="startDomain"/>
     </target>
 
     <target name="init-sharedlib" depends="init-common">
         <antcall target="stopDomain"/>
         <mkdir dir="lib"/>
-      <javac srcdir="./interface"
-            destdir="./interface"
-            classpath="${s1astest.classpath}"
-            debug="on"
-            failonerror="true"/>
-    <jar destfile="lib/CommonInterface.jar">
-        <fileset dir="./interface"/>
-    </jar>
-      <javac srcdir="./sharedlib1"
-            destdir="./sharedlib1"
-            classpath="${s1astest.classpath};./interface"
-            debug="on"
-            failonerror="true"/>
-    <jar destfile="${env.S1AS_HOME}/lib/TestSharedLib1.jar">
-        <fileset dir="./sharedlib1"/>
-        <fileset dir="./interface"/>
-    </jar>
+          <javac srcdir="./interface"
+                    destdir="./interface"
+                    classpath="${s1astest.classpath}"
+                    debug="on"
+                    failonerror="true"/>
+        <jar destfile="lib/CommonInterface.jar">
+            <fileset dir="./interface"/>
+        </jar>
+          <javac srcdir="./sharedlib1"
+                    destdir="./sharedlib1"
+                    classpath="${s1astest.classpath};./interface"
+                    debug="on"
+                    failonerror="true"/>
+        <jar destfile="${env.S1AS_HOME}/lib/TestSharedLib1.jar">
+            <fileset dir="./sharedlib1"/>
+            <fileset dir="./interface"/>
+        </jar>
         <sleep seconds="15" />
         <antcall target="startDomain"/>
     </target>
@@ -81,11 +81,11 @@
             <param name="hasWebclient" value="yes"/>
             <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
-    <mkdir dir="${env.APS_HOME}/build/module/archive/META-INF"/>
-    <copy file="./application.xml" todir="${env.APS_HOME}/build/module/archive/META-INF"/>
-    <jar destfile="${assemble.dir}/${appname}App.ear">
-        <fileset dir="${env.APS_HOME}/build/module/archive"/>
-    </jar>
+        <mkdir dir="${env.APS_HOME}/build/module/archive/META-INF"/>
+        <copy file="./application.xml" todir="${env.APS_HOME}/build/module/archive/META-INF"/>
+        <jar destfile="${assemble.dir}/${appname}App.ear">
+            <fileset dir="${env.APS_HOME}/build/module/archive"/>
+        </jar>
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="WebTest.java"/>
     </target>

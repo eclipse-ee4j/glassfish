@@ -29,7 +29,7 @@
 
 <project name="autodeploy-simple" default="all" basedir=".">
 
-     &commonBuild;
+         &commonBuild;
         &autodeployUtil;
 
     <property name="testName" value="simpleautodeploy"/>

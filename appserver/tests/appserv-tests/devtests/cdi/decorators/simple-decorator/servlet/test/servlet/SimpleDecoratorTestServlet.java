@@ -72,7 +72,7 @@ public class SimpleDecoratorTestServlet extends HttpServlet {
 
         if (RequiresNewTransactionInterceptor.aroundInvokeCalled)
             msg += "RequiresNew TransactionInterceptor called when " +
-                    "it shouldn't have been called";
+                            "it shouldn't have been called";
 
         TransactionInterceptor.clear();
         //invoke shopping cart bean. This should result in an invocation on
@@ -80,10 +80,10 @@ public class SimpleDecoratorTestServlet extends HttpServlet {
         sc.addItem("Test Item");
         if (!RequiresNewTransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke in requires new " +
-                    "transaction interceptor not called";
+                            "transaction interceptor not called";
         if (RequiresNewTransactionInterceptor.aroundInvokeInvocationCount != 1)
             msg += "Business method requires new interceptor invocation on " +
-                    "method-level interceptor annotation count not expected. "
+                            "method-level interceptor annotation count not expected. "
                     + "expected =1, actual="
                     + RequiresNewTransactionInterceptor.aroundInvokeInvocationCount;
         if (!RequiresNewTransactionInterceptor.errorMessage.trim().equals(""))
@@ -92,7 +92,7 @@ public class SimpleDecoratorTestServlet extends HttpServlet {
         //TransactionInterceptor should not have been called
         if (TransactionInterceptor.aroundInvokeCalled)
             msg += "TranscationInterceptor aroundInvoke called when a requiresnew" +
-                    "transaction interceptor should have been called";
+                            "transaction interceptor should have been called";
 
         //Test decorators
         System.out.println(testAccount.getBalance());

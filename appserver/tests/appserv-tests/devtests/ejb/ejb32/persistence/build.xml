@@ -39,9 +39,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes set of ejb-ejb32-persistence tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes set of ejb-ejb32-persistence tests)
+        </echo>
     </target>
 </project>

@@ -96,7 +96,7 @@ public class TimerSessionEJB implements TimerSession
             } catch(Exception e) {
                 e.printStackTrace();
             }
-    }
+        }
 
     }
 

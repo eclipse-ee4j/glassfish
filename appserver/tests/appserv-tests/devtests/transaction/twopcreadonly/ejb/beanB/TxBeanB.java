@@ -203,7 +203,7 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
             System.out.println("Got DB Connection Successfully...");
         } catch (Exception ex) {
             System.out.println("Exception in getConnection: " + ex.toString());
-        ex.printStackTrace();
+            ex.printStackTrace();
         }
         return con;
     }

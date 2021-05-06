@@ -86,7 +86,7 @@ public class Client {
             System.exit(-1);
         }
 
-        return;
+            return;
     }
 
     private static int goGet(String host, int port, String contextPath)

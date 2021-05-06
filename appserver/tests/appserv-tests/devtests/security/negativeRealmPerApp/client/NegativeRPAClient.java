@@ -46,23 +46,23 @@ public class NegativeRPAClient {
 
     public String doTest() {
 
-    NegativeRPARemote hr=null;
+        NegativeRPARemote hr=null;
         String res=null;
         Context ic = null;
         LoginContext lc=null;
         NegativeRPAHome home=null;
         String testId = "Sec::NegativeTest-Realm per app";
-        try{
+            try{
             stat.addDescription("Security::NegativeTest - Realm per app");
-        ic = new InitialContext();
+            ic = new InitialContext();
             // create EJB using factory from container
             java.lang.Object objref = ic.lookup("negativeRPALoginBean");
 
-        System.err.println("Looked up home!!");
+            System.err.println("Looked up home!!");
 
             home = (NegativeRPAHome)PortableRemoteObject.narrow(
-                       objref, NegativeRPAHome.class);
-        System.err.println("Narrowed home!!");
+                                           objref, NegativeRPAHome.class);
+            System.err.println("Narrowed home!!");
 
             hr = home.create("LizHurley");
             System.out.println("Got the EJB!!");

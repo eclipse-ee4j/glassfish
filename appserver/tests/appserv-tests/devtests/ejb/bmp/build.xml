@@ -91,8 +91,8 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
+        <echo>
+                Usage:
                      ant all (Executes all the ejb-bmp tests)
 
                      ant finder
@@ -104,6 +104,6 @@
                      ant txtests
                      ant thread_pool_id
 
-    </echo>
+        </echo>
     </target>
 </project>

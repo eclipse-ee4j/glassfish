@@ -88,9 +88,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the jms tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the jms tests)
+        </echo>
     </target>
 </project>

@@ -37,7 +37,7 @@ public class Client extends HttpServlet {
        @Resource(mappedName="jdbc/__default") private DataSource ds;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
@@ -45,25 +45,25 @@ public class Client extends HttpServlet {
               throws jakarta.servlet.ServletException {
             UserTransaction ut = null;
             // Create Table with name CUSTOMER_rb1. This name will be used in the EJB
-        String tableName = "CUSTOMER_rb1";
+            String tableName = "CUSTOMER_rb1";
             String[] names = {"Vikas", "VikasAwasthi"};
             String[] emails= {"vikas@sun.com", "VikasA@sun.com"};
             try {
-            Connection con = ds.getConnection();
-            createTable(con, tableName);
+                Connection con = ds.getConnection();
+                createTable(con, tableName);
                 ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
                 ut.begin();
 
-        updateTable(con, tableName, names[1], emails[1]);
+                updateTable(con, tableName, names[1], emails[1]);
                 System.out.println(" Service is :" + service);
-        Hello port = service.getHelloEJBPort();
+                Hello port = service.getHelloEJBPort();
 
-        String ret = port.sayHello("Appserver Tester !");
+                String ret = port.sayHello("Appserver Tester !");
                 System.out.println("Return value from webservice:"+ret);
-        System.out.println("**** rollbacking transaction");
-        ut.rollback();
+                System.out.println("**** rollbacking transaction");
+                ut.rollback();
 
-        if(isDataPresent(con, tableName)) {
+                if(isDataPresent(con, tableName)) {
                     ret += "FAILED";
                 }
 
@@ -80,30 +80,30 @@ public class Client extends HttpServlet {
                 out.println("[" + ret + "]");
                 out.println("</body>");
                 out.println("</html>");
-        dropTable(con, tableName);
+                dropTable(con, tableName);
             } catch(Exception e) {
                 e.printStackTrace();
-        }
+            }
        }
 
        // use this table in the EJB webservice
        private void createTable(Connection con, String tableName) throws Exception {
-        // autocommit is made true so that the table is created immediately
-        boolean autoCommit = con.getAutoCommit();
-        con.setAutoCommit(true);
-        System.out.println("**** auto commit = " + con.getAutoCommit());
+            // autocommit is made true so that the table is created immediately
+            boolean autoCommit = con.getAutoCommit();
+            con.setAutoCommit(true);
+            System.out.println("**** auto commit = " + con.getAutoCommit());
             PreparedStatement pStmt =
             con.prepareStatement("CREATE TABLE "+tableName+" (NAME VARCHAR(30) NOT NULL PRIMARY KEY, EMAIL VARCHAR(30))");
             pStmt.executeUpdate();
-        con.setAutoCommit(autoCommit);
+            con.setAutoCommit(autoCommit);
        }
 
        private void dropTable(Connection con, String tableName) throws Exception {
-        boolean autoCommit = con.getAutoCommit();
-        con.setAutoCommit(true);
+            boolean autoCommit = con.getAutoCommit();
+            con.setAutoCommit(true);
             PreparedStatement pStmt = con.prepareStatement("DROP TABLE "+tableName);
             pStmt.executeUpdate();
-        con.setAutoCommit(autoCommit);
+            con.setAutoCommit(autoCommit);
        }
 
        // Check whether the EJB webservice has updated the data in the table.
@@ -121,11 +121,11 @@ public class Client extends HttpServlet {
        }
 
        private void updateTable(Connection con, String tableName, String name, String email)
-        throws Exception {
-       PreparedStatement pStmt =
-        con.prepareStatement("INSERT INTO "+ tableName +" (NAME, EMAIL) VALUES(?,?)");
-       pStmt.setString(1, name);
-       pStmt.setString(2, email);
-       pStmt.executeUpdate();
+                throws Exception {
+           PreparedStatement pStmt =
+                con.prepareStatement("INSERT INTO "+ tableName +" (NAME, EMAIL) VALUES(?,?)");
+           pStmt.setString(1, name);
+           pStmt.setString(2, email);
+           pStmt.executeUpdate();
        }
 }

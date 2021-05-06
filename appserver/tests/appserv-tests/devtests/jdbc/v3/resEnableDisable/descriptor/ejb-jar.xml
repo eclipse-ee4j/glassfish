@@ -31,16 +31,16 @@
             <ejb-name>SimpleBMPEJB</ejb-name>
             <local-home>com.sun.s1asdev.jdbc.resenabledisable.ejb.SimpleBMPHome</local-home>
             <local>com.sun.s1asdev.jdbc.resenabledisable.ejb.SimpleBMP</local>
-        <ejb-class>com.sun.s1asdev.jdbc.resenabledisable.ejb.SimpleBMPBean</ejb-class>
-        <session-type>Stateless</session-type>
-        <transaction-type>Container</transaction-type>
-        <!--<persistence-type>Bean</persistence-type>
+            <ejb-class>com.sun.s1asdev.jdbc.resenabledisable.ejb.SimpleBMPBean</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+            <!--<persistence-type>Bean</persistence-type>
             <prim-key-class>java.lang.Integer</prim-key-class>
             <reentrant>False</reentrant>
             <security-identity>
                 <description></description>
                 <use-caller-identity></use-caller-identity>
-    </security-identity>-->
+        </security-identity>-->
             <resource-ref>
                 <res-ref-name>DataSource</res-ref-name>
                 <res-type>javax.sql.DataSource</res-type>

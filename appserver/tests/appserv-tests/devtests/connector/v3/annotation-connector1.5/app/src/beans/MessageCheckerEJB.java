@@ -93,22 +93,22 @@ public class MessageCheckerEJB implements SessionBean {
     }
 
     public int getMessageCount() {
-    try {
+        try {
             Connection con = getFreshConnection();
             int count1 = getCount(con);
             con.close();
 
-        /*
+            /*
             synchronized(Controls.getLockObject()) {
                 Controls.getLockObject().notify();
             }
-        */
+            */
 
             return count1;
         } catch (Exception e) {
             e.printStackTrace(System.out);
             throw new EJBException(e);
-    }
+        }
     }
 
     private int getCount(Connection con) throws SQLException {
@@ -134,10 +134,10 @@ public class MessageCheckerEJB implements SessionBean {
             Context ic = new InitialContext();
             user = (String) ic.lookup("java:comp/env/user");
             password = (String) ic.lookup("java:comp/env/password");
-        Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
-        System.out.println("CALLING INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
-        Controls.initialize();
-        System.out.println("CALLED INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]" + Controls);
+            Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
+            System.out.println("CALLING INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
+            Controls.initialize();
+            System.out.println("CALLED INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]" + Controls);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

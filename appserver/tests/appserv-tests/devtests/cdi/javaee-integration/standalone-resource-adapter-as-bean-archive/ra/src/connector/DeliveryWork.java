@@ -27,7 +27,7 @@ import jakarta.resource.spi.work.ExecutionContext;
 
 /**
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class DeliveryWork implements Work {
 

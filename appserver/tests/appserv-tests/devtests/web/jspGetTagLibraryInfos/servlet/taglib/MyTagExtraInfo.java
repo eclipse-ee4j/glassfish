@@ -31,7 +31,7 @@ public class MyTagExtraInfo extends TagExtraInfo {
             vms[0] = new ValidationMessage(null, "Wrong number of tsglibs");
         }
 
-    return vms;
+        return vms;
     }
 }
 

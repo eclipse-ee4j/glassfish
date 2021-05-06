@@ -57,27 +57,27 @@ public class LifecycleListenerImpl implements LifecycleListener {
 
         ctx = event.getLifecycleEventContext();
 
-    switch(event.getEventType()) {
-        case LifecycleEvent.INIT_EVENT:
-        onInitTask();
-          break;
+        switch(event.getEventType()) {
+            case LifecycleEvent.INIT_EVENT:
+                onInitTask();
+                  break;
 
-        case LifecycleEvent.STARTUP_EVENT:
-        onStartTask();
-          break;
+            case LifecycleEvent.STARTUP_EVENT:
+                onStartTask();
+                  break;
 
             case LifecycleEvent.READY_EVENT:
                 onReadyTask();
                 break;
 
-        case LifecycleEvent.SHUTDOWN_EVENT:
-        onShutdownTask();
-          break;
+            case LifecycleEvent.SHUTDOWN_EVENT:
+                onShutdownTask();
+                  break;
 
-        case LifecycleEvent.TERMINATION_EVENT:
-        onTerminationTask();
-          break;
-    }
+            case LifecycleEvent.TERMINATION_EVENT:
+                onTerminationTask();
+                  break;
+        }
 
     }
 

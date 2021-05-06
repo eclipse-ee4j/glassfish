@@ -56,20 +56,20 @@ public class SimpleServlet extends HttpServlet {
         SimpleBMP convalBMP = simpleBMPHome.create();
 
         if (convalBMP.test1()) {
-        System.out.println("Connection Creation Retry : test1 : PASS");
-        out.println("TEST:PASS");
+            System.out.println("Connection Creation Retry : test1 : PASS");
+            out.println("TEST:PASS");
         } else {
-        System.out.println("Connection Creation Retry : test1 : FAIL");
+            System.out.println("Connection Creation Retry : test1 : FAIL");
             out.println("TEST:FAIL");
         }
 
-    } catch(NamingException ne) {
-        ne.printStackTrace();
-    } catch(CreateException e) {
-        e.printStackTrace();
+        } catch(NamingException ne) {
+            ne.printStackTrace();
+        } catch(CreateException e) {
+            e.printStackTrace();
         } finally {
-        out.println("END_OF_TEST");
-        out.flush();
-    }
+            out.println("END_OF_TEST");
+            out.flush();
+        }
     }
 }

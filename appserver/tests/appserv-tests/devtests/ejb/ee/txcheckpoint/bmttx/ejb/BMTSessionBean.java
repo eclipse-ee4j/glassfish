@@ -39,11 +39,11 @@ public class BMTSessionBean
 
     private int activateCount;
     private int passivateCount;
-    private int    count;
+    private int        count;
 
     private SessionContext              sessionCtx;
     private String                      sfsbName;
-    private UserTransaction        userTx;
+    private UserTransaction                userTx;
 
     public void ejbCreate(String sfsbName) {
         System.out.println ("In SFSB.ejbCreate() for name -> " + sfsbName);
@@ -70,50 +70,50 @@ public class BMTSessionBean
     }
 
     public void startTx() {
-    try {
-        userTx = sessionCtx.getUserTransaction();
-        userTx.begin();
-    } catch (Exception ex) {
-        throw new EJBException(ex.toString());
-    }
+        try {
+            userTx = sessionCtx.getUserTransaction();
+            userTx.begin();
+        } catch (Exception ex) {
+            throw new EJBException(ex.toString());
+        }
     }
 
     public void commitTx() {
-    try {
-        userTx.commit();
-    } catch (Exception ex) {
-        throw new EJBException(ex.toString());
-    }
+        try {
+            userTx.commit();
+        } catch (Exception ex) {
+            throw new EJBException(ex.toString());
+        }
     }
 
     public void rollbackTx() {
-    try {
-        userTx.rollback();
-    } catch (Exception ex) {
-        throw new EJBException(ex.toString());
-    }
+        try {
+            userTx.rollback();
+        } catch (Exception ex) {
+            throw new EJBException(ex.toString());
+        }
     }
 
     public void incrementCount() {
-    count++;
+        count++;
     }
 
     public int getActivateCount() {
-    return activateCount;
+        return activateCount;
     }
 
     public int getPassivateCount() {
-    return passivateCount;
+        return passivateCount;
     }
 
     public void ejbRemove() {}
 
     public void ejbActivate() {
-    activateCount++;
+        activateCount++;
     }
 
     public void ejbPassivate() {
-    passivateCount++;
+        passivateCount++;
     }
 
 }

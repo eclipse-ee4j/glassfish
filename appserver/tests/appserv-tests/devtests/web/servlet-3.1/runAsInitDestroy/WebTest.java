@@ -65,7 +65,7 @@ public class WebTest extends BaseDevTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-        stat.printSummary();
+            stat.printSummary();
     }
 
     @Override

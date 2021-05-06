@@ -35,24 +35,24 @@
             <request-protection/>
             <response-protection/>
           </message-security>
-      <message-security>
+          <message-security>
             <message>
               <operation-name>sendSecret</operation-name>
             </message>
-        <request-protection
+            <request-protection
               auth-source="content"/>
-        <response-protection
+            <response-protection
               auth-source="content"/>
-      </message-security>
-      <message-security>
+          </message-security>
+          <message-security>
             <message>
               <operation-name>getSecret</operation-name>
             </message>
-        <request-protection
+            <request-protection
               auth-source="sender"/>
-        <response-protection
+            <response-protection
               auth-source="content"/>
-      </message-security>
+          </message-security>
         </message-security-binding>
       </port-info>
     </service-ref>

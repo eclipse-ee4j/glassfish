@@ -23,12 +23,12 @@
 
 <project name="webservices" default="all" basedir=".">
 
-    &commonBuild;
+        &commonBuild;
 
-    <target name="private-all">
-        <ant dir="helloservice" target="private-all">
-            <property name="build" value="${build}/helloservice"/>
-        </ant>
-    </target>
+        <target name="private-all">
+                <ant dir="helloservice" target="private-all">
+                        <property name="build" value="${build}/helloservice"/>
+                </ant>
+        </target>
 
 </project>

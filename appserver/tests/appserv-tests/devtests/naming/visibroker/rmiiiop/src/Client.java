@@ -26,7 +26,7 @@ public class Client {
       byte[] managerId = "RMIBankManager".getBytes();
       // Locate an account manager. Give the full POA name and the servant ID.
       Bank.AccountManager manager =
-    Bank.AccountManagerHelper.bind(orb, "/rmi_bank_poa", managerId);
+        Bank.AccountManagerHelper.bind(orb, "/rmi_bank_poa", managerId);
       // Use any number of argument pairs to indicate name,balance of accounts to create
       if (args.length == 0 || args.length % 2 != 0) {
         args = new String[2];

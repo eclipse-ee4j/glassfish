@@ -23,11 +23,11 @@
     <ejb>
       <ejb-name>HelloImpl</ejb-name>
       <webservice-endpoint>
-    <port-component-name>HelloImpl</port-component-name>
-    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    <login-config>
-      <auth-method>CLIENT-CERT</auth-method>
-    </login-config>
+        <port-component-name>HelloImpl</port-component-name>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        <login-config>
+          <auth-method>CLIENT-CERT</auth-method>
+        </login-config>
       </webservice-endpoint>
     </ejb>
     <webservice-description>

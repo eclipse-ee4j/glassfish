@@ -101,10 +101,10 @@
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.resource.type" value="javax.sql.DataSource"/>
         <param name="jdbc.conpool.name" value="${poolname}"/>
-    <param name="db.class" value="oracle.jdbc.pool.OracleDataSource"/>
-    <param name="db.user" value="${ora.user}"/>
-    <param name="db.pwd" value="${ora.passwd}"/>
-    <param name="db.url" value="${ora.sid}"/>
+        <param name="db.class" value="oracle.jdbc.pool.OracleDataSource"/>
+        <param name="db.user" value="${ora.user}"/>
+        <param name="db.pwd" value="${ora.passwd}"/>
+        <param name="db.url" value="${ora.sid}"/>
       </antcall>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
@@ -128,7 +128,7 @@
 
       <antcall target="create-persistence-resource-common">
         <param name="pm.resource.name" value="jdo/s1qePM-stress-cmp"/>
-    <param name="jdbc.resource.name" value="jdbc/s1qeDB-stress-cmp"/>
+        <param name="jdbc.resource.name" value="jdbc/s1qeDB-stress-cmp"/>
       </antcall>
 
       <antcall target="create-tables"/>
@@ -138,13 +138,13 @@
       <echo message="Executing sql from ${sql.file}"/>
       <sql
         src="sql/create_pointbase.sql"
-    driver="oracle.jdbc.driver.OracleDriver"
-    userid="${ora.user}"
-    password="${ora.passwd}"
-    url="${ora.url}"
-    classpath="${classes12.zip}"
-    onerror="continue"
-    print="yes"
+        driver="oracle.jdbc.driver.OracleDriver"
+        userid="${ora.user}"
+        password="${ora.passwd}"
+        url="${ora.url}"
+        classpath="${classes12.zip}"
+        onerror="continue"
+        print="yes"
       />
 
     </target>
@@ -162,13 +162,13 @@
       <echo message="Executing sql from ${sql.file}"/>
       <sql
         src="sql/drop_pointbase.sql"
-    driver="oracle.jdbc.driver.OracleDriver"
-    userid="${ora.user}"
-    password="${ora.passwd}"
-    url="${ora.url}"
-    classpath="${classes12.zip}"
-    onerror="continue"
-    print="yes"
+        driver="oracle.jdbc.driver.OracleDriver"
+        userid="${ora.user}"
+        password="${ora.passwd}"
+        url="${ora.url}"
+        classpath="${classes12.zip}"
+        onerror="continue"
+        print="yes"
       />
     </target>
 

@@ -93,11 +93,11 @@
     </target>
 
     <!--
-    Arguments to this target are-
-        appName - application name
-        wsName  - web service name
-        module  - ejb-module|web-module|j2ee-application.ejb-module|j2ee-application.web-module
-        flag    - true|false
+        Arguments to this target are-
+                appName - application name
+                wsName  - web service name
+                module  - ejb-module|web-module|j2ee-application.ejb-module|j2ee-application.web-module
+                flag        - true|false
     -->
     <target name="set-jbi-enabled" depends="init-common">
       <antcall target="asadmin-common">

@@ -48,7 +48,7 @@
         <copy todir="${build.classes.dir}/META-INF/wsdl"
           file="GoogleSearch.wsdl"/>
         <copy todir="${build.classes.dir}"
-     file="GoogleMapping.xml"/>
+         file="GoogleMapping.xml"/>
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
               value="**/**.class,GoogleMapping.xml,META-INF/wsdl/**" />

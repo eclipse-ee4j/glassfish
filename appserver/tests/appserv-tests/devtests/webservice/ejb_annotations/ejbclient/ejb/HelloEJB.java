@@ -31,9 +31,9 @@ public class HelloEJB implements Hello {
 
     public String invoke(String string) {
         System.out.println("invoked with " + string);
-    System.out.println("getting the port now from " + webService);
-    WebServiceEJB ejb = webService.getWebServiceEJBPort();
-    System.out.println("got " + ejb);
-    return ejb.sayHello(string);
+        System.out.println("getting the port now from " + webService);
+        WebServiceEJB ejb = webService.getWebServiceEJBPort();
+        System.out.println("got " + ejb);
+        return ejb.sayHello(string);
    }
 }

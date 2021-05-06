@@ -55,12 +55,12 @@ public class SfulEJB implements
     }
 
     public void sleepFor(int sec) {
-    try {
-        for (int i=0 ; i<sec; i++) {
-        Thread.currentThread().sleep(1000);
+        try {
+            for (int i=0 ; i<sec; i++) {
+                Thread.currentThread().sleep(1000);
+            }
+        } catch (Exception ex) {
         }
-    } catch (Exception ex) {
-    }
     }
 
     public void ping() {

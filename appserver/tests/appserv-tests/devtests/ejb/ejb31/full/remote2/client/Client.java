@@ -33,9 +33,9 @@ public class Client {
 
     public static void main(String args[]) {
 
-    appName = args[0];
-    stat.addDescription(appName);
-    Client client = new Client(args);
+        appName = args[0];
+        stat.addDescription(appName);
+        Client client = new Client(args);
         client.doTest(args[1]);
         stat.printSummary(appName + "ID");
     }
@@ -45,23 +45,23 @@ public class Client {
 
     public void doTest(String otherApp) {
 
-    try {
+        try {
 
-        Hello hGlobal =  (Hello) new InitialContext().lookup("java:global/HBGlobal");
-        System.out.println("hGlobal = " + hGlobal);
-        System.out.println("hGlobal hello = " + hGlobal.hello());
+            Hello hGlobal =  (Hello) new InitialContext().lookup("java:global/HBGlobal");
+            System.out.println("hGlobal = " + hGlobal);
+            System.out.println("hGlobal hello = " + hGlobal.hello());
 
-        SingletonRemote singleton = (SingletonRemote) new InitialContext().lookup("java:global/" + appName + "/SingletonBean");
+            SingletonRemote singleton = (SingletonRemote) new InitialContext().lookup("java:global/" + appName + "/SingletonBean");
 
-        // pass name of remotestateless app
-        singleton.doTest(otherApp);
+            // pass name of remotestateless app
+            singleton.doTest(otherApp);
 
-        stat.addStatus("local main", stat.PASS);
+            stat.addStatus("local main", stat.PASS);
 
-    } catch(Exception e) {
-        stat.addStatus("local main", stat.FAIL);
-        e.printStackTrace();
-    }
+        } catch(Exception e) {
+            stat.addStatus("local main", stat.FAIL);
+            e.printStackTrace();
+        }
 
     }
 

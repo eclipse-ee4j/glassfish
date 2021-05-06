@@ -40,43 +40,43 @@ public class Client {
     private String port;
 
     public static void main(String args[]) {
-    appName = args[0];
-    stat.addDescription(appName);
-    Client client = new Client(args);
+        appName = args[0];
+        stat.addDescription(appName);
+        Client client = new Client(args);
         client.doTest();
         stat.printSummary(appName + "ID");
     }
 
     public Client(String[] args) {
-    host = args[1];
+        host = args[1];
         port = args[2];
     }
 
     public void doTest() {
-    try {
-        String url = "http://" + host + ":" + port +
+        try {
+            String url = "http://" + host + ":" + port +
                 "/" + appName + "/TestServlet";
 
             System.out.println("invoking webclient servlet at " + url);
 
-        URL u = new URL(url);
+            URL u = new URL(url);
 
-        HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
-        int code = c1.getResponseCode();
-        InputStream is = c1.getInputStream();
-        BufferedReader input = new BufferedReader (new InputStreamReader(is));
-        String line = null;
-        while((line = input.readLine()) != null)
-        System.out.println(line);
-        if(code != 200) {
-        throw new RuntimeException("Incorrect return code: " + code);
+            HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
+            int code = c1.getResponseCode();
+            InputStream is = c1.getInputStream();
+            BufferedReader input = new BufferedReader (new InputStreamReader(is));
+            String line = null;
+            while((line = input.readLine()) != null)
+                System.out.println(line);
+            if(code != 200) {
+                throw new RuntimeException("Incorrect return code: " + code);
+            }
+
+            stat.addStatus(appName, stat.PASS);
+
+        } catch(Exception e) {
+            stat.addStatus(appName, stat.FAIL);
+            e.printStackTrace();
         }
-
-        stat.addStatus(appName, stat.PASS);
-
-    } catch(Exception e) {
-        stat.addStatus(appName, stat.FAIL);
-        e.printStackTrace();
-    }
     }
 }

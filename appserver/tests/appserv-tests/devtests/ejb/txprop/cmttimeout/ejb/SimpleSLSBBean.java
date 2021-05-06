@@ -34,11 +34,11 @@ public class SimpleSLSBBean
     }
 
     public void ejbCreate() throws RemoteException {
-        System.out.println("In SimpleSLSBHome::ejbCreate !!");
+            System.out.println("In SimpleSLSBHome::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-        this.sc = sc;
+            this.sc = sc;
     }
 
     public boolean doSomething(int timeout) {

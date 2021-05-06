@@ -29,14 +29,14 @@ public class Client {
     public static void main(String[] args)
         throws Exception {
 
-    SimpleReporterAdapter stat = new SimpleReporterAdapter();
-    String testSuite = "LazyAssoc ";
+        SimpleReporterAdapter stat = new SimpleReporterAdapter();
+        String testSuite = "LazyAssoc ";
 
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/SimpleSessionHome");
-    SimpleSessionHome simpleSessionHome = (SimpleSessionHome)
+        SimpleSessionHome simpleSessionHome = (SimpleSessionHome)
         javax.rmi.PortableRemoteObject.narrow(objRef, SimpleSessionHome.class);
-    stat.addDescription("Running lazyassoc testSuite1 ");
+        stat.addDescription("Running lazyassoc testSuite1 ");
         SimpleSession simpleSession = simpleSessionHome.create();
 
         boolean passed = true;
@@ -74,6 +74,6 @@ public class Client {
         } else {
             stat.addStatus( testSuite + " test2 : ", stat.FAIL );
         }
-    stat.printSummary();
+        stat.printSummary();
     }
 }

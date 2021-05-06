@@ -56,7 +56,7 @@
     </target>
 
 <!--
-    Run all the tests.
+        Run all the tests.
 -->
     <target name="run" depends="compile,assemble">
         <antcall target="runTestProgressObjectImpl"/>

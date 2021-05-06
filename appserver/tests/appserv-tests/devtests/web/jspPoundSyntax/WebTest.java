@@ -54,7 +54,7 @@ public class WebTest {
         webTest.doTest4("/testjsp21z.jsp",
                         "pound-syntax-allowed-as-literal-true-test");
 
-    stat.printSummary();
+        stat.printSummary();
     }
 
     private boolean checkValue(BufferedReader input,

@@ -27,9 +27,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class HelloWorldServlet1 extends HttpServlet {
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-        resp.getWriter().write("<html><body>Servlet 1 </body></html>");
-    }
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+                resp.setContentType("text/html");
+                resp.getWriter().write("<html><body>Servlet 1 </body></html>");
+        }
 
 }

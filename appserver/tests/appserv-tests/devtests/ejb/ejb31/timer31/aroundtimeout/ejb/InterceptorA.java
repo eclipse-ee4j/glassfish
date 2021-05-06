@@ -38,7 +38,7 @@ public class InterceptorA {
 
     @AroundTimeout
     Object aroundTimeout(InvocationContext ctx)
-            throws Exception {
+                throws Exception {
 
 /**
         // access injected environment dependency

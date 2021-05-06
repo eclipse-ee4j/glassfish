@@ -139,18 +139,18 @@ public class Client {
 
     public int getMonitorablePropertyOfConnectionPool(String poolName) throws Exception {
 
-    final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
+        final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
-    final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
-    final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
+        final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
+        final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName =
                 new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-mon,name=resources/" + poolName);
 
-    javax.management.openmbean.CompositeDataSupport returnValue =
-        (javax.management.openmbean.CompositeDataSupport)
-        connection.getAttribute(objectName, NUM_CON_DESTROYED_COUNT);
+        javax.management.openmbean.CompositeDataSupport returnValue =
+                (javax.management.openmbean.CompositeDataSupport)
+                connection.getAttribute(objectName, NUM_CON_DESTROYED_COUNT);
 
         return new Integer(returnValue.get("count").toString());
     }

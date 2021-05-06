@@ -21,7 +21,7 @@ import java.util.Map;
 import jakarta.xml.ws.Provider;
 import jakarta.xml.ws.WebServiceProvider;
 import jakarta.xml.ws.ServiceMode;
-import jakarta.xml.ws.Service    ;
+import jakarta.xml.ws.Service        ;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.ejb.Stateless;
 

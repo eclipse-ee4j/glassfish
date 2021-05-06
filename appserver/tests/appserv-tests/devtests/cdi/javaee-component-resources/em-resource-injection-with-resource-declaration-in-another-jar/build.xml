@@ -49,7 +49,7 @@
             <param name="src" value="war"/>
         </antcall>
 
-        <javac classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
+            <javac classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
         </javac>
     </target>
 
@@ -92,7 +92,7 @@
         <delete file="${assemble.dir}/${appname}.ear"/>
         <mkdir dir="${assemble.dir}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
-        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"      failonerror="false"/>
+        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"          failonerror="false"/>
         <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false"  filtering="true"/>
         <ear earfile="${assemble.dir}/${appname}App.ear"
              appxml="${application.xml}" >
@@ -101,7 +101,7 @@
             <include name="*.war"/>
           </fileset>
           <fileset dir="${build.classes.dir}">
-            <include name="META-INF/sun-application.xml"/>
+                <include name="META-INF/sun-application.xml"/>
             <include name="META-INF/glassfish-resources.xml"/>
           </fileset>
 <!--

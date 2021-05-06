@@ -28,7 +28,7 @@
 
 <project name="directoryDeploy-withEjbSuffix" default="all" basedir=".">
 
-     &commonBuild;
+         &commonBuild;
 
     <property name="testName" value="dirDeployWithEjbSuffix"/>
     <property name="ejb.build.dir"

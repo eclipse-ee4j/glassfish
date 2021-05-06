@@ -36,11 +36,11 @@ public class Client {
     }
 
     public void doTest(String[] args) {
-        try {
+            try {
 
            String targetEndpointAddress = args[0];
 
-        Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
             SimpleTestService testService =
                 (SimpleTestService) ic.lookup("java:comp/env/service/faultcode");
@@ -66,10 +66,10 @@ public class Client {
 */
             stat.addStatus("xsdanyclient main", stat.PASS);
 
-        } catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("xsdany client test failed");
             ex.printStackTrace();
             stat.addStatus("xsdanyclient main", stat.FAIL);
-    }
+        }
     }
 }

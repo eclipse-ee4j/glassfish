@@ -38,7 +38,7 @@ public class InterceptorA {
 
     @AroundInvoke
     Object aroundInvoke(InvocationContext ctx)
-            throws Exception {
+                throws Exception {
 
         // access injected environment dependency
         System.out.println("invoked business interface = " +

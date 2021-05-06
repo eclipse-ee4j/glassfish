@@ -21,46 +21,46 @@
          metadata-complete="false" version="3.1"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
     <module-name>jaccmr8-ejb</module-name>
-    <enterprise-beans>
-        <!-- See EJB annotations
+        <enterprise-beans>
+                <!-- See EJB annotations
         <session>
             <display-name>HelloStatefulEJB</display-name>
             <ejb-name>HelloStatefulEJB</ejb-name>
             <business-local>org.glassfish.jacc.test.mr8.HelloStateful</business-local>
             <ejb-class>org.glassfish.jacc.test.mr8.HelloStatefulEJB</ejb-class>
         </session>
-        -->
-        <session>
-            <display-name>HelloEJB</display-name>
-            <ejb-name>HelloEJB</ejb-name>
-            <business-local>org.glassfish.jacc.test.mr8.Hello</business-local>
-            <ejb-class>org.glassfish.jacc.test.mr8.HelloEJB</ejb-class>
-            <!-- GLASSFISH-20036 fixes IllegalStateException when role-refs are not declared.
-                 The @DeclareRoles annotation provides the linkage between roles silently.
-            <security-role-ref>
-                <role-name>javaUsers</role-name>
-                <role-link>javaUsers</role-link>
-            </security-role-ref>
-            -->
-        </session>
-    </enterprise-beans>
-    <assembly-descriptor>
-        <security-role>
-            <role-name>javaUsers</role-name>
-        </security-role>
-        <method-permission>
-            <role-name>javaUsers</role-name>
-            <method>
-                <ejb-name>HelloEJB</ejb-name>
-                <method-name>methodAuthUser</method-name>
-            </method>
-        </method-permission>
-        <method-permission>
-            <role-name>**</role-name>
-            <method>
-                <ejb-name>HelloEJB</ejb-name>
-                <method-name>methodAnyAuthUser</method-name>
-            </method>
-        </method-permission>
-    </assembly-descriptor>
+                -->
+                <session>
+                        <display-name>HelloEJB</display-name>
+                        <ejb-name>HelloEJB</ejb-name>
+                        <business-local>org.glassfish.jacc.test.mr8.Hello</business-local>
+                        <ejb-class>org.glassfish.jacc.test.mr8.HelloEJB</ejb-class>
+                        <!-- GLASSFISH-20036 fixes IllegalStateException when role-refs are not declared.
+                             The @DeclareRoles annotation provides the linkage between roles silently.
+                        <security-role-ref>
+                                <role-name>javaUsers</role-name>
+                                <role-link>javaUsers</role-link>
+                        </security-role-ref>
+                        -->
+                </session>
+        </enterprise-beans>
+        <assembly-descriptor>
+                <security-role>
+                        <role-name>javaUsers</role-name>
+                </security-role>
+                <method-permission>
+                        <role-name>javaUsers</role-name>
+                        <method>
+                                <ejb-name>HelloEJB</ejb-name>
+                                <method-name>methodAuthUser</method-name>
+                        </method>
+                </method-permission>
+                <method-permission>
+                        <role-name>**</role-name>
+                        <method>
+                                <ejb-name>HelloEJB</ejb-name>
+                                <method-name>methodAnyAuthUser</method-name>
+                        </method>
+                </method-permission>
+        </assembly-descriptor>
 </ejb-jar>

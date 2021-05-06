@@ -26,7 +26,7 @@ public class SimpleItemProcessor
 
     @Override
     public String processItem(Object obj) throws Exception {
-    String t = (String) obj;
+        String t = (String) obj;
         String[] record = t.split(", ");
 
     //EMP-ID, MONTH-YEAR, SALARY, TAX%, MEDICARE%, OTHER

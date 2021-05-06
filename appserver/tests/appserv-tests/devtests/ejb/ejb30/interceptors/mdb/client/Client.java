@@ -62,10 +62,10 @@ public class Client {
         try {
             setup();
             if (doTest("java:comp/env/jms/MsgBeanQueue", numMessages)) {
-        stat.addStatus("cmt main", stat.PASS);
-        } else {
-        stat.addStatus("cmt main", stat.FAIL);
-        }
+                stat.addStatus("cmt main", stat.PASS);
+            } else {
+                stat.addStatus("cmt main", stat.FAIL);
+            }
         } catch(Throwable t) {
             stat.addStatus("cmt main", stat.FAIL);
             t.printStackTrace();
@@ -133,9 +133,9 @@ public class Client {
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);
         if( recvdmessage != null ) {
-        String receivedMsg = ((TextMessage)recvdmessage).getText();
+            String receivedMsg = ((TextMessage)recvdmessage).getText();
             System.out.println("Received message : " + receivedMsg);
-        return receivedMsg.equals("mdb() invoked. Interceptor count: 1");
+            return receivedMsg.equals("mdb() invoked. Interceptor count: 1");
         } else {
             System.out.println("timeout after " + TIMEOUT + " seconds");
             throw new JMSException("timeout" + TIMEOUT + " seconds");

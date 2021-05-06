@@ -27,5 +27,5 @@ public interface Foo extends EJBObject {
     String sayHello() throws RemoteException;
 
     public boolean assertValidRemoteObject(String msg)
-    throws RemoteException;
+        throws RemoteException;
 }

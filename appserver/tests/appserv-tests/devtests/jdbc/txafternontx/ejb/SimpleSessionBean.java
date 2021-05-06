@@ -31,11 +31,11 @@ public class SimpleSessionBean implements SessionBean
     private InitialContext ic_;
     public void setSessionContext(SessionContext context) {
         ctxt_ = context;
-    try {
-        ic_ = new InitialContext();
-    } catch( NamingException ne ) {
-        ne.printStackTrace();
-    }
+        try {
+            ic_ = new InitialContext();
+        } catch( NamingException ne ) {
+            ne.printStackTrace();
+        }
     }
 
     public void ejbCreate() throws CreateException {
@@ -44,56 +44,56 @@ public class SimpleSessionBean implements SessionBean
     /**
      */
     public boolean test1() throws Exception {
-    com.sun.appserv.jdbc.DataSource ds =
-        (com.sun.appserv.jdbc.DataSource)ic_.lookup("java:comp/env/DataSource");
-    Connection conn1 = null;
-    Statement stmt1 = null;
-    ResultSet rs1 = null;
-    boolean passed = false;
+        com.sun.appserv.jdbc.DataSource ds =
+            (com.sun.appserv.jdbc.DataSource)ic_.lookup("java:comp/env/DataSource");
+        Connection conn1 = null;
+        Statement stmt1 = null;
+        ResultSet rs1 = null;
+        boolean passed = false;
         System.out.println("getting first tx connection");
-    try {
-        conn1 = ds.getConnection();
-        if (conn1.getAutoCommit() == true ) {
-            throw new SQLException("Before nontx: Connection with wrong autocommit value");
+        try {
+            conn1 = ds.getConnection();
+            if (conn1.getAutoCommit() == true ) {
+                throw new SQLException("Before nontx: Connection with wrong autocommit value");
+            }
+        } catch( SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (conn1 != null) {
+                try { conn1.close(); } catch( Exception e1 ) {}
+            }
         }
-    } catch( SQLException e) {
-        e.printStackTrace();
-        return false;
-    } finally {
-        if (conn1 != null) {
-            try { conn1.close(); } catch( Exception e1 ) {}
-        }
-    }
 
         System.out.println("getting nontx connection");
         try {
-        conn1 = ds.getNonTxConnection();
-        if (conn1.getAutoCommit() == false ) {
-            throw new SQLException("NonTX Connection with wrong autocommit value");
+            conn1 = ds.getNonTxConnection();
+            if (conn1.getAutoCommit() == false ) {
+                throw new SQLException("NonTX Connection with wrong autocommit value");
+            }
+        } catch( Exception e ) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {conn1.close();} catch(Exception e) {}
         }
-    } catch( Exception e ) {
-        e.printStackTrace();
-        return false;
-    } finally {
-        try {conn1.close();} catch(Exception e) {}
-    }
 
         System.out.println("getting second tx connection");
-    try {
-        conn1 = ds.getConnection();
-        if (conn1.getAutoCommit() == true ) {
-            throw new SQLException("After nontx: Connection with wrong autocommit value");
+        try {
+            conn1 = ds.getConnection();
+            if (conn1.getAutoCommit() == true ) {
+                throw new SQLException("After nontx: Connection with wrong autocommit value");
+            }
+        } catch( SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (conn1 != null) {
+                try { conn1.close(); } catch( Exception e1 ) {}
+            }
         }
-    } catch( SQLException e) {
-        e.printStackTrace();
-        return false;
-    } finally {
-        if (conn1 != null) {
-            try { conn1.close(); } catch( Exception e1 ) {}
-        }
-    }
 
-    return true;
+        return true;
     }
 
     public void ejbLoad() {}

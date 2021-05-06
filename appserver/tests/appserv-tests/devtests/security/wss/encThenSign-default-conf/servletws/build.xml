@@ -55,14 +55,14 @@
     </target>
 
     <target name="generate-artifacts">
-    <echo message=" Client Mapping file : ${client-mapping.xml}"/>
+        <echo message=" Client Mapping file : ${client-mapping.xml}"/>
         <antcall target="import-wsdl">
             <param name="mapping.file"
             value="${client-mapping.xml}"/>
             <param name="config-wsdl.file"
             value="config/config-client.xml"/>
         </antcall>
-    <echo message="Web Mapping File : ${web-mapping.xml}"/>
+        <echo message="Web Mapping File : ${web-mapping.xml}"/>
         <antcall target="import-wsdl">
             <param name="mapping.file"
             value="${web-mapping.xml}"/>
@@ -137,16 +137,16 @@
      </target>
 
     <target name="build" depends="init-common,compile">
-    <antcall target="ws-package-appclientjar-common">
+        <antcall target="ws-package-appclientjar-common">
             <param name="appclientjar.classes"
               value="com/sun/s1asdev/security/wss/defprovider/servlet/taxcal/client/*.class" />
             <param name="appclientjar.files"
               value="${build.classes.dir}"/>
             <param name="appclient.jar"
               value="${assemble.dir}/${appname}-client.jar"/>
-    </antcall>
-    <!--antcall target="ws-war-common"-->
-    <antcall target="ws-package-war-common">
+        </antcall>
+        <!--antcall target="ws-war-common"-->
+        <antcall target="ws-package-war-common">
             <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
             <param name="war.classes"
               value="com/sun/s1asdev/security/wss/defprovider/servlet/taxcal/*.class" />
@@ -156,7 +156,7 @@
               value="${build.classes.dir}"/>
             <param name="webservices.xml"
               value="${web-webservices.xml}" />
-    </antcall>
+        </antcall>
         <antcall target="ear-common"/>
     </target>
 
@@ -166,25 +166,25 @@
     </target>
 
     <target name="run" depends="init-common">
-    <property name="VMARGS" value="-Djavax.net.ssl.keyStore=${mykeystore.db.file} -Djavax.net.ssl.trustStore=${mytruststore.db.file} -Djavax.net.ssl.keyStorePassword=${ssl.password} -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
+        <property name="VMARGS" value="-Djavax.net.ssl.keyStore=${mykeystore.db.file} -Djavax.net.ssl.trustStore=${mytruststore.db.file} -Djavax.net.ssl.keyStorePassword=${ssl.password} -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
         <property name="statetax-endpoint-url"
             value="http://${http.host}:${http.port}/TaxCalWSServlet/statetaxservlet"/>
-    <echo message="State Tax Endpoint URL = ${statetax-endpoint-url}"/>
+        <echo message="State Tax Endpoint URL = ${statetax-endpoint-url}"/>
         <property name="fedtax-endpoint-url"
             value="http://${http.host}:${http.port}/TaxCalWSServlet/fedtaxservlet"/>
-    <echo message="Fed Tax Endpoint URL = ${fedtax-endpoint-url}"/>
-    <echo message="VMARGS= ${VMARGS}"/>
-       <exec executable="${APPCLIENT}">
-              <env key="VMARGS" value="${VMARGS}"/>
-            <arg value="-client" />
-            <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-            <arg value="-textauth"/>
-            <arg value="-user"/>
-            <arg value="j2ee"/>
-               <arg value="-password"/>
-            <arg value="j2ee"/>
-            <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-            <arg line="${statetax-endpoint-url} ${fedtax-endpoint-url}"/>
+        <echo message="Fed Tax Endpoint URL = ${fedtax-endpoint-url}"/>
+        <echo message="VMARGS= ${VMARGS}"/>
+           <exec executable="${APPCLIENT}">
+                      <env key="VMARGS" value="${VMARGS}"/>
+                <arg value="-client" />
+                <arg value="${assemble.dir}/${appname}AppClient.jar"/>
+                <arg value="-textauth"/>
+                <arg value="-user"/>
+                <arg value="j2ee"/>
+                       <arg value="-password"/>
+                <arg value="j2ee"/>
+                <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+                <arg line="${statetax-endpoint-url} ${fedtax-endpoint-url}"/>
       </exec>
    </target>
 

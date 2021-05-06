@@ -76,14 +76,14 @@ import jakarta.annotation.security.RunAs;
             QueueSession session = connection.createQueueSession(false,
                                    Session.AUTO_ACKNOWLEDGE);
             QueueSender sender = session.createSender(clientQueue);
-        connection.start();
+                connection.start();
 
             TextMessage tmessage = session.createTextMessage();
             tmessage.setText("mdb() invoked");
             System.out.println("Sending message");
             sender.send(tmessage);
             System.out.println("message sent");
-        connection.close();
+                connection.close();
 
         } catch(Exception e) {
             e.printStackTrace();

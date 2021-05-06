@@ -37,7 +37,7 @@ public class TestServlet extends HttpServlet
         throws ServletException, IOException
     {
         try {
-            DummyLib d = new DummyLib();
+                        DummyLib d = new DummyLib();
             PrintWriter out = response.getWriter();
             response.setContentType("text/html");
             out.println("<html>");

@@ -67,10 +67,10 @@
                    value="mdb-container"/>
        </antcall>
         <antcall target="asadmin-common">
-        <param name="admin.command" value="set"/>
-        <param name="operand.props" value="server.mdb-container.property.cmt-max-runtime-exceptions=4"/>
-    </antcall>
-    <antcall target="restart-server-instance-common"/>
+            <param name="admin.command" value="set"/>
+            <param name="operand.props" value="server.mdb-container.property.cmt-max-runtime-exceptions=4"/>
+        </antcall>
+        <antcall target="restart-server-instance-common"/>
     </target>
 
     <target name="setup" depends="init-common">
@@ -89,12 +89,12 @@
       <exec executable="${APPCLIENT}" failonerror="false">
           <env key="APPCPATH" value="${env.S1AS_HOME}/domains/domain1/lib/ext/Oranxo.jar:${env.APS_HOME}/lib/reporter.jar"/>
           <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
-      <arg line="-name ${appname}Client"/>
-      <arg line="-textauth"/>
-      <arg line="-user j2ee"/>
-      <arg line="-password j2ee"/>
-      <arg line=" ${oracleForConnector.driver} ${oracleForConnector.url} ${oracleForConnector.user} ${oracleForConnector.pwd} "/>
-      <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
+          <arg line="-name ${appname}Client"/>
+          <arg line="-textauth"/>
+          <arg line="-user j2ee"/>
+          <arg line="-password j2ee"/>
+          <arg line=" ${oracleForConnector.driver} ${oracleForConnector.url} ${oracleForConnector.user} ${oracleForConnector.pwd} "/>
+          <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
        </exec>
     </target>
 

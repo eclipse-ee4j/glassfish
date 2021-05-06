@@ -60,16 +60,16 @@ public class Client {
 
         try {
 
-        if( hr == null ) {
+            if( hr == null ) {
 
-        System.out.println("In stand-alone mode");
-        InitialContext ic = new InitialContext();
-        hr = (Hello) ic.lookup("ejb/ejb_ejb30_clientview_core_CoreApp");
-        bmpRemoteHome = (BmpRemoteHome) ic.lookup("ejb/ejb_ejb30_clientview_core_Bmp");
-        sfulRemoteHome = (SfulRemoteHome) ic.lookup("ejb/ejb_ejb30_clientview_core_Sful");
-        slessRemoteHome = (SlessRemoteHome) ic.lookup("ejb/ejb_ejb30_clientview_core_Sless");
+                System.out.println("In stand-alone mode");
+                InitialContext ic = new InitialContext();
+                hr = (Hello) ic.lookup("ejb/ejb_ejb30_clientview_core_CoreApp");
+                bmpRemoteHome = (BmpRemoteHome) ic.lookup("ejb/ejb_ejb30_clientview_core_Bmp");
+                sfulRemoteHome = (SfulRemoteHome) ic.lookup("ejb/ejb_ejb30_clientview_core_Sful");
+                slessRemoteHome = (SlessRemoteHome) ic.lookup("ejb/ejb_ejb30_clientview_core_Sless");
 
-        }
+            }
 
 
             System.out.println("testing injected BmpRemoteHome");
@@ -77,7 +77,7 @@ public class Client {
             bmpRemote = bmpRemoteHome.findByPrimaryKey("client1");
 
             EJBMetaData md = bmpRemoteHome.getEJBMetaData();
-        System.out.println("metadata = " + md);
+            System.out.println("metadata = " + md);
 
             System.out.println("testing injected SlessRemoteHome");
             SlessRemote slessRemote = slessRemoteHome.create();
@@ -90,8 +90,8 @@ public class Client {
             System.out.println("testing Remote 3.0 Hello intf");
             hr.testPassByRef();
 
-        // invoke method on the EJB
-        doProxyTest(hr);
+            // invoke method on the EJB
+            doProxyTest(hr);
 
             testExceptions(hr);
 
@@ -104,7 +104,7 @@ public class Client {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     private void testExceptions(Hello h) throws Exception {
@@ -159,35 +159,35 @@ public class Client {
     }
 
     private void doProxyTest(Hello hr)
-    throws Exception
+        throws Exception
     {
-    System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
-    hr.warmup(Common.STATEFUL);
-    runTests(Common.STATEFUL, hr);
+        System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL);
+        runTests(Common.STATEFUL, hr);
 
-    System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
-    hr.warmup(Common.STATEFUL);
-    runTests(Common.STATELESS, hr);
+        System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL);
+        runTests(Common.STATELESS, hr);
 
-    System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
-    hr.warmup(Common.BMP);
-    runTests(Common.BMP, hr);
+        System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
+        hr.warmup(Common.BMP);
+        runTests(Common.BMP, hr);
     }
 
     private void runTests(int type, Hello hr)
-    throws Exception
+        throws Exception
     {
 
         hr.notSupported(type, true);
         hr.notSupported(type, false);
         hr.supports(type, true);
-    hr.supports(type, false);
+        hr.supports(type, false);
         hr.required(type, true);
-    hr.required(type, false);
+        hr.required(type, false);
         hr.requiresNew(type, true);
-    hr.requiresNew(type, false);
+        hr.requiresNew(type, false);
         hr.mandatory(type, true);
-    hr.never(type, false);
+        hr.never(type, false);
     }
 }
 

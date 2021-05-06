@@ -39,8 +39,8 @@ public class JAXRPublisher {
     /**
      * Establishes a connection to a registry.
      *
-     * @param queryUrl    the URL of the query registry
-     * @param publishUrl    the URL of the publish registry
+     * @param queryUrl        the URL of the query registry
+     * @param publishUrl        the URL of the publish registry
      */
     public void makeConnection(String queryUrl,
         String publishUrl) {
@@ -171,7 +171,7 @@ public class JAXRPublisher {
             is = blcm.createInternationalString
                 (bundle.getString("service.binding"));
             binding.setDescription(is);
-                       binding.setValidateURI(false);
+                                           binding.setValidateURI(false);
             binding.setAccessURI(endpoint);
             serviceBindings.add(binding);
 

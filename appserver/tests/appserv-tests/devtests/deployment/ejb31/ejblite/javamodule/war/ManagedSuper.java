@@ -30,24 +30,24 @@ public class ManagedSuper {
 
     @PostConstruct
     private void init() {
-    System.out.println("In ManagedSuper::init() ");
+        System.out.println("In ManagedSuper::init() ");
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In ManagedSuper::destroy() ");
+        System.out.println("In ManagedSuper::destroy() ");
     }
 
     public String toString() {
-    return "ManagedSuper this = " + super.toString() +
-        " s = " + s + " , ds = " + ds;
+        return "ManagedSuper this = " + super.toString() +
+            " s = " + s + " , ds = " + ds;
 
     }
 
   @AroundInvoke
     public Object aroundSuper(InvocationContext c) throws Exception {
-    System.out.println("In ManagedSuper::aroundSuper() ");
-    return c.proceed();
+        System.out.println("In ManagedSuper::aroundSuper() ");
+        return c.proceed();
     }
 
 

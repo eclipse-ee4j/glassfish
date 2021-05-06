@@ -45,25 +45,25 @@ public class Client {
 
         try {
 
-        Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
-        // create EJB using factory from container
-        java.lang.Object objref =
+            // create EJB using factory from container
+            java.lang.Object objref =
                 ic.lookup("java:comp/env/ejb/ProxyApp");
 
-        System.out.println("Looked up home!!");
+            System.out.println("Looked up home!!");
 
-        HelloHome  home = (HelloHome)
+            HelloHome  home = (HelloHome)
                 PortableRemoteObject.narrow(objref, HelloHome.class);
-        System.out.println("Narrowed home!!");
+            System.out.println("Narrowed home!!");
 
-        Hello hr = home.create();
-        System.out.println("Got the EJB!!");
+            Hello hr = home.create();
+            System.out.println("Got the EJB!!");
 
             hr.testPassByRef();
 
-        // invoke method on the EJB
-        doProxyTest(hr);
+            // invoke method on the EJB
+            doProxyTest(hr);
 
             testExceptions(hr);
 
@@ -76,7 +76,7 @@ public class Client {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     private void testExceptions(Hello h) throws Exception {
@@ -131,35 +131,35 @@ public class Client {
     }
 
     private void doProxyTest(Hello hr)
-    throws Exception
+        throws Exception
     {
-    System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
-    hr.warmup(Common.STATEFUL);
-    runTests(Common.STATEFUL, hr);
+        System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL);
+        runTests(Common.STATEFUL, hr);
 
-    System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
-    hr.warmup(Common.STATEFUL);
-    runTests(Common.STATELESS, hr);
+        System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL);
+        runTests(Common.STATELESS, hr);
 
-    System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
-    hr.warmup(Common.BMP);
-    runTests(Common.BMP, hr);
+        System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
+        hr.warmup(Common.BMP);
+        runTests(Common.BMP, hr);
     }
 
     private void runTests(int type, Hello hr)
-    throws Exception
+        throws Exception
     {
 
         hr.notSupported(type, true);
         hr.notSupported(type, false);
         hr.supports(type, true);
-    hr.supports(type, false);
+        hr.supports(type, false);
         hr.required(type, true);
-    hr.required(type, false);
+        hr.required(type, false);
         hr.requiresNew(type, true);
-    hr.requiresNew(type, false);
+        hr.requiresNew(type, false);
         hr.mandatory(type, true);
-    hr.never(type, false);
+        hr.never(type, false);
     }
 }
 

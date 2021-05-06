@@ -29,11 +29,11 @@ public class StatelesshelloEJB implements SessionBean {
     public StatelesshelloEJB(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In ejbCreate !!");
+        System.out.println("In ejbCreate !!");
     }
 
     public String sayStatelesshello() throws EJBException {
-    System.out.println("StatelesshelloEJB is saying hello to user\n");
+        System.out.println("StatelesshelloEJB is saying hello to user\n");
         return("A Big hello from stateless HELLO");
     }
 

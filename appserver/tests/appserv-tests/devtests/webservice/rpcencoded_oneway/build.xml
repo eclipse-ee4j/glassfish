@@ -30,9 +30,9 @@
     &testproperties;
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="-source 1.1.2 ${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
 <!-- NOTE. the simple mapping test and full mapping test can
@@ -86,7 +86,7 @@
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="SimpleTest.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="NoMetadata.SimpleTest.xml"/>
+         file="NoMetadata.SimpleTest.xml"/>
     <unjar src="${env.APS_HOME}/lib/reporter.jar"
         dest="${build.classes.dir}"/>
     <antcall target="appclient-jar-common">
@@ -152,10 +152,10 @@
   </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes the WebServices test)
-            ant clean
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+                        ant clean
+        </echo>
     </target>
 </project>

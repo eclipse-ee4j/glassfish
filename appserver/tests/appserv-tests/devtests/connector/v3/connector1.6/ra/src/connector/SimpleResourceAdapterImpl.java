@@ -106,7 +106,7 @@ public class SimpleResourceAdapterImpl
             System.out.println("lookedup in RA endpointDeactivation:" + o);
         } catch (Exception ex){
             System.out.println("**** Error while looking up in component context " +
-                    "in endpointDeactivation");
+                            "in endpointDeactivation");
             ex.printStackTrace();
             throw new RuntimeException(ex);
         }

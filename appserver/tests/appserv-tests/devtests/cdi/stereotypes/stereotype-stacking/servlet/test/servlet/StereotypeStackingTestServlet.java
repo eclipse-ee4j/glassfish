@@ -64,7 +64,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
         tb_tx.m2();
         if (TransactionInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor [TransactionInterceptor] " +
-                    "invocation on method-level "
+                            "invocation on method-level "
                     + "interceptor annotation count not expected. "
                     + "expected =2, actual="
                     + TransactionInterceptor.aroundInvokeInvocationCount;
@@ -87,7 +87,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
         tb_sec.m2();
         if (SecurityInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor invocation [SecurityInterceptor]" +
-                    "on method-level "
+                            "on method-level "
                     + "interceptor annotation count not expected. "
                     + "expected =2, actual="
                     + SecurityInterceptor.aroundInvokeInvocationCount;

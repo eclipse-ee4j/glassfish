@@ -330,7 +330,7 @@ public class JSR88Deployer implements ProgressListener {
 
     protected void dumpResultModuleIDs(String prefix, ProgressObject po) {
         TargetModuleID[] targetModuleIDs = po.getResultTargetModuleIDs();
-    dumpModulesIDs(prefix, targetModuleIDs);
+        dumpModulesIDs(prefix, targetModuleIDs);
     }
 
     protected void dumpModulesIDs(String prefix, TargetModuleID[] targetModuleIDs) {

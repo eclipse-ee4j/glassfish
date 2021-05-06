@@ -38,22 +38,22 @@ public class Client {
             String password=null;
             boolean successExpected=true;
             String description;
-        if (args.length>1) {
+            if (args.length>1) {
                 username=args[0];
                 password=args[1];
-        description="webservices-ejb-rolesAllowed-annotation-positive";
+                description="webservices-ejb-rolesAllowed-annotation-positive";
                 if (args.length>2) {
                     description="webservices-ejb-rolesAllowed-annotation-negative-2";
                     successExpected = !(args[2].equalsIgnoreCase("FAILURE"));
                 }
             } else {
                 successExpected = false;
-        description="webservices-ejb-rolesAllowed-annotation-negative";
-        }
-        stat.addDescription(description);
+                description="webservices-ejb-rolesAllowed-annotation-negative";
+            }
+            stat.addDescription(description);
             Client client = new Client();
             client.doTest(description, username, password, successExpected);
-        stat.printSummary(description);
+            stat.printSummary(description);
        }
 
        public void doTest(String desc, String username, String password, boolean successExpected) {
@@ -105,19 +105,19 @@ public class Client {
                     return;
                 }
                 System.out.println(ret);
-        if (successExpected)
-                    stat.addStatus(desc, stat.PASS);
-        else
-                    stat.addStatus(desc, stat.FAIL);
+                if (successExpected)
+                        stat.addStatus(desc, stat.PASS);
+                else
+                        stat.addStatus(desc, stat.FAIL);
 
             } catch(Throwable t) {
-        if (successExpected) {
-                    t.printStackTrace();
-                    stat.addStatus(desc, stat.FAIL);
-        } else {
-            System.out.println("Got expected failure " + t.getMessage());
-                    stat.addStatus(desc, stat.PASS);
-        }
+                if (successExpected) {
+                        t.printStackTrace();
+                        stat.addStatus(desc, stat.FAIL);
+                } else {
+                        System.out.println("Got expected failure " + t.getMessage());
+                        stat.addStatus(desc, stat.PASS);
+                }
             }
        }
 }

@@ -38,7 +38,7 @@ public class SfulEJB extends BaseBean {
     public String hello() {
         System.out.println("In SfulEJB:hello()");
         verify("SfulEJB");
-    return sless.sayHello();
+        return sless.sayHello();
     }
 
     @Interceptors(InterceptorA.class)
@@ -50,7 +50,7 @@ public class SfulEJB extends BaseBean {
     @Interceptors(InterceptorA.class)
     @PostConstruct
     private void init0() {
-    System.out.println("**SfulEJB PostConstruct");
+        System.out.println("**SfulEJB PostConstruct");
         verifyMethod("init0");
     }
 

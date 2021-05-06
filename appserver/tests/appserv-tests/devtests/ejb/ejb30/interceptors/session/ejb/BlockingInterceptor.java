@@ -44,11 +44,11 @@ public class BlockingInterceptor {
 
     @AroundInvoke
     private Object interceptCall(InvocationContext ctx)
-       throws CallBlockedException
+           throws CallBlockedException
     {
-    System.out.println("[test.BlockingInterceptor @AroundInvoke]: " + ctx.getMethod());
-    blockCount++;
-    throw new CallBlockedException("Call blocked");
+        System.out.println("[test.BlockingInterceptor @AroundInvoke]: " + ctx.getMethod());
+        blockCount++;
+        throw new CallBlockedException("Call blocked");
     }
 
 

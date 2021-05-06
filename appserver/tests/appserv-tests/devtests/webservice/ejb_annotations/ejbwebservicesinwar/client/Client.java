@@ -30,10 +30,10 @@ public class Client {
 
 
         public static void main(String[] args) {
-        stat.addDescription("ejbwebservicesinwar");
+            stat.addDescription("ejbwebservicesinwar");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("ejbwebservicesinwar");
+            stat.printSummary("ejbwebservicesinwar");
        }
 
        public void doTest(String[] args) {

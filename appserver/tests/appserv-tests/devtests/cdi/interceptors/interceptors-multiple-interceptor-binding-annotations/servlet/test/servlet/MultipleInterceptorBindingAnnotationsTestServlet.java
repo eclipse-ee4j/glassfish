@@ -64,7 +64,7 @@ public class MultipleInterceptorBindingAnnotationsTestServlet extends HttpServle
         tb.m1();
         if (TransactionalSecureInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke on " +
-                    "TransactionSecureInterceptor called when it shouldn't have";
+                            "TransactionSecureInterceptor called when it shouldn't have";
         tb.m2();
         if (TransactionalSecureInterceptor.aroundInvokeInvocationCount != 0)
             msg += "Business method interceptor invocation on method-level "

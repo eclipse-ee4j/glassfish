@@ -38,11 +38,11 @@ public class Client extends HttpServlet {
             throws jakarta.servlet.ServletException {
         try {
             Principal p = req.getUserPrincipal();
-        String principal = (p==null)? "NULL": p.toString();
+            String principal = (p==null)? "NULL": p.toString();
             System.out.println("****Servlet: principal = " + principal);
 
             Hello port = service.getHelloEJBPort();
-        String ret = port.sayHello("PrincipalSent="+principal);
+            String ret = port.sayHello("PrincipalSent="+principal);
             System.out.println("Return value from webservice:"+ret);
 
             PrintWriter out = resp.getWriter();

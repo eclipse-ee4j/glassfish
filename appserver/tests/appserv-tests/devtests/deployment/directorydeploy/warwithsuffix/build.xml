@@ -28,7 +28,7 @@
 
 <project name="directoryDeploy-withWarSuffix" default="all" basedir=".">
 
-     &commonBuild;
+         &commonBuild;
 
     <property name="testName" value="dirDeployWithWarSuffix"/>
     <property name="contextRoot" value="foo"/>

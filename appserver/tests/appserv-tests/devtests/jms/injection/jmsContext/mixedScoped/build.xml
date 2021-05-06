@@ -29,7 +29,7 @@
     &reporting;
 
     <target name="all">
-         <antcall target="jmsContextDefaultInjection"/>
+             <antcall target="jmsContextDefaultInjection"/>
         <antcall target="jmsContextInjectionA"/>
         <antcall target="jmsContextInjectionB"/>
         <antcall target="jmsContextInjectionC"/>
@@ -109,9 +109,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the jms tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the jms tests)
+        </echo>
     </target>
 </project>

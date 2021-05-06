@@ -40,18 +40,18 @@ public class StatelessBean implements StatelessLocal {
     @Inject Foo foo;
 
     @PostConstruct
-    public void init() {
-    System.out.println("In StatelessBean::init()");
+        public void init() {
+        System.out.println("In StatelessBean::init()");
     }
 
     public void processSomeEvent(@Observes SomeEvent event) {
-    System.out.println("In StatelessBean::processSomeEvent " +
-               event);
+        System.out.println("In StatelessBean::processSomeEvent " +
+                           event);
     }
 
     public void hello() {
-    System.out.println("In StatelessBean::hello() " +
-               foo);
+        System.out.println("In StatelessBean::hello() " +
+                           foo);
         if (interceptorIds.size() != 2) {
             throw new IllegalStateException("Wrong number of interceptors were called: expected 2, got " + interceptorIds.size());
         } else if (interceptorIds.get(0) != 0 || interceptorIds.get(1) != 1) {
@@ -64,13 +64,13 @@ public class StatelessBean implements StatelessLocal {
     @ExcludeClassInterceptors
     @ExcludeDefaultInterceptors
     public void interceptorCalled(int id) {
-    System.out.println("In StatelessBean::interceptorCalled() " + id);
+        System.out.println("In StatelessBean::interceptorCalled() " + id);
         interceptorIds.add(id);
     }
 
     @PreDestroy
-    public void destroy() {
-    System.out.println("In StatelessBean::destroy()");
+        public void destroy() {
+        System.out.println("In StatelessBean::destroy()");
     }
 
 

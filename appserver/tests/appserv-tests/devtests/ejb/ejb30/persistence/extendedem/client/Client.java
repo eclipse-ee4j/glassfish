@@ -84,14 +84,14 @@ public class Client {
             stat.addStatus("local statusNonTxFindPerson", (statusNonTxFindPerson) ? stat.PASS : stat.FAIL);
             stat.addStatus("local statusNonTxFindPerson2", (statusNonTxFindPerson2) ? stat.PASS : stat.FAIL);
             stat.addStatus("local statusRemovePerson", (statusRemovePerson) ? stat.PASS : stat.FAIL);
-            stat.addStatus("local statusRefreshPerson", (statusRefreshPerson) ? stat.FAIL : stat.PASS);
+                        stat.addStatus("local statusRefreshPerson", (statusRefreshPerson) ? stat.FAIL : stat.PASS);
 
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
 

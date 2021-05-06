@@ -61,16 +61,16 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-timer tests)
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-timer tests)
 
-            ant mdbtimer (Executes the ejb-timer mdbtimer
+                        ant mdbtimer (Executes the ejb-timer mdbtimer
 
-            ant sessiontimer (Executes the ejb-timer sessiontimer test)
-            ant timertests (Executes the ejb-timer timertests test)
-            ant timerserialization (Executes the ejb-timer serialization test)
+                        ant sessiontimer (Executes the ejb-timer sessiontimer test)
+                        ant timertests (Executes the ejb-timer timertests test)
+                        ant timerserialization (Executes the ejb-timer serialization test)
 
-    </echo>
+        </echo>
     </target>
 </project>

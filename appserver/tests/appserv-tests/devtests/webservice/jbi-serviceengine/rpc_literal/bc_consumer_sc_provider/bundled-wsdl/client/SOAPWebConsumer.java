@@ -30,7 +30,7 @@ public class SOAPWebConsumer {
     private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
 
-    private static String testId = "jbi-serviceengine/rpc-literal/bc_consumer_sc_provider/bundled-wsdl";
+        private static String testId = "jbi-serviceengine/rpc-literal/bc_consumer_sc_provider/bundled-wsdl";
 
     public static void main(String[] args) {
         stat.addDescription(testId);
@@ -91,7 +91,7 @@ public class SOAPWebConsumer {
             timeTaken = System.currentTimeMillis() - startTime;
             printSuccess("Output from webservice : ",  hi, timeTaken);
 
-            /*
+                        /*
             startTime = System.currentTimeMillis();
             port.printHi();
             timeTaken = System.currentTimeMillis() - startTime;

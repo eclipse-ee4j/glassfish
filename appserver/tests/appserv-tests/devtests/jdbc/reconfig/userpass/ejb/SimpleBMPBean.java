@@ -32,44 +32,44 @@ public class SimpleBMPBean
     int id;
 
     public void setEntityContext(EntityContext entityContext) {
-    Context context = null;
-    try {
-        context    = new InitialContext();
-        ds = (DataSource) context.lookup("java:comp/env/DataSource1");
-    } catch (NamingException e) {
-        e.printStackTrace();
-        throw new EJBException("cant find datasource");
-    }
+        Context context = null;
+        try {
+            context    = new InitialContext();
+            ds = (DataSource) context.lookup("java:comp/env/DataSource1");
+        } catch (NamingException e) {
+            e.printStackTrace();
+            throw new EJBException("cant find datasource");
+        }
     }
 
     public Integer ejbCreate() throws CreateException {
-    return new Integer(1);
+        return new Integer(1);
     }
 
     public boolean test1(String user, String password, String tableName) {
         //access User1's table and push some data then read it out
-    boolean passed = false;
-    Connection conn = null;
-    try {
-        System.out.println("Called with " + user + ":"+password);
-        conn = ds.getConnection(user, password);
-        //conn = ds.getConnection();
-        insertData( conn, tableName );
-        queryTable( conn, tableName );
-        //emptyTable( conn, tableName );
+        boolean passed = false;
+        Connection conn = null;
+        try {
+            System.out.println("Called with " + user + ":"+password);
+            conn = ds.getConnection(user, password);
+            //conn = ds.getConnection();
+            insertData( conn, tableName );
+            queryTable( conn, tableName );
+            //emptyTable( conn, tableName );
             conn.close();
-        passed = true;
-    } catch (Exception e) {
-       //e.printStackTrace();
-    } finally {
-        if ( conn != null ) {
-            try {
-                conn.close();
-        } catch( Exception e1) {}
+            passed = true;
+        } catch (Exception e) {
+           //e.printStackTrace();
+        } finally {
+            if ( conn != null ) {
+                try {
+                    conn.close();
+                } catch( Exception e1) {}
+            }
         }
-    }
 
-    return passed;
+        return passed;
     }
 
 
@@ -86,15 +86,15 @@ public class SimpleBMPBean
             throws SQLException
     {
         PreparedStatement stmt = con.prepareStatement(
-        "insert into " + tableName + " values (?, ?)" );
+            "insert into " + tableName + " values (?, ?)" );
 
-    for (int i = 0; i < 5; i++ ) {
+        for (int i = 0; i < 5; i++ ) {
             stmt.setInt(1, i);
-        stmt.setString(2, "abcd-"+i);
-        stmt.executeUpdate();
-    }
+            stmt.setString(2, "abcd-"+i);
+            stmt.executeUpdate();
+        }
 
-    stmt.close();
+        stmt.close();
     }
 
     private void emptyTable( Connection con, String tableName )
@@ -103,10 +103,10 @@ public class SimpleBMPBean
         try {
             Statement stmt = con.createStatement();
 
-        stmt.execute("delete * from "+ tableName);
-        stmt.close();
+            stmt.execute("delete * from "+ tableName);
+            stmt.close();
         } catch( Exception e) {
-    }
+        }
 
     }
 
@@ -114,14 +114,14 @@ public class SimpleBMPBean
             throws SQLException
     {
         try {
-        Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("select * from "+ tableName);
-        while( rs.next() ) {
-            System.out.println( rs );
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from "+ tableName);
+            while( rs.next() ) {
+                System.out.println( rs );
+            }
+            rs.close();
+        } catch( Exception e) {
         }
-        rs.close();
-    } catch( Exception e) {
-    }
     }
 
 }

@@ -107,7 +107,7 @@ public class Jdbc extends MonTest {
 
 
 
-        /* After grizzly 2.0 integration numconfree changed from 5 to 7.  The onlygetconnectionservlet is being invoked
+                /* After grizzly 2.0 integration numconfree changed from 5 to 7.  The onlygetconnectionservlet is being invoked
                  in the *same* thread and com.sun.enterprise.resource.pool.AssocWithThreadResourcePool in this case doesn't allocate
                  new resource, but uses the one already associated with the thread. */
         //Comment out - this number seems upredictable to test - sometimes 6, sometimes 7 - JC

@@ -23,7 +23,7 @@ import java.util.*;
 public class DefinitionTag extends SimpleTagSupport {
   private String definitionName = null;
   private String screenId;
-  private    HashMap screens = null;
+  private        HashMap screens = null;
 
   public DefinitionTag() {
     super();
@@ -39,7 +39,7 @@ public class DefinitionTag extends SimpleTagSupport {
   }
   public void doTag() {
     try {
-         screens = new HashMap();
+             screens = new HashMap();
 
 
       getJspBody().invoke(null);
@@ -47,7 +47,7 @@ public class DefinitionTag extends SimpleTagSupport {
       Definition definition = new Definition();
       PageContext context = (PageContext)getJspContext();
       ArrayList params = (ArrayList) screens.get(screenId);
-      Iterator    ir = null;
+      Iterator        ir = null;
       if (params != null) {
         ir = params.iterator();
         while (ir.hasNext())
@@ -56,7 +56,7 @@ public class DefinitionTag extends SimpleTagSupport {
         // put the definition in the page context
         context.setAttribute(definitionName, definition, context.APPLICATION_SCOPE);
       }
-         else
+             else
         Debug.println("DefinitionTag: params are not defined.");
     } catch (Exception ex) {
         ex.printStackTrace();

@@ -33,11 +33,11 @@ public class HereLocalBean implements SessionBean {
     public HereLocalBean() {}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In HereLocalBean::ejbCreate !!");
+        System.out.println("In HereLocalBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public void doSomethingHere() {

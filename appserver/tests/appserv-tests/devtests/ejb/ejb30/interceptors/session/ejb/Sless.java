@@ -24,7 +24,7 @@ public interface Sless
     public String sayHello();
 
     public double computeMidPoint(int min, int max)
-        throws SwapArgumentsException;
+            throws SwapArgumentsException;
 
     public void setFoo(Foo foo)
         throws MyBadException;

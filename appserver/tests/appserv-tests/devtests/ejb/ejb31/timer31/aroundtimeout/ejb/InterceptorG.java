@@ -34,7 +34,7 @@ public class InterceptorG {
 
     @AroundTimeout
     Object aroundTimeout(InvocationContext ctx)
-            throws Exception {
+                throws Exception {
         Common.aroundTimeoutCalled(ctx, "G");
         Object instance = ctx.getTarget();
         if( instance instanceof SlessEJB6 ) {
@@ -46,7 +46,7 @@ public class InterceptorG {
 
     @AroundInvoke
     Object aroundInvoke(InvocationContext ctx)
-            throws Exception {
+                throws Exception {
         Object instance = ctx.getTarget();
         if( instance instanceof SlessEJB6 ) {
             ((SlessEJB6) instance).aroundTimeoutCalled = false;

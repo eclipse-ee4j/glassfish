@@ -121,7 +121,7 @@
 
     <target name="run" depends="init-common">
         <antcall target="runclient-local"/>
-     <antcall target="run-standalone-client"/>
+         <antcall target="run-standalone-client"/>
     </target>
 
     <target name="runclient-local" depends="init-common">
@@ -129,7 +129,7 @@
       <exec executable="${APPCLIENT}">
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-      <!-- dummy user added as appclient throwing login window -->
+          <!-- dummy user added as appclient throwing login window -->
       </exec>
     </target>
     <target name="undeploy" depends="init-common">
@@ -152,7 +152,7 @@
         <jvmarg value="-Djava.security.auth.login.config=${admin.domain.dir}/../lib/appclient/appclientlogin.conf"/>
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-    <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
+        <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
 <!--
         <jvmarg value="-Djavax.rmi.CORBA.UtilClass=com.sun.corba.ee.impl.javax.rmi.CORBA.Util"/>
         <jvmarg value="-Djavax.rmi.CORBA.StubClass=com.sun.corba.ee.impl.javax.rmi.CORBA.StubDelegateImpl"/>

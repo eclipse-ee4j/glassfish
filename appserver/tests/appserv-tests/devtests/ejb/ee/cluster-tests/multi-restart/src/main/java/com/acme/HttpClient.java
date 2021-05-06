@@ -46,18 +46,18 @@ public class HttpClient {
 
     public HttpClient(String[] args) {
         host = "localhost";
-    canProceed = (args.length == 6);
-    if (canProceed) {
+        canProceed = (args.length == 6);
+        if (canProceed) {
             for (int i=0; i<3; i++) {
-            instanceNames[i] = args[2 * i];
-            port[i] = args[2 * i + 1];
+                instanceNames[i] = args[2 * i];
+                port[i] = args[2 * i + 1];
             }
-    }
+        }
     }
 
     public void doTest() {
-    if (! canProceed) {
-        System.err.println("Usage: java -cp <cp> com.acme.HttpClient <inst_0_name> <port0>  <inst_1_name> <port1>  <inst_2_name> <port2> ");
+        if (! canProceed) {
+            System.err.println("Usage: java -cp <cp> com.acme.HttpClient <inst_0_name> <port0>  <inst_1_name> <port1>  <inst_2_name> <port2> ");
         } else {
             try {
                 String url = "http://" + host + ":" + port[0] +
@@ -79,63 +79,63 @@ public class HttpClient {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-    }
+        }
     }
 
     private void stopAndAccessAndStart(String instance, String port) {
             try { Thread.sleep(3*1000); } catch (Exception ex) {}
 
-        stopInstance(instance);
+            stopInstance(instance);
             String url = "http://" + host + ":" + port +
                     "/" + appName + "/" + servletName;
             System.out.println("** ACCESSING URL : " + url);
             for (int i = 0; i < 3; i++) {
                 if (! accessApplication(url)) {
-           break;
-        }
+                   break;
+                }
             }
 
-        startInstance(instance);
+            startInstance(instance);
             url = "http://" + host + ":" + port +
                     "/" + appName + "/" + servletName;
             for (int i = 0; i < 3; i++) {
                 if (! accessApplication(url)) {
-           break;
-        }
+                   break;
+                }
             }
     }
 
     private void stopInstance(String instName) {
-    try {
-        System.out.println("Executing stop-instance "  + instName);
-        Thread.sleep(3 * 1000);
-        Process proc = Runtime.getRuntime().exec(ASADMIN + "  stop-instance " + instName);
-        proc.waitFor();
-        System.out.println("Process stop-instance "  + instName + " finished...");
-    } catch (Exception ex) {
-        System.err.println("Error while stopping instance " + instName);
-    }
+        try {
+            System.out.println("Executing stop-instance "  + instName);
+            Thread.sleep(3 * 1000);
+            Process proc = Runtime.getRuntime().exec(ASADMIN + "  stop-instance " + instName);
+            proc.waitFor();
+            System.out.println("Process stop-instance "  + instName + " finished...");
+        } catch (Exception ex) {
+            System.err.println("Error while stopping instance " + instName);
+        }
     }
 
     private void startInstance(String instName) {
-    try {
-        System.out.println("Executing start-instance "  + instName);
-        Process proc = Runtime.getRuntime().exec(ASADMIN + "  start-instance " + instName);
-        proc.waitFor();
-        System.out.println("Process start-instance "  + instName + " finished...");
-        Thread.sleep(3 * 1000);
-    } catch (Exception ex) {
-        System.err.println("Error while starting instance " + instName);
-    }
+        try {
+            System.out.println("Executing start-instance "  + instName);
+            Process proc = Runtime.getRuntime().exec(ASADMIN + "  start-instance " + instName);
+            proc.waitFor();
+            System.out.println("Process start-instance "  + instName + " finished...");
+            Thread.sleep(3 * 1000);
+        } catch (Exception ex) {
+            System.err.println("Error while starting instance " + instName);
+        }
     }
 
     private boolean accessApplication(String urlStr) {
-    try {
+        try {
             URL url = new URL(urlStr);
             URLConnection uc = url.openConnection();
-        for (String cookie : responseCookies) {
+            for (String cookie : responseCookies) {
                 uc.setRequestProperty("Cookie", cookie);
-        }
+            }
             uc.connect();
             SessionStateInfo info = extractSessionStates(uc);
             info.setAccessCount(++_accessCount);
@@ -145,7 +145,7 @@ public class HttpClient {
                 System.out.println("Passed " + stateInfo);
             } else {
                 System.out.println("Failed " + info);
-        return false;
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,7 +166,7 @@ public class HttpClient {
                 responseCookies.add(cookie);
                 System.out.println("JUST READ COOKIE: " + cookie);
                 if (cookie.startsWith("JSESSIONID=")) {
-            jsessionIDCookie = cookie;
+                    jsessionIDCookie = cookie;
                 }
             }
         }

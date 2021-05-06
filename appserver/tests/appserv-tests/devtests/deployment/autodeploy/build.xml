@@ -24,7 +24,7 @@
 
 <project name="autodeploy" default="all" basedir=".">
 
-    &commonBuild;
+        &commonBuild;
 
         <property name="autodeploy.util.build" value="${build}/util"/>
         <property name="autodeploy.archive.name" value="servletonly.war"/>
@@ -32,7 +32,7 @@
 
         &autodeployUtil;
 
-    <target name="private-all">
+        <target name="private-all">
 
             <!--
                 Build the common tools used by autodeploy tests.
@@ -63,6 +63,6 @@
                     </ant>
             -->
 
-    </target>
+        </target>
 
 </project>

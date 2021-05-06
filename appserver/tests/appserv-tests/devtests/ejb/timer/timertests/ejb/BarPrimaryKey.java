@@ -34,21 +34,21 @@ public class BarPrimaryKey implements Serializable
 
     public boolean equals(Object other)
     {
-    if ( other instanceof BarPrimaryKey ) {
+        if ( other instanceof BarPrimaryKey ) {
             BarPrimaryKey bpk = (BarPrimaryKey) other;
-        return ((id.equals(bpk.id))
+            return ((id.equals(bpk.id))
                     && (value2.equals(bpk.value2)));
         }
-    return false;
+        return false;
     }
 
     public int hashCode()
     {
-    return id.hashCode();
+        return id.hashCode();
     }
 
     public String toString()
     {
-    return id + "_" + value2;
+        return id + "_" + value2;
     }
 }

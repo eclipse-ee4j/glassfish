@@ -36,7 +36,7 @@
 
     <security-constraint>
       <web-resource-collection>
-      <web-resource-name>Protected Area</web-resource-name>
+          <web-resource-name>Protected Area</web-resource-name>
           <url-pattern>/TestClientCert</url-pattern>
           <http-method>DELETE</http-method>
           <http-method>GET</http-method>

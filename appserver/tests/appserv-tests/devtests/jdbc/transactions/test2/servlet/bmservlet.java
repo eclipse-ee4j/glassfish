@@ -64,9 +64,9 @@ public class bmservlet extends HttpServlet
 
      try
       {
-         Hashtable env = new Hashtable(1);
+             Hashtable env = new Hashtable(1);
       env.put("javax.naming.factory.initial", "com.netscape.server.jndi.RootContextFactory");
-       ctx = new InitialContext(env);
+           ctx = new InitialContext(env);
        //TestUtil.init(p);
       Object objref = ctx.lookup("ejb/bmsamplebean1");
       home = (bmsample1home)PortableRemoteObject.narrow(objref, bmsample1home.class);
@@ -75,10 +75,10 @@ public class bmservlet extends HttpServlet
       out.println(" the result of invoking the ejb method is " + remote.performDBOps());
        out.println("calling M2 ->DB2");
       out.println("...... result of invoking the ejb method is " + remote.performDBOps2());
-       }
+           }
        catch (Exception e)
        {
-       System.out.println(" ERROR: " + e);
+           System.out.println(" ERROR: " + e);
        }
       try
         {
@@ -86,17 +86,17 @@ public class bmservlet extends HttpServlet
         java.sql.Connection conn = null,conn2 = null;
         java.sql.Statement stmt = null,stmt2 = null;
         java.sql.ResultSet rs = null,rs2 = null;
-    ctx = new InitialContext();
-    ds = (DataSource)ctx.lookup("java:comp/env/jdbc/oraclethird");
-    ds2 = (DataSource)ctx.lookup("java:comp/env/jdbc/oracleds2");
+        ctx = new InitialContext();
+        ds = (DataSource)ctx.lookup("java:comp/env/jdbc/oraclethird");
+        ds2 = (DataSource)ctx.lookup("java:comp/env/jdbc/oracleds2");
 
         conn = ds.getConnection();
-    conn2 = ds2.getConnection();
-    stmt=conn.createStatement();
-    stmt2=conn2.createStatement();
-    out.println("..........Verifying table contents ....");
-    rs=stmt.executeQuery("select * from status21");
-    int count=0;
+        conn2 = ds2.getConnection();
+        stmt=conn.createStatement();
+        stmt2=conn2.createStatement();
+        out.println("..........Verifying table contents ....");
+        rs=stmt.executeQuery("select * from status21");
+        int count=0;
          while (rs.next())
         {count++;
          out.println("record = "+rs.getString(1));
@@ -109,7 +109,7 @@ public class bmservlet extends HttpServlet
          }
          out.println("Total Records in table1 = "+count);
         out.println("Total Records in table2 = "+count2);
-    if ((count==1)&&(count2==1))
+        if ((count==1)&&(count2==1))
          out.println("Result:FAIL");
          else
          out.println("Result:PASS");
@@ -120,12 +120,12 @@ public class bmservlet extends HttpServlet
          rs.close();
          out.println("deleted in 1");
          out.println("deleted in 2");
-     rs2.close();
+         rs2.close();
          stmt.close();
-    stmt2.close();
+        stmt2.close();
 
-     conn.close();
-     conn2.close();
+         conn.close();
+         conn2.close();
         }catch(Exception e){}
 
 

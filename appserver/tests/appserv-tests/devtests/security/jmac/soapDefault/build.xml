@@ -71,7 +71,7 @@
             <param name="operand.props" value="SOAPDefaultTestClientAuthModule"/>
         </antcall>
 
-    <antcall target="enable-wss-message-security-provider">
+        <antcall target="enable-wss-message-security-provider">
             <param name="wss.server.provider.name" value="SOAPDefaultTestServerAuthModule"/>
             <param name="wss.client.provider.name" value="SOAPDefaultTestClientAuthModule"/>
         </antcall>
@@ -117,7 +117,7 @@
             <param name="operand.props" value="SOAPDefaultTestClientAuthModule"/>
         </antcall>
 
-    <antcall target="disable-wss-message-security-provider"/>
+        <antcall target="disable-wss-message-security-provider"/>
 
         <!-- may not be able to delete this file in PC environment -->
         <delete file="${env.S1AS_HOME}/lib/test-${appname}-provider.jar" failonerror="false"/>
@@ -177,7 +177,7 @@
                <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-           <include name="META-INF/sun-application.xml"/>
+               <include name="META-INF/sun-application.xml"/>
             </fileset>
         </jar>
     </target>

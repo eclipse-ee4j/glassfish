@@ -87,8 +87,8 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
 
     private static Class[] supportedMessageTypes = new Class[]
     {
-    jakarta.servlet.http.HttpServletRequest.class,
-    jakarta.servlet.http.HttpServletResponse.class
+        jakarta.servlet.http.HttpServletRequest.class,
+        jakarta.servlet.http.HttpServletResponse.class
     };
 
     private MessagePolicy requestPolicy;
@@ -119,10 +119,10 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * <p> The request policy and the response policy must not both be null.
      *
      * @param requestPolicy The request policy this module must enforce,
-     *        or null.
+     *                or null.
      *
      * @param responsePolicy The response policy this module must enforce,
-     *        or null.
+     *                or null.
      *
      * @param handler CallbackHandler used to request information.
      *
@@ -134,34 +134,34 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      */
 
     public void initialize(MessagePolicy requestPolicy,
-           MessagePolicy responsePolicy,
-           CallbackHandler handler,
-           Map options)
-    throws AuthException {
+               MessagePolicy responsePolicy,
+               CallbackHandler handler,
+               Map options)
+        throws AuthException {
 
-        this.requestPolicy = requestPolicy;
-        this.responsePolicy = responsePolicy;
+            this.requestPolicy = requestPolicy;
+            this.responsePolicy = responsePolicy;
 
-        this.isMandatory = requestPolicy.isMandatory();
+            this.isMandatory = requestPolicy.isMandatory();
 
-        this.handler = handler;
-        this.options = options;
+            this.handler = handler;
+            this.options = options;
 
-        if (options != null) {
-        debug = options.containsKey(DEBUG_OPTIONS_KEY);
-        policyContextID = (String)
-            options.get(POLICY_CONTEXT_OPTIONS_KEY);
-        } else {
-        debug = false;
-        policyContextID = null;
-        }
+            if (options != null) {
+                debug = options.containsKey(DEBUG_OPTIONS_KEY);
+                policyContextID = (String)
+                    options.get(POLICY_CONTEXT_OPTIONS_KEY);
+            } else {
+                debug = false;
+                policyContextID = null;
+            }
 
-        assignedGroups = getAssignedGroupNames();
+            assignedGroups = getAssignedGroupNames();
 
-        debugLevel = (logger.isLoggable(Level.FINE) && !debug) ?
-        Level.FINE : Level.INFO;
+            debugLevel = (logger.isLoggable(Level.FINE) && !debug) ?
+                Level.FINE : Level.INFO;
 
-        gssManager = GSSManager.getInstance();
+            gssManager = GSSManager.getInstance();
     }
 
     /**
@@ -172,7 +172,7 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * defining a message type supported by the module.
      */
     public Class[] getSupportedMessageTypes() {
-    return supportedMessageTypes;
+        return supportedMessageTypes;
     }
 
     /**
@@ -200,10 +200,10 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * @param clientSubject A Subject that represents the source of the
      *          service
      *          request.  It is used by the method implementation to store
-     *        Principals and credentials validated in the request.
+     *                Principals and credentials validated in the request.
      *
      * @param serviceSubject A Subject that represents the recipient of the
-     *        service request, or null.  It may be used by the method
+     *                service request, or null.  It may be used by the method
      *          implementation as the source of Principals or credentials to
      *          be used to validate the request. If the Subject is not null,
      *          the method implementation may add additional Principals or
@@ -244,152 +244,152 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      *          establishing a failure response message (in messageInfo).
      */
     public AuthStatus validateRequest(MessageInfo messageInfo,
-                   Subject clientSubject,
-                   Subject serviceSubject) throws AuthException {
+                               Subject clientSubject,
+                               Subject serviceSubject) throws AuthException {
 
-    assert (messageInfo.getMap().containsKey(IS_MANDATORY_INFO_KEY) ==
-        this.isMandatory);
+        assert (messageInfo.getMap().containsKey(IS_MANDATORY_INFO_KEY) ==
+                this.isMandatory);
 
-    HttpServletRequest request =
-        (HttpServletRequest) messageInfo.getRequestMessage();
+        HttpServletRequest request =
+            (HttpServletRequest) messageInfo.getRequestMessage();
 
-    HttpServletResponse response =
-        (HttpServletResponse) messageInfo.getResponseMessage();
+        HttpServletResponse response =
+            (HttpServletResponse) messageInfo.getResponseMessage();
 
-    debugRequest(request);
+        debugRequest(request);
 
-    // should specify encoder
-    String authorization = request.getHeader(AUTHORIZATION_HEADER);
+        // should specify encoder
+        String authorization = request.getHeader(AUTHORIZATION_HEADER);
 
-    if (authorization != null && authorization.startsWith(NEGOTIATE)) {
+        if (authorization != null && authorization.startsWith(NEGOTIATE)) {
 
-        authorization = authorization.substring(NEGOTIATE.length()+1);
+            authorization = authorization.substring(NEGOTIATE.length()+1);
 
-        // should specify a decoder
-        byte[] requestToken = Base64.decode(authorization.getBytes());
+            // should specify a decoder
+            byte[] requestToken = Base64.decode(authorization.getBytes());
 
-        try {
+            try {
 
-        GSSContext gssContext =
-            gssManager.createContext((GSSCredential) null);
+                GSSContext gssContext =
+                    gssManager.createContext((GSSCredential) null);
 
-        byte[] gssToken = gssContext.acceptSecContext
-            (requestToken,0,requestToken.length);
+                byte[] gssToken = gssContext.acceptSecContext
+                    (requestToken,0,requestToken.length);
 
-        if (gssToken != null) {
+                if (gssToken != null) {
 
-            byte[] responseToken = Base64.encode(gssToken);
+                    byte[] responseToken = Base64.encode(gssToken);
 
-            response.setHeader(AUTHENTICATION_HEADER,
-                       "Negotiate" + responseToken);
+                    response.setHeader(AUTHENTICATION_HEADER,
+                                       "Negotiate" + responseToken);
 
-            debugToken("jmac.servlet.authentication.token",
-                   responseToken);
-        }
+                    debugToken("jmac.servlet.authentication.token",
+                                   responseToken);
+                }
 
-        if (!gssContext.isEstablished()) {
+                if (!gssContext.isEstablished()) {
 
-            if (debug || logger.isLoggable(Level.FINE)){
-            logger.log(debugLevel,"jmac.gss_dialog_continued");
+                    if (debug || logger.isLoggable(Level.FINE)){
+                        logger.log(debugLevel,"jmac.gss_dialog_continued");
+                    }
+
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return AuthStatus.SEND_CONTINUE;
+
+                } else {
+
+                    String mechID;
+                    try {
+                        Oid oid = gssContext.getMech();
+                        mechID = oid.toString();
+                    } catch (GSSException gsse) {
+                        mechID = "Undefined GSS Mechanism";
+
+                        if (debug || logger.isLoggable(Level.FINE)){
+                            logger.log(debugLevel,
+                                       "jmac.gss_mechanism_undefined",gsse);
+                        }
+                    }
+
+                    GSSName name = gssContext.getSrcName();
+
+                    if (!setCallerPrincipal(name,clientSubject)) {
+
+                        return sendFailureMessage
+                            (response,
+                             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                             "Failed setting caller principal");
+                    }
+
+                    /* we may need to add something like a cookie to the
+                     * response (that will be returned in subsequent requests).
+                     * At this point, I am presuming that the browser will
+                     * resend the authorization token.
+                     */
+                    messageInfo.getMap().put(AUTH_TYPE_INFO_KEY,mechID);
+
+                    if (debug || logger.isLoggable(Level.FINE)){
+                        logger.log(debugLevel,"jmac.gss_dialog_complete");
+                    }
+
+                }
+
+            } catch (GSSException gsse) {
+
+                if (requestToken != null) {
+
+                    debugToken("jmac.servlet.authorization.token",
+                               requestToken);
+
+                    if (isNTLMToken(requestToken)) {
+
+                        // until we add support for NTLM
+                        return sendFailureMessage
+                            (response,
+                             HttpServletResponse.SC_NOT_IMPLEMENTED,
+                             "No support for NTLM");
+                    }
+                }
+
+                if (debug || logger.isLoggable(Level.FINE)){
+                    logger.log(debugLevel,"jmac.gss_dialog_failed",gsse);
+                }
+
+                // for other errors throw an AuthException
+
+                AuthException ae = new AuthException();
+                ae.initCause(gsse);
+                throw ae;
             }
 
+        } else if (this.isMandatory) {
+
+            response.setHeader(AUTHENTICATION_HEADER,NEGOTIATE);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+            if (debug || logger.isLoggable(Level.FINE)){
+                logger.log(debugLevel,"jmac.sevlet_header_added_to_response",
+                           NEGOTIATE);
+            }
+
             return AuthStatus.SEND_CONTINUE;
 
         } else {
 
-            String mechID;
-            try {
-            Oid oid = gssContext.getMech();
-            mechID = oid.toString();
-            } catch (GSSException gsse) {
-            mechID = "Undefined GSS Mechanism";
-
-            if (debug || logger.isLoggable(Level.FINE)){
-                logger.log(debugLevel,
-                       "jmac.gss_mechanism_undefined",gsse);
-            }
+            if (authorization != null) {
+                logger.warning("jmac.servlet_authorization_header_ignored");
             }
 
-            GSSName name = gssContext.getSrcName();
-
-            if (!setCallerPrincipal(name,clientSubject)) {
-
-            return sendFailureMessage
-                (response,
-                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                 "Failed setting caller principal");
-            }
-
-            /* we may need to add something like a cookie to the
-             * response (that will be returned in subsequent requests).
-             * At this point, I am presuming that the browser will
-             * resend the authorization token.
-             */
-            messageInfo.getMap().put(AUTH_TYPE_INFO_KEY,mechID);
-
-            if (debug || logger.isLoggable(Level.FINE)){
-            logger.log(debugLevel,"jmac.gss_dialog_complete");
+            if (!setCallerPrincipal(null,clientSubject)) {
+                return sendFailureMessage
+                    (response,
+                     HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                     "Failed setting unauthenticated caller principal");
             }
 
         }
 
-        } catch (GSSException gsse) {
-
-        if (requestToken != null) {
-
-            debugToken("jmac.servlet.authorization.token",
-                   requestToken);
-
-            if (isNTLMToken(requestToken)) {
-
-            // until we add support for NTLM
-            return sendFailureMessage
-                (response,
-                 HttpServletResponse.SC_NOT_IMPLEMENTED,
-                 "No support for NTLM");
-            }
-        }
-
-        if (debug || logger.isLoggable(Level.FINE)){
-            logger.log(debugLevel,"jmac.gss_dialog_failed",gsse);
-        }
-
-        // for other errors throw an AuthException
-
-        AuthException ae = new AuthException();
-        ae.initCause(gsse);
-        throw ae;
-        }
-
-    } else if (this.isMandatory) {
-
-        response.setHeader(AUTHENTICATION_HEADER,NEGOTIATE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-
-        if (debug || logger.isLoggable(Level.FINE)){
-        logger.log(debugLevel,"jmac.sevlet_header_added_to_response",
-               NEGOTIATE);
-        }
-
-        return AuthStatus.SEND_CONTINUE;
-
-    } else {
-
-        if (authorization != null) {
-        logger.warning("jmac.servlet_authorization_header_ignored");
-        }
-
-        if (!setCallerPrincipal(null,clientSubject)) {
-        return sendFailureMessage
-            (response,
-             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-             "Failed setting unauthenticated caller principal");
-        }
-
-    }
-
-    return AuthStatus.SUCCESS;
+        return AuthStatus.SUCCESS;
     }
 
     /**
@@ -451,8 +451,8 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      *          establishing a failure response message (in messageInfo).
      */
     public AuthStatus secureResponse(MessageInfo messageInfo,
-    Subject serviceSubject) throws AuthException {
-    return AuthStatus.SEND_SUCCESS;
+        Subject serviceSubject) throws AuthException {
+        return AuthStatus.SEND_SUCCESS;
     }
 
     /**
@@ -472,136 +472,136 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      */
 
     public void cleanSubject(MessageInfo messageInfo, Subject subject)
-    throws AuthException {
+        throws AuthException {
     }
 
     AuthStatus sendFailureMessage(HttpServletResponse response,
-                  int status, String message){
-    try {
-        response.setStatus(status);
-        response.sendError(status,message);
-    } catch (Throwable t) {
-        // status code has been set, and proper AuthStatus will be returned
-        logger.log(Level.WARNING,"jmac.servlet_failed_sending_failure",t);
-    } finally {
-        return AuthStatus.SEND_FAILURE;
-    }
+                                  int status, String message){
+        try {
+            response.setStatus(status);
+            response.sendError(status,message);
+        } catch (Throwable t) {
+            // status code has been set, and proper AuthStatus will be returned
+            logger.log(Level.WARNING,"jmac.servlet_failed_sending_failure",t);
+        } finally {
+            return AuthStatus.SEND_FAILURE;
+        }
     }
 
     private boolean setCallerPrincipal(GSSName name,Subject clientSubject) {
 
-    Principal caller = null;
+        Principal caller = null;
 
-    if (name != null) {
+        if (name != null) {
 
-        // create Subject with principals from name
-        Subject s = GSSUtil.createSubject(name,null);
+            // create Subject with principals from name
+            Subject s = GSSUtil.createSubject(name,null);
 
-        Set principals = s.getPrincipals();
+            Set principals = s.getPrincipals();
 
-        if (principals.size() > 0) {
+            if (principals.size() > 0) {
 
-        clientSubject.getPrincipals().addAll(principals);
+                clientSubject.getPrincipals().addAll(principals);
 
-        // if more than 1 prin, caller selection is unpredictable
+                // if more than 1 prin, caller selection is unpredictable
 
-        caller = (Principal) principals.iterator().next();
-        } else if (debug || logger.isLoggable(Level.FINE)){
-        logger.log(debugLevel,"jmac.no_gss_caller_principal");
+                caller = (Principal) principals.iterator().next();
+            } else if (debug || logger.isLoggable(Level.FINE)){
+                logger.log(debugLevel,"jmac.no_gss_caller_principal");
+            }
         }
-    }
 
-    CallerPrincipalCallback cPCB =
-        new CallerPrincipalCallback(clientSubject,caller);
+        CallerPrincipalCallback cPCB =
+            new CallerPrincipalCallback(clientSubject,caller);
 
-    GroupPrincipalCallback gPCB = new GroupPrincipalCallback
-        (clientSubject,(caller == null ? null : assignedGroups));
+        GroupPrincipalCallback gPCB = new GroupPrincipalCallback
+            (clientSubject,(caller == null ? null : assignedGroups));
 
-    try {
-        handler.handle(new Callback[] { cPCB, gPCB } );
-        if (debug || logger.isLoggable(Level.FINE)){
-        logger.log(debugLevel,"jmac.caller_principal",
-               new Object[] { caller } );
+        try {
+            handler.handle(new Callback[] { cPCB, gPCB } );
+            if (debug || logger.isLoggable(Level.FINE)){
+                logger.log(debugLevel,"jmac.caller_principal",
+                           new Object[] { caller } );
+            }
+            return true;
+        } catch (Exception e) {
+            // should not happen
+            logger.log(Level.WARNING,"jmac.failed_to_set_caller",e);
         }
-        return true;
-    } catch (Exception e) {
-        // should not happen
-        logger.log(Level.WARNING,"jmac.failed_to_set_caller",e);
-    }
 
-    return false;
+        return false;
     }
 
     boolean isNTLMToken(byte[] bytes) {
 
-    String s = new String(bytes);
-    return s.startsWith(NTLM_INITIAL_TOKEN);
+        String s = new String(bytes);
+        return s.startsWith(NTLM_INITIAL_TOKEN);
     }
 
     void debugToken(String message, byte[] bytes) {
 
-    if (debug || logger.isLoggable(Level.FINE)) {
+        if (debug || logger.isLoggable(Level.FINE)) {
 
-        StringBuffer sb = new StringBuffer();
-        sb.append("\n");
-        sb.append("Token " +
-              (Base64.isArrayByteBase64(bytes) ? "is" : "is Not") +
-              " Base64 encoded" + "\n");
-        sb.append("bytes: " );
-        boolean first = true;
-        for (byte b : bytes) {
-        int i = b;
-        if (first) {
-            sb.append(i);
-            first = false;
-        } else {
-            sb.append(", " + i);
-        }
-        }
+            StringBuffer sb = new StringBuffer();
+            sb.append("\n");
+            sb.append("Token " +
+                      (Base64.isArrayByteBase64(bytes) ? "is" : "is Not") +
+                      " Base64 encoded" + "\n");
+            sb.append("bytes: " );
+            boolean first = true;
+            for (byte b : bytes) {
+                int i = b;
+                if (first) {
+                    sb.append(i);
+                    first = false;
+                } else {
+                    sb.append(", " + i);
+                }
+            }
 
-        logger.log(debugLevel,message,sb);
-    }
+            logger.log(debugLevel,message,sb);
+        }
     }
 
     void debugRequest(HttpServletRequest request) {
 
-    if (debug || logger.isLoggable(Level.FINE)){
-        StringBuffer sb = new StringBuffer();
-        sb.append("\n");
-        try {
-        sb.append("Request: " +request.getRequestURL() + "\n");
-        sb.append("UserPrincipal: " + request.getUserPrincipal() + "\n");
-        sb.append("AuthType: " + request.getAuthType()+ "\n");
-        sb.append("Headers:" + "\n");
-        Enumeration names = request.getHeaderNames();
-        while (names.hasMoreElements()) {
-            String name = (String) names.nextElement();
-            sb.append("\t" + name + "\t" + request.getHeader(name) + "\n");
-        }
+        if (debug || logger.isLoggable(Level.FINE)){
+            StringBuffer sb = new StringBuffer();
+            sb.append("\n");
+            try {
+                sb.append("Request: " +request.getRequestURL() + "\n");
+                sb.append("UserPrincipal: " + request.getUserPrincipal() + "\n");
+                sb.append("AuthType: " + request.getAuthType()+ "\n");
+                sb.append("Headers:" + "\n");
+                Enumeration names = request.getHeaderNames();
+                while (names.hasMoreElements()) {
+                    String name = (String) names.nextElement();
+                    sb.append("\t" + name + "\t" + request.getHeader(name) + "\n");
+                }
 
-        logger.log(debugLevel,"jmac.servlet_request",sb);
+                logger.log(debugLevel,"jmac.servlet_request",sb);
 
-        } catch(Throwable t) {
-        logger.log(Level.WARNING,"jmac.servlet_debug_request",t);
+            } catch(Throwable t) {
+                logger.log(Level.WARNING,"jmac.servlet_debug_request",t);
+            }
         }
-    }
     }
 
     private String[] getAssignedGroupNames() {
-    String groupList = (String)
-        options.get(ASSIGN_GROUPS_OPTIONS_KEY);
-    String[] groups = null;
-    if (groupList != null) {
-        StringTokenizer tokenizer =
-        new StringTokenizer(groupList," ,:,;");
-        int count = tokenizer.countTokens();
-        if (count > 0) {
-        groups = new String[count];
-        for (int i = 0; i < count; i++) {
-            groups[i] = tokenizer.nextToken();
+        String groupList = (String)
+            options.get(ASSIGN_GROUPS_OPTIONS_KEY);
+        String[] groups = null;
+        if (groupList != null) {
+            StringTokenizer tokenizer =
+                new StringTokenizer(groupList," ,:,;");
+            int count = tokenizer.countTokens();
+            if (count > 0) {
+                groups = new String[count];
+                for (int i = 0; i < count; i++) {
+                    groups[i] = tokenizer.nextToken();
+                }
+            }
         }
-        }
-    }
-    return groups;
+        return groups;
     }
 }

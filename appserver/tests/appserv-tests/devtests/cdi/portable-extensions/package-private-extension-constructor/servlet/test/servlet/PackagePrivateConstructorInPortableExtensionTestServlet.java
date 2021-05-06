@@ -71,16 +71,16 @@ public class PackagePrivateConstructorInPortableExtensionTestServlet extends Htt
 
         if (!PackagePrivateConstructorExtension.beforeBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-                    "beforeBeanDiscovery not called";
+                            "beforeBeanDiscovery not called";
 
         if (!PackagePrivateConstructorExtension.afterBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-                    "afterBeanDiscovery not called or injection of BeanManager " +
-                    "in an observer method failed";
+                            "afterBeanDiscovery not called or injection of BeanManager " +
+                            "in an observer method failed";
 
         if (!PackagePrivateConstructorExtension.processAnnotatedTypeCalled)
             msg += "Portable Extension lifecycle observer method: process " +
-                    "annotated type not called";
+                            "annotated type not called";
 
         if((bm.getBeans(PackagePrivateConstructorExtension.class, new AnnotationLiteral<Any>(){}).iterator().next().getClass()) == null)
             msg += "Portable Extension not available for lookup through BeanManager";

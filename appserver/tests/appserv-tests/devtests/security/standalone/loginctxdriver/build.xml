@@ -35,10 +35,10 @@
    &commonSecurity;
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes standalone login context driver tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes standalone login context driver tests)
+        </echo>
     </target>
 
     <target name="all" depends="build, setup, deploy,run, undeploy, unsetup">

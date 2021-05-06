@@ -143,37 +143,37 @@
 
     <target name="create-ldap-usrgrps" depends="init-common">
 
-        <copy file="${create.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
-        <echo message="Creating ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?${directory.server.basedn}"/>
-      <antcall target="execute-ldap-ldif">
-        <param name="ldif.file.path" value="temp.ldif"/>
-      </antcall>
-      <echo message="deleting temp file..."/>
-      <delete file="temp.ldif"/>
+            <copy file="${create.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
+            <echo message="Creating ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?${directory.server.basedn}"/>
+          <antcall target="execute-ldap-ldif">
+                <param name="ldif.file.path" value="temp.ldif"/>
+          </antcall>
+          <echo message="deleting temp file..."/>
+          <delete file="temp.ldif"/>
 
     </target>
 
     <target name="delete-ldap-usrgrps" depends="init-common">
-        <copy file="${delete.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
-        <echo message="Deleting ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?${directory.server.basedn}"/>
-      <antcall target="execute-ldap-ldif">
-        <param name="ldif.file.path" value="temp.ldif"/>
-      </antcall>
-      <echo message="deleting temp file..."/>
-      <delete file="temp.ldif"/>
+            <copy file="${delete.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
+            <echo message="Deleting ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?${directory.server.basedn}"/>
+          <antcall target="execute-ldap-ldif">
+                <param name="ldif.file.path" value="temp.ldif"/>
+          </antcall>
+          <echo message="deleting temp file..."/>
+          <delete file="temp.ldif"/>
     </target>
 
     <target name="execute-ldap-ldif" depends="init-common">
-    <java classname="LDAPModify" fork="true" failonerror="false">
-        <arg line="-h ${directory.server.host}"/>
-        <arg line="-p ${directory.server.port}"/>
-        <arg line="-D &quot;${directory.manager.dn}&quot;"/>
-        <arg line="-w ${directory.manager.passwd}"/>
-        <arg line="-f ${ldif.file.path}"/>
-        <classpath>
-            <pathelement path="${env.APS_HOME}/lib/ldapjdk.jar"/>
-        </classpath>
-    </java>
+        <java classname="LDAPModify" fork="true" failonerror="false">
+                <arg line="-h ${directory.server.host}"/>
+                <arg line="-p ${directory.server.port}"/>
+                <arg line="-D &quot;${directory.manager.dn}&quot;"/>
+                <arg line="-w ${directory.manager.passwd}"/>
+                <arg line="-f ${ldif.file.path}"/>
+                <classpath>
+                        <pathelement path="${env.APS_HOME}/lib/ldapjdk.jar"/>
+                </classpath>
+        </java>
     </target>
 
     <target name="usage">

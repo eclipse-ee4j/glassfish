@@ -37,11 +37,11 @@ public class Client {
     }
 
     public void doTest(String[] args) {
-        try {
+            try {
 
            String targetEndpointAddress = args[0];
 
-        Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
             SignatureTestService testService =
                 (SignatureTestService) ic.lookup("java:comp/env/service/signature");
@@ -58,7 +58,7 @@ public class Client {
                 System.out.println("MSG: " + msg);
                 stat.addStatus("signature SEI.sayHello(msg)", stat.PASS);
             } catch (Exception e1) {
-        e1.printStackTrace();
+                e1.printStackTrace();
                 stat.addStatus("signature SEI.sayHello(msg)", stat.FAIL);
             }
 
@@ -107,10 +107,10 @@ public class Client {
                 stat.addStatus("signature SEI.setValueTypeWithDates", stat.FAIL);
             }
 */
-        } catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("signature client test failed");
             ex.printStackTrace();
             stat.addStatus("signature client main", stat.FAIL);
-    }
+        }
     }
 }

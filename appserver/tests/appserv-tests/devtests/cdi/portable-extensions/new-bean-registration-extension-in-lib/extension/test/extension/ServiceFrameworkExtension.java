@@ -122,7 +122,7 @@ public class ServiceFrameworkExtension implements Extension{
                     printDebugForInjectionPoint(injectionPoint);
                     //Keep track of service-type and its attributes
                     System.out.println("---- Injection requested for " +
-                            "framework service type " + injectionPoint.getType()
+                                    "framework service type " + injectionPoint.getType()
                             + " and annotated with dynamic="
                             + injectionPoint.getAnnotated()
                                     .getAnnotation(FrameworkService.class)

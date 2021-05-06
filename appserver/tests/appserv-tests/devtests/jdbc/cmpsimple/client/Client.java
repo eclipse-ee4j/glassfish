@@ -27,8 +27,8 @@ public class Client {
 
     public static void main(String[] args) {
 
-     SimpleReporterAdapter stat = new SimpleReporterAdapter();
-    String testSuite = "cmpsimple";
+         SimpleReporterAdapter stat = new SimpleReporterAdapter();
+        String testSuite = "cmpsimple";
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/BlobTestBean");
@@ -48,15 +48,15 @@ public class Client {
             bean = bhome.findByPrimaryKey(new Integer(1));
             System.out.println(new String(bean.getName()));
 
-        stat.addStatus(testSuite + " test : ", stat.PASS);
+            stat.addStatus(testSuite + " test : ", stat.PASS);
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus(testSuite +  "test : ", stat.FAIL);
+            stat.addStatus(testSuite +  "test : ", stat.FAIL);
         }
 
-    stat.printSummary();
+        stat.printSummary();
 
     }
 

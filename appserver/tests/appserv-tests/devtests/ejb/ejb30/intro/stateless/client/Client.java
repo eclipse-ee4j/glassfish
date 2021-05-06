@@ -49,39 +49,39 @@ public class Client {
     public void doTest() {
         try {
             (new InitialContext()).lookup("java:comp/env/ejb/GG");
-        sless.sayHello();
+            sless.sayHello();
             stat.addStatus("intro sayHello", stat.PASS);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("intro sayHello", stat.FAIL);
         }
 
-    boolean result = false;
+        boolean result = false;
 
         try {
-        result = sless.wasEjbCreateCalled();
+            result = sless.wasEjbCreateCalled();
             stat.addStatus("intro wasEjbCreateCalled",
                     result ? stat.PASS : stat.FAIL);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("intro wasEjbCreateCalled", stat.FAIL);
-    }
+        }
 
 
         try {
-        sless30.sayHello();
+            sless30.sayHello();
             stat.addStatus("intro sayHello30", stat.PASS);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("intro sayHello30", stat.FAIL);
         }
 
-    result = false;
+        result = false;
 
         try {
-        result = sless30.wasEjbCreateCalled();
+            result = sless30.wasEjbCreateCalled();
             stat.addStatus("intro wasEjbCreateCalled30",
                     (result == false) ? stat.PASS : stat.FAIL);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("intro wasEjbCreateCalled30", stat.FAIL);
-    }
+        }
 
 
 

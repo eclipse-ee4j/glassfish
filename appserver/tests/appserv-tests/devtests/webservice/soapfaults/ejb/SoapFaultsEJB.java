@@ -30,7 +30,7 @@ public class SoapFaultsEJB implements SessionBean {
     public SoapFaultsEJB(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In SoapFaultsEJB::ejbCreate !!");
+        System.out.println("In SoapFaultsEJB::ejbCreate !!");
     }
 
     public Test1ResponseType test1(String a, String b,

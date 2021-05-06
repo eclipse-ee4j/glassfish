@@ -28,7 +28,7 @@
         <ejb>jdbc41-close-on-completion-ejb.jar</ejb>
     </module>
     <module>
-    <java>jdbc41-close-on-completion-client.jar</java>
+        <java>jdbc41-close-on-completion-client.jar</java>
     </module>
 </application>
 

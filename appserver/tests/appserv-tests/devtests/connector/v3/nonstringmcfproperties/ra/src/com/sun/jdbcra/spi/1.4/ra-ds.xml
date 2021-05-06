@@ -197,31 +197,31 @@
                       <config-property-value>;create=true</config-property-value>
               </config-property>
 
-              <config-property>
-                    <config-property-name>ConnectionValidationRequired</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value>false</config-property-value>
-            </config-property>
-            <config-property>
-                    <config-property-name>ValidationMethod</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value></config-property-value>
-            </config-property>
-            <config-property>
-                    <config-property-name>ValidationTableName</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value></config-property-value>
-            </config-property>
-            <config-property>
-                    <config-property-name>TransactionIsolation</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value></config-property-value>
-            </config-property>
-            <config-property>
-                    <config-property-name>GuaranteeIsolationLevel</config-property-name>
-                    <config-property-type>java.lang.String</config-property-type>
-                    <config-property-value></config-property-value>
-            </config-property>
+                      <config-property>
+                        <config-property-name>ConnectionValidationRequired</config-property-name>
+                        <config-property-type>java.lang.String</config-property-type>
+                        <config-property-value>false</config-property-value>
+                </config-property>
+                <config-property>
+                        <config-property-name>ValidationMethod</config-property-name>
+                        <config-property-type>java.lang.String</config-property-type>
+                        <config-property-value></config-property-value>
+                </config-property>
+                <config-property>
+                        <config-property-name>ValidationTableName</config-property-name>
+                        <config-property-type>java.lang.String</config-property-type>
+                        <config-property-value></config-property-value>
+                </config-property>
+                <config-property>
+                        <config-property-name>TransactionIsolation</config-property-name>
+                        <config-property-type>java.lang.String</config-property-type>
+                        <config-property-value></config-property-value>
+                </config-property>
+                <config-property>
+                        <config-property-name>GuaranteeIsolationLevel</config-property-name>
+                        <config-property-type>java.lang.String</config-property-type>
+                        <config-property-value></config-property-value>
+                </config-property>
 <!-- properties to test setting of a non-String value with overridden setters -->
                 <config-property>
                     <config-property-name>NonStringWithNoOverriddenSetter</config-property-name>
@@ -258,29 +258,29 @@
             <reauthentication-support>false</reauthentication-support>
 
         </outbound-resourceadapter>
-    <adminobject>
-           <adminobject-interface>com.sun.jdbcra.spi.JdbcSetupAdmin</adminobject-interface>
-           <adminobject-class>com.sun.jdbcra.spi.JdbcSetupAdminImpl</adminobject-class>
-           <config-property>
-               <config-property-name>TableName</config-property-name>
-               <config-property-type>java.lang.String</config-property-type>
-               <config-property-value></config-property-value>
-           </config-property>
-           <config-property>
-               <config-property-name>SchemaName</config-property-name>
-               <config-property-type>java.lang.String</config-property-type>
-               <config-property-value></config-property-value>
-           </config-property>
-           <config-property>
-               <config-property-name>JndiName</config-property-name>
-               <config-property-type>java.lang.String</config-property-type>
-               <config-property-value></config-property-value>
-           </config-property>
-           <config-property>
-               <config-property-name>NoOfRows</config-property-name>
-               <config-property-type>java.lang.Integer</config-property-type>
-               <config-property-value>0</config-property-value>
-           </config-property>
+        <adminobject>
+               <adminobject-interface>com.sun.jdbcra.spi.JdbcSetupAdmin</adminobject-interface>
+               <adminobject-class>com.sun.jdbcra.spi.JdbcSetupAdminImpl</adminobject-class>
+               <config-property>
+                   <config-property-name>TableName</config-property-name>
+                   <config-property-type>java.lang.String</config-property-type>
+                   <config-property-value></config-property-value>
+               </config-property>
+               <config-property>
+                   <config-property-name>SchemaName</config-property-name>
+                   <config-property-type>java.lang.String</config-property-type>
+                   <config-property-value></config-property-value>
+               </config-property>
+               <config-property>
+                   <config-property-name>JndiName</config-property-name>
+                   <config-property-type>java.lang.String</config-property-type>
+                   <config-property-value></config-property-value>
+               </config-property>
+               <config-property>
+                   <config-property-name>NoOfRows</config-property-name>
+                   <config-property-type>java.lang.Integer</config-property-type>
+                   <config-property-value>0</config-property-value>
+               </config-property>
         </adminobject>
 
     </resourceadapter>

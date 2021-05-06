@@ -28,7 +28,7 @@ import connector.MyMessageListener;
 
 /**
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class DeliveryWork implements Work {
 

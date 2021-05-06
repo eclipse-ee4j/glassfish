@@ -54,7 +54,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
@@ -80,7 +80,7 @@ public class WebTest {
             if (!EXPECTED_RESPONSE.equals(line)) {
                 throw new Exception("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + line);
-        }
+            }
         } finally {
             try {
                 if (is != null) {

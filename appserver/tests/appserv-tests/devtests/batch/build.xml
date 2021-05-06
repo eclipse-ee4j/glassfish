@@ -32,21 +32,21 @@
 <property file="build.properties" />
 
     <target name="all">
-    <delete>
+        <delete>
            <fileset dir="${env.APS_HOME}" includes="test_results*"/>
         </delete>
         <delete>
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="batch.output" action="start" />
-<!--    <ant dir="batch-dev-tests" target="all"/>  -->
-    <ant dir="bmt-chunk-job" target="all"/>
-    <ant dir="cmt-chunk-job" target="all"/>
-<!--    <ant dir="pay-roll-job-with-ejb/stateless" target="all"/>
-    <ant dir="simple-batchlet" target="all"/> -->
-    <ant dir="simple-validation-test" target="all"/>
-<!--    <ant dir="two-steps-job" target="all"/>   -->
-    <record name="batch.output" action="stop" />
+<!--        <ant dir="batch-dev-tests" target="all"/>  -->
+        <ant dir="bmt-chunk-job" target="all"/>
+        <ant dir="cmt-chunk-job" target="all"/>
+<!--        <ant dir="pay-roll-job-with-ejb/stateless" target="all"/>
+        <ant dir="simple-batchlet" target="all"/> -->
+        <ant dir="simple-validation-test" target="all"/>
+<!--        <ant dir="two-steps-job" target="all"/>   -->
+        <record name="batch.output" action="stop" />
 
     </target>
 </project>

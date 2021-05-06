@@ -36,9 +36,9 @@ public class Client {
 
     public static void main(String args[]) {
 
-    appName = args[0];
-    stat.addDescription(appName);
-    Client client = new Client(args);
+        appName = args[0];
+        stat.addDescription(appName);
+        Client client = new Client(args);
         client.doTest();
         stat.printSummary(appName + "ID");
     }
@@ -47,26 +47,26 @@ public class Client {
 
     public void doTest() {
 
-    try {
+        try {
 
-        Hello bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB!com.acme.Hello");
-        System.out.println("SFSB test : " + bean.test("BAR", 1));
+            Hello bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB!com.acme.Hello");
+            System.out.println("SFSB test : " + bean.test("BAR", 1));
             bean.testRemove();
 
-        bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB!com.acme.Hello");
-        System.out.println("SFSB test destroyed: " + bean.test("FOO", 1));
-        System.out.println("SFSB test again: " + bean.test("BAR", 2));
+            bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB!com.acme.Hello");
+            System.out.println("SFSB test destroyed: " + bean.test("FOO", 1));
+            System.out.println("SFSB test again: " + bean.test("BAR", 2));
 
-        Hello2 bean2 = (Hello2) new InitialContext().lookup("java:global/" + appName + "/SLSB");
+            Hello2 bean2 = (Hello2) new InitialContext().lookup("java:global/" + appName + "/SLSB");
             bean2.testRemove();
 
 
-         stat.addStatus("local main", stat.PASS);
+             stat.addStatus("local main", stat.PASS);
 
-    } catch(Exception e) {
-        stat.addStatus("local main", stat.FAIL);
-        e.printStackTrace();
-    }
+        } catch(Exception e) {
+            stat.addStatus("local main", stat.FAIL);
+            e.printStackTrace();
+        }
     }
 
 

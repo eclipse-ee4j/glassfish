@@ -47,6 +47,6 @@ public class CustomerManager {
         System.out.println("removeCustomer");
         String ejbQL = "DELETE FROM Customer c WHERE c.name = \""+id+"\"";
         int ret = em.createQuery( ejbQL ).executeUpdate();
-     return ret;
+         return ret;
     }
 }

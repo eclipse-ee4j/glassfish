@@ -68,7 +68,7 @@ public class JPAResourceInjectionServletFromSingletonEJB extends HttpServlet {
 
         if (emf == null)
             msg += "Simple injection of EntityManagerFactory through " +
-                    "@PersistenceUnit failed";
+                            "@PersistenceUnit failed";
         String testcase = request.getParameter("testcase");
         System.out.println("testcase=" + testcase);
 

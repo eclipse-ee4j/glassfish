@@ -70,9 +70,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-ejb31-ejblite tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ejb31-ejblite tests)
+        </echo>
     </target>
 </project>

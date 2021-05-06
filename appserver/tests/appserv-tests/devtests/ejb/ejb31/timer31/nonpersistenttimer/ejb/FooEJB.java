@@ -52,7 +52,7 @@ public class FooEJB extends TimerStuffImpl implements SessionBean, TimedObject {
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
         setContext(sc);
 
         System.out.println("In FooEJB::setSessionContext");
@@ -64,7 +64,7 @@ public class FooEJB extends TimerStuffImpl implements SessionBean, TimedObject {
     }
 
     public void ejbCreate() throws EJBException {
-    System.out.println("In ejbnonpersistenttimer.Foo::ejbCreate !!");
+        System.out.println("In ejbnonpersistenttimer.Foo::ejbCreate !!");
         setupJmsConnection();
         checkGetSetRollbackOnly("ejbCreate", false);
         checkCallerSecurityAccess("ejbCreate", false);

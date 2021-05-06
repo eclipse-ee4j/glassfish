@@ -70,27 +70,27 @@ public class HelloEJB implements Hello {
     @PostConstruct
     public void create() {
 
-    try {
+        try {
 
             sful = sfulHome.createSful();
             sfulRemote = sfulRemoteHome.createSful();
-        System.out.println("Created loca/remote sful objs via homes.");
+            System.out.println("Created loca/remote sful objs via homes.");
 
             bmp = bmpHome.create(pkey);
             bmpRemote = (BmpRemote)
                 bmpRemoteHome.findByPrimaryKey(pkey);
-        System.out.println("Created BMP bean.");
+            System.out.println("Created BMP bean.");
 
             sless = slessHome.create();
             slessRemote = slessRemoteHome.create();
-        System.out.println("Created loca/remote sless objs via homes.");
+            System.out.println("Created loca/remote sless objs via homes.");
 
 
             //            ut = context.getUserTransaction();
 
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void testRemove() throws RemoteException {
@@ -410,49 +410,49 @@ public class HelloEJB implements Hello {
     }
 
     private void warmup(int type, boolean tx) {
-    // get Hotspot warmed up
-    Common bean = pre(type, tx);
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.requiresNew();
-        bean.notSupported();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.required();
-        if ( tx )
-        bean.mandatory();
-        else
-        bean.never();
-        bean.supports();
-    }
-    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        // get Hotspot warmed up
+        Common bean = pre(type, tx);
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.requiresNew();
+            bean.notSupported();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.required();
+            if ( tx )
+                bean.mandatory();
+            else
+                bean.never();
+            bean.supports();
+        }
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
     }
 
     private Common pre(int type, boolean tx)
     {
-    if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
-    if ( type == Common.STATELESS )
-        return sless;
-    else if ( type == Common.STATEFUL )
-        return sful;
-    else
-        return bmp;
+        if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
+        if ( type == Common.STATELESS )
+            return sless;
+        else if ( type == Common.STATEFUL )
+            return sful;
+        else
+            return bmp;
     }
 
     private CommonRemote preRemote(int type, boolean tx)
     {
-    if ( type == Common.STATELESS )
-        return slessRemote;
-    else if ( type == Common.STATEFUL )
-        return sfulRemote;
-    else
-        return bmpRemote;
+        if ( type == Common.STATELESS )
+            return slessRemote;
+        else if ( type == Common.STATEFUL )
+            return sfulRemote;
+        else
+            return bmpRemote;
     }
 
 
     private float post(long begin, long end, boolean tx)
     {
-    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
-    return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
     }
 
     public float requiresNew(int type, boolean tx)
@@ -496,7 +496,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float required(int type, boolean tx)
@@ -519,7 +519,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float mandatory(int type, boolean tx)
@@ -541,7 +541,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float never(int type, boolean tx)
@@ -563,7 +563,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float supports(int type, boolean tx)
@@ -585,7 +585,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-    return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     // assumes lo1 and lo2 are do not have same client identity

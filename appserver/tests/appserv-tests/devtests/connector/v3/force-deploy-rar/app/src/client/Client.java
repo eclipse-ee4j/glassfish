@@ -30,33 +30,33 @@ public class Client   {
 
     public static void main(String[] args) {
         Client client = new Client();
-    System.out.println("Client: Args: ");
-    for(int i = 0 ; i< args.length; i++) {
-        System.out.println("Client: Args: " + args[i]);
-    }
-    Integer versionNumber = new Integer(args[0]);
+        System.out.println("Client: Args: ");
+        for(int i = 0 ; i< args.length; i++) {
+                System.out.println("Client: Args: " + args[i]);
+        }
+        Integer versionNumber = new Integer(args[0]);
         client.doTest(versionNumber.intValue());
     }
 
     public String doTest(int versionToTest) {
         stat.addDescription("This is to test redeployment of connectors "+
-                 "contracts.");
+                     "contracts.");
 
         String res = "NOT RUN";
-    debug("doTest() ENTER...");
+        debug("doTest() ENTER...");
         boolean pass = false;
         try {
-        pass = checkResults(versionToTest);
-        debug("Got expected results = " + pass);
+                pass = checkResults(versionToTest);
+                debug("Got expected results = " + pass);
 
-        //do not continue if one test failed
-        if (!pass) {
-            res = "SOME TESTS FAILED";
-            stat.addStatus("Redeploy Connector 1.5 test - ", stat.FAIL);
-        } else {
-            res  = "ALL TESTS PASSED";
-            stat.addStatus("Redeploy Connector 1.5 test - " , stat.PASS);
-        }
+                //do not continue if one test failed
+                if (!pass) {
+                        res = "SOME TESTS FAILED";
+                        stat.addStatus("Redeploy Connector 1.5 test - ", stat.FAIL);
+                } else {
+                        res  = "ALL TESTS PASSED";
+                        stat.addStatus("Redeploy Connector 1.5 test - " , stat.PASS);
+                }
 
         } catch (Exception ex) {
             System.out.println("Redeploy connector test failed.");
@@ -70,18 +70,18 @@ public class Client   {
     }
 
     private boolean checkResults(int num) throws Exception {
-        debug("checkResult" + num);
-        debug("got initial context" + (new InitialContext()).toString());
+            debug("checkResult" + num);
+            debug("got initial context" + (new InitialContext()).toString());
         Object o = (new InitialContext()).lookup("MyVersionChecker");
-    debug("got o" + o);
+        debug("got o" + o);
         VersionCheckerHome  home = (VersionCheckerHome)
             PortableRemoteObject.narrow(o, VersionCheckerHome.class);
         debug("got home" + home);
-        VersionChecker checker = home.create();
-        debug("got o" + checker);
+            VersionChecker checker = home.create();
+            debug("got o" + checker);
         //problem here!
-    int result = checker.getVersion();
-    debug("checkResult" + result);
+        int result = checker.getVersion();
+        debug("checkResult" + result);
         return result == num;
     }
 

@@ -46,9 +46,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-ejb31-asynchronous tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ejb31-asynchronous tests)
+        </echo>
     </target>
 </project>

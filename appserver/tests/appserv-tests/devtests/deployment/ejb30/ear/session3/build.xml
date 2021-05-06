@@ -112,7 +112,7 @@
                    todir="${client.build.dir}/META-INF"/>
 
              <copy file="descriptor/application.xml"
-               todir="${ear.build.dir}/META-INF"/>
+                           todir="${ear.build.dir}/META-INF"/>
     </target>
 
    <target name="deploydir.asadmin" depends="prepare">

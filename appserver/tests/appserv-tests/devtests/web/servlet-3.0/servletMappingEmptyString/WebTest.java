@@ -61,7 +61,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest(String path, String expectedResponse) throws Exception {

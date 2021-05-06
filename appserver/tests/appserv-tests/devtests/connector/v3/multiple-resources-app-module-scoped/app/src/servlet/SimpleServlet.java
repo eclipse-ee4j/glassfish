@@ -45,17 +45,17 @@ public class SimpleServlet extends HttpServlet {
 
     public String doTest(HttpServletRequest request, HttpServletResponse response) throws IOException{
         System.out.println("This is to test connector 1.6 "+
-                 "contracts.");
+                     "contracts.");
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         String res = "NOT RUN";
-    debug("doTest() ENTER...");
+        debug("doTest() ENTER...");
         boolean pass = false;
         try {
             res  = "ALL TESTS PASSED";
-        int testCount = 1;
+            int testCount = 1;
             out.println("Starting the test");
             out.flush();
 
@@ -98,7 +98,7 @@ public class SimpleServlet extends HttpServlet {
                     } else {
                         System.out.println("ID Connector 1.6 test - " + testCount + " PASS");
                         out.println("TEST:PASS");
-                    }
+                            }
                 } else {
                     out.println("END_OF_EXECUTION");
                     break;

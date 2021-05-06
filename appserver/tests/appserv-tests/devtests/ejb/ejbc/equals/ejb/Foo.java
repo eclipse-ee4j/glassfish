@@ -26,5 +26,5 @@ public interface Foo extends EJBObject, FooSuper, java.rmi.Remote {
     String sayHello() throws RemoteException;
 
     public boolean assertValidRemoteObject(String msg)
-    throws RemoteException;
+        throws RemoteException;
 }

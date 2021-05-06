@@ -493,8 +493,8 @@ Variables Used:
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${assemble.dir}"/>
   <mkdir dir="${build.classes.dir}/META-INF"/>
-  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"      failonerror="false"/>
-  <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"      failonerror="false"/>
+  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"          failonerror="false"/>
+  <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"          failonerror="false"/>
   <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false"  filtering="true"/>
   <jar jarfile="${assemble.dir}/${appname}App.ear">
     <fileset dir="${assemble.dir}">
@@ -502,8 +502,8 @@ Variables Used:
       <include name="*.war"/>
     </fileset>
     <fileset dir="${build.classes.dir}">
-    <include name="META-INF/sun-application.xml"/>
-    <include name="META-INF/application.xml"/>
+        <include name="META-INF/sun-application.xml"/>
+        <include name="META-INF/application.xml"/>
         <include name="META-INF/glassfish-resources.xml"/>
     </fileset>
     <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
@@ -518,7 +518,7 @@ Variables Used:
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${assemble.dir}"/>
   <mkdir dir="${build.classes.dir}/META-INF"/>
-  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"      failonerror="false"/>
+  <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"          failonerror="false"/>
   <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false"  filtering="true"/>
   <ear earfile="${assemble.dir}/${appname}App.ear"
     appxml="${application.xml}">
@@ -527,7 +527,7 @@ Variables Used:
       <include name="*.war"/>
     </fileset>
     <fileset dir="${build.classes.dir}">
-    <include name="META-INF/sun-application.xml"/>
+        <include name="META-INF/sun-application.xml"/>
         <include name="META-INF/glassfish-resources.xml"/>
     </fileset>
     <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
@@ -634,7 +634,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <!-- ================================================================ -->
-<!-- J2EE Connector related targets                        -->
+<!-- J2EE Connector related targets                                        -->
 <!-- ================================================================ -->
 
 <target name="create-connector-connpool-common"
@@ -772,7 +772,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
   <antcall target="asadmin-common-ignore-fail">
     <param name="admin.command" value="set" />
     <param name="operand.props"
-        value="${resources.dottedname.prefix}.jdbc-connection-pool.${jdbc.conpool.name}.property.URL=${db.url};user=${db.user};password=${db.pwd}"/>
+            value="${resources.dottedname.prefix}.jdbc-connection-pool.${jdbc.conpool.name}.property.URL=${db.url};user=${db.user};password=${db.pwd}"/>
   </antcall>
 </target>
 
@@ -823,7 +823,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
   <antcall target="asadmin-common-ignore-fail">
     <param name="admin.command" value="set" />
     <param name="operand.props"
-        value="${resources.dottedname.prefix}.jdbc-connection-pool.${jdbc.conpool.name}.property.URL=${db.url};user=${db.user};password=${db.pwd}"/>
+            value="${resources.dottedname.prefix}.jdbc-connection-pool.${jdbc.conpool.name}.property.URL=${db.url};user=${db.user};password=${db.pwd}"/>
   </antcall>
 </target>
 
@@ -1515,7 +1515,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 <!--  start Derby Database -->
 <target name="startDerby">
   <condition property="darwin">
-    <os name="Mac OS X"/>
+        <os name="Mac OS X"/>
   </condition>
   <antcall target="startDerbyNonMac"/>
   <antcall target="startDerbyMac"/>
@@ -1641,7 +1641,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         ant clean           Remove all classes files
         ant build           Build the application
         ant deploy          Deploy the ear files to S1AS
-        ant run                Run the application
+        ant run                    Run the application
         ant undeploy        Undeploy the ear files from S1AS
         ant usage           Display this message
     </echo>
@@ -1669,13 +1669,13 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 
 <target name="restart-instance">
     <echo message="Restarting remote server instance,until this gets fixed"/>
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="stop-instance"/>
         <arg line="${as.props}"/>
         <arg line="${appserver.instance.name}"/>
     </exec>
     <sleep seconds="30"/>
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="start-instance"/>
         <arg line="${as.props}"/>
         <arg line="${appserver.instance.name}"/>
@@ -1698,7 +1698,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <target name="setupTimer" depends="init-common" if="ee">
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="create-resource-ref"/>
         <arg line="${as.props}"/>
         <arg line="--target server"/>
@@ -1725,13 +1725,13 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <target name="unsetupTimer" depends="init-common" if="ee">
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="delete-resource-ref"/>
         <arg line="${as.props}"/>
         <arg line="--target server"/>
         <arg line="${jdbc.resource.name}"/>
     </exec>
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="unset"/>
         <arg line="${appserver.instance.name}-config.ejb-container.ejb-timer-service.timer-datasource"/>
     </exec>

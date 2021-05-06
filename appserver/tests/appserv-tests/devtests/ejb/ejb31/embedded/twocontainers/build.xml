@@ -74,7 +74,7 @@
             <jvmarg value="-Xdebug"/>
             <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8085"/>
 -->
-           <arg line="${jndiroot}"/>
+                   <arg line="${jndiroot}"/>
         </java>
     </target>
 

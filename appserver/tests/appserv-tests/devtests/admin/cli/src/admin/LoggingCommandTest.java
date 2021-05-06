@@ -81,19 +81,19 @@ public class LoggingCommandTest extends AdminBaseDevTest {
         asadmin("create-cluster", CLUSTER_NAME);
 
         asadmin("create-local-instance", "--cluster", CLUSTER_NAME,
-                /*"--node", "localhost",*/ "--systemproperties",
-                "HTTP_LISTENER_PORT=18080:HTTP_SSL_LISTENER_PORT=18181:IIOP_SSL_LISTENER_PORT=13800:IIOP_LISTENER_PORT=13700:JMX_SYSTEM_CONNECTOR_PORT=17676:IIOP_SSL_MUTUALAUTH_PORT=13801:JMS_PROVIDER_PORT=18686:ASADMIN_LISTENER_PORT=14848",
-                INSTANCE1_NAME);
+            /*"--node", "localhost",*/ "--systemproperties",
+            "HTTP_LISTENER_PORT=18080:HTTP_SSL_LISTENER_PORT=18181:IIOP_SSL_LISTENER_PORT=13800:IIOP_LISTENER_PORT=13700:JMX_SYSTEM_CONNECTOR_PORT=17676:IIOP_SSL_MUTUALAUTH_PORT=13801:JMS_PROVIDER_PORT=18686:ASADMIN_LISTENER_PORT=14848",
+            INSTANCE1_NAME);
 
         asadmin("create-local-instance", "--cluster", CLUSTER_NAME,
-                /*"--node", "localhost", */"--systemproperties",
-                "HTTP_LISTENER_PORT=28080:HTTP_SSL_LISTENER_PORT=28181:IIOP_SSL_LISTENER_PORT=23800:IIOP_LISTENER_PORT=23700:JMX_SYSTEM_CONNECTOR_PORT=27676:IIOP_SSL_MUTUALAUTH_PORT=23801:JMS_PROVIDER_PORT=28686:ASADMIN_LISTENER_PORT=24848",
-                INSTANCE2_NAME);
+            /*"--node", "localhost", */"--systemproperties",
+            "HTTP_LISTENER_PORT=28080:HTTP_SSL_LISTENER_PORT=28181:IIOP_SSL_LISTENER_PORT=23800:IIOP_LISTENER_PORT=23700:JMX_SYSTEM_CONNECTOR_PORT=27676:IIOP_SSL_MUTUALAUTH_PORT=23801:JMS_PROVIDER_PORT=28686:ASADMIN_LISTENER_PORT=24848",
+            INSTANCE2_NAME);
 
         asadmin("create-local-instance",
-                /*"--node", "localhost",*/"--systemproperties",
-                "HTTP_LISTENER_PORT=28080:HTTP_SSL_LISTENER_PORT=38181:IIOP_SSL_LISTENER_PORT=33800:IIOP_LISTENER_PORT=33700:JMX_SYSTEM_CONNECTOR_PORT=37676:IIOP_SSL_MUTUALAUTH_PORT=33801:JMS_PROVIDER_PORT=38686:ASADMIN_LISTENER_PORT=34848",
-                STANDALONE_INSTANCE_NAME);
+            /*"--node", "localhost",*/"--systemproperties",
+            "HTTP_LISTENER_PORT=28080:HTTP_SSL_LISTENER_PORT=38181:IIOP_SSL_LISTENER_PORT=33800:IIOP_LISTENER_PORT=33700:JMX_SYSTEM_CONNECTOR_PORT=37676:IIOP_SSL_MUTUALAUTH_PORT=33801:JMS_PROVIDER_PORT=38686:ASADMIN_LISTENER_PORT=34848",
+            STANDALONE_INSTANCE_NAME);
 
         asadmin("start-cluster", CLUSTER_NAME);
         asadmin("start-local-instance", STANDALONE_INSTANCE_NAME);
@@ -158,7 +158,7 @@ public class LoggingCommandTest extends AdminBaseDevTest {
         reportExpectedResult(testName, result, SERVER );
     }
 
-     private void testSetLogLevelInClusterConfig() {
+    private void testSetLogLevelInClusterConfig() {
         String testName = "testSetLogLevelInClusterConfig";
         AsadminReturn result = asadminWithOutput(SET_LOG_LEVEL,TARGET_OPTION, CLUSTER_NAME+"-config", PACKAGE_NAME);
         reportResultStatus(testName, result);
@@ -201,7 +201,7 @@ public class LoggingCommandTest extends AdminBaseDevTest {
         reportExpectedResult(testName, result, SERVER );
     }
 
-     private void testSetLogAttributeInClusterConfig() {
+    private void testSetLogAttributeInClusterConfig() {
         String testName = "testSetLogAttributeInClusterConfig";
         AsadminReturn result = asadminWithOutput(SET_LOG_ATTRIBUTE,TARGET_OPTION, CLUSTER_NAME+"-config", ATTRIBUTE_NAME);
         reportResultStatus(testName, result);

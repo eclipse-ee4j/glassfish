@@ -40,14 +40,14 @@ public class Client   {
 
     public String doTest() {
         stat.addDescription("This is to test connector 1.5 "+
-                 "contracts.");
+                     "contracts.");
 
         String res = "NOT RUN";
-    debug("doTest() ENTER...");
+        debug("doTest() ENTER...");
         boolean pass = false;
         try {
             res  = "ALL TESTS PASSED";
-        int testCount = 1;
+            int testCount = 1;
             while (!done()) {
 
                 notifyAndWait();
@@ -63,11 +63,11 @@ public class Client   {
                         break;
                     } else {
                         stat.addStatus(" Embedded-Connector-1.5 test - " + testCount, stat.PASS);
-            }
+                    }
                 } else {
                     break;
                 }
-        testCount++;
+                testCount++;
             }
 
         } catch (Exception ex) {

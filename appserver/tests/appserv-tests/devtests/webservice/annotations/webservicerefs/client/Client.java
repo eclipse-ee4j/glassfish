@@ -36,11 +36,11 @@ public class Client {
                 new SimpleReporterAdapter("appserv-tests");
 
         public static void main(String[] args) {
-        stat.addDescription("webservicerefs-test");
+            stat.addDescription("webservicerefs-test");
             Client client = new Client();
             client.doServletTest();
             client.doEjbTest();
-        stat.printSummary("webservicerefs-test");
+            stat.printSummary("webservicerefs-test");
        }
 
        public void doServletTest() {
@@ -50,11 +50,11 @@ public class Client {
                 ServletHello port = svc.getServletHelloPort();
                 for (int i=0;i<10;i++) {
                     String ret = port.sayServletHello("Appserver Tester !");
-            if(ret.indexOf("WebSvcTest-Servlet-Hello") == -1) {
+                    if(ret.indexOf("WebSvcTest-Servlet-Hello") == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus("WebServiceRefs-Servlet-Endpoint", stat.FAIL);
                         return;
-            }
+                    }
                     System.out.println(ret);
                 }
                 stat.addStatus("WebServiceRefs-Servlet-Endpoint", stat.PASS);
@@ -71,11 +71,11 @@ public class Client {
                 WSHello port = svc.getWSHelloEJBPort();
                 for (int i=0;i<10;i++) {
                     String ret = port.sayEjbHello("Appserver Tester !");
-            if(ret.indexOf("WebSvcTest-EJB-Hello") == -1) {
+                    if(ret.indexOf("WebSvcTest-EJB-Hello") == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus("WebServiceRefs-EJB-Endpoint", stat.FAIL);
                         return;
-            }
+                    }
                     System.out.println(ret);
                 }
                 stat.addStatus("WebServiceRefs-EJB-Endpoint", stat.PASS);

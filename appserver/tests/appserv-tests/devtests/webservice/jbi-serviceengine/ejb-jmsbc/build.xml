@@ -54,7 +54,7 @@
       <mkdir dir="${assemble.dir}"/>
       <jar destfile="${assemble.dir}/${appname}-ejb.jar"
         basedir="${build.classes.dir}"
-    includes="endpoint/**">
+        includes="endpoint/**">
       </jar>
     </target>
 
@@ -100,7 +100,7 @@
       </antcall>
       <javac srcdir="consumer" destdir="${build.classes.dir}/webclient/WEB-INF/classes"
             classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
-        debug="on"
+            debug="on"
             includes="webclient/**"/>
       <copy file="./consumer/client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="./consumer/client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>

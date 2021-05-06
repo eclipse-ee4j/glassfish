@@ -72,7 +72,7 @@
     <antcall target="package-pu-common">
         <param name="entity.jar" value="entity.jar"/>
         <param name="entity.class" value="**/*Customer.class,**/*Order.class"/>
-    <param name="persistence.xml" value="descriptor/persistence.xml"/>
+        <param name="persistence.xml" value="descriptor/persistence.xml"/>
     </antcall>
 </target>
 

@@ -18,7 +18,7 @@ package connector;
 
 /**
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class Controls {
     public static Object readyLock = new Object();

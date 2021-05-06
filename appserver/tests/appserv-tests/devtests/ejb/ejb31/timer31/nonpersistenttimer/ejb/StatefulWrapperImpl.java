@@ -41,7 +41,7 @@ public class StatefulWrapperImpl implements StatefulWrapper {
     public boolean doMessageDrivenTest(String jndiName,
                                     boolean jms) {
         boolean result = false;
-    /**
+        /**
         if( jms ) { return; }
 
         try {
@@ -50,7 +50,7 @@ System.out.println("********PG-> in doMessageDrivenTest() for jndiName = " + jnd
             setup(setup);
 System.out.println("********PG-> in doMessageDrivenTest() after setup");
             Context ic = new InitialContext();
-         Queue messageDrivenDest = (Queue) ic.lookup("java:comp/env/" + jndiName);
+             Queue messageDrivenDest = (Queue) ic.lookup("java:comp/env/" + jndiName);
 
             System.out.println("Doing message driven tests for" + jndiName);
 
@@ -79,13 +79,13 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
         } finally {
             cleanup();
         }
-    **/
+        **/
 
         return result;
     }
 
     private void setup() throws Exception {
-    /**
+        /**
 //PG->        context = new InitialContext();
 
         TopicConnectionFactory topicConFactory =
@@ -120,12 +120,12 @@ System.out.println("********PG-> setup(): after createPublisher");
         queueSender = queueSession.createSender(null);
 
         queueCon.start();
-    **/
+        **/
 
     }
 
     private void cleanup() {
-    /**
+        /**
         try {
             if( topicCon != null ) {
                 topicCon.close();

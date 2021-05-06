@@ -33,7 +33,7 @@ public class Client extends HttpServlet {
             webclient.Hello hiport2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

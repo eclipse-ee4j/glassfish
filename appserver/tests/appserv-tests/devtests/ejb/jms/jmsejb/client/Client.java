@@ -111,7 +111,7 @@ public class Client {
             stat.addStatus("jmsejb " + ejbName, stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     final static String helloStr = "Hello World!";

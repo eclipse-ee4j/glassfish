@@ -85,8 +85,8 @@
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-    <param name="operand.props"
-      value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-connsharing-xa-pool.property.LazyConnectionEnlistment=true"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-connsharing-xa-pool.property.LazyConnectionEnlistment=true"/>
       </antcall>
 
       <antcall target="runclient-common"/>

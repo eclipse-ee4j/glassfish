@@ -27,7 +27,7 @@ import java.sql.*;
 
 public class bmsamplebean4 implements SessionBean
 {
-    EJBContext ejbcontext;
+        EJBContext ejbcontext;
         private transient jakarta.ejb.SessionContext m_ctx = null;
     public void setSessionContext(jakarta.ejb.SessionContext ctx)
     {
@@ -60,15 +60,15 @@ public class bmsamplebean4 implements SessionBean
         Statement stmt = null,stmt2=null;
         ResultSet rs = null,rs2=null;
    try {
-        System.out.println("in bean2 ....");
+            System.out.println("in bean2 ....");
             InitialContext ctx = new InitialContext();
             DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/oracleds2");
-              System.out.println("ds lookup succeeded");
+                  System.out.println("ds lookup succeeded");
             conn = ds.getConnection();
             System.out.println("Connection succeeded"+conn);
             stmt = conn.createStatement();
             String query1 = "select * from status1";
-        stmt.executeUpdate("insert into status1 values('bean4',3)");
+            stmt.executeUpdate("insert into status1 values('bean4',3)");
             rs = stmt.executeQuery(query1);
             while(rs.next())
             {

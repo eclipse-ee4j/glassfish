@@ -25,10 +25,10 @@
       <resource-ref>
         <res-ref-name>jdbc/onlygetconnection</res-ref-name>
         <jndi-name>jdbc/s1qeDB</jndi-name>
-    <default-resource-principal>
-      <name>dbuser</name>
-      <password>dbpassword</password>
-    </default-resource-principal>
+        <default-resource-principal>
+          <name>dbuser</name>
+          <password>dbpassword</password>
+        </default-resource-principal>
       </resource-ref>
     </ejb>
   </enterprise-beans>

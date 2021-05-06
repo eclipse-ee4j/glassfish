@@ -21,12 +21,12 @@
 ]>
 <project name="servlet endpoint annotations" default="all" basedir=".">
     <target name="all">
-    <ant dir="svc1" target="setup"/>
-    <ant dir="svc2" target="setup"/>
-    <ant dir="client" target="setup"/>
-    <ant dir="client" target="runtest"/>
-    <ant dir="svc1" target="cleanup"/>
-    <ant dir="svc2" target="cleanup"/>
-    <ant dir="client" target="cleanup"/>
+        <ant dir="svc1" target="setup"/>
+        <ant dir="svc2" target="setup"/>
+        <ant dir="client" target="setup"/>
+        <ant dir="client" target="runtest"/>
+        <ant dir="svc1" target="cleanup"/>
+        <ant dir="svc2" target="cleanup"/>
+        <ant dir="client" target="cleanup"/>
     </target>
 </project>

@@ -29,28 +29,28 @@ public class Client {
                 new SimpleReporterAdapter("appserv-tests");
 
         @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/HelloImplService/HelloImpl?WSDL")
-    static void setService(HelloImplService s) {
+        static void setService(HelloImplService s) {
 
-        System.out.println("Injection sucessful with "+s.getClass().toString());
-        service = s;
-    }
-
-    @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/HelloImplService/HelloImpl?WSDL")
-    static int setFoo(HelloImplService s) {
-        service1 = s;
-        return 0;
-    }
-
-    @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/HelloImplService/HelloImpl?WSDL")
-    static void myService(String foo, HelloImplService s) {
-        service2 = s;
-    }
+                System.out.println("Injection sucessful with "+s.getClass().toString());
+                service = s;
+        }
 
         @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/HelloImplService/HelloImpl?WSDL")
-    void setMyService(HelloImplService s) {
+        static int setFoo(HelloImplService s) {
+                service1 = s;
+                return 0;
+        }
 
-        service3 = s;
-    }
+        @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/HelloImplService/HelloImpl?WSDL")
+        static void myService(String foo, HelloImplService s) {
+                service2 = s;
+        }
+
+        @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/HelloImplService/HelloImpl?WSDL")
+        void setMyService(HelloImplService s) {
+
+                service3 = s;
+        }
 
 
         static HelloImplService service1=null;
@@ -63,28 +63,28 @@ public class Client {
         static HelloImplService service;
 
         public static void main(String[] args) {
-        stat.addDescription("ws-ejb-invalidmethodinjection");
+            stat.addDescription("ws-ejb-invalidmethodinjection");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("ws-ejb-invalidmethodinjection");
+            stat.printSummary("ws-ejb-invalidmethodinjection");
        }
 
        public void doTest(String[] args) {
             try {
-        if (service1!=null || service2!=null || service3!=null) {
-            System.out.println("Failed : invalid injection method got injected !");
+                if (service1!=null || service2!=null || service3!=null) {
+                    System.out.println("Failed : invalid injection method got injected !");
                     stat.addStatus("ws-ejb-invalidmethodinjection", stat.FAIL);
                 } else {
-            System.out.println("Success : invalid references were not injected");
-             }
+                    System.out.println("Success : invalid references were not injected");
+                 }
                 HelloImpl port = service.getHelloImplPort();
                 for (int i=0;i<10;i++) {
                     String ret = port.sayHello("Appserver Tester !");
-            if(ret.indexOf("WebSvcTest-Hello") == -1) {
+                    if(ret.indexOf("WebSvcTest-Hello") == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus("ws-ejb-invalidmethodinjection", stat.FAIL);
                         return;
-            }
+                    }
                     System.out.println(ret);
                 }
                 stat.addStatus("ws-ejb-invalidmethodinjection", stat.PASS);

@@ -32,25 +32,25 @@ public class ManagedBean2IntExcludeClass extends ManagedBeanSuper {
     private String aroundInvoke = "";
 
     public void newInterceptorInstance() {
-    numInterceptorInstances++;
+        numInterceptorInstances++;
     }
 
     public int getNumInstances() {
-    return numInstances;
+        return numInstances;
     }
 
     public int getNumInterceptorInstances() {
-    return numInterceptorInstances;
+        return numInterceptorInstances;
     }
 
     @ExcludeClassInterceptors
     public String getAroundInvokeSequence() {
-    return "";
+        return "";
     }
 
     @PostConstruct
     private void init() {
-    numInstances++;
+        numInstances++;
     }
 
     @PreDestroy

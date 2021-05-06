@@ -40,14 +40,14 @@ public class Client   {
 
     public String doTest() {
         stat.addDescription("This is to test app-scoped-resources "+
-                 "contracts.");
+                     "contracts.");
 
         String res = "NOT RUN";
-    debug("doTest() ENTER...");
+        debug("doTest() ENTER...");
         boolean pass = false;
         try {
             res  = "ALL TESTS PASSED";
-        int testCount = 1;
+            int testCount = 1;
             while (!done()) {
 
                 notifyAndWait();
@@ -62,11 +62,11 @@ public class Client   {
                         stat.addStatus("ID app-scoped-resources test - " + testCount, stat.FAIL);
                     } else {
                         stat.addStatus("ID app-scoped-resources test - " + testCount, stat.PASS);
-            }
+                    }
                 } else {
                     break;
                 }
-        testCount ++;
+                testCount ++;
             }
 
         } catch (Exception ex) {

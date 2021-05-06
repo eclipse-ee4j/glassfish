@@ -71,13 +71,13 @@
             <ant dir="session2" target="deploy"/>
             <ant dir="session2" target="run"/>
 
-    <!-- needs handle support
+        <!-- needs handle support
             <ant dir="dcode" target="build"/>
             <ant dir="dcode" target="deploy"/>
             <ant dir="dcode" target="run"/>
             <ant dir="dcode" target="run"/>
             <ant dir="dcode" target="undeploy"/>
-    -->
+        -->
             <ant dir="session2" target="undeploy"/>
         <record name="session2.output" action="stop" />
     </target>
@@ -113,9 +113,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-ejb30-hello tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ejb30-hello tests)
+        </echo>
     </target>
 </project>

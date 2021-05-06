@@ -67,7 +67,7 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
         } catch (SOAPException e) {
             e.printStackTrace();
         }
-    System.out.println("VIJ's TEST HANDLER CALLED");
+        System.out.println("VIJ's TEST HANDLER CALLED");
         return true;
     }
 

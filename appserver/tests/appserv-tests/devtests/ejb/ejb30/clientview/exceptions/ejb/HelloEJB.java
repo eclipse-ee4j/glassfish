@@ -57,12 +57,12 @@ public class HelloEJB implements Hello  {
     @PostConstruct
     public void create() {
 
-    try {
+        try {
             ut = context.getUserTransaction();
 
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void setup() {

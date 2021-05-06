@@ -40,7 +40,7 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
 
-        // Get the (caller) name and password from the request
+            // Get the (caller) name and password from the request
         // NOTE: This is for the smallest possible example only. In practice
         // putting the password in a request query parameter is highly
         // insecure

@@ -25,7 +25,7 @@
     <echo message="Starting Test ${directory}"/>
     <basename file="${directory}" property="pkg-name"/>
     <antcall target="deploy">
-    <param name="pkg-name" value="${pkg-name}"/>
+        <param name="pkg-name" value="${pkg-name}"/>
     </antcall>
     <condition property="deploy_succeeded">
         <available file="${env.S1AS_HOME}/domains/domain1/autodeploy/${server}.jar_deployed"/>
@@ -89,8 +89,8 @@
     <jar destfile="${env.S1AS_HOME}/domains/domain1/autodeploy/${server}.jar"
         basedir="${env.APS_HOME}/build/module/classes"
         includes="${pkg-name}/**">
-    <metainf dir="${pkg-name}"
-        includes="*.xml **/*.wsdl **/*.xsd"/>
+        <metainf dir="${pkg-name}"
+                includes="*.xml **/*.wsdl **/*.xsd"/>
     </jar>
 </target>
 
@@ -108,7 +108,7 @@
 <target name="undeploy">
     <basename file="${src-name}" property="server" suffix=".java"/>
     <antcall target="autoundeploy-file">
-    <param name="filename" value="${server}.jar"/>
+        <param name="filename" value="${server}.jar"/>
     </antcall>
     <condition property="undeploy_succeeded">
         <available file="${env.S1AS_HOME}/domains/domain1/autodeploy/${server}.jar_undeployed"/>
@@ -165,8 +165,8 @@
     <!--basename file="${server}" property="port" suffix="EJB"/-->
     <basename file="${server}" property="port"/>
     <antcall target="wsdl-import">
-    <param name="server" value="${server}"/>
-    <param name="port" value="${port}"/>
+        <param name="server" value="${server}"/>
+        <param name="port" value="${port}"/>
     </antcall>
     <antcall target="compile-client"/>
     <antcall target="unjar-client-utils"/>

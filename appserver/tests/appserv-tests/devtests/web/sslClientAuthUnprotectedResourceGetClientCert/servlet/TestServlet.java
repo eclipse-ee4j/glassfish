@@ -29,7 +29,7 @@ public class TestServlet extends HttpServlet {
         String clName = null;
         if (cert != null) {
             clName = cert.getClass().getName();
-    }
+        }
         res.getWriter().print(clName);
     }
 }

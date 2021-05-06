@@ -34,12 +34,12 @@ public class SimpleSessionBean implements SessionBean
 
     public void setSessionContext(SessionContext ctxt) {
         this.context = ctxt;
-    try {
-        ic = new InitialContext();
-        ds1 = (com.sun.appserv.jdbc.DataSource)ic.lookup("java:comp/env/DataSource1");
-    } catch( Exception ne ) {
-        ne.printStackTrace();
-    }
+        try {
+            ic = new InitialContext();
+            ds1 = (com.sun.appserv.jdbc.DataSource)ic.lookup("java:comp/env/DataSource1");
+        } catch( Exception ne ) {
+            ne.printStackTrace();
+        }
     }
 
     public void ejbCreate() throws CreateException {
@@ -55,46 +55,46 @@ public class SimpleSessionBean implements SessionBean
      */
     public boolean test1(boolean caseSensitive) {
         Connection con = null;
-    Statement stmt = null;
-    ResultSet rs = null;
-    String query = "Select name from WORKERS where name='Joy Joy'";
-    boolean result = false;
-    int size = 0;
-    try {
-        con = ds1.getConnection();
-        stmt = con.createStatement();
-        rs = stmt.executeQuery(query);
-        if(rs != null) {
-        while(rs.next()) {
-            size++;
-        }
-        }
-        if(caseSensitive) {
-            result = size == 1;
-        } else {
-        result = size == 3;
-        }
-    } catch (SQLException ex) {
-        result = false;
-        ex.printStackTrace();
-    } finally {
+        Statement stmt = null;
+        ResultSet rs = null;
+        String query = "Select name from WORKERS where name='Joy Joy'";
+        boolean result = false;
+        int size = 0;
+        try {
+            con = ds1.getConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(query);
             if(rs != null) {
-        try {
-            rs.close();
-        } catch(Exception ex) {}
+                while(rs.next()) {
+                    size++;
+                }
+            }
+            if(caseSensitive) {
+                result = size == 1;
+            } else {
+                result = size == 3;
+            }
+        } catch (SQLException ex) {
+            result = false;
+            ex.printStackTrace();
+        } finally {
+            if(rs != null) {
+                try {
+                    rs.close();
+                } catch(Exception ex) {}
+            }
+            if(stmt != null) {
+                try {
+                    stmt.close();
+                } catch(Exception ex) {}
+            }
+            if(con != null) {
+                try {
+                    stmt.close();
+                } catch(Exception ex) {}
+            }
         }
-        if(stmt != null) {
-        try {
-            stmt.close();
-        } catch(Exception ex) {}
-        }
-        if(con != null) {
-        try {
-            stmt.close();
-        } catch(Exception ex) {}
-        }
-    }
-    return result;
+        return result;
     }
 
     public void ejbStore() {}

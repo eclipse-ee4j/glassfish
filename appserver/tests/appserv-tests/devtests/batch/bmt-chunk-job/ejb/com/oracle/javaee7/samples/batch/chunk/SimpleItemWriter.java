@@ -31,7 +31,7 @@ public class SimpleItemWriter
     @Override
     public void writeItems(List lst) throws Exception {
         StringBuilder sb = new StringBuilder("SimpleItemWriter:");
-    List<String> list = (List<String>) lst;
+        List<String> list = (List<String>) lst;
         for (String s : list) {
             sb.append(" ").append(s);
         }

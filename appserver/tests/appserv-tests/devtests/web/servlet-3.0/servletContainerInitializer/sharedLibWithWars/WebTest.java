@@ -43,14 +43,14 @@ public class WebTest {
     public static void main(String[] args) {
         stat.addDescription("Unit test for pluggable shared libraries in WAR");
         WebTest webTest = new WebTest(args);
-    if("1".equals(args[3])) {
+        if("1".equals(args[3])) {
             webTest.doTest("/mytest1");
             stat.printSummary(TEST_NAME);
-    }
-    if("2".equals(args[3])) {
+        }
+        if("2".equals(args[3])) {
             webTest.doTest("/mytest2");
             stat.printSummary(TEST_NAME);
-    }
+        }
     }
 
     public void doTest(String root) {

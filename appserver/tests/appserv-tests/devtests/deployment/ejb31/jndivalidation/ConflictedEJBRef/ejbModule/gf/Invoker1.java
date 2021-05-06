@@ -23,7 +23,7 @@ import jakarta.ejb.Stateless;
 
 @Stateless
 public class Invoker1 {
-      @EJB(name="java:module/env/DuplicateEntry",beanName="ejb/myslsb")
-      private MySLSB mySLSB;
+          @EJB(name="java:module/env/DuplicateEntry",beanName="ejb/myslsb")
+          private MySLSB mySLSB;
 
 }

@@ -26,6 +26,6 @@ import jakarta.jws.WebService;
 public class Hello2 {
 
     public String sayHello(String param) {
-    return "WebSvcTest-Hello " + param;
+        return "WebSvcTest-Hello " + param;
     }
 }

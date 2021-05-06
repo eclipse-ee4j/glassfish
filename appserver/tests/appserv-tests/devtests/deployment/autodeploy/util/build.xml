@@ -23,7 +23,7 @@
 ]>
 
 <project name="autodeploy-util" default="all" basedir=".">
-    &commonBuild;
+        &commonBuild;
         &autodeployUtil;
 
     <target name="prepare" depends="init">

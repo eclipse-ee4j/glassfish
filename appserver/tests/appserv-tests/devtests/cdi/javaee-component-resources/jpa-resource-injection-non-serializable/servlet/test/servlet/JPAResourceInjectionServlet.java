@@ -60,11 +60,11 @@ public class JPAResourceInjectionServlet extends HttpServlet {
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
         System.out.println("JPAResourceInjectionServlet::@PersistenceUnit " +
-                "CDI EntityManagerFactory=" + emf1);
+                        "CDI EntityManagerFactory=" + emf1);
 
         EntityManager em = emf1.createEntityManager();
         System.out.println("JPAResourceInjectionServlet::createEM" +
-                "EntityManager=" + em);
+                        "EntityManager=" + em);
         String testcase = request.getParameter("testcase");
         System.out.println("testcase=" + testcase);
 

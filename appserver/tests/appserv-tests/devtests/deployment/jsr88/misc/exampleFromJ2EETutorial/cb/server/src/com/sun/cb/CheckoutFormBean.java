@@ -111,7 +111,7 @@ public class CheckoutFormBean {
     } else {
       try {
         int x = Integer.parseInt(zip);
-          errors.put("zip","");
+              errors.put("zip","");
       } catch (NumberFormatException e) {
         errors.put("zip",messages.getString("ZipError"));
         zip="";

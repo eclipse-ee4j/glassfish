@@ -31,7 +31,7 @@
   &targets;
 
   <target name="prepare" depends="init"
-       description="Create build directories.">
+           description="Create build directories.">
     <mkdir dir="${build}" />
   </target>
 
@@ -40,7 +40,7 @@
     <javac
       srcdir="${src}"
       destdir="${build}">
-        <include name="**/*.java" />
+            <include name="**/*.java" />
       <classpath refid="classpath" />
       <classpath path="${common}:../jaxrpc/dist/jaxrpc-client.jar:../saaj/dist/saaj-client.jar" />
     </javac>

@@ -50,7 +50,7 @@ public class Client {
             (new MyThread()).start();
             (new MyThread()).start();
             stat.addStatus("intro sayHello", stat.PASS);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("intro sayHello", stat.FAIL);
         }
 

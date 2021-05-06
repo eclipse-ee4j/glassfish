@@ -28,8 +28,8 @@ public class ServletTest extends HttpServlet{
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        ServletContext ctx = config.getServletContext();
-        ctx.setAttribute("Attribut", "une valeur");
+                ServletContext ctx = config.getServletContext();
+                ctx.setAttribute("Attribut", "une valeur");
     }
 
     public void destroy(){

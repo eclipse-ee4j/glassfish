@@ -50,7 +50,7 @@
 
   <assembly-descriptor>
     <container-transaction>
-        <method>
+            <method>
         <ejb-name>SimpleBMPEJB</ejb-name>
         <method-name>*</method-name>
       </method>

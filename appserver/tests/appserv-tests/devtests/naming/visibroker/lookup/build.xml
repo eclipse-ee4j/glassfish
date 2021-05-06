@@ -46,7 +46,7 @@
         <copy todir="src/HelloApp">
             <fileset dir="HelloApp"/>
         </copy>
-    <delete dir="HelloApp"/>
+        <delete dir="HelloApp"/>
 
         <echo message="common.xml: Compiling test source files" level="verbose"/>
         <mkdir dir="${build.classes.dir}"/>
@@ -76,8 +76,8 @@
 
     <target name="run" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="lookup"/>
-    </antcall>
+        <param name="testsuite.id" value="lookup"/>
+        </antcall>
     </target>
 
    <target name="undeploy" depends="init-common">

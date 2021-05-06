@@ -72,10 +72,10 @@ public class HttpClient {
                 System.out.println("Connecting for the " + i + " time....");
                 u = new URL(url);
                 uc = u.openConnection();
-        for (String cookie : responseCookies) {
-                    uc.setRequestProperty("Cookie", cookie);
+                for (String cookie : responseCookies) {
+                        uc.setRequestProperty("Cookie", cookie);
                         System.out.println("==>Setting Cookie: " + cookie);
-        }
+                }
                 uc.connect();
                 SessionStateInfo info = extractSessionStates(uc);
                 info.setAccessCount(2+i);
@@ -105,10 +105,10 @@ public class HttpClient {
                 System.out.println("Connecting for the " + i + " time....");
                 u = new URL(url);
                 uc = u.openConnection();
-        for (String cookie : responseCookies) {
-                    uc.setRequestProperty("Cookie", cookie);
+                for (String cookie : responseCookies) {
+                        uc.setRequestProperty("Cookie", cookie);
                         System.out.println("==>Setting Cookie: " + cookie);
-        }
+                }
                 uc.connect();
                 SessionStateInfo info = extractSessionStates(uc);
                 info.setAccessCount(5+i);
@@ -146,7 +146,7 @@ public class HttpClient {
                 responseCookies.add(cookie);
                 System.out.println("JUST READ COOKIE: " + cookie);
                 if (cookie.startsWith("JSESSIONID=")) {
-            jsessionIDCookie = cookie;
+                    jsessionIDCookie = cookie;
                 }
             }
         }

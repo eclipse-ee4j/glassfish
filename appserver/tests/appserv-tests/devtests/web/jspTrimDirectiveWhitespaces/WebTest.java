@@ -40,7 +40,7 @@ public class WebTest {
         stat.addDescription("Unit test for enum support in EL");
         WebTest webTest = new WebTest(args);
         webTest.doTest("/trim.jsp", "jsp-trimDirectiveWhitespaces");
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest(String path, String testName) {

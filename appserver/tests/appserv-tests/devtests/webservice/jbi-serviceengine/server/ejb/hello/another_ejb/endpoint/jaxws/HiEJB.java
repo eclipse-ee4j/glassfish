@@ -24,7 +24,7 @@ import jakarta.ejb.Stateless;
 public class HiEJB implements Hi {
 
     public String sayHi(String who) {
-    System.out.println("In EJB2");
+        System.out.println("In EJB2");
         return "WebSvcTest-Hi" + who;
     }
 }

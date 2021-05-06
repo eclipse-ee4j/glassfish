@@ -24,6 +24,6 @@ public interface SFSBHome
     extends EJBHome
 {
     public SFSB create(String sfsbName)
-    throws CreateException, RemoteException;
+        throws CreateException, RemoteException;
 
 }

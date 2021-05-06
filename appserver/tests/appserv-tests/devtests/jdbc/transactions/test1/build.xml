@@ -55,13 +55,13 @@
       </antcall>
       <antcall target="package-war-local">
         <param name="war.classes" value="${build.classes.dir}"/>
-    <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
+        <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
       </antcall>
       <antcall target="ear-common"/>
       <!--
       <antcall target="webclient-war-common"/>
         <param name="hasWebclient" value="true"/>
-    <param name="webclient.war.classes" value="**/*.class"/>
+        <param name="webclient.war.classes" value="**/*.class"/>
       </antcall>
       -->
     </target>

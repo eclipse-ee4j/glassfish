@@ -47,12 +47,12 @@ public class Servlet extends HttpServlet {
 
             InitialContext ic = new InitialContext();
 
-        //out.println("doing shareable orb test");
+            //out.println("doing shareable orb test");
             //out.println("ORB = " + shareableOrb);
             POA poa = (POA) shareableOrb.resolve_initial_references("RootPOA");
             //out.println("POA = " + poa);
 
-        //out.println("doing unshareable orb test");
+            //out.println("doing unshareable orb test");
             //out.println("ORB = " + unshareableOrb);
             POA poa1 = (POA) unshareableOrb.resolve_initial_references("RootPOA");
             //out.println("POA = " + poa1);

@@ -47,7 +47,7 @@ public class WebTest {
         stat.addDescription("Unit test for jsp:attribute with omit");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() {

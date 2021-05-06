@@ -42,13 +42,13 @@ public class GatewayImpl {
     // web service interface.
     @WebServiceRef()
     private void setService(HelloImplService service) {
-    serviceMethod = service;
+        serviceMethod = service;
     }
 
     @WebMethod
     public String invokeMethod(String who) {
         HelloImpl port = serviceMethod.getPort(HelloImpl.class);
-    return "METHOD " + port.sayHello(who);
+        return "METHOD " + port.sayHello(who);
     }
 
     @WebMethod
@@ -60,16 +60,16 @@ public class GatewayImpl {
     @WebMethod
     public String invokeDependency(String who) {
         String result = null;
-    try {
-        Context ic = new InitialContext();
-        HelloImplService service = (HelloImplService) ic.lookup("java:comp/env/service/helloservice");
-        HelloImpl port = service.getPort(HelloImpl.class);
+        try {
+                Context ic = new InitialContext();
+                HelloImplService service = (HelloImplService) ic.lookup("java:comp/env/service/helloservice");
+                HelloImpl port = service.getPort(HelloImpl.class);
                 result = "JNDI " + port.sayHello(who);
-        System.out.println(result);
-    } catch(Throwable t) {
-        t.printStackTrace();
-        return "FAILED";
-    }
+                System.out.println(result);
+        } catch(Throwable t) {
+                t.printStackTrace();
+                return "FAILED";
+        }
         return result;
     }
 

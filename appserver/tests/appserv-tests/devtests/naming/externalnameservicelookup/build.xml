@@ -79,8 +79,8 @@
 
 <target name="run" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="externalnameservicelookup"/>
-    </antcall>
+        <param name="testsuite.id" value="externalnameservicelookup"/>
+        </antcall>
     </target>
 
    <target name="undeploy" depends="init-common">

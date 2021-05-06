@@ -51,7 +51,7 @@ public class HelloEJB implements SessionBean {
 
     public void ejbCreate() {
 
-    try {
+        try {
             Context ic = new InitialContext();
 
             Context ic1 = (Context) ic.lookup("java:comp/env");
@@ -62,25 +62,25 @@ public class HelloEJB implements SessionBean {
             String ic2Name = ic2.getNameInNamespace();
             Context ic2_ = (Context) ic.lookup(ic2Name);
 
-        sfulHome = (SfulHome) ic2_.lookup("Sful");
+            sfulHome = (SfulHome) ic2_.lookup("Sful");
             sful = sfulHome.create();
             Object obj = ic2_.lookup("SfulRemote");
             sfulRemoteHome = (SfulRemoteHome)
                 PortableRemoteObject.narrow(obj, SfulRemoteHome.class);
             sfulRemote = sfulRemoteHome.create();
 
-        System.out.println("Created Stateful bean.");
+            System.out.println("Created Stateful bean.");
 
-        slessHome = (SlessHome) ic1_.lookup("ejb/Sless");
+            slessHome = (SlessHome) ic1_.lookup("ejb/Sless");
             sless = slessHome.create();
             obj = ic2_.lookup("SlessRemote");
             slessRemoteHome = (SlessRemoteHome)
                 PortableRemoteObject.narrow(obj, SlessRemoteHome.class);
             slessRemote = slessRemoteHome.create();
 
-        System.out.println("Created Stateless bean.");
+            System.out.println("Created Stateless bean.");
 
-        bmpHome = (BmpHome) ic.lookup("java:comp/env/ejb/Bmp");
+            bmpHome = (BmpHome) ic.lookup("java:comp/env/ejb/Bmp");
 
             bmp = bmpHome.create(pkey);
             obj = ic2_.lookup("BmpRemote");
@@ -89,14 +89,14 @@ public class HelloEJB implements SessionBean {
             bmpRemote = (BmpRemote)
                 bmpRemoteHome.findByPrimaryKey(pkey);
 
-        System.out.println("Created BMP bean.");
+            System.out.println("Created BMP bean.");
 
-        ut = context.getUserTransaction();
+            ut = context.getUserTransaction();
 
-    } catch (Exception ex) {
-        System.out.println("couldn't get all beans");
-        ex.printStackTrace();
-    }
+        } catch (Exception ex) {
+            System.out.println("couldn't get all beans");
+            ex.printStackTrace();
+        }
     }
 
     private void testRemove() throws RemoteException {
@@ -210,15 +210,15 @@ public class HelloEJB implements SessionBean {
     }
 
     public void warmup(int type) throws Exception {
-    warmup(type, true);
-    warmup(type, false);
+        warmup(type, true);
+        warmup(type, false);
 
-    // Measure looping and timing overhead
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-    }
-    long end = System.currentTimeMillis();
-    overhead = end - begin;
+        // Measure looping and timing overhead
+        long begin = System.currentTimeMillis();
+        for ( int i=0; i<ITERATIONS; i++ ) {
+        }
+        long end = System.currentTimeMillis();
+        overhead = end - begin;
 
         String pkey2 = (String) bmp.getPrimaryKey();
         if( !pkey2.equals(pkey) ) {
@@ -450,144 +450,144 @@ public class HelloEJB implements SessionBean {
     }
 
     private void warmup(int type, boolean tx) throws Exception {
-    // get Hotspot warmed up
-    Common bean = pre(type, tx);
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.requiresNew();
-        bean.notSupported();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.required();
-        if ( tx )
-        bean.mandatory();
-        else
-        bean.never();
-        bean.supports();
-    }
-    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        // get Hotspot warmed up
+        Common bean = pre(type, tx);
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.requiresNew();
+            bean.notSupported();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.required();
+            if ( tx )
+                bean.mandatory();
+            else
+                bean.never();
+            bean.supports();
+        }
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
     }
 
     private Common pre(int type, boolean tx)
     {
-    if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
-    if ( type == Common.STATELESS )
-        return sless;
-    else if ( type == Common.STATEFUL )
-        return sful;
-    else
-        return bmp;
+        if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
+        if ( type == Common.STATELESS )
+            return sless;
+        else if ( type == Common.STATEFUL )
+            return sful;
+        else
+            return bmp;
     }
 
     private CommonRemote preRemote(int type, boolean tx)
     {
-    if ( type == Common.STATELESS )
-        return slessRemote;
-    else if ( type == Common.STATEFUL )
-        return sfulRemote;
-    else
-        return bmpRemote;
+        if ( type == Common.STATELESS )
+            return slessRemote;
+        else if ( type == Common.STATEFUL )
+            return sfulRemote;
+        else
+            return bmpRemote;
     }
 
 
     private float post(long begin, long end, boolean tx)
     {
-    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
-    return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
     }
 
     public float requiresNew(int type, boolean tx) throws RemoteException
     {
-    Common bean = pre(type, tx);
+        Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.requiresNew();
-    }
+        long begin = System.currentTimeMillis();
         for ( int i=0; i<ITERATIONS; i++ ) {
-        beanRemote.requiresNew();
-    }
-    long end = System.currentTimeMillis();
-    return post(begin, end, tx);
+            bean.requiresNew();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            beanRemote.requiresNew();
+        }
+        long end = System.currentTimeMillis();
+        return post(begin, end, tx);
     }
 
     public float notSupported(int type, boolean tx) throws RemoteException
     {
-    Common bean = pre(type, tx);
+        Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.notSupported();
-    }
+        long begin = System.currentTimeMillis();
         for ( int i=0; i<ITERATIONS; i++ ) {
-        beanRemote.notSupported();
-    }
-    long end = System.currentTimeMillis();
-    return post(begin, end, tx);
+            bean.notSupported();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            beanRemote.notSupported();
+        }
+        long end = System.currentTimeMillis();
+        return post(begin, end, tx);
     }
 
     public float required(int type, boolean tx) throws RemoteException
     {
-    Common bean = pre(type, tx);
+        Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.required();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        beanRemote.required();
-    }
+        long begin = System.currentTimeMillis();
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.required();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            beanRemote.required();
+        }
 
-    long end = System.currentTimeMillis();
-    return post(begin, end, tx);
+        long end = System.currentTimeMillis();
+        return post(begin, end, tx);
     }
 
     public float mandatory(int type, boolean tx) throws RemoteException
     {
-    Common bean = pre(type, tx);
+        Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.mandatory();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        beanRemote.mandatory();
-    }
-    long end = System.currentTimeMillis();
-    return post(begin, end, tx);
+        long begin = System.currentTimeMillis();
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.mandatory();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            beanRemote.mandatory();
+        }
+        long end = System.currentTimeMillis();
+        return post(begin, end, tx);
     }
 
     public float never(int type, boolean tx) throws RemoteException
     {
-    Common bean = pre(type, tx);
+        Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.never();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        beanRemote.never();
-    }
-    long end = System.currentTimeMillis();
-    return post(begin, end, tx);
+        long begin = System.currentTimeMillis();
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.never();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            beanRemote.never();
+        }
+        long end = System.currentTimeMillis();
+        return post(begin, end, tx);
     }
 
     public float supports(int type, boolean tx) throws RemoteException
     {
-    Common bean = pre(type, tx);
+        Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-    long begin = System.currentTimeMillis();
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        bean.supports();
-    }
-    for ( int i=0; i<ITERATIONS; i++ ) {
-        beanRemote.supports();
-    }
-    long end = System.currentTimeMillis();
-    return post(begin, end, tx);
+        long begin = System.currentTimeMillis();
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.supports();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            beanRemote.supports();
+        }
+        long end = System.currentTimeMillis();
+        return post(begin, end, tx);
     }
 
     public void setSessionContext(SessionContext sc) {
-    context = sc;
+        context = sc;
     }
 
     public void ejbRemove() {}

@@ -143,8 +143,8 @@ public class EnrollerBean implements SessionBean {
         } catch (SQLException ex) {
             throw new EJBException("ejbPassivate Exception: " + ex.getMessage());
         } finally {
-        con = null;
-    }
+            con = null;
+        }
     }
 
     public void setSessionContext(SessionContext context) {

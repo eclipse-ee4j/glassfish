@@ -27,7 +27,7 @@
       <jndi-name>com.sun.s1asdev.jdbc.initsql.ejb.SimpleSessionHome</jndi-name>
       <resource-ref>
         <res-ref-name>DataSource1</res-ref-name>
-    <jndi-name>jdbc/oracleres-initsql</jndi-name>
+        <jndi-name>jdbc/oracleres-initsql</jndi-name>
       </resource-ref>
     </ejb>
   </enterprise-beans>

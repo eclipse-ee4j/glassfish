@@ -87,12 +87,12 @@
 
       <antcall target="deploy-jdbc-common">
         <param name="jdbc.conpool.name" value="jdbc-autocommit-pool"/>
-    <param name="jdbc.resource.name" value="jdbc/autocommit"/>
+        <param name="jdbc.resource.name" value="jdbc/autocommit"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-autocommit-pool.steady_pool_size=2"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-autocommit-pool.steady_pool_size=2"/>
       </antcall>
 
       <antcall target="asadmin-common">

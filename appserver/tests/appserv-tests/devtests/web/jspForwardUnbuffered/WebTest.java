@@ -54,7 +54,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest1() throws Exception {
@@ -68,7 +68,7 @@ public class WebTest {
         if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                                 ", received: " + responseCode);
-    }
+        }
     }
 
     /*

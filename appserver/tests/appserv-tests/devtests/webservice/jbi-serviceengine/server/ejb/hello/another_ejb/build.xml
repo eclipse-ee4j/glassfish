@@ -42,7 +42,7 @@
     <target name="my-wsdl-import">
         <antcall target="wsdl-import">
             <param name="server" value="${server}"/>
-         <param name="port" value="HiEJB"/>
+             <param name="port" value="HiEJB"/>
         </antcall>
     </target>
 

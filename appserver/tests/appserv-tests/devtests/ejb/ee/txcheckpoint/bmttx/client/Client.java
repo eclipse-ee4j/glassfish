@@ -51,7 +51,7 @@ public class Client {
 
     public void doTest() {
         initSFSB();     //create SFSBs
-    checkPersistedFirstTime();
+        checkPersistedFirstTime();
         txAccessCheck();       //access the SFBS
     }
 
@@ -76,96 +76,96 @@ public class Client {
 
     public void checkPersistedFirstTime() {
         try {
-        int prevActCount =  sfsb.getActivateCount();
-        int nowActCount =  sfsb.getActivateCount();
+            int prevActCount =  sfsb.getActivateCount();
+            int nowActCount =  sfsb.getActivateCount();
 
-        sfsb.startTx();
-        sfsb.getTxName();
-        sfsb.commitTx();
+            sfsb.startTx();
+            sfsb.getTxName();
+            sfsb.commitTx();
 
-        sfsb.startTx();
-        sfsb.getTxName();
-        sfsb.commitTx();
+            sfsb.startTx();
+            sfsb.getTxName();
+            sfsb.commitTx();
 
-        stat.addStatus("ejbclient checkPersistedFirstTime"
-         + "(" + prevActCount + " : " + nowActCount + " : "
-         + sfsb.getActivateCount() + ")", stat.PASS);
-    } catch (Exception ex) {
-        stat.addStatus("ejbclient checkPersistedFirstTime", stat.FAIL);
-    }
+            stat.addStatus("ejbclient checkPersistedFirstTime"
+                 + "(" + prevActCount + " : " + nowActCount + " : "
+                 + sfsb.getActivateCount() + ")", stat.PASS);
+        } catch (Exception ex) {
+            stat.addStatus("ejbclient checkPersistedFirstTime", stat.FAIL);
+        }
     }
 
     public void txAccessCheck() {
         try {
-        int prevActCount = 0;
-        int nowActCount = 0;
+            int prevActCount = 0;
+            int nowActCount = 0;
 
-        prevActCount =  sfsb.getActivateCount();
-        sfsb.getName();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient NonTxNonCheckpointedMethod"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
+            prevActCount =  sfsb.getActivateCount();
+            sfsb.getName();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient NonTxNonCheckpointedMethod"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
 
-        prevActCount =  sfsb.getActivateCount();
-        sfsb.checkpoint();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient NonTxCheckpointedMethod"
-        + " (" + prevActCount + " != " + nowActCount + ")",
-        ((prevActCount != nowActCount) ? stat.PASS : stat.FAIL));
+            prevActCount =  sfsb.getActivateCount();
+            sfsb.checkpoint();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient NonTxCheckpointedMethod"
+                + " (" + prevActCount + " != " + nowActCount + ")",
+                ((prevActCount != nowActCount) ? stat.PASS : stat.FAIL));
 
-        prevActCount = nowActCount;
-        sfsb.startTx();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient utBeginCheck"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
+            prevActCount = nowActCount;
+            sfsb.startTx();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient utBeginCheck"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
 
-        sfsb.incrementCount();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient TxBusinessMethodInsideTx"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
+            sfsb.incrementCount();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient TxBusinessMethodInsideTx"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
 
-        sfsb.getTxName();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient TxMethodInsideTx"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
+            sfsb.getTxName();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient TxMethodInsideTx"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
 
-        sfsb.getName();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient NonTxMethodInsideTx"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
+            sfsb.getName();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient NonTxMethodInsideTx"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
 
-        sfsb.checkpoint();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient checkpointedMethodInsideTx"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
+            sfsb.checkpoint();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient checkpointedMethodInsideTx"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                ((prevActCount == nowActCount) ? stat.PASS : stat.FAIL));
 
-        sfsb.commitTx();
-        nowActCount =  sfsb.getActivateCount();
-        stat.addStatus("ejbclient commitTxCheck"
-        + " (" + prevActCount + " == " + nowActCount + ")",
-        (((prevActCount+1) == nowActCount) ? stat.PASS : stat.FAIL));
+            sfsb.commitTx();
+            nowActCount =  sfsb.getActivateCount();
+            stat.addStatus("ejbclient commitTxCheck"
+                + " (" + prevActCount + " == " + nowActCount + ")",
+                (((prevActCount+1) == nowActCount) ? stat.PASS : stat.FAIL));
 
         } catch (Exception ex) {
-        ex.printStackTrace();
+            ex.printStackTrace();
             stat.addStatus("ejbclient txAccessCheck", stat.FAIL);
         }
     }
 
     private void sleepFor(int seconds) {
-    System.out.println("Waiting for " + seconds + " seconds before accessing...");
-    for (int i=0; i<seconds; i++) {
-        System.out.println("" + (seconds - i) + " seconds left...");
-        try {
-        Thread.currentThread().sleep(1*1000);
-        } catch (Exception ex) {
+        System.out.println("Waiting for " + seconds + " seconds before accessing...");
+        for (int i=0; i<seconds; i++) {
+            System.out.println("" + (seconds - i) + " seconds left...");
+            try {
+                Thread.currentThread().sleep(1*1000);
+            } catch (Exception ex) {
+            }
         }
-    }
     }
 
 } //Client{}

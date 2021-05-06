@@ -91,7 +91,7 @@
     </target>
 
     <target name="run" depends="init-common">
-    <antcall target="asadmin-common">
+        <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="server.monitoring-service.module-monitoring-levels.jdbc-connection-pool=OFF"/>

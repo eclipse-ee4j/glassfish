@@ -51,7 +51,7 @@ public class BeanSetup {
                 .println("Dispose method in BeanSetup for testQualifier called");
         if (tb != null) {
             disposeCalledForTestQualifierError = "dispose method for testqualifier " +
-                    "called without injecting TestBean";
+                            "called without injecting TestBean";
         }
     }
 

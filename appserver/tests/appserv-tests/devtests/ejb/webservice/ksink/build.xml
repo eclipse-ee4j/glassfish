@@ -34,9 +34,9 @@
   <target name="all" depends="clean,build,deploy,run,undeploy"/>
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
   <target name="compile" depends="">
@@ -103,25 +103,25 @@
 
   <target name="assemble" depends="init-common, compile">
     <!--
-    EJB module creation
+        EJB module creation
     -->
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch.wsdl"/>
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch_types.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="GoogleMapping_ejb.xml"/>
+         file="GoogleMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
       <param name="ejbjar.classes"
              value="GoogleMapping_ejb.xml,META-INF/wsdl/**,**/*.class" />
 
     </antcall>
     <!--
-    War module creation
+        War module creation
     -->
     <antcall target="build-war-file"/>
     <!--
-    AppClient module creation
+        AppClient module creation
     -->
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch.wsdl"/>
@@ -130,24 +130,24 @@
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch_partial.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="GoogleMapping_appclient.xml"/>
+         file="GoogleMapping_appclient.xml"/>
     <copy todir="${build.classes.dir}"
-     file="googleclient.model"/>
+         file="googleclient.model"/>
     <antcall target="appclient-jar-common">
       <param name="appclientjar.classes"
              value="googleclient.model,GoogleMapping_appclient.xml,META-INF/wsdl/**,**/*.class" />
 
     </antcall>
     <!--
-    EAR file creation
+        EAR file creation
     -->
     <antcall target="ear-common" />
     <copy todir="${build.classes.dir}/META-INF"
       file="${sun-application.xml}"/>
     <jar destfile = "${assemble.dir}/${appname}App.ear"
-    update="true">
+        update="true">
       <fileset dir="${build.classes.dir}">
-    <include name="META-INF/sun-application.xml"/>
+        <include name="META-INF/sun-application.xml"/>
       </fileset>
     </jar>
 
@@ -173,9 +173,9 @@
     <copy todir="${build.classes.dir}/tmp/WEB-INF/wsdl"
       file="GoogleSearch_types.wsdl"/>
     <copy todir="${build.classes.dir}/tmp"
-     file="GoogleMapping_web.xml"/>
+         file="GoogleMapping_web.xml"/>
     <copy todir="${build.classes.dir}/tmp"
-     file="googleweb.model"/>
+         file="googleweb.model"/>
     <copy todir="${build.classes.dir}/tmp/WEB-INF/classes/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb">
         <fileset dir="${build.classes.dir}/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb">
             <include name="**/*.class"/>
@@ -241,7 +241,7 @@
         <pathelement location="${env.S1AS_HOME}/lib/appserv-rt.jar"/>
         <pathelement location="${env.S1AS_HOME}/lib/webservices-rt.jar"/>
         <pathelement location="${env.S1AS_HOME}/lib/webservices-tools.jar"/>
-        <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
         <pathelement location="${build.classes.dir}"/>
       </classpath>
 
@@ -283,9 +283,9 @@
 
     <target name="create-user">
         <antcall target="create-user-common">
-        <param name="user" value="j2ee"/>
-        <param name="password" value="j2ee"/>
-        <param name="groups" value="staff"/>
+            <param name="user" value="j2ee"/>
+            <param name="password" value="j2ee"/>
+            <param name="groups" value="staff"/>
        </antcall>
       <antcall target="reconfig-common"/>
     </target>
@@ -302,10 +302,10 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes the WebServices test)
-            ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+                        ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
+        </echo>
     </target>
 </project>

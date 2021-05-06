@@ -40,12 +40,12 @@ public class FooManagedBean {
   }
 
     public void hello() {
-    System.out.println("In FooManagedBean::hello()");
+        System.out.println("In FooManagedBean::hello()");
     }
 
     @PreDestroy
-    private void destroy() {
-    System.out.println("In FooManagedBean::destroy()");
+        private void destroy() {
+        System.out.println("In FooManagedBean::destroy()");
     }
 
 }

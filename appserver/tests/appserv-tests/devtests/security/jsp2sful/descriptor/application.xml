@@ -25,8 +25,8 @@
   </module>
   <module>
     <web>
-        <web-uri>jsp2sful-web.war</web-uri>
-        <context-root>jsp2sful</context-root>
+            <web-uri>jsp2sful-web.war</web-uri>
+            <context-root>jsp2sful</context-root>
     </web>
   </module>
 </application>

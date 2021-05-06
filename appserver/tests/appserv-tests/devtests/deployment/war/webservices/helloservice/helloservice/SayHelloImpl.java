@@ -20,9 +20,9 @@ import java.rmi.RemoteException;
 
 public class SayHelloImpl implements SayHello {
 
-    public String message ="Bonjour ";
+        public String message ="Bonjour ";
 
-    public String sayHello(String s) throws RemoteException {
-        return message + s;
-    }
+        public String sayHello(String s) throws RemoteException {
+                return message + s;
+        }
 }

@@ -118,7 +118,7 @@
 
     <target name="timertest">
         <record name="timertest.output" action="start" />
-    <echo>Running timertest target ${timer.test.type} </echo>
+        <echo>Running timertest target ${timer.test.type} </echo>
             <ant dir="timertest" target="${timer.test.type}"/>
         <record name="timertest.output" action="stop" />
     </target>
@@ -190,9 +190,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-ejb31-embedded tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ejb31-embedded tests)
+        </echo>
     </target>
 </project>

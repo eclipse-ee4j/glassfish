@@ -289,9 +289,9 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
     @AroundInvoke
     public Object intercept(InvocationContext inv)
-    throws Exception
+        throws Exception
     {
-    System.out.println("[mdb] Interceptor invoked...");
+        System.out.println("[mdb] Interceptor invoked...");
         System.out.println("method = " + inv.getMethod());
         System.out.println("params = " + inv.getParameters());
         int i = 0;
@@ -309,8 +309,8 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
         }
 
 
-    Object o = inv.proceed();
-    System.out.println("[mdb] Interceptor after proceed()...");
+        Object o = inv.proceed();
+        System.out.println("[mdb] Interceptor after proceed()...");
 
         return o;
     }

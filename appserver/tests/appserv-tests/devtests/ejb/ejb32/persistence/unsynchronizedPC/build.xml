@@ -74,9 +74,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes set of ejb-ejb32-persistence-unsynchronizedPC tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes set of ejb-ejb32-persistence-unsynchronizedPC tests)
+        </echo>
     </target>
 </project>

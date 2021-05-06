@@ -32,7 +32,7 @@ public class Client extends HttpServlet {
        @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/containerresolver-app2/Hello2Service?wsdl") Hello2Service service2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

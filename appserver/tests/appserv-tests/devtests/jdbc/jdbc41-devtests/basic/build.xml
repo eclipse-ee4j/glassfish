@@ -60,13 +60,13 @@
     <target name="deploy" depends="init-common">
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-41-pool"/>
-    <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
-    <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
+        <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
+        <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
       </antcall>
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-41-pool"/>
-    <param name="jdbc.resource.name" value="jdbc/41resource"/>
+        <param name="jdbc.resource.name" value="jdbc/41resource"/>
       </antcall>
 
       <antcall target="deploy-common"/>

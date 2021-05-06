@@ -27,9 +27,9 @@ import java.rmi.RemoteException;
   */
  public interface WebServiceToEjbSEI extends Remote {
 
-     /*
-      * Invoke the ejb
-      */
-      public String payload(String requestInfo) throws RemoteException;
+         /*
+          * Invoke the ejb
+          */
+          public String payload(String requestInfo) throws RemoteException;
 
  }

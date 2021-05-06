@@ -29,7 +29,7 @@ public class TestClient {
 
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-    private static String testId = "jbi-serviceengine/service_unit/endpoint-naming";
+        private static String testId = "jbi-serviceengine/service_unit/endpoint-naming";
 
     public boolean found1 = false;
 
@@ -46,8 +46,8 @@ public class TestClient {
         try {
             int code = invokeServlet(url);
             report(code);
-    } catch (Exception e) {
-        fail();
+        } catch (Exception e) {
+            fail();
         }
     }
 
@@ -62,7 +62,7 @@ public class TestClient {
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.indexOf("Result is") != -1)
-        found1 = true;
+                found1 = true;
         }
         return code;
     }

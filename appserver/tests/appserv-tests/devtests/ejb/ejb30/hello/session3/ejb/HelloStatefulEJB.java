@@ -42,12 +42,12 @@ import jakarta.persistence.EntityManager;
 
     public void sleepFor(int sec) {
         System.out.println("In HelloStatefulEJB::sleepFor()");
-    try {
-        for (int i=0 ; i<sec; i++) {
-        Thread.currentThread().sleep(1000);
+        try {
+            for (int i=0 ; i<sec; i++) {
+                Thread.currentThread().sleep(1000);
+            }
+        } catch (Exception ex) {
         }
-    } catch (Exception ex) {
-    }
         System.out.println("Finished HelloStatefulEJB::sleepFor()");
     }
 

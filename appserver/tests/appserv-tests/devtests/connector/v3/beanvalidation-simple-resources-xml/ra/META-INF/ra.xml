@@ -70,7 +70,7 @@
           </config-property>
         </adminobject>
 
-    <adminobject>
+        <adminobject>
           <adminobject-interface>connector.MyAdminObject1</adminobject-interface>
           <adminobject-class>connector.MyAdminObject1</adminobject-class>
           <config-property>

@@ -31,11 +31,11 @@ public class HelloBean implements SessionBean {
     public HelloBean() {}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In HelloBean::ejbCreate !!");
+        System.out.println("In HelloBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public void sayHello() {

@@ -56,36 +56,36 @@ public class SimpleServlet extends HttpServlet {
         SimpleBMP simpleBMP = simpleBMPHome.create();
 
         if (simpleBMP.statementTest()) {
-        System.out.println("Statement Timeout test : statementTest : PASS");
-        out.println("TEST:PASS");
+            System.out.println("Statement Timeout test : statementTest : PASS");
+            out.println("TEST:PASS");
         } else {
-        System.out.println("Statement Timeout test : statementTest : FAIL");
+            System.out.println("Statement Timeout test : statementTest : FAIL");
             out.println("TEST:FAIL");
         }
 
         if (simpleBMP.preparedStatementTest()) {
-        System.out.println("Statement Timeout test : preparedStatementTest : PASS");
-        out.println("TEST:PASS");
+            System.out.println("Statement Timeout test : preparedStatementTest : PASS");
+            out.println("TEST:PASS");
         } else {
-        System.out.println("Statement Timeout test : preparedStatementTest : FAIL");
+            System.out.println("Statement Timeout test : preparedStatementTest : FAIL");
             out.println("TEST:FAIL");
         }
 
         if (simpleBMP.callableStatementTest()) {
-        System.out.println("Statement Timeout test : callableStatementTest : PASS");
-        out.println("TEST:PASS");
+            System.out.println("Statement Timeout test : callableStatementTest : PASS");
+            out.println("TEST:PASS");
         } else {
-        System.out.println("Statement Timeout test : callableStatementTest : FAIL");
+            System.out.println("Statement Timeout test : callableStatementTest : FAIL");
             out.println("TEST:FAIL");
         }
 
-    } catch(NamingException ne) {
-        ne.printStackTrace();
-    } catch(CreateException e) {
-        e.printStackTrace();
+        } catch(NamingException ne) {
+            ne.printStackTrace();
+        } catch(CreateException e) {
+            e.printStackTrace();
         } finally {
-        out.println("END_OF_TEST");
-        out.flush();
-    }
+            out.println("END_OF_TEST");
+            out.flush();
+        }
     }
 }

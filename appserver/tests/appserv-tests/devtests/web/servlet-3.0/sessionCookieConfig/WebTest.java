@@ -100,7 +100,7 @@ public class WebTest {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                     fail = true;
                 }
-        } else {
+            } else {
                 System.err.println("Missing cookie domain");
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;
@@ -115,7 +115,7 @@ public class WebTest {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                     fail = true;
                 }
-        } else {
+            } else {
                 System.err.println("Missing cookie path");
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;
@@ -130,7 +130,7 @@ public class WebTest {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                     fail = true;
                 }
-        } else {
+            } else {
                 System.err.println("Missing cookie comment");
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;

@@ -88,13 +88,13 @@ public class MyAdminObject1 implements java.io.Serializable {
     }
 
     public void initialize() {
-    System.out.println("[MyAdminObject] Initializing the Controls to false:"+resetControl);
+        System.out.println("[MyAdminObject] Initializing the Controls to false:"+resetControl);
         if (resetControl.equals("BEGINNING")) {
             synchronized (Controls.readyLock){
                 Controls.done=false;
             }
-       System.out.println("[MyAdminObject] Initialized the Controls to false");
-    }
+           System.out.println("[MyAdminObject] Initialized the Controls to false");
+        }
     }
 
     public boolean done() {

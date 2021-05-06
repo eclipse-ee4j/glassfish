@@ -83,7 +83,7 @@ public class Client {
         queueSender = queueSession.createSender(null);
 
         clientQueue = (jakarta.jms.Queue)
-        context.lookup("java:comp/env/jms/MsgBeanClientQueue");
+            context.lookup("java:comp/env/jms/MsgBeanClientQueue");
 
         queueReceiver = queueSession.createReceiver(clientQueue);
 

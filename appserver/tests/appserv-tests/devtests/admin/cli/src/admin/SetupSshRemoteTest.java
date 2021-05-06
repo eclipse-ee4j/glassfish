@@ -153,7 +153,7 @@ public class SetupSshRemoteTest extends SshBaseDevTest {
         //clean up the password file
         removePasswords("SSH");
         stopDomain();
-    stat.printSummary();
+        stat.printSummary();
     }
 
     private boolean testKeyDistributionWithoutKeyGeneration() {

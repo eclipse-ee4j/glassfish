@@ -40,13 +40,13 @@ public class Client {
                 new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) throws Exception {
-    stat.addDescription("webservices-simple-restful-svc");
+        stat.addDescription("webservices-simple-restful-svc");
         String endpointAddress =
             "http://localhost:8080/AddNumbersImplService/endpoint.AddNumbersImpl";
         URL url = new URL(endpointAddress+"?num1=10&num2=20");
         System.out.println ("Invoking URL="+url);
         process(url, args);
-    stat.printSummary("webservices-simple-restful-svc");
+        stat.printSummary("webservices-simple-restful-svc");
     }
 
     private static void process(URL url, String[] args) throws Exception {
@@ -64,12 +64,12 @@ public class Client {
             oprops.put(OutputKeys.OMIT_XML_DECLARATION, "yes");
             trans.setOutputProperties(oprops);
             trans.transform(source, sr);
-        String resp = bos.toString();
+            String resp = bos.toString();
             System.out.println("**** Response ******"+resp);
             bos.close();
-        if(resp.indexOf("<ns:return>30</ns:return>") != -1)
+            if(resp.indexOf("<ns:return>30</ns:return>") != -1)
                 stat.addStatus(args[0], stat.PASS);
-        else
+            else
                 stat.addStatus(args[0], stat.FAIL);
         } catch(Exception e) {
             e.printStackTrace();

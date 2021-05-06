@@ -34,7 +34,7 @@ import com.sun.enterprise.security.common.SecurityConstants;
  */
 public class LoginContextDriverTest {
 
-    private static String testId="Standalone-client-login-context-driver";
+        private static String testId="Standalone-client-login-context-driver";
     private static boolean testStatus=false;
     private static SimpleReporterAdapter stat =  new SimpleReporterAdapter();
 
@@ -67,7 +67,7 @@ public class LoginContextDriverTest {
 
             my1r = my1rh.create();
 
-             String retValue = my1r.businessMethod("blah");
+                     String retValue = my1r.businessMethod("blah");
             System.out.println("retValue="+retValue);
 
             testStatus = true;

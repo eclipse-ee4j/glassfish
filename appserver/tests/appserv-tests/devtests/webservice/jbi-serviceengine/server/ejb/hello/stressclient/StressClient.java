@@ -44,7 +44,7 @@ public class StressClient extends Thread {
     Hi port1;
     Subtractor port2;
 
-    private static String testId = "jbi-serviceengine/server/ejb/hello/stressclient";
+        private static String testId = "jbi-serviceengine/server/ejb/hello/stressclient";
 
      static long startTime  = 0;
      static int minutesToRun = 0;
@@ -59,20 +59,20 @@ public class StressClient extends Thread {
 
        StressClient(int i,SimpleReporterAdapter stat) {
            System.out.println("Instantiating a stress client");
-       //stat.addDescription("jsr108-serverside-webservices-ejb-noname-annotation");
+           //stat.addDescription("jsr108-serverside-webservices-ejb-noname-annotation");
            clientId = i;
-       this.stat = stat;
+           this.stat = stat;
        }
 
        void setServiceHandle( HelloEJBService ser, HiEJBService ser1, SubtractorService ser2){
            service = ser;
-       service1 = ser1;
-       service2 = ser2;
+           service1 = ser1;
+           service2 = ser2;
        }
 
        static void setTimeToRun( int minutes ) {
            minutesToRun = minutes;
-       startTime = System.currentTimeMillis();
+           startTime = System.currentTimeMillis();
        }
 
        public void run() {
@@ -84,63 +84,63 @@ public class StressClient extends Thread {
                 endpointURI);
            System.out.println(clientId + ":" + " After setting endpoint address URI");
 
-        port1 = service1.getHiEJBPort();
-        BindingProvider stub1 = (BindingProvider)port1;
+            port1 = service1.getHiEJBPort();
+            BindingProvider stub1 = (BindingProvider)port1;
             String endpointURI1 ="http://localhost:12017/HiEJBPort";
             stub1.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                                  endpointURI1);
+                                          endpointURI1);
 
-         port2 = service2.getSubtractorPort();
-         BindingProvider stub2 = (BindingProvider)port2;
+             port2 = service2.getSubtractorPort();
+             BindingProvider stub2 = (BindingProvider)port2;
              String endpointURI2 ="http://localhost:12018/subtractorendpoint";
              stub2.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                                  endpointURI2);
+                                          endpointURI2);
 
 
-       while((endTime - startTime) < minutesToRun*60*1000) {
+           while((endTime - startTime) < minutesToRun*60*1000) {
                // Iterative tester for stress, per Thread
                for ( int i=0 ; i < 10; i++)
-               doTest("Stress Tester",i);
-           endTime = System.currentTimeMillis();
-       }
+                   doTest("Stress Tester",i);
+               endTime = System.currentTimeMillis();
+           }
        }
 
        public void doTest(String toSend, int id) {
             try {
-            Integer i = (Integer)id;
+                Integer i = (Integer)id;
 
                 String ret = port.sayHello(toSend+i);
-        String ret1 = port1.sayHi(toSend+i);
-        int res = port2.add(5,2);
+                String ret1 = port1.sayHi(toSend+i);
+                int res = port2.add(5,2);
 
-        if(ret.indexOf("WebSvcTest-Hello") == -1 || ret.indexOf(i.toString()) == -1) {
+                if(ret.indexOf("WebSvcTest-Hello") == -1 || ret.indexOf(i.toString()) == -1) {
                     System.out.println(clientId + ":" + "Unexpected greeting " + ret);
                     stat.addStatus(testId, stat.FAIL);
-                stat.printSummary(testId);
+                    stat.printSummary(testId);
                     return;
-        }
-        //pass();
+                }
+                //pass();
                 System.out.println(clientId + ":" + ret);
 
-         if(ret1.indexOf("WebSvcTest-Hi") == -1 || ret1.indexOf(i.toString()) == -1) {
-                    System.out.println(clientId + ":" + "Unexpected greeting " + ret1);
-             stat.addStatus(testId, stat.FAIL);
-             return;
-         }
-         //pass();
-         System.out.println(clientId + ":" + ret1);
-
-         if( res != 3) {
-                  System.out.println(clientId + ":" + "Unexpected result " + res);
-              stat.addStatus(testId, stat.FAIL);
-              return;
-             }
+                 if(ret1.indexOf("WebSvcTest-Hi") == -1 || ret1.indexOf(i.toString()) == -1) {
+                            System.out.println(clientId + ":" + "Unexpected greeting " + ret1);
+                     stat.addStatus(testId, stat.FAIL);
+                     return;
+                 }
                  //pass();
-         System.out.println(clientId + "Result is :" + res);
+                 System.out.println(clientId + ":" + ret1);
 
-         }  catch(Exception e) {
+                 if( res != 3) {
+                      System.out.println(clientId + ":" + "Unexpected result " + res);
+                      stat.addStatus(testId, stat.FAIL);
+                      return;
+                 }
+                 //pass();
+                 System.out.println(clientId + "Result is :" + res);
+
+             }  catch(Exception e) {
                 stat.addStatus(testId, stat.FAIL);
-            stat.printSummary(testId);
+                stat.printSummary(testId);
                 e.printStackTrace();
             }
        }

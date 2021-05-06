@@ -29,9 +29,9 @@
     <property name="client-src-name" value="client/Client.java"/>
     <property name="app-client-parameters" value="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
     <target name="all" depends="clean">
-    <antcall target="deploy"/>
+        <antcall target="deploy"/>
         <basename file="${src-name}" property="server" suffix=".java"/>
-    <condition property="deploy_succeeded">
+        <condition property="deploy_succeeded">
             <available file="${env.S1AS_HOME}/domains/domain1/autodeploy/${server}.jar_deployed"/>
         </condition>
         <condition property="deploy_failed">
@@ -39,39 +39,39 @@
         </condition>
         <fail message="Deployment failed" if="deploy_failed"/>
         <echo message="Deployment passed ${deploy_succeeded}"/>
-    <echo message="ALL WEBSERVICE INVOCATION SHOULD FAIL..."/>
+        <echo message="ALL WEBSERVICE INVOCATION SHOULD FAIL..."/>
         <antcall target="run">
-        <param name="app-client-extra-parameters" value="-user nouser -password nopass"/>
+            <param name="app-client-extra-parameters" value="-user nouser -password nopass"/>
         </antcall>
-    <echo message="CREATING USERS..."/>
+        <echo message="CREATING USERS..."/>
         <copy file="${admin.password.file}" tofile="./passwordfile" overwrite="true"/>
         <echo file="./passwordfile" append="true">
 AS_ADMIN_USERPASSWORD=tester
         </echo>
-    <exec executable="${env.S1AS_HOME}/bin/asadmin">
+        <exec executable="${env.S1AS_HOME}/bin/asadmin">
             <arg line="create-file-user --port ${admin.port} --user ${admin.user} --passwordfile ./passwordfile --groups webservicetester --authrealmname file webservicetester"/>
-        </exec>
+            </exec>
         <copy file="${admin.password.file}" tofile="./passwordfile" overwrite="true"/>
         <echo file="./passwordfile" append="true">
 AS_ADMIN_USERPASSWORD=tester2
         </echo>
-    <exec executable="${env.S1AS_HOME}/bin/asadmin">
+        <exec executable="${env.S1AS_HOME}/bin/asadmin">
             <arg line="create-file-user --port ${admin.port} --user ${admin.user} --passwordfile ./passwordfile --groups webservicetester2 --authrealmname file webservicetester2"/>
-        </exec>
+            </exec>
         <antcall target="internal-run">
-        <param name="app-client-extra-parameters" value="-user nouser -password nopass webservicetester tester"/>
+            <param name="app-client-extra-parameters" value="-user nouser -password nopass webservicetester tester"/>
         </antcall>
         <antcall target="internal-run">
-        <param name="app-client-extra-parameters" value="-user nouser -password nopass webservicetester2 tester2 FAILURE"/>
+            <param name="app-client-extra-parameters" value="-user nouser -password nopass webservicetester2 tester2 FAILURE"/>
         </antcall>
-    <echo message="DELETING USERS..."/>
-    <exec executable="${env.S1AS_HOME}/bin/asadmin">
+        <echo message="DELETING USERS..."/>
+        <exec executable="${env.S1AS_HOME}/bin/asadmin">
             <arg line="delete-file-user --port ${admin.port} --user ${admin.user} --passwordfile ${admin.password.file} --authrealmname file webservicetester"/>
-        </exec>
-    <exec executable="${env.S1AS_HOME}/bin/asadmin">
+            </exec>
+        <exec executable="${env.S1AS_HOME}/bin/asadmin">
             <arg line="delete-file-user --port ${admin.port} --user ${admin.user} --passwordfile ${admin.password.file} --authrealmname file webservicetester2"/>
-        </exec>
-    <antcall target="undeploy"/>
+            </exec>
+        <antcall target="undeploy"/>
     </target>
 
     <target name="report-success">

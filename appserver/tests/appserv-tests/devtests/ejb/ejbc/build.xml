@@ -53,13 +53,13 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant equals (Executes the ejb-ejbc equals test)
-            ant redef (Executes the ejb-ejbc redef test)
-            ant sameimpl (Executes the ejb-ejbc sameimpl
+        <echo>
+                Usage:
+                        ant equals (Executes the ejb-ejbc equals test)
+                        ant redef (Executes the ejb-ejbc redef test)
+                        ant sameimpl (Executes the ejb-ejbc sameimpl
 test)
-            ant all (Executes all the ejb-ejbc tests)
-    </echo>
+                        ant all (Executes all the ejb-ejbc tests)
+        </echo>
     </target>
 </project>

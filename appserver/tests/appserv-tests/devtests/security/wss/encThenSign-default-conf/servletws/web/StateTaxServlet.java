@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 import jakarta.servlet.SingleThreadModel;
 
 public class StateTaxServlet implements
-            SingleThreadModel, ServiceLifecycle {
+                        SingleThreadModel, ServiceLifecycle {
 
     public StateTaxServlet() {
         System.out.println("StateTaxServlet() instantiated");
@@ -44,7 +44,7 @@ public class StateTaxServlet implements
     }
 
     public double getStateTax(double income, double deductions) {
-    System.out.println("getStateTax invoked from servlet endpoint");
-     return ((income -  deductions) * 0.3);
+        System.out.println("getStateTax invoked from servlet endpoint");
+         return ((income -  deductions) * 0.3);
     }
 }

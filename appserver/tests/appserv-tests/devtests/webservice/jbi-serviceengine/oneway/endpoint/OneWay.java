@@ -26,20 +26,20 @@ import jakarta.jws.Oneway;
     targetNamespace="http://example.web.service/OneWay"
 )
 public class OneWay {
-    public OneWay() {}
+        public OneWay() {}
 
-    @WebMethod(operationName="subtract", action="urn:Subtract")
-    @Oneway
-    public void subtract(int i, int j) {
-        System.out.println("*** Inside subtract("+i+", "+j+")");
+        @WebMethod(operationName="subtract", action="urn:Subtract")
+        @Oneway
+        public void subtract(int i, int j) {
+                System.out.println("*** Inside subtract("+i+", "+j+")");
                 int k = i -j ;
-        if(i == 101)
-            throw new RuntimeException("This is my exception in subtract ...");
-    }
+                if(i == 101)
+                        throw new RuntimeException("This is my exception in subtract ...");
+        }
 
-    @WebMethod(operationName="sayHi", action="urn:SayHi")
-    @Oneway
-    public void sayHi() {
+        @WebMethod(operationName="sayHi", action="urn:SayHi")
+        @Oneway
+        public void sayHi() {
                 System.out.println("*** Hi from OneWay");
-    }
+        }
 }

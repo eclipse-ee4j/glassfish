@@ -40,11 +40,11 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-cli tests)
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-cli tests)
 
-            ant negative (Executes the ejb-cli negative test)
-    </echo>
+                        ant negative (Executes the ejb-cli negative test)
+        </echo>
     </target>
 </project>

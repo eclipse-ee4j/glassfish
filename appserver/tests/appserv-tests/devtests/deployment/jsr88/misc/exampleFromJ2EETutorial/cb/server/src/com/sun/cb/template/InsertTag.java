@@ -62,9 +62,9 @@ public class InsertTag extends SimpleTagSupport {
       } catch (Exception ex) {
           Throwable rootCause = null;
           if (ex instanceof ServletException) {
-                  rootCause = ((ServletException) ex).getRootCause();
+                              rootCause = ((ServletException) ex).getRootCause();
           }
-                 throw new JspTagException(ex.getMessage(), rootCause);
-        }
+                             throw new JspTagException(ex.getMessage(), rootCause);
+            }
    }
 }

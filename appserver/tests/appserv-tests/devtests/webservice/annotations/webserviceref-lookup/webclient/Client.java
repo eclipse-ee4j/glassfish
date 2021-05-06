@@ -34,7 +34,7 @@ public class Client extends HttpServlet {
         SubtractNumbersService service2;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

@@ -32,38 +32,38 @@ public class Client {
         static HelloîService service;
 
         public static void main(String[] args) {
-        stat.addDescription("service-with-mbyte-char");
+            stat.addDescription("service-with-mbyte-char");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("service-with-mbyte-char");
+            stat.printSummary("service-with-mbyte-char");
        }
 
        public void doTest(String[] args) {
             try {
                 Hello port = service.getHelloPort();
                 String ret = port.sayHello("Appserver Tester !" + args[0]);
-        if(ret.indexOf("WebSvcTest-Hello") == -1) {
+                if(ret.indexOf("WebSvcTest-Hello") == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(args[0], stat.FAIL);
                     return;
-        }
-        if(ret.indexOf(args[0]) == -1) {
+                }
+                if(ret.indexOf(args[0]) == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(args[0], stat.FAIL);
                     return;
-        }
+                }
                 System.out.println(ret);
                 ret = port.sayDoubleHello("Appserver Tester !" + args[0]);
-        if(ret.indexOf("WebSvcTest-Double-Hello") == -1) {
+                if(ret.indexOf("WebSvcTest-Double-Hello") == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(args[0], stat.FAIL);
                     return;
-        }
-        if(ret.indexOf(args[0]) == -1) {
+                }
+                if(ret.indexOf(args[0]) == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(args[0], stat.FAIL);
                     return;
-        }
+                }
                 System.out.println(ret);
                 stat.addStatus(args[0], stat.PASS);
             } catch(Exception e) {

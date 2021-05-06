@@ -80,7 +80,7 @@
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props"
+        <param name="operand.props"
                value="${resources.dottedname.prefix}.jdbc-connection-pool.ql-jdbc-pool.connection_leak_timeout_in_seconds=10"/>
       </antcall>
 

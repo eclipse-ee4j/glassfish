@@ -25,23 +25,23 @@ public class StatefulBean {
 
     public void foo() {
 
-    slsb.foo();
+        slsb.foo();
 
     }
 
     public void afterBegin() {
-    System.out.println("In StatefulBean::afterBegin");
+        System.out.println("In StatefulBean::afterBegin");
     }
 
 
     private void beforeCompletion() {
-    System.out.println("In StatefulBean::beforeCompletion");
+        System.out.println("In StatefulBean::beforeCompletion");
     }
 
 
     void afterCompletion(boolean committed) {
-    System.out.println("In StatefulBean::afterCompletion c = " +
-               committed);
+        System.out.println("In StatefulBean::afterCompletion c = " +
+                           committed);
     }
 
 }

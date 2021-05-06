@@ -32,8 +32,8 @@ import javax.sql.*;
 //import com.sun.jdbcra.spi.JdbcSetupAdmin;
 
 public class VersionCheckerEJB implements SessionBean {
-    private InitialContext initContext = null;
-    private SessionContext sessionContext = null;
+        private InitialContext initContext = null;
+        private SessionContext sessionContext = null;
 
 
     public VersionCheckerEJB() {
@@ -48,23 +48,23 @@ public class VersionCheckerEJB implements SessionBean {
 
     public int getVersion(){
             debug("Checking the version!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        try {
-          initContext = new javax.naming.InitialContext();
-        } catch (Exception e) {
-          System.out.println("Exception occured when creating InitialContext: " + e.toString());
+            try {
+              initContext = new javax.naming.InitialContext();
+            } catch (Exception e) {
+              System.out.println("Exception occured when creating InitialContext: " + e.toString());
               e.printStackTrace();
-          return -1;
-        }
+              return -1;
+            }
 
-        try {
-          com.sun.jdbcra.spi.JdbcSetupAdmin ja = (com.sun.jdbcra.spi.JdbcSetupAdmin) initContext.lookup("eis/testAdmin");
-          int versionno =  ja.getVersion();
-          debug("Version number is " + versionno);
-          return versionno;
-        } catch (Exception e) {
-          e.printStackTrace();
-          throw new RuntimeException(e.getMessage());
-        }
+            try {
+              com.sun.jdbcra.spi.JdbcSetupAdmin ja = (com.sun.jdbcra.spi.JdbcSetupAdmin) initContext.lookup("eis/testAdmin");
+              int versionno =  ja.getVersion();
+              debug("Version number is " + versionno);
+              return versionno;
+            } catch (Exception e) {
+              e.printStackTrace();
+              throw new RuntimeException(e.getMessage());
+            }
 
            // return -1;
     }
@@ -76,7 +76,7 @@ public class VersionCheckerEJB implements SessionBean {
     }
 
     public void ejbRemove() {
-        debug(" bean removed");
+            debug(" bean removed");
     }
 
     public void ejbActivate() {

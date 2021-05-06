@@ -83,7 +83,7 @@ public class Client {
             stat.addStatus("jmsejb2 " + ejbName, stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     final static String helloStr = "Hello World!";

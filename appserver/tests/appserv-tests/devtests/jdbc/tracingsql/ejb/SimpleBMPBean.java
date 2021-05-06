@@ -29,19 +29,19 @@ public class SimpleBMPBean
     protected DataSource tracingds;
 
     public void setEntityContext(EntityContext entityContext) {
-    Context context = null;
-    try {
-        context    = new InitialContext();
-        ds = (DataSource) context.lookup("java:comp/env/DataSource");
-        tracingds = (DataSource) context.lookup("java:comp/env/TracingDataSource");
-    } catch (NamingException e) {
-        throw new EJBException("cant find datasource");
-    }
+        Context context = null;
+        try {
+            context    = new InitialContext();
+            ds = (DataSource) context.lookup("java:comp/env/DataSource");
+            tracingds = (DataSource) context.lookup("java:comp/env/TracingDataSource");
+        } catch (NamingException e) {
+            throw new EJBException("cant find datasource");
+        }
         System.out.println("[**SimpleBMPBean**] Done with setEntityContext....");
     }
 
     public Integer ejbCreate() throws CreateException {
-        return new Integer(1);
+            return new Integer(1);
     }
 
     public boolean statementTest() {
@@ -54,8 +54,8 @@ public class SimpleBMPBean
             stmt = conFromDS.createStatement();
             conFromStatement = stmt.getConnection();
 
-        System.out.println("statement Test : conFromDS : " + conFromDS);
-        System.out.println("statement Test : conFromStatement : " + conFromStatement);
+                System.out.println("statement Test : conFromDS : " + conFromDS);
+                System.out.println("statement Test : conFromStatement : " + conFromStatement);
 
             if( conFromDS==conFromStatement || conFromDS.equals(conFromStatement) ){
                 result = true;
@@ -146,8 +146,8 @@ public class SimpleBMPBean
             stmt = conFromDS.prepareCall("select * from customer_stmt_wrapper");
             conFromStatement = stmt.getConnection();
 
-        System.out.println("Callable statement Test : conFromDS : " + conFromDS);
-        System.out.println("Callable statement Test : conFromStatement : " + conFromStatement);
+                System.out.println("Callable statement Test : conFromDS : " + conFromDS);
+                System.out.println("Callable statement Test : conFromStatement : " + conFromStatement);
             if( conFromDS==conFromStatement || conFromDS.equals(conFromStatement) ){
                 result = true;
             }
@@ -177,8 +177,8 @@ public class SimpleBMPBean
             dbmd = conFromDS.getMetaData();
             conFromMetaData = dbmd.getConnection();
 
-        System.out.println("statementTest : conFromDS : " + conFromDS);
-        System.out.println("statementTest : conFromDbMetadata : " + conFromMetaData);
+                System.out.println("statementTest : conFromDS : " + conFromDS);
+                System.out.println("statementTest : conFromDbMetadata : " + conFromMetaData);
             if( conFromDS==conFromMetaData || conFromDS.equals(conFromMetaData) ){
                 result = true;
             }
@@ -204,8 +204,8 @@ public class SimpleBMPBean
             rs = stmt.executeQuery("select * from customer_stmt_wrapper");
             conFromResultSet = rs.getStatement().getConnection();
 
-        System.out.println("ResultSet test : conFromDS : " + conFromDS);
-        System.out.println("ResultSet test : conFromResultSet: " + conFromResultSet);
+                System.out.println("ResultSet test : conFromDS : " + conFromDS);
+                System.out.println("ResultSet test : conFromResultSet: " + conFromResultSet);
             if( conFromDS==conFromResultSet || conFromDS.equals(conFromResultSet) ){
                 result = true;
             }
@@ -233,71 +233,71 @@ public class SimpleBMPBean
     }
 
     public boolean compareRecords() {
-    boolean result = false;
+        boolean result = false;
         Connection conFromDS = null;
-    Connection con1 = null;
-    Statement stmt1 = null;
-    Statement stmt = null;
-    ResultSet rs = null;
-    ResultSet rs1 = null;
+        Connection con1 = null;
+        Statement stmt1 = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        ResultSet rs1 = null;
         try{
             conFromDS = tracingds.getConnection();
-        con1 = tracingds.getConnection();
+            con1 = tracingds.getConnection();
             stmt = conFromDS.createStatement();
-        stmt1 = con1.createStatement();
+            stmt1 = con1.createStatement();
             rs = stmt.executeQuery("select * from expected_sql_trace");
-        rs1 = stmt1.executeQuery("select * from sql_trace");
+            rs1 = stmt1.executeQuery("select * from sql_trace");
 
             System.out.println("@@@@ ------------------------------------------");
-        for(int i=0; i<5; i++) {
+            for(int i=0; i<5; i++) {
 
-            String className ="";
-            String methodName="";
+                String className ="";
+                String methodName="";
                 String args="";
                 String expectedClassName="";
                 String expectedMethodName="";
                 String expectedArgs="";
-            if(rs1.next()) {
+                if(rs1.next()) {
                 className = rs1.getString(1).trim();
-        methodName = rs1.getString(2).trim();
-        args = rs1.getString(3).trim();
-        System.out.println("@@@@@ class=" + className + "---");
-        System.out.println("@@@@@ method=" + methodName + "---");
-        System.out.println("@@@@@ args=" + args + "---");
-        }
+                methodName = rs1.getString(2).trim();
+                args = rs1.getString(3).trim();
+                System.out.println("@@@@@ class=" + className + "---");
+                System.out.println("@@@@@ method=" + methodName + "---");
+                System.out.println("@@@@@ args=" + args + "---");
+                }
 
-        if(rs.next()) {
-            expectedClassName = rs.getString(1).trim();
-            expectedMethodName = rs.getString(2).trim();
-        expectedArgs = rs.getString(3).trim();
-        System.out.println("@@@@@ expectedClass = " + expectedClassName + "---");
-        System.out.println("@@@@@ expectedMethod = " + expectedMethodName + "---");
-        System.out.println("@@@@@ expectedArgs = " + expectedArgs + "---");
-        }
+                if(rs.next()) {
+                    expectedClassName = rs.getString(1).trim();
+                expectedMethodName = rs.getString(2).trim();
+                expectedArgs = rs.getString(3).trim();
+                System.out.println("@@@@@ expectedClass = " + expectedClassName + "---");
+                System.out.println("@@@@@ expectedMethod = " + expectedMethodName + "---");
+                System.out.println("@@@@@ expectedArgs = " + expectedArgs + "---");
+                }
           System.out.println("@@@@ ------------------------------------------");
 
-            if(className.equals(expectedClassName) && methodName.equals(expectedMethodName) && args.equals(expectedArgs)) {
-                result = true;
-            } else {
-            return false;
-            }
+                    if(className.equals(expectedClassName) && methodName.equals(expectedMethodName) && args.equals(expectedArgs)) {
+                        result = true;
+                    } else {
+                        return false;
+                    }
 
-            /*if(className != null && expectedClassName != null) {
-            if(className.equals(expectedClassName))
-                      result = true;
+                    /*if(className != null && expectedClassName != null) {
+                        if(className.equals(expectedClassName))
+                              result = true;
+                    }
+                    if(methodName != null && expectedMethodName != null) {
+                        if(methodName.equals(expectedMethodName))
+                            result = true;
+                    }
+                    if(args != null && expectedArgs != null) {
+                        if(args.equals(expectedArgs))
+                            result = true;
+                    }*/
             }
-            if(methodName != null && expectedMethodName != null) {
-            if(methodName.equals(expectedMethodName))
-                result = true;
-            }
-            if(args != null && expectedArgs != null) {
-            if(args.equals(expectedArgs))
-                result = true;
-            }*/
-        }
 
         }catch(SQLException sqe){
-    }finally{
+        }finally{
 
             try{
                 if(stmt != null){
@@ -332,7 +332,7 @@ public class SimpleBMPBean
                 }
             }catch(SQLException sqe){}
         }
-    return result;
+        return result;
     }
 
     public void ejbLoad() {}

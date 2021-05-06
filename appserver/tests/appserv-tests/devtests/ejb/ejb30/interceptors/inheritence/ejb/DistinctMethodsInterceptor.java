@@ -32,7 +32,7 @@ public class DistinctMethodsInterceptor extends BaseLevel2Interceptor {
 
     @PostConstruct
     private void distinctPostConstruct(InvocationContext ctx) throws RuntimeException {
-    postConstructList.add(DISTINCT_INTERCEPTOR_NAME);
+        postConstructList.add(DISTINCT_INTERCEPTOR_NAME);
         distinctPCCount++;
         try {
             ctx.proceed();
@@ -46,7 +46,7 @@ public class DistinctMethodsInterceptor extends BaseLevel2Interceptor {
     @AroundInvoke
     private Object distinctMethodInterceptor(InvocationContext ctx)
             throws Throwable {
-    aroundInvokeList.add(DISTINCT_INTERCEPTOR_NAME);
+        aroundInvokeList.add(DISTINCT_INTERCEPTOR_NAME);
         distinctAICount++;
         return ctx.proceed();
     }
@@ -54,29 +54,29 @@ public class DistinctMethodsInterceptor extends BaseLevel2Interceptor {
     protected boolean isAICountOK() {
         return (distinctAICount == baseAICount)
                 && (distinctAICount == baseLevel2AICount)
-            && checkForCorrectSequence(aroundInvokeList);
-    }
+                        && checkForCorrectSequence(aroundInvokeList);
+        }
 
     protected boolean isPostConstructCallCounOK() {
         return (distinctPCCount == basePCCount)
                 && (distinctPCCount == baseLevel2PCCount)
-            && checkForCorrectSequence(postConstructList);
+                        && checkForCorrectSequence(postConstructList);
     }
 
     private boolean checkForCorrectSequence(List<String> list) {
-    boolean result = list.size() == 3;
-    if (result) {
-        BASE_INTERCEPTOR_NAME.equals(list.get(0));
-        LEVEL2_INTERCEPTOR_NAME.equals(list.get(1));
-        DISTINCT_INTERCEPTOR_NAME.equals(list.get(2));
-    }
+        boolean result = list.size() == 3;
+        if (result) {
+            BASE_INTERCEPTOR_NAME.equals(list.get(0));
+            LEVEL2_INTERCEPTOR_NAME.equals(list.get(1));
+            DISTINCT_INTERCEPTOR_NAME.equals(list.get(2));
+        }
 
-    for(String str : list) {
-        System.out.println("**DISTINCT_INTERCEPTOR_TEST**: " + str);
-    }
-    System.out.println("**DISTINCT_INTERCEPTOR_TEST**: " + result);
+        for(String str : list) {
+            System.out.println("**DISTINCT_INTERCEPTOR_TEST**: " + str);
+        }
+        System.out.println("**DISTINCT_INTERCEPTOR_TEST**: " + result);
 
-    return result;
+        return result;
     }
 
     String getName() {

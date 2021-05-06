@@ -74,8 +74,8 @@ public class Validator {
             archivist = archivistFactory.getArchivist(archiveType);
             archivist.setHandleRuntimeInfo(true);
             archivist.setArchiveUri(fileName);
-        archivist.setXMLValidation(true);
-        archivist.setXMLValidationLevel("full");
+            archivist.setXMLValidation(true);
+            archivist.setXMLValidationLevel("full");
             archivist.setRuntimeXMLValidation(true);
             archivist.setRuntimeXMLValidationLevel("full");
             log("Reading/parsing the orginal archive: " +

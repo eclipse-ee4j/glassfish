@@ -64,7 +64,7 @@ public class WebTest {
         os.write(get.getBytes());
         os.write("Host: localhost\n".getBytes());
         os.write("\n".getBytes());
-    os.flush();
+        os.flush();
 
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
@@ -83,7 +83,7 @@ public class WebTest {
         os.write(get.getBytes());
         os.write("Host: localhost\n".getBytes());
         os.write("\n".getBytes());
-    os.flush();
+        os.flush();
         try{
             while ((line = bis.readLine()) != null) {
             }
@@ -102,7 +102,7 @@ public class WebTest {
 
             try{
                 while ((line = bis.readLine()) != null) {
-                found = false;
+                    found = false;
                     System.out.println("line: " + line);
                 }
             }catch (SocketTimeoutException t){

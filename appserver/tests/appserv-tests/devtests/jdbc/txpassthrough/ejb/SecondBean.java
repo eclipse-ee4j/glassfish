@@ -45,30 +45,30 @@ public class SecondBean implements SessionBean {
     public void ejbPassivate() {}
 
     public boolean test1() {
-    System.out.println(" @@@@ Entering Bean2 @@@@ ");
-    Connection conn = null;
-    Statement stmt = null;
-    ResultSet rs = null;
+        System.out.println(" @@@@ Entering Bean2 @@@@ ");
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
         try {
 
             InitialContext ctx = new InitialContext();
-        /*
+            /*
             ds = (javax.sql.DataSource) ctx.lookup("java:comp/env/jdbc/txpassthrough");
             conn = ds.getConnection("dbuser", "dbpassword");
             stmt = conn.createStatement();
             String query1 = "SELECT * FROM ONLYGETCONNECTION";
             rs = stmt.executeQuery(query1);
-        */
+            */
             Object o = ctx.lookup("java:comp/env/ejb/ThirdEJB");
-        ThirdHome t = (ThirdHome)
-            javax.rmi.PortableRemoteObject.narrow( o, ThirdHome.class );
-        Third bean = t.create();
+            ThirdHome t = (ThirdHome)
+                javax.rmi.PortableRemoteObject.narrow( o, ThirdHome.class );
+            Third bean = t.create();
             return bean.test1();
         } catch (Exception e) {
-        System.out.println("Caught Exception in 2nd Bean---");
-        e.printStackTrace();
-        return false;
+            System.out.println("Caught Exception in 2nd Bean---");
+            e.printStackTrace();
+            return false;
         } finally {
             if (rs != null ) {
                 try { rs.close(); } catch( Exception e1) {}
@@ -79,9 +79,9 @@ public class SecondBean implements SessionBean {
             if (conn != null ) {
                 try {conn.close();} catch( Exception e1) {}
             }
-        System.out.println(" @@@@ Exiting Bean 2 @@@@");
+            System.out.println(" @@@@ Exiting Bean 2 @@@@");
 
-           }
+               }
     }
 
 

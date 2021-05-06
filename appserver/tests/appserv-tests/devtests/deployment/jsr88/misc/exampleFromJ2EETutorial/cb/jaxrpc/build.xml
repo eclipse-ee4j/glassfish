@@ -217,7 +217,7 @@
             classpath="dist/${client.jar}"
             classname="${client.class}" >
            <arg value="${endpoint-address}" />
-               <classpath refid="run.classpath" />
+                       <classpath refid="run.classpath" />
       </java>
   </target>
 

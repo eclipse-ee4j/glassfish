@@ -67,17 +67,17 @@
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-driver-pool"/>
-    <param name="jdbc.resource.name" value="jdbc/driverRes"/>
+        <param name="jdbc.resource.name" value="jdbc/driverRes"/>
       </antcall>
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-driver-pool"/>
-    <param name="jdbc.resource.name" value="jdbc/driverRes1"/>
+        <param name="jdbc.resource.name" value="jdbc/driverRes1"/>
       </antcall>
 
-    <antcall target="asadmin-common">
+        <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
-            value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-driver-pool.property.URL=jdbc:derby://localhost:1527/testdb;user=dbuser;password=dbpassword"/>
+                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-driver-pool.property.URL=jdbc:derby://localhost:1527/testdb;user=dbuser;password=dbpassword"/>
         </antcall>
 
       <antcall target="deploy-common"/>

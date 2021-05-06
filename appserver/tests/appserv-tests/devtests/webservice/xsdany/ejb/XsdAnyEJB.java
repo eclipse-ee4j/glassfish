@@ -30,7 +30,7 @@ public class XsdAnyEJB implements SessionBean {
     public XsdAnyEJB(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In XsdAnyEJB::ejbCreate !!");
+        System.out.println("In XsdAnyEJB::ejbCreate !!");
     }
 
     public int test1(int a,

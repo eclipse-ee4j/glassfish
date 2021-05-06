@@ -44,7 +44,7 @@
         <ejb-ref-type>Entity</ejb-ref-type>
         <local-home>com.sun.s1peqe.ejb.cmp.preselect.ejb.ItemLocalHome</local-home>
         <local>com.sun.s1peqe.ejb.cmp.preselect.ejb.ItemLocal</local>
-    <ejb-link>Item</ejb-link>
+        <ejb-link>Item</ejb-link>
       </ejb-local-ref>
       <query>
         <query-method>
@@ -54,7 +54,7 @@
           </method-params>
         </query-method>
         <ejb-ql>SELECT OBJECT(item) FROM ItemSchema item WHERE item.price &lt; 100
-    </ejb-ql>
+        </ejb-ql>
       </query>
     </entity>
     <entity>

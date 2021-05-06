@@ -42,8 +42,8 @@ public class Client {
         String targetEndpointAddress = (args.length == 2) ?
             args[1] : "http://api.google.com/search/beta2";
 
-        try {
-        Context ic = new InitialContext();
+            try {
+            Context ic = new InitialContext();
 
 
             String googleKey = (String) ic.lookup("java:comp/env/googlekey");
@@ -63,11 +63,11 @@ public class Client {
 
             stat.addStatus("googleclient main", stat.PASS);
 
-        } catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("google client test failed");
             ex.printStackTrace();
             stat.addStatus("googleclient main" , stat.FAIL);
             //System.exit(15);
-    }
+        }
     }
 }

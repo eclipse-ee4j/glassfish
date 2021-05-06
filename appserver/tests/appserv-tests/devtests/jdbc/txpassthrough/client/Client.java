@@ -28,23 +28,23 @@ public class Client {
     public static void main(String[] args)
         throws Exception {
 
-     SimpleReporterAdapter stat = new SimpleReporterAdapter();
-    String testSuite = "TxPassThrough ";
+         SimpleReporterAdapter stat = new SimpleReporterAdapter();
+        String testSuite = "TxPassThrough ";
 
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/NoTxConnTestEJB");
-    NoTxConnTestHome home = (NoTxConnTestHome)
+        NoTxConnTestHome home = (NoTxConnTestHome)
             javax.rmi.PortableRemoteObject.narrow(objRef, NoTxConnTestHome.class);
 
         NoTxConnTest bean = home.create();
-    stat.addDescription("TX Pass Through tests ");
+        stat.addDescription("TX Pass Through tests ");
 
         if ( bean.test1() ) {
-        stat.addStatus(testSuite+" test1 : ", stat.PASS);
-    } else {
-        stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-    }
-    stat.printSummary();
+            stat.addStatus(testSuite+" test1 : ", stat.PASS);
+        } else {
+            stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+        }
+        stat.printSummary();
 
 
     }

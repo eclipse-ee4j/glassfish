@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 import jakarta.servlet.SingleThreadModel;
 
 public class FindInterestServletImpl implements
-            SingleThreadModel, ServiceLifecycle {
+                        SingleThreadModel, ServiceLifecycle {
 
     public FindInterestServletImpl() {
         System.out.println("FindInterestServletImpl() instantiated");
@@ -44,6 +44,6 @@ public class FindInterestServletImpl implements
     }
 
     public void calculateInterest(double balance, double period) {
-    System.out.println("calculateInterest invoked from servlet endpoint " + (0.2*balance*period));
+        System.out.println("calculateInterest invoked from servlet endpoint " + (0.2*balance*period));
     }
 }

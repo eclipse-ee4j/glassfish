@@ -101,10 +101,10 @@ public class Client {
             Message message = receiver.receive(45000);
             TextMessage textMsg = (TextMessage)message;
 
-            if ( (message == null) ||
+                    if ( (message == null) ||
                  (! textMsg.getText().equals("ejbTimeout() invoked")))
-                throw new Exception("Received a null message ... TimeOut failed!!");
-            System.out.println("Message : " + message);
+                                throw new Exception("Received a null message ... TimeOut failed!!");
+                    System.out.println("Message : " + message);
 
             System.out.println("TimerSession : jndi lookup for -> " +
                 jndiName + " <- test passed!!");

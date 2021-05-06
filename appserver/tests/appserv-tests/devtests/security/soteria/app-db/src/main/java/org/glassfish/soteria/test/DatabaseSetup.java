@@ -58,12 +58,12 @@ public class DatabaseSetup {
 
     @PreDestroy
     public void destroy() {
-        try {
-            executeUpdate(dataSource, "DROP TABLE caller");
-            executeUpdate(dataSource, "DROP TABLE caller_groups");
-        } catch (Exception e) {
-            // silently ignore, concerns in-memory database
-        }
+            try {
+                    executeUpdate(dataSource, "DROP TABLE caller");
+                    executeUpdate(dataSource, "DROP TABLE caller_groups");
+            } catch (Exception e) {
+                    // silently ignore, concerns in-memory database
+            }
     }
 
     private void executeUpdate(DataSource dataSource, String query) {

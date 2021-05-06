@@ -45,23 +45,23 @@ public class Client {
 
         try {
 
-        Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
-        // create EJB using factory from container
-        java.lang.Object objref =
+            // create EJB using factory from container
+            java.lang.Object objref =
                 ic.lookup("java:comp/env/ejb/PerformanceApp");
 
-        System.out.println("Looked up home!!");
+            System.out.println("Looked up home!!");
 
-        HelloHome  home = (HelloHome)
+            HelloHome  home = (HelloHome)
                 PortableRemoteObject.narrow(objref, HelloHome.class);
-        System.out.println("Narrowed home!!");
+            System.out.println("Narrowed home!!");
 
-        Hello hr = home.create();
-        System.out.println("Got the EJB!!");
+            Hello hr = home.create();
+            System.out.println("Got the EJB!!");
 
-        // invoke method on the EJB
-        doPerfTest(hr, true);
+            // invoke method on the EJB
+            doPerfTest(hr, true);
             doPerfTest(hr, false);
 
             stat.addStatus("local main", stat.PASS);
@@ -71,27 +71,27 @@ public class Client {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     private void doPerfTest(Hello hr, boolean local)
-    throws Exception
+        throws Exception
     {
-    System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
-    hr.warmup(Common.STATEFUL, local);
-    runTests(Common.STATEFUL, hr, local);
+        System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL, local);
+        runTests(Common.STATEFUL, hr, local);
 
-    System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
-    hr.warmup(Common.STATEFUL, local);
-    runTests(Common.STATELESS, hr, local);
+        System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL, local);
+        runTests(Common.STATELESS, hr, local);
 
-    System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
-    hr.warmup(Common.BMP, local);
-    runTests(Common.BMP, hr, local);
+        System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
+        hr.warmup(Common.BMP, local);
+        runTests(Common.BMP, hr, local);
     }
 
     private void runTests(int type, Hello hr, boolean local)
-    throws Exception
+        throws Exception
     {
         System.out.println("Testing " + (local ? " Local " :
                                          " Collocated Remote ") +

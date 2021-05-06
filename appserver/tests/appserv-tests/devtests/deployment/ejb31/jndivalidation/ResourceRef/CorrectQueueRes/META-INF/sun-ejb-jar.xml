@@ -19,10 +19,10 @@
 -->
 
 <sun-ejb-jar>
-    <enterprise-beans>
-        <message-destination>
-            <message-destination-name>MyQueueLink</message-destination-name>
-            <jndi-name>jms/deployment_jndivalidation_queue</jndi-name>
-        </message-destination>
-    </enterprise-beans>
+        <enterprise-beans>
+                <message-destination>
+                        <message-destination-name>MyQueueLink</message-destination-name>
+                        <jndi-name>jms/deployment_jndivalidation_queue</jndi-name>
+                </message-destination>
+        </enterprise-beans>
 </sun-ejb-jar>

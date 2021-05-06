@@ -35,9 +35,9 @@ public class SingletonBean extends BaseBean implements Snglt {
 
     public String hello() {
         verify("SingletonBean");
-    System.out.println("In SingletonBean::hello()");
+        System.out.println("In SingletonBean::hello()");
         sful.remove();
-    return "hello, world!\n";
+        return "hello, world!\n";
     }
 
     @PreDestroy

@@ -61,7 +61,7 @@
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${jdbc.conpool.name}.lazy-connection-enlistment=true"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${jdbc.conpool.name}.lazy-connection-enlistment=true"/>
       </antcall>
 
       <antcall target="asadmin-common">

@@ -28,10 +28,10 @@ public class FooManagedBean2 {
   String appName;
 
     @Resource(name="java:module/env/fmbAppName", lookup="java:app/AppName")
-    String appName2;
+        String appName2;
 
     @Resource(lookup="java:module/env/fmbAppName")
-    String appName3;
+        String appName3;
 
   @PostConstruct
   private void init() {
@@ -42,12 +42,12 @@ public class FooManagedBean2 {
   }
 
     public void hello() {
-    System.out.println("In FooManagedBean2::hello()");
+        System.out.println("In FooManagedBean2::hello()");
     }
 
     @PreDestroy
-    private void destroy() {
-    System.out.println("In FooManagedBean2::destroy()");
+        private void destroy() {
+        System.out.println("In FooManagedBean2::destroy()");
     }
 
 

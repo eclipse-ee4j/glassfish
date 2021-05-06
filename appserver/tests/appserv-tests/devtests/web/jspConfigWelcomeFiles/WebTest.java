@@ -48,7 +48,7 @@ public class WebTest {
         ok = ok && webTest.doTest("http://" + webTest.host  + ":" + webTest.port
                        + webTest.contextRoot + "/TestServlet");
         stat.addStatus(TEST_NAME, ((ok)? stat.PASS : stat.FAIL));
-        stat.printSummary();
+            stat.printSummary();
     }
 
     public boolean doTest(String urlString) {

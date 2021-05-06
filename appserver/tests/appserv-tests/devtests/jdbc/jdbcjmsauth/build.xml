@@ -55,7 +55,7 @@
         <param name="ejbjar.classes"
           value="**/*.class" />
         <param name="appclientjar.classes"
-        value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class,**/JmsAuthHome.class,**/JmsAuth.class" />
+            value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class,**/JmsAuthHome.class,**/JmsAuth.class" />
       </antcall>
     </target>
 
@@ -66,7 +66,7 @@
       <antcall target="deploy-jdbc-common"/>
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="ql-jdbc-pool"/>
-    <param name="jdbc.resource.name" value="jdbc/s1qeDB_CM"/>
+        <param name="jdbc.resource.name" value="jdbc/s1qeDB_CM"/>
       </antcall>
       <antcall target="deploy-jms-stuff"/>
       <antcall target="deploy-common"/>
@@ -106,12 +106,12 @@
       -->
       <antcall target="create-jms-connection-common">
         <param name="jms.factory.type" value="jakarta.jms.QueueConnectionFactory"/>
-    <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF1"/>
+        <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF1"/>
       </antcall>
 
       <antcall target="create-jms-connection-common">
         <param name="jms.factory.type" value="jakarta.jms.QueueConnectionFactory"/>
-    <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF2"/>
+        <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF2"/>
       </antcall>
     </target>
 
@@ -122,10 +122,10 @@
       </antcall>
       -->
       <antcall target="delete-jms-connection-common">
-    <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF1"/>
+        <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF1"/>
       </antcall>
       <antcall target="delete-jms-connection-common">
-    <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF2"/>
+        <param name="jms.factory.name" value="jms/jdbcjmsauth_QCF2"/>
       </antcall>
     </target>
 

@@ -109,7 +109,7 @@ public class WebTest {
             throw new Exception("Session cookie does not have any JVMROUTE");
         }
 
-    String clientCookie = sessionCookieHeader.replace("Path", "$Path").replace("HttpOnly", "$HttpOnly");
+        String clientCookie = sessionCookieHeader.replace("Path", "$Path").replace("HttpOnly", "$HttpOnly");
         /*
          * Resume session
          */

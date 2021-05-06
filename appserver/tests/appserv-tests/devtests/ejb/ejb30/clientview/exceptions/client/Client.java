@@ -53,19 +53,19 @@ public class Client {
 
         try {
 
-        if( hr == null ) {
+            if( hr == null ) {
 
-        System.out.println("In stand-alone mode");
-        InitialContext ic = new InitialContext();
-        hr = (Hello) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Hello");
-        sfulRemoteBusiness2 = (SfulRemoteBusiness2) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sful#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SfulRemoteBusiness2");
-        slessRemoteBusiness2 = (SlessRemoteBusiness2) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sless#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SlessRemoteBusiness2");
-        sfulRemoteBusiness = (SfulRemoteBusiness) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sful#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SfulRemoteBusiness");
-        slessRemoteBusiness = (SlessRemoteBusiness) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sless#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SlessRemoteBusiness");
+                System.out.println("In stand-alone mode");
+                InitialContext ic = new InitialContext();
+                hr = (Hello) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Hello");
+                sfulRemoteBusiness2 = (SfulRemoteBusiness2) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sful#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SfulRemoteBusiness2");
+                slessRemoteBusiness2 = (SlessRemoteBusiness2) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sless#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SlessRemoteBusiness2");
+                sfulRemoteBusiness = (SfulRemoteBusiness) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sful#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SfulRemoteBusiness");
+                slessRemoteBusiness = (SlessRemoteBusiness) ic.lookup("ejb/ejb_ejb30_clientview_exceptions_Sless#com.sun.s1asdev.ejb.ejb30.clientview.exceptions.SlessRemoteBusiness");
 
-        }
+            }
 
-        // TODO enable when             hr.runAccessDeniedExceptionTest();
+            // TODO enable when             hr.runAccessDeniedExceptionTest();
 
             hr.runTxRequiredTest();
 
@@ -88,7 +88,7 @@ public class Client {
 
         runConcurrentAccessTest();
 
-        return;
+            return;
     }
 
     private void runTxRequiredTest() {
@@ -131,75 +131,75 @@ public class Client {
     }
 
     public void runConcurrentAccessTest() {
-        try {
-        MyThread thread = new MyThread(sfulRemoteBusiness);
-        thread.start();
+            try {
+                MyThread thread = new MyThread(sfulRemoteBusiness);
+                thread.start();
 
-        sleepFor(5);
-        sfulRemoteBusiness.ping();
-        stat.addStatus("local concurrentAccess[1.1]", stat.FAIL);
-        } catch (jakarta.ejb.ConcurrentAccessException conEx) {
-        stat.addStatus("local concurrentAccess[1.1]", stat.PASS);
-        } catch (Throwable th) {
-        System.out.println("Argggggg: Got: " + th);
-        stat.addStatus("local concurrentAccess[1.2]", stat.FAIL);
-        }
+                sleepFor(5);
+                sfulRemoteBusiness.ping();
+                stat.addStatus("local concurrentAccess[1.1]", stat.FAIL);
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
+                stat.addStatus("local concurrentAccess[1.1]", stat.PASS);
+            } catch (Throwable th) {
+                System.out.println("Argggggg: Got: " + th);
+                stat.addStatus("local concurrentAccess[1.2]", stat.FAIL);
+            }
 
-        try {
-        MyThread2 thread = new MyThread2(sfulRemoteBusiness2);
-        thread.start();
+            try {
+                MyThread2 thread = new MyThread2(sfulRemoteBusiness2);
+                thread.start();
 
-        sleepFor(5);
-        sfulRemoteBusiness2.pingRemote();
-        stat.addStatus("local concurrentAccess[2.1]", stat.FAIL);
-        } catch (java.rmi.RemoteException remEx) {
-        stat.addStatus("local concurrentAccess[2.1]", stat.PASS);
-        } catch (Throwable th) {
-        stat.addStatus("local concurrentAccess[2.2] Got: " + th, stat.FAIL);
-        }
+                sleepFor(5);
+                sfulRemoteBusiness2.pingRemote();
+                stat.addStatus("local concurrentAccess[2.1]", stat.FAIL);
+            } catch (java.rmi.RemoteException remEx) {
+                stat.addStatus("local concurrentAccess[2.1]", stat.PASS);
+            } catch (Throwable th) {
+                stat.addStatus("local concurrentAccess[2.2] Got: " + th, stat.FAIL);
+            }
     }
 
     class MyThread extends Thread {
-    SfulRemoteBusiness sfulBusiness;
+        SfulRemoteBusiness sfulBusiness;
 
-    MyThread(SfulRemoteBusiness sfulBusiness) {
-        this.sfulBusiness = sfulBusiness;
-    }
-
-    public void run() {
-        try {
-        sfulBusiness.sleepFor(20);
-        } catch (Throwable th) {
-        throw new RuntimeException("Could not invoke waitfor() method");
+        MyThread(SfulRemoteBusiness sfulBusiness) {
+            this.sfulBusiness = sfulBusiness;
         }
-    }
+
+        public void run() {
+            try {
+                sfulBusiness.sleepFor(20);
+            } catch (Throwable th) {
+                throw new RuntimeException("Could not invoke waitfor() method");
+            }
+        }
     }
 
 
     class MyThread2 extends Thread {
-    SfulRemoteBusiness2 sfulBusiness2;
+        SfulRemoteBusiness2 sfulBusiness2;
 
-    MyThread2(SfulRemoteBusiness2 sfulBusiness2) {
-        this.sfulBusiness2 = sfulBusiness2;
-    }
-
-    public void run() {
-        try {
-        sfulBusiness2.sleepFor(20);
-        } catch (Throwable th) {
-        throw new RuntimeException("Could not invoke waitfor() method");
+        MyThread2(SfulRemoteBusiness2 sfulBusiness2) {
+            this.sfulBusiness2 = sfulBusiness2;
         }
-    }
+
+        public void run() {
+            try {
+                sfulBusiness2.sleepFor(20);
+            } catch (Throwable th) {
+                throw new RuntimeException("Could not invoke waitfor() method");
+            }
+        }
     }
 
     private void sleepFor(int sec) {
-    try {
-        for (int i=0 ; i<sec; i++) {
-        Thread.currentThread().sleep(1000);
-        System.out.println("[" + i + "/" + sec + "]: Sleeping....");
+        try {
+            for (int i=0 ; i<sec; i++) {
+                Thread.currentThread().sleep(1000);
+                System.out.println("[" + i + "/" + sec + "]: Sleeping....");
+            }
+        } catch (Exception ex) {
         }
-    } catch (Exception ex) {
-    }
     }
 
 }

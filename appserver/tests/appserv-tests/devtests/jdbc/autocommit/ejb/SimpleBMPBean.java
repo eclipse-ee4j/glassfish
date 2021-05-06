@@ -30,65 +30,65 @@ public class SimpleBMPBean
     protected DataSource ds;
 
     public void setEntityContext(EntityContext entityContext) {
-    Context context = null;
-    try {
-        context    = new InitialContext();
-        ds = (DataSource) context.lookup("java:comp/env/DataSource");
-    } catch (NamingException e) {
-        throw new EJBException("cant find datasource");
-    }
+        Context context = null;
+        try {
+            context    = new InitialContext();
+            ds = (DataSource) context.lookup("java:comp/env/DataSource");
+        } catch (NamingException e) {
+            throw new EJBException("cant find datasource");
+        }
     }
 
     public Integer ejbCreate() throws CreateException {
-    return new Integer(1);
+        return new Integer(1);
     }
 
     /* Get a single connection and close it */
     public boolean test1() {
         Connection conn = null;
         boolean passed = true;
-    try {
-        conn = ds.getConnection();
-        passed = !conn.getAutoCommit();
-    } catch (Exception e) {
-        passed = false;
-    } finally {
-        if ( conn != null ) {
-            try {
-                conn.close();
-            } catch( Exception e1) {}
-        }
+        try {
+            conn = ds.getConnection();
+            passed = !conn.getAutoCommit();
+        } catch (Exception e) {
+            passed = false;
+        } finally {
+            if ( conn != null ) {
+                try {
+                    conn.close();
+                } catch( Exception e1) {}
+            }
         }
 
-    return passed;
+        return passed;
     }
 
     public boolean test2() {
         Connection conn1  = null;
         Connection conn2  = null;
-    boolean passed = true;
+        boolean passed = true;
 
-    try {
-        conn1 = ds.getConnection();
-        conn2 = ds.getConnection();
+        try {
+            conn1 = ds.getConnection();
+            conn2 = ds.getConnection();
 
-        passed = conn1.getAutoCommit() & conn2.getAutoCommit();
-    } catch( Exception e ) {
-        passed = false;
-    } finally {
-        if (conn1 != null ) {
-            try {
-            conn1.close();
-        } catch( Exception ei) {}
+            passed = conn1.getAutoCommit() & conn2.getAutoCommit();
+        } catch( Exception e ) {
+            passed = false;
+        } finally {
+            if (conn1 != null ) {
+                try {
+                    conn1.close();
+                } catch( Exception ei) {}
+            }
+            if (conn2 != null ) {
+                try {
+                    conn2.close();
+                } catch( Exception ei) {}
+            }
         }
-        if (conn2 != null ) {
-            try {
-            conn2.close();
-        } catch( Exception ei) {}
-        }
-    }
 
-    return passed;
+        return passed;
     }
 
 

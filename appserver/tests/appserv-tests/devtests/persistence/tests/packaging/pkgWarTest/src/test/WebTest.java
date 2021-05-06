@@ -61,14 +61,14 @@ public class WebTest {
 
         try {
             WebTestUtil wtu = new WebTestUtil ( host, port, contextRoot, urlPattern, testSuiteID, stat);
-        stat.addDescription("Persistence Package Test ");
+            stat.addDescription("Persistence Package Test ");
             wtu.test("testInsert");
             wtu.test("verifyInsert");
             wtu.test("testDelete");
             wtu.test("verifyDelete");
-        stat.printSummary(TEST_NAME);
+            stat.printSummary(TEST_NAME);
         } catch (Exception ex) {
-        stat.addStatus(TEST_NAME, stat.FAIL);
+            stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
     }

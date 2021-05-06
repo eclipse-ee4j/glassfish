@@ -100,7 +100,7 @@
                <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-           <include name="META-INF/application.xml"/>
+               <include name="META-INF/application.xml"/>
             </fileset>
         </jar>
     </target>

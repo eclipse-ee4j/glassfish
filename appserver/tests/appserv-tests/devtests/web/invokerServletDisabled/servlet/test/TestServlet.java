@@ -25,6 +25,6 @@ public class TestServlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse res)
         throws IOException, ServletException {
 
-    getServletContext().log("This servlet should not have been invoked");
+        getServletContext().log("This servlet should not have been invoked");
     }
 }

@@ -40,7 +40,7 @@ public class WebTest {
         stat.addDescription("Unit test for jsp-descriptor in weblogic.xml");
         WebTest webTest = new WebTest(args);
         webTest.doTest("/test.jsp");
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest(String path) {

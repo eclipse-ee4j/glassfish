@@ -34,11 +34,11 @@ public class FooBean implements SessionBean {
     public FooBean() {}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In FooBean::ejbCreate !!");
+        System.out.println("In FooBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public void callHello()  {

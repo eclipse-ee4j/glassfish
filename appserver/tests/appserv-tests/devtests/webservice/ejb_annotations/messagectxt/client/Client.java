@@ -32,10 +32,10 @@ public class Client {
         static HelloImplService service;
 
         public static void main(String[] args) {
-        stat.addDescription("webservices-ejb-msgctxt");
+            stat.addDescription("webservices-ejb-msgctxt");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("webservices-ejb-msgctxt");
+            stat.printSummary("webservices-ejb-msgctxt");
        }
 
        public void doTest(String[] args) {
@@ -43,11 +43,11 @@ public class Client {
                 HelloImpl port = service.getHelloImplPort();
                 for (int i=0;i<10;i++) {
                     String ret = port.sayHello("Appserver Tester !");
-            if(ret.indexOf("WebSvcTest-Hello") == -1) {
+                    if(ret.indexOf("WebSvcTest-Hello") == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus("ejb-msgctxt", stat.FAIL);
                         return;
-            }
+                    }
                     System.out.println(ret);
                 }
                 stat.addStatus("ejb-msgctxt", stat.PASS);

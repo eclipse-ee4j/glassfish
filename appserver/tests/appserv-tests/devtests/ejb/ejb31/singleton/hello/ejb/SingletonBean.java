@@ -63,30 +63,30 @@ public class SingletonBean {
     public void init() {
         System.out.println("In SingletonBean::init()");
         System.out.println("orb = " + orb);
-    if( orb == null ) {
-        throw new EJBException("null ORB");
-    }
-    try {
-        // same problem ManagementHome mHomeL = (ManagementHome) new InitialContext().lookup("java:comp/env/mejb");
-        // same problem ManagementHome mHomeL2 = (ManagementHome) new InitialContext().lookup("java:global/mejb/MEJBBean");
-        // System.out.println("mHomeL = " + mHomeL);
-        // System.out.println("mHomeL2 = " + mHomeL2);
-    } catch(Exception e) {
-        throw new EJBException(e);
-    }
+        if( orb == null ) {
+            throw new EJBException("null ORB");
+        }
+        try {
+            // same problem ManagementHome mHomeL = (ManagementHome) new InitialContext().lookup("java:comp/env/mejb");
+            // same problem ManagementHome mHomeL2 = (ManagementHome) new InitialContext().lookup("java:global/mejb/MEJBBean");
+            // System.out.println("mHomeL = " + mHomeL);
+            // System.out.println("mHomeL2 = " + mHomeL2);
+        } catch(Exception e) {
+            throw new EJBException(e);
+        }
 
-    // System.out.println("mHome1 = " + mHome1);
-    //    System.out.println("mHome2 = " + mHome2);
+        // System.out.println("mHome1 = " + mHome1);
+        //        System.out.println("mHome2 = " + mHome2);
 
     }
 
     public String hello() {
-    System.out.println("In SingletonBean::hello()");
-    return "hello, world!\n";
+        System.out.println("In SingletonBean::hello()");
+        return "hello, world!\n";
     }
 
     public void test_Err_or(String s1, String s2) {
-    throw new Error("test java.lang.Error");
+        throw new Error("test java.lang.Error");
     }
 
     @Asynchronous

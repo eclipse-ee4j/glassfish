@@ -25,8 +25,8 @@ import java.util.logging.Level;
 /**
  * <code>ManagedConnectionMetaData</code> implementation for Generic JDBC Connector.
  *
- * @version    1.0, 02/08/03
- * @author    Evani Sai Surya Kiran
+ * @version        1.0, 02/08/03
+ * @author        Evani Sai Surya Kiran
  */
 public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedConnectionMetaData {
 
@@ -41,15 +41,15 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
     /**
      * Constructor for <code>ManagedConnectionMetaData</code>
      *
-     * @param    mc    <code>ManagedConnection</code>
-     * @throws    <code>ResourceException</code>    if getting the DatabaseMetaData object fails
+     * @param        mc        <code>ManagedConnection</code>
+     * @throws        <code>ResourceException</code>        if getting the DatabaseMetaData object fails
      */
     public ManagedConnectionMetaData(ManagedConnection mc) throws ResourceException {
         try {
             this.mc = mc;
             dmd = mc.getActualConnection().getMetaData();
         } catch(SQLException sqle) {
-        _logger.log(Level.SEVERE, "jdbc.exc_md");
+            _logger.log(Level.SEVERE, "jdbc.exc_md");
             throw new ResourceException(sqle.getMessage());
         }
     }
@@ -58,14 +58,14 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * Returns product name of the underlying EIS instance connected
      * through the ManagedConnection.
      *
-     * @return    Product name of the EIS instance
-     * @throws    <code>ResourceException</code>
+     * @return        Product name of the EIS instance
+     * @throws        <code>ResourceException</code>
      */
     public String getEISProductName() throws ResourceException {
         try {
             return dmd.getDatabaseProductName();
         } catch(SQLException sqle) {
-        _logger.log(Level.SEVERE, "jdbc.exc_eis_prodname", sqle);
+            _logger.log(Level.SEVERE, "jdbc.exc_eis_prodname", sqle);
             throw new ResourceException(sqle.getMessage());
         }
     }
@@ -74,14 +74,14 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * Returns product version of the underlying EIS instance connected
      * through the ManagedConnection.
      *
-     * @return    Product version of the EIS instance
-     * @throws    <code>ResourceException</code>
+     * @return        Product version of the EIS instance
+     * @throws        <code>ResourceException</code>
      */
     public String getEISProductVersion() throws ResourceException {
         try {
             return dmd.getDatabaseProductVersion();
         } catch(SQLException sqle) {
-        _logger.log(Level.SEVERE, "jdbc.exc_eis_prodvers", sqle);
+            _logger.log(Level.SEVERE, "jdbc.exc_eis_prodvers", sqle);
             throw new ResourceException(sqle.getMessage(), sqle.getMessage());
         }
     }
@@ -90,14 +90,14 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * Returns maximum limit on number of active concurrent connections
      * that an EIS instance can support across client processes.
      *
-     * @return    Maximum limit for number of active concurrent connections
-     * @throws    <code>ResourceException</code>
+     * @return        Maximum limit for number of active concurrent connections
+     * @throws        <code>ResourceException</code>
      */
     public int getMaxConnections() throws ResourceException {
         try {
             return dmd.getMaxConnections();
         } catch(SQLException sqle) {
-        _logger.log(Level.SEVERE, "jdbc.exc_eis_maxconn");
+            _logger.log(Level.SEVERE, "jdbc.exc_eis_maxconn");
             throw new ResourceException(sqle.getMessage());
         }
     }
@@ -107,8 +107,8 @@ public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedCo
      * corresponds to the resource principal under whose whose security context, a connection
      * to the EIS instance has been established.
      *
-     * @return    name of the user
-     * @throws    <code>ResourceException</code>
+     * @return        name of the user
+     * @throws        <code>ResourceException</code>
      */
     public String getUserName() throws ResourceException {
         jakarta.resource.spi.security.PasswordCredential pc = mc.getPasswordCredential();

@@ -43,20 +43,20 @@ public class HelloServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-    System.out.println("In HelloServlet::init");
+        System.out.println("In HelloServlet::init");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 
-    resp.setContentType("text/html");
+        resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
-    System.out.println("In HelloServlet::doGet");
+        System.out.println("In HelloServlet::doGet");
 
 
-    try {
+        try {
 
             boolean result = wrapper.doFooTest(true);
             if (!result)
@@ -71,11 +71,11 @@ public class HelloServlet extends HttpServlet {
                 System.out.println("In HelloServlet::CMT passed");
 
 
-    } catch(RuntimeException e) {
-        throw e;
-    } catch(Exception e) {
-        throw new RuntimeException(e);
-    } finally {
+        } catch(RuntimeException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        } finally {
             try {
                  wrapper.removeFoo();
             } catch(Exception e) {
@@ -84,7 +84,7 @@ public class HelloServlet extends HttpServlet {
        }
 
 
-    out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
+        out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
             out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
             out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );

@@ -35,21 +35,21 @@ import javax.naming.*;
 
 public class TimerSessionEJB implements TimedObject, SessionBean
 {
-    private SessionContext context;
-    private QueueConnection connection;
-    private QueueSession session;
-    private Queue queue;
-    private QueueSender sender;
+        private SessionContext context;
+        private QueueConnection connection;
+        private QueueSession session;
+        private Queue queue;
+        private QueueSender sender;
 
-    public void ejbCreate() throws RemoteException {}
+        public void ejbCreate() throws RemoteException {}
 
-    public void ejbRemove() throws RemoteException {}
+        public void ejbRemove() throws RemoteException {}
 
-    public void setSessionContext(SessionContext sc) {
-        context = sc;
-    }
+        public void setSessionContext(SessionContext sc) {
+                context = sc;
+        }
 
-    // business method to create a timer
+        // business method to create a timer
     public void dummyBusinessMethod() {
         try {
             System.out.println("dummyBusinessMethod(): getCallerPrincipal() = "
@@ -64,7 +64,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
         }
     }
 
-    public TimerHandle createTimer(int ms) {
+        public TimerHandle createTimer(int ms) {
             System.out.println("Calling createTimer");
             System.out.println("createTimer(): getCallerPrincipal() = "
                 + context.getCallerPrincipal());
@@ -93,13 +93,13 @@ public class TimerSessionEJB implements TimedObject, SessionBean
             }
 
 
-        TimerService timerService = context.getTimerService();
-        Timer timer = timerService.createTimer(ms, "created timer");
-        return timer.getHandle();
-    }
+                TimerService timerService = context.getTimerService();
+                Timer timer = timerService.createTimer(ms, "created timer");
+                return timer.getHandle();
+        }
 
-    // timer callback method
-    public void ejbTimeout(Timer timer) {
+        // timer callback method
+        public void ejbTimeout(Timer timer) {
         try {
             System.out.println("Calling ejbTimeout");
             java.security.Principal principal = context.getCallerPrincipal();
@@ -132,41 +132,41 @@ public class TimerSessionEJB implements TimedObject, SessionBean
         }
 
 
-        // add message to queue
-        try {
+                // add message to queue
+                try {
 
 
-            InitialContext ic = new InitialContext();
-            QueueConnectionFactory qcFactory = (QueueConnectionFactory)
-                ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
-            Queue queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
-            connection = qcFactory.createQueueConnection();
+                        InitialContext ic = new InitialContext();
+                        QueueConnectionFactory qcFactory = (QueueConnectionFactory)
+                                ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
+                        Queue queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
+                        connection = qcFactory.createQueueConnection();
 
-            QueueSession session = connection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-            sender  = session.createSender(queue);
+                        QueueSession session = connection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+                        sender  = session.createSender(queue);
 
-            TextMessage message = session.createTextMessage();
-            message.setText("ejbTimeout() invoked");
-            System.out.println("Sending time out message");
-            sender.send(message);
-            System.out.println("Time out message sent");
-        } catch(NamingException e) {
-            e.printStackTrace();
-        } catch(JMSException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                if(connection != null) {
-                    connection.close();
-                    connection = null;
+                        TextMessage message = session.createTextMessage();
+                        message.setText("ejbTimeout() invoked");
+                        System.out.println("Sending time out message");
+                        sender.send(message);
+                        System.out.println("Time out message sent");
+                } catch(NamingException e) {
+                        e.printStackTrace();
+                } catch(JMSException e) {
+                        e.printStackTrace();
                 }
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
+                finally {
+                        try {
+                                if(connection != null) {
+                                        connection.close();
+                    connection = null;
+                                }
+                        } catch(Exception e) {
+                                e.printStackTrace();
+                        }
+                }
         }
-    }
 
-    public void ejbActivate() {}
-    public void ejbPassivate() {}
+        public void ejbActivate() {}
+        public void ejbPassivate() {}
 }

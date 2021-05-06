@@ -45,13 +45,13 @@ public class NoTxConnTestBean implements SessionBean {
     public void ejbPassivate() {}
 
     public boolean test1() {
-    Connection conn = null;
-    Statement stmt = null;
-    ResultSet rs = null;
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
-    Connection conn1 = null;
-    Statement stmt1 = null;
-    ResultSet rs1 = null;
+        Connection conn1 = null;
+        Statement stmt1 = null;
+        ResultSet rs1 = null;
 
         try {
 
@@ -64,22 +64,22 @@ public class NoTxConnTestBean implements SessionBean {
 
             /*
             rs.close();
-        stmt.close();
-        conn.close();
-        conn1 = ds.getConnection();
+            stmt.close();
+            conn.close();
+            conn1 = ds.getConnection();
             stmt1 = conn1.createStatement();
             rs1 = stmt1.executeQuery(query1);
 
             rs1.close();
-        stmt1.close();
-        conn1.close();
+            stmt1.close();
+            conn1.close();
             */
 
             return true;
         } catch (Exception e) {
-        System.out.println("Caught Exception---");
-        e.printStackTrace();
-        return false;
+            System.out.println("Caught Exception---");
+            e.printStackTrace();
+            return false;
         } finally {
             if (rs != null ) {
                 try { rs.close(); } catch( Exception e1) {}
@@ -91,7 +91,7 @@ public class NoTxConnTestBean implements SessionBean {
                 try {conn.close();} catch( Exception e1) {}
             }
 
-           }
+               }
     }
 
 

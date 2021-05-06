@@ -70,11 +70,11 @@
 
 <!-- clean -->
 <target name="clean-classes-common" depends="init-common">
-    <delete dir="${build.classes.dir}" failonerror="false"/>
+        <delete dir="${build.classes.dir}" failonerror="false"/>
 </target>
 
 <target name="clean-jars-common" depends="init-common">
-    <delete dir="${assemble.dir}" failonerror="false"/>
+        <delete dir="${assemble.dir}" failonerror="false"/>
 </target>
 
 <target name="clean-common" depends="init-common">
@@ -103,8 +103,8 @@
 
 <!--  compile  -->
 <target name="compile-common" depends="init-common">
-    <antcall target="compile-common-as"/>
-    <antcall target="compile-common-as80"/>
+        <antcall target="compile-common-as"/>
+        <antcall target="compile-common-as80"/>
 </target>
 
 <target name="compile-common-as" depends="init-common" unless="AS80">
@@ -132,38 +132,38 @@
 
 <!-- war targets -->
 <target name="webclient-war-common" if="hasWebclient" depends="init-common">
-    <mkdir dir="${assemble.dir}"/>
-    <antcall target="package-war-common">
-        <!--param name="war.classes" value="${build.classes.dir}"/-->
-        <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
-    </antcall>
+        <mkdir dir="${assemble.dir}"/>
+        <antcall target="package-war-common">
+                <!--param name="war.classes" value="${build.classes.dir}"/-->
+                <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
+        </antcall>
 </target>
 
 <target name="package-war-without-sun.xml" unless="sun-web.xml">
-    <echo message="This war does not contain sun-web.xml"/>
-    <echo message="my build classes dir is:${build.classes.dir}"/>
-    <delete file="${war.file}"/>
-    <mkdir dir="${build.classes.dir}/WEB-INF"/>
-    <copy file="${web.xml}"
-        tofile="${build.classes.dir}/WEB-INF/web.xml"/>
-    <echo message="Creating war file ${war.file}"/>
-    <!--jar jarfile="${war.file}" basedir="${war.classes}" update="true"-->
-    <jar jarfile="${war.file}" basedir="${build.classes.dir}"
-        update="true" includes ="${webclient.war.classes}">
-        <fileset dir="${basedir}/web" casesensitive="yes">
-            <include name="*.html"/>
-            <include name="*.jsp"/>
-            <include name="*.gif"/>
-            <include name="*.do"/>
-            <exclude name="**/*.java"/>
-        </fileset>
-        <fileset dir="${build.classes.dir}" casesensitive="true">
-            <include name="WEB-INF/web.xml"/>
-        </fileset>
-    </jar>
-    <echo message="created war file ${war.file}"/>
-    <delete dir="${build.classes.dir}/WEB-INF" failonerror="false"/>
-    <echo message="my webclient war classes are:${webclient.war.classes}"/>
+        <echo message="This war does not contain sun-web.xml"/>
+        <echo message="my build classes dir is:${build.classes.dir}"/>
+        <delete file="${war.file}"/>
+        <mkdir dir="${build.classes.dir}/WEB-INF"/>
+        <copy file="${web.xml}"
+                tofile="${build.classes.dir}/WEB-INF/web.xml"/>
+        <echo message="Creating war file ${war.file}"/>
+        <!--jar jarfile="${war.file}" basedir="${war.classes}" update="true"-->
+        <jar jarfile="${war.file}" basedir="${build.classes.dir}"
+                update="true" includes ="${webclient.war.classes}">
+                <fileset dir="${basedir}/web" casesensitive="yes">
+                        <include name="*.html"/>
+                        <include name="*.jsp"/>
+                        <include name="*.gif"/>
+                        <include name="*.do"/>
+                        <exclude name="**/*.java"/>
+                </fileset>
+                <fileset dir="${build.classes.dir}" casesensitive="true">
+                        <include name="WEB-INF/web.xml"/>
+                </fileset>
+        </jar>
+        <echo message="created war file ${war.file}"/>
+        <delete dir="${build.classes.dir}/WEB-INF" failonerror="false"/>
+        <echo message="my webclient war classes are:${webclient.war.classes}"/>
 </target>
 
 <target name="package-war-common">
@@ -172,58 +172,58 @@
 </target>
 
 <target name="package-war-with-sun.xml" if="sun-web.xml">
-    <echo message="my build classes dir is:${build.classes.dir}"/>
-    <delete file="${war.file}"/>
-    <mkdir dir="${build.classes.dir}/tmp"/>
-    <mkdir dir="${build.classes.dir}/tmp/WEB-INF"/>
-    <mkdir dir="${build.classes.dir}/tmp/WEB-INF/classes"/>
-    <copy file="${sun-web.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/sun-web.xml"
-        failonerror="false"/>
-    <copy file="${webservices.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/webservices.xml"
-        failonerror="false"/>
-    <copy file="${mappingfile.location}/${mappingfile.name}"
-        tofile="${build.classes.dir}/tmp/${mappingfile.name}"
-        failonerror="false"/>
-    <copy file="${wsdlfile.location}/${wsdlfile.name}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/wsdl/${wsdlfile.name}"
-        failonerror="false"/>
-    <copy file="${web.xml}"
-        tofile="${build.classes.dir}/tmp/WEB-INF/web.xml"/>
-    <copy todir="${build.classes.dir}/tmp/WEB-INF/classes">
-        <fileset dir="${build.classes.dir}">
-            <include name="${war.classes}"/>
-        </fileset>
-    </copy>
-    <echo message="Creating war file ${war.file}"/>
-    <jar jarfile="${war.file}" update="true">
-        <fileset dir="${build.classes.dir}/tmp" casesensitive="yes">
-            <include name="**/*class*"/>
-        </fileset>
-        <fileset dir="${basedir}/web" casesensitive="yes">
-            <include name="**/*.html"/>
-            <include name="**/*.jsp"/>
-            <include name="**/*.gif"/>
-            <include name="**/*.do"/>
-            <exclude name="**/*.java,**/*.xml,**/*.properties"/>
-        </fileset>
-        <fileset dir="${build.classes.dir}/tmp/" casesensitive="true">
-            <include name="WEB-INF/web.xml"/>
-            <include name="WEB-INF/sun-web.xml"/>
-            <include name="WEB-INF/webservices.xml"/>
-            <include name="WEB-INF/wsdl/${wsdlfile.name}"/>
-            <include name="${mappingfile.name}"/>
-        </fileset>
-    </jar>
-    <echo message="created war file ${war.file}"/>
-    <delete dir="${build.classes.dir}/tmp/WEB-INF" failonerror="false"/>
-    <echo message="my webclient war classes are:${webclient.war.classes}"/>
+        <echo message="my build classes dir is:${build.classes.dir}"/>
+        <delete file="${war.file}"/>
+        <mkdir dir="${build.classes.dir}/tmp"/>
+        <mkdir dir="${build.classes.dir}/tmp/WEB-INF"/>
+        <mkdir dir="${build.classes.dir}/tmp/WEB-INF/classes"/>
+        <copy file="${sun-web.xml}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/sun-web.xml"
+                failonerror="false"/>
+        <copy file="${webservices.xml}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/webservices.xml"
+                failonerror="false"/>
+        <copy file="${mappingfile.location}/${mappingfile.name}"
+                tofile="${build.classes.dir}/tmp/${mappingfile.name}"
+                failonerror="false"/>
+        <copy file="${wsdlfile.location}/${wsdlfile.name}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/wsdl/${wsdlfile.name}"
+                failonerror="false"/>
+        <copy file="${web.xml}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/web.xml"/>
+        <copy todir="${build.classes.dir}/tmp/WEB-INF/classes">
+                <fileset dir="${build.classes.dir}">
+                        <include name="${war.classes}"/>
+                </fileset>
+        </copy>
+        <echo message="Creating war file ${war.file}"/>
+        <jar jarfile="${war.file}" update="true">
+                <fileset dir="${build.classes.dir}/tmp" casesensitive="yes">
+                        <include name="**/*class*"/>
+                </fileset>
+                <fileset dir="${basedir}/web" casesensitive="yes">
+                        <include name="**/*.html"/>
+                        <include name="**/*.jsp"/>
+                        <include name="**/*.gif"/>
+                        <include name="**/*.do"/>
+                        <exclude name="**/*.java,**/*.xml,**/*.properties"/>
+                </fileset>
+                <fileset dir="${build.classes.dir}/tmp/" casesensitive="true">
+                        <include name="WEB-INF/web.xml"/>
+                        <include name="WEB-INF/sun-web.xml"/>
+                        <include name="WEB-INF/webservices.xml"/>
+                        <include name="WEB-INF/wsdl/${wsdlfile.name}"/>
+                        <include name="${mappingfile.name}"/>
+                </fileset>
+        </jar>
+        <echo message="created war file ${war.file}"/>
+        <delete dir="${build.classes.dir}/tmp/WEB-INF" failonerror="false"/>
+        <echo message="my webclient war classes are:${webclient.war.classes}"/>
 </target>
 
 <!-- ===== package ejb jar ===== -->
 <target name="package-ejbjar-common">
-    <mkdir dir="${assemble.dir}"/>
+        <mkdir dir="${assemble.dir}"/>
     <delete file="${ejb.jar}" failonerror="false"/>
     <echo message="sqe-common.xml: Generating ejb-jar inside build directory"/>
     <mkdir dir="${build.classes.dir}/META-INF"/>
@@ -234,7 +234,7 @@
     <!-- optional files -->
     <copy file="${sun-cmp-mappings.xml}"
         tofile="${build.classes.dir}/META-INF/sun-cmp-mappings.xml"
-        failonerror="false"/>
+                failonerror="false"/>
    <copy file="${dbschema}" todir="${build.classes.dir}" failonerror="false"/>
    <copy file="${mapping.xml}" todir="${build.classes.dir}/META-INF" failonerror="false"/>
    <copy file="${webservices.xml}" todir="${build.classes.dir}/META-INF" failonerror="false"/>
@@ -260,18 +260,18 @@
     <echo message="sqe-common.xml: Generating appclient-jar in build dir"/>
     <mkdir dir="${build.classes.dir}/META-INF"/>
     <copy file="${application-client.xml}"
-        tofile="${build.classes.dir}/META-INF/application-client.xml"/>
+                tofile="${build.classes.dir}/META-INF/application-client.xml"/>
     <copy file="${sun-application-client.xml}"
-        tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
+                tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
     <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}"
         update="true" includes ="${appclientjar.classes}"
         manifest="./client/MANIFEST.MF">
             <metainf dir="${build.classes.dir}/META-INF">
                 <include name="application-client.xml"/>
                 <include name="sun-application-client.xml"/>
-              </metainf>
-    </jar>
-    <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
+                  </metainf>
+        </jar>
+        <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
 </target>
 
 <!--  ejb jar packager -->
@@ -346,7 +346,7 @@
 
 <!--  reconfig the AppServ  -->
 <target name="reconfig-common" depends="init-common">
-    <echo message="Reconfig has been deprecated. No Action will be taken by the Appserver !!"/>
+        <echo message="Reconfig has been deprecated. No Action will be taken by the Appserver !!"/>
 </target>
 
 
@@ -753,7 +753,7 @@ Singh 01/27/04 -->
    <echo message="Droping all tables...executing all drop_xxx.sql
 files"/>
    <antcall target="execute-sql-common">
-    <param name="sql.file.type" value="drop"/>
+        <param name="sql.file.type" value="drop"/>
    </antcall>
 </target>
 
@@ -841,7 +841,7 @@ files"/>
 </target>
 
 <target name="set-unix-classpath-suffix"
-    depends="init-common" if="isUnix">
+        depends="init-common" if="isUnix">
         <!-- Get classpath-suffix -->
         <exec executable="${ASADMIN}" failonerror="false"
           output="${classpathsuffix.file}">
@@ -863,7 +863,7 @@ files"/>
 </target>
 
 <target name="set-win-classpath-suffix"
-    depends="init-common" if="isWindows">
+        depends="init-common" if="isWindows">
 
         <!-- Get classpath-suffix -->
         <exec executable="${ASADMIN}" failonerror="false"
@@ -888,7 +888,7 @@ files"/>
 
 <!--  create/delete Connector connection pool  -->
 <target name="create-connector-connpool-common"
-    depends="init-common, create-connector-connpool"/>
+        depends="init-common, create-connector-connpool"/>
 
 <target name="create-connector-connpool" depends="init-common">
   <exec executable="${ASADMIN}" failonerror="false">
@@ -1473,7 +1473,7 @@ Added 8/21/2003 Deepa+Sailaja
 
 <!-- ======= restart server instance targets ======= -->
     <target name="restart-server-instance-common" depends="init-common">
-        <antcall target="restart-server-instance-common-${execution.mode}"/>
+            <antcall target="restart-server-instance-common-${execution.mode}"/>
     </target>
 
     <target name="restart-server-instance-common-ee" depends="init-common">
@@ -1549,7 +1549,7 @@ Added 8/21/2003 Deepa+Sailaja
 </target>
 
    <target name="start-domain-ee" depends="init-common" if="isEE">
-    <echo message="start-domain is running on Standard/Enterprise Edition..."/>
+        <echo message="start-domain is running on Standard/Enterprise Edition..."/>
       <antcall target="start-domain-win"/>
       <antcall target="start-domain-unix"/>
       <echo message="Waiting for 90 secs to make sure server properly started..."/>
@@ -1722,7 +1722,7 @@ Added 8/21/2003 Deepa+Sailaja
     ant clean           Remove all classes files
     ant build           Build the application
     ant deploy          Deploy the ear files to S1AS
-    ant run                Run the application
+    ant run                    Run the application
     ant undeploy        Undeploy the ear files from S1AS
     ant usage           Display this message
   </echo>
@@ -1757,21 +1757,21 @@ Added 8/21/2003 Deepa+Sailaja
 </target>
 
 <target name="setupTimer" depends="init-common" if="ee">
-    <exec executable="${ASADMIN}" failonerror="false">
-    <arg line="create-resource-ref"/>
-        <arg line="--user ${admin.user}"/>
-    <arg line="--password ${admin.password}"/>
-    <arg line="--host ${admin.host}"/>
-    <arg line="--port ${admin.port}"/>
-    <arg line="--target ${appserver.instance.name}"/>
-    <arg line="${jdbc.resource.name}"/>
+        <exec executable="${ASADMIN}" failonerror="false">
+        <arg line="create-resource-ref"/>
+            <arg line="--user ${admin.user}"/>
+        <arg line="--password ${admin.password}"/>
+        <arg line="--host ${admin.host}"/>
+        <arg line="--port ${admin.port}"/>
+        <arg line="--target ${appserver.instance.name}"/>
+        <arg line="${jdbc.resource.name}"/>
 </exec>
 <exec executable="${ASADMIN}" failonerror="false">
-    <arg line="set"/>
-    <arg line="--user ${admin.user}"/>
-    <arg line="--password ${admin.password}"/>
-    <arg line="--host ${admin.host}"/>
-    <arg line="--port ${admin.port}"/>
+        <arg line="set"/>
+        <arg line="--user ${admin.user}"/>
+        <arg line="--password ${admin.password}"/>
+        <arg line="--host ${admin.host}"/>
+        <arg line="--port ${admin.port}"/>
     <arg line="${appserver.instance.name}-config.ejb-container.ejb-timer-service.timer-datasource=${jdbc.resource.name}"/>
 </exec>
 <echo message="creating timer table from ${env.S1AS_HOME}/lib/install/ejbtimer_${db.type}"/>

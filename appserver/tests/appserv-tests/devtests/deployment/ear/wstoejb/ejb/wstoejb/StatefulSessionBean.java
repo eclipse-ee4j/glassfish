@@ -26,11 +26,11 @@ import java.rmi.RemoteException;
  */
 public interface StatefulSessionBean extends EJBObject {
 
-    /**
-     * perform some kind of processing
-     * @param payload is the request info
-     * @return the processed info
-     * @throws RemoteException
-     */
-    public String payLoad(String payload) throws RemoteException;
+        /**
+         * perform some kind of processing
+         * @param payload is the request info
+         * @return the processed info
+         * @throws RemoteException
+         */
+        public String payLoad(String payload) throws RemoteException;
 }

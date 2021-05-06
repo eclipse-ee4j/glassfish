@@ -28,6 +28,6 @@ public class AppInfo implements Serializable
 
     public String toString()
     {
-    return foo;
+        return foo;
     }
 }

@@ -68,15 +68,15 @@ public class Client {
 
     public void doTest() {
         try {
-        if( queueConFactory == null ) {
+            if( queueConFactory == null ) {
 
-        System.out.println("Java SE mode...");
-        InitialContext ic = new InitialContext();
-        queueConFactory = (jakarta.jms.QueueConnectionFactory) ic.lookup("jms/cdi_hello_mdb_QCF");
-        msgBeanQueue = (jakarta.jms.Queue) ic.lookup("jms/cdi_hello_mdb_InQueue");
-        clientQueue = (jakarta.jms.Queue) ic.lookup("jms/cdi_hello_mdb_OutQueue");
+                System.out.println("Java SE mode...");
+                InitialContext ic = new InitialContext();
+                queueConFactory = (jakarta.jms.QueueConnectionFactory) ic.lookup("jms/cdi_hello_mdb_QCF");
+                msgBeanQueue = (jakarta.jms.Queue) ic.lookup("jms/cdi_hello_mdb_InQueue");
+                clientQueue = (jakarta.jms.Queue) ic.lookup("jms/cdi_hello_mdb_OutQueue");
 
-        }
+            }
 
             setup();
             doTest(numMessages);

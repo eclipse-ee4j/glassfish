@@ -68,7 +68,7 @@ public class Client {
     public void doTest() {
         try {
             setup();
-        doTest("jms/ejb_mdb_singleton_InQueue", numMessages);
+            doTest("jms/ejb_mdb_singleton_InQueue", numMessages);
             fooTest();
             stat.addStatus("singleton main", stat.PASS);
         } catch(Throwable t) {

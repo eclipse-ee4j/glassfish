@@ -34,22 +34,22 @@ public class Client {
         static HelloImplService service;
 
         public static void main(String[] args) {
-        stat.addDescription("ws-dependency-no-injection");
+            stat.addDescription("ws-dependency-no-injection");
             try {
-                Context ic = new InitialContext();
+                    Context ic = new InitialContext();
 
-                service = (HelloImplService) ic.lookup("java:comp/env/service/helloservice");
-        } catch(Throwable t) {
-        t.printStackTrace();
-        System.out.println("Dependency lookup failed : " + t.getMessage());
+                    service = (HelloImplService) ic.lookup("java:comp/env/service/helloservice");
+            } catch(Throwable t) {
+                t.printStackTrace();
+                System.out.println("Dependency lookup failed : " + t.getMessage());
                 stat.addStatus("ws-dependency-no-injection", stat.FAIL);
-        }
-        System.out.println("Service is " + service);
-        if (service!=null) {
-                Client client = new Client();
-                client.doTest(args);
-        }
-        stat.printSummary("ws-dependency-no-injection");
+            }
+            System.out.println("Service is " + service);
+            if (service!=null) {
+                    Client client = new Client();
+                    client.doTest(args);
+            }
+            stat.printSummary("ws-dependency-no-injection");
        }
 
        public void doTest(String[] args) {
@@ -57,11 +57,11 @@ public class Client {
                 HelloImpl port = service.getHelloImplPort();
                 for (int i=0;i<10;i++) {
                     String ret = port.sayHello("Appserver Tester !");
-            if(ret.indexOf("WebSvcTest-Hello") == -1) {
+                    if(ret.indexOf("WebSvcTest-Hello") == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus("ws-ejb-method-injection", stat.FAIL);
                         return;
-            }
+                    }
                     System.out.println(ret);
                 }
                 stat.addStatus("ws-dependency-no-injection", stat.PASS);

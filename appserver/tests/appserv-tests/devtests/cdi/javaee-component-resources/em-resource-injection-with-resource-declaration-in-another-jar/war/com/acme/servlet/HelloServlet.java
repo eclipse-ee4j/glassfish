@@ -76,19 +76,19 @@ public class HelloServlet extends HttpServlet {
 
         if (!rp.isInjectionSuccessful())
             msg += "Injection of a bean in lib directory into another " +
-                    "Bean in lib directory failed";
+                            "Bean in lib directory failed";
         checkForNull(fb, "Injection of a bean that is placed in lib directory " +
-                "into a Servlet that is placed in a WAR failed");
+                        "into a Servlet that is placed in a WAR failed");
         checkForNull(tmb, "Injection of a Managed bean that is placed in lib directory " +
         "into a Servlet that is placed in a WAR failed");
 
         if (!rp.isInjectionSuccessful())
             msg += "Injection of a bean in lib directory into another Bean " +
-                    "in lib directory failed";
+                            "in lib directory failed";
 
         if (!tmb.isInjectionSuccessful())
             msg += "Injection of a Bean placed in lib dir into a " +
-                    "ManagedBean placed in lib dir failed";
+                            "ManagedBean placed in lib dir failed";
 
 
         out.println(msg);

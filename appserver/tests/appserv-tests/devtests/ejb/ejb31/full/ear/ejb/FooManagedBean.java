@@ -36,33 +36,33 @@ public class FooManagedBean extends ManagedSuper implements Foo {
 
     @PostConstruct
     private void init() {
-    System.out.println("In FooManagedBean::init() " + this);
+        System.out.println("In FooManagedBean::init() " + this);
     }
 
 
     public String getName() {
-    return "somemanagedbean";
+        return "somemanagedbean";
     }
 
     public void foo() {
-    System.out.println("In FooManagedBean::foo() ");
-    bmb.bar();
+        System.out.println("In FooManagedBean::foo() ");
+        bmb.bar();
     }
 
     public Object getThis() {
-    return this;
+        return this;
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In FooManagedBean::destroy() ");
+        System.out.println("In FooManagedBean::destroy() ");
     }
 
 
     public String toString() {
-    return "FooManagedBean this = " + super.toString() +
-               " s = " + s + " , orb = " + orb +
-        " , bmb = " + bmb + " , em = " + em;
+        return "FooManagedBean this = " + super.toString() +
+                           " s = " + s + " , orb = " + orb +
+            " , bmb = " + bmb + " , em = " + em;
     }
 
 }

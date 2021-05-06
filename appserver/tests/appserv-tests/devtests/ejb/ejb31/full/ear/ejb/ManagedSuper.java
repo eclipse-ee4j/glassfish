@@ -28,17 +28,17 @@ public class ManagedSuper {
 
     @PostConstruct
     private void init() {
-    System.out.println("In ManagedSuper::init() " + this);
+        System.out.println("In ManagedSuper::init() " + this);
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In ManagedSuper::destroy() ");
+        System.out.println("In ManagedSuper::destroy() ");
     }
 
     public String toString() {
-    return "ManagedSuper this = " + super.toString() +
-        " s = " + s + " , ds = " + ds;
+        return "ManagedSuper this = " + super.toString() +
+            " s = " + s + " , ds = " + ds;
 
     }
 

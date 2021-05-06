@@ -68,18 +68,18 @@
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="${maxpoolsize-poolName}"/>
-    <param name="jdbc.resource.name" value="jdbc/maxpoolsize"/>
+        <param name="jdbc.resource.name" value="jdbc/maxpoolsize"/>
       </antcall>
 
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="${maxpoolsize-poolName}-xa"/>
-    <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
-    <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
+        <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
+        <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
       </antcall>
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="${maxpoolsize-poolName}-xa"/>
-    <param name="jdbc.resource.name" value="jdbc/maxpoolsize-xa"/>
+        <param name="jdbc.resource.name" value="jdbc/maxpoolsize-xa"/>
       </antcall>
       <antcall target="deploy-common"/>
     </target>
@@ -88,12 +88,12 @@
       <!-- set the maxpoolsize to 10 before running -->
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}.max_pool_size=10"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}.max_pool_size=10"/>
       </antcall>
       <!-- also set the max-wait-time to a smaller value so the tests executes faster -->
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}.max_wait_time_in_millis=1000"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}.max_wait_time_in_millis=1000"/>
       </antcall>
 
       <antcall target="runclient-common">
@@ -103,7 +103,7 @@
       <!-- set the maxpoolsize to 15 -->
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}.max_pool_size=20"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}.max_pool_size=20"/>
       </antcall>
 
       <antcall target="runclient-common">
@@ -114,12 +114,12 @@
       <!-- set the maxpoolsize to 10 before running -->
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}-xa.max_pool_size=10"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}-xa.max_pool_size=10"/>
       </antcall>
       <!-- also set the max-wait-time to a smaller value so the tests executes faster -->
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}-xa.max_wait_time_in_millis=1000"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}-xa.max_wait_time_in_millis=1000"/>
       </antcall>
 
       <antcall target="runclient-common">
@@ -128,7 +128,7 @@
       <!-- set the maxpoolsize to 15 -->
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}-xa.max_pool_size=20"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${maxpoolsize-poolName}-xa.max_pool_size=20"/>
       </antcall>
 
       <antcall target="runclient-common">
@@ -147,7 +147,7 @@
 
       <antcall target="undeploy-jdbc-common">
         <param name="jdbc.resource.name" value="jdbc/maxpoolsize-xa"/>
-    <param name="jdbc.conpool.name" value="${maxpoolsize-poolName}-xa"/>
+        <param name="jdbc.conpool.name" value="${maxpoolsize-poolName}-xa"/>
       </antcall>
     </target>
     <target name="usage">

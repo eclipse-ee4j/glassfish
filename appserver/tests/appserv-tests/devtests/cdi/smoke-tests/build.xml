@@ -131,15 +131,15 @@
     </target>
 
     <target name="usage">
-    <echo> Usage:
-        ant all (Executes all the smoke tests)
-        ant clean (cleans all the smoke tests)
-        ant build (builds all the smoke tests)
-        ant setup (sets up all resources for smoke tests)
-        ant deploy (deploys all the smoke apps)
-        ant run (Executes all the smoke tests)
-        ant undeploy (undeploys all the  smoke apps)
-        ant unsetup (unsets all resources for smoke tests)
-    </echo>
+        <echo> Usage:
+                ant all (Executes all the smoke tests)
+                ant clean (cleans all the smoke tests)
+                ant build (builds all the smoke tests)
+                ant setup (sets up all resources for smoke tests)
+                ant deploy (deploys all the smoke apps)
+                ant run (Executes all the smoke tests)
+                ant undeploy (undeploys all the  smoke apps)
+                ant unsetup (unsets all resources for smoke tests)
+        </echo>
     </target>
 </project>

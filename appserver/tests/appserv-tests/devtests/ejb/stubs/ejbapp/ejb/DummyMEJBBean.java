@@ -34,11 +34,11 @@ implements SessionBean {
     public DummyMEJBBean() {}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In DummyMEJBBean::ejbCreate !!");
+        System.out.println("In DummyMEJBBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public Set queryNames(ObjectName name, QueryExp query) {
@@ -130,4 +130,4 @@ implements SessionBean {
 
     public void ejbPassivate() {}
 }
-                  */
+                              */

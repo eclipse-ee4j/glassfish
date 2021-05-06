@@ -40,21 +40,21 @@ public class SimpleBMPClientThread extends Thread {
 
     public void run() {
         int numRan = 0;
-    int numPassed = 0;
+        int numPassed = 0;
         System.out.println("Thread : " +id_ + " running");
         while( runFlag == true ) {
-        numRan++;
-        try {
-            if ( simpleBMP.test1( id_) ) {
+            numRan++;
+            try {
+                if ( simpleBMP.test1( id_) ) {
                     numPassed++;
+                }
+            } catch( Exception e) {
+                System.out.println( "Failed to run after : " + numPassed );
+                break;
             }
-        } catch( Exception e) {
-            System.out.println( "Failed to run after : " + numPassed );
-        break;
         }
-    }
 
-    System.out.println("Thread : "+id_ + " ran : " + numRan +
-        " passed: " + numPassed );
+        System.out.println("Thread : "+id_ + " ran : " + numRan +
+            " passed: " + numPassed );
     }
 }

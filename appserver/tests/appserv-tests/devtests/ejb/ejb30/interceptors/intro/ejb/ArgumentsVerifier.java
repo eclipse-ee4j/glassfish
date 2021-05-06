@@ -25,7 +25,7 @@ public class ArgumentsVerifier {
 
     @AroundInvoke
     public Object interceptCall(InvocationContext ctx)
-       throws MyBadException, Exception
+           throws MyBadException, Exception
     {
         Method method = ctx.getMethod();
         String methodName = method.getName();

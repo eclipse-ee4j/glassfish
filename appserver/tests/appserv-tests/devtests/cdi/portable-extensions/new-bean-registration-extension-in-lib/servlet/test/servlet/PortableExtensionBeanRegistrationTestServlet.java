@@ -86,16 +86,16 @@ public class PortableExtensionBeanRegistrationTestServlet extends HttpServlet {
         //check if our portable extension was called
         if (!ServiceFrameworkExtension.beforeBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-                    "beforeBeanDiscovery not called";
+                            "beforeBeanDiscovery not called";
 
         if (!ServiceFrameworkExtension.afterBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-                    "afterBeanDiscovery not called or injection of BeanManager " +
-                    "in an observer method failed";
+                            "afterBeanDiscovery not called or injection of BeanManager " +
+                            "in an observer method failed";
 
         if (!ServiceFrameworkExtension.processAnnotatedTypeCalled)
             msg += "Portable Extension lifecycle observer method: process " +
-                    "annotated type not called";
+                            "annotated type not called";
 
         //BeanManager lookup
         if (bm == null)
@@ -113,7 +113,7 @@ public class PortableExtensionBeanRegistrationTestServlet extends HttpServlet {
         //check if proxied service reference is indeed proxied
         if (!Proxy.isProxyClass(sfc_proxy.getClass()))
             msg += "Expected Proxied service reference, but got back an " +
-                    "unproxied service reference ";
+                            "unproxied service reference ";
         //invoke a method o
         if(!sfc_proxy.fooMethod())
             msg += "invocation of method on proxied service failed";

@@ -38,8 +38,8 @@
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="connsharing.output" action="start" />
-      <ant dir="nonxa" target="all"/>
-      <ant dir="xa" target="all"/>
+          <ant dir="nonxa" target="all"/>
+          <ant dir="xa" target="all"/>
         <record name="connsharing.output" action="stop" />
     </target>
 
@@ -48,8 +48,8 @@
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="connsharing.output" action="start" />
-      <ant dir="nonxa" target="all"/>
-      <ant dir="xa" target="all"/>
+          <ant dir="nonxa" target="all"/>
+          <ant dir="xa" target="all"/>
         <record name="connsharing.output" action="stop" />
     </target>
 
@@ -65,9 +65,9 @@
         <record name="xa.output" action="stop" />
     </target>
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the jdbc tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the jdbc tests)
+        </echo>
     </target>
 </project>

@@ -22,11 +22,11 @@ import jakarta.ejb.TransactionAttributeType;
 
 @Stateful
 public class RemoteSfulEJB
-    implements  RemoteSful {
+        implements  RemoteSful {
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public String sayNamaste() {
-    return "Remote Hello";
+        return "Remote Hello";
     }
 
 }

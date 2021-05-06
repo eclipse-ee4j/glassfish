@@ -32,7 +32,7 @@ public class AccessSession extends HttpServlet {
         }
 
         HttpSession session = req.getSession(false);
-    if (session == null) {
+        if (session == null) {
             throw new ServletException("Unable to access login session");
         }
 

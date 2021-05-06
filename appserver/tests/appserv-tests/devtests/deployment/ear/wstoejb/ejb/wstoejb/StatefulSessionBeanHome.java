@@ -27,6 +27,6 @@ import jakarta.ejb.CreateException;
  */
 public interface StatefulSessionBeanHome extends EJBHome {
 
-    public StatefulSessionBean create () throws RemoteException, CreateException;
+        public StatefulSessionBean create () throws RemoteException, CreateException;
 
 }

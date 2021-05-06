@@ -27,8 +27,8 @@ import jakarta.ejb.Stateful;
 public class SimpleVersionedEjbImpl implements SimpleVersionedEjb {
 
     public String getVersion() {
-    Properties prop = new Properties();
-    InputStream in = null;
+        Properties prop = new Properties();
+        InputStream in = null;
         try {
             in = this.getClass().getResource("version-infos.properties").openStream();
             prop.load(in);
@@ -36,6 +36,6 @@ public class SimpleVersionedEjbImpl implements SimpleVersionedEjb {
         } catch (IOException ex) {
             Logger.getLogger(SimpleVersionedEjbImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-    return prop.getProperty("version.identifier", "");
+        return prop.getProperty("version.identifier", "");
     }
 }

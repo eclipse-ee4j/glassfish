@@ -56,10 +56,10 @@ public class AppMemBasicIT extends ArquillianBase {
     @Test
     public void testAuthenticated() {
 
-        DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials("reza", "secret1");
+            DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials("reza", "secret1");
 
-        getWebClient().setCredentialsProvider(credentialsProvider);
+            getWebClient().setCredentialsProvider(credentialsProvider);
 
         assertDefaultAuthenticated(
             readFromServer("/servlet"));
@@ -83,30 +83,30 @@ public class AppMemBasicIT extends ArquillianBase {
     @Test
     public void testNotAuthenticatedWrongName() {
 
-        DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials("romo", "secret1");
+            DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials("romo", "secret1");
 
-        getWebClient().setCredentialsProvider(credentialsProvider);
+            getWebClient().setCredentialsProvider(credentialsProvider);
 
-        WebResponse response = responseFromServer("/servlet");
+            WebResponse response = responseFromServer("/servlet");
 
-        assertEquals(401, response.getStatusCode());
+            assertEquals(401, response.getStatusCode());
 
-        assertTrue(
-            "Response did not contain the \"WWW-Authenticate\" header, but should have",
-            response.getResponseHeaderValue("WWW-Authenticate") != null);
+            assertTrue(
+                "Response did not contain the \"WWW-Authenticate\" header, but should have",
+                response.getResponseHeaderValue("WWW-Authenticate") != null);
 
-        assertDefaultNotAuthenticated(
-            response.getContentAsString());
+            assertDefaultNotAuthenticated(
+                response.getContentAsString());
     }
 
     @Test
     public void testNotAuthenticatedWrongPassword() {
 
-          DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-        credentialsProvider.addCredentials("reza", "wrongpassword");
+              DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials("reza", "wrongpassword");
 
-        getWebClient().setCredentialsProvider(credentialsProvider);
+            getWebClient().setCredentialsProvider(credentialsProvider);
 
         WebResponse response = responseFromServer("/servlet");
 

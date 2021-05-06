@@ -57,7 +57,7 @@ public class SimpleServlet extends HttpServlet {
 
         if (simpleBMP.test1(false)) {
             System.out.println(" Max Connection Usage -  (local-TxNotSupported): PASS");
-        out.println("TEST:PASS");
+            out.println("TEST:PASS");
         } else {
             System.out.println(" Max Connection Usage -  (local-TxNotSupported): FAIL");
             out.println("TEST:FAIL");
@@ -67,7 +67,7 @@ public class SimpleServlet extends HttpServlet {
         boolean status = connectionSharingTest(simpleBMP, useXA, 21112);
         if (status) {
             System.out.println(" Max Connection Usage - (local-Tx-Sharing) : PASS");
-        out.println("TEST:PASS");
+            out.println("TEST:PASS");
         } else {
             System.out.println(" Max Connection Usage - (local-Tx-Sharing) : FAIL");
             out.println("TEST:FAIL");
@@ -76,20 +76,20 @@ public class SimpleServlet extends HttpServlet {
 
         if (simpleBMP.test1(true)) {
             System.out.println(" Max Connection Usage -  (XA-TxNotSupported) : PASS");
-        out.println("TEST:PASS");
+            out.println("TEST:PASS");
         } else {
             System.out.println(" Max Connection Usage -  (XA-TxNotSupported) : FAIL");
             out.println("TEST:FAIL");
         }
 
-    } catch(NamingException ne) {
-        ne.printStackTrace();
-    } catch(CreateException e) {
-        e.printStackTrace();
+        } catch(NamingException ne) {
+            ne.printStackTrace();
+        } catch(CreateException e) {
+            e.printStackTrace();
         } finally {
-        out.println("END_OF_TEST");
-        out.flush();
-    }
+            out.println("END_OF_TEST");
+            out.flush();
+        }
     }
 
     private boolean connectionSharingTest(SimpleBMP simpleBMP, boolean useXA, int value) {//throws RemoteException {

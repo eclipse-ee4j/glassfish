@@ -233,7 +233,7 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
 
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In MsgBean::setMessageDrivenContext()!!");
-    this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     public void ejbRemove() {

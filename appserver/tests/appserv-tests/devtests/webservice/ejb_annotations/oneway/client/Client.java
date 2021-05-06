@@ -32,10 +32,10 @@ public class Client {
         static HelloEJBService service;
 
         public static void main(String[] args) {
-        stat.addDescription("ejb-oneway-annotation");
+            stat.addDescription("ejb-oneway-annotation");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("ejb-oneway-annotation");
+            stat.printSummary("ejb-oneway-annotation");
        }
 
        public void doTest(String[] args) {

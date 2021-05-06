@@ -31,11 +31,11 @@ public class SimpleSession2Bean implements SessionBean
     private InitialContext ic_;
     public void setSessionContext(SessionContext context) {
         ctxt_ = context;
-    try {
-        ic_ = new InitialContext();
-    } catch( NamingException ne ) {
-        ne.printStackTrace();
-    }
+        try {
+            ic_ = new InitialContext();
+        } catch( NamingException ne ) {
+            ne.printStackTrace();
+        }
     }
 
     public void ejbCreate() throws CreateException {
@@ -44,56 +44,56 @@ public class SimpleSession2Bean implements SessionBean
     /**
      */
     public boolean test1() throws Exception {
-    DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource2");
-    Connection conn1 = null;
-    Statement stmt1 = null;
-    ResultSet rs1 = null;
-    boolean passed = false;
+        DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource2");
+        Connection conn1 = null;
+        Statement stmt1 = null;
+        ResultSet rs1 = null;
+        boolean passed = false;
 
-    try {
-        conn1 = ds.getConnection();
-        stmt1 = conn1.createStatement();
-        stmt1.executeUpdate( "UPDATE CONNSHARING SET c_phone='CONN_SHARING_BEAN_2' WHERE c_id=100");
+        try {
+            conn1 = ds.getConnection();
+            stmt1 = conn1.createStatement();
+            stmt1.executeUpdate( "UPDATE CONNSHARING SET c_phone='CONN_SHARING_BEAN_2' WHERE c_id=100");
 
-        return true;
-    } catch( SQLException e) {
-        e.printStackTrace();
-        return false;
-    } finally {
-        if (stmt1 != null) {
-            try { stmt1.close(); } catch( Exception e1 ) {}
+            return true;
+        } catch( SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt1 != null) {
+                try { stmt1.close(); } catch( Exception e1 ) {}
+            }
+            if (conn1 != null) {
+                try { conn1.close(); } catch( Exception e1 ) {}
+            }
         }
-        if (conn1 != null) {
-            try { conn1.close(); } catch( Exception e1 ) {}
-        }
-    }
 
     }
 
     public boolean test2() throws Exception {
-    DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource2");
-    Connection conn1 = null;
-    Statement stmt1 = null;
-    ResultSet rs1 = null;
-    boolean passed = false;
+        DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource2");
+        Connection conn1 = null;
+        Statement stmt1 = null;
+        ResultSet rs1 = null;
+        boolean passed = false;
 
-    try {
-        conn1 = ds.getConnection();
-        stmt1 = conn1.createStatement();
-        stmt1.executeUpdate( "UPDATE CONNSHARING SET c_phone='CONN_SHARING_BEAN_2_2' WHERE c_id=200");
+        try {
+            conn1 = ds.getConnection();
+            stmt1 = conn1.createStatement();
+            stmt1.executeUpdate( "UPDATE CONNSHARING SET c_phone='CONN_SHARING_BEAN_2_2' WHERE c_id=200");
 
-        return true;
-    } catch( SQLException e) {
-        e.printStackTrace();
-        return false;
-    } finally {
-        if (stmt1 != null) {
-            try { stmt1.close(); } catch( Exception e1 ) {}
+            return true;
+        } catch( SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt1 != null) {
+                try { stmt1.close(); } catch( Exception e1 ) {}
+            }
+            if (conn1 != null) {
+                try { conn1.close(); } catch( Exception e1 ) {}
+            }
         }
-        if (conn1 != null) {
-            try { conn1.close(); } catch( Exception e1 ) {}
-        }
-    }
 
     }
 

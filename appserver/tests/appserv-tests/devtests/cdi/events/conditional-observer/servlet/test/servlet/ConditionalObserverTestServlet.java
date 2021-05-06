@@ -55,12 +55,12 @@ public class ConditionalObserverTestServlet extends HttpServlet {
 
         if (TestEventConditionalObserver.documentApprovedEvents != 1){
             msg += "Document updated and approved event not " +
-                    "received by observer";
+                            "received by observer";
         }
 
         if (TestEventConditionalObserver.documentAnyEvents != 4){
             msg += "# of Document event received by observer does not " +
-                    "match expected values. expected = 2. observed="+ TestEventConditionalObserver.documentAnyEvents;
+                            "match expected values. expected = 2. observed="+ TestEventConditionalObserver.documentAnyEvents;
         }
 
         if (SecondTestEventConditionalObserver.documentCreatedEvent > 0)

@@ -49,7 +49,7 @@ public class MyMessageBean implements MessageDrivenBean,
      * @param mdc    the context to set
      */
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
-    this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     /**
@@ -75,7 +75,7 @@ public class MyMessageBean implements MessageDrivenBean,
         //log("onMessage:: getCallerPrincipal : " + mdc.getCallerPrincipal());
         //System.out.println("onMessage : ThreadID : " + Thread.currentThread().getName());
         if(mdc.getCallerPrincipal() != null){
-            log("onMessage:: getCallerPrincipal Name : " + mdc.getCallerPrincipal().getName());
+                log("onMessage:: getCallerPrincipal Name : " + mdc.getCallerPrincipal().getName());
         }
 
         log("onMessage : isCallerInRole('jagadish') : " + mdc.isCallerInRole("jagadish"));

@@ -41,14 +41,14 @@ public class SFSB extends SuperSFSB implements Hello {
     }
 
     public String test(String value, int count) throws EJBException {
-    System.out.println("In SFSB::test()");
+        System.out.println("In SFSB::test()");
         Query q = em.createQuery("SELECT f FROM FooEntity f WHERE f.name=:name");
         q.setParameter("name", value);
         java.util.List result = q.getResultList();
         if (result.size() != count)
             throw new EJBException("ERROR: Found " + result.size() + " FooEntity named " + value + ", not expected " + count);
 
-    return "Found " + result.size() + " FooEntity named " + value;
+        return "Found " + result.size() + " FooEntity named " + value;
     }
 
     @Remove

@@ -101,7 +101,7 @@
     <mkdir dir="${build.classes.dir}/META-INF"/>
     <jar jarfile="${assemble.dir}/${entity.jar}" basedir="${build.classes.dir}" update="true" includes = "${entity.class}">
        <metainf dir="${build.classes.dir}/META-INF">
-       <include name="**/*.xml"/>
+           <include name="**/*.xml"/>
        </metainf>
     </jar>
     <echo message="----GENERATED----${build.classes.dir}/${entity.jar}" />
@@ -174,7 +174,7 @@
     </fileset>
     <fileset dir="${build.classes.dir}">
         <include name="META-INF/sun-application.xml"/>
-     <include name="META-INF/application.xml"/>
+         <include name="META-INF/application.xml"/>
     </fileset>
   </jar>
 </target>
@@ -256,7 +256,7 @@
                         <include name="*.do"/>
                 </fileset>
                 <fileset dir="${build.classes.dir}" casesensitive="true">
-             <include name="WEB-INF/web.xml"/>
+                         <include name="WEB-INF/web.xml"/>
                 </fileset>
         </jar>
         <echo message="created war file ${war.file}"/>
@@ -274,8 +274,8 @@
         <echo message="webclient.war.classes=${webclient.war.classes}"/>
         <copy file="${web.xml}"
                 tofile="${build.classes.dir}/WEB-INF/web.xml"/>
-    <mkdir dir="${build.classes.dir}/WEB-INF/classes/META-INF"/>
-    <copy file="${persistence.xml}"
+        <mkdir dir="${build.classes.dir}/WEB-INF/classes/META-INF"/>
+        <copy file="${persistence.xml}"
                 tofile="${build.classes.dir}/WEB-INF/classes/META-INF/persistence.xml"/>
         <copy todir="${build.classes.dir}/WEB-INF/classes">
                 <fileset dir="${build.classes.dir}">
@@ -294,7 +294,7 @@
                 <fileset dir="${build.classes.dir}" casesensitive="true">
                          <include name="WEB-INF/web.xml"/>
                 </fileset>
-         <fileset dir="${build.classes.dir}" casesensitive="true">
+                 <fileset dir="${build.classes.dir}" casesensitive="true">
                          <include name="WEB-INF/classes/META-INF/persistence.xml"/>
                 </fileset>
 

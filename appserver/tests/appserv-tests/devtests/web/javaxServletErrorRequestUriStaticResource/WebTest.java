@@ -68,7 +68,7 @@ public class WebTest {
             }
         }
 
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {

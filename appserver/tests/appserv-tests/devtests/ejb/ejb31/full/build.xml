@@ -97,9 +97,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all the ejb-ejb31-full tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ejb31-full tests)
+        </echo>
     </target>
 </project>

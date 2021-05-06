@@ -30,7 +30,7 @@ public class StatefulBean2 {
     }
 
     public void hello() {
-    System.out.println("In StatefulBean2::hello()");
+        System.out.println("In StatefulBean2::hello()");
     }
 
     @PreDestroy

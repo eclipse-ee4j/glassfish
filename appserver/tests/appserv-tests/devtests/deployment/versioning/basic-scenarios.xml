@@ -67,7 +67,7 @@
     <antcall target="deploy.version">
         <param name="force" value="true"/>
         <param name="versionExpression" value="${identifier.2}"/>
-    <param name="xmlVersionIdentifier" value="${identifier.1}"/>
+        <param name="xmlVersionIdentifier" value="${identifier.1}"/>
     </antcall>
     <!-- test that the deployed version running is ${identifier.2} -->
     <antcall target="test.registred">

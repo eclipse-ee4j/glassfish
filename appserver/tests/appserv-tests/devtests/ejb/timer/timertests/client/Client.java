@@ -63,18 +63,18 @@ public class Client {
         TimerStuff foo = new Client().doFooTest("ejbs/Foo_BMT", doJms);
 
 
-    /** TODO
+        /** TODO
         new Client().doMessageDrivenTest("jms/TimerMDBQueue_CMT", foo, doJms);
         new Client().doMessageDrivenTest("jms/TimerMDBQueue_BMT", foo, doJms);
-    **/
+        **/
 
-    new Client().doStatefulTest("ejbs/Stateful_CMT", foo,doJms);
-    new Client().doStatefulTest("ejbs/Stateful_BMT", foo, doJms);
+        new Client().doStatefulTest("ejbs/Stateful_CMT", foo,doJms);
+        new Client().doStatefulTest("ejbs/Stateful_BMT", foo, doJms);
 
         new Client().doBarTest("ejbtimer/Bar_CMT", doJms);
 
         try {
-         ((Foo) foo).remove();
+             ((Foo) foo).remove();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -95,7 +95,7 @@ public class Client {
 
     public void doMessageDrivenTest(String jndiName, TimerStuff foo,
                                     boolean jms) {
-    /**
+        /**
         if( jms ) { return; }
 
         try {
@@ -104,7 +104,7 @@ System.out.println("********PG-> in doMessageDrivenTest() for jndiName = " + jnd
             setup();
 System.out.println("********PG-> in doMessageDrivenTest() after setup");
             Context ic = new InitialContext();
-         Queue messageDrivenDest = (Queue) ic.lookup("java:comp/env/" + jndiName);
+             Queue messageDrivenDest = (Queue) ic.lookup("java:comp/env/" + jndiName);
 
             System.out.println("Doing message driven tests for" + jndiName);
 
@@ -136,12 +136,12 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
         } finally {
             cleanup();
         }
-    **/
+        **/
     }
 
     public void doBarTest(String jndiName, boolean jms) {
         try {
-        Object barObjref = context.lookup(jndiName);
+            Object barObjref = context.lookup(jndiName);
 
             System.out.println("doBarTest(): Doing bar timer test for " + jndiName);
 
@@ -185,7 +185,7 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
     }
 
     public void setup() throws Exception {
-    /**
+        /**
 //PG->        context = new InitialContext();
 
         TopicConnectionFactory topicConFactory =
@@ -220,12 +220,12 @@ System.out.println("********PG-> setup(): after createPublisher");
         queueSender = queueSession.createSender(null);
 
         queueCon.start();
-    **/
+        **/
 
     }
 
     public void cleanup() {
-    /**
+        /**
         try {
             if( topicCon != null ) {
                 topicCon.close();

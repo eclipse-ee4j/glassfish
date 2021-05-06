@@ -30,7 +30,7 @@ public class Web extends MonTest {
         setDriver(driver);
         report(true, "Hello from Web Monitoring Tests!");
         basicTests();
-    jspTests();
+        jspTests();
         testMyWeb();
     }
 
@@ -53,7 +53,7 @@ public class Web extends MonTest {
         final String getmArg = ".applications.HelloWeb.server.totaljspcount-count";
         final String getmKey = "1";
 
-    report(wget(28080, uri), "jspload on 28080-");  // commands increment the session count
+        report(wget(28080, uri), "jspload on 28080-");  // commands increment the session count
         report(wget(28081, uri), "jspload on 28081-");
 
         report(verifyGetm(CLUSTERED_INSTANCE_NAME1+getmArg, getmKey), "jsploadtest-1");
@@ -69,7 +69,7 @@ public class Web extends MonTest {
     private void testMyWeb() {
         final String uri = "HelloWeb/HelloWorld";
         final String uri2 = "HelloWeb/MyServlet";
-    final String sessionCount =".applications.HelloWeb.server.sessionstotal-count";
+        final String sessionCount =".applications.HelloWeb.server.sessionstotal-count";
         final String activatedCount =".web.session.activatedsessionstotal-count";
 
 

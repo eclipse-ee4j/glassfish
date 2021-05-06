@@ -24,6 +24,6 @@ public interface BMTSessionHome
     extends EJBHome
 {
     public BMTSession create(String sfsbName)
-    throws CreateException, RemoteException;
+        throws CreateException, RemoteException;
 
 }

@@ -49,11 +49,11 @@
       <transaction-type>Container</transaction-type>
       <ejb-ref>
         <description></description>
-    <ejb-ref-name>ejb/SimpleSession2EJB</ejb-ref-name>
-    <ejb-ref-type>Session</ejb-ref-type>
+        <ejb-ref-name>ejb/SimpleSession2EJB</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
         <home>com.sun.s1asdev.jdbc.connsharing.xa.ejb.SimpleSession2Home</home>
         <remote>com.sun.s1asdev.jdbc.connsharing.xa.ejb.SimpleSession2</remote>
-    <ejb-link>SimpleSession2EJB</ejb-link>
+        <ejb-link>SimpleSession2EJB</ejb-link>
       </ejb-ref>
       <resource-ref>
         <res-ref-name>DataSource</res-ref-name>

@@ -123,148 +123,148 @@ public class ServletAuthConfigProvider implements AuthConfigProvider {
     public ServletAuthConfigProvider
         (Map properties, AuthConfigFactory factory) throws AuthException {
 
-    if (properties == null) {
-        throw new AuthException("properties required for construction");
-    }
+        if (properties == null) {
+            throw new AuthException("properties required for construction");
+        }
 
-    String module = (String) properties.get(MODULE_KEY);
-    if (module == null) {
-        throw new AuthException("ServerAuthModule property is required");
-    }
+        String module = (String) properties.get(MODULE_KEY);
+        if (module == null) {
+            throw new AuthException("ServerAuthModule property is required");
+        }
 
-    HashMap options = new HashMap(properties);
-    options.remove(MODULE_KEY);
+        HashMap options = new HashMap(properties);
+        options.remove(MODULE_KEY);
 
-    String[] contextID = parseStringValue
-        ((String) properties.get(CONTEXTS_KEY));
+        String[] contextID = parseStringValue
+            ((String) properties.get(CONTEXTS_KEY));
 
-    options.remove(CONTEXTS_KEY);
+        options.remove(CONTEXTS_KEY);
 
-    System.err.println("constructing ServletAuthConfigProvider: " +
-               module);
+        System.err.println("constructing ServletAuthConfigProvider: " +
+                           module);
 
-    if (contextID != null) {
+        if (contextID != null) {
 
-        for (String appContext : contextID) {
+            for (String appContext : contextID) {
 
-        System.err.println("constructing ServletServerAuthConfig: " +
-               appContext);
+                System.err.println("constructing ServletServerAuthConfig: " +
+                           appContext);
 
-        if (appContext != null && appContext.length() > 0) {
+                if (appContext != null && appContext.length() > 0) {
 
-            ServerAuthConfig sAC = new ServletServerAuthConfig
-            (appContext,module,options);
+                    ServerAuthConfig sAC = new ServletServerAuthConfig
+                        (appContext,module,options);
 
+                    try {
+                        wLock.lock();
+                        authConfigMap.put(appContext,sAC);
+                    } finally {
+                        wLock.unlock();
+                    }
+
+                    if (factory != null) {
+                        factory.registerConfigProvider
+                            (this,HTTP_SERVLET_LAYER,appContext,module);
+                    }
+                }
+            }
+        } else {
+            // record defaults to handle registration for all appcontexts
             try {
-            wLock.lock();
-            authConfigMap.put(appContext,sAC);
+                wLock.lock();
+                defaultModule = module;
+                defaultModuleOptions = options;
+                defaultAuthConfigMap = new HashMap();
             } finally {
-            wLock.unlock();
-            }
-
-            if (factory != null) {
-            factory.registerConfigProvider
-                (this,HTTP_SERVLET_LAYER,appContext,module);
+                wLock.unlock();
             }
         }
-        }
-    } else {
-        // record defaults to handle registration for all appcontexts
-        try {
-        wLock.lock();
-        defaultModule = module;
-        defaultModuleOptions = options;
-        defaultAuthConfigMap = new HashMap();
-        } finally {
-        wLock.unlock();
-        }
-    }
     }
 
     private static String[] parseStringValue(String value) {
-    String[] rvalue = null;
-    if (value != null) {
+        String[] rvalue = null;
+        if (value != null) {
 
-        // removed blank
+            // removed blank
             String delim = new String(":,;");
-        StringTokenizer tokenizer = new StringTokenizer(value,delim);
-        int count = tokenizer.countTokens();
-        if (count > 0) {
-        rvalue = new String[count];
-        for (int i = 0; i < count; i++) {
-            rvalue[i] = tokenizer.nextToken();
+            StringTokenizer tokenizer = new StringTokenizer(value,delim);
+            int count = tokenizer.countTokens();
+            if (count > 0) {
+                rvalue = new String[count];
+                for (int i = 0; i < count; i++) {
+                    rvalue[i] = tokenizer.nextToken();
+                }
+            }
         }
-        }
-    }
-    return rvalue;
+        return rvalue;
     }
 
     public ClientAuthConfig getClientAuthConfig
     (String layer, String appContext, CallbackHandler handler)
-    throws AuthException {
-        throw new AuthException("Not implemented");
+        throws AuthException {
+            throw new AuthException("Not implemented");
     }
 
     public ServerAuthConfig getServerAuthConfig
-    (String layer, String appContext, CallbackHandler handler)
-    throws AuthException {
+        (String layer, String appContext, CallbackHandler handler)
+        throws AuthException {
 
-    if (!HTTP_SERVLET_LAYER.equals(layer)) {
-        throw new AuthException("Layer Not implemented");
-    }
-
-    if (handler == null) {
-        throw new AuthException("default handler Not implemented");
-    }
-
-    // reuse config for a given layer and appcontext, handler will be
-    // set on first access.
-
-    ServletServerAuthConfig sSAC = null;
-
-    try {
-        rLock.lock();
-        sSAC = (ServletServerAuthConfig)
-        authConfigMap.get(appContext);
-        if (sSAC == null) {
-        if (defaultAuthConfigMap != null) {
-            sSAC = (ServletServerAuthConfig)
-            defaultAuthConfigMap.get(appContext);
+        if (!HTTP_SERVLET_LAYER.equals(layer)) {
+            throw new AuthException("Layer Not implemented");
         }
-        }
-        if (sSAC != null) {
-        sSAC.setHandlerIfNotSet(handler);
-        }
-    } finally {
-        rLock.unlock();
-    }
 
-    if (sSAC == null) {
+        if (handler == null) {
+            throw new AuthException("default handler Not implemented");
+        }
+
+        // reuse config for a given layer and appcontext, handler will be
+        // set on first access.
+
+        ServletServerAuthConfig sSAC = null;
+
         try {
-        wLock.lock();
-        if (defaultAuthConfigMap != null) {
+            rLock.lock();
             sSAC = (ServletServerAuthConfig)
-            defaultAuthConfigMap.get(appContext);
-        }
-        if (sSAC == null) {
-            sSAC = new ServletServerAuthConfig
-            (appContext,defaultModule,defaultModuleOptions);
-            defaultAuthConfigMap.put(appContext,sSAC);
-        }
+                authConfigMap.get(appContext);
+            if (sSAC == null) {
+                if (defaultAuthConfigMap != null) {
+                    sSAC = (ServletServerAuthConfig)
+                        defaultAuthConfigMap.get(appContext);
+                }
+            }
+            if (sSAC != null) {
+                sSAC.setHandlerIfNotSet(handler);
+            }
         } finally {
-        rLock.unlock();
+            rLock.unlock();
         }
-        if (sSAC != null) {
-        sSAC.setHandlerIfNotSet(handler);
+
+        if (sSAC == null) {
+            try {
+                wLock.lock();
+                if (defaultAuthConfigMap != null) {
+                    sSAC = (ServletServerAuthConfig)
+                        defaultAuthConfigMap.get(appContext);
+                }
+                if (sSAC == null) {
+                    sSAC = new ServletServerAuthConfig
+                        (appContext,defaultModule,defaultModuleOptions);
+                    defaultAuthConfigMap.put(appContext,sSAC);
+                }
+            } finally {
+                rLock.unlock();
+            }
+            if (sSAC != null) {
+                sSAC.setHandlerIfNotSet(handler);
+            }
         }
-    }
 
-    if (sSAC == null) {
-        throw new AuthException("context: " + appContext +
-                    " not configured");
-    }
+        if (sSAC == null) {
+            throw new AuthException("context: " + appContext +
+                                    " not configured");
+        }
 
-    return sSAC;
+        return sSAC;
     }
 
     public void refresh() {
@@ -272,213 +272,213 @@ public class ServletAuthConfigProvider implements AuthConfigProvider {
 
     static class ServletServerAuthConfig implements ServerAuthConfig {
 
-    static final Class[] PARAMS = { };
-    static final Object[] ARGS = { };
+        static final Class[] PARAMS = { };
+        static final Object[] ARGS = { };
 
-    Lock rLockConfig;
-    Lock wLockConfig;
+        Lock rLockConfig;
+        Lock wLockConfig;
 
-    String appContext;
-    CallbackHandler cbh;
+        String appContext;
+        CallbackHandler cbh;
 
-    ServerAuthModule modules[] = null;
+        ServerAuthModule modules[] = null;
 
-    ServerAuthContext mandatoryContext;
-    ServerAuthContext optionalContext;
+        ServerAuthContext mandatoryContext;
+        ServerAuthContext optionalContext;
 
-    Map options;
+        Map options;
 
-    static MessagePolicy mandatoryPolicy = new MessagePolicy
-     ( new MessagePolicy.TargetPolicy[]
-       { new MessagePolicy.TargetPolicy
-         ( (MessagePolicy.Target[]) null,
-           new ServletProtectionPolicy()) } , true);
+        static MessagePolicy mandatoryPolicy = new MessagePolicy
+         ( new MessagePolicy.TargetPolicy[]
+           { new MessagePolicy.TargetPolicy
+                 ( (MessagePolicy.Target[]) null,
+                   new ServletProtectionPolicy()) } , true);
 
-    static MessagePolicy optionalPolicy = new MessagePolicy
-     ( new MessagePolicy.TargetPolicy[]
-       { new MessagePolicy.TargetPolicy
-         ((MessagePolicy.Target[]) null,
-          new ServletProtectionPolicy()) }, false);
+        static MessagePolicy optionalPolicy = new MessagePolicy
+         ( new MessagePolicy.TargetPolicy[]
+           { new MessagePolicy.TargetPolicy
+                 ((MessagePolicy.Target[]) null,
+                  new ServletProtectionPolicy()) }, false);
 
-    ServletServerAuthConfig (String appContext,
-        final String clazz, Map options) throws AuthException {
+        ServletServerAuthConfig (String appContext,
+            final String clazz, Map options) throws AuthException {
 
-        ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
-        rLockConfig = rwLock.readLock();;
-        wLockConfig = rwLock.writeLock();
+            ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+            rLockConfig = rwLock.readLock();;
+            wLockConfig = rwLock.writeLock();
 
-        this.appContext = appContext;
-        this.options = options;
+            this.appContext = appContext;
+            this.options = options;
 
-        try {
+            try {
 
-        modules  = (ServerAuthModule[]) AccessController.doPrivileged
+                modules  = (ServerAuthModule[]) AccessController.doPrivileged
 
-        (new java.security.PrivilegedExceptionAction() {
+                (new java.security.PrivilegedExceptionAction() {
 
-            public Object run() throws
+                    public Object run() throws
 
-            java.lang.ClassNotFoundException,
-            java.lang.NoSuchMethodException,
-            java.lang.InstantiationException,
-            java.lang.IllegalAccessException,
-            java.lang.reflect.InvocationTargetException {
+                        java.lang.ClassNotFoundException,
+                        java.lang.NoSuchMethodException,
+                        java.lang.InstantiationException,
+                        java.lang.IllegalAccessException,
+                        java.lang.reflect.InvocationTargetException {
 
-            ClassLoader loader =
-                Thread.currentThread().getContextClassLoader();
+                        ClassLoader loader =
+                            Thread.currentThread().getContextClassLoader();
 
-            Class c = Class.forName(clazz, true, loader);
+                        Class c = Class.forName(clazz, true, loader);
 
-            java.lang.reflect.Constructor constructor =
-                c.getConstructor(PARAMS);
+                        java.lang.reflect.Constructor constructor =
+                            c.getConstructor(PARAMS);
 
-            return new ServerAuthModule[]
-                { (ServerAuthModule) constructor.newInstance(ARGS),
-                  (ServerAuthModule) constructor.newInstance(ARGS)
-                };
+                        return new ServerAuthModule[]
+                            { (ServerAuthModule) constructor.newInstance(ARGS),
+                              (ServerAuthModule) constructor.newInstance(ARGS)
+                            };
+                    }
+
+                });
+
+            } catch (java.security.PrivilegedActionException pae) {
+                AuthException ae = new AuthException();
+                ae.initCause(pae.getCause());
+                throw ae;
             }
 
-        });
+            System.out.println("created ServletServerAuthConfig: " +
+                               appContext + " " + clazz);
 
-        } catch (java.security.PrivilegedActionException pae) {
-        AuthException ae = new AuthException();
-        ae.initCause(pae.getCause());
-        throw ae;
+            mandatoryContext = null;
+            optionalContext = null;
         }
 
-        System.out.println("created ServletServerAuthConfig: " +
-                   appContext + " " + clazz);
+        public ServerAuthContext
+        getAuthContext(String authContextID, Subject serviceSubject,
+                       Map properties) throws AuthException {
 
-        mandatoryContext = null;
-        optionalContext = null;
-    }
-
-    public ServerAuthContext
-    getAuthContext(String authContextID, Subject serviceSubject,
-               Map properties) throws AuthException {
-
-        boolean mandatory = false;
-        if (MANDATORY_CONTEXT_ID.equals(authContextID)) {
-        mandatory = true;
-        } else if (!OPTIONAL_CONTEXT_ID.equals(authContextID)) {
-        throw new AuthException("invalid AuthContext ID");
-        }
-
-        ServerAuthContext rvalue = null;
-
-        try {
-        rLockConfig.lock();
-        if (mandatory) {
-            rvalue = mandatoryContext;
-        } else {
-            rvalue = optionalContext;
-        }
-        } finally {
-        rLockConfig.unlock();
-        }
-        if (rvalue == null) {
-        try {
-            wLockConfig.lock();
-            if (options != null && properties != null) {
-            properties = new HashMap(properties);
-            properties.putAll(options);
+            boolean mandatory = false;
+            if (MANDATORY_CONTEXT_ID.equals(authContextID)) {
+                mandatory = true;
+            } else if (!OPTIONAL_CONTEXT_ID.equals(authContextID)) {
+                throw new AuthException("invalid AuthContext ID");
             }
 
-            if (mandatory) {
-            mandatoryContext = new ServletServerAuthContext
-                (modules[1],mandatoryPolicy,cbh,properties);
-            rvalue = mandatoryContext;
+            ServerAuthContext rvalue = null;
+
+            try {
+                rLockConfig.lock();
+                if (mandatory) {
+                    rvalue = mandatoryContext;
+                } else {
+                    rvalue = optionalContext;
+                }
+            } finally {
+                rLockConfig.unlock();
+            }
+            if (rvalue == null) {
+                try {
+                    wLockConfig.lock();
+                    if (options != null && properties != null) {
+                        properties = new HashMap(properties);
+                        properties.putAll(options);
+                    }
+
+                    if (mandatory) {
+                        mandatoryContext = new ServletServerAuthContext
+                            (modules[1],mandatoryPolicy,cbh,properties);
+                        rvalue = mandatoryContext;
+                    } else {
+                        optionalContext = new ServletServerAuthContext
+                            (modules[0],optionalPolicy,cbh,properties);
+                        rvalue = optionalContext;
+                    }
+                } finally {
+                    wLockConfig.unlock();
+                }
+            }
+            return rvalue;
+        }
+
+        public String getMessageLayer() {
+            return HTTP_SERVLET_LAYER;
+        }
+
+        public String getAppContext() {
+            return this.appContext;
+        }
+
+        public String getAuthContextID(MessageInfo messageInfo) {
+            if (messageInfo.getMap().containsKey(MANDATORY_KEY)) {
+                return MANDATORY_CONTEXT_ID;
             } else {
-            optionalContext = new ServletServerAuthContext
-                (modules[0],optionalPolicy,cbh,properties);
-            rvalue = optionalContext;
+                return OPTIONAL_CONTEXT_ID;
             }
-        } finally {
-            wLockConfig.unlock();
         }
+
+        public void refresh() {
         }
-        return rvalue;
-    }
 
-    public String getMessageLayer() {
-        return HTTP_SERVLET_LAYER;
-    }
-
-    public String getAppContext() {
-        return this.appContext;
-    }
-
-    public String getAuthContextID(MessageInfo messageInfo) {
-        if (messageInfo.getMap().containsKey(MANDATORY_KEY)) {
-        return MANDATORY_CONTEXT_ID;
-        } else {
-        return OPTIONAL_CONTEXT_ID;
-        }
-    }
-
-    public void refresh() {
-    }
-
-    public boolean isProtected() {
-        return true;
-    }
-
-    boolean setHandlerIfNotSet(CallbackHandler handler) {
-        try {
-        wLockConfig.lock();
-        if (this.cbh == null && handler != null) {
-            this.cbh = handler;
+        public boolean isProtected() {
             return true;
-        } else {
-            return false;
-        }
-        } finally {
-        wLockConfig.unlock();
-        }
-    }
-
-    static class ServletProtectionPolicy implements
-    MessagePolicy.ProtectionPolicy {
-
-        ServletProtectionPolicy() {
         }
 
-        public String getID() {
-        return MessagePolicy.ProtectionPolicy.AUTHENTICATE_SENDER;
+        boolean setHandlerIfNotSet(CallbackHandler handler) {
+            try {
+                wLockConfig.lock();
+                if (this.cbh == null && handler != null) {
+                    this.cbh = handler;
+                    return true;
+                } else {
+                    return false;
+                }
+            } finally {
+                wLockConfig.unlock();
+            }
         }
-    }
+
+        static class ServletProtectionPolicy implements
+        MessagePolicy.ProtectionPolicy {
+
+            ServletProtectionPolicy() {
+            }
+
+            public String getID() {
+                return MessagePolicy.ProtectionPolicy.AUTHENTICATE_SENDER;
+            }
+        }
     }
 
     static class ServletServerAuthContext implements ServerAuthContext {
 
-    ServerAuthModule module;
+        ServerAuthModule module;
 
-    ServletServerAuthContext (ServerAuthModule module,
-                  MessagePolicy requestPolicy,
-                  CallbackHandler cbh,
-                  Map options) throws AuthException {
+        ServletServerAuthContext (ServerAuthModule module,
+                                  MessagePolicy requestPolicy,
+                                  CallbackHandler cbh,
+                                  Map options) throws AuthException {
 
-        module.initialize(requestPolicy,null,cbh,options);
-        this.module = module;
-    }
+            module.initialize(requestPolicy,null,cbh,options);
+            this.module = module;
+        }
 
-    public AuthStatus validateRequest
-        (MessageInfo messageInfo, Subject clientSubject,
-         Subject serviceSubject) throws AuthException {
-         return module.validateRequest
-             (messageInfo,clientSubject,serviceSubject);
-    }
+        public AuthStatus validateRequest
+            (MessageInfo messageInfo, Subject clientSubject,
+             Subject serviceSubject) throws AuthException {
+                 return module.validateRequest
+                     (messageInfo,clientSubject,serviceSubject);
+        }
 
-    public AuthStatus secureResponse
-         (MessageInfo messageInfo, Subject serviceSubject)
-        throws AuthException {
-        return module.secureResponse(messageInfo,serviceSubject);
-    }
+        public AuthStatus secureResponse
+             (MessageInfo messageInfo, Subject serviceSubject)
+            throws AuthException {
+                return module.secureResponse(messageInfo,serviceSubject);
+        }
 
-    public void cleanSubject(MessageInfo messageInfo, Subject subject)
-        throws AuthException {
-            module.cleanSubject(messageInfo,subject);
-    }
+        public void cleanSubject(MessageInfo messageInfo, Subject subject)
+            throws AuthException {
+                module.cleanSubject(messageInfo,subject);
+        }
 
     }
 

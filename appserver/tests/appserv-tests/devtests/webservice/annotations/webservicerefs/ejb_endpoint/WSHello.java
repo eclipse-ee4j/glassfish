@@ -21,5 +21,5 @@ import jakarta.jws.WebService;
 @WebService
 public interface WSHello {
 
-    public String sayEjbHello(String who);
+        public String sayEjbHello(String who);
 }

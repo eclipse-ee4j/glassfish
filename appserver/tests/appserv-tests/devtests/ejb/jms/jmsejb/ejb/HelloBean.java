@@ -35,7 +35,7 @@ public class HelloBean implements SessionBean {
     public HelloBean() {}
 
     public void ejbCreate(String str) throws RemoteException {
-    System.out.println("In ejbCreate !!");
+        System.out.println("In ejbCreate !!");
         this.str = str;
         try {
             Context context = new InitialContext();
@@ -47,10 +47,10 @@ public class HelloBean implements SessionBean {
                 System.out.println("HelloEJB has CONTAINER MANAGED TX");
             }
 
-        String name = (String) context.lookup("java:comp/env/user");
-        Double d = (Double) context.lookup("java:comp/env/number");
+            String name = (String) context.lookup("java:comp/env/user");
+            Double d = (Double) context.lookup("java:comp/env/number");
             System.out.println("Hello EJB - saying hello to " + name +
-                ",number is " + d);
+                            ",number is " + d);
             queue = (Queue) context.lookup("java:comp/env/jms/QueueName");
 
             qcFactory =
@@ -685,7 +685,7 @@ public class HelloBean implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public void ejbRemove() throws RemoteException {}

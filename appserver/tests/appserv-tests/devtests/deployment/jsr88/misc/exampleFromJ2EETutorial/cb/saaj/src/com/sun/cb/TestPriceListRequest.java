@@ -30,7 +30,7 @@ public class TestPriceListRequest {
                 SOAPConnectionFactory.newInstance();
             SOAPConnection con = scf.createConnection();
 
-             MessageFactory mf = MessageFactory.newInstance();
+                 MessageFactory mf = MessageFactory.newInstance();
             SOAPMessage msg = mf.createMessage();
 
             // Access the SOABBody object

@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="-source 1.1.2 ${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
   <target name="compile" depends="">
@@ -79,14 +79,14 @@
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="SignatureTestService.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="SignatureMapping_appclient.xml"/>
+         file="SignatureMapping_appclient.xml"/>
     <antcall target="appclient-jar-common">
       <param name="appclientjar.classes"
              value="SignatureMapping_appclient.xml,META-INF/wsdl/**,signature/*.class" />
 
     </antcall>
     <copy todir="${build.classes.dir}"
-     file="SignatureMapping_ejb.xml"/>
+         file="SignatureMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
       <param name="ejbjar.classes"
              value="SignatureMapping_ejb.xml,META-INF/wsdl/**,signatureejb/*.class" />
@@ -124,9 +124,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes the WebServices test)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+        </echo>
     </target>
 </project>

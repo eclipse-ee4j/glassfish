@@ -33,21 +33,21 @@ public class Client {
     public static void main(String[] args)
         throws Exception {
 
-//     SimpleReporterAdapter stat = new SimpleReporterAdapter();
+//         SimpleReporterAdapter stat = new SimpleReporterAdapter();
 //
 //        InitialContext ic = new InitialContext();
 //        Object objRef = ic.lookup("java:comp/env/ejb/NoTxConnTestEJB");
-//    NoTxConnTestHome home = (NoTxConnTestHome)
+//        NoTxConnTestHome home = (NoTxConnTestHome)
 //            javax.rmi.PortableRemoteObject.narrow(objRef, NoTxConnTestHome.class);
 //
 //        NoTxConnTest bean = home.create();
 
 //      if ( bean.test1() ) {
-//        stat.addStatus(testSuite+" test1 : ", stat.PASS);
-//    } else {
-//        stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-//    }
-//    stat.printSummary();
+//            stat.addStatus(testSuite+" test1 : ", stat.PASS);
+//        } else {
+//            stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+//        }
+//        stat.printSummary();
 
         if ( args.length == 0 ) {
             (new Client()).runSingleThreaded();
@@ -66,7 +66,7 @@ public class Client {
     public Client() throws Exception {
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/NoTxConnTestEJB");
-    NoTxConnTestHome home = (NoTxConnTestHome)
+        NoTxConnTestHome home = (NoTxConnTestHome)
             javax.rmi.PortableRemoteObject.narrow(objRef, NoTxConnTestHome.class);
 
         bean = home.create();
@@ -74,11 +74,11 @@ public class Client {
 
     public void runSingleThreaded() throws Exception {
         if ( bean.test1() ) {
-        stat.addStatus(testSuite+" test1 : ", stat.PASS);
-    } else {
-        stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-    }
-    stat.printSummary();
+            stat.addStatus(testSuite+" test1 : ", stat.PASS);
+        } else {
+            stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+        }
+        stat.printSummary();
 
     }
 

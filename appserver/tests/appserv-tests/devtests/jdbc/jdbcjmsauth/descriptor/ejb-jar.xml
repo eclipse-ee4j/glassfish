@@ -35,13 +35,13 @@
       <transaction-type>Container</transaction-type>
       <resource-ref>
         <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
-    <res-type>jakarta.jms.QueueConnectionFactory</res-type>
-    <res-auth>Application</res-auth>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
+        <res-auth>Application</res-auth>
       </resource-ref>
       <resource-ref>
         <res-ref-name>jms/MyQueueConnectionFactory_CM</res-ref-name>
-    <res-type>jakarta.jms.QueueConnectionFactory</res-type>
-    <res-auth>Container</res-auth>
+        <res-type>jakarta.jms.QueueConnectionFactory</res-type>
+        <res-auth>Container</res-auth>
       </resource-ref>
     </session>
 
@@ -79,7 +79,7 @@
     <container-transaction>
       <method>
         <ejb-name>JmsAuthEJB</ejb-name>
-    <method-name>*</method-name>
+        <method-name>*</method-name>
       </method>
       <trans-attribute>Required</trans-attribute>
     </container-transaction>

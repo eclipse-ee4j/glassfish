@@ -36,30 +36,30 @@ public class Client {
         throws Exception {
 
         try {
-        ic = new InitialContext();
-    } catch(NamingException ex) {
-        ex.printStackTrace();
-    }
+            ic = new InitialContext();
+        } catch(NamingException ex) {
+            ex.printStackTrace();
+        }
 
         Object objRef = ic.lookup("java:comp/env/ejb/SimpleSessionHome");
-    SimpleSessionHome simpleSessionHome = (SimpleSessionHome)
+        SimpleSessionHome simpleSessionHome = (SimpleSessionHome)
         javax.rmi.PortableRemoteObject.narrow(objRef, SimpleSessionHome.class);
-    stat.addDescription("Running pooling testSuite ");
+        stat.addDescription("Running pooling testSuite ");
         SimpleSession simpleSession = simpleSessionHome.create();
 
         System.out.println("verifying uniqueness of all connection");
         if(simpleSession.openAndCloseConnection(40)) {
             stat.addStatus( testSuite + " openAndCloseConnection (non-xa) : ", stat.PASS );
-    } else {
+        } else {
             stat.addStatus( testSuite + " openAndCloseConnection (non-xa) : ", stat.PASS );
-    }
+        }
 
         System.out.println("creating connection upto max-pool-size of 32");
         if(simpleSession.openMaxConnections(32)) {
             stat.addStatus( testSuite + " openMaxConnections (non-xa) : ", stat.PASS );
-    } else {
+        } else {
             stat.addStatus( testSuite + " openMaxConnections (non-xa) : ", stat.PASS );
-    }
+        }
 
 
         rollback = false;
@@ -117,8 +117,8 @@ public class Client {
         } else {
             stat.addStatus( testSuite + " test3 rollback=" + rollback + " (xa  non-xa within same tx) : ", stat.FAIL );
         }
-    }catch(Exception ex) {
-        ex.printStackTrace();
-    }
+        }catch(Exception ex) {
+                ex.printStackTrace();
+        }
     }
 }

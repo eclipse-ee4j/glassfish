@@ -22,7 +22,7 @@ public class OrderConfirmations {
   ArrayList items = null;
 
   public OrderConfirmations() {
-      items = new ArrayList();
+          items = new ArrayList();
   }
 
   public synchronized void add(OrderConfirmation oc) {

@@ -32,7 +32,7 @@
 
 <project name="autodeployWithEJB" default="all" basedir=".">
 
-     &commonBuild;
+         &commonBuild;
 
     <property name="testName" value="withEJB"/>
     <property name="dateFormat" value="yyyy-MM-dd-HH:mm:ss.SSS"/>

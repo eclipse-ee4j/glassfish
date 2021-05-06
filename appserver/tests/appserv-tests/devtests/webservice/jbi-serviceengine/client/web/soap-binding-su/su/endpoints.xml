@@ -21,8 +21,8 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://www.sun.com/ns/jbi/component/soap/deploy ./endpoints.xsd">
 <service-name>
-    <namespace-uri>http://example.web.service/Calculator</namespace-uri>
-    <local-part>CalculatorService</local-part>
+        <namespace-uri>http://example.web.service/Calculator</namespace-uri>
+        <local-part>CalculatorService</local-part>
     </service-name>
     <endpoint-name>CalculatorPort</endpoint-name>
     <endpoint-role>provider</endpoint-role>

@@ -129,7 +129,7 @@ public class TestServlet extends HttpServlet {
         System.out.println("injectionWithAlternative returned: " + injectionOfBeanInWebInfLibResult);
         if (injectionOfBeanInWebInfLibResult.equals ("Alternative")) {
             msg += "Expected that the original TestBeanInWebInfLib is called, " +
-                    "but instead got " + injectionOfBeanInWebInfLibResult + " instead";
+                            "but instead got " + injectionOfBeanInWebInfLibResult + " instead";
         }
 
         if(TestAlternativeBeanInWebInfLib.ALTERNATIVE_BEAN_HAS_BEEN_CALLED) {
@@ -151,8 +151,8 @@ public class TestServlet extends HttpServlet {
 
         if (!TestAlternativeBeanInWebInfLib.ALTERNATIVE_BEAN_HAS_BEEN_CALLED) {
             msg += "Alternative Bean enabled in WEB-INF/lib was not called " +
-                    "when the injection happened in the context of a " +
-                    "Bean in WEB-INF/lib where the alternative Bean was enabled";
+                            "when the injection happened in the context of a " +
+                            "Bean in WEB-INF/lib where the alternative Bean was enabled";
         }
 
 

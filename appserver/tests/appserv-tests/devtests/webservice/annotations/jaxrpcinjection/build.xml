@@ -30,9 +30,9 @@
     &testproperties;
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
 <!-- NOTE. the simple mapping test and full mapping test can

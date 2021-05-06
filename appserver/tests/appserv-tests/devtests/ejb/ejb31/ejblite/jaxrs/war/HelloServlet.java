@@ -44,33 +44,33 @@ public class HelloServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-    System.out.println("In HelloServlet::init");
+        System.out.println("In HelloServlet::init");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 
-    resp.setContentType("text/html");
+        resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
-    System.out.println("In HelloServlet::doGet");
+        System.out.println("In HelloServlet::doGet");
 
-    simpleSingleton.hello();
-    simpleStateless.hello();
+        simpleSingleton.hello();
+        simpleStateless.hello();
 
-    simpleSingleton.assertInterceptorBinding();
-    System.out.println("Singleton interceptor binding asserted");
+        simpleSingleton.assertInterceptorBinding();
+        System.out.println("Singleton interceptor binding asserted");
 
-    simpleStateless.assertInterceptorBinding();
-    System.out.println("Stateless interceptor binding asserted");
+        simpleStateless.assertInterceptorBinding();
+        System.out.println("Stateless interceptor binding asserted");
 
-    fooManagedBean.assertInterceptorBinding();
-    System.out.println("FooManagedBean interceptor binding asserted");
-    fooManagedBean.hello();
+        fooManagedBean.assertInterceptorBinding();
+        System.out.println("FooManagedBean interceptor binding asserted");
+        fooManagedBean.hello();
 
 
-    out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
+        out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
             out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
             out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );

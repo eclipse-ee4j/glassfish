@@ -91,7 +91,7 @@ public class WebTest {
             System.err.println("Wrong number of cookie response headers. ");
             System.err.println("Expected 1, got " + cookieCount);
             stat.addStatus(TEST_NAME, stat.FAIL);
-    } else if (!EXPECTED_COOKIE_HEADER.equals(cookieHeader)) {
+        } else if (!EXPECTED_COOKIE_HEADER.equals(cookieHeader)) {
             System.err.println("Wrong cookie response header. ");
             System.err.println("Expected: " + EXPECTED_COOKIE_HEADER
                                + ", got: " + cookieHeader);

@@ -89,7 +89,7 @@ public class StandaloneClient {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
 }

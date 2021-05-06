@@ -41,14 +41,14 @@ public class Client {
             WebServiceToEjbSEI port = (WebServiceToEjbSEI) myWebService.getPort(WebServiceToEjbSEI.class);
             System.out.println(port.payload("APPCLIENT as client"));
         } catch(Throwable t) {
-            if(testPositive) {
-                t.printStackTrace();
-                System.exit(-1);
-            } else {
-                System.out.println("Recd exception as expected");
-            }
+                        if(testPositive) {
+                    t.printStackTrace();
+                    System.exit(-1);
+                        } else {
+                                System.out.println("Recd exception as expected");
+                        }
         }
-        System.exit(0);
+                System.exit(0);
     }
 
 }

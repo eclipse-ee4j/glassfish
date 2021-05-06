@@ -42,7 +42,7 @@ public class SingletonBean {
     }
 
     public boolean verifyResult() {
-    return _pc && _intf;
+        return _pc && _intf;
     }
 
     @AroundInvoke

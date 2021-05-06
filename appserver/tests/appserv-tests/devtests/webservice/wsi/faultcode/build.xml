@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="-source 1.1.2 ${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
   <target name="compile" depends="">
@@ -85,14 +85,14 @@
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="faultcode.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="FaultCodeMapping_appclient.xml"/>
+         file="FaultCodeMapping_appclient.xml"/>
     <antcall target="appclient-jar-common">
       <param name="appclientjar.classes"
              value="FaultCodeMapping_appclient.xml,META-INF/wsdl/**,faultcode/*.class" />
 
     </antcall>
     <copy todir="${build.classes.dir}"
-     file="FaultCodeMapping_ejb.xml"/>
+         file="FaultCodeMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
       <param name="ejbjar.classes"
              value="FaultCodeMapping_ejb.xml,META-INF/wsdl/**,faultcodeejb/*.class" />
@@ -141,9 +141,9 @@
   </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes the WebServices test)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+        </echo>
     </target>
 </project>

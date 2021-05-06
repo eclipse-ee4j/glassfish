@@ -94,7 +94,7 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
     // Workaround for possible CDI bug; at least in Weld 2.3.2 default methods don't seem to be intercepted
     @Override
     public void cleanSubject(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) {
-        HttpAuthenticationMechanism.super.cleanSubject(request, response, httpMessageContext);
+            HttpAuthenticationMechanism.super.cleanSubject(request, response, httpMessageContext);
     }
 
 }

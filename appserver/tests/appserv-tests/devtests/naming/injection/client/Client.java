@@ -29,9 +29,9 @@ public class Client {
     private static String appName;
 
     public static void main(String args[]) {
-    appName = args[0];
-    stat.addDescription(appName);
-    Client client = new Client(args);
+        appName = args[0];
+        stat.addDescription(appName);
+        Client client = new Client(args);
         client.doTest();
         stat.printSummary(appName + "ID");
     }
@@ -39,14 +39,14 @@ public class Client {
     public Client(String[] args) {}
 
     public void doTest() {
-    try {
+        try {
             InitialContext ic = new InitialContext();
             Hello helloBean = (Hello) ic.lookup("java:global/" + appName + "/HelloBean");
             System.out.println("Invoking " + helloBean + ", " + helloBean.injectedURL());
-        stat.addStatus(appName, stat.PASS);
-    } catch(Exception e) {
-        e.printStackTrace();
-        stat.addStatus(appName, stat.FAIL);
-    }
+            stat.addStatus(appName, stat.PASS);
+        } catch(Exception e) {
+            e.printStackTrace();
+            stat.addStatus(appName, stat.FAIL);
+        }
     }
 }

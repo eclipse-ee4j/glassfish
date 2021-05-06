@@ -20,7 +20,7 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session;
 public interface Dummy
 {
     public String dummy()
-    throws CallBlockedException;
+        throws CallBlockedException;
 
 }
 

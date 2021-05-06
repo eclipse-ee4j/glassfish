@@ -57,9 +57,9 @@ public class SFSBEJB
     private UserTransaction             userTransaction1;
     private UserTransaction             userTransaction2;
 
-    private int                activationCount;
-    private int                passivationCount;
-    private Object            nonSerializableState;
+    private int                                activationCount;
+    private int                                passivationCount;
+    private Object                        nonSerializableState;
 
     public void ejbCreate(String sfsbName) {
         System.out.println ("In SFSB.ejbCreate() for name -> " + sfsbName);
@@ -74,7 +74,7 @@ public class SFSBEJB
 
             userTransaction1 = sessionCtx.getUserTransaction();
             userTransaction2 = (UserTransaction) new InitialContext().
-        lookup("java:comp/UserTransaction");
+            lookup("java:comp/UserTransaction");
         } catch (Exception ex) {
             ex.printStackTrace();
             //TODO
@@ -195,22 +195,22 @@ public class SFSBEJB
     }
 
     public int getActivationCount() {
-    return this.activationCount;
+        return this.activationCount;
     }
 
     public int getPassivationCount() {
-    return this.passivationCount;
+        return this.passivationCount;
     }
 
     public void makeStateNonSerializable() {
-    nonSerializableState = new Object();
+        nonSerializableState = new Object();
     }
 
     public void sleepForSeconds(int sec) {
-    try {
-        Thread.currentThread().sleep(sec * 1000);
-    } catch (Exception ex) {
-    }
+        try {
+            Thread.currentThread().sleep(sec * 1000);
+        } catch (Exception ex) {
+        }
     }
 
     public void unusedMethod() {
@@ -232,7 +232,7 @@ public class SFSBEJB
     public void ejbRemove() {}
 
     public void ejbActivate() {
-    throw new EJBException("Container called ejbActivate?????");
+        throw new EJBException("Container called ejbActivate?????");
     }
 
     void postActivate() {
@@ -240,7 +240,7 @@ public class SFSBEJB
     }
 
     public void ejbPassivate() {
-    throw new EJBException("Container called ejbPassivate?????");
+        throw new EJBException("Container called ejbPassivate?????");
     }
 
     @PrePassivate

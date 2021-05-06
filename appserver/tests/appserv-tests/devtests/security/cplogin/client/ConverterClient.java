@@ -39,21 +39,21 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * <br>
  * <b>Locating the home interface:</b>
  * <blockquote><pre>
- *    Context initial = new InitialContext();
- *    Context myEnv = (Context)initial.lookup("java:comp/env");
- *    Object objref = myEnv.lookup("ejb/SimpleConverter");
+ *        Context initial = new InitialContext();
+ *        Context myEnv = (Context)initial.lookup("java:comp/env");
+ *        Object objref = myEnv.lookup("ejb/SimpleConverter");
  *  ConverterHome home = (ConverterHome)PortableRemoteObject.narrow(objref, ConverterHome.class);
  * </pre></blockquote>
  * <br>
  * <b>Creating the remote interface:</b>
  * <blockquote><pre>
- *    Converter currencyConverter = home.create();
+ *        Converter currencyConverter = home.create();
  * </pre></blockquote>
  * <br>
  * <b>Invoking business methods:</b>
  * <blockquote><pre>
  *  BigDecimal param = new BigDecimal ("100.00");
- *    amount = currencyConverter.dollarToYen(param);
+ *        amount = currencyConverter.dollarToYen(param);
  *  amount = currencyConverter.yenToEuro(param);
  * </pre></blockquote>
  * <br>
@@ -82,25 +82,25 @@ public class ConverterClient {
     *
     */
     public static void main(String[] args) {
-    ConverterClient client = new ConverterClient();
-    client.run(args);
+        ConverterClient client = new ConverterClient();
+        client.run(args);
     }
 
     private void run(String[] args) {
         String url = null;
-    String testIdPrefix = null;
-    String testId = "";
+        String testIdPrefix = null;
+        String testId = "";
         String jndiName = null;
         Context context = null;
         String ctxFactory = null;
-    java.lang.Object obj = null;
+        java.lang.Object obj = null;
         try {
             stat.addDescription("Security::client side programmatic login");
 
             if (args.length == 3) {
                 url = args[0];
                 ctxFactory = args[1];
-        jndiName = args[2];
+                jndiName = args[2];
             }
 
             String user = "shingwai";
@@ -117,7 +117,7 @@ public class ConverterClient {
             UserTransaction ut = null;
 
             if (isAppClientTest) {
-        testIdPrefix = "Sec::PLogin Converter Sample AppClient";
+                testIdPrefix = "Sec::PLogin Converter Sample AppClient";
                 testId = testIdPrefix;
                 // Initialize the Context with default properties
                 context = new InitialContext();
@@ -126,7 +126,7 @@ public class ConverterClient {
                 obj = context.lookup("java:comp/env/ejb/PLoginSimpleConverter");
                 ut = (UserTransaction) context.lookup("UserTransaction");
             } else {
-        testIdPrefix = "Sec::PLogin Standalone-Client";
+                testIdPrefix = "Sec::PLogin Standalone-Client";
                 testId = testIdPrefix;
                 Properties env = new Properties();
                 env.put("java.naming.provider.url", url);
@@ -190,7 +190,7 @@ public class ConverterClient {
             processRequest(home, "800");
             stat.addStatus(testId, stat.PASS);
         } catch (Throwable ex) {
-        System.err.println("TestID" +testId);
+            System.err.println("TestID" +testId);
             stat.addStatus(testId, stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();

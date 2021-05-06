@@ -29,7 +29,7 @@ public class BarManagedBean {
 
     @PostConstruct
     private void init() {
-    System.out.println("In BarManagedBean::init() ");
+        System.out.println("In BarManagedBean::init() ");
     }
 
    public void bar() {
@@ -39,12 +39,12 @@ public class BarManagedBean {
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In BarManagedBean::destroy() ");
+        System.out.println("In BarManagedBean::destroy() ");
     }
 
     public String toString() {
-    return "BarManagedBean this = " + super.toString() +
-        " s = " + s + " , ds = " + ds;
+        return "BarManagedBean this = " + super.toString() +
+            " s = " + s + " , ds = " + ds;
 
     }
 

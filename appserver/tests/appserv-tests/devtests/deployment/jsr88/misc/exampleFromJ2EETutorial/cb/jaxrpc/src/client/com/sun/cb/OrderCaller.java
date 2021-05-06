@@ -24,7 +24,7 @@ public class OrderCaller {
     public OrderCaller(String endpoint) {
 
         try {
-            Stub stub = (Stub)(new Supplier_Impl().getSupplierIFPort());
+                    Stub stub = (Stub)(new Supplier_Impl().getSupplierIFPort());
             //stub = (SupplierIF_Stub)(new Supplier_Impl().getSupplierIFPort());
             stub._setProperty(
                 javax.xml.rpc.Stub.ENDPOINT_ADDRESS_PROPERTY,

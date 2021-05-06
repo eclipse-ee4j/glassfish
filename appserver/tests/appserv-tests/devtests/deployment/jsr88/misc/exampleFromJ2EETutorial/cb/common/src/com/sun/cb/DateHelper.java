@@ -205,7 +205,7 @@ public final class DateHelper {
 
    public static Date calendarToDate(Calendar cal) {
 
-       return cal.getTime();
+           return cal.getTime();
 
    } // calendarToDate
 

@@ -35,19 +35,19 @@ public class SimpleBMPClient {
     {
         try {
             stat.addDescription("Testing bmp simple app.");
-        InitialContext ic = new InitialContext();
+            InitialContext ic = new InitialContext();
             Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
-        SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
+            SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
             int id= (int) System.currentTimeMillis();
-         System.out.println("Starting test for id: " + id);
-         SimpleBMP simpleBMP = simpleBMPHome.create(id);
+             System.out.println("Starting test for id: " + id);
+             SimpleBMP simpleBMP = simpleBMPHome.create(id);
 
-        boolean threadPoolIDTestStatus =
-        simpleBMP.isServicedBy("express-service-thread-pool");
+            boolean threadPoolIDTestStatus =
+                simpleBMP.isServicedBy("express-service-thread-pool");
             stat.addStatus("bmp ThreadPoolTest",
-        ((threadPoolIDTestStatus == true) ?  stat.PASS : stat.FAIL));
+                ((threadPoolIDTestStatus == true) ?  stat.PASS : stat.FAIL));
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus("bmp simple", stat.FAIL);

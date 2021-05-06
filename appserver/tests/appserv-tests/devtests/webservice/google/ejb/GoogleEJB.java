@@ -31,7 +31,7 @@ public class GoogleEJB implements SessionBean {
     public GoogleEJB(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In GoogleEJB::ejbCreate !!");
+        System.out.println("In GoogleEJB::ejbCreate !!");
     }
 
     public byte[] doGetCachedPage(java.lang.String key, java.lang.String url)

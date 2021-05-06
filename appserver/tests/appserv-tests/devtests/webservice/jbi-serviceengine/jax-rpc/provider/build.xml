@@ -39,7 +39,7 @@
     <target name="setup" depends="init-common">
         <property name="root.dir" value="." />
         <property name="src.dir" value="." />
-    <property name="appname" value="FindInterestApp" />
+        <property name="appname" value="FindInterestApp" />
 
         <property name="build.dir" value="${env.APS_HOME}/build/module" />
         <property name="build.repository" value="${build.dir}/buildears"/>
@@ -60,7 +60,7 @@
     </target>
 
     <target name="clean" depends="setup">
-    <delete dir="${build.dir}"/>
+        <delete dir="${build.dir}"/>
         <delete dir="${build.repository}"/>
         <delete dir="${build.appclient}"/>
     </target>
@@ -102,7 +102,7 @@
             </fileset>
         </jar>
 
-    <antcall target="copy-to-webinf" />
+        <antcall target="copy-to-webinf" />
 
         <jar jarfile="${build.jars}/web.war" >
             <fileset dir="${build.webinf}">
@@ -128,7 +128,7 @@
         </jar>
 
         <jar jarfile="${build.jars}/appclient.jar"
-         manifest="${build.desc}/client/MANIFEST.MF">
+             manifest="${build.desc}/client/MANIFEST.MF">
 <!--
             <fileset dir=".">
                 <include name="FIMappingClient.xml" />
@@ -154,17 +154,17 @@
     </target>
 
     <target name="copy-to-webinf">
-    <copy  todir="${build.webinf}/WEB-INF/classes" filtering="on" overwrite="yes"  >
-      <fileset dir="${build.dest}">
-        <include name="myweb/*.class"/>
-      </fileset>
-    </copy>
+        <copy  todir="${build.webinf}/WEB-INF/classes" filtering="on" overwrite="yes"  >
+          <fileset dir="${build.dest}">
+            <include name="myweb/*.class"/>
+          </fileset>
+        </copy>
     </target>
 
     <target name="ear" depends="clean,jar">
         <ear earfile="${build.ear}/${appname}.ear"
-         appxml="${build.desc}/application.xml"
-         manifest="${build.desc}/MANIFEST.MF">
+             appxml="${build.desc}/application.xml"
+             manifest="${build.desc}/MANIFEST.MF">
 
             <!--<fileset dir="${build.jars}" includes="*.jar,.war"/>-->
             <fileset dir="${build.jars}" includes="*.jar"/>
@@ -176,7 +176,7 @@
     </target>
 
     <target name="deploy" depends="setup">
-    <exec executable="${ASADMIN}">
+        <exec executable="${ASADMIN}">
             <arg value="deploy" />
             <arg value="--user" />
             <arg value="${admin.user}" />
@@ -187,12 +187,12 @@
             <arg value="--retrieve" />
             <arg value="${build.appclient}" />
             <arg value="${build.ear}/${appname}.ear" />
-    </exec>
+        </exec>
         <antcall target="deploy-jbi-component-su"/>
     </target>
 
     <target name="undeploy" depends="setup">
-    <exec executable="${ASADMIN}">
+        <exec executable="${ASADMIN}">
             <arg value="undeploy" />
             <arg value="--user" />
             <arg value="${admin.user}" />
@@ -201,17 +201,17 @@
             <arg value="--port" />
             <arg value="${admin.port}" />
             <arg value="${appname}" />
-    </exec>
+        </exec>
         <antcall target="undeploy-jbi-component-su"/>
     </target>
 
    <target name="runclient" depends="setup">
     <exec executable="${APPCLIENT}">
             <env key="VMARGS" value="-Dtest.results=${results.file}" />
-        <arg value="-client" />
-        <arg value="${build.appclient}/${appname}Client.jar"/>
-        <arg value="-name" />
-        <arg value="MyAppClient" />
+            <arg value="-client" />
+            <arg value="${build.appclient}/${appname}Client.jar"/>
+            <arg value="-name" />
+            <arg value="MyAppClient" />
     </exec>
    </target>
 
@@ -256,7 +256,7 @@
         <copy  todir="${build.desc}/client" filtering="on" overwrite="yes"  >
             <fileset dir="${src.dir}/descriptor/client" >
                 <include name="*.xml" />
-        <include name="MANIFEST.MF" />
+                <include name="MANIFEST.MF" />
             </fileset>
         </copy>
 

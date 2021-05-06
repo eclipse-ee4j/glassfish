@@ -218,7 +218,7 @@ Custom target for compilation with local libraries for connector
     <copy file="descriptor/ra.xml"
         tofile="${assemble.dir}/rar/META-INF/ra.xml"/>
     <copy file="descriptor/sun-ra.xml"
-    tofile="${assemble.dir}/rar/META-INF/sun-ra.xml"/>
+        tofile="${assemble.dir}/rar/META-INF/sun-ra.xml"/>
     <copy file="${env.APS_HOME}/sqetests/connector/lib/cciblackbox-tx.jar"
         tofile="${assemble.dir}/rar/cciblackbox-tx.jar"/>
     <replace file="${assemble.dir}/rar/META-INF/ra.xml"

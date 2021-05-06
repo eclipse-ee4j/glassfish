@@ -32,10 +32,10 @@ public interface Sful
         throws AppException;
 
     public String computeMid(int min, int max)
-        throws SwapArgumentsException;
+            throws SwapArgumentsException;
 
     public String callDummy()
-        throws Exception;
+            throws Exception;
 
     public String eatException()
         throws EatException;

@@ -86,7 +86,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-    stat.printSummary();
+        stat.printSummary();
     }
 
     /*

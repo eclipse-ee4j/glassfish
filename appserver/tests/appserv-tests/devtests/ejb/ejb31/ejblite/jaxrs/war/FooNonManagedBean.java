@@ -29,20 +29,20 @@ public class FooNonManagedBean {
 
     @PostConstruct
     private void init() {
-    if( ut == null ) {
-        throw new IllegalStateException("ut is null");
-    }
+        if( ut == null ) {
+            throw new IllegalStateException("ut is null");
+        }
 
-    System.out.println("In FooNonManagedBean:init()");
+        System.out.println("In FooNonManagedBean:init()");
     }
 
     public void hello() {
-    System.out.println("In FooNonManagedBean::hello()");
+        System.out.println("In FooNonManagedBean::hello()");
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In FooNonManagedBean:destroy()");
+        System.out.println("In FooNonManagedBean:destroy()");
     }
 
 

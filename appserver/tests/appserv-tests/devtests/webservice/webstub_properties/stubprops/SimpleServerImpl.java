@@ -40,7 +40,7 @@ public class SimpleServerImpl implements SessionBean {
     }
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In GoogleEJB::ejbCreate !!");
+        System.out.println("In GoogleEJB::ejbCreate !!");
 }
 
     public String sayHello(String who) throws RemoteException {

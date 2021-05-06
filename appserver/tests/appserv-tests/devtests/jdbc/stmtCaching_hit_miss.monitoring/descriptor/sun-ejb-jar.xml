@@ -27,7 +27,7 @@
             <jndi-name>com.sun.s1asdev.jdbc.stmtcaching.ejb.SimpleBMPHome</jndi-name>
             <resource-ref>
                 <res-ref-name>DataSource</res-ref-name>
-        <jndi-name>jdbc/jdbc-stmtcaching_hit_miss</jndi-name>
+                <jndi-name>jdbc/jdbc-stmtcaching_hit_miss</jndi-name>
                 <default-resource-principal>
                     <name>DBUSER</name>
                     <password>DBPASSWORD</password>

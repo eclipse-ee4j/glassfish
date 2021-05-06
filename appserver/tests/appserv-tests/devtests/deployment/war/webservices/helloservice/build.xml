@@ -38,23 +38,23 @@
     </target>
 
     <target name="compile" depends="prepare">
-        <javac srcdir="helloservice" destdir="${binary}"
-            classpath="${inst}/lib/j2ee.jar"/>
-        <echo message="invoking wscompile to generate wsdl file"/>
-        <exec executable="${WSCOMPILE}">
+                <javac srcdir="helloservice" destdir="${binary}"
+                        classpath="${inst}/lib/j2ee.jar"/>
+                <echo message="invoking wscompile to generate wsdl file"/>
+                <exec executable="${WSCOMPILE}">
                     <arg line="-define config-interface.xml  -d ${binary} -nd ${wsdl} -classpath ${binary} -mapping ${build}/mapping.xml"/>
-         </exec>
+                 </exec>
     </target>
 
     <target name="assemble" depends="compile">
-        <copy file="web.xml" todir="${build}/WEB-INF"/>
-        <copy file="webservices.xml" todir="${build}/WEB-INF"/>
-        <jar destfile="${portable.war}" basedir="${build}"/>
-        <copy file="sun-web.xml" todir="${build}/WEB-INF" failonerror="false"/>
-        <jar destfile="${all.war}" basedir="${build}"/>
-        <jar destfile="${deployplan.jar}">
-                <fileset dir="${basedir}" includes="sun-web.xml"/>
-        </jar>
+                <copy file="web.xml" todir="${build}/WEB-INF"/>
+                <copy file="webservices.xml" todir="${build}/WEB-INF"/>
+                <jar destfile="${portable.war}" basedir="${build}"/>
+                <copy file="sun-web.xml" todir="${build}/WEB-INF" failonerror="false"/>
+                <jar destfile="${all.war}" basedir="${build}"/>
+                <jar destfile="${deployplan.jar}">
+                        <fileset dir="${basedir}" includes="sun-web.xml"/>
+                </jar>
     </target>
 
     <target name="deploy.asadmin" depends="prepare">
@@ -62,10 +62,10 @@
             <param name="arg.list" value="--name ${testName} ${all.war}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-    <echo message="Create client webservices artifacts"/>
-    <exec executable="${WSCOMPILE}">
-        <arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
-    </exec>
+        <echo message="Create client webservices artifacts"/>
+        <exec executable="${WSCOMPILE}">
+                <arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
+        </exec>
     </target>
 
     <target name="redeploy.asadmin" depends="prepare">
@@ -73,10 +73,10 @@
             <param name="arg.list" value="--name ${testName} ${all.war}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-    <echo message="Create client webservices artifacts"/>
-    <exec executable="${WSCOMPILE}">
-        <arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
-    </exec>
+        <echo message="Create client webservices artifacts"/>
+        <exec executable="${WSCOMPILE}">
+                <arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
+        </exec>
     </target>
 
     <target name="undeploy.asadmin">
@@ -139,8 +139,8 @@
     </target>
 
     <target name="runclient" depends="prepare">
-    <javac srcdir="staticstubclient" destdir="${binary}"
-        classpath="${inst}/lib/j2ee.jar:${inst}/lib/webservices-rt.jar:${inst}/lib/webservices-tools.jar"/>
+        <javac srcdir="staticstubclient" destdir="${binary}"
+                classpath="${inst}/lib/j2ee.jar:${inst}/lib/webservices-rt.jar:${inst}/lib/webservices-tools.jar"/>
 
         <javaWithResult
             fork="true"
@@ -161,7 +161,7 @@
             <arg line="${arg.list}"/>
         </javaWithResult>
 
-     <antcall target="processResult">
+         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
         </antcall>

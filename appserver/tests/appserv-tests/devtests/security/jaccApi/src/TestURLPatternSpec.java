@@ -173,7 +173,7 @@ public class TestURLPatternSpec {
         boolean inverse = u2.implies(u1);
 
         if (result != expected) {
-             System.out.println("implies(->): " + expected + " " + result +
+                 System.out.println("implies(->): " + expected + " " + result +
                     " succeded " + u1 + "\t" + u2);
             stat.addStatus(description, stat.FAIL);
         } else if (inverse != expectedInverse) {

@@ -60,12 +60,12 @@ public class TimerStuffImpl implements TimerStuff {
             } else {
                 txMode = TX_UNSPECIFIED;
             }
-        /** TODO
+            /** TODO
             queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
 
             qcFactory = (QueueConnectionFactory)
                 ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
-        **/
+            **/
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -730,7 +730,7 @@ public class TimerStuffImpl implements TimerStuff {
 
 
     protected void setupJmsConnection() {
-    /** TODO
+        /** TODO
 
         try {
             InitialContext ic = new InitialContext();
@@ -738,11 +738,11 @@ public class TimerStuffImpl implements TimerStuff {
             session = connection.createQueueSession(true, 0);
             connection.start();
         } catch(Exception e) { e.printStackTrace(); }
-    */
+        */
     }
 
     protected void cleanup() {
-    /** TODO
+        /** TODO
         if( connection != null ) {
             try {
                 connection.close();
@@ -751,7 +751,7 @@ public class TimerStuffImpl implements TimerStuff {
                 jmse.printStackTrace();
             }
         }
-    **/
+        **/
     }
 
 

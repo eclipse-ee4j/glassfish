@@ -45,14 +45,14 @@ run_test_id(){
 }
 
 get_test_target(){
-    case ${1} in
-        connector_all )
-            TARGET=all
-            export TARGET;;
+        case ${1} in
+                connector_all )
+                        TARGET=all
+                        export TARGET;;
   * )
     TARGET=$1
     export TARGET;;
-    esac
+        esac
 }
 
 OPT=${1}

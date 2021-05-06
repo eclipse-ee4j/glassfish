@@ -71,7 +71,7 @@
         </antcall>
         <!--<antcall target="deploy-jdbc-common"/>-->
 
-    <!-- Workaround for issue 18783 -->
+        <!-- Workaround for issue 18783 -->
         <antcall target="asadmin-common">
             <param name="admin.command" value="create-module-config"/>
             <param name="operand.props"

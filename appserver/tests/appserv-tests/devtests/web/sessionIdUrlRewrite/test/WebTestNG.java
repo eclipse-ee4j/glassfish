@@ -63,7 +63,7 @@ public class WebTestNG {
         conn.connect();
         int responseCode = conn.getResponseCode();
 
-    assert responseCode == 200;
+        assert responseCode == 200;
 
         bis = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         while ((line = bis.readLine()) != null) {

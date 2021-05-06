@@ -17,7 +17,7 @@ import jakarta.servlet.http.*;
 /**
  * Servlet included in SimpleI18nServlet
  * @author  Chand Basha
- * @version    1.0
+ * @version        1.0
  */
 public class IncludedServlet extends HttpServlet {
 
@@ -42,15 +42,15 @@ public class IncludedServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest req, HttpServletResponse res)
     throws ServletException, java.io.IOException {
         try {
-            java.io.PrintWriter out    =    res.getWriter();
-            String name                =    req.getParameter("name");
+                        java.io.PrintWriter out        =        res.getWriter();
+                        String name                                =        req.getParameter("name");
 
-            out.println("<H3> This is the name from included servlet </H3>");
-            out.println("<H4> The name entered was:" + name + "</h4>");
+                        out.println("<H3> This is the name from included servlet </H3>");
+                        out.println("<H4> The name entered was:" + name + "</h4>");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
     }
 
     /** Handles the HTTP <code>GET</code> method.

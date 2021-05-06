@@ -47,7 +47,7 @@ public class StandAloneClient {
     }
 
     public void doTest() {
-        try {
+            try {
             GoogleSearchService googleSearchService =
                 new GoogleSearchService_Impl();
 
@@ -73,12 +73,12 @@ public class StandAloneClient {
 
             stat.addStatus("appclient main", stat.PASS);
 
-        } catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("google client test failed");
             ex.printStackTrace();
             stat.addStatus("appclient main" , stat.FAIL);
 
-    }
+        }
 
     }
 

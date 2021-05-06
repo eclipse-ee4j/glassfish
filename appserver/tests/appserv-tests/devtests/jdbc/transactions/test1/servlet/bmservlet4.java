@@ -71,10 +71,10 @@ public class bmservlet4 extends HttpServlet
       remote = home.create();
       out.println("calling  bean1 ");
       out.println(" the result of invoking the ejb method is " + remote.performDBOps());
-       }
+           }
        catch (Exception e)
        {
-       System.out.println(" ERROR: " + e);
+           System.out.println(" ERROR: " + e);
        }
         try
         {
@@ -82,17 +82,17 @@ public class bmservlet4 extends HttpServlet
         java.sql.Connection conn = null,conn2 = null;
         java.sql.Statement stmt = null,stmt2 = null;
         java.sql.ResultSet rs = null,rs2 = null;
-    ctx = new InitialContext();
-    ds = (DataSource)ctx.lookup("jdbc/ora1");
-    ds2 = (DataSource)ctx.lookup("jdbc/ora2");
+        ctx = new InitialContext();
+        ds = (DataSource)ctx.lookup("jdbc/ora1");
+        ds2 = (DataSource)ctx.lookup("jdbc/ora2");
 
         conn = ds.getConnection();
-    conn2 = ds2.getConnection();
-    stmt=conn.createStatement();
-    stmt2=conn2.createStatement();
-    out.println("Verifying table contents ....");
-    rs=stmt.executeQuery("select * from status1");
-    int count=0;
+        conn2 = ds2.getConnection();
+        stmt=conn.createStatement();
+        stmt2=conn2.createStatement();
+        out.println("Verifying table contents ....");
+        rs=stmt.executeQuery("select * from status1");
+        int count=0;
          while (rs.next())
         {count++;
          out.println("record = "+rs.getString(1));
@@ -105,7 +105,7 @@ public class bmservlet4 extends HttpServlet
          }
          out.println("Total Records in table1 = "+count);
         out.println("Total Records in table2 = "+count2);
-    if ((count==1)&&(count2==1))
+        if ((count==1)&&(count2==1))
          out.println("Result:PASS");
          else
          out.println("Result:FAIL");
@@ -116,11 +116,11 @@ public class bmservlet4 extends HttpServlet
          rs.close();
          out.println("deleted in 1");
          out.println("deleted in 2");
-     rs2.close();
+         rs2.close();
          stmt.close();
-     stmt2.close();
-     conn.close();
-     conn2.close();*/
+         stmt2.close();
+         conn.close();
+         conn2.close();*/
         }catch(Exception e){}
 
 

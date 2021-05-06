@@ -65,9 +65,9 @@
       <echo message="common.xml: Compiling test source files" level="verbose"/>
       <javac srcdir="servlet"
          destdir="${build.classes.dir}"
-     classpath="${s1astest.classpath}:ra/publish/internal/classes"
+         classpath="${s1astest.classpath}:ra/publish/internal/classes"
          debug="on"
-     failonerror="true"/>
+         failonerror="true"/>
      </target>
 
 
@@ -121,14 +121,14 @@
 
     <target name="run-war" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="embeddedweb (stand-alone war based)"/>
-    </antcall>
+        <param name="testsuite.id" value="embeddedweb (stand-alone war based)"/>
+        </antcall>
     </target>
 
     <target name="run-ear" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="embeddedweb (ear based)"/>
-    </antcall>
+        <param name="testsuite.id" value="embeddedweb (ear based)"/>
+        </antcall>
     </target>
 
     <target name="undeploy-ear" depends="init-common">

@@ -48,7 +48,7 @@
     </target>
 
     <target name="build" depends="compile">
-<!--    <property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
+<!--        <property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
 -->
         <antcall target="build-ear-common"/>
     </target>

@@ -36,12 +36,12 @@ public class SFSBEJB
     private SessionContext              sessionCtx;
 
     private String                      accountHolderName;
-    private transient int        balance;
-    private int                checkpointedBalance;
+    private transient int                balance;
+    private int                                checkpointedBalance;
 
     public void ejbCreate(String accountHolderName, int balance) {
         this.accountHolderName = accountHolderName;
-    this.balance = balance;
+        this.balance = balance;
     }
 
     public void setSessionContext(SessionContext sc) {
@@ -51,11 +51,11 @@ public class SFSBEJB
     public void ejbRemove() {}
 
     public void ejbActivate() {
-    balance = checkpointedBalance;
+        balance = checkpointedBalance;
     }
 
     public void ejbPassivate() {
-    checkpointedBalance = balance;
+        checkpointedBalance = balance;
     }
 
     public String getAccountHolderName() {
@@ -63,15 +63,15 @@ public class SFSBEJB
     }
 
     public int getBalance() {
-    return balance;
+        return balance;
     }
 
     public void incrementBalance(int val) {
-    balance += val;
+        balance += val;
     }
 
     public int getCheckpointedBalance() {
-    return checkpointedBalance;
+        return checkpointedBalance;
     }
 
     public void nonTxNonCheckpointedMethod() {

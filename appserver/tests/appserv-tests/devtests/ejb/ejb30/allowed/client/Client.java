@@ -44,29 +44,29 @@ public class Client {
 
     public void doTest() {
         try {
-        sless.sayHello();
+            sless.sayHello();
             stat.addStatus("local setup", stat.PASS);
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("local setup", stat.FAIL);
         }
 
-    boolean result = false;
+        boolean result = false;
 
         try {
-        result = sless.lookupUserTransactionFromBMTBean();
-    } catch (Exception ex) {
+            result = sless.lookupUserTransactionFromBMTBean();
+        } catch (Exception ex) {
             stat.addStatus("local BMTOp_Ex", stat.FAIL);
-    }
+        }
         stat.addStatus("local BMTUserTx",
-        (result ? stat.PASS : stat.FAIL));
+                (result ? stat.PASS : stat.FAIL));
 
         try {
-        result = sless.lookupUserTransactionFromCMTBean();
-    } catch (Exception ex) {
+            result = sless.lookupUserTransactionFromCMTBean();
+        } catch (Exception ex) {
             stat.addStatus("local CMTOp_Ex", stat.FAIL);
-    }
+        }
         stat.addStatus("local CMTUserTx",
-        (result ? stat.PASS : stat.FAIL));
+                (result ? stat.PASS : stat.FAIL));
 
     }
 

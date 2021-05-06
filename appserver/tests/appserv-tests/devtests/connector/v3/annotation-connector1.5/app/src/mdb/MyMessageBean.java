@@ -50,7 +50,7 @@ public class MyMessageBean implements MessageDrivenBean,
      * @param mdc    the context to set
      */
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
-    this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     /**

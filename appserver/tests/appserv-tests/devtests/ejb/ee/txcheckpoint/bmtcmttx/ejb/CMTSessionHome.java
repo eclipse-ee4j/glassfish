@@ -24,6 +24,6 @@ public interface CMTSessionHome
     extends EJBHome
 {
     public CMTSession create(String sfsbName)
-    throws CreateException, RemoteException;
+        throws CreateException, RemoteException;
 
 }

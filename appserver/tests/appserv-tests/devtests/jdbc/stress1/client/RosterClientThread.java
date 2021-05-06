@@ -44,22 +44,22 @@ public class RosterClientThread extends Thread {
     }
     public void run() {
         int numRan = 0;
-    int numPassed = 0;
+        int numPassed = 0;
         System.out.println("Thread : " +clientID_ + " running");
         while( runFlag == true ) {
-        numRan++;
+            numRan++;
             try {
                 insertInfo(myRoster);
                 getSomeInfo(myRoster);
                 getMoreInfo(myRoster);
-        numPassed++;
+                numPassed++;
             } catch (Exception ex) {
-            System.out.println( "Failed to run after : " + numPassed );
-        break;
+                System.out.println( "Failed to run after : " + numPassed );
+                break;
+            }
         }
-        }
-    System.out.println("Thread: " + clientID_ + " ran: " + numRan +
-        " passed: " + numPassed );
+        System.out.println("Thread: " + clientID_ + " ran: " + numRan +
+            " passed: " + numPassed );
     }
 
     private static void getSomeInfo(Roster myRoster) {

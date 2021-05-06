@@ -169,7 +169,7 @@ public class SetupSshTest extends SshBaseDevTest {
 
         //clean up the password file
         removePasswords("SSH");
-    stat.printSummary();
+        stat.printSummary();
     }
 
     private boolean testKeyDistributionWithoutKeyGeneration() {

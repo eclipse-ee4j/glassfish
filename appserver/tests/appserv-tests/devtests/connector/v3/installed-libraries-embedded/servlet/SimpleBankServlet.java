@@ -89,7 +89,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = customerSavingsLocalHome.create(SSN, lastName, firstName, address1, address2, city, state, zipCode);
       } catch (Exception e) {
         System.out.println("Could not create the customer savings remote bean : " + e.toString());
-    throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       message = "Customer Added.";
@@ -102,7 +102,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = customerSavingsLocalHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer remote bean : " + e.toString());
-    throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       jsp = "/SimpleBankEdit.jsp";
@@ -114,7 +114,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = customerSavingsLocalHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer savings remote bean : " + e.toString());
-    throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       message = "Delete Customer";
@@ -126,7 +126,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavingsLocalHome.findByPrimaryKey(SSN).remove();
       } catch (Exception e) {
         System.out.println("Could not delete the customer savings bean : " + e.toString());
-    throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       message = "Customer Deleted.";
@@ -141,7 +141,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = (CustomerSavings)customerSavingsLocalHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer savings remote bean : " + e.toString());
-    throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
 
@@ -150,7 +150,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerChecking = (CustomerChecking)customerCheckingLocalHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer checking remote bean : " + e.toString());
-    throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
 

@@ -48,21 +48,21 @@ public class Client {
 
             switch (Integer.parseInt(param)) {
                 case 1: {//old method
-            client.runNonAMXTest();
-            break;
-        }
-        case 2: { //using amx
+                    client.runNonAMXTest();
+                    break;
+                }
+                case 2: { //using amx
                     client.runTest();
-            break;
+                    break;
+                }
+            }
         }
-        }
-    }
     }
 
     public void runNonAMXTest() throws Exception {
-    Set<Integer> localdsSet = new HashSet();
-    Set<Integer> localdsAfterSet = new HashSet();
-    int countLocalds = 0;
+        Set<Integer> localdsSet = new HashSet();
+        Set<Integer> localdsAfterSet = new HashSet();
+        int countLocalds = 0;
 
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
@@ -73,17 +73,17 @@ public class Client {
         stat.addDescription("DMMCF Mark-Connection-As-Bad NonAMX ");
 
 
-    localdsSet = simpleBMP.getFromLocalDS(MAX_POOL_SIZE);
-    System.out.println("localds = " + localdsSet);
+        localdsSet = simpleBMP.getFromLocalDS(MAX_POOL_SIZE);
+        System.out.println("localds = " + localdsSet);
 
-    //jdbc-local-pool
+        //jdbc-local-pool
         simpleBMP.test0();
 
-    localdsAfterSet = simpleBMP.getFromLocalDS(MAX_POOL_SIZE);
-    System.out.println("localdsAfter = " + localdsAfterSet);
+        localdsAfterSet = simpleBMP.getFromLocalDS(MAX_POOL_SIZE);
+        System.out.println("localdsAfter = " + localdsAfterSet);
 
-    countLocalds = compareAndGetCount(localdsSet, localdsAfterSet);
-    if(MAX_POOL_SIZE-countLocalds == 5) {
+        countLocalds = compareAndGetCount(localdsSet, localdsAfterSet);
+        if(MAX_POOL_SIZE-countLocalds == 5) {
             stat.addStatus(" DMMCF Mark-Connection-As-Bad destroyedCount localds: ", stat.PASS);
         } else {
             stat.addStatus(" DMMCF Mark-Connection-As-Bad destroyedCount localds: ", stat.FAIL);
@@ -187,32 +187,32 @@ public class Client {
     public int compareAndGetCount(Set<Integer> beforeSet, Set<Integer> afterSet) {
         //denotes the count of hashcodes that matched in both sets.
         int contains = 0;
-    if(!beforeSet.containsAll(afterSet)) {
+        if(!beforeSet.containsAll(afterSet)) {
             //if it does not contain all the elements of the after set
-        //find how many are absent from the beforeSet
+            //find how many are absent from the beforeSet
             for(int afterInt : afterSet) {
                     if(beforeSet.contains(afterInt)) {
-                        contains++;
-                    }
+                            contains++;
+                        }
             }
-    }
+        }
         return contains;
     }
 
     public int getMonitorablePropertyOfConnectionPool(String poolName) throws Exception {
 
-    final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
+        final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
-    final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
-    final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
+        final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
+        final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName =
                 new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-mon,name=resources/" + poolName);
 
-    javax.management.openmbean.CompositeDataSupport returnValue =
-        (javax.management.openmbean.CompositeDataSupport)
-        connection.getAttribute(objectName, NUM_CON_DESTROYED_COUNT);
+        javax.management.openmbean.CompositeDataSupport returnValue =
+                (javax.management.openmbean.CompositeDataSupport)
+                connection.getAttribute(objectName, NUM_CON_DESTROYED_COUNT);
 
         return new Integer(returnValue.get("count").toString());
     }

@@ -21,7 +21,7 @@ import jakarta.servlet.http.*;
 public class From extends HttpServlet {
 
     public void service(HttpServletRequest req, HttpServletResponse res)
-    throws IOException, ServletException {
+        throws IOException, ServletException {
 
         getServletContext().getRequestDispatcher("/To").forward(req, res);
         try {

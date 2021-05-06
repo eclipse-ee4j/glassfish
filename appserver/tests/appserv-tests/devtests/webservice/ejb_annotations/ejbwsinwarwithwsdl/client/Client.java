@@ -30,10 +30,10 @@ public class Client {
 
 
         public static void main(String[] args) {
-        stat.addDescription("ejbwsinwarwithwsdl");
+            stat.addDescription("ejbwsinwarwithwsdl");
             Client client = new Client();
             client.doTest(args);
-        stat.printSummary("ejbwsinwarwithwsdl");
+            stat.printSummary("ejbwsinwarwithwsdl");
        }
 
        public void doTest(String[] args) {

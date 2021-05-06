@@ -27,9 +27,9 @@ import outsidepkg.RetVal;
     targetNamespace="http://example.com/Hello"
 )
 public class Hello {
-    public Hello() {}
+        public Hello() {}
 
-    public RetVal sayHello(String who) {
-        return new RetVal("WebSvcTest-Hello " + who);
-    }
+        public RetVal sayHello(String who) {
+                return new RetVal("WebSvcTest-Hello " + who);
+        }
 }

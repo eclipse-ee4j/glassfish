@@ -43,7 +43,7 @@ public class WebTest {
         stat.addDescription("Unit test for Bugzilla 27665");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() {

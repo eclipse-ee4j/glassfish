@@ -74,7 +74,7 @@
         <param name="appclientjar.classes" value="**/*Client*.class" />
         <param name="appclientjar.files" value="${build.classes.dir}" />
         <param name="appname" value="appmonitoring"/>
-    <param name="appclient.jar" value="${assemble.dir}/appmonitoringAppClient.jar"/>
+        <param name="appclient.jar" value="${assemble.dir}/appmonitoringAppClient.jar"/>
       </antcall>
     </target>
 

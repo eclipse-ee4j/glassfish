@@ -66,7 +66,7 @@ public class MultipleInterceptorImplementationsTestServlet extends HttpServlet {
 
         if (!SecondTransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke in the second " +
-                    "transaction interceptor not called";
+                            "transaction interceptor not called";
         tb.m2(); //calling m2 again
         if (SecondTransactionInterceptor.aroundInvokeInvocationCount != 3)
             msg += "Business method second interceptor invocation on method-level "

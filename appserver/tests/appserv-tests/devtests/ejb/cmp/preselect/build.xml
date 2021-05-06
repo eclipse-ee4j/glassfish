@@ -82,17 +82,17 @@
     </target>
 
     <target name="usage">
-    <echo> Usage:
-        ant customer (Executes the customer tests)
-        ant all (Executes all the ejb cmp tests)
-        ant clean (cleans all the ejb cmp tests)
-        ant build (builds all the ejb cmp tests)
-        ant setup (sets up all resources for cmp tests)
-        ant deploy (deploys all the ejb cmp apps)
-        ant run (Executes all the ejb cmp tests)
-        ant undeploy (undeploys all the cmp apps)
-        ant unsetup (unsets all resources for cmp tests)
-    </echo>
+        <echo> Usage:
+                ant customer (Executes the customer tests)
+                ant all (Executes all the ejb cmp tests)
+                ant clean (cleans all the ejb cmp tests)
+                ant build (builds all the ejb cmp tests)
+                ant setup (sets up all resources for cmp tests)
+                ant deploy (deploys all the ejb cmp apps)
+                ant run (Executes all the ejb cmp tests)
+                ant undeploy (undeploys all the cmp apps)
+                ant unsetup (unsets all resources for cmp tests)
+        </echo>
     </target>
 </project>
 

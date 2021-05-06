@@ -20,7 +20,7 @@ import jakarta.servlet.SingleThreadModel;
 import javax.xml.rpc.server.ServiceLifecycle;
 
 public class HelloServlet implements
-            SingleThreadModel, ServiceLifecycle {
+                        SingleThreadModel, ServiceLifecycle {
 
     public HelloServlet() {
         System.out.println("HelloServlet() instantiated");

@@ -45,15 +45,15 @@
     </target>
 
     <target name="build" depends="compile">
-      <javac srcdir="./applib1"
-            destdir="./applib1"
-            classpath="${s1astest.classpath}"
-            debug="on"
-            failonerror="true"/>
+          <javac srcdir="./applib1"
+                    destdir="./applib1"
+                    classpath="${s1astest.classpath}"
+                    debug="on"
+                    failonerror="true"/>
         <mkdir dir="lib"/>
-    <jar destfile="lib/AppSharedLib1.jar">
-        <fileset dir="./applib1"/>
-    </jar>
+        <jar destfile="lib/AppSharedLib1.jar">
+            <fileset dir="./applib1"/>
+        </jar>
         <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>

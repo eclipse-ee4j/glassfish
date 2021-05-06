@@ -22,7 +22,7 @@
     version="1.0"
     xmlns="http://java.sun.com/xml/ns/jbi"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:tns="http://glassfish.samples.sun.com/"
+        xmlns:tns="http://glassfish.samples.sun.com/"
     xsi:schemaLocation="http://java.sun.com/xml/ns/jbi ./jbi.xsd">
   <service-assembly>
     <identification>

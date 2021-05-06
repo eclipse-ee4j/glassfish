@@ -24,13 +24,13 @@ public interface SFSB
 {
 
     public String getName()
-    throws RemoteException;
+        throws RemoteException;
 
     public void createSFSBChild()
-    throws RemoteException;
+        throws RemoteException;
 
     public String getMessage()
-    throws RemoteException;
+        throws RemoteException;
 
     public boolean checkSessionContext()
         throws RemoteException;
@@ -63,17 +63,17 @@ public interface SFSB
         throws RemoteException;
 
     public int getActivationCount()
-    throws RemoteException;
+        throws RemoteException;
 
     public int getPassivationCount()
-    throws RemoteException;
+        throws RemoteException;
 
     public void makeStateNonSerializable()
-    throws RemoteException;
+        throws RemoteException;
 
     public void sleepForSeconds(int sec)
-    throws RemoteException;
+        throws RemoteException;
 
     public void unusedMethod()
-    throws RemoteException;
+        throws RemoteException;
 }

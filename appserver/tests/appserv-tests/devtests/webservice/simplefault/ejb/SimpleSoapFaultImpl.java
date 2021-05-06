@@ -40,7 +40,7 @@ public class SimpleSoapFaultImpl implements SessionBean {
     }
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In GoogleEJB::ejbCreate !!");
+        System.out.println("In GoogleEJB::ejbCreate !!");
 }
 
     public String simpleMethod()

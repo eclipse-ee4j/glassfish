@@ -20,5 +20,5 @@ import jakarta.ejb.Remote;
 
 @Remote
 public interface Hello {
-    public String invoke(String msg);
+        public String invoke(String msg);
 }

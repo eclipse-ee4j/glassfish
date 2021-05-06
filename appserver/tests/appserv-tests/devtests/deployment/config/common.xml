@@ -1198,7 +1198,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <copy todir="server-logs/${testServer}/logs">
        <fileset dir="${testServer.dir}/logs" includes="*.log *.log.*"/>
     </copy>
-    <antcall target="copyClusterLog"/>
+        <antcall target="copyClusterLog"/>
     <antcall target="deleteInstance"/>
     <antcall target="deleteCluster"/>
     <delete dir="${s1as.home}/nodeagents"/>

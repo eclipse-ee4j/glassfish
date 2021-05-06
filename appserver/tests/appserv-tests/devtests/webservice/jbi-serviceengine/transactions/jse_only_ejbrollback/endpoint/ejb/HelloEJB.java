@@ -35,31 +35,31 @@ public class HelloEJB implements Hello {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public String sayHello(String who) {
-    System.out.println("**** EJB Called");
-    Connection con=null;
-    String tableName = "CUSTOMER_rb";
-    try {
-    con = ds.getConnection();
-    System.out.println("**** auto commit = " + con.getAutoCommit());
+        System.out.println("**** EJB Called");
+        Connection con=null;
+        String tableName = "CUSTOMER_rb";
+        try {
+        con = ds.getConnection();
+        System.out.println("**** auto commit = " + con.getAutoCommit());
 
-    updateTable(con, tableName, "Vikas", "vikas@sun.com");
-    readData(con, tableName);
+        updateTable(con, tableName, "Vikas", "vikas@sun.com");
+        readData(con, tableName);
         } catch(Exception ex) {
             throw new RuntimeException(ex);
         } finally {
-        try {
-        if(con != null) con.close();
-        } catch (SQLException se) {}
-    }
-    ctx.setRollbackOnly();
+            try {
+            if(con != null) con.close();
+            } catch (SQLException se) {}
+        }
+        ctx.setRollbackOnly();
         return "WebSvcTest-Hello " + who;
     }
 
     private void updateTable(Connection con, String tableName, String name, String email) throws Exception {
         PreparedStatement pStmt =
              con.prepareStatement("INSERT INTO "+ tableName +" (NAME, EMAIL) VALUES(?,?)");
-    pStmt.setString(1, name);
-    pStmt.setString(2, email);
+        pStmt.setString(1, name);
+        pStmt.setString(2, email);
         pStmt.executeUpdate();
     }
 

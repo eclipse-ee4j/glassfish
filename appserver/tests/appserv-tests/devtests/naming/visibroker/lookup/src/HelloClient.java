@@ -29,30 +29,30 @@ public class HelloClient
   public static void main(String args[])
     {
       try{
-      Properties p1 = new Properties();
-      p1.put("org.omg.CORBA.ORBClass", "com.inprise.vbroker.orb.ORB");
-      p1.put("org.omg.CORBA.ORBSingletonClass", "com.inprise.vbroker.orb.ORBSingleton");
-      org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init( new String[]{"",""}, p1 );
+          Properties p1 = new Properties();
+          p1.put("org.omg.CORBA.ORBClass", "com.inprise.vbroker.orb.ORB");
+          p1.put("org.omg.CORBA.ORBSingletonClass", "com.inprise.vbroker.orb.ORBSingleton");
+          org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init( new String[]{"",""}, p1 );
 
-      // get the root naming context
-      org.omg.CORBA.Object objRef =
-        orb.resolve_initial_references("NameService");
-      // Use NamingContextExt instead of NamingContext. This is
-      // part of the Interoperable naming Service.
-      NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+          // get the root naming context
+          org.omg.CORBA.Object objRef =
+            orb.resolve_initial_references("NameService");
+          // Use NamingContextExt instead of NamingContext. This is
+          // part of the Interoperable naming Service.
+          NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
-      // resolve the Object Reference in Naming
-      String name = "Hello";
-      helloImpl = HelloHelper.narrow(ncRef.resolve_str(name));
+          // resolve the Object Reference in Naming
+          String name = "Hello";
+          helloImpl = HelloHelper.narrow(ncRef.resolve_str(name));
 
-      System.out.println("Obtained a handle on server object: " + helloImpl);
-      System.out.println(helloImpl.sayHello());
-      helloImpl.shutdown();
+          System.out.println("Obtained a handle on server object: " + helloImpl);
+          System.out.println(helloImpl.sayHello());
+          helloImpl.shutdown();
 
-    } catch (Exception e) {
+        } catch (Exception e) {
           System.out.println("ERROR : " + e) ;
-      e.printStackTrace(System.out);
-      }
+          e.printStackTrace(System.out);
+          }
     }
 
 }

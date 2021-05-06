@@ -80,8 +80,8 @@ public class SlessEJB implements SlessBusiness, SlessBusiness2, SlessRemoteBusin
 
             // Proprietary way to look up tx manager.
             TransactionManager tm = (TransactionManager)
-        //  TODO check this, it worked inV2              new InitialContext().lookup("java:pm/TransactionManager");
-                      new InitialContext().lookup("java:appserver/TransactionManager");
+                //  TODO check this, it worked inV2              new InitialContext().lookup("java:pm/TransactionManager");
+                              new InitialContext().lookup("java:appserver/TransactionManager");
 
             // Use an implementation-specific check whether there is a tx.
             // A portable application couldn't make this check

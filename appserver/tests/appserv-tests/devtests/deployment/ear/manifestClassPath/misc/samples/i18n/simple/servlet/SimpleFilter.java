@@ -21,9 +21,9 @@ import jakarta.servlet.http.*;
 
 public class SimpleFilter implements Filter {
 
-    private FilterConfig filterConfig    = null;
-    private boolean usefilter            = false;
-    private String encoding                = null;
+    private FilterConfig filterConfig        = null;
+    private boolean usefilter                        = false;
+    private String encoding                                = null;
 
     /**
      * Called by the web container to indicate to a filter that it is being placed into service
@@ -31,16 +31,16 @@ public class SimpleFilter implements Filter {
      * @param filterConfig The filter configuration object
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        try {
-            this.filterConfig    =    filterConfig;
-            String param        =    filterConfig.getInitParameter("usefilter");
-            this.encoding        =    filterConfig.getInitParameter("encoding");
-            if (param.equals("true")) {
-                this.usefilter    =    true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                try {
+                        this.filterConfig        =        filterConfig;
+                        String param                =        filterConfig.getInitParameter("usefilter");
+                        this.encoding                =        filterConfig.getInitParameter("encoding");
+                        if (param.equals("true")) {
+                                this.usefilter        =        true;
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
     }
 
     /**
@@ -51,18 +51,18 @@ public class SimpleFilter implements Filter {
      * @param chain The filter chain we are processing
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
-    throws IOException, ServletException {
-        try {
-            if (usefilter) {
-                String encoding = getEncoding(req);
-                if (encoding != null) {
-                    req.setCharacterEncoding(encoding);
+        throws IOException, ServletException {
+                try {
+                if (usefilter) {
+                    String encoding = getEncoding(req);
+                    if (encoding != null) {
+                        req.setCharacterEncoding(encoding);
+                                }
+                        }
+                chain.doFilter(req, res);
+                } catch (Exception e) {
+                        e.printStackTrace();
                 }
-            }
-            chain.doFilter(req, res);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -78,7 +78,7 @@ public class SimpleFilter implements Filter {
      * Called by the web container to indicate to a filter that it is being taken out of service.
      */
     public void destroy() {
-        this.encoding        = null;
-        this.filterConfig    = null;
+        this.encoding                = null;
+        this.filterConfig        = null;
     }
 }

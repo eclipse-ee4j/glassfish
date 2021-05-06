@@ -47,8 +47,8 @@ public abstract class ItemBean implements EntityBean {
         System.out.print("ItemBean ejbCreate");
         setId(id);
         setName(name);
-    setPrice(price);
-    return null;
+        setPrice(price);
+        return null;
     }
 
     public void ejbPostCreate (String id, String name, double price) throws CreateException { }
@@ -71,12 +71,12 @@ public abstract class ItemBean implements EntityBean {
 
     public void ejbStore() {
         System.out.print("ItemBean ejbStore");
-    ItemLocal item = (ItemLocal)context.getEJBLocalObject();
+        ItemLocal item = (ItemLocal)context.getEJBLocalObject();
 
-    System.out.println("Item price less than $100 : " +
-               item.getId());
-    System.out.println("Modifying its price to $200...");
-    item.modifyPrice(200.00);
+        System.out.println("Item price less than $100 : " +
+                           item.getId());
+        System.out.println("Modifying its price to $200...");
+        item.modifyPrice(200.00);
     }
 
     public void ejbPassivate() { }

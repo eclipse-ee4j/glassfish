@@ -27,22 +27,22 @@ public class StatefulNoIntf {
 
     @PostConstruct
     public void init() {
-    System.out.println("In StatefulNoIntf::init()");
+        System.out.println("In StatefulNoIntf::init()");
     }
 
     public String hello() {
-    System.out.println("In StatefulNoIntf::hello()");
-    return "hello, world\n";
+        System.out.println("In StatefulNoIntf::hello()");
+        return "hello, world\n";
     }
 
     @PreDestroy
     public void destroy() {
-    System.out.println("In StatefulNoIntf::destroy()");
+        System.out.println("In StatefulNoIntf::destroy()");
     }
 
     @PrePassivate
     public void passivate() {
-    System.out.println("In StatefulNoIntf::passivate()");
+        System.out.println("In StatefulNoIntf::passivate()");
     }
 
 

@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <exec executable="${WSCOMPILE}" failonerror="true" >
         <arg line="-source 1.1.2 ${wscompile.command}" />
-    </exec>
+        </exec>
   </target>
 
   <target name="compile" depends="">
@@ -53,7 +53,7 @@
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="SimpleTest.wsdl"/>
     <copy todir="${build.classes.dir}"
-     file="RpcLitMapping.xml"/>
+         file="RpcLitMapping.xml"/>
     <antcall target="ejb-jar-common">
       <param name="ejbjar.classes"
              value="RpcLitMapping.xml,META-INF/wsdl/**,rpclit/*.class" />
@@ -112,10 +112,10 @@
   </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes the WebServices test)
-            ant clean
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+                        ant clean
+        </echo>
     </target>
 </project>

@@ -22,6 +22,6 @@ import java.rmi.Remote;
 
 public interface StateTaxIF extends Remote{
 
-    public double getStateTax(double income, double deductions) throws RemoteException;
+        public double getStateTax(double income, double deductions) throws RemoteException;
 
 }

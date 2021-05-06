@@ -44,13 +44,13 @@
           <artifactId>maven-antrun-plugin</artifactId>
           <version>1.8</version>
           <dependencies>
-        <dependency>
-          <groupId>com.sun</groupId>
-          <artifactId>tools</artifactId>
+            <dependency>
+              <groupId>com.sun</groupId>
+              <artifactId>tools</artifactId>
               <version>1.8.0</version>
-          <scope>system</scope>
-          <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
-       </dependency>
+              <scope>system</scope>
+              <systemPath>${env.JAVA_HOME}/lib/tools.jar</systemPath>
+           </dependency>
          </dependencies>
           <executions>
             <execution>

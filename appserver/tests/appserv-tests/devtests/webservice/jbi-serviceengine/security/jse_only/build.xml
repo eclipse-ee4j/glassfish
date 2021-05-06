@@ -50,15 +50,15 @@
 
     <target name="create-user" depends="init-common">
       <antcall target="create-user-common">
-    <param name="user" value="${fileUser}"/>
-    <param name="password" value="${fileUserPassword}"/>
-    <param name="groups" value="${fileUserGroups}"/>
+        <param name="user" value="${fileUser}"/>
+        <param name="password" value="${fileUserPassword}"/>
+        <param name="groups" value="${fileUserGroups}"/>
       </antcall>
     </target>
 
     <target name="delete-user" depends="init-common">
       <antcall target="delete-user-common">
-    <param name="user" value="${fileUser}"/>
+        <param name="user" value="${fileUser}"/>
       </antcall>
     </target>
 
@@ -107,10 +107,10 @@
         <param name="contextroot" value="${appname}"/>
       </antcall>
       <antcall target="set-jbi-enabled">
-    <param name="appName" value="${appname}-ejb"/>
-    <param name="wsName" value="HelloEJB"/>
-    <param name="module" value="ejb-module"/>
-    <param name="flag" value="true"/>
+        <param name="appName" value="${appname}-ejb"/>
+        <param name="wsName" value="HelloEJB"/>
+        <param name="module" value="ejb-module"/>
+        <param name="flag" value="true"/>
       </antcall>
     </target>
 
@@ -154,7 +154,7 @@
           <pathelement path="${build.classes.dir}/client"/>
         </classpath>
         <arg value="http://${http.host}:${http.port}/wsclient/webclient/RequestProcessor"/>
-    <arg value="${fileUser}:${fileUserPassword}"/>
+        <arg value="${fileUser}:${fileUserPassword}"/>
       </java>
     </target>
 

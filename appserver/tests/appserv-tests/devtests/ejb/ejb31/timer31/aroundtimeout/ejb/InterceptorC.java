@@ -33,7 +33,7 @@ public class InterceptorC {
 
     @AroundTimeout
     Object aroundTimeout(InvocationContext ctx)
-            throws Exception {
+                throws Exception {
         Common.aroundTimeoutCalled(ctx, "C");
         return ctx.proceed();
     }

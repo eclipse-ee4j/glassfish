@@ -29,7 +29,7 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
         setContext(sc);
 
         checkCallerSecurityAccess("setSessionContext", false);
@@ -37,7 +37,7 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     }
 
     public void ejbCreate(TimerHandle th) throws RemoteException {
-    System.out.println("In ejbtimer.Stateful::ejbCreate !!");
+        System.out.println("In ejbtimer.Stateful::ejbCreate !!");
 
         timerHandle = th;
 

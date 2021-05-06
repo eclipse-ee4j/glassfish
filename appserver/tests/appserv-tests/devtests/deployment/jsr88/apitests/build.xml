@@ -42,9 +42,9 @@
     </path>
 
     <target name="deployApps">
-        <delete dir="${testsRoot}/build/war/servletonly"/>
-        <delete dir="${testsRoot}/build/ejb/statelesshello"/>
-        <delete dir="${testsRoot}/build/ear/wstoejb"/>
+                <delete dir="${testsRoot}/build/war/servletonly"/>
+                <delete dir="${testsRoot}/build/ejb/statelesshello"/>
+                <delete dir="${testsRoot}/build/ear/wstoejb"/>
         <ant dir="../../war/servletonly" target="assemble">
             <property name="build" value="${testsRoot}/build/war/servletonly"/>
         </ant>

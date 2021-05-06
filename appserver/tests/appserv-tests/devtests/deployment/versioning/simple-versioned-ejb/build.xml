@@ -68,7 +68,7 @@
           <entry  key="version.identifier" value="${versionExpression}"/>
         </propertyfile>
         <property name="xmlFile" value="${gfDDDir}/${gfDDFile}"/>
-        <antcall target="generate.xml.identifier"/>
+            <antcall target="generate.xml.identifier"/>
     </target>
 
     <!-- assemble: package the ejb -->

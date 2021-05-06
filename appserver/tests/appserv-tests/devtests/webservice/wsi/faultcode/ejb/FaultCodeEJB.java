@@ -30,11 +30,11 @@ public class FaultCodeEJB implements SessionBean {
     public FaultCodeEJB(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In FaultCodeEJB::ejbCreate !!");
+        System.out.println("In FaultCodeEJB::ejbCreate !!");
     }
 
     public String echoString(String body) {
-    System.out.println("In FaultCodeEJB::  echoString = " + body);
+        System.out.println("In FaultCodeEJB::  echoString = " + body);
         return body;
     }
 

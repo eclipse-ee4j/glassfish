@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
                     "com.sun.enterprise.ee.web.authenticator.HASingleSignOn");
             // EE
             out.println("This is EE");
-    } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             // PE
             for (int i=0; i<BUFFER_SIZE; i++) {
                 out.print("X");

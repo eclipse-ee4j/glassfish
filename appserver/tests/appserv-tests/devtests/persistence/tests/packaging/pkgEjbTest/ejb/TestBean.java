@@ -113,10 +113,10 @@ public class TestBean implements Test {
     }
 
     public Customer findCustomer(String name) {
-    Query q = em.createQuery("select c from Customer c where c.name = :name");
+        Query q = em.createQuery("select c from Customer c where c.name = :name");
         q.setParameter("name", name);
         Customer c = (Customer)q.getSingleResult();
-    return c;
+        return c;
     }
 
 }

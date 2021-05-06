@@ -36,13 +36,13 @@ public class Client {
 
     public static void main (String[] args) {
 
-    System.out.println("cp = " + System.getProperty("java.class.path"));
+        System.out.println("cp = " + System.getProperty("java.class.path"));
 
         Client client = new Client(args);
-    System.out.println("args.length = " + args.length);
-    for(int i = 0; i < args.length; i++) {
-        System.out.println("arg " + i + " = " + args[0]);
-    }
+        System.out.println("args.length = " + args.length);
+        for(int i = 0; i < args.length; i++) {
+            System.out.println("arg " + i + " = " + args[0]);
+        }
 
 
         if( args.length == 1) {
@@ -64,23 +64,23 @@ public class Client {
         try {
             // when we lookup a FooHome *before* deserializing the home reference,
             // everything works
-        // @@@
+            // @@@
             System.out.println("Adding lookup before reconstitution ...");
             lookupHome();
 
             System.out.println("Attempting to reconstruct foo handle");
-        Handle fh = (Handle) readFromFile(FOO_HANDLE_FILE);
+            Handle fh = (Handle) readFromFile(FOO_HANDLE_FILE);
             Foo f = (Foo) fh.getEJBObject();
-        f.callHello();
+            f.callHello();
 
-        System.out.println("successfully invoked foo via reconsituted handle");
+            System.out.println("successfully invoked foo via reconsituted handle");
 
             System.out.println("Attempting to reconstruct home handle as first" +
                                " operation in client");
             HomeHandle hh = (HomeHandle) readFromFile(HOME_HANDLE_FILE);
             invoke((FooHome) hh.getEJBHome());
 
-        System.out.println("successfully invoked ejb via reconsituted home");
+            System.out.println("successfully invoked ejb via reconsituted home");
 
 
             stat.addStatus("ejbclient restart2", stat.PASS);
@@ -112,12 +112,12 @@ public class Client {
             Foo f = invoke(home);
             System.out.println("successfully invoked ejb via reconsituted home");
 
-        // create SFSB instance handle file
+            // create SFSB instance handle file
             Handle fh = f.getHandle();
             serializeToFile(FOO_HANDLE_FILE, fh);
             Handle fh2 = (Handle) readFromFile(FOO_HANDLE_FILE);
             Foo f2 = (Foo) fh2.getEJBObject();
-        f2.callHello();
+            f2.callHello();
 
             System.out.println("successfully invoked ejb");
 
@@ -128,7 +128,7 @@ public class Client {
             stat.addStatus("ejbclient main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     private FooHome lookupHome() throws Exception {
@@ -157,7 +157,7 @@ public class Client {
         System.out.println("invoking ejb");
         f.callHello();
 
-    return f;
+        return f;
 
     }
 

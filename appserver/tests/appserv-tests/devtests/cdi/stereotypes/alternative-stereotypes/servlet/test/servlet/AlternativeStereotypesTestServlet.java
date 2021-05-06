@@ -70,12 +70,12 @@ public class AlternativeStereotypesTestServlet extends HttpServlet {
 
         if (RequiresNewTransactionInterceptor.aroundInvokeCalled)
             msg += "RequiresNew TransactionInterceptor called when " +
-                    "it shouldn't have been called";
+                            "it shouldn't have been called";
 
         //test that the mocks are called instead of the actual beans
         if (TestBean.testBeanInvoked)
             msg += "Test Bean invoked when actually mock bean should " +
-                    "have been invoked";
+                            "have been invoked";
 
         if (!MockBean.mockBeanInvoked)
             msg += "Mock bean not invoked";
@@ -88,10 +88,10 @@ public class AlternativeStereotypesTestServlet extends HttpServlet {
         sc.addItem("Test Item");
         if (!RequiresNewTransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke in requires new " +
-                    "transaction interceptor not called";
+                            "transaction interceptor not called";
         if (RequiresNewTransactionInterceptor.aroundInvokeInvocationCount != 1)
             msg += "Business method requires new interceptor invocation on " +
-                    "method-level interceptor annotation count not expected. "
+                            "method-level interceptor annotation count not expected. "
                     + "expected =1, actual="
                     + RequiresNewTransactionInterceptor.aroundInvokeInvocationCount;
         if (!RequiresNewTransactionInterceptor.errorMessage.trim().equals(""))
@@ -100,12 +100,12 @@ public class AlternativeStereotypesTestServlet extends HttpServlet {
         //TransactionInterceptor should not be called
         if (TransactionInterceptor.aroundInvokeCalled)
             msg += "TranscationInterceptor aroundInvoke called when a requiresnew" +
-                    "transaction interceptor should have been called";
+                            "transaction interceptor should have been called";
 
         //test that the mocks are called instead of the actual beans
         if (ShoppingCart.shoppingCartInvoked)
             msg += "Test shopping cart invoked when actually mock shopping cart " +
-                    "should have been invoked";
+                            "should have been invoked";
 
         if (!MockShoppingCart.mockShoppingCartInvoked)
             msg += "Mock shopping cart not invoked";

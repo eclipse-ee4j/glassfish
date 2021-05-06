@@ -50,9 +50,9 @@ public class EchoAttributesTag
                     out.print(",");
                 }
             }
-    } catch (IOException ioe) {
-        throw new JspException(ioe.toString(), ioe);
-    }
+        } catch (IOException ioe) {
+            throw new JspException(ioe.toString(), ioe);
+        }
 
 
         return EVAL_PAGE;

@@ -47,12 +47,12 @@
         <!--<echo message="Connector api resides in ${connector-api.jar}"/>-->
         <javac srcdir="${src.dir}"
                destdir="${component.classes.dir}"
-           failonerror="true">
-           <classpath>
-           <fileset dir="${env.S1AS_HOME}/modules">
-              <include name="**/*.jar" />
-           </fileset>
-           </classpath>
+               failonerror="true">
+               <classpath>
+                   <fileset dir="${env.S1AS_HOME}/modules">
+                      <include name="**/*.jar" />
+                   </fileset>
+               </classpath>
             <include name="com/sun/jdbcra/**"/>
             <include name="com/sun/appserv/**"/>
         </javac>
@@ -62,22 +62,22 @@
 
    <target name="assemble">
 
-    <jar jarfile="${component.lib.home}/jdbc.jar"
+        <jar jarfile="${component.lib.home}/jdbc.jar"
             basedir="${component.classes.dir}" includes="${pkg.dir}/**/*,
             com/sun/appserv/**/*, com/sun/jdbcra/util/**/*, com/sun/jdbcra/common/**/*"/>
 
         <copy file="${src.dir}/com/sun/jdbcra/spi/1.4/ra-ds.xml"
                 tofile="${component.lib.home}/ra.xml" overwrite="yes">
         </copy>
-       <jar jarfile="${component.lib.home}/testjdbcra.rar"
-        basedir="${component.lib.home}" includes="jdbc.jar">
+           <jar jarfile="${component.lib.home}/testjdbcra.rar"
+                basedir="${component.lib.home}" includes="jdbc.jar">
 
-           <metainf dir="${component.lib.home}">
-               <include name="ra.xml"/>
-           </metainf>
-       </jar>
+                   <metainf dir="${component.lib.home}">
+                           <include name="ra.xml"/>
+                   </metainf>
+           </jar>
 
-       <delete file="${component.lib.home}/ra.xml"/>
+           <delete file="${component.lib.home}/ra.xml"/>
 
   </target>
 

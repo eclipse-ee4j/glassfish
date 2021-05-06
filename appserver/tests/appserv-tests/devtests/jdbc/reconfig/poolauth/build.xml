@@ -62,7 +62,7 @@
         <param name="jdbc.conpool.name" value="jdbc-poolauth-pool"/>
       </antcall>
       <antcall target="create-jdbc-resource-common">
-    <param name="jdbc.conpool.name" value="jdbc-poolauth-pool"/>
+        <param name="jdbc.conpool.name" value="jdbc-poolauth-pool"/>
         <param name="jdbc.resource.name" value="jdbc/poolauth"/>
       </antcall>
 
@@ -75,12 +75,12 @@
       <antcall target="create-sql"/>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.User=dbuser"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.User=dbuser"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.Password=dbpassword"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.Password=dbpassword"/>
       </antcall>
 
       <antcall target="runclient-common">
@@ -89,12 +89,12 @@
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.User=pbpublic"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.User=pbpublic"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.Password=pbpublic"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-poolauth-pool.property.Password=pbpublic"/>
       </antcall>
 
       <antcall target="runclient-common">
@@ -107,7 +107,7 @@
       <antcall target="drop-sql"/>
 
       <antcall target="undeploy-jdbc-common">
-    <param name="jdbc.conpool.name" value="jdbc-poolauth-pool"/>
+        <param name="jdbc.conpool.name" value="jdbc-poolauth-pool"/>
         <param name="jdbc.resource.name" value="jdbc/poolauth"/>
       </antcall>
 
@@ -117,27 +117,27 @@
     <target name="create-sql">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_dbuser_tables.sql"/>
-    <param name="db.user" value="dbuser"/>
-    <param name="db.pwd" value="dbpassword"/>
+        <param name="db.user" value="dbuser"/>
+        <param name="db.pwd" value="dbpassword"/>
       </antcall>
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_pbpublic_tables.sql"/>
-    <param name="db.user" value="pbpublic"/>
-    <param name="db.pwd" value="pbpublic"/>
+        <param name="db.user" value="pbpublic"/>
+        <param name="db.pwd" value="pbpublic"/>
       </antcall>
     </target>
 
     <target name="drop-sql">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_dbuser_tables.sql"/>
-    <param name="db.user" value="dbuser"/>
-    <param name="db.pwd" value="dbpassword"/>
+        <param name="db.user" value="dbuser"/>
+        <param name="db.pwd" value="dbpassword"/>
       </antcall>
 
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_pbpublic_tables.sql"/>
-    <param name="db.user" value="pbpublic"/>
-    <param name="db.pwd" value="pbpublic"/>
+        <param name="db.user" value="pbpublic"/>
+        <param name="db.pwd" value="pbpublic"/>
       </antcall>
 
     </target>

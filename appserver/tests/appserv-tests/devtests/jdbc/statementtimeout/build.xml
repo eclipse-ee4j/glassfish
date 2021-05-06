@@ -70,7 +70,7 @@
         <antcall target="execute-sql-common">
             <param name="sql.file" value="sql/create_pointbase.sql"/>
         </antcall>
-    <antcall target="deploy-jdbc-common"/>
+        <antcall target="deploy-jdbc-common"/>
 
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>

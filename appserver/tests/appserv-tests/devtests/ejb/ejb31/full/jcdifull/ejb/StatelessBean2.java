@@ -29,25 +29,25 @@ public class StatelessBean2 implements StatelessLocal2 {
     private Foo foo;
 
     @Inject
-    public StatelessBean2(Foo f, Foo sr) {
-    foo = f;
-    System.out.println("In StatelessBean2()  foo = " + foo +
-               " sr = " + sr);
+        public StatelessBean2(Foo f, Foo sr) {
+        foo = f;
+        System.out.println("In StatelessBean2()  foo = " + foo +
+                           " sr = " + sr);
     }
 
     @PostConstruct
-    public void init() {
-    System.out.println("In StatelessBean2::init()");
+        public void init() {
+        System.out.println("In StatelessBean2::init()");
     }
 
     public void hello() {
-    System.out.println("In StatelessBean2::hello() " +
-               foo);
+        System.out.println("In StatelessBean2::hello() " +
+                           foo);
     }
 
     @PreDestroy
-    public void destroy() {
-    System.out.println("In StatelessBean2::destroy()");
+        public void destroy() {
+        System.out.println("In StatelessBean2::destroy()");
     }
 
 

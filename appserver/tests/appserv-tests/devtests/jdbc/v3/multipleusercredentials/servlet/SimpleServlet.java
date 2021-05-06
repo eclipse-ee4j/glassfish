@@ -69,20 +69,20 @@ public class SimpleServlet extends HttpServlet {
             }
         }
         if(passed){
-        System.out.println("Multiple User credentials test : test1 : PASS");
+            System.out.println("Multiple User credentials test : test1 : PASS");
             out.println("TEST:PASS");
-    } else {
-        System.out.println("Multiple User credentials test : test1 : FAIL");
+        } else {
+            System.out.println("Multiple User credentials test : test1 : FAIL");
             out.println("TEST:FAIL");
-    }
+        }
 
-    } catch(NamingException ne) {
-        ne.printStackTrace();
-    } catch(CreateException e) {
-        e.printStackTrace();
+        } catch(NamingException ne) {
+            ne.printStackTrace();
+        } catch(CreateException e) {
+            e.printStackTrace();
         } finally {
-        out.println("END_OF_TEST");
-        out.flush();
-    }
+            out.println("END_OF_TEST");
+            out.flush();
+        }
     }
 }

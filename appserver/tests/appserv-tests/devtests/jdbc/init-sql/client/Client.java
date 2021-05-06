@@ -34,15 +34,15 @@ public class Client {
         throws Exception {
 
         try {
-        ic = new InitialContext();
-    } catch(NamingException ex) {
-        ex.printStackTrace();
-    }
+            ic = new InitialContext();
+        } catch(NamingException ex) {
+            ex.printStackTrace();
+        }
 
         Object objRef = ic.lookup("java:comp/env/ejb/SimpleSessionHome");
-    SimpleSessionHome simpleSessionHome = (SimpleSessionHome)
+        SimpleSessionHome simpleSessionHome = (SimpleSessionHome)
         javax.rmi.PortableRemoteObject.narrow(objRef, SimpleSessionHome.class);
-    stat.addDescription("Running initsql testSuite ");
+        stat.addDescription("Running initsql testSuite ");
         SimpleSession simpleSession = simpleSessionHome.create();
 
         if (args != null && args.length > 0) {
@@ -65,8 +65,8 @@ public class Client {
                     }
                     break;
                 }
+            }
         }
-    }
 
         stat.printSummary();
     }

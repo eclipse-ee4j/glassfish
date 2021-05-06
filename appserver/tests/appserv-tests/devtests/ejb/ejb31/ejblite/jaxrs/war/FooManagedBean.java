@@ -31,23 +31,23 @@ public class FooManagedBean {
 
     @PostConstruct
     private void init() {
-    System.out.println("In FooManagedBean:init()");
+        System.out.println("In FooManagedBean:init()");
     }
 
     public void hello() {
-    System.out.println("In FooManagedBean::hello()");
+        System.out.println("In FooManagedBean::hello()");
     }
 
 
     public void assertInterceptorBinding() {
-    if( !interceptorWasHere ) {
-        throw new RuntimeException("interceptor was not here");
-    }
+        if( !interceptorWasHere ) {
+            throw new RuntimeException("interceptor was not here");
+        }
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In FooManagedBean:destroy()");
+        System.out.println("In FooManagedBean:destroy()");
     }
 
 

@@ -28,7 +28,7 @@ public class ServletHandlerTestImpl implements SessionBean {
     }
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In SimpleServer:::ejbCreate !!");
+        System.out.println("In SimpleServer:::ejbCreate !!");
     }
 
      public void setSessionContext(SessionContext sc) {

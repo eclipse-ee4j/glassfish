@@ -22,6 +22,6 @@ import jakarta.jws.WebService;
 public class ServletHello {
 
     public String sayServletHello(String param) {
-    return "WebSvcTest-Servlet-Hello " + param;
+        return "WebSvcTest-Servlet-Hello " + param;
     }
 }

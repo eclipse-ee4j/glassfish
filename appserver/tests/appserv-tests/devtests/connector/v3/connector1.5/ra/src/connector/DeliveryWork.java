@@ -29,7 +29,7 @@ import jakarta.resource.*;
 
 /**
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class DeliveryWork implements Work, ResourceAdapterAssociation {
 

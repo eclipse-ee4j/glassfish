@@ -57,7 +57,7 @@ public class WebTest {
             ex.printStackTrace();
         }
 
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {

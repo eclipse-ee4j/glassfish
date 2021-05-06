@@ -37,17 +37,17 @@
     </target>
 
     <target name="info" depends="init-common">
-        <echo message="build.classes.dir is ${build.classes.dir}"/>
-        <echo message="s1astest.classpath is ${s1astest.classpath}"/>
+            <echo message="build.classes.dir is ${build.classes.dir}"/>
+            <echo message="s1astest.classpath is ${s1astest.classpath}"/>
     </target>
 
     <target name="compile-ut" depends="init-common">
       <mkdir dir="${build.classes.dir}"/>
       <javac srcdir="ut" destdir="${build.classes.dir}"
-              classpath="${env.APS_HOME}/lib/junit.jar:${s1astest.classpath}"
-              debug="on"
+                  classpath="${env.APS_HOME}/lib/junit.jar:${s1astest.classpath}"
+                  debug="on"
             includeantruntime="false"
-              failonerror="true"/>
+                  failonerror="true"/>
     </target>
     <target name="build-ut" depends="init-common">
       <!-- build a special ear which only includes deployment descriptors-->
@@ -95,7 +95,7 @@
     </target>
 
     <target name="build" depends="compile">
-          <echo message="assemble.dir = ${assemble.dir}"/>
+              <echo message="assemble.dir = ${assemble.dir}"/>
         <!--build and package .war first so it doesn't contain ejb bean !-->
         <!--classes that have @Stateless/@Stateul !-->
         <antcall target="webclient-war-common">

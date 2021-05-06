@@ -30,7 +30,7 @@ public class BaseLevel2Interceptor
 
     @PostConstruct
     protected void overridablePostConstructMethod(InvocationContext ctx)
-        throws RuntimeException {
+            throws RuntimeException {
         postConstructList.add(LEVEL2_INTERCEPTOR_NAME);
         baseLevel2PCCount++;
         try {
@@ -44,8 +44,8 @@ public class BaseLevel2Interceptor
 
     @AroundInvoke
     protected Object overridableAroundInvokeMethod(InvocationContext ctx)
-        throws Throwable {
-    aroundInvokeList.add(LEVEL2_INTERCEPTOR_NAME);
+            throws Throwable {
+        aroundInvokeList.add(LEVEL2_INTERCEPTOR_NAME);
         baseLevel2AICount++;
         return ctx.proceed();
     }

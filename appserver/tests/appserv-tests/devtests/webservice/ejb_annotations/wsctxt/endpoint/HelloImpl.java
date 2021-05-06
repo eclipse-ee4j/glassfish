@@ -31,8 +31,8 @@ public class HelloImpl {
 
 
     public String sayHello(String who) {
-    System.out.println("EJB WSCTXT wsc = " + ejbsc);
-    if(ejbsc != null) {
+        System.out.println("EJB WSCTXT wsc = " + ejbsc);
+        if(ejbsc != null) {
 System.out.println(ejbsc.getMessageContext());
 if (ejbsc.getMessageContext() instanceof jakarta.xml.ws.handler.MessageContext){
 System.out.println("YYYYY" +ejbsc.getMessageContext().getClass());
@@ -41,9 +41,9 @@ else {
 System.out.println("NNN " + ejbsc.getMessageContext().getClass());
 
 }
-            return "WebSvcTest-Hello " + who;
+                return "WebSvcTest-Hello " + who;
         }
-/*    if(sc != null) {
+/*        if(sc != null) {
 System.out.println(sc.getContextData().getClass());
 System.out.println(sc.getContextData());
 

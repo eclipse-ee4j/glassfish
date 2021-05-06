@@ -30,12 +30,12 @@ public class CoffeeClient {
        String testId = "J2EE Connectors 1.5 : Standalone adapter tests";
        try {
 
-       if (args.length == 1) {
-           testId = args[0];
-       }
+           if (args.length == 1) {
+               testId = args[0];
+           }
 
            System.err.println(testId + " : CoffeeClient started in main...");
-       stat.addDescription("J2EE Connectors 1.5 : Standalone CCI adapter Tests");
+           stat.addDescription("J2EE Connectors 1.5 : Standalone CCI adapter Tests");
            Context initial = new InitialContext();
            Object objref = initial.lookup("java:comp/env/ejb/SimpleCoffee");
 
@@ -55,19 +55,19 @@ public class CoffeeClient {
 
            int newCount = coffee.getCoffeeCount();
            System.err.println("Coffee count = " + newCount);
-       if (count==(newCount-3)) {
-        stat.addStatus("Connector:cci Connector " + testId + " rar Test status:",stat.PASS);
-       }else{
-        stat.addStatus("Connector:cci Connector " + testId + " rar Test status:",stat.FAIL);
-       }
+           if (count==(newCount-3)) {
+                stat.addStatus("Connector:cci Connector " + testId + " rar Test status:",stat.PASS);
+           }else{
+                stat.addStatus("Connector:cci Connector " + testId + " rar Test status:",stat.FAIL);
+           }
 
-       //print test summary
-       stat.printSummary(testId);
+           //print test summary
+           stat.printSummary(testId);
 
 
        } catch (Exception ex) {
            System.err.println("Caught an unexpected exception!");
-       stat.addStatus("Connector:CCI Connector " + testId + " rar Test status:",stat.FAIL);
+           stat.addStatus("Connector:CCI Connector " + testId + " rar Test status:",stat.FAIL);
            ex.printStackTrace();
        }
    }

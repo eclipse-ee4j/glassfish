@@ -43,13 +43,13 @@ public class ServletUtil extends HttpServlet{
     public String tc;
 
     protected void doGet(HttpServletRequest request,
-             HttpServletResponse response)
+                         HttpServletResponse response)
         throws ServletException, IOException {
         processAction(request, response);
     }
 
     protected void doPost(HttpServletRequest request,
-              HttpServletResponse response)
+                          HttpServletResponse response)
         throws ServletException, IOException {
         processAction(request, response);
     }
@@ -58,11 +58,11 @@ public class ServletUtil extends HttpServlet{
       try {
         if (request.getParameter("case") != null) {
            tc = request.getParameter("case");
-    }
-    return true;
+        }
+        return true;
      } catch(Exception ex) {
         System.err.println("Exception when processing the request params");
-    ex.printStackTrace();
+        ex.printStackTrace();
         return false;
      }
 
@@ -70,18 +70,18 @@ public class ServletUtil extends HttpServlet{
 
 
     public void processAction(HttpServletRequest request,
-                   HttpServletResponse response)
+                               HttpServletResponse response)
       throws IOException{
 
         System.out.println("processing test driver request ... ");
 
-    processParams(request);
+        processParams(request);
         boolean status = false;
         System.out.println("tc:"+tc);
 
         response.setContentType("text/plain");
         ServletOutputStream out = response.getOutputStream();
-    out.println("TestCase: "+tc);
+        out.println("TestCase: "+tc);
 
         if (tc != null) {
 
@@ -101,7 +101,7 @@ public class ServletUtil extends HttpServlet{
                    m.setAccessible( true);
                    Object o = m.invoke( t );
                    System.out.println("Returned => " + (Boolean)o );
-           status = new Boolean((Boolean)o).booleanValue();
+                   status = new Boolean((Boolean)o).booleanValue();
                    //Handle any methods thrown by method to be invoked
                 } catch ( InvocationTargetException x ) {
                    Throwable cause = x.getCause();
@@ -112,15 +112,15 @@ public class ServletUtil extends HttpServlet{
             }
 
            }
-       } catch ( Exception ex ) {
-          ex.printStackTrace();
+           } catch ( Exception ex ) {
+              ex.printStackTrace();
             }
 
-      if (status) {
-        out.println(tc+":pass");
-      } else {
-        out.println(tc+":fail");
-      }
+          if (status) {
+            out.println(tc+":pass");
+          } else {
+            out.println(tc+":fail");
+          }
 
       }
     }

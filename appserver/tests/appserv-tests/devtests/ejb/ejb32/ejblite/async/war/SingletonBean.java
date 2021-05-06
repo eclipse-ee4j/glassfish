@@ -37,24 +37,24 @@ public class SingletonBean {
     @PostConstruct
     public void init() {
         System.out.println("In SingletonBean::init()");
-    System.out.println("Thread = " + Thread.currentThread());
-    me.fooAsync();
+        System.out.println("Thread = " + Thread.currentThread());
+        me.fooAsync();
     }
 
     public String hello() {
-    System.out.println("In SingletonBean::hello()");
-    return "hello, world!\n";
+        System.out.println("In SingletonBean::hello()");
+        return "hello, world!\n";
     }
 
     @Asynchronous
     public void fooAsync() {
-    System.out.println("In SingletonBean::fooAsync()");
-    System.out.println("Thread = " + Thread.currentThread());
-    gotAsyncCall = true;
+        System.out.println("In SingletonBean::fooAsync()");
+        System.out.println("Thread = " + Thread.currentThread());
+        gotAsyncCall = true;
     }
 
     public boolean getPassed() {
-    return gotAsyncCall;
+        return gotAsyncCall;
     }
 
     @PreDestroy

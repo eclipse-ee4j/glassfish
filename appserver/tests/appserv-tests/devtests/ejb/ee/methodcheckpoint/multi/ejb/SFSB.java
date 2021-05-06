@@ -24,30 +24,30 @@ public interface SFSB
 {
 
     public String getAccountHolderName()
-    throws RemoteException;
+        throws RemoteException;
 
     public int getBalance()
-    throws RemoteException;
+        throws RemoteException;
 
     public void incrementBalance(int val)
-    throws RemoteException;
+        throws RemoteException;
 
     public int getCheckpointedBalance()
-    throws RemoteException;
+        throws RemoteException;
 
 
 
 
     public void nonTxNonCheckpointedMethod()
-    throws RemoteException;
+        throws RemoteException;
 
     public void nonTxCheckpointedMethod()
-    throws RemoteException;
+        throws RemoteException;
 
     public void txNonCheckpointedMethod()
-    throws RemoteException;
+        throws RemoteException;
 
     public void txCheckpointedMethod()
-    throws RemoteException;
+        throws RemoteException;
 
 }

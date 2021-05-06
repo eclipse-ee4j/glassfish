@@ -91,8 +91,8 @@
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
       <resource-env-ref>
-    <resource-env-ref-name>eis/testAdmin</resource-env-ref-name>
-    <resource-env-ref-type>connector.MyAdminObject</resource-env-ref-type>
+        <resource-env-ref-name>eis/testAdmin</resource-env-ref-name>
+        <resource-env-ref-type>connector.MyAdminObject</resource-env-ref-type>
       </resource-env-ref>
        <resource-env-ref>
         <resource-env-ref-name>java:comp/env/Validator</resource-env-ref-name>

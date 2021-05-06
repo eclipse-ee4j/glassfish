@@ -61,7 +61,7 @@
       </antcall>
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-txafternontx-pool"/>
-    <param name="jdbc.resource.name" value="jdbc/txafternontx"/>
+        <param name="jdbc.resource.name" value="jdbc/txafternontx"/>
       </antcall>
 
       <antcall target="deploy-common"/>

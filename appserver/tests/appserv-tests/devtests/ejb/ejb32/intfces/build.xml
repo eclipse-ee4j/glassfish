@@ -85,7 +85,7 @@
         </antcall>
         <antcall target="run">
             <param name="client.type" value="deploy-fail" />
-                        <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
+                                                <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
             <param name="index" value="1" />
         </antcall>
         <antcall target="build-neg">
@@ -94,7 +94,7 @@
         </antcall>
         <antcall target="run">
             <param name="client.type" value="deploy-fail" />
-                        <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
+                                                <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
             <param name="index" value="2" />
         </antcall>
     </target>

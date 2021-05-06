@@ -235,7 +235,7 @@ public final class ProcessUtils {
             return false;
 
         // case insensitive compare...
-        osname    = osname.toLowerCase();
+        osname        = osname.toLowerCase();
 
         if(osname.indexOf("windows") >= 0)
             return true;

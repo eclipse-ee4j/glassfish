@@ -28,6 +28,6 @@ import java.io.*;
 public interface bmsample1 extends EJBObject
 {
     public int performDBOps() throws RemoteException;
-    public int performDBOps2() throws RemoteException;
+        public int performDBOps2() throws RemoteException;
 
 }

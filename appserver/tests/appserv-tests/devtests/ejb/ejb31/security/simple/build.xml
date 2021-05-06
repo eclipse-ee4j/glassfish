@@ -40,7 +40,7 @@
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
         </antcall>
-    <javac classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
+        <javac classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
 
         </javac>
     </target>
@@ -70,7 +70,7 @@
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
-           value="**/Singleton*.class,**/Hello*.class"/>
+                   value="**/Singleton*.class,**/Hello*.class"/>
             <param name="appclientjar.classes"
               value="**/Client.class,**/FooManagedBean*.class,**/Hello*.class"/>
         </antcall>
@@ -85,7 +85,7 @@
 
     <target name="run_bob" depends="init-common">
         <exec executable="${APPCLIENT}" failonerror="false">
-        <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
+            <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
 
             <arg line="-client
                  ${assemble.dir}/${appname}AppClient.jar"/>
@@ -100,7 +100,7 @@
 
     <target name="run_mary" depends="init-common">
         <exec executable="${APPCLIENT}" failonerror="false">
-        <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
+            <env key="APPCPATH" file="${env.APS_HOME}/lib/reporter.jar"/>
 
             <arg line="-client
                  ${assemble.dir}/${appname}AppClient.jar"/>

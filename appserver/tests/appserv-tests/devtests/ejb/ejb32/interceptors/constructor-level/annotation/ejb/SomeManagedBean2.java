@@ -35,13 +35,13 @@ public class SomeManagedBean2 extends BaseBean {
 
     @Interceptors(InterceptorA.class)
     public void foo2() {
-    System.out.println("In SomeManagedBean2::foo2() ");
-    verifyAC_AC("SomeManagedBean2");
+        System.out.println("In SomeManagedBean2::foo2() ");
+        verifyAC_AC("SomeManagedBean2");
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In SomeManagedBean2::destroy() ");
+        System.out.println("In SomeManagedBean2::destroy() ");
         verifyMethod("destroy");
     }
 }

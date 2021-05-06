@@ -32,7 +32,7 @@ public class InterceptorB {
 
     // around-timeout declared in ejb-jar.xml
     Object aroundTimeout(InvocationContext ctx)
-            throws Exception {
+                throws Exception {
         Common.aroundTimeoutCalled(ctx, "B");
         return ctx.proceed();
     }

@@ -45,23 +45,23 @@ public class RpaClient {
 
     public String doTest() {
 
-    RpaRemote hr=null;
+        RpaRemote hr=null;
         String res=null;
         Context ic = null;
         LoginContext lc=null;
         RpaHome home=null;
         String testId = "Sec::Solaris Realm";
-        try{
+            try{
             stat.addDescription("Security::Solaris Realm");
-        ic = new InitialContext();
+            ic = new InitialContext();
             // create EJB using factory from container
             java.lang.Object objref = ic.lookup("rpaLoginBean");
 
-        System.err.println("Looked up home!!");
+            System.err.println("Looked up home!!");
 
-        home = (RpaHome)PortableRemoteObject.narrow(
-                       objref, RpaHome.class);
-        System.err.println("Narrowed home!!");
+            home = (RpaHome)PortableRemoteObject.narrow(
+                                           objref, RpaHome.class);
+            System.err.println("Narrowed home!!");
 
             hr = home.create("LizHurley");
             System.out.println("Got the EJB!!");
@@ -88,7 +88,7 @@ public class RpaClient {
             stat.addStatus(testId, stat.FAIL);
             System.out.println("SolarisRealm:RpaLoginBean Test Failed");
             System.exit(-1);
-    } finally {
+        } finally {
             stat.printSummary();
         }
         return res;

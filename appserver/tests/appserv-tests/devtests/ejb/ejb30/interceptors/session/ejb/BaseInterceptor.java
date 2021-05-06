@@ -44,11 +44,11 @@ public class BaseInterceptor {
 
     @AroundInvoke
     public Object interceptCall(InvocationContext ctx)
-       throws Exception
+           throws Exception
     {
         Object result = null;
-    boolean setId = false;
-    baseCount++;
+        boolean setId = false;
+        baseCount++;
     if (ctx.getMethod().getName().equals("setInterceptorId")) {
         java.util.Map map = ctx.getContextData();
         map.put("BaseInterceptor", this);
@@ -65,19 +65,19 @@ public class BaseInterceptor {
     }
 
     public static int getInvocationCount() {
-        return baseCount;
+            return baseCount;
     }
 
     @PrePassivate
     public void prePassivate(InvocationContext ctx) {
-    prePassivateCount++;
-    System.out.println("prePassivateCount: " + prePassivateCount);
+        prePassivateCount++;
+        System.out.println("prePassivateCount: " + prePassivateCount);
     }
 
     @PostActivate
     public void postActivate(InvocationContext ctx) {
-    postActivateCount++;
-    System.out.println("postActivateCount: " + postActivateCount);
+        postActivateCount++;
+        System.out.println("postActivateCount: " + postActivateCount);
     }
 
     //Some package private methods to check state

@@ -41,11 +41,11 @@ public class Client   {
 
     public String doTest() {
         stat.addDescription("This is to test connector 1.5 "+
-                 "contracts.");
+                     "contracts.");
 
         String res = "NOT RUN";
-    debug("doTest() ENTER...");
-        int testCount = 1;
+        debug("doTest() ENTER...");
+            int testCount = 1;
         try{
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource)ic.lookup("java:app/jdbc/XAPointbase");
@@ -54,7 +54,7 @@ public class Client   {
         }catch(Exception e){
             stat.addStatus("ID Connector Embedded 1.5 test - " + testCount++, stat.FAIL);
             System.out.println("Exception during lookup of java:app/jdbc/XAPointbase : " + e.getMessage());
-        //e.printStackTrace();
+            //e.printStackTrace();
         }
         try{
             InitialContext ic = new InitialContext();
@@ -64,7 +64,7 @@ public class Client   {
         }catch(Exception e){
             stat.addStatus("ID Connector Embedded 1.5 test - " + testCount++, stat.FAIL);
             System.out.println("Exception during lookup of java:app/jdbc/test-resource: " + e.getMessage());
-        //e.printStackTrace();
+            //e.printStackTrace();
         }
 /*        try{
             InitialContext ic = new InitialContext();
@@ -93,11 +93,11 @@ public class Client   {
                         break;
                     } else {
                         stat.addStatus("ID Connector Embedded 1.5 test - " + testCount, stat.PASS);
-            }
+                    }
                 } else {
                     break;
                 }
-        testCount++;
+                testCount++;
             }
 
         } catch (Exception ex) {

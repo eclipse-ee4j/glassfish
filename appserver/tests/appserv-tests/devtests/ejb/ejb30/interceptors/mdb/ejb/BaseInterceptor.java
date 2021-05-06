@@ -24,16 +24,16 @@ public class BaseInterceptor {
     private static int interceptorCount = 0 ;
 
     static int getCount() {
-    return interceptorCount;
+        return interceptorCount;
     }
 
     @AroundInvoke
     public Object intercept(InvocationContext inv)
-    throws Exception
+        throws Exception
     {
-    System.out.println("[mdb] Interceptor invoked...");
-    interceptorCount++;
-    return inv.proceed();
+        System.out.println("[mdb] Interceptor invoked...");
+        interceptorCount++;
+        return inv.proceed();
     }
 }
 

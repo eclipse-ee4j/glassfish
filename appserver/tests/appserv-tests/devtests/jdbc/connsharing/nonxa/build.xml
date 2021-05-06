@@ -41,7 +41,7 @@
     &eeSetup;
     &eeProperties;
     &testproperties;
-    -->
+        -->
 
     <property name="execution.mode" value="pe"/>
 
@@ -114,12 +114,12 @@
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-connsharing-pool"/>
-        <param name="jdbc.resource.name" value="jdbc/connsharing"/>
+            <param name="jdbc.resource.name" value="jdbc/connsharing"/>
       </antcall>
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-connsharing-pool"/>
-        <param name="jdbc.resource.name" value="jdbc/connsharing2"/>
+            <param name="jdbc.resource.name" value="jdbc/connsharing2"/>
       </antcall>
 
       <antcall target="deploy-common"/>

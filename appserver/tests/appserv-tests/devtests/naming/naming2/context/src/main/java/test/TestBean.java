@@ -102,7 +102,7 @@ public class TestBean {
         listBindingsJavaApp().close();
     }
 
-    public Boolean getIsInAppClientContainer() {
-        return isInAppClientContainer;
-    }
+        public Boolean getIsInAppClientContainer() {
+                return isInAppClientContainer;
+        }
 }

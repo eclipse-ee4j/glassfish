@@ -47,7 +47,7 @@ public class WebTest {
         stat.addDescription("Unit test for urn:jsptld:<path>");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() {

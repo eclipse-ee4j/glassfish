@@ -82,7 +82,7 @@ public class Client {
             stat.addStatus("ejbclient main" , stat.FAIL);
         }
 
-    try {
+        try {
             Context ic = new InitialContext();
 
             // create EJB using factory from container
@@ -105,18 +105,18 @@ public class Client {
 
             String result = hr.assertValidRemoteObject();
             if (result == null) {
-        stat.addStatus("ejbclient assertValidRemoteObject", stat.PASS);
-        } else {
-        System.out.println("assertValidRemoteObject: " + result);
-        stat.addStatus("ejbclient assertValidRemoteObject", stat.FAIL);
-        }
+                stat.addStatus("ejbclient assertValidRemoteObject", stat.PASS);
+            } else {
+                System.out.println("assertValidRemoteObject: " + result);
+                stat.addStatus("ejbclient assertValidRemoteObject", stat.FAIL);
+            }
 
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus("ejbclient assertValidRemoteObject" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
 }

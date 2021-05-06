@@ -32,11 +32,11 @@ public class ErrorRecoveryInterceptor {
 
     @AroundInvoke
     public Object interceptCall(InvocationContext ctx)
-       throws MyBadException, AssertionFailedException, Exception
+           throws MyBadException, AssertionFailedException, Exception
     {
-    System.out.println("In ErrorREcoveryInterceptor");
-    System.out.println("sless = " + foobar);
-    System.out.println("sc = " + sc);
+        System.out.println("In ErrorREcoveryInterceptor");
+        System.out.println("sless = " + foobar);
+        System.out.println("sc = " + sc);
 
         Method method = ctx.getMethod();
         String methodName = method.getName();

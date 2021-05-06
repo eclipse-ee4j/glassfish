@@ -64,7 +64,7 @@ public class OperationTestMsgBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println
             ("In OperationTestMsgBean::setMessageDrivenContext()!!");
-    this.mdc = mdc;
+        this.mdc = mdc;
         runTest(OperationTest.SET_CONTEXT);
     }
 

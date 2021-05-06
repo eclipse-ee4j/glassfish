@@ -58,12 +58,12 @@ public class Client {
         try {
 
 //            System.out.println("Creating InitialContext()");
-//        InitialContext ic = new InitialContext();
+//            InitialContext ic = new InitialContext();
 
-//        org.omg.CORBA.ORB orb = (org.omg.CORBA.ORB) ic.lookup("java:comp/ORB");
+//            org.omg.CORBA.ORB orb = (org.omg.CORBA.ORB) ic.lookup("java:comp/ORB");
 
-//        Sful sful = (Sful) ic.lookup("com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
-//        Sless sless = (Sless) ic.lookup("com.sun.s1asdev.ejb.ejb30.hello.session.Sless");
+//            Sful sful = (Sful) ic.lookup("com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
+//            Sless sless = (Sless) ic.lookup("com.sun.s1asdev.ejb.ejb30.hello.session.Sless");
 
             System.out.println("invoking stateful");
             sful.hello();
@@ -71,11 +71,11 @@ public class Client {
             System.out.println("invoking stateless");
             sless.hello();
             System.out.println("invoking stateless2");
-        sless2.hello();
+            sless2.hello();
             System.out.println("invoking stateless3");
-        sless3.hello();
+            sless3.hello();
             System.out.println("invoking stateless4");
-        sless4.hello();
+            sless4.hello();
 
             System.out.println("test complete");
 
@@ -86,7 +86,7 @@ public class Client {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
 }

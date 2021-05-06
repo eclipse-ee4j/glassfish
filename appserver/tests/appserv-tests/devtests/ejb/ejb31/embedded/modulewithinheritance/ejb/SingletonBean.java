@@ -32,7 +32,7 @@ public class SingletonBean {
 
     @PostConstruct
     private void init() {
-    System.out.println("ds = " + ds);
+        System.out.println("ds = " + ds);
     }
 
     public String foo() {

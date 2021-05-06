@@ -58,7 +58,7 @@
             <param name="as.props" value="${as.props} --layer HttpServlet"/>
             <param name="operand.props" value="httpsTestAuthModule"/>
         </antcall>
-    <antcall target="remove-store-common"/>
+        <antcall target="remove-store-common"/>
 
         <antcall target="restart"/>
         <!-- may not be able to delete this file in PC environment -->

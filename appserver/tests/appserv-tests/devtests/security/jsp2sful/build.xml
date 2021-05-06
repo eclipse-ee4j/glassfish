@@ -161,24 +161,24 @@
 
     <target name="setup">
         <antcall target="create-user-common">
-        <param name="user" value="shingwai"/>
-        <param name="password" value="shingwai"/>
-        <param name="groups" value="employee"/>
+            <param name="user" value="shingwai"/>
+            <param name="password" value="shingwai"/>
+            <param name="groups" value="employee"/>
        </antcall>
         <antcall target="create-user-common">
-        <param name="user" value="swchan"/>
-        <param name="password" value="swchan"/>
-        <param name="groups" value="staff"/>
+            <param name="user" value="swchan"/>
+            <param name="password" value="swchan"/>
+            <param name="groups" value="staff"/>
        </antcall>
         <antcall target="create-user-common">
-        <param name="user" value="webuser"/>
-        <param name="password" value="webuser"/>
-        <param name="groups" value="employee"/>
+            <param name="user" value="webuser"/>
+            <param name="password" value="webuser"/>
+            <param name="groups" value="employee"/>
        </antcall>
         <antcall target="create-user-common">
-        <param name="user" value="noauthuser"/>
-        <param name="password" value="noauthuser"/>
-        <param name="groups" value="employee"/>
+            <param name="user" value="noauthuser"/>
+            <param name="password" value="noauthuser"/>
+            <param name="groups" value="employee"/>
        </antcall>
     <!--  <antcall target="reconfig-common"/>-->
     </target>

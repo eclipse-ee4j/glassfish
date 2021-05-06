@@ -31,12 +31,12 @@ public class SimpleItemWriter
     @Override
     public void writeItems(List lst) throws Exception {
         StringBuilder sb = new StringBuilder("SimpleItemWriter:");
-    List<String> list = (List<String>) lst;
+        List<String> list = (List<String>) lst;
         for (String s : list) {
             sb.append(" ").append(s);
         }
         System.out.println(sb.toString());
-    try { Thread.currentThread().sleep(1000); } catch (Exception ex) {}
+        try { Thread.currentThread().sleep(1000); } catch (Exception ex) {}
     }
 
     @Override

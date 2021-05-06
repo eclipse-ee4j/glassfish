@@ -36,20 +36,20 @@ public class Client {
         public static void main(String[] args) {
             boolean successExpected=true;
             String description;
-        if (args.length>1) {
+            if (args.length>1) {
                 if (args[0].compareToIgnoreCase("Failure")==0) {
                     successExpected=false;
                 }
                 description=args[1];
             } else {
                 successExpected = false;
-        description="webservices-ejb-rolesAllowed-annotation-negative";
-        }
+                description="webservices-ejb-rolesAllowed-annotation-negative";
+            }
             System.out.println("Starting test " + description);
-        stat.addDescription(description);
+            stat.addDescription(description);
             Client client = new Client();
             client.doTest(description, successExpected);
-        stat.printSummary(description);
+            stat.printSummary(description);
        }
 
        public void doTest(String desc, boolean successExpected) {

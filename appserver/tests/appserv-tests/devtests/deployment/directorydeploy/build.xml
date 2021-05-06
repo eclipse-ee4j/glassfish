@@ -23,9 +23,9 @@
 
 <project name="dirdeploy" default="all" basedir=".">
 
-    &commonBuild;
+        &commonBuild;
 
-    <target name="private-all" if="PE">
+        <target name="private-all" if="PE">
             <ant dir="ear" target="private-all">
                 <property name="build" value="${build}/ear"/>
             </ant>
@@ -44,6 +44,6 @@
             <ant dir="warwithsuffix" target="private-all">
                 <property name="build" value="${build}/warwithsuffix"/>
             </ant>
-    </target>
+        </target>
 
 </project>

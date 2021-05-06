@@ -87,11 +87,11 @@ public class WebTest {
                     } else {
                         stat.addStatus(TEST_NAME, stat.PASS);
                     }
-            } else {
+                } else {
                     System.err.println("Missing JSESSIONID");
                     stat.addStatus(TEST_NAME, stat.FAIL);
                 }
-        } else {
+            } else {
                 System.err.println("Missing Set-Cookie response header");
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }

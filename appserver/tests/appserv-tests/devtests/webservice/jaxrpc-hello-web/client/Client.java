@@ -40,7 +40,7 @@ public class Client {
     }
 
     public void doTest(String[] args) {
-        try {
+            try {
 
             String targetEndpointAddress = args[0];
             Context ic = new InitialContext();

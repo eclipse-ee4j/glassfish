@@ -80,7 +80,7 @@
      </target>
 
     <!--
-    Custom target for compilation with local libraries for connector
+        Custom target for compilation with local libraries for connector
     -->
     <target name="compile-cci" depends="init-common">
       <mkdir dir="${build.classes.dir}"/>
@@ -96,7 +96,7 @@
     </target>
 
     <target name="build">
-        <antcall target="build-embedded-ear"/>
+                <antcall target="build-embedded-ear"/>
     </target>
 
     <target name="package-embedded-ejb">
@@ -124,9 +124,9 @@
                 <mkdir dir="${assemble.dir}"/>
                 <copy file="descriptor/application.xml" tofile="${assemble.dir}/application.xml"/>
                 <mkdir dir="${build.classes.dir}/META-INF"/>
-        <antcall target="package-embedded-ejb"/>
-        <antcall target="package-embedded-client"/>
-        <antcall target="package-rar"/>
+                <antcall target="package-embedded-ejb"/>
+                <antcall target="package-embedded-client"/>
+                <antcall target="package-rar"/>
                 <ear earfile="${assemble.dir}/${appname}App.ear"
                         appxml="${assemble.dir}/application.xml">
                 <fileset dir="${assemble.dir}">
@@ -139,29 +139,29 @@
     </target>
 
     <target name="deploy" depends="init-common">
-            <antcall target="deploy-common"/>
+                <antcall target="deploy-common"/>
                 <!--
-        <antcall target="create-pool">
+                <antcall target="create-pool">
                         <param name="tx.mode" value="tx"/>
                 </antcall>
                 <antcall target="create-resource">
                         <param name="tx.mode" value="tx"/>
                 </antcall>
-        -->
+                -->
     </target>
 
     <target name="undeploy">
                 <!--
-        <antcall target="delete-resource"/>
+                <antcall target="delete-resource"/>
                 <antcall target="delete-pool"/>
-        -->
-        <antcall target="undeploy-common"/>
+                -->
+                <antcall target="undeploy-common"/>
     </target>
 
 
     <target name="run" depends="init-common">
     <antcall target="runclient-common">
-    <param name="appclient.application.args" value="Embedded"/>
+        <param name="appclient.application.args" value="Embedded"/>
     </antcall>
     </target>
 
@@ -209,10 +209,10 @@
 </target>
 
 <target name="create-rar">
-    <copy file="descriptor/ra.xml" tofile="${assemble.dir}/rar/META-INF/ra.xml"/>
-    <copy file="descriptor/sun-ra.xml" tofile="${assemble.dir}/rar/META-INF/sun-ra.xml"/>
-    <copy file="${env.APS_HOME}/sqetests/connector/lib/cciblackbox-tx.jar" tofile="${assemble.dir}/rar/cciblackbox-tx.jar"/>
-    <replace file="${assemble.dir}/rar/META-INF/ra.xml" token="DBURL" value="${db.url}"/>
+        <copy file="descriptor/ra.xml" tofile="${assemble.dir}/rar/META-INF/ra.xml"/>
+        <copy file="descriptor/sun-ra.xml" tofile="${assemble.dir}/rar/META-INF/sun-ra.xml"/>
+        <copy file="${env.APS_HOME}/sqetests/connector/lib/cciblackbox-tx.jar" tofile="${assemble.dir}/rar/cciblackbox-tx.jar"/>
+        <replace file="${assemble.dir}/rar/META-INF/ra.xml" token="DBURL" value="${db.url}"/>
 </target>
 
 <target name="package-rar" depends="init-common">

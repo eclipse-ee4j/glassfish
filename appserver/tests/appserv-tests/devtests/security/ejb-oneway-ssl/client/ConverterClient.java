@@ -37,21 +37,21 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * <br>
  * <b>Locating the home interface:</b>
  * <blockquote><pre>
- *    Context initial = new InitialContext();
- *    Context myEnv = (Context)initial.lookup("java:comp/env");
- *    Object objref = myEnv.lookup("ejb/SimpleConverter");
+ *        Context initial = new InitialContext();
+ *        Context myEnv = (Context)initial.lookup("java:comp/env");
+ *        Object objref = myEnv.lookup("ejb/SimpleConverter");
  *  ConverterHome home = (ConverterHome)PortableRemoteObject.narrow(objref, ConverterHome.class);
  * </pre></blockquote>
  * <br>
  * <b>Creating the remote interface:</b>
  * <blockquote><pre>
- *    Converter currencyConverter = home.create();
+ *        Converter currencyConverter = home.create();
  * </pre></blockquote>
  * <br>
  * <b>Invoking business methods:</b>
  * <blockquote><pre>
  *  BigDecimal param = new BigDecimal ("100.00");
- *    amount = currencyConverter.dollarToYen(param);
+ *        amount = currencyConverter.dollarToYen(param);
  *  amount = currencyConverter.yenToEuro(param);
  * </pre></blockquote>
  * <br>
@@ -80,35 +80,35 @@ public class ConverterClient {
     *
     */
     public static void main(String[] args) {
-    ConverterClient client = new ConverterClient();
-    client.run(args);
+        ConverterClient client = new ConverterClient();
+        client.run(args);
     }
 
     private void run(String[] args) {
         String url = null;
-    String testId = null;
+        String testId = null;
         String jndiName = null;
         Context context = null;
         String ctxFactory = null;
-    java.lang.Object obj = null;
+        java.lang.Object obj = null;
         try {
             stat.addDescription("Security::SSL One way ssl.");
 
             if (args.length == 3) {
                 url = args[0];
                 ctxFactory = args[1];
-        jndiName = args[2];
+                jndiName = args[2];
             }
 
             if ( (url == null) || (ctxFactory == null) ) {
-        testId = "Sec::SSL_simple Converter Sample AppClient";
+                testId = "Sec::SSL_simple Converter Sample AppClient";
                 // Initialize the Context with default properties
                 context = new InitialContext();
                 System.out.println("One way SSL Test \n Default Context Initialized...");
                 // Create Home object
                 obj = context.lookup("java:comp/env/ejb/SSLSimpleConverter");
             } else {
-        testId = "Sec::SSL_simple Standalone-Client";
+                testId = "Sec::SSL_simple Standalone-Client";
                 Properties env = new Properties();
                 env.put("java.naming.provider.url", url);
                 env.put("java.naming.factory.initial", ctxFactory);
@@ -151,7 +151,7 @@ public class ConverterClient {
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         } finally {
-        stat.printSummary(testId);
+            stat.printSummary(testId);
         }
     }
 }

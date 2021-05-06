@@ -29,7 +29,7 @@ import javax.rmi.PortableRemoteObject;
 public class bmsamplebean3 implements SessionBean
 {
         private transient jakarta.ejb.SessionContext m_ctx = null;
-    EJBContext ejbcontext;
+        EJBContext ejbcontext;
     public void setSessionContext(jakarta.ejb.SessionContext ctx)
     {
         m_ctx = ctx;
@@ -65,16 +65,16 @@ public class bmsamplebean3 implements SessionBean
         bmsample4 remote = null;
         int resultFromBean4=1;
         try {
-        System.out.println("in bean1....");
+            System.out.println("in bean1....");
             InitialContext ctx = new InitialContext();
             DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/oraclethird");
-              System.out.println("ds lookup succeeded");
+                  System.out.println("ds lookup succeeded");
             conn = ds.getConnection();
             System.out.println("Connection succeeded"+conn);
             stmt = conn.createStatement();
-        //stmt.executeQuery("delete from status1");
+            //stmt.executeQuery("delete from status1");
             String query1 = "select * from status1";
-        stmt.executeUpdate("insert into status1 values('bean3',3)");
+            stmt.executeUpdate("insert into status1 values('bean3',3)");
             rs = stmt.executeQuery(query1);
             while(rs.next())
             {

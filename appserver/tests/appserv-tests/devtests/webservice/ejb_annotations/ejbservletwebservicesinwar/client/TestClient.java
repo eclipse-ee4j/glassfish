@@ -47,7 +47,7 @@ public class TestClient {
         try {
             int code = invokeServlet(url);
             report(code);
-    } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }

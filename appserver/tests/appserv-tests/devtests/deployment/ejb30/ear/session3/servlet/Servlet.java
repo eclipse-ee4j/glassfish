@@ -193,18 +193,18 @@ public class Servlet extends HttpServlet {
             System.out.println("ds6 login timeout = " + loginTimeout);
 
 
-        try {
-        MyThread thread = new MyThread(helloStateful2);
-        thread.start();
+            try {
+                MyThread thread = new MyThread(helloStateful2);
+                thread.start();
 
-        sleepFor(10);
-        helloStateful2.ping();
-        throw new EJBException("Did not get ConcurrentAccessException");
-        } catch (jakarta.ejb.ConcurrentAccessException conEx) {
-        ;   //Everything is fine
-        } catch (Throwable th) {
-        throw new EJBException("Got some wierd exception: " + th);
-        }
+                sleepFor(10);
+                helloStateful2.ping();
+                throw new EJBException("Did not get ConcurrentAccessException");
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
+                ;   //Everything is fine
+            } catch (Throwable th) {
+                throw new EJBException("Got some wierd exception: " + th);
+            }
 
             System.out.println("successfully accessed connections");
 
@@ -229,30 +229,30 @@ public class Servlet extends HttpServlet {
     }
 
     class MyThread extends Thread {
-    HelloStateful ref;
+        HelloStateful ref;
 
-    MyThread(HelloStateful ref) {
-        this.ref = ref;
-    }
-
-    public void run() {
-        try {
-        ref.sleepFor(20);
-        } catch (Throwable th) {
-        throw new RuntimeException("Could not invoke waitfor() method");
+        MyThread(HelloStateful ref) {
+            this.ref = ref;
         }
-    }
+
+        public void run() {
+            try {
+                ref.sleepFor(20);
+            } catch (Throwable th) {
+                throw new RuntimeException("Could not invoke waitfor() method");
+            }
+        }
     }
 
 
     private void sleepFor(int sec) {
-    try {
-        for (int i=0 ; i<sec; i++) {
-        Thread.currentThread().sleep(1000);
-        System.out.println("[" + i + "/" + sec + "]: Sleeping....");
+        try {
+            for (int i=0 ; i<sec; i++) {
+                Thread.currentThread().sleep(1000);
+                System.out.println("[" + i + "/" + sec + "]: Sleeping....");
+            }
+        } catch (Exception ex) {
         }
-    } catch (Exception ex) {
-    }
     }
 
 }

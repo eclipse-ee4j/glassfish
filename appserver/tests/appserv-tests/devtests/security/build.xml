@@ -99,11 +99,11 @@
     </target>
 
    <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes all security tests)
+        <echo>
+                Usage:
+                        ant all (Executes all security tests)
                         ant ejb (Executes all ejb-related security tests
-            ant web (Executes the web tests TBD)
-    </echo>
+                        ant web (Executes the web tests TBD)
+        </echo>
     </target>
 </project>

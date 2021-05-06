@@ -32,7 +32,7 @@ public class Client extends HttpServlet {
         SubtractNumbersImpl port;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

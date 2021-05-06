@@ -23,8 +23,8 @@ import jakarta.resource.spi.LocalTransactionException;
 /**
  * <code>LocalTransaction</code> implementation for Generic JDBC Connector.
  *
- * @version    1.0, 02/08/03
- * @author    Evani Sai Surya Kiran
+ * @version        1.0, 02/08/03
+ * @author        Evani Sai Surya Kiran
  */
 public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
 
@@ -32,9 +32,9 @@ public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
 
     /**
      * Constructor for <code>LocalTransaction</code>.
-     * @param    mc    <code>ManagedConnection</code> that returns
-     *            this <code>LocalTransaction</code> object as
-     *            a result of <code>getLocalTransaction</code>
+     * @param        mc        <code>ManagedConnection</code> that returns
+     *                        this <code>LocalTransaction</code> object as
+     *                        a result of <code>getLocalTransaction</code>
      */
     public LocalTransaction(ManagedConnection mc) {
         this.mc = mc;
@@ -43,13 +43,13 @@ public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
     /**
      * Begin a local transaction.
      *
-     * @throws    LocalTransactionException    if there is an error in changing
-     *                        the autocommit mode of the physical
-     *                        connection
+     * @throws        LocalTransactionException        if there is an error in changing
+     *                                                the autocommit mode of the physical
+     *                                                connection
      */
     public void begin() throws ResourceException {
         //GJCINT
-    mc.transactionStarted();
+        mc.transactionStarted();
         try {
             mc.getActualConnection().setAutoCommit(false);
         } catch(java.sql.SQLException sqle) {
@@ -59,9 +59,9 @@ public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
 
     /**
      * Commit a local transaction.
-     * @throws    LocalTransactionException    if there is an error in changing
-     *                        the autocommit mode of the physical
-     *                        connection or committing the transaction
+     * @throws        LocalTransactionException        if there is an error in changing
+     *                                                the autocommit mode of the physical
+     *                                                connection or committing the transaction
      */
     public void commit() throws ResourceException {
         Exception e = null;
@@ -72,15 +72,15 @@ public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
             throw new LocalTransactionException(sqle.getMessage());
         }
         //GJCINT
-    mc.transactionCompleted();
+        mc.transactionCompleted();
     }
 
     /**
      * Rollback a local transaction.
      *
-     * @throws    LocalTransactionException    if there is an error in changing
-     *                        the autocommit mode of the physical
-     *                        connection or rolling back the transaction
+     * @throws        LocalTransactionException        if there is an error in changing
+     *                                                the autocommit mode of the physical
+     *                                                connection or rolling back the transaction
      */
     public void rollback() throws ResourceException {
         try {
@@ -90,7 +90,7 @@ public class LocalTransaction implements jakarta.resource.spi.LocalTransaction {
             throw new LocalTransactionException(sqle.getMessage());
         }
         //GJCINT
-    mc.transactionCompleted();
+        mc.transactionCompleted();
     }
 
 }

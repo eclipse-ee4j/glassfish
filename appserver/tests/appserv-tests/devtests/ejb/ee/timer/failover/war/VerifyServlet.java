@@ -43,7 +43,7 @@ public class VerifyServlet extends HttpServlet {
     throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-    resp.setContentType("text/html");
+        resp.setContentType("text/html");
 
         String param = req.getQueryString();
         out.println("<html>");
@@ -52,7 +52,7 @@ public class VerifyServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
         try {
-        out.println("RESULT:" + bean.timeoutReceived(param));
+            out.println("RESULT:" + bean.timeoutReceived(param));
         }catch(Throwable e){
             out.println("got exception");
             out.println(e);

@@ -47,9 +47,9 @@ public class Servlet extends HttpServlet {
             InitialContext ic = new InitialContext();
 
             System.out.println("Skipping mejb test for now.  NEED TO REENABLE");
-        //            System.out.println("Calling DummyMEJBBean");
+            //            System.out.println("Calling DummyMEJBBean");
 
-        /* TODO reenable once javax.management classes are available
+            /* TODO reenable once javax.management classes are available
             Object objref = ic.lookup("java:comp/env/ejb/dummymejb");
             ManagementHome mHome = (ManagementHome)
                 PortableRemoteObject.narrow(objref, ManagementHome.class);
@@ -59,11 +59,11 @@ public class Servlet extends HttpServlet {
             dummyMejb.getMBeanCount();
             System.out.println("dummy mejb test successful");
 
-        */
+            */
 
            System.out.println("Looking up ejb ref ");
             // create EJB using factory from container
-        Object objref2 = ic.lookup("java:comp/env/ejb/hello");
+            Object objref2 = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref2);
             System.err.println("Looked up home!!");
 

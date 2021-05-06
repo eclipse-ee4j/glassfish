@@ -55,7 +55,7 @@ public class Client {
 
     public void doTest() {
 
-        try {
+            try {
             Context ic = new InitialContext();
             String googleKey = (String)
                 ic.lookup("java:comp/env/googlekey");
@@ -115,11 +115,11 @@ public class Client {
             stat.addStatus("appclient main", stat.PASS);
 
 
-        } catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("google client test failed");
             ex.printStackTrace();
             stat.addStatus("appclient main" , stat.FAIL);
-    }
+        }
 
     }
 

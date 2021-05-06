@@ -44,7 +44,7 @@ public class TestBeanInWebInfLib {
         System.out.println("EMF injected in WEB-INF/lib bean is " + emf_at_pu);
         if (emf_at_pu == null)
             return "EMF injected via @PersistenceContext is not injected into " +
-                    "the TestBean packaged in WEB-INF/lib";
+                            "the TestBean packaged in WEB-INF/lib";
 
         Set<Bean<?>> webinfLibBeans = bm.getBeans(TestBeanInWebInfLib.class, new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 1)

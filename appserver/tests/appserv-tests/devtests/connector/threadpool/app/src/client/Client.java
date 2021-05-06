@@ -40,10 +40,10 @@ public class Client   {
 
     public String doTest() {
         stat.addDescription("This is to test connector ThreadPool "+
-                 "contracts.");
+                     "contracts.");
 
         String res = "NOT RUN";
-    debug("Starting the thread pool test=> Please wait...");
+        debug("Starting the thread pool test=> Please wait...");
         boolean pass = false;
         try {
             res  = " TEST PASSED";

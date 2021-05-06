@@ -32,11 +32,11 @@ public class ThereRemoteBean implements SessionBean {
     public ThereRemoteBean() {}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In ThereRemoteBean::ejbCreate !!");
+        System.out.println("In ThereRemoteBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-    this.sc = sc;
+        this.sc = sc;
     }
 
     public void doSomethingHere() {

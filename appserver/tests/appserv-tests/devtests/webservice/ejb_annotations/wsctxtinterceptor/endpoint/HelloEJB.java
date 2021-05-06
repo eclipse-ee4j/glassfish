@@ -40,12 +40,12 @@ public class HelloEJB implements Hello {
 
     @AroundInvoke
     private Object interceptBusinessMethod(InvocationContext invCtx) {
-    try {
+        try {
            Map<String, Object> map = invCtx.getContextData();
            map.put("intVal", new Integer(45));
            map.put("longVal", new Long(1234));
            return invCtx.proceed();
-    } catch(Throwable t) {}
+        } catch(Throwable t) {}
         return null;
     }
 }

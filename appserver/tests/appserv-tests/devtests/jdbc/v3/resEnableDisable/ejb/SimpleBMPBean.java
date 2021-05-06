@@ -28,7 +28,7 @@ public class SimpleBMPBean
     private transient jakarta.ejb.SessionContext m_ctx = null;
 
     public void setSessionContext(SessionContext context) {
-    m_ctx = context;
+        m_ctx = context;
     }
 
     public Integer ejbCreate() throws CreateException {
@@ -57,14 +57,14 @@ public class SimpleBMPBean
             //e.printStackTrace();
             passed = false;
         } finally {
-        if(conn != null) {
+            if(conn != null) {
                 try {
-            conn.close();
-        } catch(Exception ex) {
-            System.out.println("Exception in closing connection");
-        }
+                    conn.close();
+                } catch(Exception ex) {
+                    System.out.println("Exception in closing connection");
+                }
             }
-    }
+        }
         return passed;
     }
 

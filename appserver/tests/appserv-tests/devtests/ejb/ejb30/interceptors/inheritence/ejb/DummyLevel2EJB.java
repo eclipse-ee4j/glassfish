@@ -25,24 +25,24 @@ import jakarta.annotation.PostConstruct;
 
 
 public class DummyLevel2EJB
-    extends DummyBaseEJB
+        extends DummyBaseEJB
 {
     protected int dummyLevel2AICount = 0;
-    protected int dummyLevel2EJBPostConstructCount = 0;
+        protected int dummyLevel2EJBPostConstructCount = 0;
 
 
-    @PostConstruct
+        @PostConstruct
     protected void overridablePostConstruct() {
-        postConstructList.add("DummyLevel2EJB");
-        dummyLevel2EJBPostConstructCount++;
-        System.out.println("GGGG: DummyLevel2EJB.postConstruct ");
-    }
+                postConstructList.add("DummyLevel2EJB");
+                dummyLevel2EJBPostConstructCount++;
+                System.out.println("GGGG: DummyLevel2EJB.postConstruct ");
+        }
 
-    @AroundInvoke
-    protected Object overridableAroundInvoke(InvocationContext ctx)
-        throws Exception {
-            aroundInvokeList.add("DummyLevel2EJB");
-            dummyLevel2AICount++;
-            return ctx.proceed();
-    }
+        @AroundInvoke
+        protected Object overridableAroundInvoke(InvocationContext ctx)
+                throws Exception {
+                        aroundInvokeList.add("DummyLevel2EJB");
+                        dummyLevel2AICount++;
+                        return ctx.proceed();
+        }
 }

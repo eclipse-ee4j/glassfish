@@ -62,7 +62,7 @@ public class SimpleVersionedClient {
                 log("Caught EXPECTED IOException: " + ex);
                 pass();
             }
-    } catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }

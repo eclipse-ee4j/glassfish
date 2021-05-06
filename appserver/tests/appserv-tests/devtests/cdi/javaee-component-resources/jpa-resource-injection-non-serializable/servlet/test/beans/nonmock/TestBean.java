@@ -36,7 +36,7 @@ public class TestBean implements TestBeanInterface, Serializable{
     @Inject @TestDatabase
     EntityManagerFactory emf;
 
-    //Inject a non-serializable resource
+        //Inject a non-serializable resource
     @Inject @TestDatabase
     EntityManager em;
 

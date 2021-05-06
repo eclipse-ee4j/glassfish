@@ -68,16 +68,16 @@ public class SimplePortableExtensionTestServlet extends HttpServlet {
         //check if our portable extension was called
         if (!MyExtension.beforeBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-                    "beforeBeanDiscovery not called";
+                            "beforeBeanDiscovery not called";
 
         if (!MyExtension.afterBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-                    "afterBeanDiscovery not called or injection of BeanManager " +
-                    "in an observer method failed";
+                            "afterBeanDiscovery not called or injection of BeanManager " +
+                            "in an observer method failed";
 
         if (!MyExtension.processAnnotatedTypeCalled)
             msg += "Portable Extension lifecycle observer method: process " +
-                    "annotated type not called";
+                            "annotated type not called";
 
         if((bm.getBeans(MyExtension.class, new AnnotationLiteral<Any>(){}).iterator().next().getClass()) == null)
             msg += "Portable Extension not available for lookup through BeanManager";

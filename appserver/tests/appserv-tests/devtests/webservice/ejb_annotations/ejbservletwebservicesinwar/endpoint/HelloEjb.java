@@ -33,10 +33,10 @@ public class HelloEjb {
 @Resource
    private SessionContext sc;
 
-    public HelloEjb() {}
+        public HelloEjb() {}
 
-    @WebMethod(operationName="sayHello", action="urn:SayHello")
-    public String sayHello(String who) {
-        return "EJB WS:" + who;
-    }
+        @WebMethod(operationName="sayHello", action="urn:SayHello")
+        public String sayHello(String who) {
+                return "EJB WS:" + who;
+        }
 }

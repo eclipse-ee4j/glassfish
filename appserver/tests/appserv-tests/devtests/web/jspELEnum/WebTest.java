@@ -44,7 +44,7 @@ public class WebTest {
         stat.addDescription("Unit test for enum support in EL");
         WebTest webTest = new WebTest(args);
         webTest.doTest("/enum.jsp", "jsp-el-enum-test");
-    stat.printSummary();
+        stat.printSummary();
     }
 
     private boolean checkValue(BufferedReader input,

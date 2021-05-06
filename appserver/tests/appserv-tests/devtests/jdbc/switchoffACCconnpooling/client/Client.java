@@ -214,20 +214,20 @@ public class Client {
         try {
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup(dsName);
-        DataSource xads = (DataSource) ic.lookup(xaDsName);
+            DataSource xads = (DataSource) ic.lookup(xaDsName);
             printConnection(ds);
             Connection[] con;
-        Connection[] xaCon;
+            Connection[] xaCon;
 
-        isXA = false;
+            isXA = false;
             createTable(ds);
             isXA = true;
-        createTable(xads);
+            createTable(xads);
 
-        isXA = false;
+            isXA = false;
             int count1 = getCount(ds);
-        isXA = true;
-        int xacount1 = getCount(xads);
+            isXA = true;
+            int xacount1 = getCount(xads);
 
             System.out.println("count1 : " + count1 + " xacount1 : " + xacount1);
 
@@ -235,35 +235,35 @@ public class Client {
             ut.begin();
 
             con = openConnections(dsName, count);
-        xaCon = openConnections(xaDsName, 1);
-        isXA = false;
+            xaCon = openConnections(xaDsName, 1);
+            isXA = false;
             insertRow(con);
-        isXA = true;
-        insertRow(xaCon);
+            isXA = true;
+            insertRow(xaCon);
 
-        isXA = false;
+            isXA = false;
             closeConnections(con, count);
 
-        isXA = true;
-        closeConnections(xaCon, 1);
+            isXA = true;
+            closeConnections(xaCon, 1);
 
             if(rollback)
                 ut.rollback();
             else
                 ut.commit();
 
-        isXA = false;
+            isXA = false;
             int count2=getCount(ds);
-        isXA = true;
-        int xacount2 = getCount(xads);
+            isXA = true;
+            int xacount2 = getCount(xads);
 
             System.out.println("count2 : " + count2 + " xacount2 : " + xacount2);
 
             int diff = count2 - count1;
-        int xadiff = xacount2 - xacount1;
+            int xadiff = xacount2 - xacount1;
 
             if((( diff == count && !rollback) || (diff == 0 && rollback)) &&
-            ((xadiff == 1 && !rollback) || (xadiff == 0 && rollback)))
+                        ((xadiff == 1 && !rollback) || (xadiff == 0 && rollback)))
                 printStatus(true);
             else
                 printStatus(false);
@@ -424,7 +424,7 @@ public class Client {
         for(int i=0; i < con.length; i++){
             stmt = con[i].createStatement();
             stmt.executeUpdate("INSERT INTO " + tableName + " values ('COFFEE', 100)");
-        stmt.close();
+            stmt.close();
         }
     }
 
@@ -441,25 +441,25 @@ public class Client {
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup(dsName);
             com.sun.appserv.jdbc.DataSource dsTyped = (com.sun.appserv.jdbc.DataSource) ds;
-        HashSet<String> connections = new HashSet<String>();
+            HashSet<String> connections = new HashSet<String>();
             Connection con;
-        String conType;
-        boolean status = true;
-        int i = 0;
+            String conType;
+            boolean status = true;
+            int i = 0;
             for(; i < count; i++){
                 con = ds.getConnection();
-        conType = dsTyped.getConnection(con).toString();
-            System.out.println("Connection type : " + conType);
+                conType = dsTyped.getConnection(con).toString();
+                System.out.println("Connection type : " + conType);
                 con.close();
-        if(!connections.add(conType)){
-            status = false;
-            break;
-        }
+                if(!connections.add(conType)){
+                        status = false;
+                        break;
+                }
             }
-               System.out.println("Total connection requested :  " + count);
-               System.out.println("Total connection created :  " + i);
-               System.out.println("Total number of unique connection :  " + connections.size());
-        printStatus(status);
+                   System.out.println("Total connection requested :  " + count);
+                   System.out.println("Total connection created :  " + i);
+                   System.out.println("Total number of unique connection :  " + connections.size());
+            printStatus(status);
         }catch(Exception ex){
             ex.printStackTrace();
         }
@@ -467,46 +467,46 @@ public class Client {
 
     private static void openMaxConnections(String dsName, int count) {
         DataSource ds = null;
-    try{
-            InitialContext ic = new InitialContext();
-        ds = (DataSource) ic.lookup(dsName);
-    }catch(NamingException ex){
-        System.out.println("Unable to lookup datasource");
-        ex.printStackTrace();
-        return;
-    }
+        try{
+                InitialContext ic = new InitialContext();
+                ds = (DataSource) ic.lookup(dsName);
+        }catch(NamingException ex){
+                System.out.println("Unable to lookup datasource");
+                ex.printStackTrace();
+                return;
+        }
 
         Connection[] con = new Connection[count];
-    int i = 0;
+        int i = 0;
         for(; i < count; i++){
-       try{
-               con[i] = ds.getConnection();
-       }catch(SQLException ex){
-        System.out.println("Unable to create max connections");
-        printStatus(false);
-       }
-    }
+           try{
+                   con[i] = ds.getConnection();
+           }catch(SQLException ex){
+                System.out.println("Unable to create max connections");
+                printStatus(false);
+           }
+        }
 
-    if(i ==  count){
-        System.out.println("Able to create max connections");
-        printStatus(true);
-        try{
-            ds.getConnection();
-                    System.out.println("Able to create beyond max connections");
-                    printStatus(false);
-        }catch(SQLException ex){
-                    System.out.println("Unable to create beyond max connections");
-                    printStatus(true);
-               }
-    }
+        if(i ==  count){
+                System.out.println("Able to create max connections");
+                printStatus(true);
+                try{
+                        ds.getConnection();
+                        System.out.println("Able to create beyond max connections");
+                        printStatus(false);
+                }catch(SQLException ex){
+                        System.out.println("Unable to create beyond max connections");
+                        printStatus(true);
+                   }
+        }
 
         for(; i > 0; i--){
-       try{
-                con[i - 1].close();
-       }catch(SQLException ex){
-        System.out.println("Unable to close connection");
-       }
-    }
+           try{
+                    con[i - 1].close();
+           }catch(SQLException ex){
+                System.out.println("Unable to close connection");
+           }
+        }
     }
 
     private static Connection[] openConnections(String dsName, int count) throws NamingException, SQLException {
@@ -516,8 +516,8 @@ public class Client {
         Connection[] con = new Connection[count];
         for(int i=0; i < count; i++) {
             con[i] = ds.getConnection();
-        System.out.println("con[" + i+ "]=" + con[i]);
-    }
+            System.out.println("con[" + i+ "]=" + con[i]);
+        }
         return con;
     }
 

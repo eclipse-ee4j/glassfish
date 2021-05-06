@@ -58,26 +58,26 @@ public class Client {
             System.out.println("Num iterations set to " + numIterations);
             System.out.println("Num threads set to " + numThreads);
 
-        Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
-        // create EJB using factory from container
-        java.lang.Object objref =
+            // create EJB using factory from container
+            java.lang.Object objref =
                 ic.lookup("java:comp/env/ejb/PerformanceApp");
 
-        System.out.println("Looked up home!!");
+            System.out.println("Looked up home!!");
 
-        HelloHome  home = (HelloHome)
+            HelloHome  home = (HelloHome)
                 PortableRemoteObject.narrow(objref, HelloHome.class);
-        System.out.println("Narrowed home!!");
+            System.out.println("Narrowed home!!");
 
             hellos = new Hello[numThreads];
             for(int i = 0; i < numThreads; i++) {
                 hellos[i] = home.create(numIterations);
             }
-        System.out.println("Got the EJB!!");
+            System.out.println("Got the EJB!!");
 
-        // invoke method on the EJB
-        doPerfTest();
+            // invoke method on the EJB
+            doPerfTest();
 
             stat.addStatus("local2 main", stat.PASS);
 
@@ -86,30 +86,30 @@ public class Client {
             stat.addStatus("local2 main" , stat.FAIL);
         }
 
-        return;
+            return;
     }
 
     private void doPerfTest()
-    throws Exception
+        throws Exception
     {
-    System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
+        System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
         hellos[0].warmup(Common.STATEFUL);
 
-    runTests(Common.STATEFUL);
+        runTests(Common.STATEFUL);
 
-    System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
+        System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
 
         hellos[0].warmup(Common.STATELESS);
-    runTests(Common.STATELESS);
+        runTests(Common.STATELESS);
 
-    System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
+        System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
         hellos[0].warmup(Common.BMP);
 
-    runTests(Common.BMP);
+        runTests(Common.BMP);
     }
 
     private void runTests(int type)
-    throws Exception
+        throws Exception
     {
 
         System.out.println("car no tx    : \t\t\t\t"

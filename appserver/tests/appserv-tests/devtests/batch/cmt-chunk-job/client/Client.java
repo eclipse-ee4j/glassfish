@@ -45,8 +45,8 @@ public class Client {
     long[] executionIds = new long[MAX_JOB_SIZE];
 
     public void doTest() {
-    for (int i=0; i<MAX_JOB_SIZE; i++)
-        executionIds[i] = -1;
+        for (int i=0; i<MAX_JOB_SIZE; i++)
+            executionIds[i] = -1;
         submitJobs();
         checkJobExecution(executionIds[0]);
         isJobExecutionOK(executionIds[0]);
@@ -55,24 +55,24 @@ public class Client {
 
     public void submitJobs() {
         try {
-        for (int i = 0; i< MAX_JOB_SIZE; i++) {
-            executionIds[i] = jobSubmitter.submitJob("CMT-ChunkJob");
-            checkBatchJobStatus(executionIds[i], 10);
-        }
-        boolean result = true;
-        for (int i=0; i<MAX_JOB_SIZE; i++) {
-           result = result && executionIds[i] != -1;
-        }
+            for (int i = 0; i< MAX_JOB_SIZE; i++) {
+                executionIds[i] = jobSubmitter.submitJob("CMT-ChunkJob");
+                checkBatchJobStatus(executionIds[i], 10);
+            }
+            boolean result = true;
+            for (int i=0; i<MAX_JOB_SIZE; i++) {
+                result = result && executionIds[i] != -1;
+            }
             stat.addStatus("batch-cmt-chunk-test1", (result ? stat.PASS : stat.FAIL));
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("batch-cmt-chunk-test1", stat.FAIL);
         }
     }
 
     public void checkJobExecution(long executionId) {
         try {
-        boolean status = true;
-        Map<String, String> map = jobSubmitter.toMap(executionId);
+            boolean status = true;
+            Map<String, String> map = jobSubmitter.toMap(executionId);
 
             stat.addStatus("batch-cmt-status-checkExe-jobName", map.get("jobName") != null ? stat.PASS : stat.FAIL);
             stat.addStatus("batch-cmt-status-checkExe-appName", map.get("appName") != null ? stat.PASS : stat.FAIL);
@@ -83,7 +83,7 @@ public class Client {
             stat.addStatus("batch-cmt-status-checkExe-batchStatus", map.get("batchStatus") != null ? stat.PASS : stat.FAIL);
             stat.addStatus("batch-cmt-status-checkExe-endTime", map.get("endTime") != null ? stat.PASS : stat.FAIL);
 
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("batch-cmt-chunk-test3", stat.FAIL);
         }
     }
@@ -94,8 +94,8 @@ public class Client {
 
     private boolean checkOneJobExecution(long executionId) {
         try {
-        Map<String, String> map = jobSubmitter.toMap(executionId);
-        return map != null &&
+            Map<String, String> map = jobSubmitter.toMap(executionId);
+            return map != null &&
                 map.get("jobName") != null &&
                 map.get("appName") != null &&
                 map.get("instanceCount") != null &&
@@ -105,7 +105,7 @@ public class Client {
                 map.get("batchStatus") != null &&
                 map.get("endTime") != null;
 
-    } catch (Exception ex) {
+        } catch (Exception ex) {
 
         }
         return false;
@@ -113,37 +113,37 @@ public class Client {
 
     public void checkIfOnlyJobsFromThisAppAreVisible() {
         try {
-        boolean status = true;
+            boolean status = true;
             for (long exeId : jobSubmitter.getAllExecutionIds(null)) {
-            Map<String, String> map = jobSubmitter.toMap(exeId);
-        String jobName = map.get("jobName");
-        String appName = map.get("appName");
-            if (!jobName.startsWith("cmt-chunk-job") || !appName.startsWith("server-config:batch-cmt-chunkApp")) {
-            System.out.println("***********************************************");
-            System.out.println("*** Job From another app? " + jobName + "; " + appName + " ***");
-            System.out.println("***********************************************");
-            status = false;
-            break;
-        }
-        }
+                Map<String, String> map = jobSubmitter.toMap(exeId);
+                String jobName = map.get("jobName");
+                String appName = map.get("appName");
+                if (!jobName.startsWith("cmt-chunk-job") || !appName.startsWith("server-config:batch-cmt-chunkApp")) {
+                    System.out.println("***********************************************");
+                    System.out.println("*** Job From another app? " + jobName + "; " + appName + " ***");
+                    System.out.println("***********************************************");
+                    status = false;
+                    break;
+                }
+            }
             stat.addStatus("batch-cmt-chunk-checkIfOnlyJobsFromThisAppAreVisible", (status ? stat.PASS : stat.FAIL));
-    } catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("batch-cmt-chunk-checkIfOnlyJobsFromThisAppAreVisible", stat.FAIL);
         }
     }
 
     public void checkBatchJobStatus(long executionId, int sec) {
-    while (sec-- > 0) {
+        while (sec-- > 0) {
             try {
-        String status = jobSubmitter.getJobExitStatus(executionId);
-        if ("COMPLETED".equalsIgnoreCase(status) || "FAILED".equalsIgnoreCase(status)) {
-            System.out.println("** checkBatchJobStatus[" + executionId + "]  ==> " + status);
-            break;
-        }
+                String status = jobSubmitter.getJobExitStatus(executionId);
+                if ("COMPLETED".equalsIgnoreCase(status) || "FAILED".equalsIgnoreCase(status)) {
+                    System.out.println("** checkBatchJobStatus[" + executionId + "]  ==> " + status);
+                    break;
+                }
                 System.out.println("Will sleep for " + sec + " more seconds...");
                 Thread.currentThread().sleep(1000);
             } catch (Exception ex) {
-        }
+            }
         }
     }
 

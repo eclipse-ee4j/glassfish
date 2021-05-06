@@ -42,10 +42,10 @@ public class SingletonBean implements SingletonRemote {
     @Inject Foo foo;
 
     @EJB
-    private StatelessLocal statelessEE;
+        private StatelessLocal statelessEE;
 
     @Inject
-    private StatelessLocal2 sl2;
+        private StatelessLocal2 sl2;
 
     @Inject private TranslatorController tc;
 
@@ -60,46 +60,46 @@ public class SingletonBean implements SingletonRemote {
     @PostConstruct
     public void init() {
         System.out.println("In SingletonBean::init()");
-    if( beanManagerInject == null ) {
-        throw new EJBException("BeanManager is null");
-    }
-    System.out.println("Bean manager inject = " + beanManagerInject);
-    testIMCreateDestroyMO();
+        if( beanManagerInject == null ) {
+            throw new EJBException("BeanManager is null");
+        }
+        System.out.println("Bean manager inject = " + beanManagerInject);
+        testIMCreateDestroyMO();
 
 
-    System.out.println("Sending some event...");
-    someEvent.fire( new SomeEvent(2) );
+        System.out.println("Sending some event...");
+        someEvent.fire( new SomeEvent(2) );
     }
 
     public void hello() {
-    System.out.println("In SingletonBean::hello() " + foo);
-    statelessEE.hello();
-    sl2.hello();
+        System.out.println("In SingletonBean::hello() " + foo);
+        statelessEE.hello();
+        sl2.hello();
 
-    fmb.hello();
+        fmb.hello();
 
-    BeanManager beanMgr = (BeanManager)
-        sesCtx.lookup("java:comp/BeanManager");
+        BeanManager beanMgr = (BeanManager)
+            sesCtx.lookup("java:comp/BeanManager");
 
 
-    System.out.println("Successfully retrieved bean manager " +
-               beanMgr + " for JCDI enabled app");
+        System.out.println("Successfully retrieved bean manager " +
+                           beanMgr + " for JCDI enabled app");
 
-    /**
-    StatefulBean sb = (StatefulBean) sesCtx.lookup("java:module/StatefulBean");
-    System.out.println("In SingletonBean sb = " + sb);
-    sb.hello();
-    **/
+        /**
+        StatefulBean sb = (StatefulBean) sesCtx.lookup("java:module/StatefulBean");
+        System.out.println("In SingletonBean sb = " + sb);
+        sb.hello();
+        **/
 
     }
 
     @Schedule(second="*/10", minute="*", hour="*")
-    private void timeout() {
-    System.out.println("In SingletonBean::timeout() " + foo);
+        private void timeout() {
+        System.out.println("In SingletonBean::timeout() " + foo);
 
-    System.out.println("tc.getText() = " + tc.getText());
+        System.out.println("tc.getText() = " + tc.getText());
 
-    statelessEE.hello();
+        statelessEE.hello();
     }
 
     @PreDestroy
@@ -109,29 +109,29 @@ public class SingletonBean implements SingletonRemote {
 
     private void testIMCreateDestroyMO() {
 
-    try {
+        try {
 
-        // Test InjectionManager managed bean functionality
-        Object injectionMgr = new InitialContext().lookup("com.sun.enterprise.container.common.spi.util.InjectionManager");
-        Method createManagedMethod = injectionMgr.getClass().getMethod("createManagedObject", java.lang.Class.class);
-        System.out.println("create managed object method = " + createManagedMethod);
-        FooManagedBean f2 = (FooManagedBean) createManagedMethod.invoke(injectionMgr, FooManagedBean.class);
-        f2.hello();
-
-
-        Method destroyManagedMethod = injectionMgr.getClass().getMethod("destroyManagedObject", java.lang.Object.class);
-        System.out.println("destroy managed object method = " + destroyManagedMethod);
-        destroyManagedMethod.invoke(injectionMgr, f2);
-
-         FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
-         System.out.println("FooNonManagedBean = " + nonF);
-         nonF.hello();
-         destroyManagedMethod.invoke(injectionMgr, nonF);
+            // Test InjectionManager managed bean functionality
+            Object injectionMgr = new InitialContext().lookup("com.sun.enterprise.container.common.spi.util.InjectionManager");
+            Method createManagedMethod = injectionMgr.getClass().getMethod("createManagedObject", java.lang.Class.class);
+            System.out.println("create managed object method = " + createManagedMethod);
+            FooManagedBean f2 = (FooManagedBean) createManagedMethod.invoke(injectionMgr, FooManagedBean.class);
+            f2.hello();
 
 
-    } catch(Exception e) {
-        throw new EJBException(e);
-    }
+            Method destroyManagedMethod = injectionMgr.getClass().getMethod("destroyManagedObject", java.lang.Object.class);
+            System.out.println("destroy managed object method = " + destroyManagedMethod);
+            destroyManagedMethod.invoke(injectionMgr, f2);
+
+             FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
+             System.out.println("FooNonManagedBean = " + nonF);
+             nonF.hello();
+             destroyManagedMethod.invoke(injectionMgr, nonF);
+
+
+        } catch(Exception e) {
+            throw new EJBException(e);
+        }
 
 
     }

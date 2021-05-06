@@ -31,11 +31,11 @@ public class SimpleSession2Bean implements SessionBean
     private InitialContext ic_;
     public void setSessionContext(SessionContext context) {
         ctxt_ = context;
-    try {
-        ic_ = new InitialContext();
-    } catch( NamingException ne ) {
-        ne.printStackTrace();
-    }
+        try {
+            ic_ = new InitialContext();
+        } catch( NamingException ne ) {
+            ne.printStackTrace();
+        }
     }
 
     public void ejbCreate() throws CreateException {
@@ -50,29 +50,29 @@ public class SimpleSession2Bean implements SessionBean
      * The idea is to test connection sharing
      */
     public boolean test1(String newVal, int key) throws Exception {
-    DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource2");
-    Connection conn1 = null;
-    Statement stmt1 = null;
-    boolean passed = false;
+        DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource2");
+        Connection conn1 = null;
+        Statement stmt1 = null;
+        boolean passed = false;
 
-    try {
-        conn1 = ds.getConnection();
-        stmt1 = conn1.createStatement();
-        stmt1.executeUpdate( "UPDATE CONNSHARING SET c_phone = '"+ newVal +"' WHERE" +
-            " c_id = " + key);
+        try {
+            conn1 = ds.getConnection();
+            stmt1 = conn1.createStatement();
+            stmt1.executeUpdate( "UPDATE CONNSHARING SET c_phone = '"+ newVal +"' WHERE" +
+                " c_id = " + key);
 
             return true;
-    } catch( SQLException e) {
-        e.printStackTrace();
-        return false;
-    } finally {
-        if (stmt1 != null) {
-            try { stmt1.close(); } catch( Exception e1 ) {}
+        } catch( SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (stmt1 != null) {
+                try { stmt1.close(); } catch( Exception e1 ) {}
+            }
+            if (conn1 != null) {
+                try { conn1.close(); } catch( Exception e1 ) {}
+            }
         }
-        if (conn1 != null) {
-            try { conn1.close(); } catch( Exception e1 ) {}
-        }
-    }
     }
 
     public void ejbLoad() {}

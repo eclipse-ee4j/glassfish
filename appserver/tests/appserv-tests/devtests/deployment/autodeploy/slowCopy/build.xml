@@ -32,7 +32,7 @@
 
 <project name="autodeploy-slowcopy" default="all" basedir=".">
 
-     &commonBuild;
+         &commonBuild;
         &autodeployUtil;
 
     <property name="testName" value="slowcopy"/>

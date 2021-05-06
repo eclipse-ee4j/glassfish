@@ -61,24 +61,24 @@
 
   <target name="deploy" depends="init-common">
     <antcall target="deploy-jdbc-oracle-common">
-    <param name="oracle.pool.name" value="jdbc-oracle-pool-initsql"/>
-    <param name="oracle.resource.name" value="jdbc/oracleres-initsql"/>
+        <param name="oracle.pool.name" value="jdbc-oracle-pool-initsql"/>
+        <param name="oracle.resource.name" value="jdbc/oracleres-initsql"/>
     </antcall>
     <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
-            value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-oracle-pool-initsql.init-sql='ALTER SESSION SET NLS_COMP=LINGUISTIC NLS_SORT=BINARY_CI'"/>
+                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-oracle-pool-initsql.init-sql='ALTER SESSION SET NLS_COMP=LINGUISTIC NLS_SORT=BINARY_CI'"/>
     </antcall>
     <antcall target="deploy-common"/>
     <antcall target="execute-sql-oracle-common">
-    <param name="sql.file" value="sql/create.sql"/>
+        <param name="sql.file" value="sql/create.sql"/>
     </antcall>
   </target>
 
   <target name="undeploy" depends="init-common">
     <antcall target="undeploy-jdbc-oracle-common">
-    <param name="oracle.pool.name" value="jdbc-oracle-pool-initsql"/>
-    <param name="oracle.resource.name" value="jdbc/oracleres-initsql"/>
+        <param name="oracle.pool.name" value="jdbc-oracle-pool-initsql"/>
+        <param name="oracle.resource.name" value="jdbc/oracleres-initsql"/>
     </antcall>
     <antcall target="undeploy-common"/>
     <antcall target="execute-sql-oracle-common">

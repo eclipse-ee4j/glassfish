@@ -21,10 +21,10 @@ public class SingletonBean2 {
     private int initTx = -1;
 
     private void init() {
-    System.out.println("In SingletonBean2::init()");
+        System.out.println("In SingletonBean2::init()");
         try {
             javax.naming.InitialContext ic = new javax.naming.InitialContext();
-        jakarta.transaction.TransactionSynchronizationRegistry tr =
+            jakarta.transaction.TransactionSynchronizationRegistry tr =
                  (jakarta.transaction.TransactionSynchronizationRegistry)
                  ic.lookup("java:comp/TransactionSynchronizationRegistry");
             System.out.println("In SingletonBean2::init() tx status: " + tr.getTransactionStatus());
@@ -35,32 +35,32 @@ public class SingletonBean2 {
     }
 
     public void foo() {
-    System.out.println("In SingletonBean2::foo()");
+        System.out.println("In SingletonBean2::foo()");
     }
 
     public void foo2() {
-    System.out.println("In SingletonBean2::foo2()");
+        System.out.println("In SingletonBean2::foo2()");
         if (initTx != 6)
             throw new RuntimeException("initTx is " + initTx);
     }
 
     public void fooAsync(int sleepSeconds) {
-    System.out.println("In SingletonBean2::fooAsync() Sleeping for " +
-               sleepSeconds + " seconds...");
-    try {
-        Thread.sleep(sleepSeconds * 1000);
-    } catch(Exception e) {
-        e.printStackTrace();
-    }
-    System.out.println("fooAsync() awoke from Sleep");
+        System.out.println("In SingletonBean2::fooAsync() Sleeping for " +
+                           sleepSeconds + " seconds...");
+        try {
+            Thread.sleep(sleepSeconds * 1000);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("fooAsync() awoke from Sleep");
     }
 
     private void destroy() {
-    System.out.println("In SingletonBean2::destroy()");
+        System.out.println("In SingletonBean2::destroy()");
     }
 
     private void myTimeout() {
-    System.out.println("In SingletonBen2::myTimeout()");
+        System.out.println("In SingletonBen2::myTimeout()");
     }
 
 }

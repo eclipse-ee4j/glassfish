@@ -33,83 +33,83 @@
 
     <property name="implicit-target" value="all" />
 
-    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
-        <classpath>
-            <pathelement location="${env.APS_HOME}/devtests/cdi/lib/ant-contrib-1.0b3.jar" />
-        </classpath>
-    </taskdef>
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+                <classpath>
+                        <pathelement location="${env.APS_HOME}/devtests/cdi/lib/ant-contrib-1.0b3.jar" />
+                </classpath>
+        </taskdef>
 
-    <target name="run-test">
-        <antcall target="implicit">
-            <param name="implicit-target" value="run-test" />
-        </antcall>
-    </target>
+        <target name="run-test">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="run-test" />
+                </antcall>
+        </target>
 
-    <target name="all">
-        <antcall target="implicit">
-            <param name="implicit-target" value="all" />
-        </antcall>
-    </target>
+        <target name="all">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="all" />
+                </antcall>
+        </target>
 
-    <target name="clean">
-        <antcall target="implicit">
-            <param name="implicit-target" value="clean" />
-        </antcall>
-    </target>
+        <target name="clean">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="clean" />
+                </antcall>
+        </target>
 
-    <target name="build">
-        <antcall target="implicit">
-            <param name="implicit-target" value="build" />
-        </antcall>
-    </target>
+        <target name="build">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="build" />
+                </antcall>
+        </target>
 
-    <target name="setup">
-        <antcall target="implicit">
-            <param name="implicit-target" value="setup" />
-        </antcall>
-    </target>
+        <target name="setup">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="setup" />
+                </antcall>
+        </target>
 
-    <target name="deploy">
-        <antcall target="implicit">
-            <param name="implicit-target" value="deploy" />
-        </antcall>
-    </target>
+        <target name="deploy">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="deploy" />
+                </antcall>
+        </target>
 
-    <target name="undeploy">
-        <antcall target="implicit">
-            <param name="implicit-target" value="undeploy" />
-        </antcall>
-    </target>
+        <target name="undeploy">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="undeploy" />
+                </antcall>
+        </target>
 
-    <target name="unsetup">
-        <antcall target="implicit">
-            <param name="implicit-target" value="unsetup" />
-        </antcall>
-    </target>
+        <target name="unsetup">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="unsetup" />
+                </antcall>
+        </target>
 
-    <target name="run">
-        <antcall target="implicit">
-            <param name="implicit-target" value="run" />
-        </antcall>
-    </target>
+        <target name="run">
+                <antcall target="implicit">
+                        <param name="implicit-target" value="run" />
+                </antcall>
+        </target>
 
-    <target name="implicit">
-        <record name="implicit.output" action="start" />
-        <ant dir="simple-ejb-cdi" target="${implicit-target}" />
-        <ant dir="deployment-option" target="${implicit-target}" />
-        <record name="implicit.output" action="stop" />
-    </target>
+        <target name="implicit">
+                <record name="implicit.output" action="start" />
+                <ant dir="simple-ejb-cdi" target="${implicit-target}" />
+                <ant dir="deployment-option" target="${implicit-target}" />
+                <record name="implicit.output" action="stop" />
+        </target>
 
-    <target name="usage">
-        <echo> Usage:
-        ant all (Executes all the smoke tests)
-        ant clean (cleans all the smoke tests)
-        ant build (builds all the smoke tests)
-        ant setup (sets up all resources for smoke tests)
-        ant deploy (deploys all the smoke apps)
-        ant run (Executes all the smoke tests)
-        ant undeploy (undeploys all the  smoke apps)
-        ant unsetup (unsets all resources for smoke tests)
-    </echo>
-    </target>
+        <target name="usage">
+                <echo> Usage:
+                ant all (Executes all the smoke tests)
+                ant clean (cleans all the smoke tests)
+                ant build (builds all the smoke tests)
+                ant setup (sets up all resources for smoke tests)
+                ant deploy (deploys all the smoke apps)
+                ant run (Executes all the smoke tests)
+                ant undeploy (undeploys all the  smoke apps)
+                ant unsetup (unsets all resources for smoke tests)
+        </echo>
+        </target>
 </project>

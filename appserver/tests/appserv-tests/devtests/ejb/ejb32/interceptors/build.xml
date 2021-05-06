@@ -53,9 +53,9 @@
     </target>
 
     <target name="usage">
-    <echo>
-        Usage:
-            ant all (Executes set of ejb-ejb32-interceptors tests)
-    </echo>
+        <echo>
+                Usage:
+                        ant all (Executes set of ejb-ejb32-interceptors tests)
+        </echo>
     </target>
 </project>

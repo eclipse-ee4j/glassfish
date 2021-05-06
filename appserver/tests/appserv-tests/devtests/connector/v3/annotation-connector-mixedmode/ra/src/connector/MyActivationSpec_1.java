@@ -25,7 +25,7 @@ import jakarta.resource.spi.ConfigProperty;
  * so that the app server can instantiate and configure
  * it at the runtime.
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 @Activation(
         messageListeners = {connector.MyMessageListener_1.class, connector.MyMessageListener.class}

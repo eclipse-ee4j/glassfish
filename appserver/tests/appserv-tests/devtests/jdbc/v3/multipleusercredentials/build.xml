@@ -19,13 +19,13 @@
 -->
 
 <!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
-    <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+        <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
-    <!ENTITY run SYSTEM "./../../../../config/run.xml">
-    <!ENTITY jdbcCommon SYSTEM "./../../JdbcCommon.xml">
-    <!ENTITY jdbcCommonProps SYSTEM  "./../../JdbcCommon.properties">
-    <!ENTITY eeSetup SYSTEM "./../../config/ee-common.xml">
-    <!ENTITY eeProperties SYSTEM "./../../config/ee-properties.xml">
+        <!ENTITY run SYSTEM "./../../../../config/run.xml">
+        <!ENTITY jdbcCommon SYSTEM "./../../JdbcCommon.xml">
+        <!ENTITY jdbcCommonProps SYSTEM  "./../../JdbcCommon.properties">
+        <!ENTITY eeSetup SYSTEM "./../../config/ee-common.xml">
+        <!ENTITY eeProperties SYSTEM "./../../config/ee-properties.xml">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -57,12 +57,12 @@
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
-            value="**/ejb/*.class"/>
+                    value="**/ejb/*.class"/>
             <param name="appclientjar.classes"
-            value="**/client/*.class"/>
-        <param name="war.classes"
-            value="**/servlet/*.class"/>
-        <param  name="hasWebclient" value="true"/>
+                    value="**/client/*.class"/>
+            <param name="war.classes"
+                    value="**/servlet/*.class"/>
+            <param  name="hasWebclient" value="true"/>
         </antcall>
         <javac
           srcdir="."
@@ -121,7 +121,7 @@
 
         <antcall target="undeploy-common"/>
         <antcall target="undeploy-jdbc-common"/>
-    <delete file="client/WebTest.class"/>
+        <delete file="client/WebTest.class"/>
 
     </target>
 

@@ -31,7 +31,7 @@ public class Client {
     private static String threadNamePrefix = "__ejb-thread-pool";
 
     public static void main(String args[]) throws Exception {
-    appName = args[0];
+        appName = args[0];
         if(args.length >= 2) {
             try {
                 numOfInvocations = Integer.parseInt(args[1]);
@@ -44,8 +44,8 @@ public class Client {
             } catch (NumberFormatException e) {  //ignore
             }
         }
-    stat.addDescription(appName);
-    Client client = new Client();
+        stat.addDescription(appName);
+        Client client = new Client();
         client.doTest();
         stat.printSummary(appName + "ID");
     }

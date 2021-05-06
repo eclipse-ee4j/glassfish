@@ -58,7 +58,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-    stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest(String pathInfo, String expected) throws Exception {

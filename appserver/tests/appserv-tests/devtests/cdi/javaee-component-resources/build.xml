@@ -95,15 +95,15 @@
     </target>
 
     <target name="usage">
-    <echo> Usage:
-        ant all (Executes all the javaee-comp tests)
-        ant clean (cleans all the javaee-comp tests)
-        ant build (builds all the javaee-comp tests)
-        ant setup (sets up all resources for javaee-comp tests)
-        ant deploy (deploys all the javaee-comp apps)
-        ant run (Executes all the javaee-comp tests)
-        ant undeploy (undeploys all the  javaee-comp apps)
-        ant unsetup (unsets all resources for javaee-comp tests)
-    </echo>
+        <echo> Usage:
+                ant all (Executes all the javaee-comp tests)
+                ant clean (cleans all the javaee-comp tests)
+                ant build (builds all the javaee-comp tests)
+                ant setup (sets up all resources for javaee-comp tests)
+                ant deploy (deploys all the javaee-comp apps)
+                ant run (Executes all the javaee-comp tests)
+                ant undeploy (undeploys all the  javaee-comp apps)
+                ant unsetup (unsets all resources for javaee-comp tests)
+        </echo>
     </target>
 </project>

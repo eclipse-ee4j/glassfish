@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * collection of messages.
  *
- * @author    Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class Messages {
 

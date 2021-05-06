@@ -23,7 +23,7 @@
 
 <project name="wstoejb" default="all" basedir=".">
 
-    &commonBuild;
+        &commonBuild;
 
 
     <property name="testName" value="wstoejb"/>

@@ -28,7 +28,7 @@
       <name>rpc-literal-bundled-wsdl-se-consumer-se-provider</name>
       <description>Client web calculator service assembly</description>
     </identification>
-    <service-unit>
+        <service-unit>
       <identification>
          <name>rpc-literal-bundled-wsdl</name>
          <description>provider service</description>

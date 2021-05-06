@@ -43,7 +43,7 @@ public class ArquillianBase {
     private WebClient webClient;
     private String response;
 
-    @ArquillianResource
+        @ArquillianResource
     private URL base;
 
     @Rule
@@ -97,7 +97,7 @@ public class ArquillianBase {
             response = localResponse.getContentAsString();
         }
 
-        return response;
+            return response;
     }
 
     protected WebResponse responseFromServer(String path) {
@@ -117,9 +117,9 @@ public class ArquillianBase {
 
     protected <P extends Page> P pageFromServer(String path) {
 
-        if (base.toString().endsWith("/") && path.startsWith("/")) {
-            path = path.substring(1);
-        }
+            if (base.toString().endsWith("/") && path.startsWith("/")) {
+                    path = path.substring(1);
+            }
 
         try {
             response = "";
@@ -141,7 +141,7 @@ public class ArquillianBase {
     }
 
     protected WebClient getWebClient() {
-         return webClient;
-     }
+                 return webClient;
+         }
 
 }

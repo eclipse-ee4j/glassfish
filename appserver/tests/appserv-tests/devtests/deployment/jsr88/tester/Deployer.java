@@ -36,7 +36,7 @@ public class Deployer implements ProgressListener {
             System.out.println(" inst at " + System.getProperty("com.sun.aas.installRoot"));
             Deployer deployer = new Deployer();
             deployer.deploy(args);
-        System.exit(0);
+            System.exit(0);
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(-1);

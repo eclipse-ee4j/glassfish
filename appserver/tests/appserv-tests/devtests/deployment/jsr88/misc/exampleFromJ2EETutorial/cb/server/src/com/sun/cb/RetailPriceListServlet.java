@@ -30,8 +30,8 @@ public class RetailPriceListServlet extends HttpServlet {
                        HttpServletResponse response)
    throws ServletException, IOException {
 
-          HttpSession session = request.getSession();
-             ServletContext context = getServletContext();
+                  HttpSession session = request.getSession();
+                         ServletContext context = getServletContext();
       RetailPriceList rpl = new RetailPriceList();
       context.setAttribute("retailPriceList", rpl);
       ShoppingCart cart = new ShoppingCart(rpl);
@@ -40,7 +40,7 @@ public class RetailPriceListServlet extends HttpServlet {
       PrintWriter out = response.getWriter();
 
 
-          // then write the data of the response
+                  // then write the data of the response
       out.println("<html><body  bgcolor=\"#ffffff\">" +
                   "Reloaded price list." + "</html></body>");
     }

@@ -36,7 +36,7 @@ public class TransactionInterceptor {
 
         System.out.println("TransactionInterceptor::AroundInvoke");
         if (tb == null) errorMessage="Dependency Injection " +
-                "into TransactionInterceptor failed";
+                        "into TransactionInterceptor failed";
         aroundInvokeCalled = true;
         aroundInvokeInvocationCount ++;
         tb.interceptorInvocationOrder.add(this.getClass().getCanonicalName());

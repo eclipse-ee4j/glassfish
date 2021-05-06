@@ -92,17 +92,17 @@
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool.pooling=false"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool.pooling=false"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool-container.pooling=false"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool-container.pooling=false"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-xa-pool.pooling=false"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-xa-pool.pooling=false"/>
       </antcall>
 
       <antcall target="deploy-common"/>
@@ -122,7 +122,7 @@
 
 
       <antcall target="undeploy-common"/>
-     <antcall target="delete-jdbc-resource-common">
+         <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/nonxaresource"/>
         </antcall>
 
@@ -130,7 +130,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-pool"/>
         </antcall>
 
-     <antcall target="delete-jdbc-resource-common">
+         <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/nonxaresource-container"/>
         </antcall>
 
@@ -138,7 +138,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-pool-container"/>
         </antcall>
 
-     <antcall target="delete-jdbc-resource-common">
+         <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/xaresource"/>
         </antcall>
 

@@ -52,7 +52,7 @@ public class StressSFSBBean
     }
 
     public boolean doWork(long millis) {
-    return true;
+        return true;
     }
 
     public void setSessionContext(SessionContext sc) {

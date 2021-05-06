@@ -50,7 +50,7 @@ public class FooCMT extends TimerStuffImpl implements Foo {
 
     @PostConstruct
     private void init() throws EJBException {
-    System.out.println("In ejblite.timer.Foo::init !!");
+        System.out.println("In ejblite.timer.Foo::init !!");
         setContext(sc);
         getTimerService("init", true);
         doTimerStuff("init", false);

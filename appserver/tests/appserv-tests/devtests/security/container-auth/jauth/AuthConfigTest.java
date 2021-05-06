@@ -28,24 +28,24 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * 1. domain.xml test:
  *
  *    %java -Ddomain.xml.url=domain.xml
- *    -Djava.security.debug=configfile,configxmlparser
- *    -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
- *    AuthConfigTest xml-parse
+ *        -Djava.security.debug=configfile,configxmlparser
+ *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
+ *        AuthConfigTest xml-parse
  *
  * 2. sun-acc.xml test:
  *
  *    %java -Dsun-acc.xml.url=sun-acc.xml
- *    -Djava.security.debug=configfile,configxmlparser
- *    -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
- *    AuthConfigTest xml-parse
+ *        -Djava.security.debug=configfile,configxmlparser
+ *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
+ *        AuthConfigTest xml-parse
  *
  * 3. custom module config file test:
  *
  *    %java -Djava.authconfig=testConfig/config.module
- *    -Dconfigfile.parser=file
- *    -Djava.security.debug=configfile,configfileparser
- *    -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
- *    AuthConfigTest file-parse
+ *        -Dconfigfile.parser=file
+ *        -Djava.security.debug=configfile,configfileparser
+ *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
+ *        AuthConfigTest file-parse
  */
 
 public class AuthConfigTest extends Thread {
@@ -57,25 +57,25 @@ public class AuthConfigTest extends Thread {
     private static final String testId = "Sec::Container-Auth_Test_Num_";
 
     private static final AuthPolicy configRequest =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, true, true);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, true, true);
 
     private static final AuthPolicy configResponse =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, true, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, true, false);
 
     private static final AuthPolicy ddRequest =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
 
     private static final AuthPolicy ddResponse =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, false, false);
 
     private static final AuthPolicy ddHttpRequest =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, false, false);
 
     private static final AuthPolicy ddHttpResponse =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
 
     private static final AuthPolicy ddEjbResponse =
-        new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, true, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, true, false);
 
     private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
 

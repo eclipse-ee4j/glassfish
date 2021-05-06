@@ -49,18 +49,18 @@
     </target>
 
     <target name="generate-artifacts">
-    <antcall target="import-wsdl">
-        <param name="mapping.file"
-        value="${ejb-mapping.xml}"/>
-        <param name="config-wsdl.file"
-        value="config/config-ejb.xml"/>
-    </antcall>
-    <antcall target="import-wsdl">
-        <param name="mapping.file"
-        value="${client-mapping.xml}"/>
-        <param name="config-wsdl.file"
-        value="config/config-client.xml"/>
-    </antcall>
+        <antcall target="import-wsdl">
+            <param name="mapping.file"
+                value="${ejb-mapping.xml}"/>
+            <param name="config-wsdl.file"
+                value="config/config-ejb.xml"/>
+        </antcall>
+        <antcall target="import-wsdl">
+            <param name="mapping.file"
+                value="${client-mapping.xml}"/>
+            <param name="config-wsdl.file"
+                value="config/config-client.xml"/>
+        </antcall>
     </target>
     <target name="ws-package-appclientjar-common">
         <mkdir dir="${assemble.dir}"/>
@@ -121,13 +121,13 @@
    </target>
 
     <target name="build" depends="init-common,compile">
-    <antcall target="ws-package-ejb-jar-common">
+        <antcall target="ws-package-ejb-jar-common">
             <param name="ejbjar.classes"
               value="com/sun/s1peqe/webservices/ejb/taxcal/*.class" />
             <param name="ejbjar.files" value="${build.classes.dir}"/>
             <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
-    </antcall>
-    <antcall target="ws-package-appclientjar-common">
+        </antcall>
+        <antcall target="ws-package-appclientjar-common">
             <param name="appclientjar.classes"
               value="com/sun/s1peqe/webservices/ejb/taxcal/client/*.class" />
             <param name="appclientjar.files"

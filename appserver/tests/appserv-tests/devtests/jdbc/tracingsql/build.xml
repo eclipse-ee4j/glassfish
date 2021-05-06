@@ -45,7 +45,7 @@
         <param name="src" value="client"/>
       </antcall>
       <antcall target="compile-common">
-    <param name="src" value="logger"/>
+        <param name="src" value="logger"/>
       </antcall>
     </target>
 
@@ -125,10 +125,10 @@
         <antcall target="delete-jdbc-connpool-common">
             <param name="jdbc.conpool.name" value="${tracingsql-poolname}"/>
         </antcall>
-    <antcall target="undeploy-common"/>
-    <delete file="${env.S1AS_HOME}/lib/sql-trace-listener.jar"/>
-    <delete file="${sql-trace-listener-jar}"/>
-    <antcall target="restart-server"/>
+        <antcall target="undeploy-common"/>
+        <delete file="${env.S1AS_HOME}/lib/sql-trace-listener.jar"/>
+        <delete file="${sql-trace-listener-jar}"/>
+        <antcall target="restart-server"/>
     </target>
 
     <target name="usage">

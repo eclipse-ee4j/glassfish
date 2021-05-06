@@ -74,7 +74,7 @@ public class Client {
 
 
 //            java.lang.Object objref = ic.lookup("java:comp/env/" + ejbName);
-        java.lang.Object objref = ic.lookup("ejb/ejb_timer_sessiontimer_TimerSession");
+            java.lang.Object objref = ic.lookup("ejb/ejb_timer_sessiontimer_TimerSession");
 
             System.out.println("---ejb stub---" +
                 objref.getClass().getClassLoader());
@@ -84,24 +84,24 @@ public class Client {
                 TimerSessionHome.class.getClassLoader());
             System.err.println("Looked up home!!");
 
-        TimerSingletonRemote tsr = (TimerSingletonRemote)
-        ic.lookup("ejb/ejb_timer_sessiontimer_TimerSingleton");
+            TimerSingletonRemote tsr = (TimerSingletonRemote)
+                ic.lookup("ejb/ejb_timer_sessiontimer_TimerSingleton");
             // clear out singleton state.  This allows multiple test
             // runs without having to redeploy
-        tsr.startTest();
+            tsr.startTest();
 
             TimerSessionHome home = (TimerSessionHome)
                 PortableRemoteObject.narrow(objref, TimerSessionHome.class);
 
             remoteObj = home.create();
-        int timeoutInSeconds = 5;
+            int timeoutInSeconds = 5;
             TimerHandle handle = remoteObj.createTimer(timeoutInSeconds * 1000);
 
             System.out.println("Waiting for message");
 
-        boolean gotTimeout = tsr.waitForTimeout(timeoutInSeconds * 2);
+            boolean gotTimeout = tsr.waitForTimeout(timeoutInSeconds * 2);
 
-        // @@@
+            // @@@
             System.out.println("TimerSession : jndi lookup for -> " +
                 jndiName + " <- test passed!!");
 

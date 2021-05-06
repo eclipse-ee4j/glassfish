@@ -30,49 +30,49 @@ import jakarta.ejb.Stateful;
 
 @Stateful
 public class HelloStatefulEJB implements HelloStateful {
-    @Resource
-    private SessionContext ctx;
+        @Resource
+        private SessionContext ctx;
 
-    @PostConstruct
-    public void postConstruction() {
-        System.out.println("In HelloStatefulEJB::postConstruction()");
-    }
-
-    public String hello(String name) {
-        System.out.println("In HelloStatefulEJB::hello('"+name+"')");
-        String principalName = "NONE";
-        String principalType = "UNKNOWN";
-        Principal p = ctx.getCallerPrincipal();
-        if (p != null) {
-            principalName = p.getName();
-            principalType = p.getClass().getName();
+        @PostConstruct
+        public void postConstruction() {
+                System.out.println("In HelloStatefulEJB::postConstruction()");
         }
-        String result = principalName + " is " + principalType;
-        System.out.println("Caller Principal: " + result);
-        return result;
+
+        public String hello(String name) {
+                System.out.println("In HelloStatefulEJB::hello('"+name+"')");
+                String principalName = "NONE";
+        String principalType = "UNKNOWN";
+                Principal p = ctx.getCallerPrincipal();
+                if (p != null) {
+                principalName = p.getName();
+                principalType = p.getClass().getName();
+                }
+                String result = principalName + " is " + principalType;
+                System.out.println("Caller Principal: " + result);
+                return result;
+        }
+
+        public boolean inRole(String roleName) {
+                System.out.println("In HelloStatefulEJB::inRole('"+roleName+"')");
+                //try {
+                        boolean result = ctx.isCallerInRole(roleName);
+                        System.out.println("In HelloStatefulEJB::inRole('"+roleName+"') - " + result);
+                        return result;
+                //}
+                //catch (Exception exc) {
+                //        System.out.println("In HelloStatefulEJB - Exception: " + exc.toString());
+                //        exc.printStackTrace();
+                //        return false;
+                //}
+        }
+
+        @RolesAllowed({"javaUsers"})
+        public void methodAuthUser() {
+            System.out.println("In HelloStatefulEJB::methodAuthUser()");
     }
 
-    public boolean inRole(String roleName) {
-        System.out.println("In HelloStatefulEJB::inRole('"+roleName+"')");
-        //try {
-            boolean result = ctx.isCallerInRole(roleName);
-            System.out.println("In HelloStatefulEJB::inRole('"+roleName+"') - " + result);
-            return result;
-        //}
-        //catch (Exception exc) {
-        //    System.out.println("In HelloStatefulEJB - Exception: " + exc.toString());
-        //    exc.printStackTrace();
-        //    return false;
-        //}
-    }
-
-    @RolesAllowed({"javaUsers"})
-    public void methodAuthUser() {
-        System.out.println("In HelloStatefulEJB::methodAuthUser()");
-    }
-
-    @RolesAllowed({"**"})
-    public void methodAnyAuthUser() {
-        System.out.println("In HelloStatefulEJB::methodAnyAuthUser()");
+        @RolesAllowed({"**"})
+        public void methodAnyAuthUser() {
+            System.out.println("In HelloStatefulEJB::methodAnyAuthUser()");
     }
 }

@@ -53,7 +53,7 @@ public class TestServlet extends HttpServlet {
          * returned enum:
          *
          * jar:file:/space/luehe/ws/v3/distributions/web/target/glassfish\
-     *     /domains/domain1/applications\
+         *     /domains/domain1/applications\
          *     /web-classloader-get-resources-delegate-false-web/WEB-INF/lib\
          *     /mytest.jar!/test.txt
          *

@@ -47,12 +47,12 @@ public class Client {
             String result1 = sless.concatAndReverse("<One>", "<Two>");
             String result2 = sless.concatAndReverse("<One>", "Null");
             String result3 = sless.concatAndReverse("nuLL", "Null");
-        System.out.println("Got : " + result1);
-        System.out.println("Got : " + result2);
-        System.out.println("Got : " + result3);
+            System.out.println("Got : " + result1);
+            System.out.println("Got : " + result2);
+            System.out.println("Got : " + result3);
 
-        System.out.println("Got : " + sless.plus((byte) 2, (short) 3, 4));
-        System.out.println("Got : " + sless.isGreaterShort(new Short((short) 5), new Long(7)));
+            System.out.println("Got : " + sless.plus((byte) 2, (short) 3, 4));
+            System.out.println("Got : " + sless.isGreaterShort(new Short((short) 5), new Long(7)));
             stat.addStatus("local test1" , stat.PASS);
         } catch(Exception e) {
             e.printStackTrace();

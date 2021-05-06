@@ -23,12 +23,12 @@ public class FooBarManagedBean {
 
     @PostConstruct
     private void init() {
-    System.out.println("In FooBarManagedBean::init() " + this);
+        System.out.println("In FooBarManagedBean::init() " + this);
     }
 
     @PreDestroy
     private void destroy() {
-    System.out.println("In FooBarManagedBean::destroy() ");
+        System.out.println("In FooBarManagedBean::destroy() ");
     }
 
 }

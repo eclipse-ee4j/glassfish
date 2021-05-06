@@ -96,19 +96,19 @@
         <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-    <property name="ctxfactory"
+        <property name="ctxfactory"
                 value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-    <echo message="provider.url used is ${provider.url}"/>
-      <java classname="${test.client}"
-        classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
-        failonerror="true" fork="true">
-    <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-    <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-        <arg value="${provider.url}"/>
-        <arg value="${ctxfactory}"/>
-        <arg value="${jndi.name}"/>
-      </java>
+        <echo message="provider.url used is ${provider.url}"/>
+        <java classname="${test.client}"
+            classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
+            failonerror="true" fork="true">
+            <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+            <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+            <arg value="${provider.url}"/>
+            <arg value="${ctxfactory}"/>
+            <arg value="${jndi.name}"/>
+        </java>
     </target>
 
     <target name="undeploy" depends="init-common">

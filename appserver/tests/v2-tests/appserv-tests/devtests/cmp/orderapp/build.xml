@@ -59,11 +59,11 @@
 
      <target name="package-request-jar">
       <antcall target="package-ejbjar-common">
-    <param name="ejb-jar.xml" value="${ejb-jar-request.xml}"/>
-    <param name="sun-ejb-jar.xml" value="${sun-ejb-jar-request.xml}"/>
-    <param name="ejbjar.files" value="${build.classes.dir}"/>
+        <param name="ejb-jar.xml" value="${ejb-jar-request.xml}"/>
+        <param name="sun-ejb-jar.xml" value="${sun-ejb-jar-request.xml}"/>
+        <param name="ejbjar.files" value="${build.classes.dir}"/>
         <param name="ejbjar.classes" value="**/**/*Request*.class" />
-    <param name="ejb.jar" value="${assemble.dir}/ejb-jar-ic.jar"/>
+        <param name="ejb.jar" value="${assemble.dir}/ejb-jar-ic.jar"/>
       </antcall>
     </target>
 
@@ -73,7 +73,7 @@
         <param name="sun-ejb-jar.xml" value="${sun-ejb-jar-dataregistry.xml}"/>
         <param name="sun-cmp-mappings.xml" value="${sun-cmp-mappings-dataregistry.xml}"/>
         <param name="ejbjar.files" value="${build.classes.dir}"/>
-    <param name="ejbjar.classes" value="**/dataregistry/*.class" />
+        <param name="ejbjar.classes" value="**/dataregistry/*.class" />
         <param name="ejb.jar" value="${assemble.dir}/ejb-jar-ic1.jar"/>
       </antcall>
     </target>
@@ -81,7 +81,7 @@
      <target name="package-appclient-jar" >
       <mkdir dir="${assemble.dir}"/>
 
-     <antcall target="package-appclientjar-common">
+      <antcall target="package-appclientjar-common">
         <param name="appclientjar.classes"
           value="client/Client.class, request/RequestHome.class, request/Request.class, request/PartRequest.class, request/Order.class, request/OrderHome.class, request/*.class" />
         <param name="application-client.xml"
@@ -89,9 +89,9 @@
         <param name="sun-application-client.xml"
             value="${sun-application-client.xml}" />
         <param name="appclient.jar" value="${assemble.dir}/${appname}AppClient.jar"/>
-       <param name="appclientjar.files" value="${build.classes.dir}" />
+        <param name="appclientjar.files" value="${build.classes.dir}" />
 
-     </antcall>
+      </antcall>
     </target>
 
 
@@ -101,7 +101,7 @@
       <mkdir dir="${assemble.dir}"/>
       <mkdir dir="${build.classes.dir}/META-INF"/>
       <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"  failonerror="false"/>
-      <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"    failonerror="false"/>
+      <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
 
       <ear earfile="${assemble.dir}/${appname}.ear" appxml="${application.xml}">
         <fileset dir="${assemble.dir}">
@@ -110,9 +110,9 @@
 
         <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
         <fileset dir="${build.classes.dir}">
-    <include name="META-INF/sun-application.xml"/>
-    <include name="META-INF/application.xml"/>
-    </fileset>
+            <include name="META-INF/sun-application.xml"/>
+            <include name="META-INF/application.xml"/>
+        </fileset>
 
       </ear>
     </target>
@@ -157,8 +157,8 @@
 
 
     <target name="build1" depends="compile">
-    <copy  file="${sun-ejb-jar-J2DB.xml}" tofile="${sun-ejb-jar.xml}" failonerror="false"/>
-    <delete  file="${sun-cmp-mappings.xml}" failonerror="false"/>
+        <copy  file="${sun-ejb-jar-J2DB.xml}" tofile="${sun-ejb-jar.xml}" failonerror="false"/>
+        <delete  file="${sun-cmp-mappings.xml}" failonerror="false"/>
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
               value="**/*Blob*.class" />
@@ -171,14 +171,14 @@
     <target name="deploy1"
             depends="init-common">
         <antcall target="deploy-common">
-    <param name="extra-params"
+            <param name="extra-params"
               value="--uniquetablenames=true --createtables=true"/>
-    </antcall>
+        </antcall>
     </target>
 
     <target name="run1" depends="init-common">
         <antcall target="runclient-common">
-        <param name="appclient.application.args"
+            <param name="appclient.application.args"
               value="Java2DBTest"/>
     </antcall>
     </target>

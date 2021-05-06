@@ -84,20 +84,20 @@
     <!-- Target to run the standalone client without ACC -->
     <!-- =============================================== -->
     <target name="run-standalone-client" depends="init-common">
-        <property name="jndi.name" value="converter"/>
-        <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
-        <property name="ctxfactory"
+      <property name="jndi.name" value="converter"/>
+      <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
+      <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-    <property name="ctxfactory"
+      <property name="ctxfactory"
                 value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-    <echo message="provider.url used is ${provider.url}"/>
+      <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
-    <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-    <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>

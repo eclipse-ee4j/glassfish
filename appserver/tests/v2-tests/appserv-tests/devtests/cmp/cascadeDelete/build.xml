@@ -42,17 +42,17 @@
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-    <antcall target="compile-common">
+        <antcall target="compile-common">
             <param name="src" value="servlet"/>
-    </antcall>
+        </antcall>
 
      </target>
 
     <target name="build" depends="compile">
 
         <antcall target="build-ear-common">
-        <param name="war.classes"
-          value="**/Servlet.class" />
+            <param name="war.classes"
+              value="**/Servlet.class" />
             <param name="ejbjar.classes"
               value="**/A*.class,**/B*.class,**/C*.class,**/D*.class,**/Local*.class"/>
             <param name="appclientjar.classes"
@@ -64,8 +64,8 @@
         <echo message="Preparing ear file with proper xml files" />
         <unjar src="${assemble.dir}/${appname}App.ear" dest="${TEMPDIR}" overwrite="true" />
         <echo message="Copying xml file to the ear" />
-    <copy file="${ejb.xml}" todir="${TEMPDIR}" failonerror="false"/>
-    <copy file="${cdclient.xml}" todir="${TEMPDIR}" failonerror="false"/>
+        <copy file="${ejb.xml}" todir="${TEMPDIR}" failonerror="false"/>
+        <copy file="${cdclient.xml}" todir="${TEMPDIR}" failonerror="false"/>
        <jar jarfile="${assemble.dir}/${appname}App.ear">
           <fileset dir="${TEMPDIR}" />
        </jar>

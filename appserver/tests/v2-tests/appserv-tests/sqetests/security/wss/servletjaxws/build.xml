@@ -175,11 +175,11 @@
     <target name="runclient-nossl" depends="init-common">
         <property name="endpoint-url"
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
-      <exec executable="${APPCLIENT}" dir="${build.classes.dir}">
-    <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
-    <arg line="-client"/>
-        <arg line="${assemble.dir}/${appname}-client.jar"/>
-    <arg line="${endpoint-url}"/>
+        <exec executable="${APPCLIENT}" dir="${build.classes.dir}">
+            <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+            <arg line="-client"/>
+            <arg line="${assemble.dir}/${appname}-client.jar"/>
+            <arg line="${endpoint-url}"/>
       </exec>
     </target>
 
@@ -201,7 +201,7 @@
         <arg line="-user j2ee"/>
         <arg line="-password j2ee"/>
         <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-    <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
       </exec>
       <echo message="${runclientCommonOutput}"/>
       <antcall target="check-runclient-output" inheritAll="true" inheritRefs="true"/>
@@ -220,7 +220,7 @@
 
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks  -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks -Djavax.net.ssl.trustStorePassword=${master.password}" />
-    <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}-client.jar"/>
         <arg value="-textauth"/>
@@ -246,7 +246,7 @@
 
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.jks -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks -Djavax.net.ssl.trustStorePassword=changeit" />
-    <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}-client.jar"/>
         <!-- dummy user added as appclient throwing login window -->

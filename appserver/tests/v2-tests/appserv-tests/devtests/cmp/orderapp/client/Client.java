@@ -38,7 +38,7 @@ public class Client {
     public static void main(String[] args) {
 
         try {
-        stat.addDescription("OrderApp");
+            stat.addDescription("OrderApp");
             Context initial = new InitialContext();
 
             Object objref = initial.lookup("java:comp/env/ejb/Request");
@@ -49,14 +49,14 @@ public class Client {
 
             createData(request);
             printData(request);
-        stat.addStatus("ejbclient OrderApp", stat.PASS);
+            stat.addStatus("ejbclient OrderApp", stat.PASS);
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient OrderApp", stat.FAIL);
+            stat.addStatus("ejbclient OrderApp", stat.FAIL);
         }
-         stat.printSummary("OrderApp");
+        stat.printSummary("OrderApp");
     }
 
     private static void createData(Request request) {
@@ -116,7 +116,7 @@ public class Client {
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient OrderApp", stat.FAIL);
+            stat.addStatus("ejbclient OrderApp", stat.FAIL);
         }
     }
 

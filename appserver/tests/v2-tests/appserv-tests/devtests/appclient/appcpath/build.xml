@@ -80,7 +80,7 @@
         <jar jarfile="${lib.jar.file}"
             basedir="${build.classes.dir}"
             update="true" includes ="**/lib/*.class"
-            />
+        />
     </target>
 
     <target name="deploy">

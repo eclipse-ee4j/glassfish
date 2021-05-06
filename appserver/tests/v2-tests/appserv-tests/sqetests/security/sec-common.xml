@@ -83,10 +83,10 @@ author: jagadesh munta
 
 
 <target name="delete-message-security-provider">
-        <antcall target="delete-message-security-provider-common">
+    <antcall target="delete-message-security-provider-common">
         <param name="wss.provider.name" value="${wss.server.provider.name}"/>
     </antcall>
-        <antcall target="delete-message-security-provider-common">
+    <antcall target="delete-message-security-provider-common">
         <param name="wss.provider.name" value="${wss.client.provider.name}"/>
     </antcall>
 
@@ -149,14 +149,14 @@ author: jagadesh munta
 <target name="config-nss-iiop" depends="init-common">
     <antcall target="set-jvm-option">
        <param name="jvm.option" value="-DNSS_USE_FOR_IIOP=true"/>
-        </antcall>
+    </antcall>
 </target>
 
 <!-- Remove NSS config for IIOP -->
 <target name="remove-nss-iiop" depends="init-common">
     <antcall target="unset-jvm-option">
        <param name="jvm.option" value="-DNSS_USE_FOR_IIOP=true"/>
-        </antcall>
+    </antcall>
 </target>
 
 <!-- Get certificate from NSS db to JKS format -->
@@ -406,7 +406,7 @@ author: jagadesh munta
                 <param name="keystore.pass" value="changeit"/>
                 <param name="key.pass" value="changeit"/>
                 <param name="key.alias" value="s1as"/>
-         <param name="dname" value="CN=S1AS, OU=Sun Java System, O=Sun Microsystems, L=Santa Clara, ST=California, C=US"/>
+                <param name="dname" value="CN=S1AS, OU=Sun Java System, O=Sun Microsystems, L=Santa Clara, ST=California, C=US"/>
         </antcall>
         <antcall target="list-cert-jks">
                 <param name="keystore.file" value="s1as.jks"/>
@@ -517,7 +517,7 @@ Hardware Accelerator setup related targets
         <arg line="-L"/>
         <arg line="-d ${admin.domain.dir}/${admin.domain}/config"/>
         <arg line="-h ${token.name}"/>
-    <arg line="-f passfile"/>
+        <arg line="-f passfile"/>
       </exec>
 </target>
 

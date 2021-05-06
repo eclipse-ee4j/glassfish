@@ -20,30 +20,30 @@
 
 <sun-ejb-jar>
 <enterprise-beans>
-  <unique-id>156565</unique-id>
-  <ejb>
-      <ejb-name>A</ejb-name>
-      <jndi-name>SimpleA</jndi-name>
-          <ejb-ref>
+    <unique-id>156565</unique-id>
+    <ejb>
+        <ejb-name>A</ejb-name>
+        <jndi-name>SimpleA</jndi-name>
+        <ejb-ref>
             <ejb-ref-name>ejb/SimpleB</ejb-ref-name>
             <jndi-name>localejbs/SimpleB</jndi-name>
-          </ejb-ref>
-          <ejb-ref>
+        </ejb-ref>
+        <ejb-ref>
             <ejb-ref-name>ejb/SimpleC</ejb-ref-name>
             <jndi-name>localejbs/SimpleC</jndi-name>
-          </ejb-ref>
-          <ejb-ref>
+        </ejb-ref>
+        <ejb-ref>
             <ejb-ref-name>ejb/SimpleD</ejb-ref-name>
             <jndi-name>localejbs/SimpleD</jndi-name>
-          </ejb-ref>
-    <refresh-period-in-seconds>600</refresh-period-in-seconds>
-    <bean-cache>
-        <max-cache-size>60</max-cache-size>
-        <is-cache-overflow-allowed>true</is-cache-overflow-allowed>
-        <cache-idle-timeout-in-seconds>600</cache-idle-timeout-in-seconds>
-        <removal-timeout-in-seconds>6000</removal-timeout-in-seconds>
-        <victim-selection-policy>FIFO</victim-selection-policy>
-    </bean-cache>
+        </ejb-ref>
+        <refresh-period-in-seconds>600</refresh-period-in-seconds>
+        <bean-cache>
+            <max-cache-size>60</max-cache-size>
+            <is-cache-overflow-allowed>true</is-cache-overflow-allowed>
+            <cache-idle-timeout-in-seconds>600</cache-idle-timeout-in-seconds>
+            <removal-timeout-in-seconds>6000</removal-timeout-in-seconds>
+            <victim-selection-policy>FIFO</victim-selection-policy>
+        </bean-cache>
     </ejb>
     <ejb>
         <ejb-name>B</ejb-name>

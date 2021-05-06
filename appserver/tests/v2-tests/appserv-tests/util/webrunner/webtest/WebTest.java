@@ -20,12 +20,12 @@ import java.io.FileInputStream;
 import java.io.File;
 
 /**
-*This is the main class for Web Test.It takes a text script file as an argument.
-*
-* @author       Deepa Singh (deepa.singh@sun.com)
+ *This is the main class for Web Test.It takes a text script file as an argument.
+ *
+ * @author       Deepa Singh (deepa.singh@sun.com)
  *Company       Sun Microsystems Inc.
-*
-*/
+ *
+ */
 public class WebTest
 {
     private String ws_root="appserv-tests";
@@ -74,7 +74,7 @@ public class WebTest
             fin.close();
             SendRequest sendRequest=new SendRequest(ws_root,testsuite_id);
             int port=new Integer(s_port).intValue();
-        sendRequest.setServerProperties(s_host,port);
+            sendRequest.setServerProperties(s_host,port);
             sendRequest.processUrl(buffer);
         }
         catch(Exception e)

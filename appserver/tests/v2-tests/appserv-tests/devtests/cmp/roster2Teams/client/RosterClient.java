@@ -43,7 +43,7 @@ public class RosterClient {
 
    public static void main(String[] args) {
        try {
-       System.out.println("START");
+           System.out.println("START");
            stat.addDescription("rosterJava2DB");
 
            Context initial = new InitialContext();
@@ -60,18 +60,18 @@ public class RosterClient {
 
            getMoreInfo(myRoster);
 
-       stat.addStatus("ejbclient rosterJava2DB ", stat.PASS);
+           stat.addStatus("ejbclient rosterJava2DB ", stat.PASS);
            stat.printSummary("rosterJava2DB");
 
            System.exit(0);
 
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
-       ex.printStackTrace();
-       stat.addStatus("ejbclient rosterJava2DB ", stat.FAIL);
+           ex.printStackTrace();
+           stat.addStatus("ejbclient rosterJava2DB ", stat.FAIL);
            stat.printSummary("rosterJava2DB");
        }
-           stat.printSummary("rosterJava2DB");
+       stat.printSummary("rosterJava2DB");
    } // main
 
 

@@ -66,13 +66,13 @@
       <exec executable="${APPCLIENT}">
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-    <arg value="-xml"/>
-    <arg value="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-    <arg value="-textauth"/>
-    <arg value="-user"/>
-    <arg value="j2ee"/>
-    <arg value="-password"/>
-    <arg value="j2ee"/>
+        <arg value="-xml"/>
+        <arg value="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+        <arg value="-textauth"/>
+        <arg value="-user"/>
+        <arg value="j2ee"/>
+        <arg value="-password"/>
+        <arg value="j2ee"/>
       </exec>
     </target>
 
@@ -95,9 +95,9 @@
 
     <target name="create-user">
         <antcall target="create-user-common">
-        <param name="user" value="j2ee"/>
-        <param name="password" value="j2ee"/>
-        <param name="groups" value="employee"/>
+            <param name="user" value="j2ee"/>
+            <param name="password" value="j2ee"/>
+            <param name="groups" value="employee"/>
        </antcall>
     </target>
 

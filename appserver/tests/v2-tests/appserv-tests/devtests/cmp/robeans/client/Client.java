@@ -56,7 +56,7 @@ public class Client {
 
         try {
             System.out.println("START");
-        stat.addDescription("robeans");
+            stat.addDescription("robeans");
 
             lookupBeans();
             tbean = thome.create();
@@ -64,13 +64,13 @@ public class Client {
             testA1();
             testA2();
 
-        stat.addStatus("ejbclient robeans", stat.PASS);
+            stat.addStatus("ejbclient robeans", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient robeans", stat.FAIL);
+            stat.addStatus("ejbclient robeans", stat.FAIL);
         }
         stat.printSummary("robeans");
     }

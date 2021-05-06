@@ -79,8 +79,8 @@
     <target name="build" depends="compile">
     <property name="hasWebclient" value="yes"/>
     <antcall target="webclient-war-common">
-    <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="**/*.class"/>
+        <param name="hasWebclient" value="yes"/>
+        <param name="webclient.war.classes" value="**/*.class"/>
     </antcall>
 
     <antcall target="ejb-jar-common">
@@ -99,14 +99,14 @@
 
     <target name="run-war" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="web-to-ejb (stand-alone war based)"/>
-    </antcall>
+            <param name="testsuite.id" value="web-to-ejb (stand-alone war based)"/>
+        </antcall>
     </target>
 
     <target name="run-ear" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="web-to-ejb (ear based)"/>
-    </antcall>
+            <param name="testsuite.id" value="web-to-ejb (ear based)"/>
+        </antcall>
     </target>
 
     <target name="undeploy-ear" depends="init-common">

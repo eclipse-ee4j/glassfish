@@ -48,11 +48,11 @@
     </target>
 
     <target name="build-war">
-     <mkdir dir="${assemble.dir}/a/b"/>
-      <antcall target="package-war-common">
+        <mkdir dir="${assemble.dir}/a/b"/>
+        <antcall target="package-war-common">
             <param name="war.classes" value="${build.classes.dir}"/>
             <param name="war.file" value="${assemble.dir}/a/b/${appname}-web.war"/>
-      </antcall>
+        </antcall>
    </target>
 
     <target name="build" depends="compile, build-war">
@@ -62,11 +62,11 @@
             <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-    <ear earfile="${assemble.dir}/${appname}App.ear" update="true">
-            <fileset dir="${assemble.dir}">
-                  <include name="a/b/*.war"/>
-            </fileset>
-    </ear>
+        <ear earfile="${assemble.dir}/${appname}App.ear" update="true">
+           <fileset dir="${assemble.dir}">
+              <include name="a/b/*.war"/>
+           </fileset>
+        </ear>
     </target>
 
     <target name="deploy"

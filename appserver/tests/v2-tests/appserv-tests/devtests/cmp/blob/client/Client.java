@@ -34,7 +34,7 @@ public class Client {
     private static test.BlobTestHome bhome = null;
 
     private static SimpleReporterAdapter stat =
-    new SimpleReporterAdapter("appserv-tests");
+        new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
         boolean isJava2DBTest = args.length > 0;
@@ -47,7 +47,7 @@ public class Client {
                         objref, test.BlobTestHome.class);
 
             System.out.println("START");
-        stat.addDescription("Blob");
+            stat.addDescription("Blob");
 
             test(100, "FOO", new byte[]{'A', 'B', 'C'});
             test(200, "BAR", new byte[]{'M', 'N', 'O'});
@@ -62,25 +62,25 @@ public class Client {
             } else {
                 try {
                     test(40, "BAZ", null);
-            stat.addStatus("ejbclient Blob", stat.FAIL);
+                    stat.addStatus("ejbclient Blob", stat.FAIL);
                     throw new Exception(
                             "Failed to catch expected exception for insert of null blob value");
                 } catch (Exception ex) {
                     System.out.println(
                             "Caught expected exception when inserting null blob value");
-            //stat.addStatus("ejbclient Blob", stat.PASS);
+                    //stat.addStatus("ejbclient Blob", stat.PASS);
                 }
             }
 
-        stat.addStatus("ejbclient Blob", stat.PASS);
+            stat.addStatus("ejbclient Blob", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient Blob", stat.FAIL);
+            stat.addStatus("ejbclient Blob", stat.FAIL);
         }
-    stat.printSummary("Blob");
+        stat.printSummary("Blob");
     }
 
     static void test(int id, String name, byte chars[])

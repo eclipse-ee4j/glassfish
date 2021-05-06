@@ -68,8 +68,8 @@
             <ant dir="sqetests" target="run-eesqe-target"/>
             <antcall target="stopee"/>
             <antcall target="stopDerby"/>
-        <antcall target="create-report"/>
-        <antcall target="mail"/>
+            <antcall target="create-report"/>
+            <antcall target="mail"/>
             <antcall target="report-java"/>
         <record name="runtest.output" action="stop"/>
     <record name="appserv-tests.log" action="stop"/>

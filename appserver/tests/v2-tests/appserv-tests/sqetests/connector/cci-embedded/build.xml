@@ -124,17 +124,17 @@
                 <mkdir dir="${assemble.dir}"/>
                 <copy file="descriptor/application.xml" tofile="${assemble.dir}/application.xml"/>
                 <mkdir dir="${build.classes.dir}/META-INF"/>
-        <antcall target="package-embedded-ejb"/>
-        <antcall target="package-embedded-client"/>
-        <antcall target="package-rar"/>
+                <antcall target="package-embedded-ejb"/>
+                <antcall target="package-embedded-client"/>
+                <antcall target="package-rar"/>
                 <ear earfile="${assemble.dir}/${appname}App.ear"
                         appxml="${assemble.dir}/application.xml">
-                <fileset dir="${assemble.dir}">
-                <include name="cci-embedded-ejb.jar"/>
-                <include name="cciblackbox-tx.rar"/>
-                <include name="cci-embedded-client.jar"/>
-                </fileset>
-                <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
+                    <fileset dir="${assemble.dir}">
+                        <include name="cci-embedded-ejb.jar"/>
+                        <include name="cciblackbox-tx.rar"/>
+                        <include name="cci-embedded-client.jar"/>
+                    </fileset>
+                    <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
                 </ear>
     </target>
 
@@ -158,9 +158,9 @@
 
 
     <target name="run" depends="init-common">
-    <antcall target="runclient-common">
-    <param name="appclient.application.args" value="Embedded"/>
-    </antcall>
+        <antcall target="runclient-common">
+            <param name="appclient.application.args" value="Embedded"/>
+        </antcall>
     </target>
 
     <target name="usage">

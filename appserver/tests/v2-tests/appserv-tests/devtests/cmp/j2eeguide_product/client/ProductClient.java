@@ -38,8 +38,8 @@ public class ProductClient {
            ProductHome home =
                (ProductHome)PortableRemoteObject.narrow(objref,
                                             ProductHome.class);
-        System.out.println("START");
-            stat.addDescription("j2eeguide_product");
+           System.out.println("START");
+           stat.addDescription("j2eeguide_product");
 
            Product duke = home.create("123", "Ceramic Dog", 10.00);
            System.out.println(duke.getDescription() + ": " + duke.getPrice());
@@ -74,14 +74,14 @@ public class ProductClient {
               double price = product.getPrice();
               System.out.println(productId + ": " + price);
            }
-            stat.addStatus("ejbclient j2eeguide_product", stat.PASS);
-            System.out.println("FINISH");
+           stat.addStatus("ejbclient j2eeguide_product", stat.PASS);
+           System.out.println("FINISH");
 
        } catch (Exception ex) {
            System.err.println("Caught an exception." );
            ex.printStackTrace();
-            stat.addStatus("ejbclient j2eeguide_product", stat.FAIL);
+           stat.addStatus("ejbclient j2eeguide_product", stat.FAIL);
        }
-          stat.printSummary("j2eeguide_product");
+       stat.printSummary("j2eeguide_product");
    }
 }

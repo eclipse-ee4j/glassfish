@@ -59,8 +59,8 @@ public class WebTest {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = input.readLine();
-        System.out.println ("Callflow Data : "+line);
-        System.out.println (input.readLine());
+            System.out.println ("Callflow Data : "+line);
+            System.out.println (input.readLine());
         }
     }
 }

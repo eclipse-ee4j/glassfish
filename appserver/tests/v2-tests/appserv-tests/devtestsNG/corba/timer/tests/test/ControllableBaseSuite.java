@@ -47,40 +47,40 @@ public class ControllableBaseSuite {
     private ControllableTest ct ;
 
     private static class ControllableTest extends ControllableBase {
-    public ControllableTest( int id, String name, String description,
-        TimerFactory factory ) {
+        public ControllableTest( int id, String name, String description,
+            TimerFactory factory ) {
 
-        super( id, name, description, TimerFactoryImpl.class.cast( factory ) ) ;
-    }
+            super( id, name, description, TimerFactoryImpl.class.cast( factory ) ) ;
+        }
     }
 
     @Configuration( beforeTest = true )
     public void setUp() {
-    factory = TimerFactoryBuilder.make( "CTF", "No description" ) ;
-    ct = new ControllableTest( id, name, description, factory ) ;
+        factory = TimerFactoryBuilder.make( "CTF", "No description" ) ;
+        ct = new ControllableTest( id, name, description, factory ) ;
     }
 
     @Configuration( afterTest = true )
     public void tearDown() {
-    TimerFactoryBuilder.destroy( factory ) ;
+        TimerFactoryBuilder.destroy( factory ) ;
     }
 
     @Test()
     public void testId() {
-    Assert.assertEquals( id, ct.id() ) ;
+        Assert.assertEquals( id, ct.id() ) ;
     }
 
     @Test()
     public void testDescription() {
-    Assert.assertEquals( description, ct.description() ) ;
+        Assert.assertEquals( description, ct.description() ) ;
     }
 
     @Test()
     public void testEnable() {
-    Assert.assertFalse( ct.isEnabled() ) ;
-    ct.enable() ;
-    Assert.assertTrue( ct.isEnabled() ) ;
-    ct.disable() ;
-    Assert.assertFalse( ct.isEnabled() ) ;
+        Assert.assertFalse( ct.isEnabled() ) ;
+        ct.enable() ;
+        Assert.assertTrue( ct.isEnabled() ) ;
+        ct.disable() ;
+        Assert.assertFalse( ct.isEnabled() ) ;
     }
 }

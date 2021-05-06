@@ -104,16 +104,16 @@ successful"/>
 -->
     <property name="ctxfactory"
                 value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
-    <echo message="provider.url used is ${provider.url}"/>
+      <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
-    <jvmarg value="-Djavax.rmi.CORBA.UtilClass=com.sun.corba.ee.impl.javax.rmi.CORBA.Util"/>
-    <jvmarg value="-Dorg.omg.CORBA.ORBClass=com.sun.corba.ee.impl.orb.ORBImpl"/>
-    <jvmarg value="-Dorg.omg.CORBA.ORBSingletonClass=com.sun.corba.ee.impl.orb.ORBSingleton"/>
+        <jvmarg value="-Djavax.rmi.CORBA.UtilClass=com.sun.corba.ee.impl.javax.rmi.CORBA.Util"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBClass=com.sun.corba.ee.impl.orb.ORBImpl"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBSingletonClass=com.sun.corba.ee.impl.orb.ORBSingleton"/>
       </java>
     </target>
 

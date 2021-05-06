@@ -87,7 +87,7 @@
             <include name="**/*.class"/>
         </fileset>
        <metainf dir="descriptor">
-                <include name="*.xml"/>
+            <include name="*.xml"/>
         </metainf>
     </jar>
     <echo message="======================================================="/>

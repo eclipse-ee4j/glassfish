@@ -42,7 +42,7 @@ public class StateTaxEjb implements SessionBean {
     }
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In StateTaxEjb::ejbCreate !!");
+        ystem.out.println("In StateTaxEjb::ejbCreate !!");
     }
 
     // Business method implementation.

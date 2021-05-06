@@ -58,7 +58,7 @@
   <target name="usage">
       <!--<antcall target="usage-common"/> -->
     <echo message="=============================================="/>
-     <echo message="****** Security Testsuite (BankAdmin App) *****"/>
+    <echo message="****** Security Testsuite (BankAdmin App) *****"/>
     <echo message="Standard Commands:"/>
     <echo message="ant quick-look -->build,deploy,setup and run a single test, daomanager from bankapp"/>
     <echo message="ant all -->build,deploy,setup and run the testsuite"/>

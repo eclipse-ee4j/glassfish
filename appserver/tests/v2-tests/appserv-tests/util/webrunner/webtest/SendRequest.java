@@ -144,21 +144,21 @@ public class SendRequest {
                             int portIdx=hostName.indexOf(':');
                             String strport=new String();
                             if(portIdx > 0){
-                            strport=hostName.substring(portIdx+1).trim();
+                                strport=hostName.substring(portIdx+1).trim();
                                 hostName=hostName.substring(0,portIdx);
-                            //System.out.println("port is"+strport);
-}
+                                //System.out.println("port is"+strport);
+                            }
                             hostName = hostName.trim();
                             port=new Integer(strport).intValue();
-                                                    // if serverSet is true,then use m_host and m_port from the commandline
-                                                    //otherwise read host and port from the script.txt
-                                                    if(serverSet){
-                            System.out.println("HTTP port :"+m_port);
-                            System.out.println("HTTP hostname :"+m_host);
-                            server=new Socket(m_host,m_port);
-                                                    }
-                                                    else
-                                                        server=new Socket(hostName,port);
+                            // if serverSet is true,then use m_host and m_port from the commandline
+                            //otherwise read host and port from the script.txt
+                            if(serverSet){
+                                System.out.println("HTTP port :"+m_port);
+                                System.out.println("HTTP hostname :"+m_host);
+                                server=new Socket(m_host,m_port);
+                            }
+                            else
+                                server=new Socket(hostName,port);
                             serverAddress=server.getInetAddress();
                             bufferedStream=new BufferedReader(new InputStreamReader(server.getInputStream()));
                             server_out= new DataOutputStream(server.getOutputStream());
@@ -209,7 +209,7 @@ public class SendRequest {
                                 reporter.setTestCaseStatus(TEST_SUITE_ID,requestLine,requestLine,ReporterConstants.FAIL);
                                 //stat.addStatus("WEBCLIENT "+ requestLine,stat.FAIL);
                                 System.out.println(TEST_SUITE_ID+"\t"+requestLine+"\t FAIL");
-                                                            reporter.generateValidReport();
+                                reporter.generateValidReport();
                                 return 0;
                             }
                             if (code==200){
@@ -250,7 +250,7 @@ public class SendRequest {
         try {
             StringBuffer result=new StringBuffer();
             st=inStream.readLine();
-                /*if(st!=null)
+            /*if(st!=null)
                 System.out.println("*****Server Response Starts *****\n"+st );*/
 
             //st should be of form HTTP/1.1 200 OK

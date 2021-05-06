@@ -50,7 +50,7 @@
     </target>
 
     <target name="build" depends="compile">
-     <jar destfile="${env.APS_HOME}/lib/sslutil.jar">
+      <jar destfile="${env.APS_HOME}/lib/sslutil.jar">
          <fileset dir="${build.classes.dir}"
              includes="**/KeyTool.class"
         />

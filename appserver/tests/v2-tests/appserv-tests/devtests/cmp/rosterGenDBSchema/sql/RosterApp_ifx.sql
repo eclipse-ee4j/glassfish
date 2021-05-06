@@ -30,8 +30,8 @@ CREATE TABLE Team
 CREATE TABLE TeamPlayer
 (
     player_Id VARCHAR(127),
-        team_Id VARCHAR(127),
-        PRIMARY KEY (player_Id, team_Id),
+    team_Id VARCHAR(127),
+    PRIMARY KEY (player_Id, team_Id),
     FOREIGN KEY (team_Id)   REFERENCES Team (team_Id),
     FOREIGN KEY (player_Id)   REFERENCES Player (player_Id)
 );

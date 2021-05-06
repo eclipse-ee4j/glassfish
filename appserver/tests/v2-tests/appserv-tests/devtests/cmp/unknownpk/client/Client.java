@@ -66,15 +66,15 @@ public class Client {
             a1bean = a1home.findByPrimaryKey(pk1);
             System.out.println("FOUND 1.1: " + a1bean.getName());
 
-        stat.addStatus("ejbclient unknownpk", stat.PASS);
+            stat.addStatus("ejbclient unknownpk", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient unknownpk", stat.FAIL);
+            stat.addStatus("ejbclient unknownpk", stat.FAIL);
         }
-          stat.printSummary("unknownpk");
+        stat.printSummary("unknownpk");
 
     }
 

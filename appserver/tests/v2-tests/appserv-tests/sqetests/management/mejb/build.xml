@@ -33,10 +33,10 @@
     <target name="run-test" depends="clean,build,deploy,run,undeploy"/>
 
     <target name="setup">
-    <antcall target="create-file-users"/>
+        <antcall target="create-file-users"/>
     </target>
     <target name="unsetup">
-    <antcall target="delete-file-users"/>
+        <antcall target="delete-file-users"/>
     </target>
 
     <target name="clean" depends="init-common">

@@ -34,35 +34,35 @@ public class ConverterClient {
     }
 
     public static void main(String[] args) {
-    ConverterClient client = new ConverterClient();
-    client.run(args);
+        ConverterClient client = new ConverterClient();
+        client.run(args);
     }
 
     private void run(String[] args) {
         String url = null;
-    String testId = null;
+        String testId = null;
         String jndiName = null;
         Context context = null;
         String ctxFactory = null;
-    java.lang.Object obj = null;
+        java.lang.Object obj = null;
         try {
             stat.addDescription("This is to test parser overrideability for EJB jars");
 
             if (args.length == 3) {
                 url = args[0];
                 ctxFactory = args[1];
-        jndiName = args[2];
+                jndiName = args[2];
             }
 
             if ( (url == null) || (ctxFactory == null) ) {
-        testId = "ParserOverrideablityEJB::Sample AppClient";
+                testId = "ParserOverrideablityEJB::Sample AppClient";
                 // Initialize the Context with default properties
                 context = new InitialContext();
                 System.out.println("Default Context Initialized...");
                 // Create Home object
                 obj = context.lookup("java:comp/env/ejb/SimpleConverter");
             } else {
-        testId = "ParserOverrideabilityEJB::Sample Standalone-Client";
+                testId = "ParserOverrideabilityEJB::Sample Standalone-Client";
                 Properties env = new Properties();
                 env.put("java.naming.provider.url", url);
                 env.put("java.naming.factory.initial", ctxFactory);
@@ -97,7 +97,7 @@ public class ConverterClient {
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         } finally {
-        stat.printSummary(testId);
+            stat.printSummary(testId);
         }
     }
 }

@@ -128,8 +128,8 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common">
-    <param name="deployedapp.name" value="${appname}-ejb"/>
-    </antcall>
+          <param name="deployedapp.name" value="${appname}-ejb"/>
+        </antcall>
     </target>
 
     <target name="usage">

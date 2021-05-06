@@ -30,7 +30,7 @@ public class FedTaxEjb implements SessionBean {
     public FedTaxEjb(){}
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In FedTaxEjb::ejbCreate !!");
+        System.out.println("In FedTaxEjb::ejbCreate !!");
     }
 
     public double getFedTax(double income, double deductions) {

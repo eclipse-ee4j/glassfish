@@ -40,17 +40,17 @@ public class TestDriver {
     private boolean useRmi;
     private List<RemoteAdminQuicklookTest> tests;
     private MBeanServerConnection mbsc;
-    private String      testfileName;
+    private String testfileName;
 
     private static final String SCRIPT_COMMENT = "#"; //this is how comment is denoted, traditionally
     private static final SimpleReporterAdapter reporter = new SimpleReporterAdapter("devtests");
     private static final String DESC = "Admin Infrastructure Devtests";
     /** Creates a new instance of TestDriver */
     public TestDriver() throws Exception {
-        tests           = new ArrayList<RemoteAdminQuicklookTest> ();
+        tests = new ArrayList<RemoteAdminQuicklookTest>();
         //loadProperties();
         loadRmiProperties();
-    testFile = new File(testfileName);
+        testFile = new File(testfileName);
         initializeConnection();
         initializeTestClasses();
     }

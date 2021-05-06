@@ -79,7 +79,7 @@
 
   <target name="deploy" depends="set-asadmin,build,create-war">
       <echo message="Deploying ${war.file} from ${basedir}." level="verbose"/>
-    <glassfish-embedded-start />
+      <glassfish-embedded-start />
       <glassfish-embedded-deploy app="${war.file}" />
     </target>
 
@@ -87,7 +87,7 @@
 
    <target name="undeploy-war1" depends="init-common">
       <echo message="Undeploying ${war.file} from ${basedir}." level="verbose"/>
-    <glassfish-embedded-undeploy name="${warname}"/>
+      <glassfish-embedded-undeploy name="${warname}"/>
   </target>
 
 
@@ -132,7 +132,7 @@
         <move file="${assemble.dir}/${appname}-client.jar" toFile="${assemble.dir}/${appname}AppClient.jar"/>
   </target>
 
-     <target name="run" depends="init-common,assemble-client">
+    <target name="run" depends="init-common,assemble-client">
         <antcall target="runclient-common">
           <param name="appclient.application.args" value="http://${http.host}:${http.port}/hello-jaxrpc/hello"/>
         </antcall>
@@ -159,17 +159,17 @@
              <copy file="client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
             <mkdir dir="${assemble.dir}"/>
              <jar destfile="${assemble.dir}/wsclient.war" basedir="${build.classes.dir}/webclient" includes="**"/>
-           </target>
+       </target>
 
-           <target name="deploy-client" depends="init-common">
+       <target name="deploy-client" depends="init-common">
              <property name="client.war" value="${assemble.dir}/wsclient.war"/>
              <echo message="Deploying wsclient.war from ${assemble.dir}." level="verbose"/>
-         <glassfish-embedded-deploy app="${client.war}" />
-           </target>
+             <glassfish-embedded-deploy app="${client.war}" />
+       </target>
 
        <target name="undeploy-client" depends="init-common">
          <glassfish-embedded-undeploy name="wsclient" />
-         </target>
+       </target>
 
        <target  name="undeploy" depends="undeploy-war1,undeploy-client"/>
 
@@ -185,7 +185,7 @@
                </classpath>
                <arg value="http://${http.host}:${http.port}/wsclient/RequestProcessor"/>
              </java>
-           </target>
+       </target>
 
 
 

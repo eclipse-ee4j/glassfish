@@ -41,7 +41,7 @@ public class FedTaxEjb implements SessionBean {
     }
 
     public void ejbCreate() throws RemoteException {
-    System.out.println("In FedTaxEjb::ejbCreate !!");
+        System.out.println("In FedTaxEjb::ejbCreate !!");
     }
 
     // Business service method implementation.

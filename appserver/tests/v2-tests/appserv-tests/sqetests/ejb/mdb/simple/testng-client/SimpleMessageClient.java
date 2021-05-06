@@ -79,7 +79,7 @@ public class SimpleMessageClient {
                 Thread.sleep(100);
             }
         } finally {
-        if (queueSession !=null)
+            if (queueSession !=null)
                 try {
                     queueSession.close();
                 } catch(JMSException ex) { }
@@ -99,7 +99,7 @@ public class SimpleMessageClient {
 
         TextMessage message = null;
 
-    System.out.println("inside recvMessage of mdb appclient");
+        System.out.println("inside recvMessage of mdb appclient");
 
         try {
             connect = tcf.createTopicConnection();

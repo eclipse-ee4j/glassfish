@@ -39,8 +39,8 @@ create table TEAM
 create table TEAMPLAYER
 (
     PLAYER_ID VARCHAR(255) not null,
-        TEAM_ID VARCHAR(255) not null,
-        constraint PK_TEAMPLAYER primary key (PLAYER_ID, TEAM_ID),
+    TEAM_ID VARCHAR(255) not null,
+    constraint PK_TEAMPLAYER primary key (PLAYER_ID, TEAM_ID),
     foreign key (TEAM_ID) references TEAM (TEAM_ID),
     foreign key (PLAYER_ID) references PLAYER (PLAYER_ID)
 )

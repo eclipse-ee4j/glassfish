@@ -53,7 +53,7 @@
       </resource-ref>
       <is-read-only-bean>false</is-read-only-bean>
       <commit-option>B</commit-option>
-     <bean-pool>
+      <bean-pool>
          <steady-pool-size>0</steady-pool-size>
          <resize-quantity>1</resize-quantity>
          <max-pool-size>10</max-pool-size>

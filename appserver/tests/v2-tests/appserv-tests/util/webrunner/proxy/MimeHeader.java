@@ -19,23 +19,23 @@ package com.sun.ejte.ccl.webrunner.proxy;
 import java.util.*;
 
 /**
-* MIME is an internet standard for communicating multimedia content over e-mail systems.MimeHeader extends HashTable so that it can store key value pairs.
-* @author       Deepa Singh(deepa.singh@sun.com)
+ * MIME is an internet standard for communicating multimedia content over e-mail systems.MimeHeader extends HashTable so that it can store key value pairs.
+ * @author       Deepa Singh(deepa.singh@sun.com)
  *Company: Sun Microsystems Inc
-*
-*/
+ *
+ */
 public class MimeHeader extends Hashtable
 {
     /**
-    * Takes a String as a parameter and parses it.Takes a raw MIME-formatted String and enter its key/value pairs into a given instance of MimeHeader.Uses
-         *StringTokenizer to split the input data into individual lines marked by CRLF(\r\n) sequence.
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    * @return       void
-    * @param        data    The string to be parsed
-    */
+     * Takes a String as a parameter and parses it.Takes a raw MIME-formatted String and enter its key/value pairs into a given instance of MimeHeader.Uses
+     *StringTokenizer to split the input data into individual lines marked by CRLF(\r\n) sequence.
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     * @return       void
+     * @param        data    The string to be parsed
+     */
     void parse(String data)
     {
-    StringTokenizer st=new StringTokenizer(data,"\r\n");
+        StringTokenizer st=new StringTokenizer(data,"\r\n");
         while(st.hasMoreTokens())
         {
             String s=st.nextToken();
@@ -47,52 +47,52 @@ public class MimeHeader extends Hashtable
     }
 
     /**
-    * Default Constructor
-         *Class is a subclass of HashTable so that it can conveneintly store and retreive the key/value pairs
-         *associated with a MIME header.It creates a blank MimeHeader with no keys.
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    *
-    * @param        None
-    */
+     * Default Constructor
+     *Class is a subclass of HashTable so that it can conveneintly store and retreive the key/value pairs
+     *associated with a MIME header.It creates a blank MimeHeader with no keys.
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     *
+     * @param        None
+     */
     MimeHeader(){}
 
     /**
-    * This constructor takes strng formatted as MIME header and parses it for the initial contents of the objects.
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    *
-    * @param        d    The string to be parsed
-    */
+     * This constructor takes strng formatted as MIME header and parses it for the initial contents of the objects.
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     *
+     * @param        d    The string to be parsed
+     */
     MimeHeader(String d)
     {
         parse(d);
     }
 
     /**
-    * Converts to String .It takes current key/value pairs stored in the MimeHeader and returns a string representation of them in
-         *MIME format, where keys are printed followed by colon and a space, and then value followed by CRLF.
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    * @return       String
-    */
+     * Converts to String .It takes current key/value pairs stored in the MimeHeader and returns a string representation of them in
+     *MIME format, where keys are printed followed by colon and a space, and then value followed by CRLF.
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     * @return       String
+     */
     public String toString()
     {
         String ret="";
         Enumeration e=keys();
         while(e.hasMoreElements())
         {
-        String key=(String)e.nextElement();
-        String val=(String)get(key);
-        ret+=key + ": " + val + "\r\n";
+            String key=(String)e.nextElement();
+            String val=(String)get(key);
+            ret+=key + ": " + val + "\r\n";
         }
-    return ret;
+        return ret;
     }
 
     /**
-    *To remove the discrepancy in MIME specification for "Content-Type" and "content-type" and "Content-Length" to "content-length"
-         *To avoid problems, all incoming and outgoing MimeHeader keys are converted to canonical form.
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    * @return       String
-    * @param        ms    String to be operated upon
-    */
+     *To remove the discrepancy in MIME specification for "Content-Type" and "content-type" and "Content-Length" to "content-length"
+     *To avoid problems, all incoming and outgoing MimeHeader keys are converted to canonical form.
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     * @return       String
+     * @param        ms    String to be operated upon
+     */
     private String fix(String ms)
     {
         char chars[]=ms.toLowerCase().toCharArray();
@@ -106,26 +106,26 @@ public class MimeHeader extends Hashtable
             }
             upcaseNext=ch=='-';
         }
-    return new String(chars);
+        return new String(chars);
     }
 
     /**
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    * @return       String
-    * @param        key    String to be fetched
-    */
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     * @return       String
+     * @param        key    String to be fetched
+     */
     public String get(String key)
     {
         return (String)super.get(fix(key));
     }
 
     /**
-    *
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    * @return       void
-    * @param        key        The Key String
-    * @param        val      The value String
-    */
+     *
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     * @return       void
+     * @param        key        The Key String
+     * @param        val      The value String
+     */
     public void put(String key,String val)
     {
         super.put(fix(key),val);

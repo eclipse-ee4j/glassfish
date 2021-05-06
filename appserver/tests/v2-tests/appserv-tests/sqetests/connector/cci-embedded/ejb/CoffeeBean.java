@@ -99,11 +99,11 @@ public class CoffeeBean implements SessionBean {
     private Connection getCCIConnection() {
         Connection con = null;
 
-    System.out.println("<========== IN get cci Connection ===========>");
+        System.out.println("<========== IN get cci Connection ===========>");
         try {
             ConnectionSpec spec = new CciConnectionSpec("DBUSER", "DBPASSWORD");
-    System.out.println("<========== Created ISpec ===========>");
-    System.out.println("CF value : " + cf);
+            System.out.println("<========== Created ISpec ===========>");
+            System.out.println("CF value : " + cf);
             con = cf.getConnection(spec);
         } catch (ResourceException ex) {
             ex.printStackTrace();

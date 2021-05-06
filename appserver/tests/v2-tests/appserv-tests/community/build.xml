@@ -53,7 +53,7 @@
 </target>
 
 <target name="build">
-    <ant dir="web/helloworld" target="build"/>
+     <ant dir="web/helloworld" target="build"/>
      <ant dir="ejb30/hello" target="build"/>
      <ant dir="adminweb/basic" target="build"/>
 </target>
@@ -69,7 +69,7 @@
 </target>-->
 
 <target name="deploy" >
-    <ant dir="web/helloworld" target="deploy" inheritAll="false"/>
+     <ant dir="web/helloworld" target="deploy" inheritAll="false"/>
      <ant dir="ejb30/hello" target="deploy" inheritAll="false"/>
     <!-- <ant dir="adminweb/basic" target="deploy"/>-->
 </target>
@@ -80,7 +80,7 @@
 </target>
 
 <!--<target name="run">
-    <ant dir="web/helloworld" target="run"/>
+     <ant dir="web/helloworld" target="run"/>
      <ant dir="ejb30/hello" target="run"/>
      <ant dir="adminweb/basic" target="run"/>
 </target>-->

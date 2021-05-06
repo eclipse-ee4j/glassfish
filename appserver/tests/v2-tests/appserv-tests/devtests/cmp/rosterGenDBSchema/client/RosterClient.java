@@ -28,11 +28,11 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class RosterClient {
 
     private static SimpleReporterAdapter stat =
-    new SimpleReporterAdapter("appserv-tests");
+        new SimpleReporterAdapter("appserv-tests");
 
    public static void main(String[] args) {
        try {
-       System.out.println("START");
+           System.out.println("START");
            stat.addDescription("RosterGenDBSchema");
 
            Context initial = new InitialContext();
@@ -49,8 +49,8 @@ public class RosterClient {
 
            // getMoreInfo(myRoster);
 
-       stat.addStatus("ejbclient RosterGenDBSchema", stat.PASS);
-       stat.printSummary("RosterGenDBSchema");
+           stat.addStatus("ejbclient RosterGenDBSchema", stat.PASS);
+           stat.printSummary("RosterGenDBSchema");
            System.exit(0);
 
        } catch (Exception ex) {
@@ -58,7 +58,7 @@ public class RosterClient {
            ex.printStackTrace();
            stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
        }
-         stat.printSummary("RosterGenDBSchema");
+       stat.printSummary("RosterGenDBSchema");
    } // main
 
 
@@ -86,7 +86,7 @@ public class RosterClient {
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
            ex.printStackTrace();
-         stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
+           stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
        }
 
     } // getSomeInfo
@@ -142,7 +142,7 @@ public class RosterClient {
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
            ex.printStackTrace();
-          stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
+           stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
        }
 
     } // getMoreInfo
@@ -314,7 +314,7 @@ public class RosterClient {
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
            ex.printStackTrace();
-       stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
+           stat.addStatus("ejbclient RosterGenDBSchema", stat.FAIL);
        }
 
     } // insertInfo

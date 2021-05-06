@@ -70,13 +70,13 @@
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/cacerts.jks&quot; -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-      <!-- dummy user added as appclient throwing login window -->
-    <arg value="-textauth"/>
+        <!-- dummy user added as appclient throwing login window -->
+        <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-    <arg line="-xml &quot;${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml&quot;"/>
+        <arg line="-xml &quot;${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml&quot;"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -87,20 +87,20 @@
     </target>
 
     <target name="runclient-local-ee-win" depends="init-common" if="isEE">
-    <echo message="Test is running on Standard/Enterprise Edition!"/>
-    <antcall target="get-certdb-to-jks">
-    </antcall>
+       <echo message="Test is running on Standard/Enterprise Edition!"/>
+       <antcall target="get-certdb-to-jks">
+       </antcall>
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks&quot;" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-      <!-- dummy user added as appclient throwing login window -->
-    <arg value="-textauth"/>
+        <!-- dummy user added as appclient throwing login window -->
+        <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-    <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+        <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -116,18 +116,18 @@
     </target>
 
     <target name="runclient-local-unix" depends="init-common" unless="isEE">
-    <echo message="Test is running on Platform Edition!"/>
+      <echo message="Test is running on Platform Edition!"/>
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks  -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-      <!-- dummy user added as appclient throwing login window -->
-    <arg value="-textauth"/>
+        <!-- dummy user added as appclient throwing login window -->
+        <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-    <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+        <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -139,20 +139,20 @@
     </target>
 
     <target name="runclient-local-ee-unix" depends="init-common" if="isEE">
-    <echo message="Test is running on Standard/Enterprise Edition!"/>
-    <antcall target="get-certdb-to-jks">
-    </antcall>
-      <exec executable="${APPCLIENT}">
+        <echo message="Test is running on Standard/Enterprise Edition!"/>
+        <antcall target="get-certdb-to-jks">
+        </antcall>
+        <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-      <!-- dummy user added as appclient throwing login window -->
-    <arg value="-textauth"/>
+        <!-- dummy user added as appclient throwing login window -->
+        <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-    <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+        <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -184,7 +184,7 @@
         <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks"/>
         <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
         <jvmarg value="-Djavax.net.ssl.trustStorePassword=${master.password}"/>
-    <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
+        <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
@@ -201,12 +201,12 @@
       <exec executable="${env.S1AS_HOME}/lib/certutil" output="${admin.domain.dir}/${admin.domain}/config/certdb.rfc">
         <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
         <arg line="-L -n ${cert.nickname}"/>
-    <arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
+        <arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
       </exec>
       <antcall target="import-cert-jks">
-     <param name="cert.alias" value="${cert.nickname}"/>
-     <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
-     <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
+         <param name="cert.alias" value="${cert.nickname}"/>
+         <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+         <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
       </antcall>
 </target>
 

@@ -131,13 +131,13 @@
    </target>
 
     <target name="build" depends="init-common,compile">
-    <antcall target="ws-package-ejb-jar-common">
+        <antcall target="ws-package-ejb-jar-common">
             <param name="ejbjar.classes"
               value="**/wss/ejbws/taxcal/*.class" />
             <param name="ejbjar.files" value="${build.classes.dir}"/>
             <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
-    </antcall>
-    <antcall target="ws-package-appclientjar-common">
+        </antcall>
+        <antcall target="ws-package-appclientjar-common">
             <param name="appclientjar.classes"
               value="**/wss/ejbws/taxcal/client/*.class" />
             <param name="appclientjar.files"

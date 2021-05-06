@@ -122,7 +122,7 @@ public class SimpleReporterAdapter implements Serializable {
             reporter = Reporter.getInstance(ws_home);
             if(debug)
                 System.out.println("Generating report at \t" + outputDir +
-                        File.separatorChar + "test_results.xml");
+                    File.separatorChar + "test_results.xml");
             reporter.setTestSuite(testSuiteID, testSuiteName, testSuiteDescription);
             reporter.addTest(testSuiteID, testSuiteID, testSuiteName);
             keySets = testCaseStatus.keySet();
@@ -232,7 +232,7 @@ public class SimpleReporterAdapter implements Serializable {
             String value = line.substring( idx+1 );
             envVars.setProperty( key, value );
             if(debug)
-             System.out.println( key + " = " + value );
+                System.out.println( key + " = " + value );
         }
         return envVars;
     }

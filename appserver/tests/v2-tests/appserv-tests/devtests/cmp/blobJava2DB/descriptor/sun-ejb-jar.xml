@@ -24,14 +24,14 @@
   <ejb>
       <ejb-name>BlobTest</ejb-name>
       <jndi-name>SimpleBlobTest</jndi-name>
-    <refresh-period-in-seconds>600</refresh-period-in-seconds>
-    <bean-cache>
+      <refresh-period-in-seconds>600</refresh-period-in-seconds>
+      <bean-cache>
         <max-cache-size>60</max-cache-size>
         <is-cache-overflow-allowed>true</is-cache-overflow-allowed>
         <cache-idle-timeout-in-seconds>600</cache-idle-timeout-in-seconds>
         <removal-timeout-in-seconds>6000</removal-timeout-in-seconds>
         <victim-selection-policy>FIFO</victim-selection-policy>
-    </bean-cache>
+      </bean-cache>
     </ejb>
 
 <pm-descriptors>

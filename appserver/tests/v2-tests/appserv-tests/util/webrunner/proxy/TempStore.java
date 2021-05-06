@@ -19,13 +19,13 @@ package com.sun.ejte.ccl.webrunner.proxy;
 import java.io.*;
 
 
-    /**
-    * This class is for copying array of bytes.
-    * @author       Deepa Singh(deepa.singh@sun.com)
-        *Company: Sun Microsystems Inc
-    *
-    *
-    */
+/**
+ * This class is for copying array of bytes.
+ * @author       Deepa Singh(deepa.singh@sun.com)
+ *Company: Sun Microsystems Inc
+ *
+ *
+ */
 public class TempStore
 {
     String url;
@@ -34,12 +34,12 @@ public class TempStore
     int length=0;
 
     /**
-    * Constructor that Takes two Stringa as parameter
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    *
-    * @param        u    The string URL
-    * @param        m    mimeheader
-    */
+     * Constructor that Takes two Stringa as parameter
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     *
+     * @param        u    The string URL
+     * @param        m    mimeheader
+     */
     public TempStore(String u,MimeHeader m)
     {
         url=u;
@@ -47,19 +47,19 @@ public class TempStore
         String cl=mh.get((String)"Content-Length");
         if(cl!=null)
         {
-        data=new byte[Integer.parseInt(cl)];
+            data=new byte[Integer.parseInt(cl)];
         }
     }
 
 
 
     /**
-    *
-    * @author       Deepa Singh(deepa.singh@sun.com)
-    *
-    * @param        d[]    Byte array
-    * @param        n Integer
-    */
+     *
+     * @author       Deepa Singh(deepa.singh@sun.com)
+     *
+     * @param        d[]    Byte array
+     * @param        n Integer
+     */
     void append(byte d[],int n)
     {
         if(data==null)
@@ -69,15 +69,15 @@ public class TempStore
             length+=n;
         } else if(length+n>data.length)
         {
-        byte old[]=data;
-        data=new byte[old.length+n];
-        System.arraycopy(old,0,data,0,old.length);
-        System.arraycopy(d,0,data,old.length,n);
-        length+=n;
+            byte old[]=data;
+            data=new byte[old.length+n];
+            System.arraycopy(old,0,data,0,old.length);
+            System.arraycopy(d,0,data,old.length,n);
+            length+=n;
         }else
         {
-        System.arraycopy(d,0,data,length,n);
-        length+=n;
+            System.arraycopy(d,0,data,length,n);
+            length+=n;
         }
     }
 }

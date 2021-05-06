@@ -74,14 +74,14 @@ public class AMXConnectionVerifier {
         return( SmartStringifier.toString( o ) );
     }
 
-    private void  listMap(final String    msg, final Map     m)
+    private void listMap(final String msg, final Map m)
     {
         println( msg + ": " + toString( m.keySet() ) );
     }
 
     private void list()
     {
-        final DomainConfig    dcp    = getDomainConfig();
+        final DomainConfig dcp = getDomainConfig();
 
         // Top-level items
         println( "\n--- Top-level --- \n" );

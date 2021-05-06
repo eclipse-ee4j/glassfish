@@ -45,7 +45,7 @@ public class Client {
 
         try {
             System.out.println("START");
-        stat.addDescription("ejbflush");
+            stat.addDescription("ejbflush");
 
             Context initial = new InitialContext();
 
@@ -98,16 +98,16 @@ public class Client {
                 System.out.println("A2 FAILED " + e.getMessage());
             }
 
-        stat.addStatus("ejbclient ejbflush", stat.PASS);
+            stat.addStatus("ejbclient ejbflush", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient ejbflush", stat.PASS);
+            stat.addStatus("ejbclient ejbflush", stat.PASS);
         }
 
-      stat.printSummary("ejbflush");
+        stat.printSummary("ejbflush");
     }
 
 }

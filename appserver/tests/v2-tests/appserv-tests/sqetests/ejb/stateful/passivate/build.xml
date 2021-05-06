@@ -52,7 +52,7 @@
 </target>
 
 <target name="build" depends="compile">
-<antcall target="build-ear-common"/>
+    <antcall target="build-ear-common"/>
 </target>
 
 <target name="deploy" depends="init-common">
@@ -85,15 +85,15 @@
 </target>
 
   <target name="standalone-client" depends="init-common">
-  <delete dir="${build.classes.dir}/ejb/stateful/passivate/standalone" failonerror="false"/>
-  <echo message="assemble.dir is ${assemble.dir}"/>
-  <antcall target="compile-common">
+      <delete dir="${build.classes.dir}/ejb/stateful/passivate/standalone" failonerror="false"/>
+      <echo message="assemble.dir is ${assemble.dir}"/>
+      <antcall target="compile-common">
         <param name="src" value="standalone"/>
-   </antcall>
-    <java classname="ejb.stateful.passivate.standalone.StandaloneClient" fork="yes">
-    <arg line="${admin.host} ${orb.port} beforerestart"/>
+      </antcall>
+      <java classname="ejb.stateful.passivate.standalone.StandaloneClient" fork="yes">
+         <arg line="${admin.host} ${orb.port} beforerestart"/>
          <classpath>
-         <pathelement location="${assemble.dir}/ejb-sfsblifecycleAppClient.jar"/>
+           <pathelement location="${assemble.dir}/ejb-sfsblifecycleAppClient.jar"/>
                 <fileset dir="${env.S1AS_HOME}/lib">
                 <include name="**/*.jar"/>
                 </fileset>

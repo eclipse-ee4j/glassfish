@@ -41,7 +41,7 @@ public class Client {
 
         try {
             System.out.println("START");
-        stat.addDescription("inheritedpk");
+            stat.addDescription("inheritedpk");
 
             Context initial = new InitialContext();
 
@@ -79,15 +79,15 @@ public class Client {
             cbean = chome.findByPrimaryKey(cpk);
             System.out.println("FOUND C: " + cbean.getName());
 
-        stat.addStatus("ejbclient inheritedpk", stat.PASS);
+            stat.addStatus("ejbclient inheritedpk", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient inheritedpk", stat.FAIL);
+            stat.addStatus("ejbclient inheritedpk", stat.FAIL);
         }
-            stat.printSummary("inheritedpk");
+        stat.printSummary("inheritedpk");
     }
 
 }

@@ -54,15 +54,15 @@ public class Client {
             runCreateException11Test();
             runBeanStateResetTest();
 
-        stat.addStatus("ejbclient createExceptionsTest", stat.PASS);
+            stat.addStatus("ejbclient createExceptionsTest", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient createExceptionsTest", stat.FAIL);
+            stat.addStatus("ejbclient createExceptionsTest", stat.FAIL);
         }
-           stat.printSummary("createExceptionsTest");
+        stat.printSummary("createExceptionsTest");
     }
 
     private static void lookupBeans() throws NamingException {

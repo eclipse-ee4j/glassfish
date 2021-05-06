@@ -186,17 +186,17 @@
         <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-    <property name="ctxfactory"
+        <property name="ctxfactory"
                 value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-    <echo message="provider.url used is ${provider.url}"/>
+      <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
-    <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-    <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-    <jvmarg value="-Dj2eelogin.name=${test.user}"/>
-    <jvmarg value="-Dj2eelogin.password=${test.passwd}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+        <jvmarg value="-Dj2eelogin.name=${test.user}"/>
+        <jvmarg value="-Dj2eelogin.password=${test.passwd}"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>

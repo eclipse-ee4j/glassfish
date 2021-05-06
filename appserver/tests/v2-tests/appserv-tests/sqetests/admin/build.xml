@@ -49,13 +49,13 @@
     <java classname="TestDriver"
       dir="."
           fork="yes">
-      <arg value="${admin.user}"/>
-      <arg value="${admin.password}"/>
-      <arg value="${admin.host}"/>
-      <arg value="${admin.port}"/>
-      <!-- following is to check if the protocol is https"/-->
-      <arg value="${enterprise}"/>
-      <arg value="tests.list"/>
+        <arg value="${admin.user}"/>
+        <arg value="${admin.password}"/>
+        <arg value="${admin.host}"/>
+        <arg value="${admin.port}"/>
+        <!-- following is to check if the protocol is https"/-->
+        <arg value="${enterprise}"/>
+        <arg value="tests.list"/>
         <classpath>
             <pathelement path="${s1astest.classpath}"/>
             <pathelement path="${build.classes.dir}/admin"/>

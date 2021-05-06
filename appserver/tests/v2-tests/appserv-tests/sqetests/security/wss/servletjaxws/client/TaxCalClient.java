@@ -37,23 +37,23 @@ public class TaxCalClient {
      * Tests the getStateTax and getFedTax with expected values. If value
      * matched,then test PASSED else FAILED.
      */
-     private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
-            // J2EE simple reporter for logging the test status.
+    private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
+    // J2EE simple reporter for logging the test status.
     private static String taxEndpoint = null;
     private static String testSuite = "sec-wss-annotate-servletendpoint";
     private static String testCase = null;
-        @WebServiceRef(wsdlLocation="http://localhost:8080/wss-tax-web/wss/TaxService?wsdl")
-        static TaxService service;
+    @WebServiceRef(wsdlLocation="http://localhost:8080/wss-tax-web/wss/TaxService?wsdl")
+    static TaxService service;
 
     public static void main (String[] args) {
 
         if(args.length<1){
             System.out.println("TaxCal client: Argument missing."+
-                    " Please provide target" +
-                     "endpoint address as argument");
-                System.exit(1);
+                " Please provide target" +
+                "endpoint address as argument");
+            System.exit(1);
         } else {
-                taxEndpoint = args[0];
+            taxEndpoint = args[0];
         }
 
         stat.addDescription("Security-WSS-ejb webservice");
@@ -61,7 +61,7 @@ public class TaxCalClient {
             TaxCalClient client = new TaxCalClient();
             client.callTaxService();
         }catch(Exception e){
-                e.printStackTrace();
+            e.printStackTrace();
         }
 
         stat.printSummary(testSuite);
@@ -82,12 +82,12 @@ public class TaxCalClient {
 
                 double fedTax = port.getFedTax(income, deductions);
                 System.out.println("Fed tax from annotations based TaxCalService endpoint:" +
-                        fedTax);
+                    fedTax);
 
                 if(fedTax == expectedTax) {
-                        testStatus = stat.PASS;
+                    testStatus = stat.PASS;
                 } else {
-                        testStatus = stat.FAIL;
+                    testStatus = stat.FAIL;
                 }
             }else {
                 System.out.println("Error: Not able to get the service and is null!");
@@ -95,11 +95,11 @@ public class TaxCalClient {
             }
 
         } catch (Exception ex) {
-                System.out.println("TaxCal client failed");
-                ex.printStackTrace();
-                testStatus = stat.FAIL;
+            System.out.println("TaxCal client failed");
+            ex.printStackTrace();
+            testStatus = stat.FAIL;
         } finally {
-                stat.addStatus(testSuite+"-getFedTax" , testStatus);
+            stat.addStatus(testSuite+"-getFedTax" , testStatus);
         }
     }
 }

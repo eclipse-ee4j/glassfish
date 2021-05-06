@@ -41,9 +41,9 @@ public class ProductServlet extends HttpServlet {
 
        try {
 
-       InitialContext ic = new InitialContext();
+           InitialContext ic = new InitialContext();
 
-       System.out.println("looking up java:comp/env/ejb/MyProduct");
+           System.out.println("looking up java:comp/env/ejb/MyProduct");
            Object objref = ic.lookup("java:comp/env/ejb/MyProduct");
            System.out.println("lookup ok");
 

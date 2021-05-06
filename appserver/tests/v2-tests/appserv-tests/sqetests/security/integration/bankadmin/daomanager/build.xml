@@ -72,11 +72,11 @@
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <arg value="-xml"/>
         <arg value="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-    <arg value="-textauth"/>
-    <arg value="-user"/>
-    <arg value="scott"/>
-    <arg value="-password"/>
-    <arg value="j2ee"/>
+        <arg value="-textauth"/>
+        <arg value="-user"/>
+        <arg value="scott"/>
+        <arg value="-password"/>
+        <arg value="j2ee"/>
       </exec>
     </target>
 

@@ -24,11 +24,11 @@
       <ejb-name>SessionTest</ejb-name>
       <jndi-name>MySessionTest</jndi-name>
       <resource-ref>
-   <res-ref-name>url/myURL</res-ref-name>
-   <jndi-name>http://jse.east.sun.com</jndi-name>
-</resource-ref>
+         <res-ref-name>url/myURL</res-ref-name>
+         <jndi-name>http://jse.east.sun.com</jndi-name>
+      </resource-ref>
       <pass-by-reference>false</pass-by-reference>
-<bean-cache>
+      <bean-cache>
 <!--
  In case a stateful bean represents a user,
  a healthy max-cache-size of beans could be the expected number of concurrent
@@ -50,13 +50,13 @@
          <!--
          Possible values are First In, First Out (FIFO), Least Recently Used (LRU), Not Recently Used (NRU). The default value is NRU, which is actually pseudo-LRU.
          The victims are generally passivated into a backup store (typically a file system or database).
-          This store is cleaned during startup, and also by a periodic background
-          process that removes idle entries as specified by removal-timeout-in-seconds.
-          The backup store is monitored by a background thread (or sweeper thread)
-          to remove unwanted entries.
+         This store is cleaned during startup, and also by a periodic background
+         process that removes idle entries as specified by removal-timeout-in-seconds.
+         The backup store is monitored by a background thread (or sweeper thread)
+         to remove unwanted entries.
          -->
         <victim-selection-policy>LRU</victim-selection-policy>
-</bean-cache>
-</ejb>
+      </bean-cache>
+    </ejb>
   </enterprise-beans>
 </sun-ejb-jar>

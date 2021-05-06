@@ -128,7 +128,7 @@
 
   <target name="usage">
     <echo message="=============================================="/>
-     <echo message="****** Security-WSS Testsuites *****"/>
+    <echo message="****** Security-WSS Testsuites *****"/>
     <echo message="ant all -->Run all tests"/>
     <echo message="=============================================="/>
   </target>
@@ -170,13 +170,13 @@
                 <param name="cert.file" value="clientcert_rfc.crt"/>
         </antcall>
 
-    <!-- JSSE trust store -->
-    <antcall target="est-cert-trust-jks-ee"/>
+        <!-- JSSE trust store -->
+        <antcall target="est-cert-trust-jks-ee"/>
 
     </target>
 
     <target name="est-cert-trust-jks-ee" depends="init-common">
-    <antcall target="get-certdb-to-jks">
+        <antcall target="get-certdb-to-jks">
                 <param name="cert.nickname" value="s1as"/>
         </antcall>
         <antcall target="import-cert-jks">
@@ -242,8 +242,8 @@
         <param name="jks.pass" value="changeit"/>
         </antcall>
     <antcall target="get-certdb-to-jks">
-                <param name="cert.nickname" value="s1as"/>
-        </antcall>
+       <param name="cert.nickname" value="s1as"/>
+    </antcall>
   </target>
 
   <target name="unsetup-client-cert-s1as-ee" depends="init-common" if="isEE">

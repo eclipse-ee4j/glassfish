@@ -67,12 +67,12 @@ public class Reporter extends Thread implements Serializable {
     public void setTestSuite( String id, String name, String description )
     {
 
-    TestSuite myTestSuite =  (TestSuite)testSuiteHash.get( id.trim() );
-    if ( myTestSuite == null )
-    {
-        myTestSuite = new TestSuite( id, name,description);
-        testSuiteHash.put( id.trim(), myTestSuite );
-    }
+        TestSuite myTestSuite =  (TestSuite)testSuiteHash.get( id.trim() );
+        if ( myTestSuite == null )
+        {
+            myTestSuite = new TestSuite( id, name,description);
+            testSuiteHash.put( id.trim(), myTestSuite );
+        }
     }
 
     /**
@@ -80,12 +80,12 @@ public class Reporter extends Thread implements Serializable {
      */
     public void setTestSuite( String id, String name)
     {
-    TestSuite myTestSuite =  (TestSuite)testSuiteHash.get( id.trim() );
-    if ( myTestSuite == null )
-    {
-        myTestSuite = new TestSuite( id.trim(), name);
-        testSuiteHash.put( id.trim(), myTestSuite );
-    }
+        TestSuite myTestSuite =  (TestSuite)testSuiteHash.get( id.trim() );
+        if ( myTestSuite == null )
+        {
+            myTestSuite = new TestSuite( id.trim(), name);
+            testSuiteHash.put( id.trim(), myTestSuite );
+        }
     }
 
     /**
@@ -93,13 +93,13 @@ public class Reporter extends Thread implements Serializable {
      */
     public void setTestSuite( String id)
     {
-    System.err.println("setTestSuite with id -> " + id );
-    TestSuite myTestSuite =  (TestSuite)testSuiteHash.get( id.trim() );
-    if ( myTestSuite == null )
-    {
-        myTestSuite = new TestSuite( id.trim());
-        testSuiteHash.put( id.trim(), myTestSuite );
-    }
+        System.err.println("setTestSuite with id -> " + id );
+        TestSuite myTestSuite =  (TestSuite)testSuiteHash.get( id.trim() );
+        if ( myTestSuite == null )
+        {
+            myTestSuite = new TestSuite( id.trim());
+            testSuiteHash.put( id.trim(), myTestSuite );
+        }
     }
 
     /**
@@ -109,16 +109,16 @@ public class Reporter extends Thread implements Serializable {
      */
     public void addTest( String testSuiteId,  String testId, String testName, String testDescription )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:addTest might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-        return;
-    }
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:addTest might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
+        }
 
-    Test myTest = new Test( testId, testName, testDescription );
-    myTestSuite.addTest( myTest );
+        Test myTest = new Test( testId, testName, testDescription );
+        myTestSuite.addTest( myTest );
     }
 
     /**
@@ -128,16 +128,16 @@ public class Reporter extends Thread implements Serializable {
      */
     public void addTest( String testSuiteId,  String testId, String testName )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:addTest might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-        return;
-    }
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:addTest might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
+        }
 
-    Test myTest = new Test( testId, testName );
-    myTestSuite.addTest( myTest );
+        Test myTest = new Test( testId, testName );
+        myTestSuite.addTest( myTest );
     }
 
     /**
@@ -147,21 +147,21 @@ public class Reporter extends Thread implements Serializable {
      */
     public void addTest( String testSuiteId,  String testId )
     {
-    System.out.println("addTest with testSuiteId:: testId -> " + testSuiteId + "::" + testId );
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:addTest might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-        return;
+        System.out.println("addTest with testSuiteId:: testId -> " + testSuiteId + "::" + testId );
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:addTest might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
+        }
+
+        Test myTest = new Test( testId );
+        myTestSuite.addTest( myTest );
     }
 
-    Test myTest = new Test( testId );
-    myTestSuite.addTest( myTest );
-    }
 
-
-     /**
+    /**
         After adding a Test using addTest , We need to use this setTestStatus method
       for setting Test status(pass/fail) information about particular Test. We need to  pass both TestSuiteId and TestId  al
 ong with expected and actual result. This is optional as in some case
@@ -174,23 +174,23 @@ ong with expected and actual result. This is optional as in some case
 
         if ( myTestSuite== null )
         {
-                System.err.println("ERROR:setTestStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
-                System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-                return;
+            System.err.println("ERROR:setTestStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
         }
 
         Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
         if ( myTest == null )
         {
-                System.err.println("ERROR:setTestStatus might have called without addTest. PENDING : Shall we throw Exception?");
-                System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
-                return;
+            System.err.println("ERROR:setTestStatus might have called without addTest. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
+            return;
         }
         myTest.setStatus( status);
         myTest.setExpected( expected);
         myTest.setActual( actual);
 
-     }
+    }
 
     /**
     After adding a Test using addTest , We need to use this setTestStatus method
@@ -199,27 +199,27 @@ ong with expected and actual result. This is optional as in some case
      */
     public void setTestStatus ( String testSuiteId, String testId, String status, String statusDescription )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
 
 
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:setTestStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-        return;
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:setTestStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
+        }
+
+        Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:setTestStatus might have called without addTest. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
+            return;
+        }
+        myTest.setStatus( status);
+        myTest.setStatusDescription( statusDescription);
+
     }
-
-    Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:setTestStatus might have called without addTest. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
-        return;
-    }
-    myTest.setStatus( status);
-    myTest.setStatusDescription( statusDescription);
-
-     }
 
     /**
     After adding a Test using addTest , We need to use this setTestStatus method
@@ -228,24 +228,24 @@ ong with expected and actual result. This is optional as in some case
      */
     public void setTestStatus ( String testSuiteId, String testId, String status )
     {
-    System.out.println("setTestStatus testSuiteId::testId::status -> " + testSuiteId + "::" + testId + "::" + status );
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:setTestStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-        return;
-    }
+        System.out.println("setTestStatus testSuiteId::testId::status -> " + testSuiteId + "::" + testId + "::" + status );
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:setTestStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
+        }
 
-    Test myTest =(Test) myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:setTestStatus might have called without addTest. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
-        return;
+        Test myTest =(Test) myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:setTestStatus might have called without addTest. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
+            return;
+        }
+        myTest.setStatus( status);
     }
-    myTest.setStatus( status);
-     }
 
     /**
     After adding a Test using addTest, We need to use this addTestCase method
@@ -253,23 +253,23 @@ ong with expected and actual result. This is optional as in some case
      */
     public void addTestCase( String testSuiteId,  String testId , String testCaseId)
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:addTestCase might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
-        return;
-    }
-    Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:addTestCase might have called without addTest. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
-        return;
-    }
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:addTestCase might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id -> " + testSuiteId.trim() );
+            return;
+        }
+        Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:addTestCase might have called without addTest. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
+            return;
+        }
 
-    TestCase myTestCase = new TestCase( testCaseId.trim() );
-    myTest.addTestCase ( myTestCase );
+        TestCase myTestCase = new TestCase( testCaseId.trim() );
+        myTest.addTestCase ( myTestCase );
     }
 
     /**
@@ -278,22 +278,22 @@ ong with expected and actual result. This is optional as in some case
      */
     public void addTestCase( String testSuiteId,  String testId , String testCaseId, String testCaseName )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:addTestCase might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        return;
-    }
-    Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:addTestCase might have called without addTest. PENDING : Shall we throw Exception?");
-        System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
-        return;
-    }
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:addTestCase might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            return;
+        }
+        Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:addTestCase might have called without addTest. PENDING : Shall we throw Exception?");
+            System.err.println("Given TestSuite Id::Test Id -> " + testSuiteId.trim() + "::" + testId.trim() );
+            return;
+        }
 
-    TestCase myTestCase = new TestCase( testCaseId.trim(), testCaseName );
-    myTest.addTestCase ( myTestCase );
+        TestCase myTestCase = new TestCase( testCaseId.trim(), testCaseName );
+        myTest.addTestCase ( myTestCase );
     }
 
     /**
@@ -302,26 +302,26 @@ ong with expected and actual result. This is optional as in some case
      */
     public void addTestCase( String testSuiteId,  String testId , String testCaseId, String testCaseName , String testCaseDescription )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:addTestCase might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        return;
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:addTestCase might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            return;
+        }
+        Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:addTestCase might have called without addTest. PENDING : Shall we throw Exception?");
+            return;
+        }
+
+        TestCase myTestCase = new TestCase( testCaseId.trim(), testCaseName, testCaseDescription );
+        myTest.addTestCase ( myTestCase );
     }
-    Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:addTestCase might have called without addTest. PENDING : Shall we throw Exception?");
-        return;
-    }
-
-    TestCase myTestCase = new TestCase( testCaseId.trim(), testCaseName, testCaseDescription );
-    myTest.addTestCase ( myTestCase );
-    }
 
 
 
-     /**
+    /**
         After adding a TestCase using addTestCase , We need to use this setTestCaseStatus method
       for setting TestCase status(pass/fail) information about particular TestCase. We need to  pass TestSuiteId, TestId and
  TestCaseId  along with status information. We pass expected and actual information along with pass/fail here
@@ -331,27 +331,27 @@ ong with expected and actual result. This is optional as in some case
         TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
         if ( myTestSuite== null )
         {
-                System.err.println("ERROR:setTestCaseStatus might have called without setTestSuite. PENDING : Shall we throwException?");
-                return;
+            System.err.println("ERROR:setTestCaseStatus might have called without setTestSuite. PENDING : Shall we throwException?");
+            return;
         }
 
         Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
         if ( myTest == null )
         {
-                System.err.println("ERROR:setTestCaseStatus might have called without addTest. PENDING : Shall we throw Exception?");
-                return;
+            System.err.println("ERROR:setTestCaseStatus might have called without addTest. PENDING : Shall we throw Exception?");
+            return;
         }
         TestCase myTestCase =(TestCase) myTest.getTestCaseHash().get( testCaseId.trim() );
         if ( myTestCase == null )
         {
-                System.err.println("ERROR:setTestCaseStatus might have called without addTestCase. PENDING : Shall we throwException?");
-                return;
+            System.err.println("ERROR:setTestCaseStatus might have called without addTestCase. PENDING : Shall we throwException?");
+            return;
         }
         myTestCase.setStatus( status);
         myTestCase.setExpected( expected);
         myTestCase.setActual( actual);
 
-     }
+    }
 
 
     /**
@@ -361,29 +361,29 @@ ong with expected and actual result. This is optional as in some case
      */
     public void setTestCaseStatus ( String testSuiteId, String testId, String testCaseId,  String status, String statusDescription )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:setTestCaseStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        return;
-    }
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:setTestCaseStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            return;
+        }
 
-    Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:setTestCaseStatus might have called without addTest. PENDING : Shall we throw Exception?");
-        return;
-    }
-    TestCase myTestCase =(TestCase) myTest.getTestCaseHash().get( testCaseId.trim() );
-    if ( myTestCase == null )
-    {
-        System.err.println("ERROR:setTestCaseStatus might have called without addTestCase. PENDING : Shall we throw Exception?");
-        return;
-    }
-    myTestCase.setStatus( status);
-    myTestCase.setStatusDescription( statusDescription);
+        Test myTest = (Test)myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:setTestCaseStatus might have called without addTest. PENDING : Shall we throw Exception?");
+            return;
+        }
+        TestCase myTestCase =(TestCase) myTest.getTestCaseHash().get( testCaseId.trim() );
+        if ( myTestCase == null )
+        {
+            System.err.println("ERROR:setTestCaseStatus might have called without addTestCase. PENDING : Shall we throw Exception?");
+            return;
+        }
+        myTestCase.setStatus( status);
+        myTestCase.setStatusDescription( statusDescription);
 
-     }
+    }
 
 
     /**
@@ -393,28 +393,28 @@ ong with expected and actual result. This is optional as in some case
      */
     public void setTestCaseStatus ( String testSuiteId, String testId, String testCaseId,  String status )
     {
-    TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
-    if ( myTestSuite== null )
-    {
-        System.err.println("ERROR:setTestCaseStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
-        return;
-    }
+        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId.trim() );
+        if ( myTestSuite== null )
+        {
+            System.err.println("ERROR:setTestCaseStatus might have called without setTestSuite. PENDING : Shall we throw Exception?");
+            return;
+        }
 
-    Test myTest =(Test) myTestSuite.getTestHash().get( testId.trim() );
-    if ( myTest == null )
-    {
-        System.err.println("ERROR:setTestCaseStatus might have called without addTest. PENDING : Shall we throw Exception?");
-        return;
-    }
-    TestCase myTestCase = (TestCase)myTest.getTestCaseHash().get( testCaseId.trim() );
-    if ( myTestCase == null )
-    {
-        System.err.println("ERROR:setTestCaseStatus might have called without addTestCase. PENDING : Shall we throw Exception?");
-        return;
-    }
-    myTestCase.setStatus( status);
+        Test myTest =(Test) myTestSuite.getTestHash().get( testId.trim() );
+        if ( myTest == null )
+        {
+            System.err.println("ERROR:setTestCaseStatus might have called without addTest. PENDING : Shall we throw Exception?");
+            return;
+        }
+        TestCase myTestCase = (TestCase)myTest.getTestCaseHash().get( testCaseId.trim() );
+        if ( myTestCase == null )
+        {
+            System.err.println("ERROR:setTestCaseStatus might have called without addTestCase. PENDING : Shall we throw Exception?");
+            return;
+        }
+        myTestCase.setStatus( status);
 
-     }
+    }
 
 
     /**
@@ -454,17 +454,17 @@ ong with expected and actual result. This is optional as in some case
         return reporterInstance;
     }
 
-      public static Reporter getInstance( String resultFilePath,boolean pathSpecified )
-      {
-       if ( reporterInstance == null )
-       {
-        reporterInstance = new Reporter(resultFilePath );
+    public static Reporter getInstance( String resultFilePath,boolean pathSpecified )
+    {
+        if ( reporterInstance == null )
+        {
+            reporterInstance = new Reporter(resultFilePath );
 
-       }
-       return reporterInstance;
-       }
+        }
+        return reporterInstance;
+    }
 
-      //done only for the webtests.
+    //done only for the webtests.
 
     /*public static Reporter getInstance(String wshome) {
         if ( reporterInstance == null ) {
@@ -484,53 +484,53 @@ ong with expected and actual result. This is optional as in some case
 
 
     public static Reporter getInstance( OutputStream outStream  )
-      {
-       if ( reporterInstance == null )
-       {
-        reporterInstance = new Reporter(outStream );
+    {
+        if ( reporterInstance == null )
+        {
+            reporterInstance = new Reporter(outStream );
 
-       }
-       return reporterInstance;
-       }
-
-      public static Reporter getInstance( Writer writer  )
-      {
-       if ( reporterInstance == null )
-       {
-
-        reporterInstance = new Reporter(writer );
-
-       }
-       return reporterInstance;
-       }
-    /* CONSTRUCTORS */
-
-     private Reporter( )
-     {
-      try{
-          Runtime.getRuntime().addShutdownHook(this);
-      } catch (java.lang.Exception ex){
-            //System.out.println("WARNING: Reporter hook thread not created. No XML file will be produced.");
-            System.out.println(ex.getMessage());
-      }
+        }
+        return reporterInstance;
     }
 
-     private Reporter( String resultFilePath )
-     {
-      try{
-       resultFile= resultFilePath;
+    public static Reporter getInstance( Writer writer  )
+    {
+        if ( reporterInstance == null )
+        {
 
-          Runtime.getRuntime().addShutdownHook(this);
-      } catch (java.lang.Exception ex){
+            reporterInstance = new Reporter(writer );
+
+        }
+        return reporterInstance;
+    }
+    /* CONSTRUCTORS */
+
+    private Reporter( )
+    {
+        try{
+            Runtime.getRuntime().addShutdownHook(this);
+        } catch (java.lang.Exception ex){
             //System.out.println("WARNING: Reporter hook thread not created. No XML file will be produced.");
-      }
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private Reporter( String resultFilePath )
+    {
+        try{
+            resultFile= resultFilePath;
+
+            Runtime.getRuntime().addShutdownHook(this);
+        } catch (java.lang.Exception ex){
+            //System.out.println("WARNING: Reporter hook thread not created. No XML file will be produced.");
+        }
     }
 
 
 
     private Reporter (OutputStream o) {
-    this();
-    out = new PrintWriter(o);
+        this();
+        out = new PrintWriter(o);
     }
 
 
@@ -539,131 +539,131 @@ ong with expected and actual result. This is optional as in some case
      * which extends PrintWriter.    */
 
     private Reporter (Writer w) {
-    this();
-    out = new PrintWriter(w);
+        this();
+        out = new PrintWriter(w);
     }
 
 
 
- public void generateValidReport( )
- {
-
-//     System.out.println("REPORTER\t Inside generateValidReport");
-     FileChannel rChannel = null;
-     FileChannel wChannel = null;
-     try
-     {
-
-    //Now flush all the TestSuite info
-
-    //System.out.println("REPORTER\t generateValidReport.flushAll");
-         flushAll();
-
-    String oFileName =null;
-    if ( resultFile.lastIndexOf(".") > 0 )
+    public void generateValidReport( )
     {
-        oFileName = resultFile.substring(0, resultFile.lastIndexOf(".") ) + "Valid.xml";
-    }
-    else
-    {
-        oFileName = resultFile + "Valid.xml";
-    }
-        wChannel = new FileOutputStream(oFileName).getChannel();
 
-    String osName = System.getProperty("os.name");
-    String osVersion = System.getProperty("os.version");
-    String currentDate = (new Date()).toString();
+        //     System.out.println("REPORTER\t Inside generateValidReport");
+        FileChannel rChannel = null;
+        FileChannel wChannel = null;
+        try
+        {
 
-    String extraXML = "<report> <date> " + currentDate + "</date><configuration>";
-    extraXML += "<os>" + osName + osVersion + "</os>";
-    extraXML += "<jdkVersion>" + System.getProperty("java.version") + "</jdkVersion>";
+            //Now flush all the TestSuite info
 
-    String machineName = "unavailable";
-        InputStream in = null;
-    try {
+            //System.out.println("REPORTER\t generateValidReport.flushAll");
+            flushAll();
 
-        in  = Runtime.getRuntime().exec("uname -n").getInputStream();
-        byte[] myBytes = new byte[200];
-        in.read(myBytes);
-        machineName = new String( myBytes ).trim();
-    }
-    catch ( Exception me ) {
-    } finally {
-            close(in);
+            String oFileName =null;
+            if ( resultFile.lastIndexOf(".") > 0 )
+            {
+                oFileName = resultFile.substring(0, resultFile.lastIndexOf(".") ) + "Valid.xml";
+            }
+            else
+            {
+                oFileName = resultFile + "Valid.xml";
+            }
+            wChannel = new FileOutputStream(oFileName).getChannel();
+
+            String osName = System.getProperty("os.name");
+            String osVersion = System.getProperty("os.version");
+            String currentDate = (new Date()).toString();
+
+            String extraXML = "<report> <date> " + currentDate + "</date><configuration>";
+            extraXML += "<os>" + osName + osVersion + "</os>";
+            extraXML += "<jdkVersion>" + System.getProperty("java.version") + "</jdkVersion>";
+
+            String machineName = "unavailable";
+            InputStream in = null;
+            try {
+
+                in  = Runtime.getRuntime().exec("uname -n").getInputStream();
+                byte[] myBytes = new byte[200];
+                in.read(myBytes);
+                machineName = new String( myBytes ).trim();
+            }
+            catch ( Exception me ) {
+            } finally {
+                close(in);
+            }
+
+            extraXML += "<machineName>" + machineName + "</machineName>";
+            extraXML += "</configuration> <testsuites>";
+
+            wChannel.write(ByteBuffer.wrap(extraXML.getBytes()));
+
+            rChannel = new FileInputStream(resultFile).getChannel();
+            wChannel.transferFrom(rChannel, wChannel.position(), rChannel.size());
+            wChannel.position(wChannel.position() + rChannel.size());
+
+            wChannel.write(ByteBuffer.wrap("</testsuites>\n</report>\n".getBytes()));
+            //System.out.println("REPORTER\t File validation complete");
+
         }
-
-    extraXML += "<machineName>" + machineName + "</machineName>";
-    extraXML += "</configuration> <testsuites>";
-
-    wChannel.write(ByteBuffer.wrap(extraXML.getBytes()));
-
-        rChannel = new FileInputStream(resultFile).getChannel();
-        wChannel.transferFrom(rChannel, wChannel.position(), rChannel.size());
-        wChannel.position(wChannel.position() + rChannel.size());
-
-    wChannel.write(ByteBuffer.wrap("</testsuites>\n</report>\n".getBytes()));
-        //System.out.println("REPORTER\t File validation complete");
-
-    }
-    catch ( Exception e )
-    {
-        System.out.println("ERROR : " + e );
-    } finally {
+        catch ( Exception e )
+        {
+            System.out.println("ERROR : " + e );
+        } finally {
             close(rChannel);
             close(wChannel);
         }
-   }
-
-   public void flushAll ( )
-   {
-//    System.out.println("REPORTER\t inside flushAll") ;
-       InputStream in = null;
-       FileOutputStream foutput = null;
-       try
-    {
-        Enumeration testSuiteEnum = testSuiteHash.keys();
-
-        if ( resultFile.equals("default.xml") )
-        {
-            in  = Runtime.getRuntime().exec("uname -n").getInputStream();
-            byte[] myBytes = new byte[200];
-            in.read(myBytes);
-            String myResultFile = "result_";
-            String machineName = new String( myBytes ).trim();
-            myResultFile += machineName;
-
-            Calendar  myCalendar  = Calendar.getInstance();
-            String month = new Integer( myCalendar.get ( Calendar.MONTH)).toString();
-            String day = new Integer(myCalendar.get ( Calendar.DAY_OF_MONTH)).toString();
-            String year = new Integer(myCalendar.get ( Calendar.YEAR)).toString();
-             myResultFile += "_" + month + day + year + ".xml";
-            resultFile= myResultFile;
-
-        }
-
-        foutput = new FileOutputStream( resultFile, true );
-        while ( testSuiteEnum.hasMoreElements( ) )
-        {
-            String testSuiteId = (String) testSuiteEnum.nextElement();
-            flush( testSuiteId, foutput );
-        }
-
-        System.out.println("in flushAll , creating new testSuiteHash");
-        // Now take out the TestSuite info from memory
-        testSuiteHash = new Hashtable();
     }
-    catch ( Exception e )
+
+    public void flushAll ( )
     {
-        System.err.println("ERROR: " + e );
-    } finally {
+        //    System.out.println("REPORTER\t inside flushAll") ;
+        InputStream in = null;
+        FileOutputStream foutput = null;
+        try
+        {
+            Enumeration testSuiteEnum = testSuiteHash.keys();
+
+            if ( resultFile.equals("default.xml") )
+            {
+                in  = Runtime.getRuntime().exec("uname -n").getInputStream();
+                byte[] myBytes = new byte[200];
+                in.read(myBytes);
+                String myResultFile = "result_";
+                String machineName = new String( myBytes ).trim();
+                myResultFile += machineName;
+
+                Calendar  myCalendar  = Calendar.getInstance();
+                String month = new Integer( myCalendar.get ( Calendar.MONTH)).toString();
+                String day = new Integer(myCalendar.get ( Calendar.DAY_OF_MONTH)).toString();
+                String year = new Integer(myCalendar.get ( Calendar.YEAR)).toString();
+                myResultFile += "_" + month + day + year + ".xml";
+                resultFile= myResultFile;
+
+            }
+
+            foutput = new FileOutputStream( resultFile, true );
+            while ( testSuiteEnum.hasMoreElements( ) )
+            {
+                String testSuiteId = (String) testSuiteEnum.nextElement();
+                flush( testSuiteId, foutput );
+            }
+
+            System.out.println("in flushAll , creating new testSuiteHash");
+            // Now take out the TestSuite info from memory
+            testSuiteHash = new Hashtable();
+        }
+        catch ( Exception e )
+        {
+            System.err.println("ERROR: " + e );
+        } finally {
             close(in);
             close(foutput);
         }
 
 
-   }
+    }
 
-     /**
+    /**
      * This method prepares and output an XML representation of the Reporter class' content for the given testSuite.
      * @param testSuiteName the test suite's name.
      * @return returns true if the file is succesfully created
@@ -673,44 +673,44 @@ ong with expected and actual result. This is optional as in some case
     public boolean flush(String testSuiteId)
     {
         //System.out.println("REPORTER\t flush(testsuiteID");
-    boolean returnVal=false;
+        boolean returnVal=false;
         InputStream in = null;
         FileOutputStream foutput = null;
         try
         {
 
-         if ( resultFile.equals("default.xml") )
-                {
-                        in  = Runtime.getRuntime().exec("uname -n").getInputStream();
-                        byte[] myBytes = new byte[200];
-                        in.read(myBytes);
-                        String myResultFile = "result_";
-                        String machineName = new String( myBytes ).trim();
-                        myResultFile += machineName;
+            if ( resultFile.equals("default.xml") )
+            {
+                in  = Runtime.getRuntime().exec("uname -n").getInputStream();
+                byte[] myBytes = new byte[200];
+                in.read(myBytes);
+                String myResultFile = "result_";
+                String machineName = new String( myBytes ).trim();
+                myResultFile += machineName;
 
-                        Calendar  myCalendar  = Calendar.getInstance();
-            String month = new Integer( myCalendar.get ( Calendar.MONTH)).toString();
-            String day = new Integer(myCalendar.get ( Calendar.DAY_OF_MONTH)).toString();
-            String year = new Integer(myCalendar.get ( Calendar.YEAR)).toString();
-                        myResultFile += "_" + month + day + year + ".xml";
-                        resultFile= myResultFile;
+                Calendar  myCalendar  = Calendar.getInstance();
+                String month = new Integer( myCalendar.get ( Calendar.MONTH)).toString();
+                String day = new Integer(myCalendar.get ( Calendar.DAY_OF_MONTH)).toString();
+                String year = new Integer(myCalendar.get ( Calendar.YEAR)).toString();
+                myResultFile += "_" + month + day + year + ".xml";
+                resultFile= myResultFile;
 
-                }
+            }
 
-        foutput = new FileOutputStream( resultFile, true );
-        returnVal= flush( testSuiteId, foutput);
-          }
-          catch ( Exception e )
-    {
-        System.err.println("ERROR : " + e );
-    } finally {
+            foutput = new FileOutputStream( resultFile, true );
+            returnVal= flush( testSuiteId, foutput);
+        }
+        catch ( Exception e )
+        {
+            System.err.println("ERROR : " + e );
+        } finally {
             close(in);
             close(foutput);
         }
-    return returnVal;
+        return returnVal;
     }
 
-     /**
+    /**
      * This method prepares and output an XML representation of the Reporter class' content for the given testSuite.
      * @param testSuiteName the test suite's name.
      * @param foutput the FileOutputStream in which we need to write.
@@ -721,149 +721,149 @@ ong with expected and actual result. This is optional as in some case
         try{
             StringBuffer xmlRepresentation = new StringBuffer();
 
-       /*
+            /*
             xmlRepresentation.append("<?xml version=\"1.0\"?>\n");
             xmlRepresentation.append("<!DOCTYPE testsuite SYSTEM \"test_suite.dtd\">\n");
 
             xmlRepresentation.append("<!-- ID are defined as: test suite: test case : local id-->\n");
-        */
+             */
 
-        TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId );
-        if ( myTestSuite == null )
-        {
-        System.err.println("ERROR: Information for TestSuite Id : " + testSuiteId + " doesn't exist");
-        return false;
-        }
-        String testSuiteName = myTestSuite.getName();
-        String testSuiteDescription = myTestSuite.getDescription();
+            TestSuite myTestSuite = (TestSuite)testSuiteHash.get( testSuiteId );
+            if ( myTestSuite == null )
+            {
+                System.err.println("ERROR: Information for TestSuite Id : " + testSuiteId + " doesn't exist");
+                return false;
+            }
+            String testSuiteName = myTestSuite.getName();
+            String testSuiteDescription = myTestSuite.getDescription();
 
             xmlRepresentation.append("<testsuite>\n" );
             xmlRepresentation.append("  <id> " + testSuiteId + " </id>\n");
 
-        if (!testSuiteName.equals( ReporterConstants.NA ) )
-        {
-            xmlRepresentation.append("<name>" + testSuiteName.trim() + "</name>\n");
-        }
-        if (!testSuiteDescription.equals( ReporterConstants.NA ) )
-        {
-            xmlRepresentation.append("<description><![CDATA[" + testSuiteDescription + "]]></description>\n");
-        }
+            if (!testSuiteName.equals( ReporterConstants.NA ) )
+            {
+                xmlRepresentation.append("<name>" + testSuiteName.trim() + "</name>\n");
+            }
+            if (!testSuiteDescription.equals( ReporterConstants.NA ) )
+            {
+                xmlRepresentation.append("<description><![CDATA[" + testSuiteDescription + "]]></description>\n");
+            }
 
-        Hashtable testHash = myTestSuite.getTestHash( );
+            Hashtable testHash = myTestSuite.getTestHash( );
 
-        Vector testIdVector = myTestSuite.getTestIdVector( );
+            Vector testIdVector = myTestSuite.getTestIdVector( );
 
-        xmlRepresentation.append("<tests>\n");
-        for ( int ti=0; ti< testIdVector.size(); ti++ )
-        {
+            xmlRepresentation.append("<tests>\n");
+            for ( int ti=0; ti< testIdVector.size(); ti++ )
+            {
 
-        String testId = (String)testIdVector.elementAt(ti );
-        Test myTest = (Test)testHash.get( testId.trim() );
-        String testName = myTest.getName();
-        String testDescription = myTest.getDescription();
-        String testStatus = myTest.getStatus();
-        String testStatusDescription = myTest.getStatusDescription();
+                String testId = (String)testIdVector.elementAt(ti );
+                Test myTest = (Test)testHash.get( testId.trim() );
+                String testName = myTest.getName();
+                String testDescription = myTest.getDescription();
+                String testStatus = myTest.getStatus();
+                String testStatusDescription = myTest.getStatusDescription();
 
-        String testExpected= myTest.getExpected( );
-        String testActual= myTest.getActual( );
+                String testExpected= myTest.getExpected( );
+                String testActual= myTest.getActual( );
 
-        xmlRepresentation.append("<test>\n");
+                xmlRepresentation.append("<test>\n");
                 xmlRepresentation.append("<id>" + testId + "</id>\n");
 
-        if (!testName.equals( ReporterConstants.NA ) )
-        {
-            xmlRepresentation.append("<name>" + testName + "</name>\n");
-        }
+                if (!testName.equals( ReporterConstants.NA ) )
+                {
+                    xmlRepresentation.append("<name>" + testName + "</name>\n");
+                }
 
-        if (!testDescription.equals( ReporterConstants.NA ) )
-        {
-            xmlRepresentation.append("<description><![CDATA[" + testDescription + "]]></description>\n");
-        }
-        if (!testStatus.equals( ReporterConstants.OPTIONAL ) )
-        {
-            if (!testStatusDescription.equals( ReporterConstants.OPTIONAL ) )
-            {
-                xmlRepresentation.append("<status value=\"" + testStatus + "\"><![CDATA[" + testStatusDescription + "]]></status>\n");
-            }
-            else if ( ( testExpected != null ) && ( testActual != null ) )
-            {
-                xmlRepresentation.append("<status value=\"" + testStatus + "\"> <expected><![CDATA[" + testExpected + "]]></expected><actual><![CDATA[" + testActual +   "]]></actual></status>\n");
-            }
-            else {
-                xmlRepresentation.append("<status value=\"" + testStatus + "\">" + "</status>\n");
-            }
-        }
+                if (!testDescription.equals( ReporterConstants.NA ) )
+                {
+                    xmlRepresentation.append("<description><![CDATA[" + testDescription + "]]></description>\n");
+                }
+                if (!testStatus.equals( ReporterConstants.OPTIONAL ) )
+                {
+                    if (!testStatusDescription.equals( ReporterConstants.OPTIONAL ) )
+                    {
+                        xmlRepresentation.append("<status value=\"" + testStatus + "\"><![CDATA[" + testStatusDescription + "]]></status>\n");
+                    }
+                    else if ( ( testExpected != null ) && ( testActual != null ) )
+                    {
+                        xmlRepresentation.append("<status value=\"" + testStatus + "\"> <expected><![CDATA[" + testExpected + "]]></expected><actual><![CDATA[" + testActual +   "]]></actual></status>\n");
+                    }
+                    else {
+                        xmlRepresentation.append("<status value=\"" + testStatus + "\">" + "</status>\n");
+                    }
+                }
 
-        Hashtable testCaseHash = myTest.getTestCaseHash();
-        Vector testCaseIdVector = myTest.getTestCaseIdVector( );
+                Hashtable testCaseHash = myTest.getTestCaseHash();
+                Vector testCaseIdVector = myTest.getTestCaseIdVector( );
 
-        /*
+                /*
         if ( testCaseIdVector.size( ) < 1 )
         {
             // This means there are no test cases and Test has the status info
             xmlRepresentation.append("</test>\n");
 
         }
-        */
-        if ( testCaseIdVector.size() >= 1 )
-        {
-            xmlRepresentation.append("<testcases>\n");
+                 */
+                if ( testCaseIdVector.size() >= 1 )
+                {
+                    xmlRepresentation.append("<testcases>\n");
 
-             for ( int tc=0; tc< testCaseIdVector.size(); tc++ )
-             {
-            String testCaseId = (String)testCaseIdVector.elementAt( tc );
-            TestCase myTestCase = (TestCase)testCaseHash.get( testCaseId.trim() );
+                    for ( int tc=0; tc< testCaseIdVector.size(); tc++ )
+                    {
+                        String testCaseId = (String)testCaseIdVector.elementAt( tc );
+                        TestCase myTestCase = (TestCase)testCaseHash.get( testCaseId.trim() );
 
-            String testCaseName = myTestCase.getName();
-            String testCaseDescription = myTestCase.getDescription();
-            String testCaseStatus = myTestCase.getStatus();
-            String testCaseStatusDescription = myTestCase.getStatusDescription();
-            String testCaseExpected = myTestCase.getExpected();
-            String testCaseActual = myTestCase.getActual();
+                        String testCaseName = myTestCase.getName();
+                        String testCaseDescription = myTestCase.getDescription();
+                        String testCaseStatus = myTestCase.getStatus();
+                        String testCaseStatusDescription = myTestCase.getStatusDescription();
+                        String testCaseExpected = myTestCase.getExpected();
+                        String testCaseActual = myTestCase.getActual();
 
-            xmlRepresentation.append("<testcase>\n");
-            xmlRepresentation.append("<id> " + testCaseId + "</id>\n");
-            if (!testCaseName.equals( ReporterConstants.NA ) )
-            {
-                xmlRepresentation.append("<name>" + testCaseName + "</name>\n");
-            }
+                        xmlRepresentation.append("<testcase>\n");
+                        xmlRepresentation.append("<id> " + testCaseId + "</id>\n");
+                        if (!testCaseName.equals( ReporterConstants.NA ) )
+                        {
+                            xmlRepresentation.append("<name>" + testCaseName + "</name>\n");
+                        }
 
-            if (!testCaseDescription.equals( ReporterConstants.NA ) )
-            {
-                xmlRepresentation.append("<description><![CDATA[" + testCaseDescription + "]]></description>\n");
-            }
-            if (!testCaseStatusDescription.equals( ReporterConstants.NA ) )
-            {
-                xmlRepresentation.append("<status value=\"" + testCaseStatus + "\"><![CDATA[" + testCaseStatusDescription + "]]></status>\n");
-            }
-            else if ( ( testCaseExpected != null ) && ( testCaseActual != null ) )
-            {
-                xmlRepresentation.append("<status value=\"" + testCaseStatus + "\"> <expected><![CDATA[" + testCaseExpected + "]]></expected><actual><![CDATA[" + testCaseActual +   "]]></actual></status>\n");
-            }
-            else
-            {
-                xmlRepresentation.append("<status value=\"" + testCaseStatus + "\">" + "</status>\n");
-            }
-            xmlRepresentation.append("</testcase>\n");
+                        if (!testCaseDescription.equals( ReporterConstants.NA ) )
+                        {
+                            xmlRepresentation.append("<description><![CDATA[" + testCaseDescription + "]]></description>\n");
+                        }
+                        if (!testCaseStatusDescription.equals( ReporterConstants.NA ) )
+                        {
+                            xmlRepresentation.append("<status value=\"" + testCaseStatus + "\"><![CDATA[" + testCaseStatusDescription + "]]></status>\n");
+                        }
+                        else if ( ( testCaseExpected != null ) && ( testCaseActual != null ) )
+                        {
+                            xmlRepresentation.append("<status value=\"" + testCaseStatus + "\"> <expected><![CDATA[" + testCaseExpected + "]]></expected><actual><![CDATA[" + testCaseActual +   "]]></actual></status>\n");
+                        }
+                        else
+                        {
+                            xmlRepresentation.append("<status value=\"" + testCaseStatus + "\">" + "</status>\n");
+                        }
+                        xmlRepresentation.append("</testcase>\n");
                     }
 
-                xmlRepresentation.append("</testcases>\n");
+                    xmlRepresentation.append("</testcases>\n");
 
-        }
+                }
 
                 xmlRepresentation.append("</test>\n");
-         }
+            }
 
-              xmlRepresentation.append("</tests>\n" );
-              xmlRepresentation.append("</testsuite>\n" );
-             boolean writeResult =  writeXMLFile(xmlRepresentation, foutput);
-        // Now remove TestSuite from Hashtable: PENDING
-         if ( writeResult==true )
-         {
-        // If we could write teh content properly then remove the TestSuite from Hashtable
-         testSuiteHash.remove( testSuiteId.trim() );
-         }
-        return writeResult;
+            xmlRepresentation.append("</tests>\n" );
+            xmlRepresentation.append("</testsuite>\n" );
+            boolean writeResult =  writeXMLFile(xmlRepresentation, foutput);
+            // Now remove TestSuite from Hashtable: PENDING
+            if ( writeResult==true )
+            {
+                // If we could write teh content properly then remove the TestSuite from Hashtable
+                testSuiteHash.remove( testSuiteId.trim() );
+            }
+            return writeResult;
         } catch (java.lang.Exception ex){
             return false;
         }
@@ -886,8 +886,8 @@ ong with expected and actual result. This is optional as in some case
 
     private boolean writeXMLFile(StringBuffer xmlStringBuffer, FileOutputStream  fout){
         try{
-        fout.write( xmlStringBuffer.toString().getBytes() );
-        fout.flush( );
+            fout.write( xmlStringBuffer.toString().getBytes() );
+            fout.flush( );
         } catch(java.io.IOException ex){
             ex.printStackTrace();
             return false;

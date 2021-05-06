@@ -37,16 +37,16 @@
 
     <target name="deploy"
             depends="init-common">
-    <mkdir dir="${build.classes.dir}"/>
-    <mkdir dir="${assemble.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${assemble.dir}"/>
         <echo message="assemble.dir => ${assemble.dir} " />
-    <copy file="${basedir}/ear/CollegeApp.ear" todir="${assemble.dir}" />
+        <copy file="${basedir}/ear/CollegeApp.ear" todir="${assemble.dir}" />
         <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/CollegeApp_derby.sql"/>
         </antcall>
         <antcall target="deploy-common">
-        <param name="${deployed.app}" value="${basedir}/ear/CollegeApp.ear"/>
-    </antcall>
+            <param name="${deployed.app}" value="${basedir}/ear/CollegeApp.ear"/>
+        </antcall>
     </target>
 
    <target name="create-resources" depends="init-common">

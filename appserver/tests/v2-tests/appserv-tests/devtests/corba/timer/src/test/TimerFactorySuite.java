@@ -39,138 +39,146 @@ import com.sun.corba.ee.spi.orbutil.newtimer.TimerFactoryBuilder ;
 import com.sun.corba.ee.spi.orbutil.newtimer.TimerGroup ;
 
 public class TimerFactorySuite {
-    private String tfName = "TFTF" ;
-    private String tfDescription = "The TimerFactorySuite TimerFactory" ;
-    private TimerFactory tf ;
 
-    private String timer1Name = "t1" ;
-    private String timer1Description = "Timer one" ;
-    private Timer t1 ;
+    private String tfName = "TFTF";
+    private String tfDescription = "The TimerFactorySuite TimerFactory";
+    private TimerFactory tf;
 
-    private String timer2Name = "t2" ;
-    private String timer2Description = "Timer two" ;
-    private Timer t2 ;
+    private String timer1Name = "t1";
+    private String timer1Description = "Timer one";
+    private Timer t1;
 
-    private String timerGroup1Name = "tg1" ;
-    private String timerGroup1Description = "TimerGroup one" ;
-    private TimerGroup tg1 ;
+    private String timer2Name = "t2";
+    private String timer2Description = "Timer two";
+    private Timer t2;
 
-    private static final int EXPECTED_NUM_TIMERS = 2 ;
+    private String timerGroup1Name = "tg1";
+    private String timerGroup1Description = "TimerGroup one";
+    private TimerGroup tg1;
+
+    private static final int EXPECTED_NUM_TIMERS = 2;
 
     // Remember, the factory is also a TimerGroup!
-    private static final int EXPECTED_NUM_TIMER_GROUPS = 2 ;
+    private static final int EXPECTED_NUM_TIMER_GROUPS = 2;
 
-    private static final int EXPECTED_NUM_IDS =
-    EXPECTED_NUM_TIMERS + EXPECTED_NUM_TIMER_GROUPS ;
+    private static final int EXPECTED_NUM_IDS = EXPECTED_NUM_TIMERS + EXPECTED_NUM_TIMER_GROUPS;
 
-
-    @Configuration( beforeTest = true )
+    @Configuration(beforeTest = true)
     public void setUp() {
-    tf = TimerFactoryBuilder.make( tfName, tfDescription ) ;
-    t1 = tf.makeTimer( timer1Name, timer1Description ) ;
-    t2 = tf.makeTimer( timer2Name, timer2Description ) ;
-    tg1 = tf.makeTimerGroup( timerGroup1Name, timerGroup1Description ) ;
+        tf = TimerFactoryBuilder.make(tfName, tfDescription);
+        t1 = tf.makeTimer(timer1Name, timer1Description);
+        t2 = tf.makeTimer(timer2Name, timer2Description);
+        tg1 = tf.makeTimerGroup(timerGroup1Name, timerGroup1Description);
     }
 
-    @Configuration( afterTest = true )
+
+    @Configuration(afterTest = true)
     public void tearDown() {
-    TimerFactoryBuilder.destroy( tf ) ;
+        TimerFactoryBuilder.destroy(tf);
     }
+
 
     @Test()
     public void testNumberOfIds() {
-    Assert.assertEquals( EXPECTED_NUM_IDS, tf.numberOfIds() ) ;
+        Assert.assertEquals(EXPECTED_NUM_IDS, tf.numberOfIds());
     }
+
 
     @Test()
     public void testGetControllable1() {
-    int id = t1.id() ;
-    Controllable con = tf.getControllable( id ) ;
-    Assert.assertTrue( con instanceof Timer ) ;
-    Timer timer = Timer.class.cast( con ) ;
-    Assert.assertEquals( t1, timer ) ;
+        int id = t1.id();
+        Controllable con = tf.getControllable(id);
+        Assert.assertTrue(con instanceof Timer);
+        Timer timer = Timer.class.cast(con);
+        Assert.assertEquals(t1, timer);
     }
+
 
     @Test()
     public void testGetControllable2() {
-    int id = t2.id() ;
-    Controllable con = tf.getControllable( id ) ;
-    Assert.assertTrue( con instanceof Timer ) ;
-    Timer timer = Timer.class.cast( con ) ;
-    Assert.assertEquals( t2, timer ) ;
+        int id = t2.id();
+        Controllable con = tf.getControllable(id);
+        Assert.assertTrue(con instanceof Timer);
+        Timer timer = Timer.class.cast(con);
+        Assert.assertEquals(t2, timer);
     }
+
 
     @Test()
     public void testGetControllable3() {
-    int id = tg1.id() ;
-    Controllable con = tf.getControllable( id ) ;
-    Assert.assertTrue( con instanceof TimerGroup ) ;
-    TimerGroup tg = TimerGroup.class.cast( con ) ;
-    Assert.assertEquals( tg1, tg ) ;
+        int id = tg1.id();
+        Controllable con = tf.getControllable(id);
+        Assert.assertTrue(con instanceof TimerGroup);
+        TimerGroup tg = TimerGroup.class.cast(con);
+        Assert.assertEquals(tg1, tg);
     }
+
 
     @Test()
     public void testMakeLogEventHandler() {
-    String name = "LogEventHandler1" ;
-    TimerEventHandler h1 = tf.makeLogEventHandler( name ) ;
-    Assert.assertEquals( h1.name(), name ) ;
-    try {
-        tf.makeLogEventHandler( name ) ;
-        Assert.fail( "Should throw an exception" ) ;
-    } catch (IllegalArgumentException exc) {
-        // this is correct
-    } catch (Throwable thr) {
-        Assert.fail( "Unexpected exception " + thr ) ;
+        String name = "LogEventHandler1";
+        TimerEventHandler h1 = tf.makeLogEventHandler(name);
+        Assert.assertEquals(h1.name(), name);
+        try {
+            tf.makeLogEventHandler(name);
+            Assert.fail("Should throw an exception");
+        } catch (IllegalArgumentException exc) {
+            // this is correct
+        } catch (Throwable thr) {
+            Assert.fail("Unexpected exception " + thr);
+        }
+        try {
+            tf.makeStatsEventHandler(name);
+            Assert.fail("Should throw an exception");
+        } catch (IllegalArgumentException exc) {
+            // this is correct
+        } catch (Throwable thr) {
+            Assert.fail("Unexpected exception " + thr);
+        }
+        tf.removeTimerEventHandler(h1);
+        h1 = tf.makeLogEventHandler(name);
+        tf.removeTimerEventHandler(h1);
+        h1 = tf.makeStatsEventHandler(name);
     }
-    try {
-        tf.makeStatsEventHandler( name ) ;
-        Assert.fail( "Should throw an exception" ) ;
-    } catch (IllegalArgumentException exc) {
-        // this is correct
-    } catch (Throwable thr) {
-        Assert.fail( "Unexpected exception " + thr ) ;
-    }
-    tf.removeTimerEventHandler( h1 ) ;
-    h1 = tf.makeLogEventHandler( name ) ;
-    tf.removeTimerEventHandler( h1 ) ;
-    h1 = tf.makeStatsEventHandler( name ) ;
-    }
+
 
     @Test()
     public void testTimers() {
-    Map<String,? extends Timer> tmap = tf.timers() ;
-    Assert.assertEquals( tmap.size(), EXPECTED_NUM_TIMERS ) ;
-    Timer x1 = tmap.get( timer1Name ) ;
-    Assert.assertEquals( x1, t1 ) ;
-    Timer x2 = tmap.get( timer2Name ) ;
-    Assert.assertEquals( x2, t2 ) ;
+        Map<String, ? extends Timer> tmap = tf.timers();
+        Assert.assertEquals(tmap.size(), EXPECTED_NUM_TIMERS);
+        Timer x1 = tmap.get(timer1Name);
+        Assert.assertEquals(x1, t1);
+        Timer x2 = tmap.get(timer2Name);
+        Assert.assertEquals(x2, t2);
     }
+
 
     @Test()
     public void testTimerGroups() {
-    Map<String,? extends TimerGroup> tmap = tf.timerGroups() ;
-    Assert.assertEquals( tmap.size(), EXPECTED_NUM_TIMER_GROUPS ) ;
-    TimerGroup x1 = tmap.get( timerGroup1Name ) ;
-    Assert.assertEquals( x1, tg1 ) ;
-    TimerGroup x2 = tmap.get( tfName ) ;
-    Assert.assertEquals( x2, tf ) ;
+        Map<String, ? extends TimerGroup> tmap = tf.timerGroups();
+        Assert.assertEquals(tmap.size(), EXPECTED_NUM_TIMER_GROUPS);
+        TimerGroup x1 = tmap.get(timerGroup1Name);
+        Assert.assertEquals(x1, tg1);
+        TimerGroup x2 = tmap.get(tfName);
+        Assert.assertEquals(x2, tf);
     }
+
 
     @Test()
     public void testMakeController() {
-    String name = "Controller1" ;
-    TimerEventController controller = tf.makeController( name ) ;
-    Assert.assertEquals( controller.name(), name ) ;
-    try {
-        tf.makeController( name ) ;
-        Assert.fail( "Should throw an exception" ) ;
-    } catch (IllegalArgumentException exc) {
-        // this is correct
-    } catch (Throwable thr) {
-        Assert.fail( "Unexpected exception " + thr ) ;
-    }
-    tf.removeController( controller ) ;
-    controller = tf.makeController( name ) ;
+        String name = "Controller1";
+        TimerEventController controller = tf.makeController(name);
+        Assert.assertEquals(controller.name(), name);
+        try {
+            tf.makeController(name);
+            Assert.fail("Should throw an exception");
+        } catch (IllegalArgumentException exc) {
+            // this is correct
+        } catch (Throwable thr) {
+            Assert.fail("Unexpected exception " + thr);
+        }
+        tf.removeController(controller);
+        controller = tf.makeController(name);
     }
 
     // enabledSet and activeSet are tested in the ActivationSuite

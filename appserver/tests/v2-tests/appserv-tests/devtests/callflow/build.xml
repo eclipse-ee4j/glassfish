@@ -39,7 +39,7 @@
         <antcall target="setup"/>
         <ant dir="simpleServlet" target="all"/>
         <ant dir="simpleJsp" target="all"/>
-    <antcall target="report"/>
+        <antcall target="report"/>
         <antcall target="unsetup"/>
     </target>
 

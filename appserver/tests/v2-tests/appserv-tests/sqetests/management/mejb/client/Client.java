@@ -48,9 +48,9 @@ public class Client {
     public Client(String[] args) {
         String debug=args[0];
         if(debug.equalsIgnoreCase("false"))
-        DEBUG=false;
+            DEBUG=false;
         if(debug.equalsIgnoreCase("true"))
-        DEBUG=true;
+            DEBUG=true;
     }
 
 

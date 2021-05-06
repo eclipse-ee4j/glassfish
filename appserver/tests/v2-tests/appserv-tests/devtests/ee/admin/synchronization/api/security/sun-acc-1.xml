@@ -32,9 +32,9 @@
   <message-security-config auth-layer="SOAP">
     <!-- turned off by default -->
     <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="ClientProvider" provider-type="client">
-     <request-policy auth-source="content"/>
+      <request-policy auth-source="content"/>
       <response-policy auth-source="content"/>
-         <property name="security.config" value="wss-client-config.xml"/>
- </provider-config>
- </message-security-config>
+      <property name="security.config" value="wss-client-config.xml"/>
+    </provider-config>
+  </message-security-config>
 </client-container>

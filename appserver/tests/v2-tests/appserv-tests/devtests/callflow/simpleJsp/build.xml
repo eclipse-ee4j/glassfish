@@ -86,17 +86,17 @@
    </target>
 
     <target name="run-report" depends="init-common">
-          <javac
+        <javac
             srcdir="."
             classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="WebTest.java"/>
-    <sleep seconds ="10"/>
+        <sleep seconds ="10"/>
         <java classname="WebTest">
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <arg value="/dbReader"/>
-      <arg value="report"/>
-      <arg value="${expectedresult}"/>
+          <arg value="report"/>
+          <arg value="${expectedresult}"/>
           <classpath>
            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
            <pathelement location="."/>
@@ -105,16 +105,16 @@
     </target>
 
     <target name="clean-db" depends="init-common">
-          <javac
+        <javac
             srcdir="."
             classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="WebTest.java"/>
-    <sleep seconds ="4"/>
+        <sleep seconds ="4"/>
         <java classname="WebTest">
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <arg value="/dbReader"/>
-      <arg value="clean-db"/>
+          <arg value="clean-db"/>
           <classpath>
            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
            <pathelement location="."/>

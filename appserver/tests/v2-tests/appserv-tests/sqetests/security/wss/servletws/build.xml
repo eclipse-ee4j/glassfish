@@ -142,16 +142,16 @@
      </target>
 
     <target name="build" depends="init-common,compile">
-    <antcall target="ws-package-appclientjar-common">
+        <antcall target="ws-package-appclientjar-common">
             <param name="appclientjar.classes"
               value="com/sun/appserv/sqe/security/wss/servletws/taxcal/client/*.class" />
             <param name="appclientjar.files"
               value="${build.classes.dir}"/>
             <param name="appclient.jar"
               value="${assemble.dir}/${appname}-client.jar"/>
-    </antcall>
-    <!--antcall target="ws-war-common"-->
-    <antcall target="ws-package-war-common">
+        </antcall>
+        <!--antcall target="ws-war-common"-->
+        <antcall target="ws-package-war-common">
             <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
             <param name="war.classes"
               value="com/sun/appserv/sqe/security/wss/servletws/taxcal/*.class" />
@@ -161,7 +161,7 @@
               value="${build.classes.dir}"/>
             <param name="webservices.xml"
               value="${web-webservices.xml}" />
-    </antcall>
+        </antcall>
         <antcall target="ear-common"/>
     </target>
 
@@ -171,8 +171,8 @@
     </target>
 
     <target name="run">
-    <antcall target="runclient-ssl-win"/>
-    <antcall target="runclient-ssl-unix"/>
+        <antcall target="runclient-ssl-win"/>
+        <antcall target="runclient-ssl-unix"/>
     </target>
 
     <target name="runclient-ssl-win" depends="set-appserver-version" if="isWindows">

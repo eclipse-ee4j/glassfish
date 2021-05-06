@@ -64,7 +64,7 @@
       </antcall>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-onlygetconnectionservlet-pool.property.associatewiththread=true"/>
+        <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-onlygetconnectionservlet-pool.property.associatewiththread=true"/>
       </antcall>
 <antcall target="deploy-common"/>
     </target>

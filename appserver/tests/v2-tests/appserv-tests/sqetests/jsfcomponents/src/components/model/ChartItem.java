@@ -31,8 +31,8 @@ public class ChartItem {
 
     public ChartItem(String label, int value, String color) {
         setLabel(label);
-    setValue(value);
-    setColor(color);
+        setValue(value);
+        setColor(color);
     }
 
     /**

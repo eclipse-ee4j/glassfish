@@ -87,14 +87,14 @@ public class ChartBean {
 
     public ChartBean() {
 
-    setWidth(400);
-    setHeight(300);
-    setColumns(2);
-    setOrientation(ChartBean.HORIZONTAL);
+         setWidth(400);
+         setHeight(300);
+         setColumns(2);
+         setOrientation(ChartBean.HORIZONTAL);
 
         chartItems = new ArrayList(columns);
-    chartItems.add(new ChartItem("one", 10, "red"));
-    chartItems.add(new ChartItem("two", 20, "blue"));
+        chartItems.add(new ChartItem("one", 10, "red"));
+        chartItems.add(new ChartItem("two", 20, "blue"));
 
     }
 }

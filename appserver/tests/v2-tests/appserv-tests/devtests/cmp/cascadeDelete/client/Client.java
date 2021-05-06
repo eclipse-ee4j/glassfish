@@ -108,10 +108,9 @@ public class Client {
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-        stat.addStatus("ejbclient cascadeDelete", stat.FAIL);
+            stat.addStatus("ejbclient cascadeDelete", stat.FAIL);
         }
-      stat.printSummary("cascadeDelete");
-
+        stat.printSummary("cascadeDelete");
     }
 
 }

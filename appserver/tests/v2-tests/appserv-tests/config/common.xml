@@ -1609,7 +1609,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         ant clean           Remove all classes files
         ant build           Build the application
         ant deploy          Deploy the ear files to S1AS
-        ant run                Run the application
+        ant run             Run the application
         ant undeploy        Undeploy the ear files from S1AS
         ant usage           Display this message
     </echo>

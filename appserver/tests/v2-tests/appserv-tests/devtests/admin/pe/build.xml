@@ -67,20 +67,20 @@
     <target name="runmain" depends="build">
     <java classname="test.TestDriver"
       dir="."
-          fork="yes">
-     <!--
-     <arg value="${admin.user}"/>
-      <arg value="${admin.password}"/>
-      <arg value="${admin.host}"/>
-      <arg value="${admin.port}"/>
-      <arg value="${admin.secure}"/>
-      <arg value="tests.list"/>
-      -->
+      fork="yes">
+    <!--
+        <arg value="${admin.user}"/>
+        <arg value="${admin.password}"/>
+        <arg value="${admin.host}"/>
+        <arg value="${admin.port}"/>
+        <arg value="${admin.secure}"/>
+        <arg value="tests.list"/>
+    -->
         <jvmarg line="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=3333,suspend=n,server=y -Djava.compiler=NONE"/>
         <classpath>
             <pathelement path="${s1astest.classpath}"/>
-        <pathelement path="${classes.dir}"/>
-        <pathelement path="${env.S1AS_HOME}/lib/appserv-rt.jar"/>
+            <pathelement path="${classes.dir}"/>
+            <pathelement path="${env.S1AS_HOME}/lib/appserv-rt.jar"/>
         </classpath>
     </java>
     </target>
@@ -91,11 +91,11 @@
     <target name="debug" depends="build">
     <java classname="test.TestDriver"
       dir="."
-          fork="yes">
+      fork="yes">
         <jvmarg line="-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,address=3333,suspend=y,server=y -Djava.compiler=NONE"/>
         <classpath>
             <pathelement path="${s1astest.classpath}"/>
-        <pathelement path="${classes.dir}"/>
+            <pathelement path="${classes.dir}"/>
         </classpath>
     </java>
     </target>

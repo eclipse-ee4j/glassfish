@@ -28,11 +28,11 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class RosterClient {
 
     private static SimpleReporterAdapter stat =
-    new SimpleReporterAdapter("appserv-tests");
+        new SimpleReporterAdapter("appserv-tests");
 
    public static void main(String[] args) {
        try {
-       stat.addDescription("RosterAppExt");
+           stat.addDescription("RosterAppExt");
            Context initial = new InitialContext();
            Object objref = initial.lookup("java:comp/env/ejb/SimpleRosterExt");
 
@@ -47,9 +47,9 @@ public class RosterClient {
 
            // getMoreInfo(myRoster);
 
-       stat.addStatus("ejbclient RosterAppExt", stat.PASS);
-       stat.printSummary("RosterAppExt");
-       System.exit(0);
+           stat.addStatus("ejbclient RosterAppExt", stat.PASS);
+           stat.printSummary("RosterAppExt");
+           System.exit(0);
 
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
@@ -85,7 +85,7 @@ public class RosterClient {
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
            ex.printStackTrace();
-         stat.addStatus("ejbclient RosterAppExt", stat.FAIL);
+           stat.addStatus("ejbclient RosterAppExt", stat.FAIL);
        }
 
     } // getSomeInfo
@@ -141,7 +141,7 @@ public class RosterClient {
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
            ex.printStackTrace();
-          stat.addStatus("ejbclient RosterAppExt", stat.FAIL);
+           stat.addStatus("ejbclient RosterAppExt", stat.FAIL);
        }
 
     } // getMoreInfo
@@ -313,7 +313,7 @@ public class RosterClient {
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
            ex.printStackTrace();
-       stat.addStatus("ejbclient RosterAppExt", stat.FAIL);
+           stat.addStatus("ejbclient RosterAppExt", stat.FAIL);
        }
 
     } // insertInfo

@@ -100,9 +100,9 @@ public class RpaClient {
     public void testSynch(String[] args) {
             // invoke 3 overloaded methods on the EJB
         try{
-        System.out.println ("Calling authorized method - addItem");
-        hr.addItem("lipstick", 30);
-        hr.addItem("mascara", 40);
+                System.out.println ("Calling authorized method - addItem");
+                hr.addItem("lipstick", 30);
+                hr.addItem("mascara", 40);
                 hr.addItem("lipstick2", 50);
                 hr.addItem("sandals",  200);
                 System.out.println(hr.getTotalCost());
@@ -118,10 +118,10 @@ public class RpaClient {
 
         } catch(Exception re){
                 re.printStackTrace();
-        System.out.println("RealmPerApp:RpaLoginBean Test Failed");
+                System.out.println("RealmPerApp:RpaLoginBean Test Failed");
                 System.exit(-1);
-    }
-            System.out.println("RealmPerApp:RpaLoginBean Test Passed");
+        }
+        System.out.println("RealmPerApp:RpaLoginBean Test Passed");
 
     }
 

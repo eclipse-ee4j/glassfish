@@ -47,12 +47,13 @@ public class WebTest {
                     stat.printSummary(TEST_NAME);
 
                 }
-            }else if (args.length == 4){
+            } else if (args.length == 4){
                 if (args[3].equalsIgnoreCase ("clean-db")){
-            webTest.cleandb ();
-        }
-            }else
+                    webTest.cleandb ();
+                }
+            } else {
                 webTest.doTest();
+            }
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
@@ -77,7 +78,7 @@ public class WebTest {
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = input.readLine();
         }
-    conn.disconnect ();
+        conn.disconnect ();
     }
 
     public void analyseResult(String result) throws Exception {

@@ -88,17 +88,15 @@
     </target>
 
     <target name="build" depends="compile">
-    <property name="hasWebclient" value="yes"/>
-    <property name="tlds-exist" value="yes"/>
-    <antcall target="copy-tlds"/>
-    <antcall target="copy-tagfiles"/>
-    <antcall target="webclient-war-common">
-    <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="**/*.class"/>
-    </antcall>
-
-   <!-- <antcall target="ear-common"/>-->
-
+        <property name="hasWebclient" value="yes"/>
+        <property name="tlds-exist" value="yes"/>
+        <antcall target="copy-tlds"/>
+        <antcall target="copy-tagfiles"/>
+        <antcall target="webclient-war-common">
+            <param name="hasWebclient" value="yes"/>
+            <param name="webclient.war.classes" value="**/*.class"/>
+        </antcall>
+       <!-- <antcall target="ear-common"/>-->
     </target>
 
     <target name="deploy-ear" depends="init-common">
@@ -119,8 +117,8 @@
 
     <target name="run-war" depends="init-common">
         <antcall target="runwebclient-common">
-    <param name="testsuite.id" value="jstl-servlet (stand-alone war based)"/>
-    </antcall>
+            <param name="testsuite.id" value="jstl-servlet (stand-alone war based)"/>
+        </antcall>
     </target>
 
     <target name="usage">

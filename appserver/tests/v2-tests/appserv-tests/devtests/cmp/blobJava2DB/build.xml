@@ -69,18 +69,18 @@
 
     <target name="deploy"
             depends="init-common">
-     <antcall target="execute-ejb-sql-common">
+        <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_blob_derby.sql"/>
         </antcall>
         <antcall target="deploy-common">
-    <param name="extra-params"
+            <param name="extra-params"
               value="--uniquetablenames=true --dropandcreatetables=true"/>
     </antcall>
     </target>
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common">
-        <param name="appclient.application.args"
+            <param name="appclient.application.args"
               value="Java2DBTest"/>
     </antcall>
     </target>

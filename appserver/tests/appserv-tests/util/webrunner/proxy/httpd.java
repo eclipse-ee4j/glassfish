@@ -47,8 +47,8 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        s    The string to be converted
-        * @return        byte[]
+        * @param                s        The string to be converted
+        * @return                byte[]
         */
         private final byte[] toBytes(String s)
         {
@@ -61,9 +61,9 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        out    The output stream
-        * @param        s    The string
-        * @return        void
+        * @param                out        The output stream
+        * @param                s        The string
+        * @return                void
         */
         private void writeString(OutputStream out,String s)
         throws IOException
@@ -75,10 +75,10 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        in    The InputStream
-        * @param        url    The string URL
-        * @param        mh Mimeheader
-        * @return        TempStore
+        * @param                in        The InputStream
+        * @param                url        The string URL
+        * @param                mh Mimeheader
+        * @return                TempStore
         */
         private TempStore loadFile(InputStream in,String url,MimeHeader mh)
         throws IOException
@@ -104,11 +104,11 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        cmd    String
-        * @param        url    The string URL
-        * @param        code integer
+        * @param                cmd        String
+        * @param                url        The string URL
+        * @param                code integer
         * @param        size Integer
-        * @return        void
+        * @return                void
         */
         private void logEntry(String cmd,String url,int code,int size)
         {
@@ -124,10 +124,10 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        in    The InputStream
-        * @param        url    The string URL
-        * @param        mh Mimeheader
-        * @return        TempStore
+        * @param                in        The InputStream
+        * @param                url        The string URL
+        * @param                mh Mimeheader
+        * @return                TempStore
         */
         private String getRawRequest(InputStream in)
         throws IOException
@@ -169,11 +169,11 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        out    The OutputStream
-        * @param        url    The string URL
-        * @param        inmh Mimeheader
-        * @param        in   The input stream
-        * @return        void
+        * @param                out        The OutputStream
+        * @param                url        The string URL
+        * @param                inmh Mimeheader
+        * @param                in   The input stream
+        * @return                void
         */
         private void handleProxy(OutputStream out,String url,MimeHeader inmh,InputStream in) {
             try {
@@ -386,9 +386,9 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param        s    Socket
-        * @return        void
-        * @throws         IOException
+        * @param                s        Socket
+        * @return                void
+        * @throws                 IOException
         */
     private void doRequest(Socket s) throws IOException
         {
@@ -430,7 +430,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return        void
+        * @return                void
         *
         */
         public void run()
@@ -465,7 +465,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return        void
+        * @return                void
         *
         */
         public synchronized void start()
@@ -483,7 +483,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return        void
+        * @return                void
         *
         */
         public synchronized void stop()
@@ -498,7 +498,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return        void
+        * @return                void
         *
         */
         public httpd(int p, LogMessage lm)
@@ -513,7 +513,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return        void
+        * @return                void
         *
         */
         public static void main(String args[])
@@ -536,7 +536,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return        void
+        * @return                void
         *
         */
         public void log(String m)

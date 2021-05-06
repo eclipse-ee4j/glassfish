@@ -68,7 +68,7 @@ public class EnterpriseBeanLogger implements Serializable{
 
       String mode = ic.lookup("java:comp/env/toXML").toString().toLowerCase();
       if (mode.compareTo("false") == 0){
-    outputXML = false;
+        outputXML = false;
       }
       toXML("toXML", mode);
 
@@ -80,9 +80,9 @@ public class EnterpriseBeanLogger implements Serializable{
       ic = new InitialContext();
       String mode = ic.lookup("java:comp/env/passBy").toString().toLowerCase();
       if (mode.compareTo("both") == 0){
-    dualMode = true;
+        dualMode = true;
       } else if (mode.compareTo("value") != 0){
-    doPassByValue = false;
+        doPassByValue = false;
       }
       toXML("passBy", mode);
 
@@ -95,13 +95,13 @@ public class EnterpriseBeanLogger implements Serializable{
 
     if ( (dualMode == true || doPassByValue) && remoteRef.compareTo("") != 0){
       try{
-    toXML("remote interface",remoteRef);
-    objref = ic.lookup(remoteRef);
+        toXML("remote interface",remoteRef);
+        objref = ic.lookup(remoteRef);
 
-    adapterHome[REMOTE_EJB] = (PortableAdapter)PortableRemoteObject.narrow(objref, PortableAdapter.class);
-    toXML("Remote interface","Looked up remote interface");
+        adapterHome[REMOTE_EJB] = (PortableAdapter)PortableRemoteObject.narrow(objref, PortableAdapter.class);
+        toXML("Remote interface","Looked up remote interface");
       } catch(java.lang.Exception ex){
-    logLocalXMLException(ex,"prepareLocalAndRemoteObject - remote");
+        logLocalXMLException(ex,"prepareLocalAndRemoteObject - remote");
       }
     } else {
       REMOTE_EJB = 0;
@@ -109,7 +109,7 @@ public class EnterpriseBeanLogger implements Serializable{
 
     if (dualMode == true || !doPassByValue){
       if (dualMode == false){
-    LOCAL_EJB = 0;
+        LOCAL_EJB = 0;
       }
 
       try{

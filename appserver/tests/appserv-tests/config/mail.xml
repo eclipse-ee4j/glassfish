@@ -20,14 +20,14 @@
 <property name="results.mailee" value="" />-->
 <property name="machine.config" value="default_${os.name}_${os.arch}" />
 <target name="mail" depends="init-common">
-    <mail from="${results.mailer}" tolist="${results.mailee}"
-        subject="Test results for ${machine.config}"
-        mailhost="${results.mailhost}"
-        message="Quick Look test results..."
+        <mail from="${results.mailer}" tolist="${results.mailee}"
+                subject="Test results for ${machine.config}"
+                mailhost="${results.mailhost}"
+                message="Quick Look test results..."
                 failonerror="false">
-    <fileset dir="${env.APS_HOME}"
+        <fileset dir="${env.APS_HOME}"
             includes="count.txt,test_results.html"/>
-    </mail>
+        </mail>
 </target>
 <target name="copyMailJars">
         <echo message="Copying mail jars into $ANT_HOME/lib"/>

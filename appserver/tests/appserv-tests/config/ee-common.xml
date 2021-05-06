@@ -499,10 +499,10 @@
 <!-- ================================================================ -->
 <target name="eesetup-ant" depends="env-ee">
    <echo file="${admin.password.file}" append="false">
-    AS_ADMIN_USERPASSWORD=${password}
-    AS_ADMIN_PASSWORD=${admin.password}
-    AS_ADMIN_ADMINPASSWORD=${admin.password}
-    AS_ADMIN_MASTERPASSWORD=${master.password}
+        AS_ADMIN_USERPASSWORD=${password}
+        AS_ADMIN_PASSWORD=${admin.password}
+        AS_ADMIN_ADMINPASSWORD=${admin.password}
+        AS_ADMIN_MASTERPASSWORD=${master.password}
    </echo>
    <antcall target="createDomain"/>
    <antcall target="startDomain">

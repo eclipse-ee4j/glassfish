@@ -546,7 +546,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <!-- ================================================================ -->
-<!-- J2EE Connector related targets                        -->
+<!-- J2EE Connector related targets                                        -->
 <!-- ================================================================ -->
 
 <target name="create-connector-connpool-common" depends="init-common, create-connector-connpool" />
@@ -1543,7 +1543,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
         ant clean           Remove all classes files
         ant build           Build the application
         ant deploy          Deploy the ear files to S1AS
-        ant run                Run the application
+        ant run                    Run the application
         ant undeploy        Undeploy the ear files from S1AS
         ant usage           Display this message
     </echo>
@@ -1572,13 +1572,13 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 
 <target name="restart-instance">
     <echo message="Restarting remote server instance,until this gets fixed"/>
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="stop-instance"/>
         <arg line="${as.props}"/>
         <arg line="${appserver.instance.name}"/>
     </exec>
     <sleep seconds="30"/>
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="start-instance"/>
         <arg line="${as.props}"/>
         <arg line="${appserver.instance.name}"/>
@@ -1601,7 +1601,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <target name="setupTimer" depends="init-common" if="ee">
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="create-resource-ref"/>
         <arg line="${as.props}"/>
         <arg line="--target server"/>
@@ -1628,13 +1628,13 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 </target>
 
 <target name="unsetupTimer" depends="init-common" if="ee">
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="delete-resource-ref"/>
         <arg line="${as.props}"/>
         <arg line="--target server"/>
         <arg line="${jdbc.resource.name}"/>
     </exec>
-    <exec executable="${ASADMIN}" failonerror="false">
+        <exec executable="${ASADMIN}" failonerror="false">
         <arg line="unset"/>
         <arg line="${appserver.instance.name}-config.ejb-container.ejb-timer-service.timer-datasource"/>
     </exec>

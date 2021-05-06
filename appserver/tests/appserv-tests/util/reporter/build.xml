@@ -35,8 +35,8 @@
 
   <target name="build" depends="init">
   <javac
-        destdir="${build.dest}"
-        classpath="${classpath}"
+                destdir="${build.dest}"
+                classpath="${classpath}"
                 srcdir="${basedir}"
                 debug="on"
     />
@@ -46,7 +46,7 @@
 
   <target name="jar" depends="build">
   <jar destfile="${reporter.jar}">
-    <fileset dir="${build.dest}"/>
+        <fileset dir="${build.dest}"/>
   </jar>
   </target>
 

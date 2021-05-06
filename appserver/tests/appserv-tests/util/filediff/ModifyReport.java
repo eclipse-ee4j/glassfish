@@ -109,22 +109,22 @@ public class ModifyReport{
         try{
             File inputfile = new File(filename);
             BufferedReader in = new BufferedReader(new FileReader(inputfile));
-        //System.out.println("Reading original file...");
+            //System.out.println("Reading original file...");
             while ((fileline = in.readLine()) != null){
                 filedata.append(fileline);
             }
-        //System.out.println("Finished Reading file. ");
-        //System.out.println("Closing input stream...");
+            //System.out.println("Finished Reading file. ");
+            //System.out.println("Closing input stream...");
             in.close();
-        //System.out.println("filedata:\n\n"+filedata);
+            //System.out.println("filedata:\n\n"+filedata);
             // find index of first </TABLE> tag
             // insert new string at the index.
-        //System.out.println("breakPoint:"+breakPoint);
+            //System.out.println("breakPoint:"+breakPoint);
             breakPoint=filedata.indexOf(tag);
             if(breakPoint != -1){
                 filedata.insert(breakPoint, tobeAdded);
                 fileContent = filedata.toString();
-        //System.out.println("string inserted");
+                //System.out.println("string inserted");
             } else {
                 System.out.println("specified tag: "+tag+" was not found in the report");
             }

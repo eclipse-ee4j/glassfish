@@ -34,22 +34,22 @@ public class ReporterClient{
             echo(args[1]+" is the test description");
             default_desc = args[1];
         }
-    int numTests = 1;
-    if (args.length>=3) {
-        numTests = Integer.parseInt(args[2]);
-    }
+        int numTests = 1;
+        if (args.length>=3) {
+            numTests = Integer.parseInt(args[2]);
+        }
 
 
         echo("adding description...");
         stat.addDescription(default_desc);
         echo("adding status...");
-    if (numTests==1) {
-         stat.addStatus(args[0], stat.DID_NOT_RUN);
-    } else {
-         for (int i=0;i<numTests; i++) {
-              stat.addStatus(args[0]+"-"+(i+1), stat.DID_NOT_RUN);
-         }
-    }
+        if (numTests==1) {
+                 stat.addStatus(args[0], stat.DID_NOT_RUN);
+        } else {
+             for (int i=0;i<numTests; i++) {
+                  stat.addStatus(args[0]+"-"+(i+1), stat.DID_NOT_RUN);
+             }
+        }
 
         echo("printing summary...");
         stat.printSummary();

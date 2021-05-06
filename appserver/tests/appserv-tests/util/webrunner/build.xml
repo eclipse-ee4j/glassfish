@@ -44,9 +44,9 @@
     <echo message="Compiling Proxy Server source files (${name}) ..."/>
     <mkdir dir="${build.dest}"/>
     <javac
-        srcdir="${proxy.src}"
-        destdir="${build.dest}"
-        classpath="${java.classpath}"
+                srcdir="${proxy.src}"
+                destdir="${build.dest}"
+                classpath="${java.classpath}"
                 debug="on"
 
     />
@@ -57,9 +57,9 @@
     <echo message="Compiling Proxy Server source files (${name}) ..."/>
     <mkdir dir="${build.dest}"/>
     <javac
-        srcdir="${webtest.src}"
-        destdir="${build.dest}"
-        classpath="${java.classpath}"
+                srcdir="${webtest.src}"
+                destdir="${build.dest}"
+                classpath="${java.classpath}"
                 debug="on"
 
     />
@@ -70,9 +70,9 @@
     <echo message="Compiling Tomcat test util source files ..."/>
     <mkdir dir="${build.dest}"/>
     <javac
-        srcdir="${tomcattest.src}"
-        destdir="${build.dest}"
-        classpath="${java.classpath}"
+                srcdir="${tomcattest.src}"
+                destdir="${build.dest}"
+                classpath="${java.classpath}"
                 debug="on"
 
     />
@@ -83,9 +83,9 @@
     <echo message="Compiling Grizzly test source files (${name}) ..."/>
     <mkdir dir="${build.dest}"/>
     <javac
-        srcdir="${http2test.src}"
-        destdir="${build.dest}"
-        classpath="${java.classpath}:${myenv.S1AS_HOME}/modules/nucleus-grizzly-all.jar"
+                srcdir="${http2test.src}"
+                destdir="${build.dest}"
+                classpath="${java.classpath}:${myenv.S1AS_HOME}/modules/nucleus-grizzly-all.jar"
                 debug="on"
 
     />
@@ -96,9 +96,9 @@
     <!-- Compile the java code from ${src} into ${build} -->
     <echo message="Running Web Test"/>
     <java
-            fork="on"
-            classpath="${java.classpath}:${build.dest}"
-            classname="com.sun.ejte.ccl.webrunner.webtest.WebTest">
+                        fork="on"
+                        classpath="${java.classpath}:${build.dest}"
+                        classname="com.sun.ejte.ccl.webrunner.webtest.WebTest">
                         <arg value="script.txt"/>
                         <arg value="${server.host}"/>
 
@@ -109,9 +109,9 @@
     <!-- Compile the java code from ${src} into ${build} -->
     <echo message="Starting webserver at port 1235"/>
     <java
-            fork="on"
-            classpath="${java.classpath}:${build.dest}"
-            classname="com.sun.ejte.ccl.webrunner.proxy.httpd">
+                        fork="on"
+                        classpath="${java.classpath}:${build.dest}"
+                        classname="com.sun.ejte.ccl.webrunner.proxy.httpd">
 
 
     </java>
@@ -123,7 +123,7 @@
 
 <target name="jar" depends="compile-proxy,compile-webtest,compile-tomcattest,compile-http2test">
   <jar destfile="${myenv.APS_HOME}/lib/webtest.jar">
-    <fileset dir="${build.dest}"/>
+        <fileset dir="${build.dest}"/>
   </jar>
   </target>
 

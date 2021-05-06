@@ -90,157 +90,157 @@ public class SendRequest {
      *
      */
     public synchronized int processUrl(byte[] filebuf) {
-        int responseCode=0;
-        int nRequest=0;
-        int code=0;
-        reporter.setTestSuite(TEST_SUITE_ID, "J2EE Web Client","This test suite integrates web and ejb");
+            int responseCode=0;
+            int nRequest=0;
+            int code=0;
+            reporter.setTestSuite(TEST_SUITE_ID, "J2EE Web Client","This test suite integrates web and ejb");
 
 
-        try {
-            Socket server=null;
-            InetAddress serverAddress=null;
-            BufferedReader bufferedStream=null;
-            DataOutputStream server_out= null;
+            try {
+                    Socket server=null;
+                    InetAddress serverAddress=null;
+                    BufferedReader bufferedStream=null;
+                    DataOutputStream server_out= null;
 
-            int pos=0;
-            int retVal=0;
-            double currentstart,currentstop;
-            double temp=0;
-            double time=0;
-            char c;
-            String hostName = new String("");
+                    int pos=0;
+                    int retVal=0;
+                    double currentstart,currentstop;
+                    double temp=0;
+                    double time=0;
+                    char c;
+                    String hostName = new String("");
 
-            int i=0,j=0;
-            MimeHeader mh;
-            while(i<filebuf.length) {
-                c=(char)filebuf[i];
+                    int i=0,j=0;
+                    MimeHeader mh;
+                    while(i<filebuf.length) {
+                            c=(char)filebuf[i];
 
-                switch(c) {
-                    case '!':
+                            switch(c) {
+                                    case '!':
 
-                        if(filebuf[i+1] =='\n' && filebuf[i+2]=='!') {
-                            nRequest=nRequest+1;
-                            String temp1=new String(filebuf,j,i-1-j);
-                            mh=new MimeHeader(temp1);
-                            if(setCookie) {
-                                //Cookie: JSESSIONID=4659B62637AC12324972EA5072064469
-                                //String full_cookie_value="JSESSIONID="+cookie_value+";Path="+cookie_path;
-                                //String full_cookie_value="JSESSIONID="+cookie_value;
-                                String full_cookie_value=cookie_name+"="+cookie_value;
-                                full_cookie_value=full_cookie_value.trim();
-                                String oldcookie=mh.get("Cookie");
-                                //  System.out.println("Old Cookie value"+oldcookie);
-                                mh.put("Cookie",full_cookie_value);
-                            }
+                                            if(filebuf[i+1] =='\n' && filebuf[i+2]=='!') {
+                                                    nRequest=nRequest+1;
+                                                    String temp1=new String(filebuf,j,i-1-j);
+                                                    mh=new MimeHeader(temp1);
+                                                    if(setCookie) {
+                                                            //Cookie: JSESSIONID=4659B62637AC12324972EA5072064469
+                                                            //String full_cookie_value="JSESSIONID="+cookie_value+";Path="+cookie_path;
+                                                            //String full_cookie_value="JSESSIONID="+cookie_value;
+                                                            String full_cookie_value=cookie_name+"="+cookie_value;
+                                                            full_cookie_value=full_cookie_value.trim();
+                                                            String oldcookie=mh.get("Cookie");
+                                                            //  System.out.println("Old Cookie value"+oldcookie);
+                                                            mh.put("Cookie",full_cookie_value);
+                                                    }
 
-                            int stIdx = temp1.indexOf("Host: ");
-                            stIdx+=5;
-                            String tp = temp1.substring(stIdx);
+                                                    int stIdx = temp1.indexOf("Host: ");
+                                                    stIdx+=5;
+                                                    String tp = temp1.substring(stIdx);
 
-                            int endIdx = tp.indexOf('\n');
-                            endIdx+=stIdx;
-                            hostName = temp1.substring(stIdx, endIdx);
+                                                    int endIdx = tp.indexOf('\n');
+                                                    endIdx+=stIdx;
+                                                    hostName = temp1.substring(stIdx, endIdx);
 
-                            int portIdx=hostName.indexOf(':');
-                            String strport=new String();
-                            if(portIdx > 0){
-                            strport=hostName.substring(portIdx+1).trim();
-                                hostName=hostName.substring(0,portIdx);
-                            //System.out.println("port is"+strport);
+                                                    int portIdx=hostName.indexOf(':');
+                                                    String strport=new String();
+                                                    if(portIdx > 0){
+                                                    strport=hostName.substring(portIdx+1).trim();
+                                                            hostName=hostName.substring(0,portIdx);
+                                                    //System.out.println("port is"+strport);
 }
-                            hostName = hostName.trim();
-                            port=new Integer(strport).intValue();
+                                                    hostName = hostName.trim();
+                                                    port=new Integer(strport).intValue();
                                                     // if serverSet is true,then use m_host and m_port from the commandline
                                                     //otherwise read host and port from the script.txt
                                                     if(serverSet){
-                            System.out.println("HTTP port :"+m_port);
-                            System.out.println("HTTP hostname :"+m_host);
-                            server=new Socket(m_host,m_port);
+                                                    System.out.println("HTTP port :"+m_port);
+                                                    System.out.println("HTTP hostname :"+m_host);
+                                                    server=new Socket(m_host,m_port);
                                                     }
                                                     else
                                                         server=new Socket(hostName,port);
-                            serverAddress=server.getInetAddress();
-                            bufferedStream=new BufferedReader(new InputStreamReader(server.getInputStream()));
-                            server_out= new DataOutputStream(server.getOutputStream());
-                            String req=new String();
-                            if(mh.ifPOSTRequest()) {
-                                //System.out.println("POST REQUEST");
-                                req=mh.getRequestHeader()+ CRLF + mh+CRLF+ mh.getPostData()+CRLF+CRLF;
-                                //String post="POST" + " " + server_url+ " " + "HTTP/1.0" + CRLF + inmh
-                                //+ CRLF + postdata+ CRLF+CRLF;
+                                                    serverAddress=server.getInetAddress();
+                                                    bufferedStream=new BufferedReader(new InputStreamReader(server.getInputStream()));
+                                                    server_out= new DataOutputStream(server.getOutputStream());
+                                                    String req=new String();
+                                                    if(mh.ifPOSTRequest()) {
+                                                            //System.out.println("POST REQUEST");
+                                                            req=mh.getRequestHeader()+ CRLF + mh+CRLF+ mh.getPostData()+CRLF+CRLF;
+                                                            //String post="POST" + " " + server_url+ " " + "HTTP/1.0" + CRLF + inmh
+                                                            //+ CRLF + postdata+ CRLF+CRLF;
 
-                            }
-                            else
-                                req=mh.getRequestHeader()+ CRLF + mh + CRLF + CRLF;
+                                                    }
+                                                    else
+                                                            req=mh.getRequestHeader()+ CRLF + mh + CRLF + CRLF;
 
-                            String requestLine=mh.getRequestHeader();
-                            int fsp=requestLine.indexOf(' ');
-                            int nsp=requestLine.indexOf(' ',fsp+1);
-                            int eol=requestLine.indexOf('\n');
-                            requestLine=requestLine.substring(fsp+1,nsp);
+                                                    String requestLine=mh.getRequestHeader();
+                                                    int fsp=requestLine.indexOf(' ');
+                                                    int nsp=requestLine.indexOf(' ',fsp+1);
+                                                    int eol=requestLine.indexOf('\n');
+                                                    requestLine=requestLine.substring(fsp+1,nsp);
 
-                            //Following are debug output statements
-                            //System.out.println("%%%%%%%%%%%%%%%%%%%%%%Request String Sent to Server%%%%%%%%%%%%%%%%%%%");
-                            //System.out.println(mh.getRequestHeader());
-                            //System.out.println(mh);
+                                                    //Following are debug output statements
+                                                    //System.out.println("%%%%%%%%%%%%%%%%%%%%%%Request String Sent to Server%%%%%%%%%%%%%%%%%%%");
+                                                    //System.out.println(mh.getRequestHeader());
+                                                    //System.out.println(mh);
 
-                            try {
-                                if(server_out!=null)
-                                    server_out.write(req.getBytes());
-                                else System.out.println("Server_out is null");
-                            }
-                            catch(IOException e) {
-                                String errMsg=e.getMessage();
-                                System.out.println(e.getMessage());
-                            }
+                                                    try {
+                                                            if(server_out!=null)
+                                                                    server_out.write(req.getBytes());
+                                                            else System.out.println("Server_out is null");
+                                                    }
+                                                    catch(IOException e) {
+                                                            String errMsg=e.getMessage();
+                                                            System.out.println(e.getMessage());
+                                                    }
 
-                            code = readHeader(bufferedStream);
-                            reporter.addTest(TEST_SUITE_ID,requestLine );
-                            reporter.addTestCase(TEST_SUITE_ID,requestLine, requestLine );
+                                                    code = readHeader(bufferedStream);
+                                                    reporter.addTest(TEST_SUITE_ID,requestLine );
+                                                    reporter.addTestCase(TEST_SUITE_ID,requestLine, requestLine );
 
 
-                            if(code==500 || code==404) {
-                                if(code==404){
-                                    System.out.println("WebServer returned error code 404");
-                                    System.out.println("Request Resource not available");
-                                    System.out.println("There is some deployment error");
-                                }
-                                System.out.println("!!Server returned error..Application Exiting");
-                                reporter.setTestCaseStatus(TEST_SUITE_ID,requestLine,requestLine,ReporterConstants.FAIL);
-                                //stat.addStatus("WEBCLIENT "+ requestLine,stat.FAIL);
-                                System.out.println(TEST_SUITE_ID+"\t"+requestLine+"\t FAIL");
+                                                    if(code==500 || code==404) {
+                                                            if(code==404){
+                                                                    System.out.println("WebServer returned error code 404");
+                                                                    System.out.println("Request Resource not available");
+                                                                    System.out.println("There is some deployment error");
+                                                            }
+                                                            System.out.println("!!Server returned error..Application Exiting");
+                                                            reporter.setTestCaseStatus(TEST_SUITE_ID,requestLine,requestLine,ReporterConstants.FAIL);
+                                                            //stat.addStatus("WEBCLIENT "+ requestLine,stat.FAIL);
+                                                            System.out.println(TEST_SUITE_ID+"\t"+requestLine+"\t FAIL");
                                                             reporter.generateValidReport();
-                                return 0;
+                                                            return 0;
+                                                    }
+                                                    if (code==200){
+                                                            reporter.setTestCaseStatus(TEST_SUITE_ID,requestLine,requestLine,ReporterConstants.PASS);
+                                                            //stat.addStatus("WEBCLIENT"+" "+ requestLine,stat.PASS);
+                                                            System.out.println(TEST_SUITE_ID+"\t"+requestLine+"\t"+"PASS");
+                                                    }
+
+                                            }
+                                            i=i+3;
+                                            j=i;
+
+                                    default:
+
+                                            i=i+1;
                             }
-                            if (code==200){
-                                reporter.setTestCaseStatus(TEST_SUITE_ID,requestLine,requestLine,ReporterConstants.PASS);
-                                //stat.addStatus("WEBCLIENT"+" "+ requestLine,stat.PASS);
-                                System.out.println(TEST_SUITE_ID+"\t"+requestLine+"\t"+"PASS");
-                            }
+                            if(time>=temp)
+                                    temp=time;
 
-                        }
-                        i=i+3;
-                        j=i;
-
-                    default:
-
-                        i=i+1;
-                }
-                if(time>=temp)
-                    temp=time;
-
+                    }
+                    // System.out.println("while loop ended");
+                    bufferedStream.close();
+                    server_out.close();
+                    reporter.generateValidReport();
+                    return code;
             }
-            // System.out.println("while loop ended");
-            bufferedStream.close();
-            server_out.close();
-            reporter.generateValidReport();
+            catch(Exception e) {
+                    e.printStackTrace();
+                    String msg=e.getMessage();
+            }
             return code;
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            String msg=e.getMessage();
-        }
-        return code;
     }
 
     public synchronized int readHeader(BufferedReader inStream) {

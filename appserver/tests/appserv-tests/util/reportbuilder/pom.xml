@@ -27,12 +27,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.devtests</groupId>
-    <version>4.0-SNAPSHOT</version>
+        <version>4.0-SNAPSHOT</version>
     <artifactId>report-builder</artifactId>
     <packaging>jar</packaging>
     <name>report-builder</name>
     <build>
-        <finalName>${artifactId}</finalName>
+                <finalName>${artifactId}</finalName>
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>

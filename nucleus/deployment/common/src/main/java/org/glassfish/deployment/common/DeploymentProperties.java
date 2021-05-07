@@ -50,7 +50,7 @@ public class DeploymentProperties extends Properties {
     // passe from client
     public DeploymentProperties(Properties props) {
         super();
-    putAll(props);
+        putAll(props);
     }
 
     // construct a DeploymentProperties using the map
@@ -209,7 +209,7 @@ public class DeploymentProperties extends Properties {
     }
 
     public void setVirtualServers(String virtualServers) {
-        if(virtualServers != null)
+        if (virtualServers != null)
             setProperty(VIRTUAL_SERVERS, virtualServers);
     }
 

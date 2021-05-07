@@ -42,8 +42,8 @@ import org.glassfish.hk2.api.PerLookup;
  *
  * --target      Cluster or stand alone server instance (required)
  * --retrieve    When true, the zip file is downloaded under the specified file_name in local machine
- *             When false, the zip file is exported under the the specified file_name on DAS
- *             Default value is false. (optional)
+ *                 When false, the zip file is exported under the the specified file_name on DAS
+ *                 Default value is false. (optional)
  *
  * file_name    Specifies the file name and location of the synchronized content.
  * If file_name is not specified and --retrieve=false, the default value is

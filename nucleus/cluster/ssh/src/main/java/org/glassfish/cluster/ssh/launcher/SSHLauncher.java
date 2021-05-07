@@ -122,7 +122,7 @@ public class SSHLauncher {
             this.host = node.getNodeHost();
         }
         if (logger.isLoggable(Level.FINE)) {
-        logger.fine("Connecting to host " + host);
+            logger.fine("Connecting to host " + host);
         }
 
         //XXX Why do we need this again?  This is already done above and set to host

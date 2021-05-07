@@ -31,28 +31,27 @@ import org.glassfish.flashlight.impl.client.DTraceClientInvoker;
 @Service
 public class ProbeClientInvokerFactory {
 
-    private static AtomicInteger clientMethodIdCounter =
-            new AtomicInteger();
+    private static AtomicInteger clientMethodIdCounter = new AtomicInteger();
 
     protected static int getNextId() {
         return clientMethodIdCounter.incrementAndGet();
     }
 
-    public static ProbeClientInvoker createInvoker(Object target, Method method,
-                                                   FlashlightProbe probe, String[] paramNames) {
-        int invokerId = clientMethodIdCounter.incrementAndGet();
 
+    public static ProbeClientInvoker createInvoker(Object target, Method method, FlashlightProbe probe,
+        String[] paramNames) {
+        int invokerId = clientMethodIdCounter.incrementAndGet();
         return new ReflectiveClientInvoker(invokerId, target, method, paramNames, probe);
     }
 
-    public static ProbeClientInvoker createInvoker(Object target, Method method,
-                                                   FlashlightProbe probe) {
+
+    public static ProbeClientInvoker createInvoker(Object target, Method method, FlashlightProbe probe) {
         return createInvoker(target, method, probe, FlashlightUtils.getParamNames(method));
     }
 
 
-    public static ProbeClientInvoker createDTraceInvoker(FlashlightProbe probe)     {
+    public static ProbeClientInvoker createDTraceInvoker(FlashlightProbe probe) {
         int invokerId = clientMethodIdCounter.incrementAndGet();
-        return  new DTraceClientInvoker(invokerId, probe);
+        return new DTraceClientInvoker(invokerId, probe);
     }
 }

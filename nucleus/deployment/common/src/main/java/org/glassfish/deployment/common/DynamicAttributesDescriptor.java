@@ -36,10 +36,10 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
     */
 
     public Map getExtraAttributes() {
-    if (dynamicAttributes == null) {
-        dynamicAttributes = new Hashtable();
-    }
-    return dynamicAttributes;
+        if (dynamicAttributes == null) {
+            dynamicAttributes = new Hashtable();
+        }
+        return dynamicAttributes;
     }
 
     /**
@@ -51,9 +51,9 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
         if (value==null) {
             return;
         }
-    if (dynamicAttributes == null) {
-        dynamicAttributes = new Hashtable();
-    }
+        if (dynamicAttributes == null) {
+            dynamicAttributes = new Hashtable();
+        }
         dynamicAttributes.put(name, value);
         changed();
     }
@@ -119,24 +119,24 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
            for (Iterator itr = keys.iterator();itr.hasNext();) {
                String keyName = (String) itr.next();
                Object o = getExtraAttribute(keyName);
-           if (o instanceof Object[]) {
-           Object[] objects = (Object[]) o;
-           for (int i=0;i<objects.length;i++) {
-               toStringBuffer.append("\n Indexed prop name ").append(keyName).append("[").append(i).append("] = ");
+               if (o instanceof Object[]) {
+                   Object[] objects = (Object[]) o;
+                   for (int i=0;i<objects.length;i++) {
+                       toStringBuffer.append("\n Indexed prop name ").append(keyName).append("[").append(i).append("] = ");
                        if(objects[i] instanceof DynamicAttributesDescriptor)
                             ((DynamicAttributesDescriptor)objects[i]).print(toStringBuffer);
                        else
                             toStringBuffer.append(objects[i]);
-           }
-           } else {
-           toStringBuffer.append("\n  Property name = ").append(keyName).append(" value = ");
+                   }
+               } else {
+                   toStringBuffer.append("\n  Property name = ").append(keyName).append(" value = ");
                    if(o instanceof DynamicAttributesDescriptor)
                             ((DynamicAttributesDescriptor)o).print(toStringBuffer);
                        else
                             toStringBuffer.append(o);
                }
            }
-       toStringBuffer.append("\n<==End");
+           toStringBuffer.append("\n<==End");
            return ;
         }
     }

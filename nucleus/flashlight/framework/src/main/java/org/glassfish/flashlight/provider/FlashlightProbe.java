@@ -98,7 +98,7 @@ public class FlashlightProbe
     }
 
     public synchronized boolean addInvoker(ProbeClientInvoker invoker) {
-        boolean isFirst = (invokers.isEmpty() && firstTransform);
+            boolean isFirst = (invokers.isEmpty() && firstTransform);
 
         if(invokers.putIfAbsent(invoker.getId(), invoker) != null) {
             if (logger.isLoggable(Level.FINE))
@@ -236,14 +236,14 @@ public class FlashlightProbe
     }
 
     public String getModuleProviderName() {
-        return moduleProviderName;
-    }
+                return moduleProviderName;
+        }
 
     public String getModuleName() {
         return moduleProviderName;
     }
 
-    public String getProbeProviderName() {
+        public String getProbeProviderName() {
         return probeProviderName;
     }
 
@@ -280,12 +280,12 @@ public class FlashlightProbe
     }
 
     public Class getProviderClazz() {
-        return providerClazz;
-    }
+                return providerClazz;
+        }
 
-     public String toString() {
+         public String toString() {
          StringBuilder sbldr = new StringBuilder(moduleProviderName + ":" + moduleName
-                 + ":" + probeProviderName + ":" + probeName);
+                         + ":" + probeProviderName + ":" + probeName);
          String delim = " (";
          for (int i = 0; i < paramTypes.length; i++) {
              sbldr.append(delim).append((paramTypes[i] == null) ? " " : paramTypes[i].getName());

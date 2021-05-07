@@ -36,6 +36,6 @@ public @interface ResourceDeployerInfo {
     @Metadata(org.glassfish.resourcebase.resources.util.ResourceManagerFactory.METADATA_KEY)
     Class<?> value();
 
-    Class<? extends ResourceDeployerValidator> validator() default
-        org.glassfish.resourcebase.resources.api.DefaultResourceDeployerValidator.class;
+    Class<? extends ResourceDeployerValidator> validator()
+    default org.glassfish.resourcebase.resources.api.DefaultResourceDeployerValidator.class;
 }

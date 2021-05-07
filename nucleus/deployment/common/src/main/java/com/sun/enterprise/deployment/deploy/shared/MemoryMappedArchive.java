@@ -55,7 +55,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
 
     /** Creates a new instance of MemoryMappedArchive */
     protected MemoryMappedArchive() {
-    // for use by subclasses
+        // for use by subclasses
     }
 
     /** Creates a new instance of MemoryMappedArchive */
@@ -156,15 +156,15 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
         return entries;
     }
 
-    /**
-     *  @return an @see java.util.Enumeration of entries in this abstract
-     * archive, providing the list of embedded archive to not count their
-     * entries as part of this archive
-     */
-     public Enumeration entries(Enumeration embeddedArchives) {
-    // jar file are not recursive
-    return entries();
-    }
+        /**
+         *  @return an @see java.util.Enumeration of entries in this abstract
+         * archive, providing the list of embedded archive to not count their
+         * entries as part of this archive
+         */
+         public Enumeration entries(Enumeration embeddedArchives) {
+        // jar file are not recursive
+        return entries();
+        }
 
     /**
      * @return true if this archive exists

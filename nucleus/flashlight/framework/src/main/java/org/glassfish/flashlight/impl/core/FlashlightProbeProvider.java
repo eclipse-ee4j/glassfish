@@ -60,9 +60,9 @@ public class FlashlightProbeProvider implements ProbeProviderInfo{
 
     }
 
-    public String toString() {
-        return ObjectAnalyzer.toString(this);
-    }
+        public String toString() {
+                return ObjectAnalyzer.toString(this);
+        }
     public Class getProviderClass() {
         return providerClazz;
     }

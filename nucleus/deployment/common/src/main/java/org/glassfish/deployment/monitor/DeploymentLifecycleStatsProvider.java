@@ -110,7 +110,7 @@ public class DeploymentLifecycleStatsProvider {
 
             strBuf.append(LINE_BREAK).append(LINE_BREAK);
             appendColumn(strBuf, "Application_Name", appNameLength);
-        appendColumn(strBuf, "Module_Type", moduleTypeLength);
+            appendColumn(strBuf, "Module_Type", moduleTypeLength);
             appendColumn(strBuf, "Loading_Time(ms)", COLUMN_LENGTH);
             strBuf.append(LINE_BREAK);
 
@@ -119,7 +119,7 @@ public class DeploymentLifecycleStatsProvider {
                 Map<String, String> appInfoMap = appsInfoMap.get(appName);
                 String moduleType = appInfoMap.get(MODULE_TYPE);
                 String loadingTime = appInfoMap.get(LOADING_TIME);
-        appendColumn(strBuf, moduleType, COLUMN_LENGTH);
+                appendColumn(strBuf, moduleType, COLUMN_LENGTH);
                 appendColumn(strBuf, loadingTime, COLUMN_LENGTH);
                 strBuf.append(LINE_BREAK);
             }

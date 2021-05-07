@@ -52,8 +52,7 @@ import jakarta.inject.Inject;
  * @author Prashanth Abbagani
  */
 @Service
-public class FlashlightProbeProviderFactory
-        implements ProbeProviderFactory, PostConstruct {
+public class FlashlightProbeProviderFactory implements ProbeProviderFactory, PostConstruct {
     @Inject
     //Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     MonitoringService monitoringServiceConfig;
@@ -129,12 +128,12 @@ public class FlashlightProbeProviderFactory
     }
 
     public <T> T getProbeProvider(Class<T> providerClazz)
-            throws InstantiationException, IllegalAccessException {
+        throws InstantiationException, IllegalAccessException {
         return getProbeProvider(providerClazz, null);
     }
 
     public <T> T getProbeProvider(Class<T> providerClazz, String invokerId)
-            throws InstantiationException, IllegalAccessException {
+        throws InstantiationException, IllegalAccessException {
 
         if (providerClazz == null) {
             throw new NullPointerException("providerClazz cannot be null");
@@ -165,28 +164,28 @@ public class FlashlightProbeProviderFactory
         }
 
         if (isValidString(moduleProviderName)
-                && isValidString(moduleName)
-                && isValidString(probeProviderName)) {
+            && isValidString(moduleName)
+            && isValidString(probeProviderName)) {
             return getProbeProvider(moduleProviderName, moduleName,
-                    probeProviderName,
-                    invokerId, providerClazz);
+                probeProviderName,
+                invokerId, providerClazz);
         } else {
             logger.log(Level.WARNING,
-                    INVALID_PROBE_PROVIDER, new Object[]{providerClazz.getName()});
+                INVALID_PROBE_PROVIDER, new Object[]{providerClazz.getName()});
             return null;
         }
     }
 
     public <T> T getProbeProvider(String moduleName, String providerName, String appName,
-                                  Class<T> clazz)
+        Class<T> clazz)
             throws InstantiationException, IllegalAccessException {
 
         return getProbeProvider(moduleName, providerName, appName, null, clazz);
     }
 
     public <T> T getProbeProvider(String moduleProviderName, String moduleName,
-            String probeProviderName, String invokerId,
-            Class<T> providerClazz)
+        String probeProviderName, String invokerId,
+        Class<T> providerClazz)
             throws InstantiationException, IllegalAccessException {
 
         String origProbeProviderName = probeProviderName;
@@ -196,7 +195,7 @@ public class FlashlightProbeProviderFactory
         FlashlightProbeProvider genericProvider = null;
         if (invokerId != null) {
             getProbeProvider( moduleProviderName,  moduleName,
-             probeProviderName, null, providerClazz);
+                probeProviderName, null, providerClazz);
             genericProvider = new FlashlightProbeProvider(
                 moduleProviderName, moduleName, probeProviderName, providerClazz);
             genericProvider = ppRegistry.getProbeProvider(genericProvider);
@@ -212,7 +211,7 @@ public class FlashlightProbeProviderFactory
             }
         }
         FlashlightProbeProvider provider = new FlashlightProbeProvider(
-                moduleProviderName, moduleName, probeProviderName, providerClazz);
+            moduleProviderName, moduleName, probeProviderName, providerClazz);
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("ModuleProviderName= " + moduleProviderName + " \tModule= " + moduleName
                 + "\tProbeProviderName= " + probeProviderName + "\tProviderClazz= " + providerClazz.toString());
@@ -226,7 +225,7 @@ public class FlashlightProbeProviderFactory
         if(alreadyExists != null) {
             T inst = (T) alreadyExists.getProviderClass().newInstance();
             notifyListenersOnAdd(moduleProviderName, moduleName,
-                    probeProviderName, invokerId, providerClazz, inst);
+                probeProviderName, invokerId, providerClazz, inst);
             return inst;
         }
 
@@ -250,9 +249,9 @@ public class FlashlightProbeProviderFactory
                 }
 
                 createProbe(origProbeProviderName, genericProvider, provider,
-                        probeName, self, hidden, m, moduleProviderName, moduleName, probeProviderName,
-                        invokerId, providerClazz, pnameAnn.stateful(), pnameAnn.statefulReturn(),
-                        pnameAnn.statefulException(), pnameAnn.profileNames());
+                    probeName, self, hidden, m, moduleProviderName, moduleName, probeProviderName,
+                    invokerId, providerClazz, pnameAnn.stateful(), pnameAnn.statefulReturn(),
+                    pnameAnn.statefulException(), pnameAnn.profileNames());
 
             }
         }
@@ -262,9 +261,9 @@ public class FlashlightProbeProviderFactory
                 String methodName = m.getName();
 
                 createProbe(origProbeProviderName, genericProvider, provider,
-                        methodName, false, false, m, moduleProviderName, moduleName, probeProviderName,
-                        invokerId, providerClazz,
-                        false, false, false, null); // Not stateful and no profile names for these
+                    methodName, false, false, m, moduleProviderName, moduleName, probeProviderName,
+                    invokerId, providerClazz,
+                    false, false, false, null); // Not stateful and no profile names for these
             }
         }
 
@@ -276,8 +275,8 @@ public class FlashlightProbeProviderFactory
         if (Modifier.isAbstract(mod)) {
 
             String generatedClassName = provider.getModuleProviderName() +
-                    "_Flashlight_" + provider.getModuleName() + "_" + "Probe_" +
-                    ((provider.getProbeProviderName() == null) ? providerClazz.getName() : provider.getProbeProviderName());
+                "_Flashlight_" + provider.getModuleName() + "_" + "Probe_" +
+                ((provider.getProbeProviderName() == null) ? providerClazz.getName() : provider.getProbeProviderName());
             generatedClassName = providerClazz.getName() + "_" + generatedClassName;
 
             try {
@@ -285,7 +284,7 @@ public class FlashlightProbeProviderFactory
                 //System.out.println ("Reusing the Generated class");
                 T inst = (T) tClazz.newInstance();
                 notifyListenersOnAdd(moduleProviderName, moduleName,
-                        probeProviderName, invokerId, providerClazz, inst);
+                    probeProviderName, invokerId, providerClazz, inst);
                 return inst;
             } catch (ClassNotFoundException cnfEx) {
                 //Ignore
@@ -302,42 +301,42 @@ public class FlashlightProbeProviderFactory
         }
 
         ppRegistry.getInstance().registerProbeProvider(
-                provider, tClazz);
+            provider, tClazz);
 
         T inst = (T) tClazz.newInstance();
         notifyListenersOnAdd(moduleProviderName, moduleName,
-                probeProviderName, invokerId, providerClazz, inst);
+            probeProviderName, invokerId, providerClazz, inst);
         return inst;
     }
 
     private void createProbe(String origProbeProviderName, FlashlightProbeProvider genericProvider,
-            FlashlightProbeProvider provider, String probeName, boolean self, boolean hidden,
-            Method m, String moduleProviderName, String moduleName,
-            String probeProviderName, String invokerId,
-            Class providerClazz, boolean stateful, boolean statefulReturn,
-            boolean statefulException, String profileNames) {
+        FlashlightProbeProvider provider, String probeName, boolean self, boolean hidden,
+        Method m, String moduleProviderName, String moduleName,
+        String probeProviderName, String invokerId,
+        Class providerClazz, boolean stateful, boolean statefulReturn,
+        boolean statefulException, String profileNames) {
 
-            String[] probeParamNames = FlashlightUtils.getParamNames(m);
-            FlashlightProbe probe = ProbeFactory.createProbe(
-                    providerClazz, moduleProviderName, moduleName, probeProviderName, probeName,
-                    probeParamNames, m.getParameterTypes(), self, hidden,
-                    stateful, statefulReturn, statefulException, splitProfileNames(profileNames));
-            probe.setProviderJavaMethodName(m.getName());
-            probe.setProbeMethod(m);
-            provider.addProbe(probe);
+        String[] probeParamNames = FlashlightUtils.getParamNames(m);
+        FlashlightProbe probe = ProbeFactory.createProbe(
+            providerClazz, moduleProviderName, moduleName, probeProviderName, probeName,
+            probeParamNames, m.getParameterTypes(), self, hidden,
+            stateful, statefulReturn, statefulException, splitProfileNames(profileNames));
+        probe.setProviderJavaMethodName(m.getName());
+        probe.setProbeMethod(m);
+        provider.addProbe(probe);
 
-            if (invokerId != null) {
-                if (genericProvider != null) {
-                    String probeDescriptor = FlashlightProbe.getProbeDesc(moduleProviderName, moduleName, origProbeProviderName, probeName);
-                    if (probeDescriptor != null) {
-                        FlashlightProbe fp = genericProvider.getProbe(probeDescriptor);
-                        if (fp != null) {
-                             probe.setParent(fp);
-                        }
+        if (invokerId != null) {
+            if (genericProvider != null) {
+                String probeDescriptor = FlashlightProbe.getProbeDesc(moduleProviderName, moduleName, origProbeProviderName, probeName);
+                if (probeDescriptor != null) {
+                    FlashlightProbe fp = genericProvider.getProbe(probeDescriptor);
+                    if (fp != null) {
+                        probe.setParent(fp);
                     }
-
                 }
+
             }
+        }
 
 
 
@@ -347,7 +346,7 @@ public class FlashlightProbeProviderFactory
         try {
             ProbeProviderRegistry ppRegistry = ProbeProviderRegistry.getInstance();
             FlashlightProbeProvider fProbeProvider =
-                    ppRegistry.getProbeProvider(probeProvider.getClass());
+                ppRegistry.getProbeProvider(probeProvider.getClass());
             ProbeRegistry probeRegistry = ProbeRegistry.getInstance();
             for (FlashlightProbe probe : fProbeProvider.getProbes()) {
                 probeRegistry.unregisterProbe(probe);
@@ -364,7 +363,7 @@ public class FlashlightProbeProviderFactory
 
         try {
             ProviderSubClassImplGenerator gen = new ProviderSubClassImplGenerator(
-                    oldProviderClazz, invokerId);
+                oldProviderClazz, invokerId);
 
             genClazz = gen.generateAndDefineClass(oldProviderClazz, invokerId);
 
@@ -402,8 +401,8 @@ public class FlashlightProbeProviderFactory
     }
 
     private <T> void notifyListenersOnAdd(String moduleProviderName, String moduleName,
-                String probeProviderName, String invokerId,
-                Class<T> providerClazz, T provider) {
+        String probeProviderName, String invokerId,
+        Class<T> providerClazz, T provider) {
         for (ProbeProviderEventListener listener : listeners) {
             listener.probeProviderAdded(moduleProviderName, moduleName,
                 probeProviderName, invokerId, providerClazz, provider);
@@ -459,23 +458,23 @@ public class FlashlightProbeProviderFactory
 
         provider.setDTraceInstrumented(true);
 
-         Collection<FlashlightProbe> probes = provider.getProbes();
-         boolean onlyHidden = true;
+        Collection<FlashlightProbe> probes = provider.getProbes();
+        boolean onlyHidden = true;
 
-         for(FlashlightProbe probe : probes) {
-             // if it is hidden -- do not hook-up a DTrace "listener"
+        for(FlashlightProbe probe : probes) {
+            // if it is hidden -- do not hook-up a DTrace "listener"
 
-             if(!probe.isHidden()) {
-                 DTraceMethodFinder mf = new DTraceMethodFinder(probe, dtraceProviderImpl);
-                 probe.setDTraceMethod(mf.matchMethod());
-                 probe.setDTraceProviderImpl(dtraceProviderImpl);
-                 onlyHidden = false;    // we have at least one!
-             }
-         }
+            if(!probe.isHidden()) {
+                DTraceMethodFinder mf = new DTraceMethodFinder(probe, dtraceProviderImpl);
+                probe.setDTraceMethod(mf.matchMethod());
+                probe.setDTraceProviderImpl(dtraceProviderImpl);
+                onlyHidden = false;    // we have at least one!
+            }
+        }
 
-         // if there are only hidden probes -- don't register the class
+        // if there are only hidden probes -- don't register the class
 
-         if(!onlyHidden)
+        if(!onlyHidden)
             FlashlightProbeClientMediator.getInstance().registerDTraceListener(provider);
     }
 
@@ -506,7 +505,7 @@ public class FlashlightProbeProviderFactory
         } catch (Exception e) {
             if (logger.isLoggable(Level.FINE))
                 logger.fine( " Could not load the class ( " + providerClazz +
-                        " ) for the provider " + providerClass);
+                    " ) for the provider " + providerClass);
             e.printStackTrace();
         }
         if (logger.isLoggable(Level.FINE)) {
@@ -516,7 +515,7 @@ public class FlashlightProbeProviderFactory
             logger.fine("probeProviderClass = " + providerClass);
         }
         FlashlightProbeProvider flProvider = new FlashlightProbeProvider(
-                    moduleProviderName, moduleName, probeProviderName, providerClazz);
+            moduleProviderName, moduleName, probeProviderName, providerClazz);
 
         for (org.glassfish.flashlight.xml.XmlProbe probe : probes) {
             String probeName = probe.getProbeName();
@@ -553,10 +552,10 @@ public class FlashlightProbeProviderFactory
                 continue;
             }
             FlashlightProbe flProbe = ProbeFactory.createProbe( providerClazz,
-                    moduleProviderName, moduleName, probeProviderName, probeName,
-                    probeParams, paramTypes, hasSelf, isHidden,
-                    probe.getStateful(), probe.getStatefulReturn(), probe.getStatefulException(),
-                    splitProfileNames(probe.getProfileNames()));
+                moduleProviderName, moduleName, probeProviderName, probeName,
+                probeParams, paramTypes, hasSelf, isHidden,
+                probe.getStateful(), probe.getStatefulReturn(), probe.getStatefulException(),
+                splitProfileNames(probe.getProfileNames()));
             flProbe.setProviderJavaMethodName(probeMethod);
             if (logger.isLoggable(Level.FINE))
                 logger.fine(" Constructed probe = " + flProbe.toString());
@@ -568,10 +567,10 @@ public class FlashlightProbeProviderFactory
         handleDTrace(flProvider);
         allProbeProviders.add(flProvider);
         ProbeProviderRegistry.getInstance().registerProbeProvider(
-                flProvider, providerClazz);
+            flProvider, providerClazz);
         if (logger.isLoggable(Level.FINE))
             logger.fine (" Provider registered successfully - " + probeProviderName);
-   }
+    }
 
 
     private Class<?> getParamType(ClassLoader cl, String paramTypeStr) {

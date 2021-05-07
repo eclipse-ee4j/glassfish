@@ -38,9 +38,9 @@ public class ProbeRegistry {
     private static volatile ProbeRegistry _me = new ProbeRegistry();
 
     private static ConcurrentHashMap<Integer, FlashlightProbe> probeMap =
-                new ConcurrentHashMap<Integer, FlashlightProbe>();
+        new ConcurrentHashMap<Integer, FlashlightProbe>();
     private static ConcurrentHashMap<String, FlashlightProbe> probeDesc2ProbeMap =
-                new ConcurrentHashMap<String, FlashlightProbe>();
+        new ConcurrentHashMap<String, FlashlightProbe>();
 
     public static ProbeRegistry getInstance() {
         return _me;
@@ -95,51 +95,51 @@ public class ProbeRegistry {
     }
 
     public Collection<FlashlightProbe> getAllProbes() {
-       Collection<FlashlightProbe> allProbes = probeMap.values();
-       Collection<FlashlightProbe> visibleProbes = new ArrayList<FlashlightProbe>();
-       for (FlashlightProbe probe : allProbes) {
-           if (!probe.isHidden())
-               visibleProbes.add(probe);
-       }
-       return visibleProbes;
+        Collection<FlashlightProbe> allProbes = probeMap.values();
+        Collection<FlashlightProbe> visibleProbes = new ArrayList<FlashlightProbe>();
+        for (FlashlightProbe probe : allProbes) {
+            if (!probe.isHidden())
+                visibleProbes.add(probe);
+        }
+        return visibleProbes;
     }
 
-   public static void invokeProbe(int id, Object[] args) {
+    public static void invokeProbe(int id, Object[] args) {
         FlashlightProbe probe = probeMap.get(id);
         if (probe != null) {
             probe.fireProbe(args);
         }
     }
 
-   public static Object invokeProbeBefore(int id, Object[] args) {
-       FlashlightProbe probe = probeMap.get(id);
-       if (probe != null) {
-           return probe.fireProbeBefore(args);
-       }
-       return null;
-   }
+    public static Object invokeProbeBefore(int id, Object[] args) {
+        FlashlightProbe probe = probeMap.get(id);
+        if (probe != null) {
+            return probe.fireProbeBefore(args);
+        }
+        return null;
+    }
 
-   public static void invokeProbeAfter(Object returnValue, int id,
-                        Object states) {
-       FlashlightProbe probe = probeMap.get(id);
-       if (probe != null) {
-           try {
-               probe.fireProbeAfter(returnValue, (ArrayList<FlashlightProbe.ProbeInvokeState>)states);
-           } catch (ClassCastException e) {
-               // Make sure the state we got was really ok, internal error if that happens
-           }
-       }
-   }
+    public static void invokeProbeAfter(Object returnValue, int id,
+        Object states) {
+        FlashlightProbe probe = probeMap.get(id);
+        if (probe != null) {
+            try {
+                probe.fireProbeAfter(returnValue, (ArrayList<FlashlightProbe.ProbeInvokeState>)states);
+            } catch (ClassCastException e) {
+                // Make sure the state we got was really ok, internal error if that happens
+            }
+        }
+    }
 
-   public static void invokeProbeOnException(Object exceptionValue, int id,
-                        Object states) {
-       FlashlightProbe probe = probeMap.get(id);
-       if (probe != null) {
-           try {
-               probe.fireProbeOnException(exceptionValue, (ArrayList<FlashlightProbe.ProbeInvokeState>)states);
-           } catch (ClassCastException e) {
-               // Make sure the state we got was really ok, internal error if that happens
-           }
-       }
-   }
+    public static void invokeProbeOnException(Object exceptionValue, int id,
+        Object states) {
+        FlashlightProbe probe = probeMap.get(id);
+        if (probe != null) {
+            try {
+                probe.fireProbeOnException(exceptionValue, (ArrayList<FlashlightProbe.ProbeInvokeState>)states);
+            } catch (ClassCastException e) {
+                // Make sure the state we got was really ok, internal error if that happens
+            }
+        }
+    }
 }

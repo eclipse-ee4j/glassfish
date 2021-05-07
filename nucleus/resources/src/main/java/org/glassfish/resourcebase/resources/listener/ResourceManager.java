@@ -253,7 +253,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
          * @param changedInstance changed instance.
          */
         public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
-        NotProcessed np = null;
+            NotProcessed np = null;
             ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
             try {
                 ClassLoader ccl = clh.getConnectorClassLoader(null);
@@ -365,33 +365,33 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                     Resource resource = ResourceUtil.getResourceByName(Resource.class, domain.getResources(), refName);
                     ResourceDeployer deployer = getResourceDeployer(resource);
                     if (deployer != null) {
-                    for (PropertyChangeEvent event : events) {
-                        String propertyName = event.getPropertyName();
-                        //Depending on the type of event (disable/enable, invoke the
-                        //method on deployer.
-                        if ("enabled".equalsIgnoreCase(propertyName)) {
-                            if (resource instanceof ServerResource) {
-                                if (!isServerResourceEnabled(resource)) {
-                                    // should be no op if already disabled
-                                    deployer.disableResource(resource);
-                                } else {
-                                    // should be no op if already enabled
-                                    deployer.enableResource(resource);
-                                }
-                            } else {
-                                //both cannot be true or false
-                                boolean newValue = Boolean.valueOf(event.getNewValue().toString());
-                                boolean oldValue = Boolean.valueOf(event.getOldValue().toString());
-                                if (!(newValue && oldValue)) {
-                                    if (newValue) {
-                                        deployer.enableResource(resource);
-                                    } else {
+                        for (PropertyChangeEvent event : events) {
+                            String propertyName = event.getPropertyName();
+                            //Depending on the type of event (disable/enable, invoke the
+                            //method on deployer.
+                            if ("enabled".equalsIgnoreCase(propertyName)) {
+                                if (resource instanceof ServerResource) {
+                                    if (!isServerResourceEnabled(resource)) {
+                                        // should be no op if already disabled
                                         deployer.disableResource(resource);
+                                    } else {
+                                        // should be no op if already enabled
+                                        deployer.enableResource(resource);
+                                    }
+                                } else {
+                                    //both cannot be true or false
+                                    boolean newValue = Boolean.valueOf(event.getNewValue().toString());
+                                    boolean oldValue = Boolean.valueOf(event.getOldValue().toString());
+                                    if (!(newValue && oldValue)) {
+                                        if (newValue) {
+                                            deployer.enableResource(resource);
+                                        } else {
+                                            deployer.disableResource(resource);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
                     }
                 }
             } catch (Exception ex) {

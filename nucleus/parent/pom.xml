@@ -615,13 +615,11 @@
         </resources>
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>config-generator</artifactId>
                     <version>${hk2.config-generator.version}</version>
                 </plugin>
-
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>hk2-inhabitant-generator</artifactId>
@@ -873,7 +871,7 @@
                     </execution>
                 </executions>
             </plugin>
-        -->
+            -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

@@ -36,25 +36,27 @@ public class ProbeFactory {
     static ProbeRegistry probeRegistry = ProbeRegistry.getInstance();
 
     public static FlashlightProbe createProbe(Class providerClazz,
-            String moduleProviderName, String moduleName,
-            String probeProviderName, String probeName, String[] paramNames,
-            Class[] paramTypes, boolean self, boolean hidden) {
+        String moduleProviderName, String moduleName,
+        String probeProviderName, String probeName, String[] paramNames,
+        Class[] paramTypes, boolean self, boolean hidden) {
+
         return createProbe(providerClazz, moduleProviderName, moduleName, probeProviderName,
-                probeName, paramNames, paramTypes, self, hidden,
-                false, false, false, null); // not stateful, no profile names
+            probeName, paramNames, paramTypes, self, hidden,
+            false, false, false, null); // not stateful, no profile names
     }
 
     public static FlashlightProbe createProbe(Class providerClazz,
-            String moduleProviderName, String moduleName,
-            String probeProviderName, String probeName, String[] paramNames,
-            Class[] paramTypes, boolean self, boolean hidden,
-            boolean stateful, boolean statefulReturn, boolean statefulException,
-            String [] profileNames) {
+        String moduleProviderName, String moduleName,
+        String probeProviderName, String probeName, String[] paramNames,
+        Class[] paramTypes, boolean self, boolean hidden,
+        boolean stateful, boolean statefulReturn, boolean statefulException,
+        String [] profileNames) {
+
         int id = counter.incrementAndGet();
         FlashlightProbe probe = new FlashlightProbe(id, providerClazz,
-                moduleProviderName, moduleName, probeProviderName, probeName,
-                paramNames, paramTypes, self, hidden, stateful, statefulReturn,
-                statefulException, profileNames);
+            moduleProviderName, moduleName, probeProviderName, probeName,
+            paramNames, paramTypes, self, hidden, stateful, statefulReturn,
+            statefulException, profileNames);
 
         probeRegistry.registerProbe(probe);
         return probe;

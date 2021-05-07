@@ -219,7 +219,7 @@ public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity
             }
             childPart.setMessage(sb.toString());
         }
-    // Ending output formatting
+        // Ending output formatting
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 

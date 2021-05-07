@@ -188,8 +188,8 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
      * entries as part of this archive
      */
      public Enumeration entries(Enumeration embeddedArchives) {
-    // jar file are not recursive
-      return entries();
+        // jar file are not recursive
+          return entries();
     }
 
     public JarEntry getJarEntry(String name) {
@@ -229,7 +229,7 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
                 return null;
             }
         } else
-    if ((parentArchive != null) && (parentArchive.jarFile != null)) {
+        if ((parentArchive != null) && (parentArchive.jarFile != null)) {
             JarEntry je;
             // close the current input stream
             if (jarIS!=null) {
@@ -238,10 +238,10 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
 
             // reopen the embedded archive and position the input stream
             // at the beginning of the desired element
-        JarEntry archiveJarEntry = (uri != null)? parentArchive.jarFile.getJarEntry(uri.getSchemeSpecificPart()) : null;
-        if (archiveJarEntry == null) {
-        return null;
-        }
+            JarEntry archiveJarEntry = (uri != null)? parentArchive.jarFile.getJarEntry(uri.getSchemeSpecificPart()) : null;
+            if (archiveJarEntry == null) {
+                return null;
+            }
             jarIS = new JarInputStream(parentArchive.jarFile.getInputStream(archiveJarEntry));
             do {
                 je = jarIS.getNextJarEntry();
@@ -252,8 +252,8 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
                 return null;
             }
         } else {
-        return null;
-    }
+            return null;
+        }
     }
 
     /**

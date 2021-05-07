@@ -132,5 +132,5 @@ public interface ResourceDeployer {
 
 
     void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
-            throws org.glassfish.resourcebase.resources.api.ResourceConflictException;
+        throws org.glassfish.resourcebase.resources.api.ResourceConflictException;
 }

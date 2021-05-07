@@ -19,18 +19,14 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.glassfish.main.hk2</groupId>
         <artifactId>glassfish-nucleus-hk2</artifactId>
         <version>6.1.1-SNAPSHOT</version>
     </parent>
-
     <artifactId>tiger-types</artifactId>
     <packaging>glassfish-jar</packaging>
-
     <name>Tiger types- type arithmetic library for Java5</name>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -38,7 +34,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -56,14 +51,11 @@
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>org.glassfish.hk2.tiger-types</Bundle-SymbolicName>
-                        <Export-Package>
-                            org.jvnet.tiger_types;version="${project.version}",
-                        </Export-Package>
+                        <Export-Package>org.jvnet.tiger_types;version="${project.version}",</Export-Package>
                         <_noee>true</_noee>
                     </instructions>
                     <unpackBundle>true</unpackBundle>
                 </configuration>
-
                 <executions>
                     <execution>
                         <id>bundle-manifest</id>
@@ -76,7 +68,6 @@
             </plugin>
         </plugins>
     </build>
-
     <reporting>
         <plugins>
             <plugin>

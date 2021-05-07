@@ -16,8 +16,6 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.config.TransactionFailure;
-
 import java.beans.PropertyVetoException;
 
 /**
@@ -27,13 +25,16 @@ import java.beans.PropertyVetoException;
  * For example say, you need to modify the HttpListener config object with a new
  * port number, you can do so by writing the following code snippet.
  *
- *    {@code    new SingleConfigCode<HttpListener>() {
- *            public boolean run(HttpListener httpListener) throws PropertyVetoException {
- *                httpListener.setPort("8989");
- *                return true;
- *            }
- *        };
- *  }
+ * <pre>
+ * {@code
+ * new SingleConfigCode<HttpListener>() {
+ *     public boolean run(HttpListener httpListener) throws PropertyVetoException {
+ *         httpListener.setPort("8989");
+ *         return true;
+ *     }
+ * };
+ * }
+ * </pre>
  * This new SingleConfigCode can then be used with in the ConfigSupport utilities to
  * run this code within a Transaction freeing the developer to know/care about Transaction
  * APIs and semantics.
@@ -52,5 +53,5 @@ public interface SingleConfigCode<T extends ConfigBeanProxy> {
      * @throws PropertyVetoException if the changes cannot be applied
      * to the configuration
      */
-    public Object run(T param) throws PropertyVetoException, TransactionFailure;
+    Object run(T param) throws PropertyVetoException, TransactionFailure;
 }

@@ -72,7 +72,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
     /**
      * Step 1-3 of message interpolation can be cached. We do this in this map.
      */
-    private final Map<LocalisedMessage, String> resolvedMessages = new WeakHashMap<LocalisedMessage, String>();
+    private final Map<LocalisedMessage, String> resolvedMessages = new WeakHashMap<>();
     /**
      * Flag indicating whether this interpolator should chance some of the interpolation steps.
      */
@@ -140,12 +140,12 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
             do {
                 // search the user bundle recursive (step1)
                 userBundleResolvedMessage = replaceVariables(
-                        resolvedMessage, userResourceBundle, locale, true);
+                    resolvedMessage, userResourceBundle, locale, true);
 
                 // exit condition - we have at least tried to validate against the default bundle and there was no
                 // further replacements
                 if (evaluatedDefaultBundleOnce
-                        && !hasReplacementTakenPlace(userBundleResolvedMessage, resolvedMessage)) {
+                    && !hasReplacementTakenPlace(userBundleResolvedMessage, resolvedMessage)) {
                     break;
                 }
 
@@ -179,7 +179,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
         while (matcher.find()) {
             String parameter = matcher.group(1);
             resolvedParameterValue = resolveParameter(
-                    parameter, bundle, locale, recurse);
+                parameter, bundle, locale, recurse);
 
             matcher.appendReplacement(sb, escapeMetaCharacters(resolvedParameterValue));
         }
@@ -278,18 +278,17 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
                 }
             }
             try {
-                ClassLoader cl = System.getSecurityManager()==null?Thread.currentThread().getContextClassLoader():
-                        AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                            @Override
-                            public ClassLoader run() {
-                                return Thread.currentThread().getContextClassLoader();
-                            }
-                        });
-                userBundle = ResourceBundle.getBundle(USER_VALIDATION_MESSAGES,
-                        locale,
-                        cl);
+                ClassLoader cl = System.getSecurityManager() == null
+                    ? Thread.currentThread().getContextClassLoader()
+                    : AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                        @Override
+                        public ClassLoader run() {
+                            return Thread.currentThread().getContextClassLoader();
+                        }
+                    });
+                userBundle = ResourceBundle.getBundle(USER_VALIDATION_MESSAGES, locale, cl);
             } catch (MissingResourceException mre) {
-                    userBundle = null;
+                userBundle = null;
             }
 
             if (userBundle != null) {
@@ -307,7 +306,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
 
         @Override
         public Enumeration<String> getKeys() {
-            Set<String> keys = new TreeSet<String>();
+            Set<String> keys = new TreeSet<>();
             if (contextBundle != null) {
                 keys.addAll(Collections.list(contextBundle.getKeys()));
             }

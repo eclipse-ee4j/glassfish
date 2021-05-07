@@ -92,7 +92,7 @@ class JSSE14Support extends JSSESupport {
         socket.startHandshake();
         int maxTries = 60; // 60 * 1000 = example 1 minute time out
         for (int i = 0; i < maxTries; i++) {
-        if(logger.isLoggable(Level.FINE))
+            if(logger.isLoggable(Level.FINE))
                 logger.log(Level.FINE, "Reading for try #{0}", i);
             try {
                 final int bytesRead = in.read(b);
@@ -118,11 +118,11 @@ class JSSE14Support extends JSSESupport {
      */
     @Override
     protected X509Certificate [] getX509Certificates(SSLSession session)
-    throws IOException
+        throws IOException
     {
         Certificate [] certs;
         try {
-        certs = session.getPeerCertificates();
+            certs = session.getPeerCertificates();
         } catch( Throwable t ) {
             if (logger.isLoggable(Level.FINEST))
                 logger.log(Level.FINEST,"Error getting client certs",t);
@@ -131,30 +131,30 @@ class JSSE14Support extends JSSESupport {
         if( certs==null ) return null;
 
         X509Certificate [] x509Certs = new X509Certificate[certs.length];
-    for(int i=0; i < certs.length; i++) {
-        if( certs[i] instanceof X509Certificate ) {
-        // always currently true with the JSSE 1.1.x
-        x509Certs[i] = (X509Certificate)certs[i];
-        } else {
-        try {
-            byte [] buffer = certs[i].getEncoded();
-            CertificateFactory cf =
-            CertificateFactory.getInstance("X.509");
-            ByteArrayInputStream stream =
-            new ByteArrayInputStream(buffer);
-            x509Certs[i] = (X509Certificate)
-            cf.generateCertificate(stream);
-        } catch(Exception ex) {
-            logger.log(Level.SEVERE,"Error translating cert " + certs[i], ex);
-            return null;
-        }
-        }
-        if(logger.isLoggable(Level.FINE))
+        for(int i=0; i < certs.length; i++) {
+            if( certs[i] instanceof X509Certificate ) {
+                // always currently true with the JSSE 1.1.x
+                x509Certs[i] = (X509Certificate)certs[i];
+            } else {
+                try {
+                    byte [] buffer = certs[i].getEncoded();
+                    CertificateFactory cf =
+                        CertificateFactory.getInstance("X.509");
+                    ByteArrayInputStream stream =
+                        new ByteArrayInputStream(buffer);
+                    x509Certs[i] = (X509Certificate)
+                        cf.generateCertificate(stream);
+                } catch(Exception ex) {
+                    logger.log(Level.SEVERE,"Error translating cert " + certs[i], ex);
+                    return null;
+                }
+            }
+            if(logger.isLoggable(Level.FINE))
                 logger.log(Level.FINE, "Cert #{0} = {1}", new Object[]{i, x509Certs[i]});
-    }
-    if(x509Certs.length < 1)
-        return null;
-    return x509Certs;
+        }
+        if(x509Certs.length < 1)
+            return null;
+        return x509Certs;
     }
 
 

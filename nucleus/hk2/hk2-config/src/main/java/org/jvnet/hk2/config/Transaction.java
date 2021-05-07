@@ -40,7 +40,7 @@ public class Transaction {
         // add participants first so the lastly created elements are processed before the parent
         // is modified, this is especially important when sub elements have key attributes the parent
         // need (or the habitat).
-          participants.addFirst(t);
+        participants.addFirst(t);
     }
 
     /**
@@ -80,7 +80,7 @@ public class Transaction {
      * @throws TransactionFailure if the transaction commit failed.
      */
     public synchronized List<PropertyChangeEvent> commit()
-            throws RetryableException, TransactionFailure {
+        throws RetryableException, TransactionFailure {
 
         if (!canCommit()) {
             throw new RetryableException();
@@ -118,7 +118,7 @@ public class Transaction {
         return null;
     }
 
-   /**
+    /**
      * Enroll a configuration object in a transaction and returns a writeable view of it
      *
      * @param source the configured interface implementation

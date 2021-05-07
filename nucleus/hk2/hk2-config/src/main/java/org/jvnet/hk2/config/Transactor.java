@@ -38,7 +38,7 @@ public interface Transactor {
      * @return true if the enlisting with the passed transaction was accepted,
      * false otherwise
      */
-    public boolean join(Transaction t);
+    boolean join(Transaction t);
 
     /**
      * Returns true of this Transaction can be committed on this object
@@ -49,7 +49,7 @@ public interface Transactor {
      * @return true if the transaction committing would be successful
      * @throws TransactionFailure if the changes cannot be validated
      */
-    public boolean canCommit(Transaction t) throws TransactionFailure;
+    boolean canCommit(Transaction t) throws TransactionFailure;
 
     /**
      * Commit this Transaction.
@@ -58,12 +58,12 @@ public interface Transactor {
      * @return list of applied property changes
      * @throws TransactionFailure if the transaction commit failed
      */
-    public List<PropertyChangeEvent> commit(Transaction t) throws TransactionFailure;
+    List<PropertyChangeEvent> commit(Transaction t) throws TransactionFailure;
 
     /**
      * Aborts this Transaction, reverting the state
 
      * @param t the aborting transaction
      */
-    public void abort(Transaction t);
+    void abort(Transaction t);
 }

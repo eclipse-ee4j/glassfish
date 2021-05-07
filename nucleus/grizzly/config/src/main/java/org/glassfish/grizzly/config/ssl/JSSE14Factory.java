@@ -44,7 +44,7 @@ public class JSSE14Factory implements JSSEFactory {
 
     @Override
     public ServerSocketFactory getSocketFactory() {
-    return new JSSE14SocketFactory();
+        return new JSSE14SocketFactory();
     }
 
 

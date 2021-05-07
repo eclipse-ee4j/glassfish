@@ -16,8 +16,6 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.config.TransactionFailure;
-
 import java.beans.PropertyVetoException;
 
 /**
@@ -39,5 +37,5 @@ public interface ConfigCode {
      * @throws PropertyVetoException if the changes cannot be applied
      * to the configuration
      */
-    public Object run(ConfigBeanProxy... params) throws PropertyVetoException, TransactionFailure;
+    Object run(ConfigBeanProxy... params) throws PropertyVetoException, TransactionFailure;
 }

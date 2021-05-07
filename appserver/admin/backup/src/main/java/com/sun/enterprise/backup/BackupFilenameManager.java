@@ -171,8 +171,8 @@ class BackupFilenameManager {
             return time > 0;
         }
 
-        private File    zip;
-        private int        num = -1;
+        private File zip;
+        private int num = -1;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -180,8 +180,7 @@ class BackupFilenameManager {
     private final File dir;
     private final String domainName;
     private String desc;
-    private final SortedMap<Integer, ZipFileAndNumber> zipFiles =
-        new TreeMap<Integer, ZipFileAndNumber>();
+    private final SortedMap<Integer, ZipFileAndNumber> zipFiles = new TreeMap<>();
 
     ///////////////////////////////////////////////////////////////////////////////
 

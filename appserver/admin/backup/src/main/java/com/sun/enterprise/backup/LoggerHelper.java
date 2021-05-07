@@ -40,22 +40,23 @@ class LoggerHelper
     final static void setLevel(BackupRequest req)
     {
         // the final should cause this to be inlined...
-        if(req.terse)
+        if(req.terse) {
             logger.setLevel(Level.WARNING);
-        else
+        } else {
             logger.setLevel(Level.INFO);
+        }
 
         /* test logging messages
-         String me = System.getProperty("user.name");
-        if(me != null && me.equals("bnevins"))
-        {
-            logger.finest("finest");
-            logger.finer("finer");
-            logger.fine("fine");
-            logger.info("info");
-            logger.warning("warning");
-            logger.severe("severe");
-        }
+                 String me = System.getProperty("user.name");
+                if(me != null && me.equals("bnevins"))
+                {
+                        logger.finest("finest");
+                        logger.finer("finer");
+                        logger.fine("fine");
+                        logger.info("info");
+                        logger.warning("warning");
+                        logger.severe("severe");
+                }
          **/
     }
 
@@ -78,7 +79,7 @@ class LoggerHelper
 
     ///////////////////////////////////////////////////////////////////////////
 
-    private static Logger    logger = null;
+    private static Logger        logger = null;
 
     static
     {

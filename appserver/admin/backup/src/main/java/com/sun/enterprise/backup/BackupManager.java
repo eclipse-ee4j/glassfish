@@ -115,7 +115,7 @@ public class BackupManager extends BackupRestoreManager {
             if(!FileUtils.safeIsDirectory(backupDir))
                 throw new BackupException("backup-res.NoBackupDirCantCreate",
                                       backupDir);
-    }
+        }
 
         BackupFilenameManager bfmgr =
             new BackupFilenameManager(backupDir, request.domainName);

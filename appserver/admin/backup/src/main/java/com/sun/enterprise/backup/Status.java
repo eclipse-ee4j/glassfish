@@ -59,7 +59,7 @@ class Status {
                 try {
                     out.close();
                 } catch(IOException ex) {}
-        }
+            }
         }
     }
 
@@ -251,8 +251,8 @@ class Status {
                 try {
                     in.close();
                 } catch(IOException ex) {}
+            }
         }
-    }
     }
 
     private void setProps(BackupRequest request) {

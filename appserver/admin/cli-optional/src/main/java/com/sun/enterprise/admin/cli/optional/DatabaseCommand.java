@@ -73,7 +73,7 @@ public abstract class DatabaseCommand extends CLICommand {
         dbLocation = new File(getSystemProperty(DERBY_ROOT_PROPERTY));
         checkIfDbInstalled(dbLocation);
 
-    sClasspath.add(new File(sInstallRoot, "lib/asadmin/cli-optional.jar"));
+        sClasspath.add(new File(sInstallRoot, "lib/asadmin/cli-optional.jar"));
         sDatabaseClasspath
                 .add(dbLocation,"lib","derby.jar")
                 .add(dbLocation,"lib","derbyshared.jar")

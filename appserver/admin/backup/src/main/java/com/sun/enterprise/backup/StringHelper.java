@@ -101,7 +101,7 @@ class StringHelper
 
     ///////////////////////////////////////////////////////////////////////////
 
-    private static    ResourceBundle bundle;
+    private static ResourceBundle bundle;
 
     static
     {

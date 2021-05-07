@@ -22,8 +22,6 @@
 
 package com.sun.enterprise.backup;
 
-import com.sun.enterprise.util.StringUtils;
-
 /**
  *
  * @author  bnevins
@@ -39,8 +37,7 @@ public class BackupWarningException extends BackupException
      * @param s the detail message which is first checked for as a key for an i18n string.
      * If not found it will be used as the message itself.
      */
-    public BackupWarningException(String s)
-    {
+    public BackupWarningException(String s) {
         super(s);
     }
 
@@ -51,8 +48,7 @@ public class BackupWarningException extends BackupException
      * replaced with o.toString().  If there is no i18n string located
      * o will be ignored.
      */
-    public BackupWarningException(String s, Object o)
-    {
+    public BackupWarningException(String s, Object o) {
         super(s, o);
     }
 }

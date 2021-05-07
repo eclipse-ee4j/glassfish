@@ -45,7 +45,7 @@ public class JmsResourceHandler {
     }
 
     /**
-     *    <p> This handler return the list of JMS Resources to be displayed in the table.
+     * <p> This handler return the list of JMS Resources to be displayed in the table.
      */
     @Handler(id = "getJmsResourcesInfo",
     input = {

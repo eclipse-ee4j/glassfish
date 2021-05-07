@@ -427,11 +427,11 @@ public class RestUtil {
                             if (handlerCtx != null) {
                                 GuiUtil.handleError(handlerCtx, message);
                                 if (!quiet) {
-                    Logger logger = GuiUtil.getLogger();
+                                    Logger logger = GuiUtil.getLogger();
                                     logger.severe(neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[]{exitCode, endpoint, maskedAttr})));
-                    if (logger.isLoggable(Level.FINEST)){
-                                        logger.finest("response.getResponseBody(): " + response.getResponseBody());
-                    }
+                                    if (logger.isLoggable(Level.FINEST)){
+                                            logger.finest("response.getResponseBody(): " + response.getResponseBody());
+                                    }
                                 }
                                 return new HashMap();
                             } else {
@@ -440,11 +440,11 @@ public class RestUtil {
                             }
                         } else { // Issue Number :13312 handling the case when throwException is false.
                             if (!quiet) {
-                Logger logger = GuiUtil.getLogger();
+                                Logger logger = GuiUtil.getLogger();
                                 logger.severe(neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[]{exitCode, endpoint, maskedAttr})));
-                if (logger.isLoggable(Level.FINEST)){
-                                    logger.finest("response.getResponseBody(): " + response.getResponseBody());
-                }
+                                if (logger.isLoggable(Level.FINEST)){
+                                        logger.finest("response.getResponseBody(): " + response.getResponseBody());
+                                }
                             }
                             return responseMap;
                         }
@@ -460,11 +460,11 @@ public class RestUtil {
                 }
             } catch (Exception ex) {
                 if (!quiet) {
-            Logger logger = GuiUtil.getLogger();
+                    Logger logger = GuiUtil.getLogger();
                     logger.severe(neutralizeForLog(GuiUtil.getCommonMessage("LOG_REQUEST_RESULT", new Object[]{exitCode, endpoint, maskedAttr})));
-            if (logger.isLoggable(Level.FINEST)){
+                    if (logger.isLoggable(Level.FINEST)){
                         logger.finest("response.getResponseBody(): " + response.getResponseBody());
-            }
+                    }
                 }
                 if (handlerCtx != null) {
                     //If this is called from the jsf as handler, we want to stop processing and show error

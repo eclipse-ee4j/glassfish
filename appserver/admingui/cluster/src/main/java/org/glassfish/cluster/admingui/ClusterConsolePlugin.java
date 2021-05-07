@@ -26,21 +26,21 @@ import org.jvnet.hk2.annotations.Service;
 import java.net.URL;
 
 /**
- *
  * @author anilam
  */
-
 @Service
 public class ClusterConsolePlugin implements ConsoleProvider {
 
-/**
- *  <p> Returns the URL of the Integration Point configuration file
- *    console-config.xml </p>
- *
- *  @return URL of configration file.
- */
-    public URL getConfiguration(){
-            return null;
+    /**
+     * <p>
+     * Returns the URL of the Integration Point configuration file
+     * console-config.xml
+     * </p>
+     *
+     * @return URL of configration file.
+     */
+    @Override
+    public URL getConfiguration() {
+        return null;
     }
 }
-

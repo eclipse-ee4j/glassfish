@@ -39,12 +39,12 @@ import org.glassfish.admingui.theme.AdminguiThemeContext;
 public class ThemeHandlers {
 
         /**
-     *    <p> This method initializes the theme using the given
-     *        <code>themeName</code> and <code>themeVersion</code>.  If these
-     *        values are not supplied, "suntheme" and "4.2" will be used
-     *        respectively.  This method should be invoked before the theme is
-     *        accessed (for example on the initPage or beforeCreate of the login
-     *        page).</p>
+     * <p> This method initializes the theme using the given
+     *     <code>themeName</code> and <code>themeVersion</code>.  If these
+     *     values are not supplied, "suntheme" and "4.2" will be used
+     *     respectively.  This method should be invoked before the theme is
+     *     accessed (for example on the initPage or beforeCreate of the login
+     *     page).</p>
      *
      */
     @Handler(id = "getTheme", input = {
@@ -63,11 +63,11 @@ public class ThemeHandlers {
     }
 
     /**
-     *    <p> This method gets the <code>themeName</code> and <code>themeVersion</code>
-     *        via <code>Integration Point</code>.  If more than one is provided
-     *        the one with the lowest <code>priority</code> number will be used.
-     *        This method should be invoked before the theme is
-     *        accessed (for example on the initPage or beforeCreate of the login page).</p>
+     * <p> This method gets the <code>themeName</code> and <code>themeVersion</code>
+     *     via <code>Integration Point</code>.  If more than one is provided
+     *     the one with the lowest <code>priority</code> number will be used.
+     *     This method should be invoked before the theme is
+     *     accessed (for example on the initPage or beforeCreate of the login page).</p>
      */
     @Handler(id = "getThemeFromIntegrationPoints", output = {
         @HandlerOutput(name = "themeContext", type = ThemeContext.class)
@@ -93,8 +93,8 @@ public class ThemeHandlers {
                         Properties propertyMap = new Properties();
                         propertyMap.load(propertyFileURL.openStream());
                         ThemeContext themeContext =
-                AdminguiThemeContext.getInstance(ctx, propertyMap);
-            themeContext.setDefaultClassLoader(pluginCL);
+                            AdminguiThemeContext.getInstance(ctx, propertyMap);
+                        themeContext.setDefaultClassLoader(pluginCL);
                         handlerCtx.setOutputValue("themeContext", themeContext);
                     } catch (Exception ex) {
                         throw new RuntimeException(

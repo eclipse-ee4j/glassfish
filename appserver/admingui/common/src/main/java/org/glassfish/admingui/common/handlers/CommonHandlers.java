@@ -69,7 +69,7 @@ public class CommonHandlers {
     }
 
     /**
-     * <p> This handler will be called during initialization when Cluster Support is detected.
+     * This handler will be called during initialization when Cluster Support is detected.
      */
     @Handler(id="initClusterSessionAttribute")
     public static void initClusterSessionAttribute(HandlerContext handlerCtx){
@@ -94,7 +94,7 @@ public class CommonHandlers {
     }
 
     /**
-     * <p> This handler will be called during initialization for doing any initialization.
+     * This handler will be called during initialization for doing any initialization.
      */
     @Handler(id="initSessionAttributes")
     public static void initSessionAttributes(HandlerContext handlerCtx){
@@ -122,7 +122,7 @@ public class CommonHandlers {
     })
     public static void getFieldLengths(HandlerContext handlerCtx) {
         ResourceBundle bundle = (ResourceBundle) handlerCtx.getInputValue("bundle");
-        Map<String, Integer> result = new HashMap<String, Integer>();
+        Map<String, Integer> result = new HashMap<>();
         for (String key : bundle.keySet()) {
             try {
                 result.put(key, Integer.decode(bundle.getString(key)));
@@ -174,14 +174,16 @@ public class CommonHandlers {
         sessionMap.put("_INFO_SESSION_INITIALIZED","TRUE");
     }
 
-     /**
-     *    <p> This handler returns String[] of the given java.util.List </p>
+
+    /**
+     * This handler returns String[] of the given java.util.List
+     * <p>
+     * Output value: "selectedIndex" -- Type: <code>Object</code>/
      *
-     *  <p> Output value: "selectedIndex" -- Type: <code>Object</code>/</p>
-     *    @param    handlerCtx    The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id="getListElement",
-        input={
+            input={
         @HandlerInput(name="list", type=java.util.List.class, required=true ),
         @HandlerInput(name="index", type=Integer.class)},
         output={
@@ -200,14 +202,16 @@ public class CommonHandlers {
         handlerCtx.setOutputValue("selectedIndex", listItem);
     }
 
+
     /**
-     *    <p> This handler removes the given element from the list </p>
+     * This handler removes the given element from the list
+     * <p>
+     * Output value: "finalList" -- Type: <code>List</code>/
      *
-     *  <p> Output value: "finalList" -- Type: <code>List</code>/</p>
-     *    @param    handlerCtx    The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id="removeListElement",
-        input={
+            input={
         @HandlerInput(name="list", type=java.util.List.class, required=true ),
         @HandlerInput(name="name", type=String.class)},
         output={
@@ -222,14 +226,16 @@ public class CommonHandlers {
         handlerCtx.setOutputValue("finalList", list);
     }
 
+
     /**
-     *    <p> This handler converts the milliseconds to readable format </p>
+     * This handler converts the milliseconds to readable format
+     * <p>
+     * Output value: "readableString" -- Type: <code>String</code>/
      *
-     *  <p> Output value: "readableString" -- Type: <code>String</code>/</p>
-     *    @param    handlerCtx    The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id="convertMillisToReadable",
-        input={
+            input={
             @HandlerInput(name="milliseconds", type=Long.class, required=true )},
         output={
             @HandlerOutput(name="readableString", type=String.class)})
@@ -279,14 +285,16 @@ public class CommonHandlers {
         handlerCtx.setOutputValue("readableString", readableString);
     }
 
+
     /**
-     *    <p> This handler creates a map with the given keys and values </p>
+     * This handler creates a map with the given keys and values
+     * <p>
+     * Output value: "map" -- Type: <code>Map</code>/
      *
-     *  <p> Output value: "map" -- Type: <code>Map</code>/</p>
-     *    @param    handlerCtx    The HandlerContext.
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id="gf.createAttributeMap",
-        input={
+            input={
         @HandlerInput(name="keys", type=java.util.List.class),
         @HandlerInput(name="values", type=java.util.List.class)},
         output={
@@ -294,7 +302,7 @@ public class CommonHandlers {
     public static void createAttributeMap(HandlerContext handlerCtx) {
         List<String> keys = (List<String>) handlerCtx.getInputValue("keys");
         List values = (List) handlerCtx.getInputValue("values");
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (keys != null && values != null) {
             for (int i = 0; i < keys.size(); i++) {
                 map.put(keys.get(i), values.get(i));
@@ -303,14 +311,19 @@ public class CommonHandlers {
         handlerCtx.setOutputValue("map", map);
     }
 
+
     /**
-     * <p> This handler returns the encoded String using the type specified.
-     * <p> If type is not specified, it defaults to UTF-8.
-     * <p> Input value: "value" -- Type: <code>String</code> <p>
-     * <p> Input value: "delim" -- Type: <code>String</code> <p>
-     * <p> Input Value: "type" -- Type: <code>String</code> <p>
-     * <p> Output Value: "value" -- Type: <code>String</code> <p>
-     *@param    handlerCtx    The HandlerContext.
+     * This handler returns the encoded String using the type specified.
+     * <p>
+     * If type is not specified, it defaults to UTF-8.
+     * <ul>
+     * <li>Input value: "value" -- Type: <code>String</code>
+     * <li>Input value: "delim" -- Type: <code>String</code>
+     * <li>Input Value: "type" -- Type: <code>String</code>
+     * <li>Output Value: "result" -- Type: <code>String</code>
+     * </ul>
+     *
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id="selectiveEncode",
     input={
@@ -325,27 +338,33 @@ public class CommonHandlers {
         String value = (String) handlerCtx.getInputValue("value");
         String delim = (String) handlerCtx.getInputValue("delim");
         String encType = (String) handlerCtx.getInputValue("type");
-        String encodedString = GuiUtil.encode(value, delim, encType);
+                String encodedString = GuiUtil.encode(value, delim, encType);
         handlerCtx.setOutputValue("result", encodedString);
    }
 
-    /**
-     *    <p> This method kills the session, and logs out </p>
-     *      Server Domain Attributes Page.</p>
-     *    <p> Input value: "page" -- Type: <code>java.lang.String</code></p>
-     *    @param    handlerCtx    The HandlerContext.
-     */
+
+   /**
+    * This method kills the session, and logs out
+    * Server Domain Attributes Page.
+    * <p>
+    * Input value: "page" -- Type: <code>java.lang.String</code>
+    *
+    * @param handlerCtx The HandlerContext.
+    */
     @Handler(id="logout")
     public static void logout(HandlerContext handlerCtx) {
-    handlerCtx.getFacesContext().getExternalContext().invalidateSession();
+        handlerCtx.getFacesContext().getExternalContext().invalidateSession();
     }
 
 
     /**
-     *    <p> This method sets the required attribute of a UI component .
-     *    <p> Input value: "id" -- Type: <code>java.lang.String</code></p>
-     *  <p> Input value: "required" -- Type: <code>java.lang.String</code></p>
-     *    @param    handlerCtx    The HandlerContext.
+     * This method sets the required attribute of a UI component .
+     * <ul>
+     * <li>Input value: "id" -- Type: <code>java.lang.String</code>
+     * <li>Input value: "required" -- Type: <code>java.lang.String</code>
+     * </ul>
+     *
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id="setComponentRequired",
     input={
@@ -356,7 +375,9 @@ public class CommonHandlers {
         String id = (String) handlerCtx.getInputValue("id");
         String required = (String) handlerCtx.getInputValue("required");
         UIComponent viewRoot = handlerCtx.getFacesContext().getViewRoot();
-        if (viewRoot == null) return;
+        if (viewRoot == null) {
+            return;
+        }
         try {
             UIInput targetComponent = (UIInput) viewRoot.findComponent(id);
             if (targetComponent != null ){
@@ -370,8 +391,8 @@ public class CommonHandlers {
 
 
     /**
-     *  <p> Test if a particular attribute exists.
-     *      It will look at request scope, then page, then session.
+     * Test if a particular attribute exists.
+     * It will look at request scope, then page, then session.
      */
     @Handler(id="testExists",
     input={
@@ -389,8 +410,7 @@ public class CommonHandlers {
     }
 
     /**
-     *  <p> Remove the properties if the key(name) is empty.
-     *
+     * Remove the properties if the key(name) is empty.
      */
     @Handler(id="removeEmptyProps",
     input={
@@ -400,7 +420,7 @@ public class CommonHandlers {
     )
     public static void removeEmptyProps(HandlerContext handlerCtx) {
         List<Map<String, String>> props = (List<Map<String, String>>) handlerCtx.getInputValue("props");
-        List<Map<String, String>> modifiedProps = new java.util.ArrayList<Map<String, String>>();
+        List<Map<String, String>> modifiedProps = new java.util.ArrayList<>();
         if (props != null) {
             for (Map<String, String> prop : props) {
                 if (!(GuiUtil.isEmpty(prop.get("name")))) {
@@ -416,22 +436,23 @@ public class CommonHandlers {
         handlerCtx.setOutputValue("modifiedProps", modifiedProps);
     }
 
+
     /**
-     *    <p> This handler returns the requestParameter value based on the key.
-     *        If it doesn't exists, then it will look at the request
-     *        attribute.  If there is no request attribute, it will return the
-     *        default, if specified.</p>
-     *
-     *    <p> This method will "html escape" any &lt;, &gt;, or &amp; characters
-     *        that appear in a String from the QUERY_STRING.  This is to help
-     *        prevent XSS vulnerabilities.</p>
-     *  <p> orig without escape is available, but be very cautious when using it.
-     *
-     *     <p> Input value: "key" -- Type: <code>String</code></p>
-     *
-     *    <p> Output value: "value" -- Type: <code>String</code></p>
-     *  <p> Output value: "orig" -- Type: <code>String</code></p>
-     *
+     * This handler returns the requestParameter value based on the key.
+     * If it doesn't exists, then it will look at the request
+     * attribute. If there is no request attribute, it will return the
+     * default, if specified.
+     * <p>
+     * This method will "html escape" any &lt;, &gt;, or &amp; characters
+     * that appear in a String from the QUERY_STRING. This is to help
+     * prevent XSS vulnerabilities.
+     * <p>
+     * orig without escape is available, but be very cautious when using it.
+     * <ul>
+     * <li>Input value: "key" -- Type: <code>String</code>
+     * <li>Output value: "value" -- Type: <code>String</code>
+     * <li>Output value: "orig" -- Type: <code>String</code>
+     * </ul>
      */
     @Handler(id="getRequestValue",
     input={
@@ -452,21 +473,21 @@ public class CommonHandlers {
                 value = defaultValue;
             }
         } else {
-        // For URLs, the following could be used, but it URLEncodes  the
-        // values, which are not ideal for displaying in HTML... so I will
-        // instead call htmlEscape()
-        //value = GuiUtil.encode(value, "#=@%+;-&_.?:/()", "UTF-8");
+            // For URLs, the following could be used, but it URLEncodes  the
+            // values, which are not ideal for displaying in HTML... so I will
+            // instead call htmlEscape()
+            //value = GuiUtil.encode(value, "#=@%+;-&_.?:/()", "UTF-8");
 
-        // Only need to do this for QUERY_STRING values...
-        value = Util.htmlEscape((String) value);
+            // Only need to do this for QUERY_STRING values...
+            value = Util.htmlEscape((String) value);
         }
         handlerCtx.setOutputValue("value", value);
         handlerCtx.setOutputValue("orig", orig);
     }
 
     /**
-     *    This method adds two long integers together.  The 2 longs should be
-     *    stored in "long1" and "long2".  The result will be stored as "result".
+     * This method adds two long integers together.  The 2 longs should be
+     * stored in "long1" and "long2".  The result will be stored as "result".
      */
     @Handler(id="longAdd",
     input={
@@ -488,13 +509,13 @@ public class CommonHandlers {
                 logger.log(Level.WARNING, GuiUtil.getCommonMessage("LOG_LONGADD_ERROR", new Object[]{""+long1, ""+long2}));
             }
         }
-    // Set the result
-    handlerCtx.setOutputValue("LongResult", result);
+        // Set the result
+        handlerCtx.setOutputValue("LongResult", result);
     }
 
     /**
-     * <p> Returns the current system time formatted<p>
-     * <p> Output value: "Time" -- Type: <code>String</code></p>
+     * Returns the current system time formatted<p>
+     * Output value: "Time" -- Type: <code>String</code></p>
      *
      */
     @Handler(id="getCurrentTime",
@@ -531,7 +552,7 @@ public class CommonHandlers {
     }
 
     /**
-     * <p> This handler sets a property on an object which is stored in an existing key
+     * This handler sets a property on an object which is stored in an existing key
      * For example "advance.lazyConnectionEnlistment".  <strong>Note</strong>:  This does
      * <em>not</em> evaluate the EL expression.  Its value (e.g., "#{advance.lazyConnectionEnlistment}")
      * is passed as is to the EL API.
@@ -543,7 +564,7 @@ public class CommonHandlers {
     })
     public static void setValueExpression(HandlerContext handlerCtx) {
         MiscUtil.setValueExpression((String) handlerCtx.getHandler().getInputValue("expression"),
-                (Object) handlerCtx.getInputValue("value"));
+                handlerCtx.getInputValue("value"));
     }
 
 
@@ -561,8 +582,9 @@ public class CommonHandlers {
             try {
                 long longValue = Long.parseLong(dateTime);
                 String format = (String)handlerCtx.getHandler().getInputValue("format");
-                if (format == null)
+                if (format == null) {
                     format = "yyyy-MM-dd HH:mm:ss z";
+                }
                 result = new SimpleDateFormat(format).format(new Date(longValue));
             } catch (NumberFormatException ex) {
                 //ignore
@@ -572,93 +594,76 @@ public class CommonHandlers {
     }
 
 
-
     /**
-     *    <p> This handler checks if particular feature is supported  </p>
-     *
-     *  <p> Output value: "supportCluster" -- Type: <code>Boolean</code>/</p>
-     *  <p> Output value: "supportHADB" -- Type: <code>Boolean</code>/</p>
-     *    @param    handlerCtx    The HandlerContext.
-     */
-//    @Handler(id="checkSupport",
-//    output={
-//        @HandlerOutput(name="supportCluster", type=Boolean.class),
-//        @HandlerOutput(name="supportHADB", type=Boolean.class)})
-//        public static void checkSupport(HandlerContext handlerCtx) {
-//            handlerCtx.setOutputValue("supportCluster", false);
-//            handlerCtx.setOutputValue("supportHADB", false);
-//    }
-
-    /**
-     *    <p> This handler allows the "partialRequest" flag to be set.  This
-     *        was added to work-a-round a bug in JSF where the behavior was
-     *        inconsistent between FF and other browsers.  Namely it recognized
-     *        redirects as "partial" requets in other browsers due to the
-     *        header being preserved across the redirect, but not in FF.</p>
+     * <p> This handler allows the "partialRequest" flag to be set.  This
+     *     was added to work-a-round a bug in JSF where the behavior was
+     *     inconsistent between FF and other browsers.  Namely it recognized
+     *     redirects as "partial" requets in other browsers due to the
+     *     header being preserved across the redirect, but not in FF.</p>
      */
     @Handler(id="setPartialRequest",
-    input={
-        @HandlerInput(name="value", type=Boolean.class, required=true)})
+        input={
+            @HandlerInput(name="value", type=Boolean.class, required=true)})
     public static void setPartialRequest(HandlerContext context) {
-    boolean isPartial = (Boolean) context.getInputValue("value");
-    context.getFacesContext().getPartialViewContext().setPartialRequest(isPartial);
+        boolean isPartial = (Boolean) context.getInputValue("value");
+        context.getFacesContext().getPartialViewContext().setPartialRequest(isPartial);
     }
 
     /**
-     *    <p> This handler is different than JSFT's default navigate handler in
-     *        that it forces the request to NOT be a "partial request".  The
-     *        effect is that no wrapping of the response will be done.  This is
-     *        normally done in JSF2 in order to work with the jsf.js JS code
-     *        that handles the response.  In the Admin Console, we typically do
-     *        not use this JS, so this is not desirable behavior.</p>
+     * <p> This handler is different than JSFT's default navigate handler in
+     *     that it forces the request to NOT be a "partial request".  The
+     *     effect is that no wrapping of the response will be done.  This is
+     *     normally done in JSF2 in order to work with the jsf.js JS code
+     *     that handles the response.  In the Admin Console, we typically do
+     *     not use this JS, so this is not desirable behavior.</p>
      *
-     *    <p> Input value: "page" -- Type: <code>Object</code> (should be a
-     *        <code>String</code> or a <code>UIViewRoot</code>).</p>
+     * <p> Input value: "page" -- Type: <code>Object</code> (should be a
+     *     <code>String</code> or a <code>UIViewRoot</code>).</p>
      *
-     *    <p> See JSFTemplating's built-in navigate handler for more info.</p>
+     * <p> See JSFTemplating's built-in navigate handler for more info.</p>
      *
-     *    @param    context    The {@link HandlerContext}.
+     * @param        context        The {@link HandlerContext}.
      */
     @Handler(id="gf.navigate",
-    input={
-        @HandlerInput(name="page", type=Object.class, required=true)
-    })
+        input={
+            @HandlerInput(name="page", type=Object.class, required=true)
+        })
     public static void navigate(HandlerContext context) {
-    context.getFacesContext().getPartialViewContext().setPartialRequest(false);
-    NavigationHandlers.navigate(context);
+        context.getFacesContext().getPartialViewContext().setPartialRequest(false);
+        NavigationHandlers.navigate(context);
     }
 
     /**
-     *    <p> This handler redirects to the given page.</p>
+     * <p> This handler redirects to the given page.</p>
      *
-     *    <p> Input value: "page" -- Type: <code>String</code></p>
+     * <p> Input value: "page" -- Type: <code>String</code></p>
      *
-     *    @param    context    The {@link HandlerContext}.
+     * @param        context        The {@link HandlerContext}.
      */
     @Handler(id="gf.redirect",
-    input={
-        @HandlerInput(name="page", type=String.class, required=true)
-    })
+        input={
+            @HandlerInput(name="page", type=String.class, required=true)
+        })
     public static void redirect(HandlerContext context) {
-    String page = (String) context.getInputValue("page");
-    FacesContext ctx = context.getFacesContext();
-    page = handleBareAttribute(ctx, page);
-    //if (ctx.getPartialViewContext().isPartialRequest()) {
-        // FIXME: I should be able to call setPartialRequest(false),
-        // FIXME: however, isAjaxRequest will still return true, and the
-        // FIXME: following line will not work correctly (it'll wrap it in
-        // FIXME: <xml> stuff and send it to the client):
-        // FIXME:   ctx.getExternalContext().redirect(page);
-        // FIXME: Work-a-round: call servlet api's directly
-    //}
-    try {
-        // FIXME: Should be: ctx.getExternalContext().redirect(page);  See FIXME above.
-        ((HttpServletResponse) ctx.getExternalContext().getResponse()).sendRedirect(page);
-    } catch (IOException ex) {
-        throw new RuntimeException(
-        "Unable to redirect to page '" + page + "'!", ex);
-    }
-    ctx.responseComplete();
+        String page = (String) context.getInputValue("page");
+        FacesContext ctx = context.getFacesContext();
+        page = handleBareAttribute(ctx, page);
+        //if (ctx.getPartialViewContext().isPartialRequest()) {
+            // FIXME: I should be able to call setPartialRequest(false),
+            // FIXME: however, isAjaxRequest will still return true, and the
+            // FIXME: following line will not work correctly (it'll wrap it in
+            // FIXME: <xml> stuff and send it to the client):
+            // FIXME:   ctx.getExternalContext().redirect(page);
+            // FIXME: Work-a-round: call servlet api's directly
+        //}
+        try {
+            // FIXME: Should be: ctx.getExternalContext().redirect(page);  See FIXME above.
+            ((HttpServletResponse) ctx.getExternalContext().getResponse()).sendRedirect(page);
+        } catch (IOException ex) {
+            throw new RuntimeException(
+                "Unable to redirect to page '" + page + "'!", ex);
+        }
+        ctx.responseComplete();
     }
 
     @Handler(id = "gf.filterTable",
@@ -685,7 +690,7 @@ public class CommonHandlers {
         if (keep == null) {
             keep = Boolean.TRUE;
         }
-        List<Map> results = new java.util.ArrayList<Map>();
+        List<Map> results = new java.util.ArrayList<>();
 
         // If we're stripping keys we don't want, prep the results table with all of the
         // current values.  Those we don't want will be removed later.
@@ -720,7 +725,7 @@ public class CommonHandlers {
         Map<String, String> map = (Map<String, String>) handlerCtx.getInputValue("map");
         List<String> attrNames = (List<String>) handlerCtx.getInputValue("attrNames");
         Boolean keep = (Boolean) handlerCtx.getInputValue("keep");
-        Map<String, String> resultMap = new HashMap<String, String>();
+        Map<String, String> resultMap = new HashMap<>();
         if (map != null) {
             if (keep == null) {
                 keep = Boolean.TRUE;
@@ -763,8 +768,8 @@ public class CommonHandlers {
         ArrayList result = new ArrayList();
 
         if(protocols != null && protocols.size() > 0){
-           for (int i=0; i < protocols.size(); i++){
-               String protocol = (String) protocols.get(i);
+           for (Object protocol2 : protocols) {
+               String protocol = (String) protocol2;
                if (!(protocol.equals(ServerTags.PORT_UNIF_PROTOCOL_NAME) || protocol.equals(ServerTags.REDIRECT_PROTOCOL_NAME))) {
                     result.add(protocol);
                }
@@ -779,13 +784,13 @@ public class CommonHandlers {
     @Handler( id="filterAdminObjects")
     public static List filterAdminObjects(HandlerContext context) {
         List result = new ArrayList();
-    FilterTreeEvent event = null;
+        FilterTreeEvent event = null;
         try{
-        if (context.getEventObject() instanceof FilterTreeEvent){
+            if (context.getEventObject() instanceof FilterTreeEvent){
                 event = FilterTreeEvent.class.cast(context.getEventObject());
-        }else{
-        return result;
-        }
+            }else{
+                return result;
+            }
             List<String> jmsResources = event.getChildObjects();
             if (jmsResources == null || jmsResources.size() <=0){
                 return result;
@@ -819,33 +824,33 @@ public class CommonHandlers {
      * @return
      */
     private static String handleBareAttribute(FacesContext ctx, String url) {
-    // Get Page Session...
-    UIViewRoot root = ctx.getViewRoot();
-    Map<String, Serializable> pageSession =
-        PageSessionResolver.getPageSession(ctx, root);
-    if (pageSession == null) {
-        pageSession = PageSessionResolver.createPageSession(ctx, root);
-    }
-        String request = (String) ctx.getExternalContext().getRequestParameterMap().get("bare");
-    if (request != null) {
-        // It was specified, use this.
-        if (request.equalsIgnoreCase("true")) {
-        url = addQueryStringParam(url, "bare", "true");
-        request = "true";
-        } else {
-        request = "false";
+        // Get Page Session...
+        UIViewRoot root = ctx.getViewRoot();
+        Map<String, Serializable> pageSession =
+            PageSessionResolver.getPageSession(ctx, root);
+        if (pageSession == null) {
+            pageSession = PageSessionResolver.createPageSession(ctx, root);
         }
-        pageSession.put("bare", request);
-    } else {
-        // Get the Page Session Map
-        Object pageSessionValue = pageSession.get("bare");
-        if (Boolean.TRUE.equals(pageSessionValue)) {
-        url = addQueryStringParam(url, "bare", "true");
+        String request = ctx.getExternalContext().getRequestParameterMap().get("bare");
+        if (request != null) {
+            // It was specified, use this.
+            if (request.equalsIgnoreCase("true")) {
+                url = addQueryStringParam(url, "bare", "true");
+                request = "true";
+            } else {
+                request = "false";
+            }
+            pageSession.put("bare", request);
         } else {
-        pageSession.put("bare", "false");
+            // Get the Page Session Map
+            Object pageSessionValue = pageSession.get("bare");
+            if (Boolean.TRUE.equals(pageSessionValue)) {
+                url = addQueryStringParam(url, "bare", "true");
+            } else {
+                pageSession.put("bare", "false");
+            }
         }
-    }
-    return url;
+        return url;
     }
 
     /**

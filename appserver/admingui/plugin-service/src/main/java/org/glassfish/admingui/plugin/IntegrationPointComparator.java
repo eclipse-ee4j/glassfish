@@ -27,51 +27,51 @@ import org.glassfish.admingui.connector.IntegrationPoint;
 import org.glassfish.admingui.connector.ConsoleConfig;
 
 /**
- *  <p>    This class compares two {@link IntegrationPoint} Objects.  See
- *    {@link #compare} for more details.</p>
+ *  <p>        This class compares two {@link IntegrationPoint} Objects.  See
+ * {@link #compare} for more details.</p>
  */
 public class IntegrationPointComparator implements Comparator<IntegrationPoint>, Serializable {
     /**
-     *    <p> Protected constructor.  Use {@link #getInstance()} instead.</p>
+     * <p> Protected constructor.  Use {@link #getInstance()} instead.</p>
      */
     protected IntegrationPointComparator() {
     }
 
     /**
-     *    <p> Accessor for this <code>Comparator</code>.</p>
+     * <p> Accessor for this <code>Comparator</code>.</p>
      */
     public static IntegrationPointComparator getInstance() {
-    return _instance;
+        return _instance;
     }
 
     /**
-     *    <p> This method compares two {@link IntegrationPoint}s.  It will first
-     *        check the <code>parentId</code>, then the <code>priority</code> if
-     *        the <code>parentId</code>s are equal.  If the priorities happen to
-     *        be equal as well, it will compare the <code>id</code>s.</p>
+     * <p> This method compares two {@link IntegrationPoint}s.  It will first
+     *     check the <code>parentId</code>, then the <code>priority</code> if
+     *     the <code>parentId</code>s are equal.  If the priorities happen to
+     *     be equal as well, it will compare the <code>id</code>s.</p>
      */
     public int compare(IntegrationPoint ip1, IntegrationPoint ip2) {
-    // First check parentIds
-    String left = "" + ip1.getParentId();
-    int result = left.compareTo("" + ip2.getParentId());
-    if (result == 0) {
-        // parentIds are the same, check the priorities
-        result = ip1.getPriority() - ip2.getPriority();
+        // First check parentIds
+        String left = "" + ip1.getParentId();
+        int result = left.compareTo("" + ip2.getParentId());
         if (result == 0) {
-        // priorities are the same, check the ids
-        left = "" + ip1.getId();
-        result = left.compareTo("" + ip2.getId());
-        if (result == 0) {
-            // Equal
-            return 0;
+            // parentIds are the same, check the priorities
+            result = ip1.getPriority() - ip2.getPriority();
+            if (result == 0) {
+                // priorities are the same, check the ids
+                left = "" + ip1.getId();
+                result = left.compareTo("" + ip2.getId());
+                if (result == 0) {
+                    // Equal
+                    return 0;
+                }
+            }
         }
-        }
-    }
 
-    // Return the answer
-    return (result < 0) ? -1 : 1;
+        // Return the answer
+        return (result < 0) ? -1 : 1;
     }
 
     private static IntegrationPointComparator _instance =
-        new IntegrationPointComparator();
+            new IntegrationPointComparator();
 }

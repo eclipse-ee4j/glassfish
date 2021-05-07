@@ -51,7 +51,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *    <p> This handler gets the default values and resource type and puts them in session
+     * <p> This handler gets the default values and resource type and puts them in session
      */
     @Handler(id = "setJDBCPoolWizard",
     input = {
@@ -80,7 +80,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *    <p> This handler gets the datasource classname and properties and sets them in session
+     * <p> This handler gets the datasource classname and properties and sets them in session
      */
     @Handler(id = "gf.updateJDBCPoolWizardStep1")
     public static void updateJDBCPoolWizardStep1(HandlerContext handlerCtx) {
@@ -174,7 +174,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *    <p> updates the wizard map properties on step 2
+     * <p> updates the wizard map properties on step 2
      */
     @Handler(id = "gf.updateJdbcConnectionPoolPropertiesTable")
     public static void updateJdbcConnectionPoolPropertiesTable(HandlerContext handlerCtx) {
@@ -200,7 +200,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *    <p> updates the wizard map properties on step 2
+     * <p> updates the wizard map properties on step 2
      */
     @Handler(id = "updateJdbcConnectionPoolWizardStep2")
     public static void updateJdbcConnectionPoolWizardStep2(HandlerContext handlerCtx) {
@@ -232,7 +232,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *    <p> This handler adds the class name table column depends on the resource type.
+     * <p> This handler adds the class name table column depends on the resource type.
      */
     @Handler(id = "gf.addClassNameColumn",
     input = {

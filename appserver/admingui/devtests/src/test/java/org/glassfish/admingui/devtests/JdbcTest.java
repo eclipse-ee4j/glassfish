@@ -152,7 +152,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
 
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", instanceName);
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", "server");
-    pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
+        pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
 
         clickAndWait("form:propertyContentPage:topButtons:newButton", TRIGGER_JDBC_RESOURCES);
 

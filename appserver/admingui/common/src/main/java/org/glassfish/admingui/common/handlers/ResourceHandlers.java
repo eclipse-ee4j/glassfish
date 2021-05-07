@@ -83,11 +83,11 @@ public class ResourceHandlers {
 
 
     /**
-     *    <p> This handler looks into the config properties, and confidential list, and returns a List of Map for populating the properties table. </p>
+     * <p> This handler looks into the config properties, and confidential list, and returns a List of Map for populating the properties table. </p>
      *   This is called for creating new objects.
      */
     @Handler(id="gf.getConfigPropsInfo",
-        input={
+            input={
         @HandlerInput(name="extraProps", type=java.util.Map.class),
         @HandlerInput(name="key", type=String.class),
         @HandlerInput(name="confidentialKey", type=String.class, defaultValue="confidentialConfigProps")},
@@ -135,7 +135,7 @@ public class ResourceHandlers {
     * This method is called just before saving the properties.
     */
     @Handler(id="gf.combineProperties",
-        input={
+            input={
         @HandlerInput(name="tableList", type=java.util.List.class)},
         output={
         @HandlerOutput(name="combined", type=java.util.List.class)})
@@ -176,7 +176,7 @@ public class ResourceHandlers {
 
 
     @Handler(id="gf.buildConfidentialPropsTable",
-        input={
+            input={
         @HandlerInput(name="propsMaps", type=List.class),
         @HandlerInput(name="confidentialList", type=java.util.List.class)},
         output={

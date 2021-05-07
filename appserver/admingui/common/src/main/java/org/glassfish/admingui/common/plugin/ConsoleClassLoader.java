@@ -29,11 +29,11 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 
 /**
- *  <p>    This <code>ClassLoader</code> makes it possible to access plugin
- *    resources by finding the appropriate plugin module's
- *    <code>ClassLoader</code> and loading resources from it.</p>
+ *  <p>This <code>ClassLoader</code> makes it possible to access plugin
+ * resources by finding the appropriate plugin module's
+ * <code>ClassLoader</code> and loading resources from it.</p>
  *
- *  @author Ken Paulsen    (ken.paulsen@sun.com)
+ *  @author Ken Paulsen        (ken.paulsen@sun.com)
  */
 public class ConsoleClassLoader extends ClassLoader {
 
@@ -42,27 +42,27 @@ public class ConsoleClassLoader extends ClassLoader {
     public static final String HABITAT_ATTRIBUTE = "org.glassfish.servlet.habitat";
 
     /**
-     *    <p> This constructor should not normally be used.  You should use
-     *        the one that allows you to provide the parent
-     *        <code>ClassLoader</code>.</p>
+     * <p> This constructor should not normally be used.  You should use
+     *     the one that allows you to provide the parent
+     *     <code>ClassLoader</code>.</p>
      */
     protected ConsoleClassLoader() {
-    super();
+        super();
     }
 
     /**
-     *    <p> This constructor creates an instance of this
-     *        <code>ClassLoader</code> and will use the given
-     *        <code>ClassLoader</code> as its parent <code>ClassLoader</code>.</p>
+     * <p> This constructor creates an instance of this
+     *     <code>ClassLoader</code> and will use the given
+     *     <code>ClassLoader</code> as its parent <code>ClassLoader</code>.</p>
      *
-     *    @param    parent    The parent <code>ClassLoader</code>
+     * @param        parent        The parent <code>ClassLoader</code>
      */
     public ConsoleClassLoader(ClassLoader parent) {
-    super(parent);
+        super(parent);
     }
 
     /**
-     *    <p> This method will attempt to look for a module...</p>
+     * <p> This method will attempt to look for a module...</p>
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         Class c = findLoadedClass(name);
         if(c!=null) return c;
@@ -71,62 +71,62 @@ public class ConsoleClassLoader extends ClassLoader {
      */
 
     /**
-     *    <p> In order for this method to find the Resource...
-     *        </p>
+     * <p> In order for this method to find the Resource...
+     *     </p>
      */
     public URL findResource(String name) {
 //System.out.println("Find Resource: " + name);
-    // Find module name
-    int end = name.indexOf('/');
-    int start = 0;
-    while (end == start) {
-        end = name.indexOf('/', ++start);
-    }
-    if (end == -1) {
-        // Not a request for a module resource
-        return null;
-    }
-    String moduleName = name.substring(start, end);
-    name = name.substring(end + 1);
-    if (start != 0) {
-        // This means the original request was prefixed with a "/"
-        name = "/" + name;
-    }
-
-    // Get the Module ClassLoader
-    ClassLoader moduleCL = findModuleClassLoader(moduleName);
-    if (moduleCL != null) {
-        // Use the Module ClassLoader to find the resource
-        if (moduleCL instanceof URLClassLoader) {
-        URL url = ((URLClassLoader) moduleCL).findResource(name);
-//System.out.println("findResource("+name+"), URL: " + url);
-        return url;
-        } else {
-        return moduleCL.getResource(name);
+        // Find module name
+        int end = name.indexOf('/');
+        int start = 0;
+        while (end == start) {
+            end = name.indexOf('/', ++start);
         }
-    }
+        if (end == -1) {
+            // Not a request for a module resource
+            return null;
+        }
+        String moduleName = name.substring(start, end);
+        name = name.substring(end + 1);
+        if (start != 0) {
+            // This means the original request was prefixed with a "/"
+            name = "/" + name;
+        }
 
-    // Not found.
-    return null;
+        // Get the Module ClassLoader
+        ClassLoader moduleCL = findModuleClassLoader(moduleName);
+        if (moduleCL != null) {
+            // Use the Module ClassLoader to find the resource
+            if (moduleCL instanceof URLClassLoader) {
+                URL url = ((URLClassLoader) moduleCL).findResource(name);
+//System.out.println("findResource("+name+"), URL: " + url);
+                return url;
+            } else {
+                return moduleCL.getResource(name);
+            }
+        }
+
+        // Not found.
+        return null;
     }
 
     /**
-     *    <p> This method find the <code>ClassLoader</code> associated with the
-     *        named module.</p>
+     * <p> This method find the <code>ClassLoader</code> associated with the
+     *     named module.</p>
      */
     public static ClassLoader findModuleClassLoader(String moduleName) {
 //System.out.println("Find module ClassLoader: " + moduleName);
-    // Get the ServletContext
-    ServletContext servletCtx = (ServletContext)
-        (FacesContext.getCurrentInstance().getExternalContext()).getContext();
+        // Get the ServletContext
+        ServletContext servletCtx = (ServletContext)
+            (FacesContext.getCurrentInstance().getExternalContext()).getContext();
 
-    // Get the Habitat from the ServletContext
-    ServiceLocator habitat = (ServiceLocator) servletCtx.getAttribute(HABITAT_ATTRIBUTE);
+        // Get the Habitat from the ServletContext
+        ServiceLocator habitat = (ServiceLocator) servletCtx.getAttribute(HABITAT_ATTRIBUTE);
 
-    // Use the Habitat to find the ConsolePluginService and return the
-    // correct ClassLoader for the requested module (or null)
-    return habitat.<ConsolePluginService>getService(ConsolePluginService.class).
-        getModuleClassLoader(moduleName);
+        // Use the Habitat to find the ConsolePluginService and return the
+        // correct ClassLoader for the requested module (or null)
+        return habitat.<ConsolePluginService>getService(ConsolePluginService.class).
+            getModuleClassLoader(moduleName);
     }
 
 // FIXME: I need to finish implementing this class!  So far I only support getResource()

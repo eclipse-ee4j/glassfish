@@ -229,17 +229,17 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         //Create Connector Security Map
         clickAndWait(getLinkIdByLinkText("propertyForm:poolTable", testPool), TRIGGER_EDIT_CONNECTOR_CONNECTION_POOL);
         clickAndWait("propertyForm:connectorPoolSet:securityMapTab", TRIGGER_CONNECTOR_SECURITY_MAPS);
-    clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_CONNECTOR_SECURITY_MAP);
+        clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_CONNECTOR_SECURITY_MAP);
 
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:mapNameNew:mapName", testSecurityMap);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:groupProp:group", testGroup);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField2:userNameEdit:userNameEdit", testUserName);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField2:passwordEdit:passwordEdit", testPassword);
-    clickAndWait("propertyForm:propertyContentPage:topButtons:newButton", TRIGGER_CONNECTOR_SECURITY_MAPS);
+        clickAndWait("propertyForm:propertyContentPage:topButtons:newButton", TRIGGER_CONNECTOR_SECURITY_MAPS);
 
-    clickAndWait(getLinkIdByLinkText("propertyForm:resourcesTable", testSecurityMap), TRIGGER_EDIT_CONNECTOR_SECURITY_MAP);
+        clickAndWait(getLinkIdByLinkText("propertyForm:resourcesTable", testSecurityMap), TRIGGER_EDIT_CONNECTOR_SECURITY_MAP);
         Assert.assertEquals(testGroup, getFieldValue("propertyForm:propertySheet:propertSectionTextField:groupProp:group"));
-    clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_CONNECTOR_SECURITY_MAPS);
+        clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_CONNECTOR_SECURITY_MAPS);
 
         //Delete Connector Security Maps
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", testSecurityMap);

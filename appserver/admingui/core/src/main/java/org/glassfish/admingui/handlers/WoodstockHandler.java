@@ -112,7 +112,7 @@ public class WoodstockHandler {
      * <p>
      * Output value: "uploadDir" -- Type: <code>java.lang.String</code></p>
      *
-     * @param    handlerCtx    The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id = "uploadFileToTempDir",
             input = {

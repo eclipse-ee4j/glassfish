@@ -306,7 +306,7 @@ public class MonitoringHandlers {
     }
 
     /**
-     *    <p> Add list to new list
+     * <p> Add list to new list
      */
     @Handler(id = "addToMonitorList",
     input = {

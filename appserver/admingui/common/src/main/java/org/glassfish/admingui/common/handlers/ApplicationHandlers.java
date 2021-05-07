@@ -14,16 +14,8 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ApplicationHandlers.java
- *
- * Created on August 1, 2010, 2:32 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
+
 /**
- *
  * @author anilam
  */
 package org.glassfish.admingui.common.handlers;
@@ -44,9 +36,6 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.Collections;
-import java.net.URLDecoder;
-
-
 import java.util.TreeSet;
 import java.util.Set;
 import org.glassfish.admingui.common.util.GuiUtil;
@@ -59,9 +48,12 @@ import org.glassfish.admingui.common.util.AppUtil;
 public class ApplicationHandlers {
 
     /**
-     *    <p> This handler returns the list of applications for populating the table.
-     *  <p> Input  value: "serverName" -- Type: <code> java.lang.String</code></p>
-     *    @param    handlerCtx    The HandlerContext.
+     * <p>
+     * This handler returns the list of applications for populating the table.
+     * <p>
+     * Input value: "serverName" -- Type: <code> java.lang.String</code>
+     *
+     * @param handlerCtx The HandlerContext.
      */
     @Handler(id = "gf.getDeployedAppsInfo",
         input = {
@@ -102,11 +94,13 @@ public class ApplicationHandlers {
 
             List sniffersList = GuiUtil.parseStringList(engines, ",");
             oneRow.put("sniffersList", sniffersList);
-            for(int ix=0; ix< sniffersList.size(); ix++)
-                filters.add(sniffersList.get(ix));
+            for (Object element : sniffersList) {
+                filters.add(element);
+            }
             if (filterValue != null){
-                if (! sniffersList.contains(filterValue))
+                if (! sniffersList.contains(filterValue)) {
                     continue;
+                }
             }
 
             getLaunchInfo(oneAppName, null, oneRow);
@@ -176,7 +170,6 @@ public class ApplicationHandlers {
     }
 
 
-
     private static List<Map> getSubComponentDetail(String appName, String moduleName, List<String> snifferList, List<Map> result){
         try{
             String encodedAppName = URLEncoder.encode(appName, "UTF-8");
@@ -237,26 +230,27 @@ public class ApplicationHandlers {
         Map<String, String> resources = (Map<String, String>) handlerCtx.getInputValue("resources");
         List<Map<String, String>> result = (List<Map<String, String>>) handlerCtx.getInputValue("listOfRows");
         if (result == null) {
-            result = new ArrayList<Map<String, String>>();
+            result = new ArrayList<>();
         }
         if (GuiUtil.isEmpty(moduleName)) {
             moduleName = "-----------";
         }
-        if( resources != null )
-        for (Map.Entry<String, String> e : resources.entrySet())  {
-            String resource = e.getKey();
-            String value = e.getValue();
-            Map oneRow = new HashMap();
-            oneRow.put("appName", appName);
-            oneRow.put("moduleName", moduleName);
-            oneRow.put("resName", resource);
-            oneRow.put("resType", AppUtil.getAppScopedResType(value, "display"));
-            String link = AppUtil.getAppScopedResType(value, "edit") + resource + "&appName=" + appName;
-            if (!moduleName.equals("-----------")) {
-                link = link + "&moduleName=" + moduleName;
+        if( resources != null ) {
+            for (Map.Entry<String, String> e : resources.entrySet())  {
+                String resource = e.getKey();
+                String value = e.getValue();
+                Map oneRow = new HashMap();
+                oneRow.put("appName", appName);
+                oneRow.put("moduleName", moduleName);
+                oneRow.put("resName", resource);
+                oneRow.put("resType", AppUtil.getAppScopedResType(value, "display"));
+                String link = AppUtil.getAppScopedResType(value, "edit") + resource + "&appName=" + appName;
+                if (!moduleName.equals("-----------")) {
+                    link = link + "&moduleName=" + moduleName;
+                }
+                oneRow.put("link", link);
+                result.add(oneRow);
             }
-            oneRow.put("link", link);
-            result.add(oneRow);
         }
         handlerCtx.setOutputValue("result", result);
     }
@@ -346,8 +340,9 @@ public class ApplicationHandlers {
             if (extraProperties != null) {
                 Map entity = (Map)extraProperties.get("entity");
                 if (entity != null) {
-                    if (contextRoot == null)
+                    if (contextRoot == null) {
                         contextRoot = (String) entity.get("contextRoot");
+                    }
                     enabled = Boolean.parseBoolean((String) entity.get("enabled"));
                 }
             }
@@ -364,8 +359,9 @@ public class ApplicationHandlers {
             String virtualServers = getVirtualServers(target, appName);
             String ep = TargetUtil.getTargetEndpoint(target) + "/application-ref/" + appName;
             enabled = Boolean.parseBoolean((String)RestUtil.getAttributesMap(ep).get("enabled"));
-            if (!enabled)
+            if (!enabled) {
                 continue;
+            }
             if (virtualServers != null && virtualServers.length() > 0) {
                 oneRow.put("hasLaunch", true);
             }
@@ -560,7 +556,7 @@ public class ApplicationHandlers {
         handlerCtx.setOutputValue("result", result);
     }
 
-    /*
+    /**
      * This handler is called for populating the application table in the cluster or instance Application tab.
      */
     @Handler(id = "gf.getSingleTargetAppsInfo",
@@ -585,7 +581,7 @@ public class ApplicationHandlers {
         }
         List result = new ArrayList();
         String prefix = (String) GuiUtil.getSessionValue("REST_URL");
-    if (appPropsMap != null) {
+        if (appPropsMap != null) {
             for(Map.Entry<String,String> e : appPropsMap.entrySet()){
                 try{
                     String engines = e.getValue();
@@ -604,18 +600,20 @@ public class ApplicationHandlers {
                     oneRow.put("sniffers", engines);
                     List sniffersList = GuiUtil.parseStringList(engines, ",");
                     oneRow.put("sniffersList", sniffersList);
-                    for(int ix=0; ix< sniffersList.size(); ix++)
-                        filters.add(sniffersList.get(ix));
+                    for (Object element : sniffersList) {
+                        filters.add(element);
+                    }
                     if (filterValue != null){
-                        if (! sniffersList.contains(filterValue))
+                        if (! sniffersList.contains(filterValue)) {
                             continue;
+                        }
                     }
                     result.add(oneRow);
                 }catch(Exception ex){
                     //skip this app.
                 }
+            }
         }
-    }
         handlerCtx.setOutputValue("result", result);
         handlerCtx.setOutputValue("filters", new ArrayList(filters));
     }
@@ -629,7 +627,7 @@ public class ApplicationHandlers {
             @HandlerOutput(name="URLList", type=List.class)})
 
     public void getTargetURLList(HandlerContext handlerCtx) {
-    String appID = (String)handlerCtx.getInputValue("AppID");
+        String appID = (String)handlerCtx.getInputValue("AppID");
         String contextRoot = (String)handlerCtx.getInputValue("contextRoot");
         String ctxRoot = calContextRoot(contextRoot);
         Set<String> URLs = new TreeSet();
@@ -637,8 +635,9 @@ public class ApplicationHandlers {
         for(String target : targetList) {
             String ep = TargetUtil.getTargetEndpoint(target) + "/application-ref/" + appID;
             boolean enabled = Boolean.parseBoolean((String)RestUtil.getAttributesMap(ep).get("enabled"));
-            if (!enabled)
+            if (!enabled) {
                 continue;
+            }
 
             String virtualServers = getVirtualServers(target, appID);
             String configName = TargetUtil.getConfigName(target);
@@ -657,12 +656,12 @@ public class ApplicationHandlers {
             }
         }
 
-    Iterator it = URLs.iterator();
-    String url = null;
+        Iterator it = URLs.iterator();
+        String url = null;
         ArrayList list = new ArrayList();
 
-    while (it.hasNext()) {
-        url = (String)it.next();
+        while (it.hasNext()) {
+            url = (String)it.next();
             String target = "";
             int i = url.indexOf("@@@");
             if (i >= 0) {
@@ -674,14 +673,14 @@ public class ApplicationHandlers {
             m.put("url", url + ctxRoot);
             m.put("target", target);
             list.add(m);
-    }
+        }
 
         handlerCtx.setOutputValue("URLList", list);
 
     }
 
 
-    /*
+    /**
      * Get the application type for the specified appName.
      * If there isComposite property is true, the appType will be returned as 'ear'
      * Otherwise, depends on the sniffer engine
@@ -776,7 +775,7 @@ public class ApplicationHandlers {
 "/configs/config/" + configName + "/network-config/network-listeners/network-listener/" + one;
 
                         Map nlAttributes = RestUtil.getAttributesMap(ep);
-                        if ("false".equals((String)nlAttributes.get("enabled"))) {
+                        if ("false".equals(nlAttributes.get("enabled"))) {
                             continue;
                         }
 //                        String security = (String)oneListener.findProtocol().attributesMap().get("SecurityEnabled");
@@ -785,18 +784,21 @@ public class ApplicationHandlers {
                         String security = (String)RestUtil.getAttributesMap(ep).get("securityEnabled");
 
                         String protocol = "http";
-                        if ("true".equals(security))
+                        if ("true".equals(security)) {
                             protocol = "https";
+                        }
 
                         String port = (String)nlAttributes.get("port");
-                        if (port == null)
+                        if (port == null) {
                             port = "";
+                        }
                         String resolvedPort = RestUtil.resolveToken((String)GuiUtil.getSessionValue("REST_URL") +
                                 "/servers/server/" + target, port);
 
                         for (String hostName : hostNames) {
-                            if (localHostName != null && hostName.equalsIgnoreCase("localhost"))
+                            if (localHostName != null && hostName.equalsIgnoreCase("localhost")) {
                                 hostName = localHostName;
+                            }
 //                            URLs.add("[" + target + "]  - " + protocol + "://" + hostName + ":" + resolvedPort + "[ " + one + " " + configName
 //                                    + " " + listener + " " + target + " ]");
                             URLs.add(target + "@@@" + protocol + "://" + hostName + ":" + resolvedPort);

@@ -37,8 +37,8 @@ public class SecurityHandler {
 
 
     /**
-     *    <p> This handler returns the a Map for storing the attributes for realm creation.
-     *    @param    handlerCtx    The HandlerContext.
+     * <p> This handler returns the a Map for storing the attributes for realm creation.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getRealmAttrForCreate",
     output={
@@ -57,9 +57,9 @@ public class SecurityHandler {
     }
 
     /**
-     *    <p> This handler returns the a Map for storing the attributes for editing a realm.
+     * <p> This handler returns the a Map for storing the attributes for editing a realm.
      *  This can be used by either the node agent realm or the realm in configuration-Security-realm
-     *    @param    handlerCtx    The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getRealmAttrForEdit",
     input={
@@ -143,7 +143,7 @@ public class SecurityHandler {
             //Custom realm class
             handlerCtx.setOutputValue("classnameOption", "input");
             attrMap.put("predefinedClassname", Boolean.FALSE);
-        attrMap.put("classnameInput", classname);
+            attrMap.put("classnameInput", classname);
             attrMap.put("classname", classname);
             List props = getChildrenMapForTableList(propList, "property", null);
             handlerCtx.setOutputValue("properties", props);
@@ -306,21 +306,21 @@ public class SecurityHandler {
     /* Handler for Group/User managemenet */
 
     /**
-     *    <p> This handler update's user info.</p>
+     * <p> This handler update's user info.</p>
      *  <p> Input value: "Realm" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "UserId" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "GroupList" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "Password" -- Type: <code>java.lang.String</code></p>
-     *    @param    handlerCtx    The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="saveUser",
-    input={
-        @HandlerInput(name="Realm", type=String.class, required=true),
+        input={
+            @HandlerInput(name="Realm", type=String.class, required=true),
             @HandlerInput(name="configName", type=String.class, required=true),
-        @HandlerInput(name="UserId", type=String.class, required=true),
-        @HandlerInput(name="GroupList", type=String.class, required=true),
-        @HandlerInput(name="Password", type=String.class, required=true),
-        @HandlerInput(name="CreateNew", type=String.class, required=true)})
+            @HandlerInput(name="UserId", type=String.class, required=true),
+            @HandlerInput(name="GroupList", type=String.class, required=true),
+            @HandlerInput(name="Password", type=String.class, required=true),
+            @HandlerInput(name="CreateNew", type=String.class, required=true)})
     public static void saveUser(HandlerContext handlerCtx) {
         char[] password = null;
         try {
@@ -371,12 +371,12 @@ public class SecurityHandler {
     }
 
    /**
-     *    <p> This handler returns the attribute values in the
+     * <p> This handler returns the attribute values in the
      *      Edit Manage User Password Page.</p>
      *  <p> Input value: "Realm" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "UserId" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "GroupList" -- Type: <code>java.lang.String</code></p>
-     *    @param    handlerCtx    The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getUserInfo",
     input={
@@ -395,8 +395,8 @@ public class SecurityHandler {
     }
 
    /**
-     *    <p> This handler returns the list of file users for specified realm.
-     *    @param    handlerCtx    The HandlerContext.
+     * <p> This handler returns the list of file users for specified realm.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getFileUsers",
         input={
@@ -434,8 +434,8 @@ public class SecurityHandler {
 
 
   /**
-     *    <p> This handler removes users for specified realm.
-     *    @param    handlerCtx    The HandlerContext.
+     * <p> This handler removes users for specified realm.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="removeUser",
         input={

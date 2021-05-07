@@ -325,7 +325,7 @@ public class BaseSeleniumTestClass {
     }
 
     protected void selectWindow(String windowId) {
-        selenium.selectWindow(windowId);
+            selenium.selectWindow(windowId);
     }
 
     protected String getSelectedLabel(String elem) {

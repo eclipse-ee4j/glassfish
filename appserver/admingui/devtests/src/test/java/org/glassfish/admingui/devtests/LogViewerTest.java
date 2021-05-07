@@ -16,16 +16,15 @@
 
 package org.glassfish.admingui.devtests;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
 
 public class LogViewerTest extends BaseSeleniumTestClass {
+
     private static final String TRIGGER_SERVER = "i18n.instance.GeneralTitle";
     private static final String TRIGGER_LV = "i18nc.logViewer.levelLabel";
     private static final String TRIGGER_IV = "i18nc.logViewer.instanceLabel";
-
 
     // basic sanity test for log viewer
     @Test
@@ -40,6 +39,7 @@ public class LogViewerTest extends BaseSeleniumTestClass {
             selectWindow(null);
         }
     }
+
 
     // basic sanity test for raw log viewer
     @Test

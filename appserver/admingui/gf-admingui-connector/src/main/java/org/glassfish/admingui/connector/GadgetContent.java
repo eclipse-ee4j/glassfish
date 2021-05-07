@@ -24,48 +24,48 @@ import java.util.List;
 
 
 /**
- *  <p>    This class is configured via XML.  This is done via the HK2
- *    <code>ConfigParser</code>.</p>
+ *  <p>        This class is configured via XML.  This is done via the HK2
+ * <code>ConfigParser</code>.</p>
  *
  *  FIXME:
- *  <p>    NOTE: THIS CLASS IS NOT BEING USED BECAUSE I CANNOT FIGURE OUT HOW
- *    TO GET BOTH THE BODY CONTENT AND HAVE THIS CLASS GET IT'S VALUES!!</p>
+ *  <p>        NOTE: THIS CLASS IS NOT BEING USED BECAUSE I CANNOT FIGURE OUT HOW
+ * TO GET BOTH THE BODY CONTENT AND HAVE THIS CLASS GET IT'S VALUES!!</p>
  *
- *  @author Ken Paulsen    (ken.paulsen@sun.com)
+ *  @author Ken Paulsen        (ken.paulsen@sun.com)
  */
 @Configured(name="Content")
 public class GadgetContent {
 
     /**
-     *    <p> A unique identifier for the content.</p>
+     * <p> A unique identifier for the content.</p>
      */
     public String getType() {
-    return this.type;
+        return this.type;
     }
 
     /**
-     *    <p> Setter for the type.</p>
+     * <p> Setter for the type.</p>
      */
     @Attribute(value="type", required=false)
     void setType(String type) {
-    this.type = type;
+        this.type = type;
     }
 
     private String type;
 
     /**
-     *    <p> A unique identifier for the content.</p>
+     * <p> A unique identifier for the content.</p>
      */
     public String getHref() {
-    return this.href;
+        return this.href;
     }
 
     /**
-     *    <p> Setter for the href.</p>
+     * <p> Setter for the href.</p>
      */
     @Attribute(value="href", required=false)
     void setHref(String href) {
-    this.href = href;
+        this.href = href;
     }
 
     private String href;

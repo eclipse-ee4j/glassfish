@@ -80,7 +80,7 @@ public class IiopListenerTest extends BaseSeleniumTestClass {
         assertEquals(totalConn, getFieldValue("form1:propertySheet:propertySectionTextField:TotalConnsProp:TotalConns"));
         assertEquals(maxMsgSize, getFieldValue("form1:propertySheet:propertySectionTextField:MaxMsgSizeProp:MaxMsgSize"));
 
-    // Load default button functionality is broken in all pages, once fixed need to uncomment
+        // Load default button functionality is broken in all pages, once fixed need to uncomment
         //clickAndWaitForButtonEnabled("form1:propertyContentPage:loadDefaultsButton");
         //assertEquals("1024", getFieldValue("form1:propertySheet:propertySectionTextField:TotalConnsProp:TotalConns"));
         //assertEquals("1024", getFieldValue("form1:propertySheet:propertySectionTextField:MaxMsgSizeProp:MaxMsgSize"));

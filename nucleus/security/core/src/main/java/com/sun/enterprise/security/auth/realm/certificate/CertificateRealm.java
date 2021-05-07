@@ -207,21 +207,21 @@ public final class CertificateRealm extends IASRealm
         }
 
         if (defaultGroups != null) {
-        Set<Principal> principalSet = subject.getPrincipals();
-        Enumeration<String> e = defaultGroups.elements();
-        while (e.hasMoreElements()) {
-        principalSet.add(new Group(e.nextElement()));
+            Set<Principal> principalSet = subject.getPrincipals();
+            Enumeration<String> e = defaultGroups.elements();
+            while (e.hasMoreElements()) {
+                principalSet.add(new Group(e.nextElement()));
+            }
         }
-    }
         if (!subject.getPrincipals().isEmpty()) {
             DistinguishedPrincipalCredential dpc = new DistinguishedPrincipalCredential(principal);
             subject.getPublicCredentials().add(dpc);
         }
 
         SecurityContext securityContext =
-        new SecurityContext(name, subject);
+            new SecurityContext(name, subject);
 
-    SecurityContext.setCurrent(securityContext);
+        SecurityContext.setCurrent(securityContext);
         /*AppServSecurityContext secContext = Util.getDefaultHabitat().getByContract(AppServSecurityContext.class);
         AppServSecurityContext securityContext = secContext.newInstance(name, subject);
         securityContext.setCurrentSecurityContext(securityContext);*/

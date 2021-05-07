@@ -47,8 +47,8 @@ public class GSSUPName {
     public GSSUPName(String username, String realm)
     {
 
-    this.username = username;
-    this.realm    = realm;
+        this.username = username;
+        this.realm    = realm;
         gssUtils = Util.getDefaultHabitat().getService(GSSUtilsContract.class);
     }
 
@@ -76,11 +76,11 @@ public class GSSUPName {
             expname = new String(exportedname, "UTF8");
         } catch (Exception e) {
              _logger.log(Level.SEVERE, SecurityLoggerInfo.iiopImportNameError , e.getLocalizedMessage());
-    }
+        }
 
-    if(_logger.isLoggable(Level.FINE)) {
-        _logger.log(Level.FINE,"Mechanism specific name: " + expname);
-    }
+        if(_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE,"Mechanism specific name: " + expname);
+        }
         // Deterimine the starting indices of the username and realm name
 
         int at_index  = expname.indexOf(AT_CHAR);
@@ -94,39 +94,39 @@ public class GSSUPName {
 
         }  else if (esc_index == -1 ) {
             if (at_index != 0) {
-            /* name_value is not null i.e. scoped-username is of the form:
+                /* name_value is not null i.e. scoped-username is of the form:
                  *     scoped-username ::= name_value@name_scope
-         */
+                 */
                 name_value = expname.substring(0, at_index);
-        }
+            }
             name_scope = expname.substring(at_index+1);
-    }   else {
-        // exported name contains both AT_CHAR and ESCAPE_CHAR. Separate
+        }   else {
+            // exported name contains both AT_CHAR and ESCAPE_CHAR. Separate
             // the username and the realm name. The start of a realm name
-        // is indicated by an AT_CHAR that is not preceded by an
-        // ESCAPE_CHAR.
-        // The username always starts at 0.
+            // is indicated by an AT_CHAR that is not preceded by an
+            // ESCAPE_CHAR.
+            // The username always starts at 0.
 
             user_index  = 0;
             realm_index = 0;
             int i = 0;
-        while ( (i = expname.indexOf(AT_CHAR, i)) != -1) {
-            if (expname.charAt(i-1) != ESCAPE_CHAR) {
+            while ( (i = expname.indexOf(AT_CHAR, i)) != -1) {
+                if (expname.charAt(i-1) != ESCAPE_CHAR) {
                     realm_index = i;
                     break;
-        }
+                }
                 i += 1;
-        }
+            }
             name_value = expname.substring(user_index, realm_index);
             name_scope = expname.substring(realm_index+1);
-    }
+        }
 
-    if(_logger.isLoggable(Level.FINE)) {
-        _logger.log(Level.FINE,"name_value: " + name_value + " ;  name_scope: " + name_scope);
-    }
+        if(_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE,"name_value: " + name_value + " ;  name_scope: " + name_scope);
+        }
 
         if ((name_value.length() > 0) && (at_index != -1)) {
-        // remove the ESCAPE_CHAR from the username
+            // remove the ESCAPE_CHAR from the username
             StringBuilder strbuf = new StringBuilder("");
             int starti = 0  ; // start index
             int endi   = 0  ; // end index
@@ -134,14 +134,14 @@ public class GSSUPName {
             while ((endi = name_value.indexOf(ESCAPE_CHAR, starti)) != -1) {
                 strbuf.append(name_value.substring(starti, endi));
                 starti = endi + 1;
-        }
+            }
             strbuf.append(name_value.substring(starti));
             name_value = strbuf.toString();
-    }
+        }
 
         username = name_value;
         realm    = name_scope;
-    if(_logger.isLoggable(Level.FINE)) {
+        if(_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE,"Constructed GSSUPName ( " + toString()+ " )");
         }
     }
@@ -155,9 +155,9 @@ public class GSSUPName {
         byte[] expname_utf8 = null ;
         StringTokenizer strtok ;
 
-    if(_logger.isLoggable(Level.FINE)) {
-        _logger.log(Level.FINE,"Going to create exported name for:" + toString());
-    }
+        if(_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE,"Going to create exported name for:" + toString());
+        }
 
         StringBuffer strbuf = new StringBuffer("");
 
@@ -167,19 +167,19 @@ public class GSSUPName {
         int esc_index = username.indexOf(ESCAPE_CHAR);
 
         if ( (at_index == -1) &&  (esc_index == -1))
-        strbuf = new StringBuffer(username); // just copy - no processing required.
-    else {
+            strbuf = new StringBuffer(username); // just copy - no processing required.
+        else {
 
-        // N.B. Order of processing is important
+            // N.B. Order of processing is important
 
-        // Replace the ESCAPE_CHAR first
-        if (esc_index != -1) {
+            // Replace the ESCAPE_CHAR first
+            if (esc_index != -1) {
                 strtok = new StringTokenizer(username, ESCAPE_STRING);
                 while (strtok.hasMoreTokens()) {
                     strbuf.append(strtok.nextToken());
                     strbuf.append(ESCAPE_CHAR).append(ESCAPE_CHAR);
-        }
-        }
+                }
+            }
 
             // Replace the AT_CHAR next
             if (at_index != -1) {
@@ -187,13 +187,13 @@ public class GSSUPName {
                 while (strtok.hasMoreTokens()) {
                     strbuf.append(strtok.nextToken());
                     strbuf.append(ESCAPE_CHAR).append(AT_CHAR);
+                }
+            }
         }
-        }
-    }
 
-    if(_logger.isLoggable(Level.FINE)) {
+        if(_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE,"username after processing for @ and \\: " + strbuf);
-    }
+        }
 
         /** Do not append realm name: this ensures that we dont sent
             "default" or "certificate" to another appserver.
@@ -205,12 +205,12 @@ public class GSSUPName {
         if (realm.length() > 0) {
             strbuf.append(AT_CHAR);
             strbuf.append(realm);
-    }
+        }
         **/
 
-    if(_logger.isLoggable(Level.FINE)) {
+        if(_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE,"username and realm name : " + strbuf);
-    }
+        }
         try {
             expname_utf8 = strbuf.toString().getBytes("UTF8");
             assert(gssUtils != null);
@@ -218,17 +218,17 @@ public class GSSUPName {
                        gssUtils.GSSUP_MECH_OID(), expname_utf8);
         } catch (Exception e) {
              _logger.log(Level.SEVERE, SecurityLoggerInfo.iiopCreateExportedNameError , e.getLocalizedMessage());
-    }
+        }
 
-    if(_logger.isLoggable(Level.FINE)) {
+        if(_logger.isLoggable(Level.FINE)) {
                 assert(gssUtils != null);
-        _logger.log(Level.FINE,"GSSUPName in exported format = " + gssUtils.dumpHex(expname));
-    }
+                _logger.log(Level.FINE,"GSSUPName in exported format = " + gssUtils.dumpHex(expname));
+        }
         return expname;
     }
 
     public String getRealm() {
-    return realm;
+        return realm;
     }
 
     public String getUser() {
@@ -236,24 +236,24 @@ public class GSSUPName {
     }
 
     public boolean equals(Object o) {
-    if(o instanceof GSSUPName) {
-        GSSUPName nm = (GSSUPName)o;
-        if (nm.getUser().equals(username) && nm.getRealm().equals(realm))
-        return true;
-    }
-    return false;
+        if(o instanceof GSSUPName) {
+            GSSUPName nm = (GSSUPName)o;
+            if (nm.getUser().equals(username) && nm.getRealm().equals(realm))
+                return true;
+        }
+        return false;
     }
 
     /* Return the hashCode. */
     public int hashCode() {
-    return username.hashCode() + realm.hashCode();
+        return username.hashCode() + realm.hashCode();
     }
 
     /* String representation of the GSSUPname */
     public String toString() {
-    String s = "Username = " + username;
-    s = s + " Realm = " + realm;
-    return s;
+        String s = "Username = " + username;
+        s = s + " Realm = " + realm;
+        return s;
     }
 
 

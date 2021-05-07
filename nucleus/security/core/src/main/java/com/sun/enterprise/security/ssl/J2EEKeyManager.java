@@ -67,7 +67,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     public J2EEKeyManager(X509KeyManager mgr, String alias) {
         this.mgr = mgr;
-    this.alias = alias;
+        this.alias = alias;
 
         if (mgr instanceof UnifiedX509KeyManager) {
             UnifiedX509KeyManager umgr = (UnifiedX509KeyManager)mgr;
@@ -169,7 +169,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
             serverAlias = this.alias;
         }else{
             serverAlias =  mgr.chooseServerAlias(keyType, issuers, socket);
-    }
+        }
         if(_logger.isLoggable(Level.FINE)){
             _logger.log(Level.FINE, "Choosing server alias :{0}", serverAlias);
         }
@@ -202,9 +202,9 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     public String[] getClientAliases(String keyType, Principal[] issuers) {
         if(_logger.isLoggable(Level.FINE)){
-        _logger.log(Level.FINE,"Getting client aliases");
+            _logger.log(Level.FINE,"Getting client aliases");
         }
-    return mgr.getClientAliases(keyType, issuers);
+        return mgr.getClientAliases(keyType, issuers);
     }
 
     /**
@@ -227,8 +227,8 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
      */
     public PrivateKey getPrivateKey(String alias) {
         if(_logger.isLoggable(Level.FINE)){
-        _logger.log(Level.FINE, "Getting private key for alias:{0}", alias);
-    }
+            _logger.log(Level.FINE, "Getting private key for alias:{0}", alias);
+        }
         X509KeyManager keyMgr = getManagerFromToken(alias);
         if (keyMgr != null) {
             String aliasName = alias.substring(alias.indexOf(':') + 1);

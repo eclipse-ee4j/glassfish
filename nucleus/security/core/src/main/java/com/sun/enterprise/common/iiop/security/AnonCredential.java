@@ -15,7 +15,7 @@
  */
 
 /*
- * @(#)AnonCredential.java    1.1 00/10/20
+ * @(#)AnonCredential.java        1.1 00/10/20
  *
  */
 

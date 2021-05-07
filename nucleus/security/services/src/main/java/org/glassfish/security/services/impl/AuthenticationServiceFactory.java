@@ -73,9 +73,9 @@ public class AuthenticationServiceFactory extends ServiceFactory implements Fact
      * Helper function to obtain the Authentication Service configuration from the Domain.
      */
     public static org.glassfish.security.services.config.AuthenticationService getAuthenticationServiceConfiguration(Domain domain) {
-        org.glassfish.security.services.config.AuthenticationService atnConfiguration =
-            ServiceFactory.getSecurityServiceConfiguration(
-                    domain, org.glassfish.security.services.config.AuthenticationService.class);
+                org.glassfish.security.services.config.AuthenticationService atnConfiguration =
+                ServiceFactory.getSecurityServiceConfiguration(
+                                domain, org.glassfish.security.services.config.AuthenticationService.class);
         return atnConfiguration;
-    }
+        }
 }

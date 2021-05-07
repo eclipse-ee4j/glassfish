@@ -44,7 +44,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 public class SimpleRoleMappingProviderImpl implements RoleMappingProvider {
     private static final Level DEBUG_LEVEL = Level.FINER;
     private static final Logger _logger =
-            Logger.getLogger(ServiceLogging.SEC_PROV_LOGGER,ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
+        Logger.getLogger(ServiceLogging.SEC_PROV_LOGGER,ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
 
     private static final String ADMIN = "Admin";
 
@@ -87,7 +87,9 @@ public class SimpleRoleMappingProviderImpl implements RoleMappingProvider {
     @Override
     public boolean isUserInRole(String appContext, AzSubject subject, AzResource resource, String role, AzEnvironment environment, List<AzAttributeResolver> resolvers) {
         boolean result = false;
-        if (isDebug()) _logger.log(DEBUG_LEVEL, "isUserInRole() - " + role);
+        if (isDebug()) {
+            _logger.log(DEBUG_LEVEL, "isUserInRole() - " + role);
+        }
 
         if (!isAdminResource(resource)) {
             // Log a warning if the resource is not correct
@@ -101,7 +103,9 @@ public class SimpleRoleMappingProviderImpl implements RoleMappingProvider {
             result = containsAdminGroup(subject);
         }
 
-        if (isDebug()) _logger.log(DEBUG_LEVEL, "isUserInRole() - returning " + result);
+        if (isDebug()) {
+            _logger.log(DEBUG_LEVEL, "isUserInRole() - returning " + result);
+        }
         return result;
     }
 
@@ -112,7 +116,7 @@ public class SimpleRoleMappingProviderImpl implements RoleMappingProvider {
     }
 
     @LogMessageInfo(
-            message = "Role Mapping Provider supplied an invalid resource: {0}",
-            level = "WARNING")
+        message = "Role Mapping Provider supplied an invalid resource: {0}",
+        level = "WARNING")
     private static final String ROLEPROV_BAD_RESOURCE = "SEC-PROV-00150";
 }

@@ -35,12 +35,12 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @param The status of the authentication
      */
     public AuthenticationStatusImpl(String principalName, String authMethod,
-                    String realm,
-                    int status) {
-    this.principalName = principalName;
-    this.authMethod = authMethod;
-    this.status = status;
-    this.realmName = realm;
+                                    String realm,
+                                    int status) {
+        this.principalName = principalName;
+        this.authMethod = authMethod;
+        this.status = status;
+        this.realmName = realm;
     }
 
     /**
@@ -48,7 +48,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @return An integer value indicating the status of the authentication
      */
     public int getStatus() {
-    return status;
+        return status;
     }
 
     /**
@@ -57,7 +57,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @return A byte array of zero length.
      */
     public byte[] getContinuationData() {
-    return new byte[0];
+        return new byte[0];
     }
 
     /**
@@ -66,7 +66,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @return A byte array of zero length.
      */
     public byte[] getAuthSpecificData() {
-    return new byte[0];
+        return new byte[0];
     }
 
     /**
@@ -75,7 +75,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @return A java.lang.String representation of the realm.
      */
     public String getRealmName() {
-    return realmName;
+        return realmName;
     }
 
     /**
@@ -84,7 +84,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * passphrase based authentication it returns the string "password".
      */
     public String getAuthMethod() {
-    return authMethod;
+        return authMethod;
     }
 
     /**
@@ -93,6 +93,6 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @return A java.lang.String representation of the Principal.
      */
     public String getPrincipalName() {
-    return principalName;
+        return principalName;
     }
 }

@@ -66,7 +66,7 @@ public interface SecurityConfiguration extends ConfigBeanProxy {
         /**
          * Gets a named security provider.
          */
-        public static SecurityProvider getSecurityProviderByName(SecurityConfiguration securityServiceConfiguration, String name) {
+            public static SecurityProvider getSecurityProviderByName(SecurityConfiguration securityServiceConfiguration, String name) {
             for (SecurityProvider config : securityServiceConfiguration.getSecurityProviders()) {
                 if (config.getProviderName().equals(name)) {
                     return config;

@@ -100,10 +100,10 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
     }
     private volatile InitializationState initialized = InitializationState.NOT_INITIALIZED;
     private volatile String reasonInitFailed =
-            localStrings.getLocalString("service.atz.never_init","Authorization Service never initialized.");
+        localStrings.getLocalString("service.atz.never_init","Authorization Service never initialized.");
 
     private final List<AzAttributeResolver> attributeResolvers =
-            Collections.synchronizedList(new java.util.ArrayList<AzAttributeResolver>());
+        Collections.synchronizedList(new java.util.ArrayList<AzAttributeResolver>());
 
     private boolean isDebug() {
         return logger.isLoggable(DEBUG_LEVEL);
@@ -125,7 +125,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
             // Get service level config
             if ( !( securityServiceConfiguration instanceof org.glassfish.security.services.config.AuthorizationService ) ) {
                 throw new IllegalStateException(
-                        localStrings.getLocalString("service.atz.not_config","The Authorization service is not configured in the domain configuration file."));
+                    localStrings.getLocalString("service.atz.not_config","The Authorization service is not configured in the domain configuration file."));
             }
             atzSvCfg = (org.glassfish.security.services.config.AuthorizationService) securityServiceConfiguration;
 
@@ -133,7 +133,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
             List<SecurityProvider> providersConfig = atzSvCfg.getSecurityProviders();
             if ( (providersConfig == null) || ( (atzPrvConfig = providersConfig.get(0)) == null ) ) {
                 throw new IllegalStateException(
-                        localStrings.getLocalString("service.atz.no_prov_config","No provider configured for the Authorization service in the domain configuration file."));
+                    localStrings.getLocalString("service.atz.no_prov_config","No provider configured for the Authorization service in the domain configuration file."));
             }
 
             // Get the provider
@@ -141,9 +141,8 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
             if ( isDebug() ) {
                 logger.log(DEBUG_LEVEL, "Attempting to get Authorization provider \"{0}\".", providerName );
             }
-            provider =  AccessController.doPrivileged(
-                            new PrivilegedLookup<AuthorizationProvider>(
-                                    serviceLocator, AuthorizationProvider.class, providerName));
+            provider = AccessController.doPrivileged(
+                new PrivilegedLookup<AuthorizationProvider>(serviceLocator, AuthorizationProvider.class, providerName));
             if (provider == null) {
                 throw new IllegalStateException(
                     localStrings.getLocalString("service.atz.not_provider","Authorization Provider {0} not found.", providerName));
@@ -298,9 +297,9 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      */
     @Override
     public AzResult getAuthorizationDecision(
-            final AzSubject subject,
-            final AzResource resource,
-            final AzAction action) {
+        final AzSubject subject,
+        final AzResource resource,
+        final AzAction action) {
 
         checkServiceAvailability();
 
@@ -324,8 +323,8 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
 
         if ( isDebug() ) {
             logger.log(DEBUG_LEVEL,
-            "Authorization Service result for {0} was {1}.",
-            new String[]{ subject.toString(), result.toString() } );
+                "Authorization Service result for {0} was {1}.",
+                new String[]{ subject.toString(), result.toString() } );
         }
 
         return result;
@@ -393,7 +392,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      */
     @Override
     public PolicyDeploymentContext findOrCreateDeploymentContext(
-            final String appContext) {
+        final String appContext) {
 
         checkServiceAvailability();
 
@@ -550,12 +549,12 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
     //
 
     @LogMessageInfo(
-            message = "Authorization Service has successfully initialized.",
-            level = "INFO")
+        message = "Authorization Service has successfully initialized.",
+        level = "INFO")
     private static final String ATZSVC_INITIALIZED = "SEC-SVCS-00100";
 
     @LogMessageInfo(
-            message = "Authorization Service initialization failed, exception {0}, message {1}",
-            level = "WARNING")
+        message = "Authorization Service initialization failed, exception {0}, message {1}",
+        level = "WARNING")
     private static final String ATZSVC_INIT_FAILED = "SEC-SVCS-00101";
 }

@@ -44,5 +44,5 @@ public interface AuthenticationHandler {
      * authentication.
      */
     public boolean doAuthentication(String principalName,
-                    byte[] authData);
+                                    byte[] authData);
 }

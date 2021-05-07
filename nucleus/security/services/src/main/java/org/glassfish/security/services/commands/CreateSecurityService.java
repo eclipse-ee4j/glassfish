@@ -167,25 +167,25 @@ public class CreateSecurityService implements AdminCommand, AdminCommandSecurity
         }
     }
 
-        private SecurityConfigurations getSecurityConfigurations(final ActionReport report) {
-            // Lookup or Create the security configurations
-            SecurityConfigurations result = domain.getExtensionByType(SecurityConfigurations.class);
-            if (result == null) {
-                try {
-                    result = (SecurityConfigurations) ConfigSupport.apply(new SingleConfigCode<Domain>() {
-                        @Override
-                        public Object run(Domain wDomain) throws PropertyVetoException, TransactionFailure {
-                            SecurityConfigurations s = wDomain.createChild(SecurityConfigurations.class);
-                            wDomain.getExtensions().add(s);
-                            return s;
-                        }
-                    }, domain);
-                } catch (TransactionFailure transactionFailure)  {
-                    report.setMessage("Unable to create security configurations: " + transactionFailure.getMessage());
-                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    report.setFailureCause(transactionFailure);
-                }
+    private SecurityConfigurations getSecurityConfigurations(final ActionReport report) {
+        // Lookup or Create the security configurations
+        SecurityConfigurations result = domain.getExtensionByType(SecurityConfigurations.class);
+        if (result == null) {
+            try {
+                result = (SecurityConfigurations) ConfigSupport.apply(new SingleConfigCode<Domain>() {
+                    @Override
+                    public Object run(Domain wDomain) throws PropertyVetoException, TransactionFailure {
+                        SecurityConfigurations s = wDomain.createChild(SecurityConfigurations.class);
+                        wDomain.getExtensions().add(s);
+                        return s;
+                    }
+                }, domain);
+            } catch (TransactionFailure transactionFailure)  {
+                report.setMessage("Unable to create security configurations: " + transactionFailure.getMessage());
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                report.setFailureCause(transactionFailure);
             }
-            return result;
         }
+        return result;
+    }
 }

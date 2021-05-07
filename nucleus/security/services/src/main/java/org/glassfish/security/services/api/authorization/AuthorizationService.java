@@ -27,8 +27,8 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * The <code>AuthorizationService</code> interface provides methods that allow server and container
- * to determine whether access should be allowed to a particular resource.  It is intended for
- * internal use, not for use by applications.
+ * to determine whether access should be allowed to a particular resource.
+ * It is intended for internal use, not for use by applications.
  */
 @Contract
 public interface AuthorizationService extends SecurityService {
@@ -51,7 +51,7 @@ public interface AuthorizationService extends SecurityService {
      * is granted to the Subject by the configured Policy.
      * @throws IllegalArgumentException Given null or illegal subject or permission
      */
-    public boolean isPermissionGranted(Subject subject, Permission permission);
+    boolean isPermissionGranted(Subject subject, Permission permission);
 
     /**
      * Determines whether the given Subject is authorized to access the given resource,
@@ -63,7 +63,7 @@ public interface AuthorizationService extends SecurityService {
      * @throws IllegalArgumentException Given null or illegal subject or resource
      * @throws IllegalStateException Service was not initialized.
      */
-    public boolean isAuthorized(Subject subject, URI resource);
+    boolean isAuthorized(Subject subject, URI resource);
 
     /**
      * Determines whether the given Subject is authorized to access the given resource,
@@ -78,7 +78,7 @@ public interface AuthorizationService extends SecurityService {
      * @throws IllegalArgumentException Given null or illegal subject or resource
      * @throws IllegalStateException Service was not initialized.
      */
-    public boolean isAuthorized(Subject subject, URI resource, String action);
+    boolean isAuthorized(Subject subject, URI resource, String action);
 
     /**
      * The primary authorization method.  The isAuthorized() methods call this method
@@ -104,7 +104,7 @@ public interface AuthorizationService extends SecurityService {
      * @throws IllegalArgumentException Given null or illegal subject or resource
      * @throws IllegalStateException Service was not initialized.
      */
-    public AzResult getAuthorizationDecision(AzSubject subject, AzResource resource, AzAction action);
+    AzResult getAuthorizationDecision(AzSubject subject, AzResource resource, AzAction action);
 
     /**
      * Converts a Java Subject into a typed attributes collection.
@@ -113,7 +113,7 @@ public interface AuthorizationService extends SecurityService {
      * @return The resulting AzSubject.
      * @throws IllegalArgumentException Given null or illegal subject
      */
-    public AzSubject makeAzSubject(Subject subject);
+    AzSubject makeAzSubject(Subject subject);
 
     /**
      * Converts a resource, expressed as a URI, into a typed attributes collection.
@@ -125,7 +125,7 @@ public interface AuthorizationService extends SecurityService {
      * @return The resulting AzResource.
      * @throws IllegalArgumentException Given null or illegal resource
      */
-    public AzResource makeAzResource(URI resource);
+    AzResource makeAzResource(URI resource);
 
     /**
      * Converts an action, expressed as a String, into a typed attributes collection.
@@ -133,7 +133,7 @@ public interface AuthorizationService extends SecurityService {
      * @param action The action to convert. null or "*" represents all actions.
      * @return The resulting AzAction.
      */
-    public AzAction makeAzAction(String action);
+    AzAction makeAzAction(String action);
 
     // TODO: What if multiple providers? Rollback/closeWithoutChange? Would delete remove an existing PolicyDeploymentContext?
     /**
@@ -147,7 +147,7 @@ public interface AuthorizationService extends SecurityService {
      * null if the configured providers do not support this feature.
      * @throws IllegalStateException Service was not initialized.
      */
-    public PolicyDeploymentContext findOrCreateDeploymentContext(String appContext);
+    PolicyDeploymentContext findOrCreateDeploymentContext(String appContext);
 
     /**
      * This interface represents a PolicyDeploymentContext as returned by the Authorization
@@ -164,23 +164,23 @@ public interface AuthorizationService extends SecurityService {
      */
     public interface PolicyDeploymentContext {
 
-        public void addRolePolicy(String role, String resource, String action);
+        void addRolePolicy(String role, String resource, String action);
 
-        public void addUncheckedPolicy(String resource, String action);
+        void addUncheckedPolicy(String resource, String action);
 
-        public void addExcludedPolicy(String resource, String action);
+        void addExcludedPolicy(String resource, String action);
 
-        public void removeRolePolicy(String role);
+        void removeRolePolicy(String role);
 
-        public void removeRolePolicies();
+        void removeRolePolicies();
 
-        public void removeUncheckedPolicies();
+        void removeUncheckedPolicies();
 
-        public void removeExcludedPolicies();
+        void removeExcludedPolicies();
 
-        public void commit();
+        void commit();
 
-        public void delete();
+        void delete();
     }
 
 
@@ -195,7 +195,7 @@ public interface AuthorizationService extends SecurityService {
      * false if the <code>AzAttributeResolver</code> was already in the list.
      * @throws IllegalArgumentException Given AzAttributeResolver was null.
      */
-    public boolean appendAttributeResolver(AzAttributeResolver resolver);
+    boolean appendAttributeResolver(AzAttributeResolver resolver);
 
 
     /**
@@ -206,7 +206,7 @@ public interface AuthorizationService extends SecurityService {
      * @param resolverList Replacement list of <code>AzAttributeResolver</code> instances
      * @throws IllegalArgumentException Given AzAttributeResolver list was null.
      */
-    public void setAttributeResolvers(List<AzAttributeResolver> resolverList);
+    void setAttributeResolvers(List<AzAttributeResolver> resolverList);
 
 
     /**
@@ -216,7 +216,7 @@ public interface AuthorizationService extends SecurityService {
      * @return  The current list of AttributeResolver instances,
      * in execution order.
      */
-    public List<AzAttributeResolver> getAttributeResolvers();
+    List<AzAttributeResolver> getAttributeResolvers();
 
 
     /**
@@ -226,6 +226,6 @@ public interface AuthorizationService extends SecurityService {
      * @return true if any <code>AttributeResolver</code> instances were removed,
      * false if the list was empty.
      */
-    public boolean removeAllAttributeResolvers();
+    boolean removeAllAttributeResolvers();
 
 }

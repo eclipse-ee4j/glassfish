@@ -41,7 +41,7 @@ public interface RoleMappingService extends SecurityService {
      * @throws IllegalArgumentException for a <code>null</code> subject or resource
      * @throws IllegalStateException if the service was not initialized.
      */
-    public boolean isUserInRole(String appContext, Subject subject, URI resource, String role);
+    boolean isUserInRole(String appContext, Subject subject, URI resource, String role);
 
     /**
      * Determine whether the user (<code>AzSubject</code>) has the indicated role
@@ -56,7 +56,7 @@ public interface RoleMappingService extends SecurityService {
      * @throws IllegalArgumentException for a <code>null</code> subject or resource
      * @throws IllegalStateException if the service was not initialized.
      */
-    public boolean isUserInRole(String appContext, AzSubject subject, AzResource resource, String role);
+    boolean isUserInRole(String appContext, AzSubject subject, AzResource resource, String role);
 
     /**
      * Find an existing <code>RoleDeploymentContext</code>, or create a new one if one does not
@@ -69,7 +69,7 @@ public interface RoleMappingService extends SecurityService {
      *
      * @throws IllegalStateException if the service was not initialized.
      */
-    public RoleDeploymentContext findOrCreateDeploymentContext(String appContext);
+    RoleDeploymentContext findOrCreateDeploymentContext(String appContext);
 
     /**
      * This interface represents a <code>RoleDeploymentContext</code> as returned by the Role Mapping
@@ -86,14 +86,14 @@ public interface RoleMappingService extends SecurityService {
      */
     public interface RoleDeploymentContext {
 
-        public void addMapping(String role, String[] users, String[] groups);
+        void addMapping(String role, String[] users, String[] groups);
 
-        public void removeMapping(String role, String[] users, String[] groups);
+        void removeMapping(String role, String[] users, String[] groups);
 
-        public void removeRole(String role);
+        void removeRole(String role);
 
-        public void commit();
+        void commit();
 
-        public void delete();
+        void delete();
     }
 }

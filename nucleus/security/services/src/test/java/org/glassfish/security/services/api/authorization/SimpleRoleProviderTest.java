@@ -33,9 +33,10 @@ import org.glassfish.security.services.spi.authorization.RoleMappingProvider;
 
 public class SimpleRoleProviderTest extends HK2Runner {
 
-    private AuthorizationService authorizationService = new AuthorizationServiceImpl();
+    private final AuthorizationService authorizationService = new AuthorizationServiceImpl();
     private RoleMappingProvider simpleRoleProvider = null;
 
+    @Override
     @Before
     public void before() {
         super.before();
@@ -47,9 +48,9 @@ public class SimpleRoleProviderTest extends HK2Runner {
     public void testProviderAdmin() throws Exception {
         Assert.assertNotNull(simpleRoleProvider);
         boolean result = simpleRoleProvider.isUserInRole(null,
-                authorizationService.makeAzSubject(adminSubject()),
-                authorizationService.makeAzResource(URI.create("admin://my/respath")),
-                "Admin", null, null);
+            authorizationService.makeAzSubject(adminSubject()),
+            authorizationService.makeAzResource(URI.create("admin://my/respath")),
+            "Admin", null, null);
         Assert.assertEquals(true, result);
     }
 
@@ -64,9 +65,9 @@ public class SimpleRoleProviderTest extends HK2Runner {
     public void testProviderNonAdmin() throws Exception {
         Assert.assertNotNull(simpleRoleProvider);
         boolean result = simpleRoleProvider.isUserInRole(null,
-                authorizationService.makeAzSubject(nonAdminSubject()),
-                authorizationService.makeAzResource(URI.create("admin://negative")),
-                "Admin", null, null);
+            authorizationService.makeAzSubject(nonAdminSubject()),
+            authorizationService.makeAzResource(URI.create("admin://negative")),
+            "Admin", null, null);
         Assert.assertEquals(false, result);
     }
 
@@ -81,9 +82,9 @@ public class SimpleRoleProviderTest extends HK2Runner {
     public void testProviderNonAdminRole() throws Exception {
         Assert.assertNotNull(simpleRoleProvider);
         boolean result = simpleRoleProvider.isUserInRole(null,
-                authorizationService.makeAzSubject(adminSubject()),
-                authorizationService.makeAzResource(URI.create("foo://other")), // Warning Message
-                "otherRole", null, null);
+            authorizationService.makeAzSubject(adminSubject()),
+            authorizationService.makeAzResource(URI.create("foo://other")), // Warning Message
+            "otherRole", null, null);
         Assert.assertEquals(false, result);
     }
 }

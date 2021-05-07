@@ -90,12 +90,12 @@ public class SecurePermTest {
         Assert.assertTrue(p11.implies(p11));
     }
 
-   @Test
+    @Test
     public void testImpliesWild1() {
         Permission p1 = new SecureServiceAccessPermission("a/*", null);
         Permission p2 = new SecureServiceAccessPermission("a/default", null);
         Assert.assertTrue(p1.implies(p2));
-   }
+    }
 
     @Test
     public void testImpliesActions() {

@@ -40,7 +40,7 @@ public class LoginException extends SecurityException {
      * @param The message indicating why authentication failed.
      */
     public LoginException(String message) {
-    super(message);
+        super(message);
     }
 
 
@@ -50,9 +50,9 @@ public class LoginException extends SecurityException {
      * @param The AuthenticationStatus object
      */
     public LoginException(boolean as){
-    super(localStrings.getLocalString("enterprise.security.login_failed",
-                       "Login Failed."));
-    status = as;
+        super(localStrings.getLocalString("enterprise.security.login_failed",
+                                           "Login Failed."));
+        status = as;
     }
 
 
@@ -60,7 +60,7 @@ public class LoginException extends SecurityException {
      * Returns the status of the Authentication.
      */
     public boolean getStatus(){
-    return status;
+        return status;
     }
 
 }

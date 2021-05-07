@@ -94,7 +94,7 @@ public interface SecurityManager {
      */
 
     public Object doAsPrivileged(PrivilegedExceptionAction pea)
-     throws Throwable;
+         throws Throwable;
 
     public Object invoke(Method beanClassMethod, boolean isLocal, Object o, Object[] oa)
             throws Throwable;

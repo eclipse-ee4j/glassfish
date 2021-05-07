@@ -21,8 +21,6 @@ import java.util.Properties;
 
 import jakarta.inject.Inject;
 
-import org.glassfish.security.services.config.SecurityConfiguration;
-
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
@@ -40,7 +38,6 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 
 import org.glassfish.security.services.config.LoginModuleConfig;
-import org.glassfish.security.services.config.SecurityConfigurations;
 import org.glassfish.security.services.config.SecurityProvider;
 
 import com.sun.enterprise.config.serverbeans.Domain;

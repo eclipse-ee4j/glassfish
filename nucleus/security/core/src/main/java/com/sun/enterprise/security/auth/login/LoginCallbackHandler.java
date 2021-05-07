@@ -65,11 +65,11 @@ public class LoginCallbackHandler implements CallbackHandler
      * @param the callback object instances supported by the login module.
      */
     public void handle(Callback[] callbacks) throws IOException,
-                    UnsupportedCallbackException
+                                        UnsupportedCallbackException
     {
         if(isGUI) {
             String user = localStrings.getLocalString("login.user", "user");
-        new GUILoginDialog(user, callbacks);
+            new GUILoginDialog(user, callbacks);
             for (int i = 0; i < callbacks.length; i++) {
                 if (callbacks[i] instanceof NameCallback) {
                     cancelStatus.set(((NameCallback) callbacks[i]).getName() == null);
@@ -77,7 +77,7 @@ public class LoginCallbackHandler implements CallbackHandler
                 }
             }
         } else {
-        new TextLoginDialog(callbacks);
+            new TextLoginDialog(callbacks);
         }
     }
 }

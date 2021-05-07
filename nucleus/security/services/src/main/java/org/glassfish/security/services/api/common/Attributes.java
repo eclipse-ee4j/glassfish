@@ -34,7 +34,7 @@ public interface Attributes {
      *
      * @return The attribute count.
      */
-    public int getAttributeCount();
+    int getAttributeCount();
 
     /**
      * Get the attribute names, as a Set.  This set is read-only; updating it will not change the
@@ -42,7 +42,7 @@ public interface Attributes {
      *
      * @return The attribute names Set.
      */
-    public Set<String> getAttributeNames();
+    Set<String> getAttributeNames();
 
     /**
      * Get the Attribute object for the named attribute, if present.
@@ -50,7 +50,7 @@ public interface Attributes {
      * @param name The name of the Attribute to get.
      * @return The Attribute, or null if an attribute by that name is not present.
      */
-    public Attribute getAttribute(String name);
+    Attribute getAttribute(String name);
 
     /**
      * Get the value of the specified attribute, if present.  Note that, for multi-valued attributes,
@@ -64,7 +64,7 @@ public interface Attributes {
      * @param name The name of the attribute whose value is wanted.
      * @return The attribute value, or null if the attribute is missing or has no values.
      */
-    public String getAttributeValue(String name);
+    String getAttributeValue(String name);
 
     /**
      * Get the Set of values for the specified attribute, if present.
@@ -73,7 +73,7 @@ public interface Attributes {
      * @return The Set of values, or null if the attribute is not present in the collection.  If the
      * attribute is present but has no values, an empty Set is returned.
      */
-    public Set<String> getAttributeValues(String name);
+    Set<String> getAttributeValues(String name);
 
     /**
      * Get the set of values for the specified attribute as a String array.
@@ -82,7 +82,7 @@ public interface Attributes {
      * @return The array of values, or null if the attribute is not present in the collection.  If the
      * attribute is present but has no values, a zero-length array is returned.
      */
-    public String[] getAttributeValuesAsArray(String name);
+    String[] getAttributeValuesAsArray(String name);
 
     /**
      * Add the specified attribute to the attributes collection.  Remove any existing values
@@ -94,7 +94,7 @@ public interface Attributes {
      * @param replace If true, replace the existing attribute and any existing values.  If false,
      * add the new value to those that are already present.
      */
-    public void addAttribute(String name, String value, boolean replace);
+    void addAttribute(String name, String value, boolean replace);
 
     /**
      * Add the specified attribute to the attributes collection.  Remove any existing values
@@ -106,7 +106,7 @@ public interface Attributes {
      * @param replace If true, replace the existing attribute and any existing values.  If false,
      * add the new values to those that are already present.
      */
-    public void addAttribute(String name, Set<String> values, boolean replace);
+    void addAttribute(String name, Set<String> values, boolean replace);
 
     /**
      * Add the specified attribute to the attributes collection.  Remove any existing values
@@ -118,14 +118,14 @@ public interface Attributes {
      * @param replace If true, replace the existing attribute and any existing values.  If false,
      * add the new values to those that are already present.
      */
-    public void addAttribute(String name, String[] values, boolean replace);
+    void addAttribute(String name, String[] values, boolean replace);
 
     /**
      * Remove the specified attribute from the collection.
      *
      * @param name The name of the attribute to remove.
      */
-    public void removeAttribute(String name);
+    void removeAttribute(String name);
 
     /**
      * Remove the specified value from the named attribute.
@@ -133,7 +133,7 @@ public interface Attributes {
      * @param name The name of the attribute from which to remove a value.
      * @param value The value to remove.  A value will be removed only if it exactly matches this parameter.
      */
-    public void removeAttributeValue(String name, String value);
+    void removeAttributeValue(String name, String value);
 
     /**
      * Remove the specified values from the named attribute.
@@ -141,7 +141,7 @@ public interface Attributes {
      * @param name The name of the attribute from which to remove the values.
      * @param value The Set of values to remove.  Only values that exactly match values in this Set will be removed.
      */
-    public void removeAttributeValues(String name, Set<String> values);
+    void removeAttributeValues(String name, Set<String> values);
 
     /**
      * Remove the specified values from the named attribute.
@@ -149,7 +149,7 @@ public interface Attributes {
      * @param name The name of the attribute from which to remove the values.
      * @param value The array of values to remove.  Only values that exactly match values in this array will be removed.
      */
-    public void removeAttributeValues(String name, String[] values);
+    void removeAttributeValues(String name, String[] values);
 
     /**
      * Remove all values associated with the named attribute, but do not remove
@@ -157,11 +157,11 @@ public interface Attributes {
      *
      * @param name The name of the attribute whose values should be removed.
      */
-    public void removeAllAttributeValues(String name);
+    void removeAllAttributeValues(String name);
 
     /**
      * Removes all attributes from the collection.
      */
-    public void clear();
+    void clear();
 
 }

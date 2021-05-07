@@ -130,15 +130,15 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
     }
 
     private AzResult getAdminDecision(
-            final AzSubject subject,
-            final AzResource resource,
-            final AzAction action,
-            final AzEnvironment environment) {
+        final AzSubject subject,
+        final AzResource resource,
+        final AzAction action,
+        final AzEnvironment environment) {
         if (isDebug()) {
             _logger.log(DEBUG_LEVEL, "");
         }
         AzResult rtn = new AzResultImpl(getDecider().decide(subject, resource, action, environment),
-                Status.OK, new AzObligationsImpl());
+            Status.OK, new AzObligationsImpl());
 
         return rtn;
     }
@@ -180,7 +180,7 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
     protected class Decider {
 
         protected Decision decide(final AzSubject subject, final AzResource resource,
-                final AzAction action, final AzEnvironment env) {
+            final AzAction action, final AzEnvironment env) {
             /*
              * Basically, if the subject has one of the "special" principals
              * (token, local password, etc.) then we accept it for any action
@@ -188,15 +188,15 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
              * we allow full access on the DAS but read-only on instances.
              */
             Decision result =
-                    isSubjectTrustedForDASAndInstances(subject)
+                isSubjectTrustedForDASAndInstances(subject)
 
-                    || // Looks external.  Allow full access on DAS, read-only on instance.
+                || // Looks external.  Allow full access on DAS, read-only on instance.
 
-                    (isSubjectAnAdministrator(subject)
+                (isSubjectAnAdministrator(subject)
                     && ( serverEnv.isDas()
                         || isActionRead(action)
-                       )
-                   ) ? Decision.PERMIT : Decision.DENY;
+                        )
+                    ) ? Decision.PERMIT : Decision.DENY;
 
             return result;
         }
@@ -219,7 +219,7 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
 
         private boolean isSubjectAnAdministrator(final AzSubject subject) {
             return isPrincipalType(subject, getAdminGroupName()) ||
-                    hasSecureAdminPrincipal(subject);
+                hasSecureAdminPrincipal(subject);
         }
 
         private boolean isPrincipalType(final AzSubject subject, final String type) {
@@ -253,7 +253,7 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
     }
 
     @LogMessageInfo(
-            message = "Authorization Provider supplied an invalid resource: {0}",
-            level = "WARNING")
+        message = "Authorization Provider supplied an invalid resource: {0}",
+        level = "WARNING")
     private static final String ATZPROV_BAD_RESOURCE = "SEC-PROV-00100";
 }

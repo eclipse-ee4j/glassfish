@@ -39,13 +39,13 @@ public class ServerLoginCallbackHandler implements CallbackHandler
     private String moduleID = null;
 
     public ServerLoginCallbackHandler(String username, char[] password) {
-    this.username = username;
-    this.password = password;
+        this.username = username;
+        this.password = password;
     }
 
     public ServerLoginCallbackHandler(String username, char[] password, String moduleID) {
-    this.username = username;
-    this.password = password;
+        this.username = username;
+        this.password = password;
         this.moduleID = moduleID;
     }
 
@@ -53,11 +53,11 @@ public class ServerLoginCallbackHandler implements CallbackHandler
     }
 
     public void setUsername(String user){
-    username = user;
+        username = user;
     }
 
     public void setPassword(char[] pass){
-    password = pass;
+        password = pass;
     }
 
     public void setModuleID(String moduleID) {
@@ -72,23 +72,23 @@ public class ServerLoginCallbackHandler implements CallbackHandler
      * @param the callback object instances supported by the login module.
      */
     public void handle(Callback[] callbacks) throws IOException,
-                    UnsupportedCallbackException
+                                        UnsupportedCallbackException
     {
-    for (int i = 0; i < callbacks.length; i++) {
+        for (int i = 0; i < callbacks.length; i++) {
             if (callbacks[i] instanceof NameCallback){
-        NameCallback nme = (NameCallback)callbacks[i];
-        nme.setName(username);
-        } else if (callbacks[i] instanceof PasswordCallback){
-        PasswordCallback pswd = (PasswordCallback)callbacks[i];
-        pswd.setPassword(password);
-        } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback){
+                NameCallback nme = (NameCallback)callbacks[i];
+                nme.setName(username);
+            } else if (callbacks[i] instanceof PasswordCallback){
+                PasswordCallback pswd = (PasswordCallback)callbacks[i];
+                pswd.setPassword(password);
+            } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback){
                 ((CertificateRealm.AppContextCallback) callbacks[i]).setModuleID(moduleID);
             } else if (GP_CB.equals(callbacks[i].getClass().getName())){
                 processGroupPrincipal(callbacks[i]);
             } else {
                 throw new UnsupportedCallbackException(callbacks[i]);
             }
-    }
+        }
     }
 
     private static void processGroupPrincipal(Callback callback) throws UnsupportedCallbackException {

@@ -63,38 +63,38 @@ public final class LoginContext {
      * Creates the LoginContext with the defauly callback handler
      */
     public LoginContext () {
-    handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(guiAuth);
+        handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(guiAuth);
     }
 
     /**
      * Login method to login username and password
      */
     public void login(String user, String pass) throws LoginException{
-    final String username = user;
-    final String password = pass;
-    AppservAccessController.doPrivileged(new PrivilegedAction() {
-        public java.lang.Object run() {
+        final String username = user;
+        final String password = pass;
+        AppservAccessController.doPrivileged(new PrivilegedAction() {
+            public java.lang.Object run() {
 
-        System.setProperty(ClientPasswordLoginModule.LOGIN_NAME,
-                   username);
-        System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD,
-                   password);
+                System.setProperty(ClientPasswordLoginModule.LOGIN_NAME,
+                                   username);
+                System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD,
+                                   password);
 
-            return null;
-        }
-        });
-    // Since this is  a private api and the user is not supposed to use
-    // this. We use the default the LoginCallbackHandler.
-    LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD,handler);
+                    return null;
+                }
+            });
+        // Since this is  a private api and the user is not supposed to use
+        // this. We use the default the LoginCallbackHandler.
+        LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD,handler);
     }
 
     /** This method has been provided to satisfy the CTS Porting Package
      * requirement for logging in a certificate
      */
     public void login(String username, byte[] authData)
-    throws LoginException{
+        throws LoginException{
 
-        // do nothing
+            // do nothing
     }
 
 }

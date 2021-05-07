@@ -60,10 +60,10 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      * @param The Credentials of the user.
      */
     public ClientSecurityContext(String userName,
-                 Subject s) {
+                                 Subject s) {
 
-    this.initiator = new PrincipalImpl(userName);
-    this.subject = s ;
+        this.initiator = new PrincipalImpl(userName);
+        this.subject = s ;
     }
 
     /**
@@ -71,23 +71,23 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      * principal case
 
     public static ClientSecurityContext init() {
-    ClientSecurityContext sc = getCurrent();
-    if (sc == null) { // there is no current security context
+        ClientSecurityContext sc = getCurrent();
+        if (sc == null) { // there is no current security context
             // create a default one if
-        sc = generateDefaultSecurityContext();
+            sc = generateDefaultSecurityContext();
         }
-    return sc;
+        return sc;
     }*/
 
    /*
     private static ClientSecurityContext generateDefaultSecurityContext() {
-    final String PRINCIPAL_NAME = "auth.default.principal.name";
-    final String PRINCIPAL_PASS = "auth.default.principal.password";
+        final String PRINCIPAL_NAME = "auth.default.principal.name";
+        final String PRINCIPAL_PASS = "auth.default.principal.password";
 
 
-    //ServerConfiguration config = ServerConfiguration.getConfiguration();
-    //String username = config.getProperty(PRINCIPAL_NAME, "guest");
-    //String password = config.getProperty(PRINCIPAL_PASS, "guest123");
+        //ServerConfiguration config = ServerConfiguration.getConfiguration();
+        //String username = config.getProperty(PRINCIPAL_NAME, "guest");
+        //String password = config.getProperty(PRINCIPAL_PASS, "guest123");
 
         //Temporary hardcoding to make V3 code for WebProfile compile
         String username ="guest";
@@ -157,17 +157,17 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      * @return The caller Principal.
      */
     public Principal getCallerPrincipal() {
-    return initiator;
+        return initiator;
     }
 
 
     public Subject getSubject() {
-    return subject;
+        return subject;
     }
 
     public String toString() {
-    return "ClientSecurityContext[ " + "Initiator: " + initiator +
-        "Subject " + subject + " ]";
+        return "ClientSecurityContext[ " + "Initiator: " + initiator +
+            "Subject " + subject + " ]";
     }
 
     //added for CR:6620388

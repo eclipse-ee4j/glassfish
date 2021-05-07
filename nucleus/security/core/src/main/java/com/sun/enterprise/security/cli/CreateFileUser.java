@@ -317,9 +317,9 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                     realm.refresh(configName);
                 }
             } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
-                //        _logger.fine("Realm: "+realmName+" is not configured");
+                //            _logger.fine("Realm: "+realmName+" is not configured");
             } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
-                //        _logger.fine("Realm: "+realmName+" is not configured");
+                //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }
     }

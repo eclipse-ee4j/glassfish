@@ -59,7 +59,7 @@ public class FileRealmUser implements User
     @Override
     public Realm getRealm() throws NoSuchRealmException
     {
-    return Realm.getInstance(realm);
+        return Realm.getInstance(realm);
     }
 
     /**
@@ -80,7 +80,7 @@ public class FileRealmUser implements User
      */
     @Override
     public Enumeration getAttributeNames () {
-    return attributes.keys();
+        return attributes.keys();
     }
 
     @Override

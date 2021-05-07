@@ -42,12 +42,12 @@ public class PasswordCredential {
      */
     public PasswordCredential(String user, char[] password, String realm)
     {
-    this.username = user;
+        this.username = user;
         //Copy the password to another reference before storing it to the
         //instance field.
         char[] passwordCopy = (password == null) ? null : Arrays.copyOf(password, password.length);
-    this.password = passwordCopy;
-    this.realm = realm;
+        this.password = passwordCopy;
+        this.realm = realm;
 
         if (this.username == null ) { this.username = ""; }
         if (this.password == null ) { this.password = new char[]{}; }
@@ -63,7 +63,7 @@ public class PasswordCredential {
                               String realm, byte[] target_name)
     {
         this(user, password, realm);
-    this.target_name = target_name;
+        this.target_name = target_name;
         readOnly = true;
     }
 
@@ -73,7 +73,7 @@ public class PasswordCredential {
      * @return the realm name. Only value supported for now is "default".
      */
     public String getRealm() {
-    return realm;
+        return realm;
     }
 
 
@@ -82,7 +82,7 @@ public class PasswordCredential {
      * @return the user name.
      */
     public String getUser() {
-    return username;
+        return username;
     }
 
     public void setRealm(String realm){
@@ -98,7 +98,7 @@ public class PasswordCredential {
     public char[] getPassword() {
        //Copy the password to another reference before returning it
         char[] passwordCopy = (password == null) ? null : Arrays.copyOf(password, password.length);
-    return passwordCopy;
+        return passwordCopy;
     }
 
 
@@ -107,7 +107,7 @@ public class PasswordCredential {
      * @return the target_name
      */
     public byte[] getTargetName() {
-    return this.target_name;
+        return this.target_name;
     }
 
     /**
@@ -117,15 +117,15 @@ public class PasswordCredential {
      * @return true if the instances are equal, false otherwise
      */
     public boolean equals(Object o) {
-    if(o instanceof PasswordCredential) {
-        PasswordCredential pc = (PasswordCredential) o;
-        if(pc.getUser().equals(username) &&
-        Arrays.equals(pc.getPassword(),password) &&
-        pc.getRealm().equals(realm)) {
-        return true;
+        if(o instanceof PasswordCredential) {
+            PasswordCredential pc = (PasswordCredential) o;
+            if(pc.getUser().equals(username) &&
+                Arrays.equals(pc.getPassword(),password) &&
+                pc.getRealm().equals(realm)) {
+                return true;
+            }
         }
-    }
-    return false;
+        return false;
     }
 
 
@@ -134,7 +134,7 @@ public class PasswordCredential {
      * @return the hash code.
      */
     public int hashCode() {
-    return username.hashCode() + Arrays.hashCode(password) + realm.hashCode();
+        return username.hashCode() + Arrays.hashCode(password) + realm.hashCode();
     }
 
 
@@ -142,11 +142,11 @@ public class PasswordCredential {
      * The string representation of the credential.
      */
     public String toString() {
-    String s = "Realm=" + realm;
-    s = s + " Username=" + username;
-    s = s + " Password=" + "########";
-    s = s + " TargetName = " + new String(target_name);
-    return s;
+        String s = "Realm=" + realm;
+        s = s + " Username=" + username;
+        s = s + " Password=" + "########";
+        s = s + " TargetName = " + new String(target_name);
+        return s;
     }
 
 }

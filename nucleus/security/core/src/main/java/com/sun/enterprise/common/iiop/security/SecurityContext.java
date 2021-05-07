@@ -15,7 +15,7 @@
  */
 
 /*
- * @(#)SecurityContext.java    1.5 00/10/24
+ * @(#)SecurityContext.java        1.5 00/10/24
  */
 
 package com.sun.enterprise.common.iiop.security;

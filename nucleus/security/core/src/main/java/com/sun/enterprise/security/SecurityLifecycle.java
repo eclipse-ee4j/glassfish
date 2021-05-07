@@ -86,7 +86,7 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     public SecurityLifecycle() {
-    try {
+        try {
 
             if (Util.isEmbeddedServer()) {
                 //If the user-defined login.conf/server.policy are set as system properties, then they are given priority
@@ -108,10 +108,10 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
                     _logger.info(SecurityLoggerInfo.secMgrDisabled);
                 }
             }
-    } catch(Exception ex) {
+        } catch(Exception ex) {
             _logger.log(Level.SEVERE, "java_security.init_securitylifecycle_fail", ex);
             throw new RuntimeException(ex.toString(), ex);
-    }
+        }
     }
 
     // override default

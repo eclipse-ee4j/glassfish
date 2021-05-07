@@ -30,32 +30,32 @@ public interface AzResult {
      * The possible authorization decision values.  These carry the same meaning as the corresponding
      * decision values defined by XACML 2.0 and later.
      */
-    public enum Decision { PERMIT, DENY, INDETERMINATE, NOT_APPLICABLE };
+    public enum Decision { PERMIT, DENY, INDETERMINATE, NOT_APPLICABLE }
     /**
      * The possible authorization status values.  These carry the same meaning as the corresponding
      * status values defined by XACML 2.0 and later.
      */
-    public enum Status { OK, MISSING_ATTRIBUTE, PROCESSING_ERROR, SYNTAX_ERROR };
+    public enum Status { OK, MISSING_ATTRIBUTE, PROCESSING_ERROR, SYNTAX_ERROR }
 
     /**
      * Get the authorization decision value for this AzResult.
      *
      * @return The Decision value.
      */
-    public Decision getDecision();
+    Decision getDecision();
 
     /**
      * Get the authorization status value for this AzResult.
      *
      * @return The Status value.
      */
-    public Status getStatus();
+    Status getStatus();
 
     /**
      * Return the obligations that apply to this result.
      *
      * @return The AzObligations.
      */
-    public AzObligations getObligations();
+    AzObligations getObligations();
 
 }

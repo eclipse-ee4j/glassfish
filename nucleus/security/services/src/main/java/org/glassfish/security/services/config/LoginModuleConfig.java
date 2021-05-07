@@ -72,7 +72,7 @@ public interface LoginModuleConfig extends SecurityProviderConfig, PropertyBag {
          * Gets the options of the LoginModule for use with JAAS Configuration.
          */
         public static Map<String,?> getModuleOptions(LoginModuleConfig config) {
-            Map<String,String> moduleOptions = new HashMap<String,String>();
+                Map<String,String> moduleOptions = new HashMap<String,String>();
             for (Property prop : config.getProperty()) {
                 moduleOptions.put(prop.getName(), prop.getValue());
             }

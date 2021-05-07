@@ -78,13 +78,13 @@ public interface SecurityConfigurations extends ConfigBeanProxy, DomainExtension
                     // ignore, not the right type.
                 }
             }
-            return Collections.unmodifiableList(typedServices);
+                        return Collections.unmodifiableList(typedServices);
         }
 
         /**
          * Gets the default configured security service by security service type.
          */
-        public static <T extends SecurityConfiguration> T getDefaultSecurityServiceByType(SecurityConfigurations services, Class<T> type) {
+            public static <T extends SecurityConfiguration> T getDefaultSecurityServiceByType(SecurityConfigurations services, Class<T> type) {
             for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
                 try {
                     if (securityServiceConfiguration.getDefault()) {
@@ -100,7 +100,7 @@ public interface SecurityConfigurations extends ConfigBeanProxy, DomainExtension
         /**
          * Gets a named security service configuration by specific security type.
          */
-        public static <T extends SecurityConfiguration> T getSecurityServiceByName(SecurityConfigurations services, String name, Class<T> type) {
+            public static <T extends SecurityConfiguration> T getSecurityServiceByName(SecurityConfigurations services, String name, Class<T> type) {
             for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
                 try {
                     if (securityServiceConfiguration.getName().equals(name)) {
@@ -116,7 +116,7 @@ public interface SecurityConfigurations extends ConfigBeanProxy, DomainExtension
         /**
          * Gets a named security service configuration.
          */
-        public static SecurityConfiguration getSecurityServiceByName(SecurityConfigurations services, String name) {
+            public static SecurityConfiguration getSecurityServiceByName(SecurityConfigurations services, String name) {
             for (SecurityConfiguration securityServiceConfiguration : services.getSecurityServices()) {
                 if (securityServiceConfiguration.getName().equals(name)) {
                     return securityServiceConfiguration;

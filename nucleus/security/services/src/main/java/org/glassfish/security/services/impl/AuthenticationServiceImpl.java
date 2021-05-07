@@ -70,13 +70,13 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
     @Inject
     ServerContext serverContext;
 
-        @Inject
-        private ServiceLocator locator;
+    @Inject
+    private ServiceLocator locator;
 
-        @Inject
-        private ImpersonationService impersonationService;
+    @Inject
+    private ImpersonationService impersonationService;
 
-        private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class.getName());
+    private static final Logger LOG = Logger.getLogger(AuthenticationServiceImpl.class.getName());
 
 
     // Authentication Service Configuration Information
@@ -111,8 +111,9 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
 //                }
 //            }
         config = (org.glassfish.security.services.config.AuthenticationService) securityServiceConfiguration;
-        if (config == null)
+        if (config == null) {
             return;
+        }
 
         // JAAS LoginContext Name
         name = config.getName();
@@ -123,7 +124,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
         // Build JAAS Configuration based on the individual LoginModuleConfig settings
         List<SecurityProvider> providers = config.getSecurityProviders();
         if (providers != null) {
-            ArrayList<AppConfigurationEntry> lmEntries = new ArrayList<AppConfigurationEntry>();
+            ArrayList<AppConfigurationEntry> lmEntries = new ArrayList<>();
             for (SecurityProvider provider : providers) {
 
                 // If the provider is a LoginModule look for the LoginModuleConfig
@@ -135,20 +136,22 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
                         LoginModuleConfig lmConfig = (LoginModuleConfig) providerConfig.get(0);
                         Map<String, ?> lmOptions = lmConfig.getModuleOptions();
                         lmEntries.add(new AppConfigurationEntry(lmConfig.getModuleClass(),
-                                getLoginModuleControlFlag(lmConfig.getControlFlag()),lmOptions));
+                            getLoginModuleControlFlag(lmConfig.getControlFlag()),lmOptions));
 
                         // Obtain the Realm name for password credential from the LoginModule options
                         // Use the first LoginModule with auth-realm (i.e. unable to stack Realms)
                         if (usePasswordCredential && (realmName == null)) {
                             String authRealm = (String) lmOptions.get("auth-realm");
-                            if ((authRealm != null) && (!authRealm.isEmpty()))
+                            if ((authRealm != null) && (!authRealm.isEmpty())) {
                                 realmName = authRealm;
+                            }
                         }
                     }
                 }
             }
-            if (!lmEntries.isEmpty())
+            if (!lmEntries.isEmpty()) {
                 configuration = new AuthenticationJaasConfiguration(name,lmEntries);
+            }
         }
 
         // If required, initialize the currently configured Realm instances
@@ -161,27 +164,29 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
 
     @Override
     public Subject login(String username, char[] password, Subject subject)
-            throws LoginException {
+        throws LoginException {
         CallbackHandler cbh = new AuthenticationCallbackHandler(username, password);
         return loginEx(cbh, subject);
     }
 
     @Override
     public Subject login(CallbackHandler cbh, Subject subject)
-            throws LoginException {
-        if (cbh == null)
+        throws LoginException {
+        if (cbh == null) {
             throw new LoginException("AuthenticationService: JAAS CallbackHandler not supplied");
+        }
 
         // TODO - Wrap CallbackHandler to obtain name for auditing
         return loginEx(cbh, subject);
     }
 
     private Subject loginEx(CallbackHandler handler, Subject subject)
-            throws LoginException {
+        throws LoginException {
         // Use the supplied Subject or create a new Subject
         Subject _subject = subject;
-        if (_subject == null)
+        if (_subject == null) {
             _subject = new Subject();
+        }
 
         ClassLoader tcl = null;
         boolean restoreTcl = false;
@@ -190,7 +195,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
             // TODO - Dynamic configuration handling?
             if (configuration == null) {
                 throw new UnsupportedOperationException(
-                        "JAAS Configuration setup incomplete, unable to perform login");
+                    "JAAS Configuration setup incomplete, unable to perform login");
             }
 
             // Setup the PasswordCredential for the Realm LoginModules when configured
@@ -200,13 +205,15 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
 
             // When needed, setup the Context ClassLoader so JAAS can load the LoginModule(s)
             tcl = (ClassLoader) AppservAccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
+                @Override
                 public ClassLoader run() {
                     return Thread.currentThread().getContextClassLoader();
                 }
             });
             final ClassLoader ccl = serverContext.getCommonClassLoader();
             if (!ccl.equals(tcl)) {
-                AppservAccessController.doPrivileged(new PrivilegedAction<Object>() {
+                AppservAccessController.doPrivileged(new PrivilegedAction<>() {
+                    @Override
                     public Object run() {
                         Thread.currentThread().setContextClassLoader(ccl);
                         return null;
@@ -220,15 +227,17 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
             context.login();
         } catch (Exception exc) {
             // TODO - Address Audit/Log/Debug handling options
-            if (exc instanceof LoginException)
+            if (exc instanceof LoginException) {
                 throw (LoginException) exc;
+            }
 
             throw (LoginException) new LoginException(
-                    "AuthenticationService: "+ exc.getMessage()).initCause(exc);
+                "AuthenticationService: "+ exc.getMessage()).initCause(exc);
         } finally {
             if (restoreTcl) {
                 final ClassLoader cl = tcl;
-                AppservAccessController.doPrivileged(new PrivilegedAction<Object>() {
+                AppservAccessController.doPrivileged(new PrivilegedAction<>() {
+                    @Override
                     public Object run() {
                         Thread.currentThread().setContextClassLoader(cl);
                         return null;
@@ -243,8 +252,8 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
 
     @Override
     public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
-            throws LoginException {
-      return impersonationService.impersonate(user, groups, subject, virtual);
+        throws LoginException {
+        return impersonationService.impersonate(user, groups, subject, virtual);
     }
 
     /**
@@ -255,14 +264,14 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
      */
     @Override
     public void postConstruct() {
-            /*
-             * Realm-related classes uses Globals (they are not services)
-             * so make sure it is set up.
-             */
-            if (Globals.getDefaultBaseServiceLocator() == null) {
-                Globals.setDefaultHabitat(locator);
-            }
-            // TODO - Dynamic configuration changes?
+        /*
+         * Realm-related classes uses Globals (they are not services)
+         * so make sure it is set up.
+         */
+        if (Globals.getDefaultBaseServiceLocator() == null) {
+            Globals.setDefaultHabitat(locator);
+        }
+        // TODO - Dynamic configuration changes?
         initialize(AuthenticationServiceFactory.getAuthenticationServiceConfiguration(domain));
     }
 
@@ -276,7 +285,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
      * @throws LoginException when unable to obtain data from the CallbackHandler
      */
     private void setupPasswordCredential(Subject subject, CallbackHandler callbackHandler)
-            throws LoginException {
+        throws LoginException {
         String username = null;
         char[] password = null;
 
@@ -305,7 +314,8 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
         // Add the PasswordCredential to the Subject
         final Subject s = subject;
         final PasswordCredential pc = new PasswordCredential(username, password, realmName);
-        AppservAccessController.doPrivileged(new PrivilegedAction<Object>() {
+        AppservAccessController.doPrivileged(new PrivilegedAction<>() {
+            @Override
             public Object run() {
                 s.getPrivateCredentials().add(pc);
                 return null;
@@ -321,15 +331,17 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
         LoginModuleControlFlag flag = LoginModuleControlFlag.REQUIRED;
         // TODO - Handle invalid control flag?
         if (controlFlag != null) {
-            if ("required".equalsIgnoreCase(controlFlag))
+            if ("required".equalsIgnoreCase(controlFlag)) {
                 return flag;
+            }
             // Check additional flag types
-            if ("sufficient".equalsIgnoreCase(controlFlag))
+            if ("sufficient".equalsIgnoreCase(controlFlag)) {
                 flag = LoginModuleControlFlag.SUFFICIENT;
-            else if ("optional".equalsIgnoreCase(controlFlag))
+            } else if ("optional".equalsIgnoreCase(controlFlag)) {
                 flag = LoginModuleControlFlag.OPTIONAL;
-            else if ("requisite".equalsIgnoreCase(controlFlag))
+            } else if ("requisite".equalsIgnoreCase(controlFlag)) {
                 flag = LoginModuleControlFlag.REQUISITE;
+            }
         }
         return flag;
     }
@@ -340,8 +352,8 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
      * Facilitates use of the standard JAAS NameCallback and PasswordCallback.
      */
     private static class AuthenticationCallbackHandler implements CallbackHandler {
-        private String user;
-        private char[] pass;
+        private final String user;
+        private final char[] pass;
 
         public AuthenticationCallbackHandler(String username, char[] password) {
             user = username;
@@ -353,16 +365,17 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
 
         @Override
         public void handle(Callback[] callbacks) throws UnsupportedCallbackException {
-            for (int i = 0; i < callbacks.length; i++) {
-                if (callbacks[i] instanceof NameCallback)
-                    ((NameCallback) callbacks[i]).setName(user);
-                else if (callbacks[i] instanceof PasswordCallback)
-                    ((PasswordCallback) callbacks[i]).setPassword(pass);
-                else
+            for (Callback callback : callbacks) {
+                if (callback instanceof NameCallback) {
+                    ((NameCallback) callback).setName(user);
+                } else if (callback instanceof PasswordCallback) {
+                    ((PasswordCallback) callback).setPassword(pass);
+                } else {
                     // TODO - Have configuration setting for throwing exception
-                    throw new UnsupportedCallbackException(callbacks[i],
-                            "AuthenticationCallbackHandler: Unrecognized Callback "
-                            + callbacks[i].getClass().getName());
+                    throw new UnsupportedCallbackException(callback,
+                        "AuthenticationCallbackHandler: Unrecognized Callback "
+                            + callback.getClass().getName());
+                }
             }
         }
     }
@@ -373,8 +386,8 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
      * Facilitates the use of JAAS LoginContext with Authentication Service LoginModule configuration.
      */
     private static class AuthenticationJaasConfiguration extends Configuration {
-        private String configurationName;
-        private AppConfigurationEntry[] lmEntries;
+        private final String configurationName;
+        private final AppConfigurationEntry[] lmEntries;
 
         /**
          * Create the JAAS Configuration instance used by the Authentication Service.
@@ -389,10 +402,11 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
          */
         @Override
         public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
-            if (configurationName.equals(name))
+            if (configurationName.equals(name)) {
                 return lmEntries;
-            else
+            } else {
                 return null;
+            }
         }
     }
 }

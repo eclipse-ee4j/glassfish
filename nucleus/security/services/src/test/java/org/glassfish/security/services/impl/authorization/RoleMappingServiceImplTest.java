@@ -33,7 +33,7 @@ import static org.glassfish.security.services.impl.authorization.RoleMappingServ
 public class RoleMappingServiceImplTest {
 
     // Use Authorization for creating the Az typed arguments on Role Service
-    private AuthorizationService authorizationService = new AuthorizationServiceImpl();
+    private final AuthorizationService authorizationService = new AuthorizationServiceImpl();
     private RoleMappingServiceImpl impl;
 
     @Before
@@ -57,9 +57,9 @@ public class RoleMappingServiceImplTest {
 
         try {
             impl.isUserInRole("test",
-                    authorizationService.makeAzSubject(new Subject()),
-                    authorizationService.makeAzResource(URI.create("test://test")),
-                    "aRole");
+                authorizationService.makeAzSubject(new Subject()),
+                authorizationService.makeAzResource(URI.create("test://test")),
+                "aRole");
             fail( "Expected fail illegal state exception." );
         } catch ( IllegalStateException e ) {
             assertNotNull("Service fails at run-time", e);
@@ -75,9 +75,9 @@ public class RoleMappingServiceImplTest {
         assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
         try {
             impl.isUserInRole("test",
-                    authorizationService.makeAzSubject(new Subject()),
-                    authorizationService.makeAzResource(URI.create("test://test")),
-                    "aRole");
+                authorizationService.makeAzSubject(new Subject()),
+                authorizationService.makeAzResource(URI.create("test://test")),
+                "aRole");
             fail( "Expected fail not initialized." );
         } catch ( RuntimeException e ) {
         }
@@ -91,9 +91,9 @@ public class RoleMappingServiceImplTest {
         assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
         try {
             impl.isUserInRole("test",
-                    new Subject(),
-                    URI.create("test://test"),
-                    "aRole");
+                new Subject(),
+                URI.create("test://test"),
+                "aRole");
             fail( "Expected fail not initialized." );
         } catch ( RuntimeException e ) {
         }
@@ -107,18 +107,18 @@ public class RoleMappingServiceImplTest {
         // Arguments checked before service state
         try {
             impl.isUserInRole("test",
-                    null,
-                    authorizationService.makeAzResource(URI.create("test://test")),
-                    "aRole");
+                null,
+                authorizationService.makeAzResource(URI.create("test://test")),
+                "aRole");
             fail( "Expected fail illegal argument." );
         } catch ( IllegalArgumentException e ) {
             assertNotNull("Subject null test", e);
         }
         try {
             impl.isUserInRole("test",
-                    authorizationService.makeAzSubject(new Subject()),
-                    null,
-                    "aRole");
+                authorizationService.makeAzSubject(new Subject()),
+                null,
+                "aRole");
             fail( "Expected fail illegal argument." );
         } catch ( IllegalArgumentException e ) {
             assertNotNull("Resource null test", e);
@@ -130,18 +130,18 @@ public class RoleMappingServiceImplTest {
         // Arguments checked before service state
         try {
             impl.isUserInRole("test",
-                    null,
-                    URI.create("test://test"),
-                    "aRole");
+                null,
+                URI.create("test://test"),
+                "aRole");
             fail( "Expected fail illegal argument." );
         } catch ( IllegalArgumentException e ) {
             assertNotNull("Subject null test", e);
         }
         try {
             impl.isUserInRole("test",
-                    new Subject(),
-                    null,
-                    "aRole");
+                new Subject(),
+                null,
+                "aRole");
             fail( "Expected fail illegal argument." );
         } catch ( IllegalArgumentException e ) {
             assertNotNull("Subject null test", e);

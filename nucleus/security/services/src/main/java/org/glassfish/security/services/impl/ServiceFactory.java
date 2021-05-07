@@ -49,8 +49,9 @@ public class ServiceFactory {
             if (config == null) {
                 // Obtain the first service configuration listed
                 List<T> configs = secConfigs.getSecurityServicesByType(type);
-                if (!configs.isEmpty())
+                if (!configs.isEmpty()) {
                     config = configs.get(0);
+                }
             }
         }
 

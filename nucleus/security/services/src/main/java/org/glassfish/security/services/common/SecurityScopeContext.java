@@ -34,7 +34,7 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class SecurityScopeContext implements Context<SecurityScope> {
     private final HashMap<String, HashMap<ActiveDescriptor<?>, Object>> contexts =
-        new HashMap<String, HashMap<ActiveDescriptor<?>, Object>>();
+        new HashMap<>();
 
     @Inject
     private StateManager manager;
@@ -44,7 +44,6 @@ public class SecurityScopeContext implements Context<SecurityScope> {
         return SecurityScope.class;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <T> T findOrCreate(ActiveDescriptor<T> activeDescriptor, ServiceHandle<?> root) {
         HashMap<ActiveDescriptor<?>, Object> mappings = getCurrentContext();
@@ -58,7 +57,6 @@ public class SecurityScopeContext implements Context<SecurityScope> {
         return (T) retVal;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean containsKey(ActiveDescriptor<?> descriptor) {
         HashMap<ActiveDescriptor<?>, Object> mappings = getCurrentContext();
@@ -72,11 +70,13 @@ public class SecurityScopeContext implements Context<SecurityScope> {
     }
 
     private HashMap<ActiveDescriptor<?>, Object> getCurrentContext() {
-        if (manager.getCurrent() == null) throw new IllegalStateException("Not In Active State");
+        if (manager.getCurrent() == null) {
+            throw new IllegalStateException("Not In Active State");
+        }
 
         HashMap<ActiveDescriptor<?>, Object> retVal = contexts.get(manager.getCurrent());
         if (retVal == null) {
-            retVal = new HashMap<ActiveDescriptor<?>, Object>();
+            retVal = new HashMap<>();
 
             contexts.put(manager.getCurrent(), retVal);
         }

@@ -37,7 +37,6 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 
-import org.glassfish.security.services.config.SecurityConfigurations;
 import org.glassfish.security.services.config.SecurityProvider;
 
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -74,7 +73,7 @@ public class CreateSecurityProvider implements AdminCommand, AdminCommandSecurit
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         securityServiceConfiguration = CLIUtil.findSecurityConfiguration(domain,
-                serviceName, context.getActionReport());
+            serviceName, context.getActionReport());
         return (securityServiceConfiguration != null);
     }
 
@@ -85,7 +84,7 @@ public class CreateSecurityProvider implements AdminCommand, AdminCommandSecurit
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-                // Add security provider configuration to the service
+        // Add security provider configuration to the service
         // TODO - Add validation logic required for security provider attributes
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityConfiguration>() {

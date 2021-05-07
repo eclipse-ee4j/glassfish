@@ -141,9 +141,9 @@ public class Util {
                 oStream.write(iStream.read());
             }
         } finally {
-        if (oStream != null) {
+            if (oStream != null) {
                 oStream.close();
-        }
+            }
             if  (iStream != null) {
                 iStream.close();
             }

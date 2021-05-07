@@ -85,7 +85,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
              SecurityLoggerInfo.getLogger();
 
     private static final LocalStringManagerImpl _localStrings =
-    new LocalStringManagerImpl(BaseAuditManager.class);
+        new LocalStringManagerImpl(BaseAuditManager.class);
 
     private List<BaseAuditModule> instances = Collections.synchronizedList(new ArrayList<BaseAuditModule>());
     // just a copy of names of the audit classes - helpful for log messages

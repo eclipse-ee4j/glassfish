@@ -35,6 +35,6 @@ public interface SecurityContextService {
      *
      * @return The environment attributes.
      */
-    public Attributes getEnvironmentAttributes();
+    Attributes getEnvironmentAttributes();
 
 }

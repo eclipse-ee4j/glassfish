@@ -32,14 +32,14 @@ public interface Attribute {
      *
      * @return The name.
      */
-    public String getName();
+    String getName();
 
     /**
      * Get a count of the number of values this attribute has (0-n).
      *
      * @return The value count.
      */
-    public int getValueCount();
+    int getValueCount();
 
     /**
      * Get the first value from the Set of attribute values, or null if the attribute has no values.
@@ -49,7 +49,7 @@ public interface Attribute {
      *
      * @return The attribute value.
      */
-    public String getValue();
+    String getValue();
 
     /**
      * Get the Set of values for this attribute.  The Set returned is a copy of the original; changes
@@ -57,7 +57,7 @@ public interface Attribute {
      *
      * @return The attribute values Set.
      */
-    public Set<String> getValues();
+    Set<String> getValues();
 
     /**
      * Return the attributes values as a String array.  Note that this array can be zero-length
@@ -65,16 +65,16 @@ public interface Attribute {
      *
      * @return The attribute values array.
      */
-    public String[] getValuesAsArray();
+    String[] getValuesAsArray();
 
-    public void addValue(String value);
-    public void addValues(Set<String> values);
-    public void addValues(String[] values);
+    void addValue(String value);
+    void addValues(Set<String> values);
+    void addValues(String[] values);
 
-    public void removeValue(String value);
-    public void removeValues(Set<String> values);
-    public void removeValues(String[] values);
+    void removeValue(String value);
+    void removeValues(Set<String> values);
+    void removeValues(String[] values);
 
-    public void clear();
+    void clear();
 
 }

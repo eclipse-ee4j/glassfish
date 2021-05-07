@@ -39,11 +39,11 @@ public class X509CertificateCredential {
      */
 
     public X509CertificateCredential(X509Certificate[] certChain,
-                    String alias, String realm)
+                                    String alias, String realm)
     {
-    this.certChain = certChain;
-    this.alias = alias;
-    this.realm = realm;
+        this.certChain = certChain;
+        this.alias = alias;
+        this.realm = realm;
     }
 
     /**
@@ -51,7 +51,7 @@ public class X509CertificateCredential {
      * @return the alias.
      */
     public String getAlias() {
-    return alias;
+        return alias;
     }
 
     /**
@@ -59,7 +59,7 @@ public class X509CertificateCredential {
      * @return the realm name. Only value supported for now is "certificate".
      */
     public String getRealm() {
-    return realm;
+        return realm;
     }
 
     /**
@@ -67,7 +67,7 @@ public class X509CertificateCredential {
      * @return the chain of X509Certificates.
      */
     public X509Certificate[] getX509CertificateChain() {
-    return certChain;
+        return certChain;
     }
 
     /**
@@ -76,19 +76,19 @@ public class X509CertificateCredential {
      * @return true if the instances are equal, false otherwise.
      */
     public boolean equals(Object o) {
-    if(o instanceof X509CertificateCredential) {
-        X509CertificateCredential pc = (X509CertificateCredential) o;
-        if(pc.getRealm().equals(realm) && pc.getAlias().equals(alias)) {
-        X509Certificate[] certs = pc.getX509CertificateChain();
-        for(int i = 0; i < certs.length; i++) {
-            if(!certs[i].equals(certChain[i])) {
-            return false;
+        if(o instanceof X509CertificateCredential) {
+            X509CertificateCredential pc = (X509CertificateCredential) o;
+            if(pc.getRealm().equals(realm) && pc.getAlias().equals(alias)) {
+                X509Certificate[] certs = pc.getX509CertificateChain();
+                for(int i = 0; i < certs.length; i++) {
+                    if(!certs[i].equals(certChain[i])) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
-        return true;
-        }
-    }
-    return false;
+        return false;
     }
 
     /**
@@ -96,22 +96,22 @@ public class X509CertificateCredential {
      * @return the hash code.
      */
     public int hashCode() {
-    return Arrays.hashCode(certChain) + realm.hashCode() + ((alias != null)?alias.hashCode():0);
+        return Arrays.hashCode(certChain) + realm.hashCode() + ((alias != null)?alias.hashCode():0);
     }
 
     /**
      * String representation of the credential.
      */
     public String toString() {
-    String s = "Realm=" + realm;
-    s = s + " alias=" + alias;
+        String s = "Realm=" + realm;
+        s = s + " alias=" + alias;
         StringBuffer certChainStr = new StringBuffer("");
         for (int i=0; i < certChain.length; i++) {
             certChainStr.append(certChain[i].toString());
             certChainStr.append("\n");
         }
-    s = s + " X509Certificate=" + certChainStr.toString();
-    return s;
+        s = s + " X509Certificate=" + certChainStr.toString();
+        return s;
     }
 
 }

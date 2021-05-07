@@ -37,12 +37,12 @@ import java.util.Enumeration;
  *
  * @author Harish Prabandham
  */
-
 public interface User extends Principal {
+
     /**
      * Returns the realm with which this user is associated.
      */
-    Realm getRealm () throws NoSuchRealmException;
+    Realm getRealm() throws NoSuchRealmException;
 
 
     /**
@@ -50,14 +50,14 @@ public interface User extends Principal {
      *
      * @param name string identifying the attribute.
      * @return value of that attribute, or null if no value
-     *    has been defined
+     *         has been defined
      */
-    Object getAttribute (String name);
+    Object getAttribute(String name);
 
 
     /**
      * Returns an enumeration of the keys for the attributes
      * supported for this user.
      */
-    Enumeration    getAttributeNames ();
+    Enumeration getAttributeNames();
 }

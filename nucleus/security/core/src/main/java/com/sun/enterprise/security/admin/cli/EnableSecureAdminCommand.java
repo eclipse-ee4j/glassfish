@@ -54,30 +54,30 @@ import org.jvnet.hk2.config.TransactionFailure;
  * <pre>
  * {@code
         ###
-    ### create new protocol for secure admin
-    ###
-    asadmin create-protocol --securityenabled=true sec-admin-listener
-    asadmin create-http --default-virtual-server=__asadmin sec-admin-listener
-    #asadmin create-network-listener --listenerport 4849 --protocol sec-admin-listener sec-admin-listener
-    asadmin create-ssl --type network-listener --certname s1as --ssl2enabled=false --ssl3enabled=false --clientauthenabled=false sec-admin-listener
+        ### create new protocol for secure admin
+        ###
+        asadmin create-protocol --securityenabled=true sec-admin-listener
+        asadmin create-http --default-virtual-server=__asadmin sec-admin-listener
+        #asadmin create-network-listener --listenerport 4849 --protocol sec-admin-listener sec-admin-listener
+        asadmin create-ssl --type network-listener --certname s1as --ssl2enabled=false --ssl3enabled=false --clientauthenabled=false sec-admin-listener
         asadmin set configs.config.server-config.network-config.protocols.protocol.sec-admin-listener.ssl.client-auth=want
-    asadmin set configs.config.server-config.network-config.protocols.protocol.sec-admin-listener.ssl.classname=com.sun.enterprise.security.ssl.GlassfishSSLImpl
+        asadmin set configs.config.server-config.network-config.protocols.protocol.sec-admin-listener.ssl.classname=com.sun.enterprise.security.ssl.GlassfishSSLImpl
 
 
-    ###
-    ### create the port redirect config
-    ###
-    asadmin create-protocol --securityenabled=false admin-http-redirect
-    asadmin create-http-redirect --secure-redirect true admin-http-redirect
-    #asadmin create-http-redirect --secure-redirect true --redirect-port 4849 admin-http-redirect
-    asadmin create-protocol --securityenabled=false pu-protocol
-    asadmin create-protocol-finder --protocol pu-protocol --targetprotocol sec-admin-listener --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
-    asadmin create-protocol-finder --protocol pu-protocol --targetprotocol admin-http-redirect --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder admin-http-redirect
+        ###
+        ### create the port redirect config
+        ###
+        asadmin create-protocol --securityenabled=false admin-http-redirect
+        asadmin create-http-redirect --secure-redirect true admin-http-redirect
+        #asadmin create-http-redirect --secure-redirect true --redirect-port 4849 admin-http-redirect
+        asadmin create-protocol --securityenabled=false pu-protocol
+        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol sec-admin-listener --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
+        asadmin create-protocol-finder --protocol pu-protocol --targetprotocol admin-http-redirect --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder admin-http-redirect
 
-    ###
-    ### update the admin listener
-    ###
-    asadmin set configs.config.server-config.network-config.network-listeners.network-listener.admin-listener.protocol=pu-protocol
+        ###
+        ### update the admin listener
+        ###
+        asadmin set configs.config.server-config.network-config.network-listeners.network-listener.admin-listener.protocol=pu-protocol
  * }
  *
  *

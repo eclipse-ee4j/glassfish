@@ -45,8 +45,8 @@ public interface AuthorizationProviderConfig extends SecurityProviderConfig, Pro
     @Attribute(required=false)
     @NotNull
     @JavaClassName
-    public String getProviderClass();
-    public void setProviderClass(String value) throws PropertyVetoException;
+    String getProviderClass();
+    void setProviderClass(String value) throws PropertyVetoException;
 
     /**
      * Configuration parameter indicating if the provider support policy deploy or not
@@ -68,6 +68,7 @@ public interface AuthorizationProviderConfig extends SecurityProviderConfig, Pro
     /**
      * Gets the properties of the LoginModule.
      */
+    @Override
     @Element
     List<Property> getProperty();
 
@@ -82,7 +83,7 @@ public interface AuthorizationProviderConfig extends SecurityProviderConfig, Pro
          * Gets the options of the LoginModule for use with JAAS Configuration.
          */
         public static Map<String,?> getProviderOptions(AuthorizationProviderConfig config) {
-            Map<String,String> providerOptions = new HashMap<String,String>();
+            Map<String,String> providerOptions = new HashMap<>();
             for (Property prop : config.getProperty()) {
                 providerOptions.put(prop.getName(), prop.getValue());
             }

@@ -46,7 +46,7 @@ import org.jvnet.hk2.annotations.Contract;
 public abstract class Realm implements Comparable {
 
     private static LocalStringManagerImpl localStrings =
-    new LocalStringManagerImpl(Realm.class);
+        new LocalStringManagerImpl(Realm.class);
 
 //    private static Hashtable loadedRealms = new Hashtable();
     private String myName;
@@ -84,8 +84,8 @@ public abstract class Realm implements Comparable {
      *
      * @return realm name.
      */
-    public final String    getName() {
-    return myName;
+    public final String getName() {
+        return myName;
     }
 
     protected String getDefaultDigestAlgorithm() {
@@ -102,11 +102,14 @@ public abstract class Realm implements Comparable {
      * @param name name to be assigned to this realm.
      */
     protected final void setName(String name) {
-    if (myName != null) {
-        return;
+        if (myName != null) {
+            return;
+        }
+        myName = name;
     }
     myName = name;
     }
+
 
 
     /**
@@ -115,8 +118,8 @@ public abstract class Realm implements Comparable {
      * @return name of realm.
      */
     @Override
-    public String  toString() {
-    return myName;
+    public String toString() {
+        return myName;
     }
 
 
@@ -128,21 +131,21 @@ public abstract class Realm implements Comparable {
      * there's only a partial order defined, in the case that those other
      * objects compare themselves "before" a realm object).
      */
-    public int compareTo (Object realm) {
-    if (!(realm instanceof Realm)) {
-        return 1;
-    }
+    public int compareTo(Object realm) {
+        if (!(realm instanceof Realm)) {
+            return 1;
+        }
 
-    Realm     r = (Realm) realm;
-    String    str = r.getAuthType ();
-    int    temp;
+        Realm r = (Realm) realm;
+        String str = r.getAuthType();
+        int temp;
 
-    if ((temp = getAuthType ().compareTo (str)) != 0) {
-        return temp;
-    }
+        if ((temp = getAuthType().compareTo(str)) != 0) {
+            return temp;
+        }
 
-    str = r.getName ();
-    return getName ().compareTo (str);
+        str = r.getName();
+        return getName().compareTo(str);
     }
 
 
@@ -532,9 +535,9 @@ public abstract class Realm implements Comparable {
      * @exception NoSuchRealmException if the realm is invalid
      * @exception BadRealmException if realm data structures are bad
      */
-    public static synchronized Realm    getInstance(String name) throws NoSuchRealmException
+    public static synchronized Realm        getInstance(String name) throws NoSuchRealmException
     {
-    Realm retval = _getInstance(name);
+        Realm retval = _getInstance(name);
 
         if (retval == null) {
             throw new NoSuchRealmException(
@@ -543,7 +546,7 @@ public abstract class Realm implements Comparable {
                 new Object[] { name }));
         }
 
-    return retval;
+        return retval;
     }
 
     /**
@@ -559,7 +562,7 @@ public abstract class Realm implements Comparable {
      */
     public static synchronized Realm getInstance(String configName, String name) throws NoSuchRealmException
     {
-    Realm retval = _getInstance(configName, name);
+        Realm retval = _getInstance(configName, name);
 
         if (retval == null) {
             throw new NoSuchRealmException(
@@ -568,7 +571,7 @@ public abstract class Realm implements Comparable {
                 new Object[] { name }));
         }
 
-    return retval;
+        return retval;
     }
 
     /**
@@ -608,7 +611,7 @@ public abstract class Realm implements Comparable {
      * Returns the names of accessible realms.
      * @return set of realm names
      */
-    public static synchronized Enumeration    getRealmNames() {
+    public static synchronized Enumeration        getRealmNames() {
         RealmsManager mgr = getRealmsManager();
         if (mgr != null) {
             return mgr.getRealmNames();
@@ -633,9 +636,9 @@ public abstract class Realm implements Comparable {
      *
      * @param props initialization parameters used by this realm.
      * @exception BadRealmException if the configuration parameters
-     *    identify a corrupt realm
+     *        identify a corrupt realm
      * @exception NoSuchRealmException if the configuration parameters
-     *    specify a realm which doesn't exist
+     *        specify a realm which doesn't exist
      */
     protected void init(Properties props)
             throws BadRealmException, NoSuchRealmException {
@@ -749,7 +752,7 @@ public abstract class Realm implements Comparable {
      * of the kind of authentication which is supported by this realm.
      *
      * @return description of the kind of authentication that is directly
-     *    supported by this realm.
+     *        supported by this realm.
      */
     public abstract String getAuthType ();
 
@@ -767,7 +770,7 @@ public abstract class Realm implements Comparable {
      * @return enumeration of user names (strings)
      * @exception BadRealmException if realm data structures are bad
      */
-    public abstract Enumeration    getUserNames() throws BadRealmException;
+    public abstract Enumeration        getUserNames() throws BadRealmException;
 
     /**
      * Returns the information recorded about a particular named user.
@@ -778,7 +781,7 @@ public abstract class Realm implements Comparable {
      * @exception BadRealmException if realm data structures are bad
      */
     public abstract User getUser(String name)
-    throws NoSuchUserException, BadRealmException;
+        throws NoSuchUserException, BadRealmException;
 
     /**
      * Returns names of all the groups in this particular realm.
@@ -786,8 +789,8 @@ public abstract class Realm implements Comparable {
      * @return enumeration of group names (strings)
      * @exception BadRealmException if realm data structures are bad
      */
-    public abstract Enumeration    getGroupNames()
-    throws BadRealmException;
+    public abstract Enumeration        getGroupNames()
+        throws BadRealmException;
 
     /**
      * Returns the name of all the groups that this user belongs to
@@ -799,7 +802,7 @@ public abstract class Realm implements Comparable {
      * operation
      */
     public abstract Enumeration getGroupNames (String username)
-    throws InvalidOperationException, NoSuchUserException;
+        throws InvalidOperationException, NoSuchUserException;
 
     /**
      * Refreshes the realm data so that new users/groups are visible.

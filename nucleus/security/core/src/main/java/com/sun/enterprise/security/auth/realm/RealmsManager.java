@@ -74,6 +74,7 @@ public class RealmsManager {
     public RealmsManager() {
 
     }
+
     /**
      * Checks if the given realm name is loaded/valid.
      * @param name of the realm to check.
@@ -104,13 +105,13 @@ public class RealmsManager {
      * Returns the names of accessible realms.
      * @return set of realm names
      */
-    public  Enumeration<String>    getRealmNames() {
-    return getRealmNames(config.getName());
+    public Enumeration<String> getRealmNames() {
+        return getRealmNames(config.getName());
     }
 
     Realm _getInstance(String configName, String name) {
-    Realm retval = null;
-    retval = configGetRealmInstance(configName, name);
+        Realm retval = null;
+        retval = configGetRealmInstance(configName, name);
 
         // Some tools as well as numerous other locations assume that
         // getInstance("default") always works; keep them from breaking
@@ -275,7 +276,7 @@ public class RealmsManager {
 
     private Realm configGetRealmInstance(String configName, String realm) {
         Hashtable<String, Realm> containedRealms = loadedRealms.get(configName);
-    return  (containedRealms != null) ? (Realm) containedRealms.get(realm) : null;
+        return  (containedRealms != null) ? (Realm) containedRealms.get(realm) : null;
     }
 
     public Realm removeFromLoadedRealms (String configName, String realmName) {
@@ -304,9 +305,9 @@ public class RealmsManager {
                     realm.refresh(configName);
                 }
             } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
-                //        _logger.fine("Realm: "+realmName+" is not configured");
+                //            _logger.fine("Realm: "+realmName+" is not configured");
             } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
-                //        _logger.fine("Realm: "+realmName+" is not configured");
+                //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }
     }

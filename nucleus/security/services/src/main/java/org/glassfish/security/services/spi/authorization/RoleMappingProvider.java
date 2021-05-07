@@ -51,12 +51,12 @@ public interface RoleMappingProvider extends SecurityProvider {
      *
      * @see {@link org.glassfish.security.services.api.authorization.RoleMappingService#isUserInRole(String, AzSubject, AzResource, String)}
      */
-    public boolean isUserInRole(String appContext,
-            AzSubject subject,
-            AzResource resource,
-            String role,
-            AzEnvironment environment,
-            List<AzAttributeResolver> attributeResolvers);
+    boolean isUserInRole(String appContext,
+        AzSubject subject,
+        AzResource resource,
+        String role,
+        AzEnvironment environment,
+        List<AzAttributeResolver> attributeResolvers);
 
     /**
      * Find an existing <code>RoleDeploymentContext</code>, or create a new one if one does not
@@ -66,5 +66,5 @@ public interface RoleMappingProvider extends SecurityProvider {
      *
      * @see {@link org.glassfish.security.services.api.authorization.RoleMappingService#findOrCreateDeploymentContext(String)}
      */
-    public RoleMappingService.RoleDeploymentContext findOrCreateDeploymentContext(String appContext);
+    RoleMappingService.RoleDeploymentContext findOrCreateDeploymentContext(String appContext);
 }

@@ -29,7 +29,7 @@ public class AttributesImpl implements Attributes {
     private final TreeMap<String, Attribute> attributes;
 
     public AttributesImpl() {
-        attributes = new TreeMap<String, Attribute>();
+        attributes = new TreeMap<>();
     }
 
     /**
@@ -39,21 +39,25 @@ public class AttributesImpl implements Attributes {
         if ( null == other ) {
             throw new NullPointerException( "Given illegal null AttributesImpl." );
         }
-        attributes = new TreeMap<String, Attribute>( other.attributes );
+        attributes = new TreeMap<>( other.attributes );
     }
 
+    @Override
     public int getAttributeCount() {
         return attributes.size();
     }
 
+    @Override
     public Set<String> getAttributeNames() {
         return attributes.keySet();
     }
 
+    @Override
     public Attribute getAttribute(String name) {
         return attributes.get(name);
     }
 
+    @Override
     public String getAttributeValue(String name) {
         Attribute a = attributes.get(name);
         if(a != null) {
@@ -62,6 +66,7 @@ public class AttributesImpl implements Attributes {
         return null;
     }
 
+    @Override
     public Set<String> getAttributeValues(String name) {
         Attribute a = attributes.get(name);
         if(a != null) {
@@ -70,6 +75,7 @@ public class AttributesImpl implements Attributes {
         return null;
     }
 
+    @Override
     public String[] getAttributeValuesAsArray(String name) {
         Attribute a = attributes.get(name);
         if(a != null) {
@@ -78,6 +84,7 @@ public class AttributesImpl implements Attributes {
         return null;
     }
 
+    @Override
     public void addAttribute(String name, String value, boolean replace) {
         Attribute a = attributes.get(name);
         if(a != null && !replace) {
@@ -88,6 +95,7 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void addAttribute(String name, Set<String> values, boolean replace) {
         Attribute a = attributes.get(name);
         if(a != null && !replace) {
@@ -98,6 +106,7 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void addAttribute(String name, String[] values, boolean replace) {
         Attribute a = attributes.get(name);
         if(a != null && !replace) {
@@ -108,10 +117,12 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void removeAttribute(String name) {
         attributes.remove(name);
     }
 
+    @Override
     public void removeAttributeValue(String name, String value) {
         Attribute a = attributes.get(name);
         if (a != null) {
@@ -119,6 +130,7 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void removeAttributeValues(String name, Set<String> values) {
         Attribute a = attributes.get(name);
         if (a != null) {
@@ -126,6 +138,7 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void removeAttributeValues(String name, String[] values) {
         Attribute a = attributes.get(name);
         if (a != null) {
@@ -133,6 +146,7 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void removeAllAttributeValues(String name) {
         Attribute a = attributes.get(name);
         if (a != null) {
@@ -140,6 +154,7 @@ public class AttributesImpl implements Attributes {
         }
     }
 
+    @Override
     public void clear() {
         attributes.clear();
 

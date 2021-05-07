@@ -84,13 +84,13 @@ public class SecuritySupportImpl extends SecuritySupport {
     public static final String SEC_SSL_LOGGER = "jakarta.enterprise.system.security.ssl";
 
     protected static final Logger _logger =
-            Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+        Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
     @LogMessageInfo(
-            message = "The SSL certificate has expired: {0}",
-            level = "SEVERE",
-            cause = "Certificate expired.",
-            action = "Check the expiration date of the certicate.")
+        message = "The SSL certificate has expired: {0}",
+        level = "SEVERE",
+        cause = "Certificate expired.",
+        action = "Check the expiration date of the certicate.")
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
     private static boolean initialized = false;

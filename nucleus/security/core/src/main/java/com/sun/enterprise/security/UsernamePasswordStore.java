@@ -59,7 +59,7 @@ public final class UsernamePasswordStore {
         //Copy the password to another reference before storing it to the
         //instance field.
         char[] passwordCopy = (password == null) ? null : Arrays.copyOf(password, password.length);
-    this.password = passwordCopy;
+        this.password = passwordCopy;
         this.username = username;
 
     }

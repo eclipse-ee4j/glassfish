@@ -42,9 +42,8 @@ public interface RoleMappingProviderConfig extends SecurityProviderConfig, Prope
      */
     @Attribute(required=false)
     @NotNull
-    @JavaClassName
-    public String getProviderClass();
-    public void setProviderClass(String value) throws PropertyVetoException;
+    @JavaClassName String getProviderClass();
+    void setProviderClass(String value) throws PropertyVetoException;
 
     /**
      * Indicates if the provider supports role deployment.
@@ -63,6 +62,7 @@ public interface RoleMappingProviderConfig extends SecurityProviderConfig, Prope
     /**
      * Gets the properties of the provider.
      */
+    @Override
     @Element
     List<Property> getProperty();
 
@@ -77,7 +77,7 @@ public interface RoleMappingProviderConfig extends SecurityProviderConfig, Prope
          * Gets the options of the provider by looking at the properties.
          */
         public static Map<String,?> getProviderOptions(RoleMappingProviderConfig config) {
-            Map<String,String> providerOptions = new HashMap<String,String>();
+            Map<String,String> providerOptions = new HashMap<>();
             for (Property prop : config.getProperty()) {
                 providerOptions.put(prop.getName(), prop.getValue());
             }

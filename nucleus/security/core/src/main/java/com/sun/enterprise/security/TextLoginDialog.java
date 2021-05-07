@@ -111,8 +111,8 @@ public final class TextLoginDialog implements LoginDialog {
                     for (cnt = 0; cnt < 3; cnt++) {
                         // Let the user try putting password thrice
                         System.out.println(lbl + " : ");
-            String s = (new BufferedReader(new InputStreamReader(System.in))).readLine();
-            if (s != null) {
+                        String s = (new BufferedReader(new InputStreamReader(System.in))).readLine();
+                        if (s != null) {
                             char[] kp = s.toCharArray();
                             if (sslUtils.verifyMasterPassword(kp)) {
                                 break;
@@ -121,7 +121,7 @@ public final class TextLoginDialog implements LoginDialog {
                                 System.err.println(errmessage);
                             }
                             Arrays.fill(kp, ' ');
-            }
+                        }
                     }
                     if (cnt >= 3) {
                         cc.setSelectedIndex(-1);
@@ -136,10 +136,10 @@ public final class TextLoginDialog implements LoginDialog {
                         String line =
                                 (new BufferedReader(new InputStreamReader(System.in))).readLine();
 
-            if (line != null) {
+                        if (line != null) {
                             int sel = Integer.parseInt(line);
                             cc.setSelectedIndex(sel);
-            }
+                        }
                     }
                 }
             }

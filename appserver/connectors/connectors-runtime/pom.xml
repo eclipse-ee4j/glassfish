@@ -60,8 +60,8 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                <manifestEntries>
-                    <probe-provider-class-names>com.sun.enterprise.resource.pool.monitor.ConnectorConnPoolProbeProvider,com.sun.enterprise.resource.pool.monitor.ConnectorConnPoolAppProbeProvider</probe-provider-class-names>
+                        <manifestEntries>
+<probe-provider-class-names>com.sun.enterprise.resource.pool.monitor.ConnectorConnPoolProbeProvider,com.sun.enterprise.resource.pool.monitor.ConnectorConnPoolAppProbeProvider</probe-provider-class-names>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -69,12 +69,12 @@
         </plugins>
     </build>
     <dependencies>
-    <dependency>
+        <dependency>
             <groupId>org.glassfish.main.flashlight</groupId>
             <artifactId>flashlight-framework</artifactId>
             <version>${project.version}</version>
         </dependency>
-    <dependency>
+        <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>monitoring-core</artifactId>
             <version>${project.version}</version>
@@ -172,12 +172,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-        <groupId>org.glassfish.gmbal</groupId>
-        <artifactId>gmbal</artifactId>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal</artifactId>
         </dependency>
         <dependency>
-        <groupId>jakarta.interceptor</groupId>
-        <artifactId>jakarta.interceptor-api</artifactId>
+            <groupId>jakarta.interceptor</groupId>
+            <artifactId>jakarta.interceptor-api</artifactId>
         </dependency>
     </dependencies>
 </project>

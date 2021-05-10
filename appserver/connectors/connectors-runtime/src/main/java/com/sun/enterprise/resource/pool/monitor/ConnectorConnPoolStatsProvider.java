@@ -131,7 +131,7 @@ public class ConnectorConnPoolStatsProvider {
                                        @ProbeParam("appName") String appName,
                                        @ProbeParam("moduleName") String moduleName
                                        ) {
-    // handle the conn leak probe event
+        // handle the conn leak probe event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {
@@ -153,7 +153,7 @@ public class ConnectorConnPoolStatsProvider {
                                         @ProbeParam("appName") String appName,
                                         @ProbeParam("moduleName") String moduleName
                                         ) {
-    // handle the conn timed out probe event
+        // handle the conn timed out probe event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {
@@ -175,7 +175,7 @@ public class ConnectorConnPoolStatsProvider {
             @ProbeParam("appName") String appName,
             @ProbeParam("moduleName") String moduleName
             ) {
-    // handle the num conn free decrement event
+        // handle the num conn free decrement event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {
@@ -202,7 +202,7 @@ public class ConnectorConnPoolStatsProvider {
             @ProbeParam("moduleName") String moduleName,
             @ProbeParam("beingDestroyed") boolean beingDestroyed,
             @ProbeParam("steadyPoolSize") int steadyPoolSize) {
-    // handle the num conn free increment event
+        // handle the num conn free increment event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {
@@ -236,7 +236,7 @@ public class ConnectorConnPoolStatsProvider {
             @ProbeParam("appName") String appName,
             @ProbeParam("moduleName") String moduleName
             ) {
-    // handle the num conn used decrement event
+        // handle the num conn used decrement event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {
@@ -261,7 +261,7 @@ public class ConnectorConnPoolStatsProvider {
             @ProbeParam("appName") String appName,
             @ProbeParam("moduleName") String moduleName,
             @ProbeParam("count") int count) {
-    // handle the connections freed event
+        // handle the connections freed event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {
@@ -288,7 +288,7 @@ public class ConnectorConnPoolStatsProvider {
             @ProbeParam("appName") String appName,
             @ProbeParam("moduleName") String moduleName
             ) {
-    // handle the connection used event
+        // handle the connection used event
         PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
         if(this.poolInfo.equals(poolInfo)) {
             if(logger.isLoggable(Level.FINEST)) {

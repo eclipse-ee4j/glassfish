@@ -41,7 +41,7 @@
         </developer>
     </developers>
     <build>
-    <resources>
+        <resources>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -55,7 +55,7 @@
                     <include>**/*.1</include>
                 </includes>
             </resource>
-          </resources>
+        </resources>
     </build>
 
     <dependencies>

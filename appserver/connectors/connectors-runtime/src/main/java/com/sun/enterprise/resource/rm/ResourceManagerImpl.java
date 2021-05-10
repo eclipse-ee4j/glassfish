@@ -106,41 +106,41 @@ public class ResourceManagerImpl implements ResourceManager {
                 ComponentInvocation inv = invmgr.getCurrentInvocation();
 
                 if (inv == null) {
-                    //throw new InvocationException();
+                    // throw new InvocationException();
 
-                    //Go to the tm and get the transaction
-            //This is mimicking the current behavior of
-            //the SystemResourceManagerImpl registerResource method
-            //in that, you return the transaction from the TxManager
-            try {
+                    // Go to the tm and get the transaction
+                    // This is mimicking the current behavior of
+                    // the SystemResourceManagerImpl registerResource method
+                    // in that, you return the transaction from the TxManager
+                    try {
                         tran = tm.getTransaction();
-                    } catch( Exception e ) {
-                tran = null;
-            _logger.log(Level.INFO, e.getMessage());
-            }
+                    } catch (Exception e) {
+                        tran = null;
+                        _logger.log(Level.INFO, e.getMessage());
+                    }
                 } else {
                     tran = (Transaction) inv.getTransaction();
                     tm.registerComponentResource(handle);
                 }
 
                 if (tran != null) {
-              try{
-                  tm.enlistResource(tran, handle);
-              } catch (Exception ex) {
-                        if(_logger.isLoggable(Level.FINE)) {
-                      _logger.fine("Exception whle trying to enlist resource " + ex.getMessage());
+                    try {
+                        tm.enlistResource(tran, handle);
+                    } catch (Exception ex) {
+                        if (_logger.isLoggable(Level.FINE)) {
+                            _logger.fine("Exception whle trying to enlist resource " + ex.getMessage());
                         }
-                  //If transactional, remove the connection handle from the
-                  //component's resource list as there has been exception attempting
-                  //to enlist the resource
-                  if(inv != null) {
-                            if(_logger.isLoggable(Level.FINE)) {
-                          _logger.fine("Attempting to unregister component resource");
+                        // If transactional, remove the connection handle from the
+                        // component's resource list as there has been exception attempting
+                        // to enlist the resource
+                        if (inv != null) {
+                            if (_logger.isLoggable(Level.FINE)) {
+                                _logger.fine("Attempting to unregister component resource");
                             }
-                      tm.unregisterComponentResource(handle);
-                  }
-                  throw ex;
-              }
+                            tm.unregisterComponentResource(handle);
+                        }
+                        throw ex;
+                    }
                 }
             }
 
@@ -167,9 +167,8 @@ public class ResourceManagerImpl implements ResourceManager {
      */
     public void rollBackTransaction() {
         InvocationManager invmgr = ConnectorRuntime.getRuntime().getInvocationManager();
-
-    JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
-    Transaction tran = null;
+        JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
+        Transaction tran = null;
         try {
             ComponentInvocation inv = invmgr.getCurrentInvocation();
             if (inv == null) {

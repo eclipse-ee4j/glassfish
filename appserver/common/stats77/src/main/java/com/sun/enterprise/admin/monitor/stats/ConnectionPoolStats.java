@@ -24,7 +24,6 @@ import org.glassfish.j2ee.statistics.CountStatistic;
  * Pool. All the Connection Pool implementations should expose statistical data
  * by implementing this interface.
  */
-
 public interface ConnectionPoolStats extends Stats {
 
     /**
@@ -34,7 +33,7 @@ public interface ConnectionPoolStats extends Stats {
      * Maximum number of connections that were used(High Watermark)
      * @return RangeStatistic
      */
-    public RangeStatistic getNumConnUsed();
+    RangeStatistic getNumConnUsed();
 
     /*
      * represents the number of free connections in the pool.
@@ -46,20 +45,20 @@ public interface ConnectionPoolStats extends Stats {
      * represents the number of connections that failed validation
      * @return CountStatistic
      */
-    public CountStatistic getNumConnFailedValidation() ;
+    CountStatistic getNumConnFailedValidation() ;
 
     /**
      * represents the number of connection requests that timed out
      * @return CountStatistic
      */
-    public CountStatistic getNumConnTimedOut();
+    CountStatistic getNumConnTimedOut();
 
     /**
      * Indicates the number of free connections in the pool in addition
      * to their high and low watermarks.
      * @return RangeStatistic
      */
-     public RangeStatistic getNumConnFree();
+     RangeStatistic getNumConnFree();
 
 
     /**
@@ -67,14 +66,14 @@ public interface ConnectionPoolStats extends Stats {
      * connection request attempts to the connector connection pool
      * @return CountStatistic
      */
-    public CountStatistic getAverageConnWaitTime();
+    CountStatistic getAverageConnWaitTime();
 
     /**
      * Indicates the number of connection requests in the queue waiting
      * to be serviced
      * @return CountStatistic
      */
-    public CountStatistic getWaitQueueLength();
+    CountStatistic getWaitQueueLength();
 
     /**
      * Indicates the longest, shortest wait times of connection
@@ -82,21 +81,21 @@ public interface ConnectionPoolStats extends Stats {
      * the last request that was serviced by the pool.
      * @return RangeStatistic
      */
-    public RangeStatistic getConnRequestWaitTime();
+    RangeStatistic getConnRequestWaitTime();
 
     /**
      * indicates the number of physical EIS/JDBC connections that were created,
      * since the last reset
      * @return CountStatistic
      */
-    public CountStatistic getNumConnCreated();
+    CountStatistic getNumConnCreated();
 
     /**
      * indicates the number of physical EIS/JDBC connections that were destroyed
      * , since the last reset
      * @return CountStatistic
      */
-    public CountStatistic getNumConnDestroyed();
+    CountStatistic getNumConnDestroyed();
 
     /**
      * indicates the number of logical EIS/JDBC connections that were acquired
@@ -104,7 +103,7 @@ public interface ConnectionPoolStats extends Stats {
      * @return CountStatistic
      * @since 8.1
      */
-    public CountStatistic getNumConnAcquired();
+    CountStatistic getNumConnAcquired();
 
     /**
      * indicates the number of logical EIS/JDBC connections that were released
@@ -112,7 +111,7 @@ public interface ConnectionPoolStats extends Stats {
      * @return CountStatistic
      * @since 8.1
      */
-    public CountStatistic getNumConnReleased();
+    CountStatistic getNumConnReleased();
 
     /**
      * Indicates the number of connections that were successfully matched by
@@ -121,7 +120,7 @@ public interface ConnectionPoolStats extends Stats {
      * @return CountStatistic
      * @since 9.0
      */
-    public CountStatistic getNumConnSuccessfullyMatched();
+    CountStatistic getNumConnSuccessfullyMatched();
 
     /**
      * Indicates the number of connections that were rejected by the
@@ -130,7 +129,7 @@ public interface ConnectionPoolStats extends Stats {
      * @return CountStatistic
      * @since 9.0
      */
-    public CountStatistic getNumConnNotSuccessfullyMatched();
+    CountStatistic getNumConnNotSuccessfullyMatched();
 
     /**
      * Indicates the number of potential connection leaks
@@ -138,6 +137,6 @@ public interface ConnectionPoolStats extends Stats {
      * @return CountStatistic
      * @since 9.1
      */
-    public CountStatistic getNumPotentialConnLeak();
+    CountStatistic getNumPotentialConnLeak();
 
 }

@@ -17,7 +17,6 @@
 package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
-import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
 /**
  * A Stats interface, to expose information
@@ -30,23 +29,23 @@ public interface JVMOperatingSystemStats extends Stats {
      * Returns the operating system architecture
      * @return StringStatistic
      */
-    public StringStatistic getArch();
+    StringStatistic getArch();
 
     /**
      * Returns the number of processors available to the JVM
      * @return CountStatistic
      */
-    public CountStatistic getAvailableProcessors();
+    CountStatistic getAvailableProcessors();
 
     /**
      * Returns the operating system name
      * @return StringStatistic
      */
-    public StringStatistic getName();
+    StringStatistic getName();
 
     /**
      * Returns the operating system version
      * @return StringStatistic
      */
-    public StringStatistic getVersion();
+    StringStatistic getVersion();
 }

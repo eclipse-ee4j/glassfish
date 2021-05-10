@@ -18,14 +18,15 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
 import com.sun.enterprise.util.i18n.StringManager;
 
-/** An implementation of a BoundedRangeStatistic. All instances of this class are
+/**
+ * An implementation of a BoundedRangeStatistic. All instances of this class are
  * immutable. Provides all the necessary accessors for properties.
+ *
  * @author Muralidhar Vempaty
  * @author Kedar Mhaswade
  * @since S1AS8.0
  * @verison 1.0
  */
-
 public final class BoundedRangeStatisticImpl extends StatisticImpl implements
     BoundedRangeStatistic {
 
@@ -37,6 +38,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
     private static final StringManager localStrMgr =
                 StringManager.getManager(BoundedRangeStatisticImpl.class);
 
+    @Override
     public String toString() {
         return super.toString() + NEWLINE +
             "Current: " + getCurrent() + NEWLINE +
@@ -201,8 +203,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
      * @param desc      A brief description of the statistic
      * @param startTime Time in milliseconds at which the measurement was started
      * @param sampleTime Time at which the last measurement was done.
-     **/
-
+     */
     public BoundedRangeStatisticImpl(long curVal, long highMark, long lowMark,
                                      long upper, long lower, String name,
                                      String unit, String desc, long startTime,
@@ -219,6 +220,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
      * Returns the current value of this statistic.
      * @return long indicating the current value
      */
+    @Override
     public long getCurrent() {
         return currentVal;
     }
@@ -227,7 +229,8 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
      * Returns the highest value of this statistic, since measurement started.
      * @return long indicating high water mark
      */
-     public long getHighWaterMark() {
+    @Override
+    public long getHighWaterMark() {
         return highWaterMark;
     }
 
@@ -235,6 +238,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
      * Returns the lowest value of this statistic, since measurement started.
      * @return long indicating low water mark
      */
+    @Override
     public long getLowWaterMark() {
         return lowWaterMark;
     }
@@ -243,6 +247,7 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
      * Return the lowest possible value, that this statistic is permitted to attain.
      * @return long indicating the lower bound
      */
+    @Override
     public long getLowerBound() {
         return lowerBound;
     }
@@ -251,12 +256,14 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
      * Returns the highest possible value, that this statistic is permitted to attain.
      * @return long indicating the higher bound
      */
+    @Override
     public long getUpperBound() {
         return upperBound;
     }
 
     private static class Util {
-        /** A method to get the description from a name. Can be simple property file
+        /**
+         * A method to get the description from a name. Can be simple property file
          * pair reader. Note that name is invariant, whereas the descriptions are
          * localizable.
          */
@@ -264,7 +271,8 @@ public final class BoundedRangeStatisticImpl extends StatisticImpl implements
             return (localStrMgr.getString("describes_string") + name);
         }
 
-        /** Returns an array of two longs, that represent the times at the time of call.
+        /**
+         * Returns an array of two longs, that represent the times at the time of call.
          * The idea is not to call expensive System#currentTimeMillis twice for two
          * successive operations.
          */

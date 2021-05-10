@@ -17,8 +17,10 @@
 package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.RangeStatistic;
 
-/** An implementation of a RangeStatistic. All instances of this class are
+/**
+ * An implementation of a RangeStatistic. All instances of this class are
  * immutable. Provides all the necessary accessors for properties.
+ *
  * @author Muralidhar Vempaty
  * @author Kedar Mhaswade
  * @since S1AS8.0
@@ -31,7 +33,9 @@ public final class RangeStatisticImpl extends StatisticImpl implements RangeStat
     private final long highWaterMark;
     private final long lowWaterMark;
 
-    /** Constructs an immutable instance of RangeStatistic.
+    /**
+     * Constructs an immutable instance of RangeStatistic.
+     *
      * @param curVal    The current value of this statistic
      * @param highMark  The highest value of this statistic, since measurement
      *                  started
@@ -57,6 +61,7 @@ public final class RangeStatisticImpl extends StatisticImpl implements RangeStat
      * Returns the current value of this statistic.
      * @return long indicating the current value
      */
+    @Override
     public long getCurrent() {
         return currentVal;
     }
@@ -65,6 +70,7 @@ public final class RangeStatisticImpl extends StatisticImpl implements RangeStat
      * Returns the highest value of this statistic, since measurement started.
      * @return long indicating high water mark
      */
+    @Override
     public long getHighWaterMark() {
         return highWaterMark;
     }
@@ -73,11 +79,13 @@ public final class RangeStatisticImpl extends StatisticImpl implements RangeStat
      * Returns the lowest value of this statistic, since measurement started.
      * @return long indicating low water mark
      */
+    @Override
     public long getLowWaterMark() {
         return lowWaterMark;
     }
 
-    public final String toString() {
+    @Override
+    public String toString() {
         return super.toString() + NEWLINE +
             "Current: " + getCurrent() + NEWLINE +
             "LowWaterMark: " + getLowWaterMark() + NEWLINE +

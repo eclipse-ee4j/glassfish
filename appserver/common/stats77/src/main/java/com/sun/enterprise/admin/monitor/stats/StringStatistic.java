@@ -15,6 +15,7 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
+import org.glassfish.j2ee.statistics.CountStatistic;
 import org.glassfish.j2ee.statistics.Statistic;
 
 /**
@@ -29,6 +30,7 @@ import org.glassfish.j2ee.statistics.Statistic;
  * values and the current value can be any one of them (and them only).
  * The permissible values
  * are upto a particular implementation.
+ *
  * @author Muralidhar Vempaty
  * @author Kedar Mhaswade
  * @since S1AS8.0
@@ -39,5 +41,5 @@ public interface StringStatistic extends Statistic {
     /**
      * Returns the String value of the statistic.
      */
-    public String getCurrent();
+    String getCurrent();
 }

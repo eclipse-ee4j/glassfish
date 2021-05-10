@@ -24,6 +24,7 @@ import org.glassfish.j2ee.statistics.CountStatistic;
  * and the ThreadPool.
  * The GlobalRequestProcessor collects data about request processing
  * from each of the RequestProcessor threads.
+ *
  * @author Murali Vempaty
  * @since S1AS8.0
  * @version 1.0
@@ -40,14 +41,14 @@ public interface HTTPListenerStats extends Stats {
      * RequestProcessors
      * @return CountStatistic
      */
-    public CountStatistic getBytesReceived();
+    CountStatistic getBytesReceived();
 
     /**
      * Cumulative value of the bytesSent by each of the
      * RequestProcessors
      * @return CountStatistic
      */
-    public CountStatistic getBytesSent();
+    CountStatistic getBytesSent();
 
     /**
      * Cumulative value of the errorCount of each of the
@@ -55,7 +56,7 @@ public interface HTTPListenerStats extends Stats {
      * cases where the response code was >= 400
      * @return CountStatistic
      */
-    public CountStatistic getErrorCount();
+    CountStatistic getErrorCount();
 
     /**
      * The longest response time for a request. This is not a
@@ -63,7 +64,7 @@ public interface HTTPListenerStats extends Stats {
      * for each of the RequestProcessors.
      * @return CountStatistic
      */
-    public CountStatistic getMaxTime();
+    CountStatistic getMaxTime();
 
     /**
      * Cumulative value of the processing times of each of the
@@ -72,14 +73,14 @@ public interface HTTPListenerStats extends Stats {
      * count.
      * @return CountStatistic
      */
-    public CountStatistic getProcessingTime();
+    CountStatistic getProcessingTime();
 
     /**
      * Cumulative number of the requests processed so far,
      * by the RequestProcessors.
      * @return CountStatistic
      */
-    public CountStatistic getRequestCount();
+    CountStatistic getRequestCount();
 
 
     /**
@@ -89,7 +90,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code in the 2xx range
      */
-    public CountStatistic getCount2xx();
+    CountStatistic getCount2xx();
 
 
     /**
@@ -99,7 +100,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code in the 3xx range
      */
-    public CountStatistic getCount3xx();
+    CountStatistic getCount3xx();
 
 
     /**
@@ -109,7 +110,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code in the 4xx range
      */
-    public CountStatistic getCount4xx();
+    CountStatistic getCount4xx();
 
 
     /**
@@ -119,7 +120,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code in the 5xx range
      */
-    public CountStatistic getCount5xx();
+    CountStatistic getCount5xx();
 
 
     /**
@@ -130,7 +131,7 @@ public interface HTTPListenerStats extends Stats {
      * @return Number of responses with a status code outside the 2xx, 3xx,
      * 4xx, and 5xx range
      */
-    public CountStatistic getCountOther();
+    CountStatistic getCountOther();
 
 
     /**
@@ -140,7 +141,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 200
      */
-    public CountStatistic getCount200();
+    CountStatistic getCount200();
 
 
     /**
@@ -150,7 +151,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 302
      */
-    public CountStatistic getCount302();
+    CountStatistic getCount302();
 
 
     /**
@@ -160,7 +161,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 304
      */
-    public CountStatistic getCount304();
+    CountStatistic getCount304();
 
 
     /**
@@ -170,7 +171,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 400
      */
-    public CountStatistic getCount400();
+    CountStatistic getCount400();
 
 
     /**
@@ -180,7 +181,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 401
      */
-    public CountStatistic getCount401();
+    CountStatistic getCount401();
 
 
     /**
@@ -190,7 +191,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 403
      */
-    public CountStatistic getCount403();
+    CountStatistic getCount403();
 
 
     /**
@@ -200,7 +201,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 404
      */
-    public CountStatistic getCount404();
+    CountStatistic getCount404();
 
 
     /**
@@ -210,7 +211,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of responses with a status code equal to 503
      */
-    public CountStatistic getCount503();
+    CountStatistic getCount503();
 
 
     /**
@@ -219,7 +220,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Number of open connections
      */
-    public CountStatistic getCountOpenConnections();
+    CountStatistic getCountOpenConnections();
 
 
     /**
@@ -229,7 +230,7 @@ public interface HTTPListenerStats extends Stats {
      *
      * @return Maximum number of open connections
      */
-    public CountStatistic getMaxOpenConnections();
+    CountStatistic getMaxOpenConnections();
 
 
     // ThreadPool statistics for the listener
@@ -239,14 +240,14 @@ public interface HTTPListenerStats extends Stats {
      * thread pool
      * @return CountStatistic
      */
-    public CountStatistic getCurrentThreadCount();
+    CountStatistic getCurrentThreadCount();
 
     /**
      * The number of request processing threads currently in the
      * thread pool, serving requests.
      * @return CountStatistic
      */
-    public CountStatistic getCurrentThreadsBusy();
+    CountStatistic getCurrentThreadsBusy();
 
     /**
      * The maximum number of request processing threads that are
@@ -254,7 +255,7 @@ public interface HTTPListenerStats extends Stats {
      * simultaneous requests that can be handled
      * @return CountStatistic
      */
-    public CountStatistic getMaxThreads();
+    CountStatistic getMaxThreads();
 
     /**
      * The maximum number of unused request processing threads that will
@@ -262,13 +263,13 @@ public interface HTTPListenerStats extends Stats {
      * unnecessary threads.
      * @return CountStatistic
      */
-    public CountStatistic getMaxSpareThreads();
+    CountStatistic getMaxSpareThreads();
 
     /**
      * The number of request processing threads that will be created
      * when this listener is first started.
      * @return CountStatistic
      */
-    public CountStatistic getMinSpareThreads();
+    CountStatistic getMinSpareThreads();
 
 }

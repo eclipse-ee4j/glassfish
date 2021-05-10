@@ -16,29 +16,28 @@
 
 package com.sun.enterprise.admin.monitor.stats.lb;
 
-//
-// This interface is the intersection of all generated methods.
-//
-
+/**
+ * This interface is the intersection of all generated methods.
+ */
 public interface CommonBean {
-    public void changePropertyByName(String name, Object value);
+    void changePropertyByName(String name, Object value);
 
-    public com.sun.enterprise.admin.monitor.stats.lb.CommonBean[] childBeans(boolean recursive);
+    com.sun.enterprise.admin.monitor.stats.lb.CommonBean[] childBeans(boolean recursive);
 
-    public void childBeans(boolean recursive, java.util.List beans);
+    void childBeans(boolean recursive, java.util.List beans);
 
-    public boolean equals(Object o);
+    @Override boolean equals(Object o);
 
-    public Object fetchPropertyByName(String name);
+    Object fetchPropertyByName(String name);
 
-    public int hashCode();
+    @Override int hashCode();
 
-    public void readNode(org.w3c.dom.Node node);
+    void readNode(org.w3c.dom.Node node);
 
-    public String toString();
+    @Override String toString();
 
-    public void validate() throws com.sun.enterprise.admin.monitor.stats.lb.LoadBalancerStats.ValidateException;
+    void validate() throws com.sun.enterprise.admin.monitor.stats.lb.LoadBalancerStats.ValidateException;
 
-    public void writeNode(java.io.Writer out, String nodeName, String indent) throws java.io.IOException;
+    void writeNode(java.io.Writer out, String nodeName, String indent) throws java.io.IOException;
 
 }

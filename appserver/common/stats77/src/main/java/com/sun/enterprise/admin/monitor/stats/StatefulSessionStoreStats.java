@@ -18,7 +18,6 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.RangeStatistic;
 import org.glassfish.j2ee.statistics.CountStatistic;
-import com.sun.enterprise.admin.monitor.stats.AverageRangeStatistic;
 
 /**
  *
@@ -31,77 +30,77 @@ public interface StatefulSessionStoreStats extends Stats {
      * store
      * @return RangeStatistic
      */
-    public RangeStatistic getCurrentSize();
+    RangeStatistic getCurrentSize();
 
     /**
      * Returns the total number of sessions activated from the store
      * @return CountStatistic
      */
-    public CountStatistic getActivationCount();
+    CountStatistic getActivationCount();
 
     /**
      * Returns the total number of sessions successfully activated
      * from the store
      * @return CountStatistic
      */
-    public CountStatistic getActivationSuccessCount();
+    CountStatistic getActivationSuccessCount();
 
     /**
      * Returns the total number of sessions that could not be activated
      * from the store
      * @return CountStatistic
      */
-    public CountStatistic getActivationErrorCount();
+    CountStatistic getActivationErrorCount();
 
     /**
      * Returns the total number of sessions passivated using this store
      * @return CountStatistic
      */
-    public CountStatistic getPassivationCount();
+    CountStatistic getPassivationCount();
 
     /**
      * Returns the total number of sessions passivated successfully
      * using this store
      * @return CountStatistic
      */
-    public CountStatistic getPassivationSuccessCount();
+    CountStatistic getPassivationSuccessCount();
 
     /**
      * Returns the total number of sessions that could not be passivated
      * using the store
      * @return CountStatistic
      */
-    public CountStatistic getPassivationErrorCount();
+    CountStatistic getPassivationErrorCount();
 
     /**
      * Returns the total number of expired sessions that were removed by
      * the store
      * @return CountStatistic
      */
-    public CountStatistic getExpiredSessionCount();
+    CountStatistic getExpiredSessionCount();
 
     /**
      * Returns the total number of bytes passivated by this store
      * @return AverageRangeStatistic
      */
-    public AverageRangeStatistic getPassivatedBeanSize();
+    AverageRangeStatistic getPassivatedBeanSize();
 
     /**
      * Returns the time spent on passivating beans to the store
      * @return AverageRangeStatistic
      */
-    public AverageRangeStatistic getPassivationTime();
+    AverageRangeStatistic getPassivationTime();
 
     /**
      * Returns the total number of bytes activated by this store
      * @return AverageRangeStatistic
      */
-    public AverageRangeStatistic getActivatedBeanSize();
+    AverageRangeStatistic getActivatedBeanSize();
 
     /**
      * Returns the time spent on activating beans from the store
      * @return AverageRangeStatistic
      */
-    public AverageRangeStatistic getActivationTime();
+    AverageRangeStatistic getActivationTime();
 
 }

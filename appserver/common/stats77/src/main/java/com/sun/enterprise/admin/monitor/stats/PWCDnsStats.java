@@ -34,54 +34,54 @@ public interface PWCDnsStats extends Stats {
      * Indicates whether the DNS cache is enabled or disable. Default is disabled.
      * @return DNS cache enabled?
      */
-    public CountStatistic getFlagCacheEnabled();
+    CountStatistic getFlagCacheEnabled();
 
     /**
      * The number of current cache entries
      * @return current cache entries
      */
-    public CountStatistic getCountCacheEntries();
+    CountStatistic getCountCacheEntries();
 
     /**
      * The maximum number of cache entries
      * @return max cache entries
      */
-    public CountStatistic getMaxCacheEntries();
+    CountStatistic getMaxCacheEntries();
 
     /**
      * The number of cache hits
      * @return cache hits
      */
-    public CountStatistic getCountCacheHits();
+    CountStatistic getCountCacheHits();
 
     /**
      * The number of cache misses
      * @return cache misses
      */
-    public CountStatistic getCountCacheMisses();
+    CountStatistic getCountCacheMisses();
 
     /**
      * Returns whether asynchronic lookup is enabled. 1 if true, 0 otherwise
      * @return enabled
      */
-    public CountStatistic getFlagAsyncEnabled();
+    CountStatistic getFlagAsyncEnabled();
 
     /**
      * The total number of asynchronic name lookups
      * @return asyn name lookups
      */
-    public CountStatistic getCountAsyncNameLookups();
+    CountStatistic getCountAsyncNameLookups();
 
     /**
      * The total number of asynchronic address lookups
      * @return asyn address lookups
      */
-    public CountStatistic getCountAsyncAddrLookups();
+    CountStatistic getCountAsyncAddrLookups();
 
     /**
      * The number of asynchronic lookups in progress
      * @return async lookups in progress
      */
-    public CountStatistic getCountAsyncLookupsInProgress();
+    CountStatistic getCountAsyncLookupsInProgress();
 
 }

@@ -29,12 +29,12 @@ public interface JVMGarbageCollectorStats extends Stats {
      * Returns the total number of collections that have occurred
      * @return CountStatistic   total number of collections that occurred
      */
-    public CountStatistic getCollectionCount();
+    CountStatistic getCollectionCount();
 
     /**
      * Returns the accumulated collection time in milliseconds
      * @return CountStatistic collection time in milliseconds
      */
-    public CountStatistic getCollectionTime();
+    CountStatistic getCollectionTime();
 
 }

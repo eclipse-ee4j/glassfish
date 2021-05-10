@@ -19,9 +19,11 @@ import org.glassfish.j2ee.statistics.TimeStatistic;
 import org.glassfish.j2ee.statistics.Statistic;
 
 
-/** An implementation of {@link MutableTimeStatistic} that eases the various
+/**
+ * An implementation of {@link MutableTimeStatistic} that eases the various
  * statistical calculations.
- * @author  <a href="mailto:Kedar.Mhaswade@sun.com">Kedar Mhaswade</a>
+ *
+ * @author <a href="mailto:Kedar.Mhaswade@sun.com">Kedar Mhaswade</a>
  * @since S1AS8.0
  * @version $Revision: 1.2 $
  */
@@ -33,13 +35,15 @@ public class MutableTimeStatisticImpl implements TimeStatistic, MutableTimeStati
     private long max;
     private long total; //possibility of an overflow?
     private long lastSampleTime;
+
     /**
      * Constructs an instance of this class from its immutable equivalent. Note that there are
      * some constraints on the parameter passed:
      * <ul>
-     *  <li> The maxTime, minTime and totTime of param must be same </li>
+     * <li>The maxTime, minTime and totTime of param must be same</li>
      * </ul>
-     * @param       instance of (immutable) {@link TimeStatistic}
+     *
+     * @param instance of (immutable) {@link TimeStatistic}
      */
     public MutableTimeStatisticImpl(TimeStatistic initial) {
         this.initial        = initial;
@@ -49,20 +53,24 @@ public class MutableTimeStatisticImpl implements TimeStatistic, MutableTimeStati
         total  = initial.getTotalTime();
         final boolean minMax = min == max;
         final boolean minTot = min == total;
-        if (! (minMax && minTot))
+        if (! (minMax && minTot)) {
             throw new IllegalArgumentException("Invalid initial values: " + min + ", " + max + ", " + total);
+        }
         lastSampleTime = initial.getLastSampleTime();
     }
+
 
     /**
      * Increments the count of operation execution by 1 and also increases the time
      * consumed. A successful execution of method will have all the data updated as:
      * <ul>
-     * <li> method count ++ </li>
-     * <li> max time, min time and total time are accordingly adjusted </li>
+     * <li>method count ++</li>
+     * <li>max time, min time and total time are accordingly adjusted</li>
      * </ul>
-     * @param       current     long indicating time in whatever unit this statistic is calculated
+     *
+     * @param current long indicating time in whatever unit this statistic is calculated
      */
+    @Override
     public void incrementCount(long current) {
         if (methodCount == 0) {
             total = max = min = current;
@@ -75,13 +83,15 @@ public class MutableTimeStatisticImpl implements TimeStatistic, MutableTimeStati
         lastSampleTime = System.currentTimeMillis();
     }
 
+
     /**
      * Resets the Statistic. Calling this method has following effect:
      * <ul>
-     * <li> Initial state of this Statistic is restored as far as Count, Minimum/Maximum
-     * and Total time of execution is considered. </li>
+     * <li>Initial state of this Statistic is restored as far as Count, Minimum/Maximum
+     * and Total time of execution is considered.</li>
      * </ul>
      */
+    @Override
     public void reset() {
         methodCount         = initial.getCount();
         min                 = initial.getMinTime();
@@ -90,61 +100,74 @@ public class MutableTimeStatisticImpl implements TimeStatistic, MutableTimeStati
         lastSampleTime        = initial.getLastSampleTime();
     }
 
+
     /**
      * This method is the essence of this class. Returns the unmodifiable view
      * of this instance.
+     *
      * @return an instance of {@link TimeStatistic}
      */
+    @Override
     public Statistic unmodifiableView() {
-        return ( new TimeStatisticImpl(
-        this.methodCount,
-        this.max,
-        this.min,
-        this.total,
-        initial.getName(),
-        initial.getUnit(),
-        initial.getDescription(),
-        initial.getStartTime(),
-        this.lastSampleTime )
+        return new TimeStatisticImpl(
+            this.methodCount,
+            this.max,
+            this.min,
+            this.total,
+            initial.getName(),
+            initial.getUnit(),
+            initial.getDescription(),
+            initial.getStartTime(),
+            this.lastSampleTime
         );
     }
 
+    @Override
     public Statistic modifiableView() {
         return ( this );
     }
 
+    @Override
     public long getCount() {
         return ( this.methodCount);
     }
 
+    @Override
     public String getDescription() {
         return ( initial.getDescription() );
     }
 
+    @Override
     public long getLastSampleTime() {
         return ( this.lastSampleTime );
     }
 
+    @Override
     public long getMaxTime() {
         return ( this.max );
     }
 
+    @Override
     public long getMinTime() {
         return ( this.min );
     }
 
+    @Override
     public String getName() {
         return ( initial.getName() );
     }
 
+    @Override
     public long getStartTime() {
         return ( initial.getStartTime() );
     }
 
+    @Override
     public long getTotalTime() {
         return ( this.total );
     }
 
+    @Override
     public String getUnit() {
         return ( initial.getUnit() );
     }

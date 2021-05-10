@@ -30,19 +30,19 @@ public interface JVMClassLoadingStats extends Stats {
      * in the JVM
      * @return CountStatistic   The total number of classes currently loaded
      */
-    public CountStatistic getLoadedClassCount();
+    CountStatistic getLoadedClassCount();
 
     /**
      * Returns the total number of classes that have been loaded,
      * since the JVM began execution
      * @return CountStatistic   The total number of classes loaded
      */
-    public CountStatistic getTotalLoadedClassCount();
+    CountStatistic getTotalLoadedClassCount();
 
     /**
      * Returns the number of classes that have been unloaded from the JVM
      * @return CountStatistic   number of unloaded classes
      */
-    public CountStatistic getUnloadedClassCount();
+    CountStatistic getUnloadedClassCount();
 
 }

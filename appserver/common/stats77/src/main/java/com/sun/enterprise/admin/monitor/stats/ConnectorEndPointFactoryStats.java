@@ -31,20 +31,20 @@ public interface ConnectorEndPointFactoryStats {
      * the last reset
      * @return CountStatistic
      */
-    public CountStatistic getMessagesCreatedCount();
+    CountStatistic getMessagesCreatedCount();
 
     /**
      * indicates the number of messages delivered through Endpoints created, via
      * this endpoint factory
      * @return CountStatistic
      */
-    public CountStatistic getDeliveredMessageCount();
+    CountStatistic getDeliveredMessageCount();
 
     /**
      * indicates the number of runtime exceptions that had occurred during the
      * delivery of messages to endpoints created via this endpoint factory.
      * @return CountStatistic
      */
-    public CountStatistic getRuntimeExceptionsCount();
+    CountStatistic getRuntimeExceptionsCount();
 
 }

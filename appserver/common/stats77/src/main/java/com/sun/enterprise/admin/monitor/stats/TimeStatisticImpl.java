@@ -18,13 +18,14 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.TimeStatistic;
 import com.sun.enterprise.util.i18n.StringManager;
 
-/** An implementation of a TimeStatistic. All instances of this class are
+/**
+ * An implementation of a TimeStatistic. All instances of this class are
  * immutable. Provides all the necessary accessors for properties.
+ *
  * @author Muralidhar Vempaty
  * @author Kedar Mhaswade
  * @since S1AS8.0
  */
-
 public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
 
     private final long count;
@@ -34,6 +35,7 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
     private static final StringManager localStrMgr =
                 StringManager.getManager(TimeStatisticImpl.class);
 
+    @Override
     public final String toString() {
         return super.toString() + NEWLINE +
             "Count: " + getCount() + NEWLINE +
@@ -51,10 +53,13 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
             Util.getDescriptionFromName(name), Util.getInitTime()[0], Util.getInitTime()[1]);
     }
 
-        /** Constructs an immutable instance of TimeStatistic.
-     * @param name  The name of the statistic
-     * @param unit  The unit of measurement for this statistic
-     * @param desc  A brief description of the statistic
+
+    /**
+     * Constructs an immutable instance of TimeStatistic.
+     *
+     * @param name The name of the statistic
+     * @param unit The unit of measurement for this statistic
+     * @param desc A brief description of the statistic
      */
     public TimeStatisticImpl(String name, String unit, String desc) {
         this(StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE,
@@ -63,7 +68,9 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
 
     }
 
-    /** Constructs an immutable instance of TimeStatistic.
+    /**
+     * Constructs an immutable instance of TimeStatistic.
+     *
      * @deprecated use the other TimeStatisticImpl constructors.
      *             Counter, maxtime, mintime, totaltime, starttime
      *              last sampletime are automatically calculated
@@ -82,7 +89,8 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
      * @param startTime Time in milliseconds at which the measurement was started
      * @param sampleTime    Time at which the last measurement was done.
      */
-     public TimeStatisticImpl(long counter, long maximumTime, long minimumTime,
+    @Deprecated
+    public TimeStatisticImpl(long counter, long maximumTime, long minimumTime,
                               long totalTime, String name, String unit,
                              String desc, long startTime, long sampleTime) {
 
@@ -97,6 +105,7 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
      * Returns the number of times an operation was invoked
      * @return long indicating the number of invocations
      */
+    @Override
     public long getCount() {
         return count;
     }
@@ -106,6 +115,7 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
      * operation, since measurement started.
      * @return long indicating the maximum time for one invocation
      */
+    @Override
     public long getMaxTime() {
         return maxTime;
     }
@@ -115,6 +125,7 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
      * operation, since measurement started.
      * @return long indicating the minimum time for one invocation
      */
+    @Override
     public long getMinTime() {
         return minTime;
     }
@@ -124,12 +135,14 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
      * since measurement started.
      * @return long indicating the total time for all invocation
      */
+    @Override
     public long getTotalTime() {
         return totTime;
     }
 
     private static class Util {
-        /** A method to get the description from a name. Can be simple property file
+        /**
+         * A method to get the description from a name. Can be simple property file
          * pair reader. Note that name is invariant, whereas the descriptions are
          * localizable.
          */
@@ -137,7 +150,8 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
             return (localStrMgr.getString("describes_string")  + name);
         }
 
-        /** Returns an array of two longs, that represent the times at the time of call.
+        /**
+         * Returns an array of two longs, that represent the times at the time of call.
          * The idea is not to call expensive System#currentTimeMillis twice for two
          * successive operations.
          */

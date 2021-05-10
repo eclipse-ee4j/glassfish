@@ -27,18 +27,26 @@ import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
  */
 public interface OrbConnectionManagerStats extends Stats {
 
-    /** Returns the total number of connections to the ORB as an instance of BoundedRangeStatistic.
-     * @return        an instance of {@link BoundedRangeStatistic}
+    /**
+     * Returns the total number of connections to the ORB as an instance of BoundedRangeStatistic.
+     *
+     * @return an instance of {@link BoundedRangeStatistic}
      */
-    public BoundedRangeStatistic getTotalConnections();
+    BoundedRangeStatistic getTotalConnections();
 
-    /** Returns the total number of idle connections to the ORB as an instance of CountStatistic.
-     * @return        an instance of {@link CountStatistic}
-     */
-    public CountStatistic getConnectionsIdle();
 
-    /** Returns the total number of in-use connections to the ORB as an instance of CountStatistic.
-     * @return        an instance of {@link CountStatistic}
+    /**
+     * Returns the total number of idle connections to the ORB as an instance of CountStatistic.
+     *
+     * @return an instance of {@link CountStatistic}
      */
-    public CountStatistic getConnectionsInUse();
+    CountStatistic getConnectionsIdle();
+
+
+    /**
+     * Returns the total number of in-use connections to the ORB as an instance of CountStatistic.
+     *
+     * @return an instance of {@link CountStatistic}
+     */
+    CountStatistic getConnectionsInUse();
 }

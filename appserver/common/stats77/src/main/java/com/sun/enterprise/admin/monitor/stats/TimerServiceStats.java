@@ -19,10 +19,11 @@ import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
 /**
- * A Stats interface to represent the  statistical data exposed by the
+ * A Stats interface to represent the statistical data exposed by the
  * Ejb Timer Service.
- * @author  Murali Vempaty
- * @since   SJSAS8.1
+ *
+ * @author Murali Vempaty
+ * @since SJSAS8.1
  */
 public interface TimerServiceStats extends Stats {
 
@@ -32,17 +33,17 @@ public interface TimerServiceStats extends Stats {
      * Total number of timers created in the system
      * @return CountStatistic
      */
-    public CountStatistic getNumTimersCreated();
+    CountStatistic getNumTimersCreated();
 
     /**
      * Total number of timers delivered by the system
      * @return CountStatistic
      */
-    public CountStatistic getNumTimersDelivered();
+    CountStatistic getNumTimersDelivered();
 
     /**
      * Total number of timers removed from the system
      * @return CountStatistic
      */
-    public CountStatistic getNumTimersRemoved();
+    CountStatistic getNumTimersRemoved();
 }

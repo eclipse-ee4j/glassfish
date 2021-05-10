@@ -26,6 +26,7 @@ import org.glassfish.j2ee.statistics.TimeStatistic;
  * here, as it is not possible to encapsulate the data pertaining to
  * the service method in a TimeStatistic. Therefore it becomes necessary
  * to define our own interface for exposing Servlet Statistics.
+ *
  * @since S1AS8.0
  */
 public interface ServletStats extends Stats {
@@ -34,14 +35,14 @@ public interface ServletStats extends Stats {
      * Number of requests processed by this servlet.
      * @return CountStatistic
      */
-    public CountStatistic getRequestCount();
+    CountStatistic getRequestCount();
 
     /**
      * Cumulative Value, indicating the time taken to process the
      * requests received so far.
      * @return CountStatistic
      */
-    public CountStatistic getProcessingTime();
+    CountStatistic getProcessingTime();
 
     /**
      * Gets the execution time of the servlet's service method.
@@ -52,19 +53,19 @@ public interface ServletStats extends Stats {
      *
      * @return Execution time of the servlet's service method
      */
-    public TimeStatistic getServiceTime();
+    TimeStatistic getServiceTime();
 
     /**
      * The maximum processing time of a servlet request
      * @return CountStatistic
      */
-    public CountStatistic getMaxTime();
+    CountStatistic getMaxTime();
 
     /**
      * The errorCount represents the number of cases where the response
      * code was >= 400
      * @return CountStatistic
      */
-    public CountStatistic getErrorCount();
+    CountStatistic getErrorCount();
 
 }

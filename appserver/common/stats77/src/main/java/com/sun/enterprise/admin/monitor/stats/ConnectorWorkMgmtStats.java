@@ -27,7 +27,6 @@ import org.glassfish.j2ee.statistics.Stats;
  * @author  Murali Vempaty
  * @since   SJSAS8.1
  */
-
 public interface ConnectorWorkMgmtStats extends Stats {
 
     /**
@@ -37,41 +36,41 @@ public interface ConnectorWorkMgmtStats extends Stats {
      * module
      * @return RangeStatistic
      */
-    public RangeStatistic getActiveWorkCount();
+    RangeStatistic getActiveWorkCount();
 
     /**
      * indicates the current, high & low of the number of work objects waiting
      * in the work queue before executing, since the last reset
      * @return RangeStatistic
      */
-    public RangeStatistic getWaitQueueLength();
+    RangeStatistic getWaitQueueLength();
 
     /**
      * indicates the longest and shorted wait of a work object in the work queue
      * before it gets executed, since the last reset
      * @return RangeStatistic
      */
-    public RangeStatistic getWorkRequestWaitTime();
+    RangeStatistic getWorkRequestWaitTime();
 
     /**
      * indicates the number of work objects submitted by a connector module
      *  for execution, since the last reset
      * @return CountStatistic
      */
-    public CountStatistic getSubmittedWorkCount();
+    CountStatistic getSubmittedWorkCount();
 
     /**
      * indicates the number of work objects rejected by the Application Server
      * per connector module, since the last reset.
      * @return CountStatistic
      */
-    public CountStatistic getRejectedWorkCount();
+    CountStatistic getRejectedWorkCount();
 
     /**
      * indicates the number of work objects that were completed by the
      * Application Server per connector module, since the last reset.
      * @return CountStatistic
      */
-    public CountStatistic getCompletedWorkCount();
+    CountStatistic getCompletedWorkCount();
 
 }

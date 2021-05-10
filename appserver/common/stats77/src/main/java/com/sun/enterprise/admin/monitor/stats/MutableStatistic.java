@@ -18,7 +18,8 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Statistic;
 import java.io.Serializable;
 
-/** An interface that gives a flexibility to set various values for a particular Statistic.
+/**
+ * An interface that gives a flexibility to set various values for a particular Statistic.
  * This provision is basically to have the same data structure to collect and
  * return the (read-only copy of) statistical data. This extends the
  * java.io.Serializable, so that its subclasses can be serialized to facilitate
@@ -28,20 +29,22 @@ import java.io.Serializable;
  * <P>
  * Methods of this class should be called judiciously by the component that is
  * gathering the statistics.
+ *
  * @author Kedar Mhaswade
  * @since S1AS8.0
  * @version 1.0
  */
-
 public interface MutableStatistic extends Serializable {
 
     /**
      * Returns a read-only view of this Statistic. An implementing class has
-     * to return the instances of Statistic interfaces defined in {@link javax.management.j2ee.statistic}
+     * to return the instances of Statistic interfaces defined in
+     * {@link javax.management.j2ee.statistic}
      * and {@link com.sun.enterprise.admin.monitor.stats} packages.
-     * @return      an instance of a specific Statistic interface
+     *
+     * @return an instance of a specific Statistic interface
      */
-    public Statistic unmodifiableView();
+    Statistic unmodifiableView();
 
     /**
      * Returns an instance of Statistic whose state can be changed by the caller. It is important
@@ -53,7 +56,7 @@ public interface MutableStatistic extends Serializable {
      * number of instances created (per Mahesh's Suggestion).
      * @return      an instance of Statistic interface that should not be cached.
      */
-    public Statistic modifiableView();
+    Statistic modifiableView();
 
     /**
      * Resets the encapsulated Statistic interface to its initial value. The idea being, if (after
@@ -61,5 +64,5 @@ public interface MutableStatistic extends Serializable {
      * calling this method. Note that the time of last sampling changes to the instant
      * when this method is invoked.
      */
-    public void reset();
+    void reset();
 }

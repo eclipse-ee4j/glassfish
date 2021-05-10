@@ -16,10 +16,8 @@
 
 package org.glassfish.admin.amx.j2ee;
 
-
 /**
-    Parent type for the various EJB types.
+ * Parent type for the various EJB types.
  */
-public interface EJB extends J2EEManagedObject
-{
+public interface EJB extends J2EEManagedObject {
 }

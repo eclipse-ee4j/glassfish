@@ -19,7 +19,6 @@ package org.glassfish.admin.amx.j2ee;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 
-@AMXMBeanMetadata(type=J2EETypes.RMI_IIOP_RESOURCE, leaf=true)
-public interface RMI_IIOPResource extends J2EEResource
-{
+@AMXMBeanMetadata(type = J2EETypes.RMI_IIOP_RESOURCE, leaf = true)
+public interface RMI_IIOPResource extends J2EEResource {
 }

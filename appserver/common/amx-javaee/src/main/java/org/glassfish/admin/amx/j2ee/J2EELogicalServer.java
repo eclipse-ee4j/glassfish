@@ -21,18 +21,19 @@ import org.glassfish.admin.amx.annotation.ManagedOperation;
 
 
 /**
-    Base interface only (for cluster and standalone server)
+ * Base interface only (for cluster and standalone server)
  */
-public interface J2EELogicalServer extends J2EEManagedObject, StateManageable
-{
+public interface J2EELogicalServer extends J2EEManagedObject, StateManageable {
+
     /**
      * Start the application on this Server.
      *
      * @param appID The application ID
      * @param optional Optional parameters supplied as name-value pairs
      */
-     @ManagedOperation
-    public void startApp(String appID, Map<String,String> optional);
+    @ManagedOperation
+    void startApp(String appID, Map<String, String> optional);
+
 
     /**
      * Stop the application on this Server.
@@ -40,7 +41,6 @@ public interface J2EELogicalServer extends J2EEManagedObject, StateManageable
      * @param appID The application ID
      * @param optional Optional parameters supplied as name-value pairs
      */
-     @ManagedOperation
-    public void stopApp(String appID, Map<String,String> optional);
+    @ManagedOperation
+    void stopApp(String appID, Map<String, String> optional);
 }
-

@@ -16,44 +16,46 @@
 
 package org.glassfish.admin.amx.j2ee;
 
-
-
 /**
  */
-public interface J2EEManagementEvent
-{
-    /**
-        The name of the managed object that generated this event.
-
-         @return the ObjectName of the object, as a String
-     */
-    public String    getSource();
+public interface J2EEManagementEvent {
 
     /**
-        The time of the event represented as a long, whose value is
-        the number of milliseconds since January 1, 1970, 00:00:00.
+     * The name of the managed object that generated this event.
+     *
+     * @return the ObjectName of the object, as a String
      */
-    public long            getWhen();
+    String getSource();
+
 
     /**
-        The sequence number of the event.
-        Identifies the position of the event in a stream
-        of events. The sequence number provides a means of
-        determining the order of sequential events that
-        occurred with the same timestamp (within the
-        minimum supported unit of time).
+     * The time of the event represented as a long, whose value is
+     * the number of milliseconds since January 1, 1970, 00:00:00.
      */
-    public long            getSequence();
+    long getWhen();
+
 
     /**
-        The type of the event. State manageable objects generate a
-        J2EEEvent object with the type attribute set to "STATE"
-        whenever they reach the RUNNING, STOPPED or FAILED states.
+     * The sequence number of the event.
+     * Identifies the position of the event in a stream
+     * of events. The sequence number provides a means of
+     * determining the order of sequential events that
+     * occurred with the same timestamp (within the
+     * minimum supported unit of time).
      */
-    public String        getType();
+    long getSequence();
+
 
     /**
-        An informational message about the event.
+     * The type of the event. State manageable objects generate a
+     * J2EEEvent object with the type attribute set to "STATE"
+     * whenever they reach the RUNNING, STOPPED or FAILED states.
      */
-    public String        getMessage();
+    String getType();
+
+
+    /**
+     * An informational message about the event.
+     */
+    String getMessage();
 }

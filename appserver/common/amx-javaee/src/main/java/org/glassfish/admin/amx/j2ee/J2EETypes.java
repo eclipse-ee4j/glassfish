@@ -22,87 +22,87 @@ import org.glassfish.admin.amx.util.SetUtil;
 import java.util.Set;
 
 /**
-    See JSR 77.3-1.<br>
+ * See JSR 77.3-1.<br>
  */
-public final class J2EETypes
-{
-    private J2EETypes() {}
+public final class J2EETypes {
+
+    private J2EETypes() {
+    }
 
     /**
-        The javax.management.ObjectName property key denoting the type of the MBean.
+     * The javax.management.ObjectName property key denoting the type of the MBean.
      */
-    public final static String    J2EE_TYPE_KEY            = "j2eeType";
+    public final static String J2EE_TYPE_KEY = "j2eeType";
 
     /**
-        The ObjectName property key denoting the name of the MBean.
+     * The ObjectName property key denoting the name of the MBean.
      */
-    public final static String    NAME_KEY            = AMX.NAME_KEY;
+    public final static String NAME_KEY = AMX.NAME_KEY;
 
-    public final static String    J2EE_DOMAIN                    = "J2EEDomain";
-    public final static String    J2EE_SERVER                    = "J2EEServer";
-    public final static String    J2EE_APPLICATION            = "J2EEApplication";
-    public final static String    APP_CLIENT_MODULE            = "AppClientModule";
-    public final static String    EJB_MODULE                    = "EJBModule";
-    public final static String    WEB_MODULE                    = "WebModule";
-    public final static String    RESOURCE_ADAPTER_MODULE        = "ResourceAdapterModule";
-    public final static String    RESOURCE_ADAPTER            = "ResourceAdapter";
-    public final static String    ENTITY_BEAN                    = "EntityBean";
-    public final static String    STATEFUL_SESSION_BEAN        = "StatefulSessionBean";
-    public final static String    STATELESS_SESSION_BEAN        = "StatelessSessionBean";
-    public final static String    SINGLETON_SESSION_BEAN        = "SingletonSessionBean";
-    public final static String    MESSAGE_DRIVEN_BEAN            = "MessageDrivenBean";
-    public final static String    SERVLET                        = "Servlet";
-    public final static String    JAVA_MAIL_RESOURCE            = "JavaMailResource";
-    public final static String    JCA_RESOURCE                = "JCAResource";
-    public final static String    JCA_CONNECTION_FACTORY        = "JCAConnectionFactory";
-    public final static String    JCA_MANAGED_CONNECTION_FACTORY    = "JCAManagedConnectionFactory";
-    public final static String    JDBC_RESOURCE                = "JDBCResource";
-    public final static String    JDBC_DATA_SOURCE            = "JDBCDataSource";
-    public final static String    JDBC_DRIVER                    = "JDBCDriver";
-    public final static String    JMS_RESOURCE                = "JMSResource";
-    public final static String    JNDI_RESOURCE                = "JNDIResource";
-    public final static String    JTA_RESOURCE                = "JTAResource";
-    public final static String    RMI_IIOP_RESOURCE            = "RMI_IIOPResource";
-    public final static String    URL_RESOURCE                = "URLResource";
-    public final static String    JVM                            = "JVM";
+    public final static String J2EE_DOMAIN = "J2EEDomain";
+    public final static String J2EE_SERVER = "J2EEServer";
+    public final static String J2EE_APPLICATION = "J2EEApplication";
+    public final static String APP_CLIENT_MODULE = "AppClientModule";
+    public final static String EJB_MODULE = "EJBModule";
+    public final static String WEB_MODULE = "WebModule";
+    public final static String RESOURCE_ADAPTER_MODULE = "ResourceAdapterModule";
+    public final static String RESOURCE_ADAPTER = "ResourceAdapter";
+    public final static String ENTITY_BEAN = "EntityBean";
+    public final static String STATEFUL_SESSION_BEAN = "StatefulSessionBean";
+    public final static String STATELESS_SESSION_BEAN = "StatelessSessionBean";
+    public final static String SINGLETON_SESSION_BEAN = "SingletonSessionBean";
+    public final static String MESSAGE_DRIVEN_BEAN = "MessageDrivenBean";
+    public final static String SERVLET = "Servlet";
+    public final static String JAVA_MAIL_RESOURCE = "JavaMailResource";
+    public final static String JCA_RESOURCE = "JCAResource";
+    public final static String JCA_CONNECTION_FACTORY = "JCAConnectionFactory";
+    public final static String JCA_MANAGED_CONNECTION_FACTORY = "JCAManagedConnectionFactory";
+    public final static String JDBC_RESOURCE = "JDBCResource";
+    public final static String JDBC_DATA_SOURCE = "JDBCDataSource";
+    public final static String JDBC_DRIVER = "JDBCDriver";
+    public final static String JMS_RESOURCE = "JMSResource";
+    public final static String JNDI_RESOURCE = "JNDIResource";
+    public final static String JTA_RESOURCE = "JTAResource";
+    public final static String RMI_IIOP_RESOURCE = "RMI_IIOPResource";
+    public final static String URL_RESOURCE = "URLResource";
+    public final static String JVM = "JVM";
 
 
     /**
-        @since AppServer 9.0
+     * @since AppServer 9.0
      */
-    public final static String    WEB_SERVICE_ENDPOINT    ="WebServiceEndpoint";
+    public final static String WEB_SERVICE_ENDPOINT = "WebServiceEndpoint";
 
     /**
-        Set consisting of all standard JSR 77 j2eeTypes
+     * Set consisting of all standard JSR 77 j2eeTypes
      */
-    public static final Set<String>    ALL_STD    =
+    public static final Set<String> ALL_STD =
         SetUtil.newUnmodifiableStringSet(
-        J2EE_DOMAIN,
-        J2EE_SERVER,
-        J2EE_APPLICATION,
-        APP_CLIENT_MODULE,
-        EJB_MODULE,
-        WEB_MODULE,
-        RESOURCE_ADAPTER_MODULE,
-        ENTITY_BEAN,
-        STATEFUL_SESSION_BEAN,
-        STATELESS_SESSION_BEAN,
-        MESSAGE_DRIVEN_BEAN,
-        SERVLET,
-        JAVA_MAIL_RESOURCE,
-        JCA_RESOURCE,
-        JCA_CONNECTION_FACTORY,
-        JCA_MANAGED_CONNECTION_FACTORY,
-        JDBC_RESOURCE,
-        JDBC_DATA_SOURCE,
-        JDBC_DRIVER,
-        JMS_RESOURCE,
-        JNDI_RESOURCE,
-        JTA_RESOURCE,
-        RMI_IIOP_RESOURCE,
-        URL_RESOURCE,
-        JVM,
-        WEB_SERVICE_ENDPOINT  );
-
-
+            J2EE_DOMAIN,
+            J2EE_SERVER,
+            J2EE_APPLICATION,
+            APP_CLIENT_MODULE,
+            EJB_MODULE,
+            WEB_MODULE,
+            RESOURCE_ADAPTER_MODULE,
+            ENTITY_BEAN,
+            STATEFUL_SESSION_BEAN,
+            STATELESS_SESSION_BEAN,
+            MESSAGE_DRIVEN_BEAN,
+            SERVLET,
+            JAVA_MAIL_RESOURCE,
+            JCA_RESOURCE,
+            JCA_CONNECTION_FACTORY,
+            JCA_MANAGED_CONNECTION_FACTORY,
+            JDBC_RESOURCE,
+            JDBC_DATA_SOURCE,
+            JDBC_DRIVER,
+            JMS_RESOURCE,
+            JNDI_RESOURCE,
+            JTA_RESOURCE,
+            RMI_IIOP_RESOURCE,
+            URL_RESOURCE,
+            JVM,
+            WEB_SERVICE_ENDPOINT
+        );
 }

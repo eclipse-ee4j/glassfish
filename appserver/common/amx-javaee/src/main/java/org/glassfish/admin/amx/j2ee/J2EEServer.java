@@ -26,76 +26,80 @@ import org.glassfish.admin.amx.annotation.ManagedOperation;
 
 /**
  */
-@AMXMBeanMetadata(type=J2EETypes.J2EE_SERVER)
-public interface J2EEServer extends J2EELogicalServer
-{
-    /**
-        Restart the server.
-        <b>Enterprise Edition only.</b>
-     */
-     @ManagedOperation
-    public void restart();
+@AMXMBeanMetadata(type = J2EETypes.J2EE_SERVER)
+public interface J2EEServer extends J2EELogicalServer {
 
     /**
-        Note that the Attribute name is case-sensitive
-        "deployedObjects" as defined by JSR 77.
-
-         @return the ObjectNames as Strings
+     * Restart the server.
+     * <b>Enterprise Edition only.</b>
      */
-     @ManagedAttribute
-    public String[]    getdeployedObjects();
+    @ManagedOperation
+    void restart();
 
 
     /**
-        In 8.1, there will only ever be one JVM for a J2EEServer.
-        Note that the Attribute name is case-sensitive
-        "javaVMs" as defined by JSR 77.
-
-         @return the ObjectNames as Strings
+     * Note that the Attribute name is case-sensitive
+     * "deployedObjects" as defined by JSR 77.
+     *
+     * @return the ObjectNames as Strings
      */
-     @ManagedAttribute
-    public String[]    getjavaVMs();
-
-    /**
-        There is always a single JVM for a J2EEServer.
-        @return JVM
-     */
-     @ManagedAttribute
-    public String        getjvm();
-
-    /**
-        Note that the Attribute name is case-sensitive
-        "resources" as defined by JSR 77.
-
-         @return the ObjectNames as Strings
-     */
-     @ManagedAttribute
-    public String[]        getresources();
+    @ManagedAttribute
+    String[] getdeployedObjects();
 
 
     /**
-        Note that the Attribute name is case-sensitive
-        "serverVendor" as defined by JSR 77.
-
-         @return the server vendor, a free-form String
+     * In 8.1, there will only ever be one JVM for a J2EEServer.
+     * Note that the Attribute name is case-sensitive
+     * "javaVMs" as defined by JSR 77.
+     *
+     * @return the ObjectNames as Strings
      */
-     @ManagedAttribute
-    public String        getserverVendor();
+    @ManagedAttribute
+    String[] getjavaVMs();
+
 
     /**
-        Note that the Attribute name is case-sensitive
-        "serverVersion" as defined by JSR 77.
-
-         @return the server version, a free-form String
+     * There is always a single JVM for a J2EEServer.
+     *
+     * @return JVM
      */
-     @ManagedAttribute
-    public String        getserverVersion();
+    @ManagedAttribute
+    String getjvm();
 
 
-     @ManagedAttribute
-    @Description( "Get the ObjectName of the corresponding config MBean, if any" )
-    public ObjectName getCorrespondingConfig();
+    /**
+     * Note that the Attribute name is case-sensitive
+     * "resources" as defined by JSR 77.
+     *
+     * @return the ObjectNames as Strings
+     */
+    @ManagedAttribute
+    String[] getresources();
+
+
+    /**
+     * Note that the Attribute name is case-sensitive
+     * "serverVendor" as defined by JSR 77.
+     *
+     * @return the server vendor, a free-form String
+     */
+    @ManagedAttribute
+    String getserverVendor();
+
+
+    /**
+     * Note that the Attribute name is case-sensitive
+     * "serverVersion" as defined by JSR 77.
+     *
+     * @return the server version, a free-form String
+     */
+    @ManagedAttribute
+    String getserverVersion();
+
+
+    @ManagedAttribute
+    @Description("Get the ObjectName of the corresponding config MBean, if any")
+    ObjectName getCorrespondingConfig();
 }
-
 
 

@@ -19,6 +19,5 @@ package org.glassfish.admin.amx.j2ee;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 @AMXMBeanMetadata(type = J2EETypes.STATEFUL_SESSION_BEAN, leaf = true)
-public interface StatefulSessionBean extends SessionBean
-{
+public interface StatefulSessionBean extends SessionBean {
 }

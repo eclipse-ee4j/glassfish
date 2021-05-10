@@ -15,10 +15,10 @@
  */
 
 package org.glassfish.admin.amx.j2ee;
+
 /**
-    Defines access to Stats.
+ * Defines access to Stats.
  */
-public interface StatisticsProvider
-{
+public interface StatisticsProvider {
 
 }

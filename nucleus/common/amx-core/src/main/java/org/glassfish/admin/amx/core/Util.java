@@ -16,25 +16,35 @@
 
 package org.glassfish.admin.amx.core;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.glassfish.admin.amx.util.jmx.JMXUtil;
-import org.glassfish.admin.amx.util.SetUtil;
-import org.glassfish.admin.amx.util.ClassUtil;
-import org.glassfish.admin.amx.core.AMXMBeanMetadata;
-
-import static org.glassfish.external.amx.AMX.*;
-
+import javax.management.MBeanServer;
 import javax.management.Notification;
 import javax.management.ObjectName;
-import java.io.Serializable;
-import java.util.*;
-import javax.management.MBeanServer;
+
+import org.glassfish.admin.amx.util.ClassUtil;
+import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
+import static org.glassfish.external.amx.AMX.ATTR_PARENT;
+import static org.glassfish.external.amx.AMX.NAME_KEY;
+import static org.glassfish.external.amx.AMX.NO_NAME;
+import static org.glassfish.external.amx.AMX.PARENT_PATH_KEY;
+import static org.glassfish.external.amx.AMX.TYPE_KEY;
+
 /**
-Utility routines pertinent to the MBean API.
+ * Utility routines pertinent to the MBean API.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 public final class Util {
@@ -64,33 +74,36 @@ public final class Util {
     private Util() {
     }
 
-    /**
-    Create a new ObjectName, caller is guaranteeing that the name is
-    well-formed (a RuntimeException will be thrown if not). This avoids
-    having to catch all sorts of JMX exceptions.<br>
-    <b>NOTE:</b> Do not call this method if there is not certainty of a well-formed name.
 
-    @param name
+    /**
+     * Create a new ObjectName, caller is guaranteeing that the name is
+     * well-formed (a RuntimeException will be thrown if not). This avoids
+     * having to catch all sorts of JMX exceptions.<br>
+     * <b>NOTE:</b> Do not call this method if there is not certainty of a well-formed name.
+     *
+     * @param name
      */
     public static ObjectName newObjectName(String name) {
         return (JMXUtil.newObjectName(name));
     }
 
-    /**
-    Build an ObjectName.  Calls newObjectName( domain + ":" + props )
 
-    @param domain        the JMX domain
-    @param props        properties of the ObjectName
+    /**
+     * Build an ObjectName. Calls newObjectName( domain + ":" + props )
+     *
+     * @param domain the JMX domain
+     * @param props properties of the ObjectName
      */
     public static ObjectName newObjectName(String domain, String props) {
         return (newObjectName(domain + ":" + props));
     }
 
-    /**
-    Build an ObjectName pattern.
 
-    @param domain        the JMX domain
-    @param props        properties of the ObjectName
+    /**
+     * Build an ObjectName pattern.
+     *
+     * @param domain the JMX domain
+     * @param props properties of the ObjectName
      */
     public static ObjectName newObjectNamePattern(
             final String domain,
@@ -98,10 +111,11 @@ public final class Util {
         return (JMXUtil.newObjectNamePattern(domain, props));
     }
 
-    /**
-    Build an ObjectName pattern.
 
-    @param objectName
+    /**
+     * Build an ObjectName pattern.
+     *
+     * @param objectName
      */
     public static ObjectName newObjectNamePattern(ObjectName objectName) {
         final String props = objectName.getKeyPropertyListString();
@@ -109,11 +123,12 @@ public final class Util {
         return (newObjectNamePattern(objectName.getDomain(), props));
     }
 
-    /**
-    Make an ObjectName property of the form <i>name</i>=<i>value</i>.
 
-    @param name
-    @param value
+    /**
+     * Make an ObjectName property of the form <i>name</i>=<i>value</i>.
+     *
+     * @param name
+     * @param value
      */
     public static String makeProp(
             final String name,
@@ -121,25 +136,28 @@ public final class Util {
         return (JMXUtil.makeProp(name, value));
     }
 
-    /**
-    Make an ObjectName property of the form type=<i>value</i>.
 
-    @param value
+    /**
+     * Make an ObjectName property of the form type=<i>value</i>.
+     *
+     * @param value
      */
     public static String makeTypeProp(final String value) {
         return (makeProp(TYPE_KEY, value));
     }
 
+
     /**
-    Make an ObjectName property of the form name=<i>value</i>.
+     * Make an ObjectName property of the form name=<i>value</i>.
      */
     public static String makeNameProp(final String name) {
         return (makeProp(NAME_KEY, "" + quoteIfNeeded(name)));
     }
 
+
     /**
-    @param type
-    @param name
+     * @param type
+     * @param name
      */
     public static String makeRequiredProps(
             final String type,
@@ -153,11 +171,12 @@ public final class Util {
         return (props);
     }
 
-    /**
-    Extract the type and name properties and return it as a single property
-    <i>type</i>=<i>name</i>
 
-    @param objectName
+    /**
+     * Extract the type and name properties and return it as a single property
+     * <i>type</i>=<i>name</i>
+     *
+     * @param objectName
      */
     public static String getSelfProp(final ObjectName objectName) {
         final String type = objectName.getKeyProperty(TYPE_KEY);
@@ -166,10 +185,11 @@ public final class Util {
         return (Util.makeProp(type, name));
     }
 
-    /**
-    Extract all properties other than type=<type>,name=<name>.
 
-    @param objectName
+    /**
+     * Extract all properties other than type=<type>,name=<name>.
+     *
+     * @param objectName
      */
     public static String getAdditionalProps(final ObjectName objectName) {
         final java.util.Hashtable<String,String> allProps = objectName.getKeyPropertyList();
@@ -198,22 +218,24 @@ public final class Util {
         return (concatenateProps(concatenateProps(props1, props2), props3));
     }
 
+
     /**
-    @return a List of ObjectNames from a Set of AMX.
+     * @return a List of ObjectNames from a Set of AMX.
      */
     public static List<ObjectName> toObjectNameList(final Collection<? extends AMXProxy> amxs) {
-        final List<ObjectName> objectNames = new ArrayList<ObjectName>();
+        final List<ObjectName> objectNames = new ArrayList<>();
         for (final AMXProxy next : amxs) {
             objectNames.add(next.objectName());
         }
         return (Collections.checkedList(objectNames, ObjectName.class));
     }
 
+
     /**
-    @return a Map of ObjectNames from a Map whose values are AMX.
+     * @return a Map of ObjectNames from a Map whose values are AMX.
      */
     public static Map<String, ObjectName> toObjectNameMap(final Map<String, ? extends AMXProxy> amxMap) {
-        final Map<String, ObjectName> m = new HashMap<String, ObjectName>();
+        final Map<String, ObjectName> m = new HashMap<>();
 
         for (final Map.Entry<String,? extends AMXProxy> e : amxMap.entrySet()) {
             final AMXProxy value = e.getValue();
@@ -222,8 +244,9 @@ public final class Util {
         return (Collections.checkedMap(m, String.class, ObjectName.class));
     }
 
+
     /**
-    @return an ObjectName[] from an AMX[]
+     * @return an ObjectName[] from an AMX[]
      */
     public static ObjectName[] toObjectNamesArray(final AMXProxy[] amx) {
         final ObjectName[] objectNames = new ObjectName[amx.length];
@@ -245,14 +268,15 @@ public final class Util {
         return (objectNames);
     }
 
-    /**
-    Create a Map keyed by the value of the NAME_KEY with
-    value the AMX item.
 
-    @param amxs Set of AMX
+    /**
+     * Create a Map keyed by the value of the NAME_KEY with
+     * value the AMX item.
+     *
+     * @param amxs Set of AMX
      */
     public static <T extends AMXProxy> Map<String, T> createNameMap(final Set<T> amxs) {
-        final Map<String, T> m = new HashMap<String, T>();
+        final Map<String, T> m = new HashMap<>();
 
         for (final T amx : amxs) {
             final String name = amx.getName();
@@ -262,16 +286,17 @@ public final class Util {
         return (m);
     }
 
-    /**
-    Create a Map keyed by the value of the NAME_KEY with
-    value the ObjectName. Note that if two or more ObjectNames
-    share the same name, the resulting Map will contain only
-    one of the original ObjectNames.
 
-    @param objectNames Set of ObjectName
+    /**
+     * Create a Map keyed by the value of the NAME_KEY with
+     * value the ObjectName. Note that if two or more ObjectNames
+     * share the same name, the resulting Map will contain only
+     * one of the original ObjectNames.
+     *
+     * @param objectNames Set of ObjectName
      */
-    public static final Map<String, ObjectName> createObjectNameMap(final Set<ObjectName> objectNames) {
-        final Map<String, ObjectName> m = new HashMap<String, ObjectName>();
+    public static Map<String, ObjectName> createObjectNameMap(final Set<ObjectName> objectNames) {
+        final Map<String, ObjectName> m = new HashMap<>();
 
         for (final ObjectName objectName : objectNames) {
             final String name = getNameProp(objectName);
@@ -287,7 +312,7 @@ public final class Util {
     }
 
     public static <T extends AMXProxy> List<T> asProxyList(final Collection<? extends AMXProxy> c, final Class<T> intf) {
-        final List<T> list = new ArrayList<T>();
+        final List<T> list = new ArrayList<>();
 
         for (final AMXProxy amx : c) {
             list.add(amx.as(intf));
@@ -296,20 +321,22 @@ public final class Util {
         return list;
     }
 
+
     /**
-    All Notifications emitted by AMX MBeans which are not
-    standard types defined by JMX place a Map
-    into the userData field of the Notification.  This call
-    retrieves that Map, which may be null if no additional
-    data is included.
+     * All Notifications emitted by AMX MBeans which are not
+     * standard types defined by JMX place a Map
+     * into the userData field of the Notification. This call
+     * retrieves that Map, which may be null if no additional
+     * data is included.
      */
     public static Map<String, Serializable> getAMXNotificationData(final Notification notif) {
         return Collections.unmodifiableMap(
                 JMXUtil.getUserDataMapString_Serializable(notif));
     }
 
+
     /**
-    Use of generic type form taking Class<T> is preferred.
+     * Use of generic type form taking Class<T> is preferred.
      */
     public static Serializable getAMXNotificationValue(final Notification notif, final String key) {
         final Map<String, Serializable> data =
@@ -327,10 +354,12 @@ public final class Util {
         return data.get(key);
     }
 
+
     /**
-    Retrieve a particular value associated with the specified
-    key from an AMX Notification.
-    @see #getAMXNotificationData
+     * Retrieve a particular value associated with the specified
+     * key from an AMX Notification.
+     *
+     * @see #getAMXNotificationData
      */
     public static <T extends Serializable> T getAMXNotificationValue(
             final Notification notif,
@@ -348,23 +377,25 @@ public final class Util {
         }
     }
 
+
     /**
-    A safe way to cast to AMX.
+     * A safe way to cast to AMX.
      */
     public static AMXProxy asAMX(final Object o) {
         return AMXProxy.class.cast(o);
     }
 
-    /**
-    Filter the AMX dynamic proxies to those that implement the specified interface,
-    and return a new Set with the matching items.  The 'desired' interface can be
-    any AMX-defined class, including the mixin ones.
 
-    @param candidates the Set to be filtered
-    @param desired the interface to filter by
+    /**
+     * Filter the AMX dynamic proxies to those that implement the specified interface,
+     * and return a new Set with the matching items. The 'desired' interface can be
+     * any AMX-defined class, including the mixin ones.
+     *
+     * @param candidates the Set to be filtered
+     * @param desired the interface to filter by
      */
     public static <T extends AMXProxy> Set<T> filterAMX(final Set<T> candidates, final Class<?> desired) {
-        final Set<T> result = new HashSet<T>();
+        final Set<T> result = new HashSet<>();
         for (final T amx : candidates) {
             if (desired.isAssignableFrom(amx.getClass())) {
                 result.add(amx);
@@ -376,7 +407,7 @@ public final class Util {
     public static Map<String, ObjectName> filterByType(final ObjectName[] objectNames, final String type) {
         Map<String, ObjectName> m = null;
         if (objectNames != null) {
-            m = new HashMap<String, ObjectName>();
+            m = new HashMap<>();
             for (final ObjectName o : objectNames) {
                 if (type.equals(o.getKeyProperty(TYPE_KEY))) {
                     // use the name property, not the name from getNameProp()
@@ -387,16 +418,17 @@ public final class Util {
         return m;
     }
 
-    /**
-    Filter the AMX dynamic proxies to those that implement the specified interface,
-    and return a new Map with the matching items.  The 'desired' interface can be
-    any AMX-defined class, including the mixin ones.
 
-    @param candidates the Map to be filtered
-    @param desired the interface to filter by
+    /**
+     * Filter the AMX dynamic proxies to those that implement the specified interface,
+     * and return a new Map with the matching items. The 'desired' interface can be
+     * any AMX-defined class, including the mixin ones.
+     *
+     * @param candidates the Map to be filtered
+     * @param desired the interface to filter by
      */
     public static <T extends AMXProxy> Map<String, T> filterAMX(final Map<String, T> candidates, final Class<?> desired) {
-        final Map<String, T> result = new HashMap<String, T>();
+        final Map<String, T> result = new HashMap<>();
         for (final Map.Entry<String,T> e : candidates.entrySet()) {
             final T amx = e.getValue();
             if (desired.isAssignableFrom(amx.getClass())) {
@@ -410,10 +442,12 @@ public final class Util {
         return objectName.getKeyProperty(TYPE_KEY);
     }
 
+
     /**
-    Get the value of the NAME_KEY property within the ObjectName, or null if
-    not present.
-    @return the name
+     * Get the value of the NAME_KEY property within the ObjectName, or null if
+     * not present.
+     *
+     * @return the name
      */
     public static String getNameProp(final ObjectName objectName) {
         return objectName.getKeyProperty(NAME_KEY);
@@ -431,8 +465,9 @@ public final class Util {
         return (ObjectName) JMXUtil.getAttribute(server, objectName, ATTR_PARENT);
     }
 
+
     /**
-    Generate the default MBean type from a String, eg from a classname.
+     * Generate the default MBean type from a String, eg from a classname.
      */
     public static String typeFromName(final String s) {
         if (s.indexOf("-") >= 0) {
@@ -446,9 +481,11 @@ public final class Util {
         }
         return domConvertName(simpleName);
     }
-    /** Proxy interfaces may contain a type field denoting the type to be used in the ObjectName;
+
+    /**
+     * Proxy interfaces may contain a type field denoting the type to be used in the ObjectName;
      * this is an alternative to an annotation that may be desirable to avoid
-     * a dependency on the amx-core module.  Some proxy interfaces also represent
+     * a dependency on the amx-core module. Some proxy interfaces also represent
      * MBeans whose type and other metadata is derived not from the proxy interface,
      * but from another authoritative source; this allows an explicit
      * linkage that allows the AMXProxyHandler to deduce the correct type, given
@@ -462,8 +499,8 @@ public final class Util {
     public static final String TYPE_FIELD = "AMX_TYPE";
 
     /**
-    Deduce the type to be used in the path.  Presence of a TYPE_FIELD field always
-    take precedence, then the AMXMBeanMetadata.
+     * Deduce the type to be used in the path. Presence of a TYPE_FIELD field always
+     * take precedence, then the AMXMBeanMetadata.
      */
     public static String deduceType(final Class<?> intf) {
         if (intf == null) {
@@ -523,6 +560,7 @@ public final class Util {
         }
         return buf.toString();
     }
+
     /**
      * Used to tokenize the property name into XML name.
      */

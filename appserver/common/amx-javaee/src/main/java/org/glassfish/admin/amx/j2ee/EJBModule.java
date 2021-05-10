@@ -20,15 +20,13 @@ import org.glassfish.admin.amx.annotation.ManagedAttribute;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 @AMXMBeanMetadata(type = J2EETypes.EJB_MODULE)
-public interface EJBModule extends J2EEModule
-{
+public interface EJBModule extends J2EEModule {
 
     /**
-    Note that the Attribute name is case-sensitive
-    "servlets" as defined by JSR 77.
-
-    @return the ObjectNames of the ejbs, as Strings
+     * Note that the Attribute name is case-sensitive
+     * "servlets" as defined by JSR 77.
+     *
+     * @return the ObjectNames of the ejbs, as Strings
      */
-    @ManagedAttribute
-    public String[] getejbs();
+    @ManagedAttribute String[] getejbs();
 }

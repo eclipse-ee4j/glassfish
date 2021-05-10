@@ -37,13 +37,11 @@ import java.util.*;
 import static org.glassfish.external.amx.AMX.*;
 
 /**
-@deprecated Extends MBeanProxyHandler by also supporting the functionality required of an AMX.
+ * @deprecated Extends MBeanProxyHandler by also supporting the functionality required of an AMX.
  */
 @Deprecated
-@Taxonomy(stability = Stability.PRIVATE)
-public final class AMXProxyHandler extends MBeanProxyHandler
-        implements AMXProxy, Extra
-{
+@Taxonomy(stability = Stability.PRIVATE) 
+public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy, Extra { 
 
     private static void sdebug(final String s)
     {
@@ -82,8 +80,9 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return (AMXProxyHandler) Proxy.getInvocationHandler(proxy);
     }
 
+
     /**
-    Create a new AMX proxy.
+     * Create a new AMX proxy.
      */
     protected AMXProxyHandler(
             final MBeanServerConnection conn,
@@ -163,9 +162,10 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return result;
     }
 
+
     /**
-    Return true if the method is one that is requesting a single AMX object.
-    Such methods are client-side methods and do not operate on the target MBean.
+     * Return true if the method is one that is requesting a single AMX object.
+     * Such methods are client-side methods and do not operate on the target MBean.
      */
     protected static boolean isSingleProxyGetter(final Method method, final int argCount)
     {
@@ -181,9 +181,10 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return (isProxyGetter);
     }
 
+
     /**
-    The method is one that requests a Proxy. The method could retrieve a real attribute,
-    but if there is no real Attribute, attempt to find a child of the matching type.
+     * The method is one that requests a Proxy. The method could retrieve a real attribute,
+     * but if there is no real Attribute, attempt to find a child of the matching type.
      */
     AMXProxy invokeSingleProxyGetter(
             final Object myProxy,
@@ -287,8 +288,8 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     private static final String INVOKE_OPERATION = "invokeOp";
 
     /**
-    These Attributes are handled specially.  For example, J2EE_TYPE and
-    J2EE_NAME are part of the ObjectName.
+     * These Attributes are handled specially. For example, J2EE_TYPE and
+     * J2EE_NAME are part of the ObjectName.
      */
     private static final Set<String> SPECIAL_METHOD_NAMES = SetUtil.newUnmodifiableStringSet(
             GET_PARENT,
@@ -311,9 +312,9 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             REMOVE_NOTIFICATION_LISTENER);
 
     /**
-    Handle a "special" method; one that requires special handling and/or can
-    be dealt with on the client side and/or can be handled most efficiently
-    by special-casing it.
+     * Handle a "special" method; one that requires special handling and/or can
+     * be dealt with on the client side and/or can be handled most efficiently
+     * by special-casing it.
      */
     private Object handleSpecialMethod(
             final Object myProxy,
@@ -578,11 +579,11 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return children;
     }
 
+
     /**
-        Convert an ObjectName[] to the proxy-based Map/Set/List/[] result type
+     * Convert an ObjectName[] to the proxy-based Map/Set/List/[] result type
      */
-        Object
-    autoConvert(final Method method, final ObjectName[] items )
+    Object autoConvert(final Method method, final ObjectName[] items)
     {
         //debug( "_invoke: trying to make ObjectName[] into proxies for " + method.getName() );
         final Class<?> returnType = method.getReturnType();
@@ -629,30 +630,26 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return result;
     }
 
-        private List<ObjectName>
-    tentativeObjectNameList(final Collection<?> items)
-    {
+
+    private List<ObjectName> tentativeObjectNameList(final Collection<?> items) {
         final List<ObjectName> objectNames = new ArrayList<ObjectName>();
         // verify that all items are of type ObjectName
         // do NOT throw an exception, we just want to check, not require it.
-        for( final Object item : items )
-        {
-            if ( ! (item instanceof ObjectName) )
-            {
+        for (final Object item : items) {
+            if (!(item instanceof ObjectName)) {
                 return null;
             }
-            objectNames.add((ObjectName)item);
+            objectNames.add((ObjectName) item);
         }
         return objectNames;
     }
 
+
     /**
-        Convert an Map/Set/List to the proxy-based Map/Set/List/[] result type
+     * Convert an Map/Set/List to the proxy-based Map/Set/List/[] result type
      */
-        Object
-    autoConvertCollection(final Method method, final Object itemsIn)
-    {
-        Object result = itemsIn;  // fallback is to return the original result
+    Object autoConvertCollection(final Method method, final Object itemsIn) {
+        Object result = itemsIn; // fallback is to return the original result
 
         //System.out.println( "autoConvertCollection() for " + method.getName() );
         final Class<?> returnType = method.getReturnType();
@@ -975,9 +972,10 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return objectNames;
     }
 
+
     /**
-    Returns an array of children, including an empty array if there are none, but children
-    are possible.  Returns null if children are not possible.
+     * Returns an array of children, including an empty array if there are none, but children
+     * are possible. Returns null if children are not possible.
      */
     public Set<AMXProxy> childrenSet()
     {
@@ -1267,8 +1265,3 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         return super.hashCode();
     }
 }
-
-
-
-
-

@@ -18,10 +18,8 @@ package org.glassfish.admin.amx.j2ee;
 
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
-
 /**
  */
-@AMXMBeanMetadata(type=J2EETypes.SINGLETON_SESSION_BEAN, leaf=true)
-public interface SingletonSessionBean extends SessionBean
-{
+@AMXMBeanMetadata(type = J2EETypes.SINGLETON_SESSION_BEAN, leaf = true)
+public interface SingletonSessionBean extends SessionBean {
 }

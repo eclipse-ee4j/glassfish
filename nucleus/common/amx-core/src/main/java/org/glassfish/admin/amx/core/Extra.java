@@ -34,20 +34,16 @@ public interface Extra extends StdAttributesAccess, MetaGetters, AMXProxy {
     /**
      * Get the MBeanServerConnection.
      */
-    public MBeanServerConnection mbeanServerConnection();
+    MBeanServerConnection mbeanServerConnection();
 
 
     /**
      * @return the {@link ProxyFactory} that created this proxy.
      */
-    public ProxyFactory proxyFactory();
+    ProxyFactory proxyFactory();
 
 
     /** return a compilable Java interface representing this MBean */
-    public String java();
+    @Override
+    String java();
 }
-
-
-
-
-

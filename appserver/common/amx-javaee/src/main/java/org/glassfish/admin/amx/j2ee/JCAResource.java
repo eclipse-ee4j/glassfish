@@ -19,14 +19,13 @@ package org.glassfish.admin.amx.j2ee;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
 
-
 /**
  */
-@AMXMBeanMetadata(type=J2EETypes.JCA_RESOURCE, singleton=true)
-public interface JCAResource extends J2EEResource
-{
-    /** ObjectName   */
+@AMXMBeanMetadata(type = J2EETypes.JCA_RESOURCE, singleton = true)
+public interface JCAResource extends J2EEResource {
+
+    /** ObjectName */
     @ManagedAttribute
-    public String getjcaConnectionFactory();
+    String getjcaConnectionFactory();
 
 }

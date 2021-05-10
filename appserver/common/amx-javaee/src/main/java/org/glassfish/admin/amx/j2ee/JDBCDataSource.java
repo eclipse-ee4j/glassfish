@@ -19,10 +19,10 @@ package org.glassfish.admin.amx.j2ee;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
 
-@AMXMBeanMetadata(type=J2EETypes.JDBC_DATA_SOURCE)
-public interface JDBCDataSource extends J2EEManagedObject
-{
+@AMXMBeanMetadata(type = J2EETypes.JDBC_DATA_SOURCE)
+public interface JDBCDataSource extends J2EEManagedObject {
+
     /** ObjectName */
     @ManagedAttribute
-    public String getjdbcDriver();
+    String getjdbcDriver();
 }

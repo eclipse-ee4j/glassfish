@@ -20,14 +20,13 @@ import org.glassfish.admin.amx.annotation.ManagedAttribute;
 
 /**
  */
-public interface EventProvider
-{
+public interface EventProvider {
 
     /**
-    <p>
-    Note that the Attribute name is case-sensitive
-    "types" as defined by JSR 77.
+     * <p>
+     * Note that the Attribute name is case-sensitive
+     * "types" as defined by JSR 77.
      */
     @ManagedAttribute
-    public String[] gettypes();
+    String[] gettypes();
 }

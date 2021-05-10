@@ -16,16 +16,12 @@
 
 package org.glassfish.admin.amx.j2ee;
 
-import org.glassfish.admin.amx.annotation.ManagedAttribute;
-import org.glassfish.admin.amx.annotation.ManagedOperation;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
-
 /**
-    @see org.glassfish.admin.amx.monitor.ServletMonitor
-    @see org.glassfish.admin.amx.monitor.WebModuleVirtualServerMonitor
+ * @see org.glassfish.admin.amx.monitor.ServletMonitor
+ * @see org.glassfish.admin.amx.monitor.WebModuleVirtualServerMonitor
  */
-@AMXMBeanMetadata(type=J2EETypes.SERVLET, leaf=true)
-public interface Servlet extends J2EEManagedObject
-{
+@AMXMBeanMetadata(type = J2EETypes.SERVLET, leaf = true)
+public interface Servlet extends J2EEManagedObject {
 }

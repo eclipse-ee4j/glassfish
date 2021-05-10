@@ -21,11 +21,9 @@ import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 /**
  */
-@AMXMBeanMetadata(type=J2EETypes.URL_RESOURCE, leaf=true)
-public interface URLResource extends J2EEResource
-{
-    public final static String    J2EE_TYPE    = J2EETypes.URL_RESOURCE;
+@AMXMBeanMetadata(type = J2EETypes.URL_RESOURCE, leaf = true)
+public interface URLResource extends J2EEResource {
 
-
+    String J2EE_TYPE = J2EETypes.URL_RESOURCE;
 
 }

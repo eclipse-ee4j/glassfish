@@ -17,38 +17,70 @@
 package org.glassfish.admin.amx.core;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import javax.management.*;
+
+import javax.management.Descriptor;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
+import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanServerConnection;
+import javax.management.MBeanServerInvocationHandler;
+import javax.management.ObjectName;
 import javax.management.openmbean.OpenType;
+
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.base.MBeanTrackerMBean;
 import org.glassfish.admin.amx.base.Pathnames;
 import org.glassfish.admin.amx.config.AMXConfigProxy;
-import static org.glassfish.admin.amx.core.PathnameConstants.LEGAL_NAME_PATTERN;
-import static org.glassfish.admin.amx.core.PathnameConstants.LEGAL_TYPE_PATTERN;
 import org.glassfish.admin.amx.core.proxy.ProxyFactory;
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.util.ExceptionUtil;
 import org.glassfish.admin.amx.util.SetUtil;
 import org.glassfish.admin.amx.util.StringUtil;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
-import static org.glassfish.external.amx.AMX.*;
 import org.glassfish.external.amx.AMXGlassfish;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
+import static org.glassfish.admin.amx.core.PathnameConstants.LEGAL_NAME_PATTERN;
+import static org.glassfish.admin.amx.core.PathnameConstants.LEGAL_TYPE_PATTERN;
+import static org.glassfish.external.amx.AMX.ATTR_CHILDREN;
+import static org.glassfish.external.amx.AMX.ATTR_NAME;
+import static org.glassfish.external.amx.AMX.ATTR_PARENT;
+import static org.glassfish.external.amx.AMX.DESC_GENERIC_INTERFACE_NAME;
+import static org.glassfish.external.amx.AMX.DESC_GROUP;
+import static org.glassfish.external.amx.AMX.DESC_IS_GLOBAL_SINGLETON;
+import static org.glassfish.external.amx.AMX.DESC_IS_SINGLETON;
+import static org.glassfish.external.amx.AMX.DESC_PREFIX;
+import static org.glassfish.external.amx.AMX.DESC_STD_IMMUTABLE_INFO;
+import static org.glassfish.external.amx.AMX.DESC_STD_INTERFACE_NAME;
+import static org.glassfish.external.amx.AMX.DESC_SUB_TYPES;
+import static org.glassfish.external.amx.AMX.DESC_SUPPORTS_ADOPTION;
+import static org.glassfish.external.amx.AMX.TYPE_KEY;
+
 /**
-Validation of key behavioral requirements of AMX MBeans.
-These tests do not validate any MBean-specific semantics, only general requirements for all AMX MBeans.
-<p>
-Note that all tests have to account for the possibility that an MBean can be unregistered while
-the validation is in progress— that is not a test failure, since it is perfectly legal.
+ * Validation of key behavioral requirements of AMX MBeans.
+ * These tests do not validate any MBean-specific semantics, only general requirements for all AMX
+ * MBeans.
+ * <p>
+ * Note that all tests have to account for the possibility that an MBean can be unregistered while
+ * the validation is in progress— that is not a test failure, since it is perfectly legal.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 public final class AMXValidator
@@ -139,10 +171,12 @@ public final class AMXValidator
      */
     public Set<ObjectName> filterAMX(final Set<ObjectName> candidates)
     {
-        final Set<ObjectName> amxSet = new HashSet<ObjectName>();
+        final Set<ObjectName> amxSet = new HashSet<>();
         for( final ObjectName cand : candidates )
         {
-            if ( cand.getKeyProperty(TYPE_KEY) == null ) continue;
+            if ( cand.getKeyProperty(TYPE_KEY) == null ) {
+                continue;
+            }
 
             // for now, require matching jmx domain "amx"
             if ( cand.getDomain().equals( AMXGlassfish.DEFAULT_JMX_DOMAIN) )
@@ -229,9 +263,9 @@ public final class AMXValidator
     /** keeps track of all validation failures */
     private static final class Failures
     {
-        private final ConcurrentMap<ObjectName, ProblemList> mFailures = new ConcurrentHashMap<ObjectName, ProblemList>();
+        private final ConcurrentMap<ObjectName, ProblemList> mFailures = new ConcurrentHashMap<>();
 
-        private AtomicInteger mNumTested = new AtomicInteger();
+        private final AtomicInteger mNumTested = new AtomicInteger();
 
         public Failures()
         {
@@ -296,7 +330,7 @@ public final class AMXValidator
         public ProblemList( final ObjectName objectName )
         {
             mObjectName = objectName;
-            mProblems = new ArrayList<String>();
+            mProblems = new ArrayList<>();
             mInstanceNotFound = false;
         }
 
@@ -385,10 +419,12 @@ public final class AMXValidator
         return false;
     }
 
+
     /**
-    "best effort"<p>
-    Attributes that cannot be sent to generic clients are not allowed.
-    More than OpenTypes are allowed eg messy stuff like JSR 77 Stats and Statistics.
+     * "best effort"
+     * <p>
+     * Attributes that cannot be sent to generic clients are not allowed.
+     * More than OpenTypes are allowed eg messy stuff like JSR 77 Stats and Statistics.
      */
     private static void checkLegalForRemote(final Object value) throws IllegalClassException
     {
@@ -589,7 +625,7 @@ public final class AMXValidator
             final Set<String> attrNames = proxy.attributeNames();
             if (!attrNames.equals(attributesMap.keySet()))
             {
-                final Set<String>  keys = new HashSet<String>(attributesMap.keySet());
+                final Set<String>  keys = new HashSet<>(attributesMap.keySet());
                 keys.removeAll(attrNames);
                 if ( !keys.isEmpty() )
                 {
@@ -598,7 +634,7 @@ public final class AMXValidator
 
                 if ( mLogInaccessibleAttributes )
                 {
-                    final Set<String> missing = new HashSet<String>(attrNames);
+                    final Set<String> missing = new HashSet<>(attrNames);
                     missing.removeAll(attributesMap.keySet());
 
                     logInfo("Inaccessible attributes: " + missing + " in " + proxy.objectName(), null);
@@ -811,8 +847,8 @@ public final class AMXValidator
                 }
 
                 // verify that the children types do not differ only by case-sensitivity
-                final Set<String> caseSensitiveTypes = new HashSet<String>();
-                final Set<String> caseInsensitiveTypes = new HashSet<String>();
+                final Set<String> caseSensitiveTypes = new HashSet<>();
+                final Set<String> caseInsensitiveTypes = new HashSet<>();
                 for (final ObjectName o : children)
                 {
                     caseSensitiveTypes.add(Util.getTypeProp(o));
@@ -1269,41 +1305,3 @@ public final class AMXValidator
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

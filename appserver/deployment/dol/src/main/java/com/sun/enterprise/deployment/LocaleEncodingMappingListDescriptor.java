@@ -16,59 +16,69 @@
 
 package com.sun.enterprise.deployment;
 
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Vector;
+
 import org.glassfish.deployment.common.Descriptor;
 
-import java.util.*;
-/**
- */
+
 public class LocaleEncodingMappingListDescriptor extends Descriptor {
 
     private Set<LocaleEncodingMappingDescriptor> list = null;
 
-    /*
+    /**
      * standard constructor
      */
     public LocaleEncodingMappingListDescriptor() {
     }
 
-    /*
+
+    /**
      * copy constructor
      */
     public LocaleEncodingMappingListDescriptor(LocaleEncodingMappingListDescriptor other) {
-    super(other);
-    if (other.list != null) {
-        list = new HashSet();
-        for (Iterator i = other.list.iterator(); i.hasNext();) {
-        LocaleEncodingMappingDescriptor lemd = (LocaleEncodingMappingDescriptor)i.next();
-        list.add(new LocaleEncodingMappingDescriptor(lemd));
+        super(other);
+        if (other.list != null) {
+            list = new HashSet();
+            for (Object element : other.list) {
+                LocaleEncodingMappingDescriptor lemd = (LocaleEncodingMappingDescriptor) element;
+                list.add(new LocaleEncodingMappingDescriptor(lemd));
+            }
+        } else {
+            list = null;
         }
-    } else {
-        list = null;
     }
-    }
+
 
     public Set<LocaleEncodingMappingDescriptor> getLocaleEncodingMappingSet() {
-    if(list == null) {
-        list = new HashSet<LocaleEncodingMappingDescriptor>();
+        if (list == null) {
+            list = new HashSet<>();
+        }
+        return list;
     }
-    return list;
-    }
+
 
     public Enumeration getLocaleEncodingMappings() {
-    return (new Vector(this.getLocaleEncodingMappingSet())).elements();
+        return (new Vector(this.getLocaleEncodingMappingSet())).elements();
     }
+
 
     public void addLocaleEncodingMapping(LocaleEncodingMappingDescriptor desc) {
-    getLocaleEncodingMappingSet().add(desc);
+        getLocaleEncodingMappingSet().add(desc);
     }
+
 
     public void removeLocaleEncodingMapping(LocaleEncodingMappingDescriptor desc) {
-    getLocaleEncodingMappingSet().remove(desc);
+        getLocaleEncodingMappingSet().remove(desc);
     }
 
+
     /**
-     * @return a string describing the values I hold
+     * Adds a string describing the values I hold
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nProp : ").append(list);
     }

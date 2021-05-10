@@ -24,9 +24,7 @@ import java.util.logging.Logger;
 
 /**
  * This descriptor holds the security configuration of an EJB IOR.
- *
  */
-
 public class EjbIORConfigurationDescriptor implements Serializable {
     // For backward compatiblity with CTS, equalsIgnoreCase should be used
     // for comparison with NONE, SUPPORTED, REQUIRED.
@@ -49,33 +47,33 @@ public class EjbIORConfigurationDescriptor implements Serializable {
     static Logger _logger = DOLUtils.getDefaultLogger();
 
     /**
-    * Default constructor.
-    */
+     * Default constructor.
+     */
     public EjbIORConfigurationDescriptor() {
-    try {
-        if (Boolean.getBoolean("interop.ssl.required")) {
-        integrity = REQUIRED;
-        confidentiality = REQUIRED;
-        establishTrustInClient = REQUIRED;
-        establishTrustInTarget = SUPPORTED;
-        }
+        try {
+            if (Boolean.getBoolean("interop.ssl.required")) {
+                integrity = REQUIRED;
+                confidentiality = REQUIRED;
+                establishTrustInClient = REQUIRED;
+                establishTrustInTarget = SUPPORTED;
+            }
 
             if (Boolean.getBoolean("interop.authRequired.enabled")) {
-        required = true;
-        authenticationMethod = USERNAME_PASSWORD;
-        }
-    } catch(Throwable ioe) {
-         _logger.log(Level.WARNING,"enterprise.deployment_ioexcp",ioe);
+                required = true;
+                authenticationMethod = USERNAME_PASSWORD;
+            }
+        } catch (Throwable ioe) {
+            _logger.log(Level.WARNING, "enterprise.deployment_ioexcp", ioe);
 
-        // ignore
-    }
+            // ignore
+        }
     }
 
     public EjbIORConfigurationDescriptor(boolean enableUsernamePassword) {
-    if(enableUsernamePassword) {
-        required = true;
-        authenticationMethod = USERNAME_PASSWORD;
-    }
+        if (enableUsernamePassword) {
+            required = true;
+            authenticationMethod = USERNAME_PASSWORD;
+        }
     }
 
     /**
@@ -83,7 +81,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the value (one of supported, required, none).
      */
     public String getIntegrity() {
-    return integrity;
+        return integrity;
     }
 
     /**
@@ -91,12 +89,11 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the value (one of supported, required, none).
      */
     public void setIntegrity(String val) {
-    if(!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) &&
-        !val.equalsIgnoreCase(REQUIRED)) {
-        throw new RuntimeException("Incorrect value for integrity:" + val);
-    }
+        if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
+            throw new RuntimeException("Incorrect value for integrity:" + val);
+        }
 
-    integrity = val;
+        integrity = val;
     }
 
     /**
@@ -105,7 +102,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the value (one of supported, required, none).
      */
     public String getConfidentiality() {
-    return confidentiality;
+        return confidentiality;
     }
 
     /**
@@ -113,12 +110,10 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the value (one of supported, required, none).
      */
     public void setConfidentiality(String val) {
-    if(!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) &&
-        !val.equalsIgnoreCase(REQUIRED)) {
-        throw new RuntimeException("Incorrect value for confidentiality:" +
-                    val);
-    }
-    confidentiality = val;
+        if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
+            throw new RuntimeException("Incorrect value for confidentiality:" + val);
+        }
+        confidentiality = val;
     }
 
     /**
@@ -127,7 +122,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the value (required, supported, or none)
      */
     public String getEstablishTrustInTarget() {
-    return establishTrustInTarget;
+        return establishTrustInTarget;
     }
 
     /**
@@ -135,12 +130,11 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the value (required, supported, or none)
      */
     public void setEstablishTrustInTarget(String val) {
-    if(!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED)) {
-        throw new RuntimeException("Incorrect value for " +
-            "establishTrustInTarget:" + val);
-    }
+        if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED)) {
+            throw new RuntimeException("Incorrect value for " + "establishTrustInTarget:" + val);
+        }
 
-    establishTrustInTarget = val;
+        establishTrustInTarget = val;
     }
 
     /**
@@ -149,21 +143,19 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the value (required, supported, or none)
      */
     public String getEstablishTrustInClient() {
-    return establishTrustInClient;
+        return establishTrustInClient;
     }
 
     /**
      * Set the value of establishTrustInClient in the transport layer.
+     *
      * @param the value (required, supported, or none)
      */
     public void setEstablishTrustInClient(String val) {
-    if(!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) &&
-        !val.equalsIgnoreCase(REQUIRED)) {
-        throw new RuntimeException("Incorrect value for " +
-            "establishTrustInClient:" + val);
-    }
-
-    establishTrustInClient = val;
+        if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
+            throw new RuntimeException("Incorrect value for " + "establishTrustInClient:" + val);
+        }
+        establishTrustInClient = val;
     }
 
     /**
@@ -172,19 +164,19 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the authentication method.
      */
     public String getAuthenticationMethod() {
-    return authenticationMethod;
+        return authenticationMethod;
     }
 
     /**
      * Set the authentication method used to authenticate clients.
+     *
      * @param the authentication method.
      */
     public void setAuthenticationMethod(String val) {
-    if(!val.equalsIgnoreCase(USERNAME_PASSWORD) && !val.equalsIgnoreCase(NONE)) {
-        throw new RuntimeException("Incorrect value for " +
-            "authentication method:" + val);
-    }
-    authenticationMethod = val;
+        if (!val.equalsIgnoreCase(USERNAME_PASSWORD) && !val.equalsIgnoreCase(NONE)) {
+            throw new RuntimeException("Incorrect value for " + "authentication method:" + val);
+        }
+        authenticationMethod = val;
     }
 
     /**
@@ -193,7 +185,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the realm name.
      */
     public String getRealmName() {
-    return realmName;
+        return realmName;
     }
 
     /**
@@ -201,7 +193,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the realm name.
      */
     public void setRealmName(String val) {
-    realmName = val;
+        realmName = val;
     }
 
     /**
@@ -209,7 +201,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the value (one of none, required or supported).
      */
     public String getCallerPropagation() {
-    return callerPropagation;
+        return callerPropagation;
     }
 
     /**
@@ -217,11 +209,10 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the value (one of none, required or supported).
      */
     public void setCallerPropagation(String val) {
-    if(!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) &&
-        !val.equalsIgnoreCase(REQUIRED)) {
-        throw new RuntimeException("Incorrect value for callerPropagation:" + val);
-    }
-    callerPropagation = val;
+        if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
+            throw new RuntimeException("Incorrect value for callerPropagation:" + val);
+        }
+        callerPropagation = val;
     }
 
     /**
@@ -230,7 +221,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @return the value (true or false).
      */
     public boolean isAuthMethodRequired() {
-    return required;
+        return required;
     }
 
     /**
@@ -239,7 +230,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the value (true or false).
      */
     public void setAuthMethodRequired(boolean val) {
-    required = val;
+        required = val;
     }
 
 
@@ -249,20 +240,20 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      * @param the value (true or false).
      */
     public void setAuthMethodRequired(String val) {
-    required = Boolean.valueOf(val).booleanValue();
+        required = Boolean.valueOf(val).booleanValue();
     }
 
     /**
     * Returns a formatted String of the attributes of this object.
     */
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("\n integrity ").append(integrity);
-    toStringBuffer.append( "\n confidentiality " ).append( confidentiality);
-    toStringBuffer.append( "\n establishTrustInTarget ").append(establishTrustInTarget);
-    toStringBuffer.append( "\n establishTrustInClient ").append(establishTrustInClient);
-    toStringBuffer.append( "\n callerPropagation ").append(callerPropagation);
-    toStringBuffer.append( "\n realm ").append(realmName);
-    toStringBuffer.append( "\n authenticationMethod ").append(authenticationMethod).append("\n");
+        toStringBuffer.append("\n integrity ").append(integrity);
+        toStringBuffer.append( "\n confidentiality " ).append( confidentiality);
+        toStringBuffer.append( "\n establishTrustInTarget ").append(establishTrustInTarget);
+        toStringBuffer.append( "\n establishTrustInClient ").append(establishTrustInClient);
+        toStringBuffer.append( "\n callerPropagation ").append(callerPropagation);
+        toStringBuffer.append( "\n realm ").append(realmName);
+        toStringBuffer.append( "\n authenticationMethod ").append(authenticationMethod).append("\n");
     }
 }
 

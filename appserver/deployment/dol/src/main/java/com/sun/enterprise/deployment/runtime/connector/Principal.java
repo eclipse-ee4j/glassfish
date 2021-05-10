@@ -31,17 +31,15 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
  * @author  Jerome Dochez
  * @version
  */
-public class Principal extends RuntimeDescriptor
-{
+public class Principal extends RuntimeDescriptor {
 
     public static final String USER_NAME = "UserName";
     public static final String CREDENTIAL = "Credential";
     public static final String PASSWORD = "Password";
 
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 
 }

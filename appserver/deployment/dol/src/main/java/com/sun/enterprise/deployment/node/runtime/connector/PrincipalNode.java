@@ -21,6 +21,8 @@ import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import com.sun.enterprise.deployment.runtime.connector.Principal;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -38,21 +40,21 @@ public class PrincipalNode extends RuntimeDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
-    RuntimeDescriptor descriptor = (RuntimeDescriptor) getDescriptor();
-    if (descriptor==null) {
-        throw new RuntimeException("Trying to set values on a null descriptor");
-    }
-    if (element.getQName().equals(RuntimeTagNames.USER_NAME)) {
-        descriptor.setAttributeValue(Principal.USER_NAME, value);
-    } else
-    if (element.getQName().equals(RuntimeTagNames.PASSWORD)) {
-        descriptor.setAttributeValue(Principal.PASSWORD, value);
-    } else
-    if (element.getQName().equals(RuntimeTagNames.CREDENTIAL)) {
-        descriptor.setAttributeValue(Principal.CREDENTIAL, value);
-    } else
-    super.setElementValue(element, value);
+        RuntimeDescriptor descriptor = (RuntimeDescriptor) getDescriptor();
+        if (descriptor == null) {
+            throw new RuntimeException("Trying to set values on a null descriptor");
+        }
+        if (element.getQName().equals(RuntimeTagNames.USER_NAME)) {
+            descriptor.setAttributeValue(Principal.USER_NAME, value);
+        } else if (element.getQName().equals(RuntimeTagNames.PASSWORD)) {
+            descriptor.setAttributeValue(Principal.PASSWORD, value);
+        } else if (element.getQName().equals(RuntimeTagNames.CREDENTIAL)) {
+            descriptor.setAttributeValue(Principal.CREDENTIAL, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
 
@@ -60,16 +62,16 @@ public class PrincipalNode extends RuntimeDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName name for the descriptor
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, Principal descriptor) {
-    Element principalNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-    appendTextChild(principalNode, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
-    setAttribute(principalNode, RuntimeTagNames.USER_NAME, (String) descriptor.getValue(Principal.USER_NAME));
-    setAttribute(principalNode, RuntimeTagNames.PASSWORD, (String) descriptor.getValue(Principal.PASSWORD));
-    setAttribute(principalNode, RuntimeTagNames.CREDENTIAL, (String) descriptor.getValue(Principal.CREDENTIAL));
-    return principalNode;
+        Element principalNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+        appendTextChild(principalNode, TagNames.DESCRIPTION, descriptor.getDescription());
+        setAttribute(principalNode, RuntimeTagNames.USER_NAME, (String) descriptor.getValue(Principal.USER_NAME));
+        setAttribute(principalNode, RuntimeTagNames.PASSWORD, (String) descriptor.getValue(Principal.PASSWORD));
+        setAttribute(principalNode, RuntimeTagNames.CREDENTIAL, (String) descriptor.getValue(Principal.CREDENTIAL));
+        return principalNode;
     }
 }

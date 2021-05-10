@@ -112,8 +112,7 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
             // security-role-assignment*
             SecurityRoleAssignment[]securityRoleAssignments =
                 webBundleDescriptor.getSunDescriptor().getSecurityRoleAssignments();
-            for (SecurityRoleAssignment securityRoleAssignment :
-                    securityRoleAssignments) {
+            for (SecurityRoleAssignment securityRoleAssignment : securityRoleAssignments) {
                 writeDescriptor(parent, nodeName, securityRoleAssignment);
             }
         }

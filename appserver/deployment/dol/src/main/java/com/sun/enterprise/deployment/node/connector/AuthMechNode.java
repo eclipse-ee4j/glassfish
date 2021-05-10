@@ -45,7 +45,7 @@ public class AuthMechNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-
+    @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.CREDENTIAL_INTF, "setCredentialInterface");
@@ -53,15 +53,18 @@ public class AuthMechNode extends DeploymentDescriptorNode {
         return table;
     }
 
+
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         if (auth == null) {
             auth = (AuthMechanism) DescriptorFactory.getDescriptor(getXMLPath());
         }
         return auth;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -71,30 +74,29 @@ public class AuthMechNode extends DeploymentDescriptorNode {
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
-
-        if (! (descriptor instanceof OutboundResourceAdapter) &&
-        ! (descriptor instanceof ConnectorDescriptor)) {
-            throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
+        if (!(descriptor instanceof OutboundResourceAdapter) && !(descriptor instanceof ConnectorDescriptor)) {
+            throw new IllegalArgumentException(
+                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
 
-    Iterator authMechs = null;
+        Iterator authMechs = null;
 
-    if (descriptor instanceof ConnectorDescriptor) {
-        authMechs = ((ConnectorDescriptor)descriptor).getAuthMechanisms().iterator();
-    } else if (descriptor instanceof OutboundResourceAdapter) {
-        authMechs = ((OutboundResourceAdapter)descriptor).getAuthMechanisms().iterator();
-    }
+        if (descriptor instanceof ConnectorDescriptor) {
+            authMechs = ((ConnectorDescriptor) descriptor).getAuthMechanisms().iterator();
+        } else if (descriptor instanceof OutboundResourceAdapter) {
+            authMechs = ((OutboundResourceAdapter) descriptor).getAuthMechanisms().iterator();
+        }
 
-    //auth mechanism info
+        // auth mechanism info
         if (authMechs != null) {
-          for (;authMechs.hasNext();) {
-        AuthMechanism auth = (AuthMechanism) authMechs.next();
-        Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
-        appendTextChild(authNode, TagNames.DESCRIPTION, auth.getDescription());
-        appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, auth.getAuthMechType());
-        appendTextChild(authNode, ConnectorTagNames.CREDENTIAL_INTF, auth.getCredentialInterface());
-          }
+            for (; authMechs.hasNext();) {
+                AuthMechanism auth = (AuthMechanism) authMechs.next();
+                Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
+                appendTextChild(authNode, TagNames.DESCRIPTION, auth.getDescription());
+                appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, auth.getAuthMechType());
+                appendTextChild(authNode, ConnectorTagNames.CREDENTIAL_INTF, auth.getCredentialInterface());
+            }
         }
-    return parent;
+        return parent;
     }
 }

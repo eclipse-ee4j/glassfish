@@ -33,22 +33,24 @@ import org.xml.sax.Attributes;
  */
 public class GroupNode extends DeploymentDescriptorNode {
 
-    Group group=null;
+    Group group = null;
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         return group;
     }
 
+
     /**
      * SAX Parser API implementation, we don't really care for now.
      */
+    @Override
     public void startElement(XMLElement element, Attributes attributes) {
-
         if (RuntimeTagNames.GROUP.equals(element.getQName())) {
-            for (int i=0; i<attributes.getLength();i++) {
+            for (int i = 0; i < attributes.getLength(); i++) {
                 if (RuntimeTagNames.NAME.equals(attributes.getQName(i))) {
                     group = new Group(attributes.getValue(i));
                 }
@@ -56,7 +58,8 @@ public class GroupNode extends DeploymentDescriptorNode {
         }
     }
 
-   /**
+
+    /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
@@ -66,8 +69,7 @@ public class GroupNode extends DeploymentDescriptorNode {
      */
     public Node writeDescriptor(Node parent, String nodeName, Group descriptor) {
         Element principal = appendChild(parent, nodeName);
-    setAttribute(principal, RuntimeTagNames.NAME, descriptor.getName());
+        setAttribute(principal, RuntimeTagNames.NAME, descriptor.getName());
         return principal;
-
     }
 }

@@ -40,27 +40,27 @@ import java.util.logging.Level;
  * @author  Jerome Dochez
  * @version
  */
-public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
-{
+public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
+
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
     public T getDescriptor() {
-
-        if (abstractDescriptor==null) {
-        abstractDescriptor = createDescriptor();
-            if (abstractDescriptor ==null) {
-                return (T)getParentNode().getDescriptor();
+        if (abstractDescriptor == null) {
+            abstractDescriptor = createDescriptor();
+            if (abstractDescriptor == null) {
+                return (T) getParentNode().getDescriptor();
             }
         }
-        return (T)abstractDescriptor;
+        return (T) abstractDescriptor;
     }
 
-    @SuppressWarnings("unchecked")
+
     protected Object createDescriptor() {
         return RuntimeDescriptorFactory.getDescriptor(getXMLPath());
     }
+
 
     /**
      * receives notification of the value for a particular tag
@@ -69,19 +69,20 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
      * @param value it's associated value
      */
     public void setElementValue(XMLElement element, String value) {
-    if (getDispatchTable().containsKey(element.getQName())) {
-        super.setElementValue(element, value);
-    } else {
-        Object o = getDescriptor();
-        if (o instanceof RuntimeDescriptor) {
-        RuntimeDescriptor rd = (RuntimeDescriptor) o;
-        rd.setValue(element.getQName(), value);
+        if (getDispatchTable().containsKey(element.getQName())) {
+            super.setElementValue(element, value);
         } else {
+            Object o = getDescriptor();
+            if (o instanceof RuntimeDescriptor) {
+                RuntimeDescriptor rd = (RuntimeDescriptor) o;
+                rd.setValue(element.getQName(), value);
+            } else {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{element.getQName() , value });
+                    new Object[] {element.getQName(), value});
             }
+        }
     }
-    }
+
 
     /**
      * writes all information common to all J2EE components
@@ -99,9 +100,8 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
         if (descriptor instanceof ResourceEnvReferenceContainer) {
             ResourceEnvRefNode.writeResoureEnvReferences(parent, (ResourceEnvReferenceContainer) descriptor);
         }
-        if( descriptor instanceof JndiNameEnvironment ) {
-            ServiceRefNode.writeServiceReferences
-                (parent, (JndiNameEnvironment) descriptor);
+        if (descriptor instanceof JndiNameEnvironment) {
+            ServiceRefNode.writeServiceReferences(parent, (JndiNameEnvironment) descriptor);
         }
         if (descriptor instanceof MessageDestinationReferenceContainer) {
             MessageDestinationRefNode.writeMessageDestinationReferences(parent,
@@ -109,14 +109,12 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
         }
     }
 
-    public static void writeMessageDestinationInfo(Node parent,
-                                               BundleDescriptor descriptor) {
-        for(Iterator iter = descriptor.getMessageDestinations().iterator();
-            iter.hasNext();) {
-            MessageDestinationRuntimeNode node =
-                new MessageDestinationRuntimeNode();
+
+    public static void writeMessageDestinationInfo(Node parent, BundleDescriptor descriptor) {
+        for (Iterator iter = descriptor.getMessageDestinations().iterator(); iter.hasNext();) {
+            MessageDestinationRuntimeNode node = new MessageDestinationRuntimeNode();
             node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION,
-                                 (MessageDestinationDescriptor) iter.next());
+                (MessageDestinationDescriptor) iter.next());
         }
     }
 

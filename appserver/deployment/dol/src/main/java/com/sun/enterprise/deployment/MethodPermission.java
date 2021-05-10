@@ -101,35 +101,40 @@ public class MethodPermission extends Descriptor {
     }
 
     // For Map storage
+    @Override
     public int hashCode() {
-        if (role!=null)
+        if (role!=null) {
             return role.hashCode();
-        else
+        } else {
             return super.hashCode();
+        }
     }
 
     // for Map storage
+    @Override
     public boolean equals(Object other) {
-    boolean ret = false;
-    if(other instanceof MethodPermission) {
+        boolean ret = false;
+        if (other instanceof MethodPermission) {
             MethodPermission o = (MethodPermission) other;
             if (isRoleBased()) {
-            ret = role.equals(o.getRole());
+                ret = role.equals(o.getRole());
             } else {
                 ret = (isExcluded == o.isExcluded()) && (isUnchecked == o.isUnchecked());
             }
-    }
-    return ret;
+        }
+        return ret;
     }
 
+    @Override
     public void print(StringBuffer toStringBuffer) {
         if (isRoleBased()) {
             toStringBuffer.append(role.toString());
         } else {
-            if (isExcluded)
+            if (isExcluded) {
                 toStringBuffer.append("excluded");
-            else
+            } else {
                 toStringBuffer.append("unchecked");
+            }
         }
     }
 }

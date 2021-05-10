@@ -22,57 +22,57 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 /**
  * An object representing a component environment reference
  * to an EntityManagerFactory
- *
-*/
+ */
 public class EntityManagerFactoryReferenceDescriptor extends
     EnvironmentProperty implements EntityManagerFactoryReference {
 
     private String unitName = null;
     private BundleDescriptor referringBundle;
 
-    public EntityManagerFactoryReferenceDescriptor(String name,
-                                                   String unitName) {
+    public EntityManagerFactoryReferenceDescriptor(String name, String unitName) {
         super(name, "", "");
-
         this.unitName = unitName;
     }
 
     public EntityManagerFactoryReferenceDescriptor() {}
 
+    @Override
     public void setUnitName(String unitName) {
-
         this.unitName = unitName;
     }
 
+    @Override
     public String getUnitName() {
-
         return unitName;
-
     }
 
+    @Override
     public String getInjectResourceType() {
         return "jakarta.persistence.EntityManagerFactory";
     }
 
+    @Override
     public void setInjectResourceType(String resourceType) {
     }
 
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle)
-    {
-    this.referringBundle = referringBundle;
+    @Override
+    public void setReferringBundleDescriptor(BundleDescriptor referringBundle) {
+        this.referringBundle = referringBundle;
     }
+
     @Override
     public int hashCode() {
         return super.hashCode();
     }
+
     @Override
     public boolean equals(Object other) {
         return super.equals(other);
     }
 
-    public BundleDescriptor getReferringBundleDescriptor()
-    {
-    return referringBundle;
+    @Override
+    public BundleDescriptor getReferringBundleDescriptor() {
+        return referringBundle;
     }
 
     public boolean isConflict(EntityManagerFactoryReferenceDescriptor other) {

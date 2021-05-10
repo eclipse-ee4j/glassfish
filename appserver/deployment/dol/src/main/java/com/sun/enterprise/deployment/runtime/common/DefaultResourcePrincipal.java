@@ -25,39 +25,39 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 *
 * @author Jerome Dochez
 */
-public class DefaultResourcePrincipal extends RuntimeDescriptor
-{
+public class DefaultResourcePrincipal extends RuntimeDescriptor {
 
-    static public final String NAME = "Name";    // NOI18N
-    static public final String PASSWORD = "Password";    // NOI18N
-
-    // This attribute is mandatory
-    public void setName(String value)
-    {
-    this.setValue(NAME, value);
-    }
-
-    //
-    public String getName()
-    {
-    return (String)this.getValue(NAME);
-    }
+    static public final String NAME = "Name"; // NOI18N
+    static public final String PASSWORD = "Password"; // NOI18N
 
     // This attribute is mandatory
-    public void setPassword(String value)
-    {
-    this.setValue(PASSWORD, value);
+    @Override
+    public void setName(String value) {
+        this.setValue(NAME, value);
     }
 
+
     //
-    public String getPassword()
-    {
-    return (String)this.getValue(PASSWORD);
+    @Override
+    public String getName() {
+        return (String) this.getValue(NAME);
     }
+
+
+    // This attribute is mandatory
+    public void setPassword(String value) {
+        this.setValue(PASSWORD, value);
+    }
+
+
+    //
+    public String getPassword() {
+        return (String) this.getValue(PASSWORD);
+    }
+
 
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 }

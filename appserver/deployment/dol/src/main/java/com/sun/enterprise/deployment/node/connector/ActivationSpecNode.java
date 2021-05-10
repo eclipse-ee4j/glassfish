@@ -38,10 +38,8 @@ public class ActivationSpecNode extends DeploymentDescriptorNode {
     private MessageListener msgListener = null;
 
     public ActivationSpecNode() {
-        registerElementHandler(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP),
-                   RequiredConfigNode.class);
-        registerElementHandler(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY),
-                       ConfigPropertyNode.class);
+        registerElementHandler(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP), RequiredConfigNode.class);
+        registerElementHandler(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY), ConfigPropertyNode.class);
     }
 
    /**
@@ -50,16 +48,17 @@ public class ActivationSpecNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-
+    @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-    table.put(ConnectorTagNames.ACTIVATION_SPEC_CLASS, "setActivationSpecClass");
+        table.put(ConnectorTagNames.ACTIVATION_SPEC_CLASS, "setActivationSpecClass");
         return table;
     }
 
     /**
     * @return the descriptor instance to associate with this XMLNode
     */
+    @Override
     public Object getDescriptor() {
         if (msgListener == null) {
             msgListener = (MessageListener) getParentNode().getDescriptor();
@@ -73,11 +72,12 @@ public class ActivationSpecNode extends DeploymentDescriptorNode {
      *
      * @param descriptor the new descriptor
      */
-    public void addDescriptor(Object obj) {
-        if (obj instanceof ConnectorConfigProperty) {
-            msgListener.addConfigProperty((ConnectorConfigProperty)obj);
-        }else if (obj instanceof EnvironmentProperty){
-            msgListener.addRequiredConfigProperty((EnvironmentProperty)obj);
+    @Override
+    public void addDescriptor(Object descriptor) {
+        if (descriptor instanceof ConnectorConfigProperty) {
+            msgListener.addConfigProperty((ConnectorConfigProperty) descriptor);
+        } else if (descriptor instanceof EnvironmentProperty) {
+            msgListener.addRequiredConfigProperty((EnvironmentProperty) descriptor);
         }
     }
 
@@ -89,21 +89,21 @@ public class ActivationSpecNode extends DeploymentDescriptorNode {
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
-
-        if (! (descriptor instanceof MessageListener)) {
-            throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
+        if (!(descriptor instanceof MessageListener)) {
+            throw new IllegalArgumentException(
+                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
 
-    MessageListener msgListener = (MessageListener)descriptor;
-    Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
-    appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
+        MessageListener msgListener = (MessageListener) descriptor;
+        Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
+        appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
 
-    //required-config-property
-    RequiredConfigNode reqNode = new RequiredConfigNode();
-    actSpecNode = reqNode.writeDescriptor(actSpecNode, msgListener);
+        // required-config-property
+        RequiredConfigNode reqNode = new RequiredConfigNode();
+        actSpecNode = reqNode.writeDescriptor(actSpecNode, msgListener);
 
-    ConfigPropertyNode configPropertyNode = new ConfigPropertyNode();
-    configPropertyNode.writeDescriptor(actSpecNode, msgListener);
-    return parent;
+        ConfigPropertyNode configPropertyNode = new ConfigPropertyNode();
+        configPropertyNode.writeDescriptor(actSpecNode, msgListener);
+        return parent;
     }
 }

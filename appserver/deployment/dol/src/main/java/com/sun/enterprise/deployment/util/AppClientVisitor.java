@@ -35,7 +35,6 @@ public interface AppClientVisitor extends ComponentVisitor {
      * visits an application client descriptor
      * @param an application client descriptor
      */
-    public void accept(ApplicationClientDescriptor descriptor);
+    void accept(ApplicationClientDescriptor descriptor);
 
 }
-

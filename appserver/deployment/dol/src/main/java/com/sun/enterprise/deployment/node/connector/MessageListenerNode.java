@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * This node is responsible for handling the Connector DTD related message-listener XML tag
  *
- * @author  Sheetal Vartak
+ * @author Sheetal Vartak
  * @version
  */
 public class MessageListenerNode extends DeploymentDescriptorNode {
@@ -39,27 +39,30 @@ public class MessageListenerNode extends DeploymentDescriptorNode {
     private MessageListener msgListener = null;
 
     public MessageListenerNode() {
-    registerElementHandler(new XMLElement(ConnectorTagNames.ACTIVATION_SPEC),
-                   ActivationSpecNode.class);
+        registerElementHandler(new XMLElement(ConnectorTagNames.ACTIVATION_SPEC), ActivationSpecNode.class);
 
     }
 
-   /**
+
+    /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
      * method name on the descriptor class for setting the element value.
      *
      * @return the map with the element name as a key, the setter method as a value
      */
 
+    @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.MSG_LISTENER_TYPE, "setMessageListenerType");
-    return table;
+        return table;
     }
 
+
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         if (msgListener == null) {
             msgListener = (MessageListener) DescriptorFactory.getDescriptor(getXMLPath());
@@ -67,32 +70,33 @@ public class MessageListenerNode extends DeploymentDescriptorNode {
         return msgListener;
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
-
-        if (! (descriptor instanceof InboundResourceAdapter)) {
-            throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
+        if (!(descriptor instanceof InboundResourceAdapter)) {
+            throw new IllegalArgumentException(
+                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
-    Iterator msgListeners = ((InboundResourceAdapter)descriptor).getMessageListeners().iterator();
-    if (!msgListeners.hasNext()) {
-        throw new RuntimeException("There must be at least one messagelistener for this inbound resource adapter");
-    }
-    //message listeners
-    for (;msgListeners.hasNext();) {
-        MessageListener msgListener = (MessageListener) msgListeners.next();
-        Node msgListenerNode = appendChild(parent, ConnectorTagNames.MSG_LISTENER);
-        appendTextChild(msgListenerNode, ConnectorTagNames.MSG_LISTENER_TYPE, msgListener.getMessageListenerType());
+        Iterator msgListeners = ((InboundResourceAdapter) descriptor).getMessageListeners().iterator();
+        if (!msgListeners.hasNext()) {
+            throw new RuntimeException("There must be at least one messagelistener for this inbound resource adapter");
+        }
+        // message listeners
+        for (; msgListeners.hasNext();) {
+            MessageListener msgListener = (MessageListener) msgListeners.next();
+            Node msgListenerNode = appendChild(parent, ConnectorTagNames.MSG_LISTENER);
+            appendTextChild(msgListenerNode, ConnectorTagNames.MSG_LISTENER_TYPE, msgListener.getMessageListenerType());
 
-        //activation spec node
-        ActivationSpecNode actSpecNode = new ActivationSpecNode();
-        msgListenerNode = actSpecNode.writeDescriptor(msgListenerNode, msgListener);
-    }
-    return parent;
+            // activation spec node
+            ActivationSpecNode actSpecNode = new ActivationSpecNode();
+            msgListenerNode = actSpecNode.writeDescriptor(msgListenerNode, msgListener);
+        }
+        return parent;
     }
 }

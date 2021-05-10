@@ -18,10 +18,9 @@ package com.sun.enterprise.deployment.util.webservice;
 
 /**
  * This class is used by the deployment tool to set the required information for jaxrpc-config.xml
- * that is passed as an argument to the wscompile tool. This class is to be used when the developer is
- * using the deploytool to generate SEI from WSDL
+ * that is passed as an argument to the wscompile tool. This class is to be used when the developer
+ * is using the deploytool to generate SEI from WSDL
  */
-
 public class WSDLConfig {
 
     private String webServiceName;
@@ -30,20 +29,29 @@ public class WSDLConfig {
 
     /**
      * Constructor takes all required arguments and sets them appropriately
-     * @param wsName  Name of the webservice
-     * @param wsdl    the WSDL file location
-     * @param pkg     the package name where the SEI and its implementations are present
+     *
+     * @param wsName Name of the webservice
+     * @param wsdl the WSDL file location
+     * @param pkg the package name where the SEI and its implementations are present
      */
-
     public WSDLConfig(String wsName, String wsdl, String pkg) {
         this.webServiceName = wsName;
         this.wsdlLocation = wsdl;
         this.packageName = pkg;
     }
 
-    public String getWebServiceName() { return this.webServiceName; }
 
-    public String getWsdlLocation() { return this.wsdlLocation; }
+    public String getWebServiceName() {
+        return this.webServiceName;
+    }
 
-    public String getPackageName() { return this.packageName; }
+
+    public String getWsdlLocation() {
+        return this.wsdlLocation;
+    }
+
+
+    public String getPackageName() {
+        return this.packageName;
+    }
 }

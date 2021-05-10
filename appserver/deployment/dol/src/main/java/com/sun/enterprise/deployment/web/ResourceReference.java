@@ -16,19 +16,26 @@
 
 package com.sun.enterprise.deployment.web;
 
-    /** Objects exhibiting this interface represent a specialization of a container property
-    * that is used for obtaining a database connection. */
-
+/**
+ * Objects exhibiting this interface represent a specialization of a container property
+ * that is used for obtaining a database connection.
+ */
 public interface ResourceReference extends ContextParameter {
-    public static String CONTAINER_AUTHORIZATION = "Container";
-    public static String APPLICATION_AUTHORIZATION = "Application";
+    String CONTAINER_AUTHORIZATION = "Container";
+    String APPLICATION_AUTHORIZATION = "Application";
 
-    /** return the fully qualified classname of the datasource factory
-    * - e.g. javax.sql.DataSource. */
-    public String getType();
-    public void setType(String type);
-    public void setDescription(String description);
+    /**
+     * return the fully qualified classname of the datasource factory
+     * - e.g. javax.sql.DataSource.
+     */
+    String getType();
 
-    public String getAuthorization();
-    public void setAuthorization(String authorization);
+    void setType(String type);
+
+    @Override
+    void setDescription(String description);
+
+    String getAuthorization();
+
+    void setAuthorization(String authorization);
 }

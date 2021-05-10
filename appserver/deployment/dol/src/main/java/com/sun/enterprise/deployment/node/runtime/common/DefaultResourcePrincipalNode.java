@@ -37,12 +37,14 @@ public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
+    @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.NAME, "setName");
         table.put(RuntimeTagNames.PASSWORD, "setPassword");
         return table;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -54,8 +56,8 @@ public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode {
      */
     public Node writeDescriptor(Node parent, String nodeName, DefaultResourcePrincipal descriptor) {
         Node ejbRef = appendChild(parent, nodeName);
-    appendTextChild(ejbRef, RuntimeTagNames.NAME, descriptor.getName());
-    appendTextChild(ejbRef, RuntimeTagNames.PASSWORD, descriptor.getPassword());
+        appendTextChild(ejbRef, RuntimeTagNames.NAME, descriptor.getName());
+        appendTextChild(ejbRef, RuntimeTagNames.PASSWORD, descriptor.getPassword());
         return ejbRef;
     }
 }

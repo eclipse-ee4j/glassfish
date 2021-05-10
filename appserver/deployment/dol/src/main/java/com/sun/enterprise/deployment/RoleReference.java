@@ -26,12 +26,11 @@ import org.glassfish.security.common.Role;
  * in the bean code, the value will be mapped to the name of a Role chosen by
  * the application assembler which is referenced by the EjbBundle being
  * assembled.
+ *
  * @author Danny Coward
  */
+public class RoleReference extends EnvironmentProperty implements SecurityRoleReference {
 
-public class RoleReference extends EnvironmentProperty implements
-        SecurityRoleReference
-{
     /**
      * Default constructor.
      */
@@ -42,63 +41,74 @@ public class RoleReference extends EnvironmentProperty implements
      * Construct a role reference from the given name and description.
      */
     public RoleReference(String name, String description) {
-    super(name, "", description);
+        super(name, "", description);
     }
 
     /**
      * Set the value for the reference.
+     *
      * @param the role
      */
     void setRole(Role role) {
-    super.setValue(role.getName());
+        super.setValue(role.getName());
     }
 
     /**
      * Return the role object from this descriptor.
+     *
      * @return the role.
      */
     public Role getRole() {
-    return new Role(super.getValue());
+        return new Role(super.getValue());
     }
 
     /**
      * Return the rolename.
+     *
      * @return the role name.
      */
+    @Override
     public SecurityRole getSecurityRoleLink() {
-    return new SecurityRoleDescriptor(super.getValue(), "");
+        return new SecurityRoleDescriptor(super.getValue(), "");
     }
 
     /**
      * Sets the rolename.
+     *
      * @param the rolename.
      */
+    @Override
     public void setSecurityRoleLink(SecurityRole securityRole) {
-    super.setValue(securityRole.getName());
+        super.setValue(securityRole.getName());
     }
 
     /**
      * Return the coded name.
+     *
      * @return the role name used in the bean code.
      */
+    @Override
     public String getRoleName() {
-    return this.getName();
+        return this.getName();
     }
 
     /**
      * Sets the coded name.
+     *
      * @param the role name used in the bean code.
      */
+    @Override
     public void setRoleName(String rolename) {
-    this.setName(rolename);
+        this.setName(rolename);
     }
 
     /**
      * Returns a formatted version of this object as a String.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("Role-Ref-Env-Prop: ").append(super.getName()).append("@").append(
-        this.getRole()).append("@").append(super.getDescription());
+        toStringBuffer.append("Role-Ref-Env-Prop: ").append(super.getName()).append("@").append(this.getRole())
+            .append("@").append(super.getDescription());
     }
 
 }

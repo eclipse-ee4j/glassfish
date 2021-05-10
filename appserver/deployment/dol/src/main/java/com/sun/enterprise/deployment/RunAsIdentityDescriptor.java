@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.deployment;
 
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -25,37 +24,36 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Sanjeev Krishnan
  */
-
 public final class RunAsIdentityDescriptor extends Descriptor {
 
-    private String roleName="";
-    private String principal="";
+    private String roleName = "";
+    private String principal = "";
 
-    public RunAsIdentityDescriptor()
-    {}
-
-    public RunAsIdentityDescriptor(String description)
-    {
-    super("no name", description);
+    public RunAsIdentityDescriptor() {
     }
 
-    public void setRoleName(String roleName)
-    {
-    this.roleName = roleName;
+
+    public RunAsIdentityDescriptor(String description) {
+        super("no name", description);
     }
 
-    public String getRoleName()
-    {
-    return roleName;
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
-    public void setPrincipal(String principal)
-    {
-    this.principal = principal;
+
+    public String getRoleName() {
+        return roleName;
     }
 
-    public String getPrincipal()
-    {
-    return principal;
+
+    public void setPrincipal(String principal) {
+        this.principal = principal;
+    }
+
+
+    public String getPrincipal() {
+        return principal;
     }
 }

@@ -52,7 +52,6 @@ import java.util.logging.Level;
  *
  * @author Jerome Dochez
  */
-
 public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
     public final static String FULL_VALIDATION = "full";
@@ -93,22 +92,20 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      */
     public SAXParser getSAXParser (boolean validating) {
         // always use system SAXParser to parse DDs, see IT 8229
-        ClassLoader currentLoader =
-            Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(
-            getClass().getClassLoader());
+        ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
 
             // set the namespace awareness
             spf.setNamespaceAware(true);
 
-        // turn validation on for deployment descriptor XML files
+            // turn validation on for deployment descriptor XML files
             spf.setValidating(validating);
 
-        // this feature is needed for backward compat with old DDs
-        // constructed by J2EE1.2 which used Java encoding names
-        // such as ISO8859_1 etc.
+            // this feature is needed for backward compat with old DDs
+            // constructed by J2EE1.2 which used Java encoding names
+            // such as ISO8859_1 etc.
 
             // this is a hack for a few days so people can continue runnning
             // with crimson
@@ -119,7 +116,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                 DOLUtils.getDefaultLogger().log(Level.WARNING, "SAXParserFactory should be xerces, but was not.");
             }
 
-        try {
+            try {
                 if (!validating) {
                     // if we are not validating, let's not load the DTD
                     if (getDeploymentDescriptorPath().indexOf(DescriptorConstants.WLS) != -1) {
@@ -128,8 +125,8 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                     }
                 }
 
-        // Validation part 2a: set the schema language if necessary
-        spf.setFeature("http://apache.org/xml/features/validation/schema",validating);
+                // Validation part 2a: set the schema language if necessary
+                spf.setFeature("http://apache.org/xml/features/validation/schema",validating);
 
                 SAXParser sp = spf.newSAXParser();
 
@@ -139,13 +136,13 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                     sp.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation",path);
                 }
 
-        // Set Xerces feature to allow dynamic validation. This prevents
-        // SAX errors from being reported when no schemaLocation attr
-        // is seen for a DTD based (J2EE1.3) XML descriptor.
-        sp.getXMLReader().setFeature(
-            "http://apache.org/xml/features/validation/dynamic", validating);
+                // Set Xerces feature to allow dynamic validation. This prevents
+                // SAX errors from being reported when no schemaLocation attr
+                // is seen for a DTD based (J2EE1.3) XML descriptor.
+                sp.getXMLReader().setFeature(
+                    "http://apache.org/xml/features/validation/dynamic", validating);
 
-        return sp;
+                return sp;
 
             } catch (SAXNotRecognizedException x) {
                 // This can happen if the parser does not support JAXP 1.2
@@ -166,6 +163,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         }
         return null;
     }
+
     /**
      * @return a DOM parser to read XML File into a DOM tree
      *
@@ -181,11 +179,11 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             // set the namespace awareness
             dbf.setNamespaceAware(true);
 
-        // turn validation on for deployment descriptor XML files
+            // turn validation on for deployment descriptor XML files
             dbf.setValidating(validating);
 
             // Validation part 2a: set the schema language if necessary
-            try     {
+            try {
                 // put the default schema for this deployment file type
                 String path = getDefaultSchemaSource();
                 if (path!=null) {
@@ -216,8 +214,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      * @param is the input stream for the XML file
      * @return the DOL descriptor for the J2EE Module
      */
-    public T read(InputStream is)
-        throws IOException, SAXException {
+    public T read(InputStream is) throws IOException, SAXException {
         return read(null, is);
     }
 
@@ -229,9 +226,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      * @param in the input stream for the XML file
      * @return the DOL descriptor for the J2EE Module
      */
-    public T read(T descriptor, File in)
-        throws IOException, SAXException {
-
+    public T read(T descriptor, File in) throws IOException, SAXException {
         FileInputStream fis = new FileInputStream(in);
         try {
             return read(descriptor, fis);
@@ -248,15 +243,13 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      * @param in the input archive abstraction for the XML file
      * @return the DOL descriptor for the J2EE Module
      */
-    public T read(T descriptor, ReadableArchive in)
-        throws IOException, SAXException {
-
-            InputStream is = in.getEntry(getDeploymentDescriptorPath());
-            try {
-                return read(descriptor, is);
-            } finally {
-                is.close();
-            }
+    public T read(T descriptor, ReadableArchive in) throws IOException, SAXException {
+        InputStream is = in.getEntry(getDeploymentDescriptorPath());
+        try {
+            return read(descriptor, is);
+        } finally {
+            is.close();
+        }
     }
 
     /**
@@ -268,8 +261,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      * @return the DOL descriptor for the J2EE Module
      */
     @SuppressWarnings("unchecked")
-    public T read(T descriptor, InputStream is)
-            throws IOException, SAXException {
+    public T read(T descriptor, InputStream is) throws IOException, SAXException {
 
         errorReportingString = FileUtils.revertFriendlyFilenameExtension(errorReportingString);
         String error = (errorReportingString == null)? errorReportingString:new File(errorReportingString).getName();
@@ -280,9 +272,9 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
         SAXParser sp = getSAXParser(getXMLValidation());
         SaxParserHandler dh = SaxParserHandlerFactory.newInstance();
-    if (validationLevel.equals(FULL_VALIDATION)) {
-        dh.setStopOnError(true);
-    }
+        if (validationLevel.equals(FULL_VALIDATION)) {
+            dh.setStopOnError(true);
+        }
         if (descriptor!=null) {
             dh.setTopNode(getRootXMLNode(descriptor));
         }
@@ -391,8 +383,9 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         File dirs = new File(dir.replace('/', File.separatorChar));
         if (!dirs.exists()) {
             boolean ok = dirs.mkdirs();
-            if (! ok)
-              throw new IOException(dirs.getAbsolutePath() + " not created");
+            if (!ok) {
+                throw new IOException(dirs.getAbsolutePath() + " not created");
+            }
         }
         File out = new File(dirs, fileName);
         write(descriptor, out);
@@ -455,34 +448,35 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     * xml validation and stop the xml parsing.
     */
     public void setXMLValidationLevel(String level) {
-    validationLevel = level;
+        validationLevel = level;
     }
 
     /**
-    * @return the xml validation reporting level
-    */
+     * @return the xml validation reporting level
+     */
     public String getXMLValidationLevel() {
-    return validationLevel;
+        return validationLevel;
     }
 
     /**
     * @return the default schema source for this deployment descriptors
     */
     protected String getDefaultSchemaSource() {
-    RootXMLNode<?> node = getRootXMLNode(null);
-    if (node!=null) {
-        List<String> systemIDs = node.getSystemIDs();
+        RootXMLNode<?> node = getRootXMLNode(null);
+        if (node != null) {
+            List<String> systemIDs = node.getSystemIDs();
             if (systemIDs != null) {
                 StringBuilder path = new StringBuilder();
                 for (String systemID : systemIDs) {
-                    if (path.length()>0)
+                    if (path.length() > 0) {
                         path.append(' ');
+                    }
                     path.append(systemID);
                 }
                 return path.toString();
             }
-    }
-    return null;
+        }
+        return null;
     }
 
     /**

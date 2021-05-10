@@ -77,13 +77,11 @@ public class MailConfiguration implements Serializable {
      * @param the from address.
      * @param the mail hostname.
      */
-    public MailConfiguration(String username,
-                 String mailFrom,
-                 String mailHost) {
+    public MailConfiguration(String username, String mailFrom, String mailHost) {
         // called from MailConfigurationNode, which is never used
-    this.username = username;
-    this.mailFrom = mailFrom;
-    this.mailHost = mailHost;
+        this.username = username;
+        this.mailFrom = mailFrom;
+        this.mailHost = mailHost;
 
         put(MAIL_FROM, mailFrom);
         put(MAIL_USER, username);
@@ -106,9 +104,7 @@ public class MailConfiguration implements Serializable {
      * Load all configuration information from the mail resource node in
      * domain.xml for the JavaMail Session object within Java EE.
      */
-    private void loadMailResources(MailResourceIntf mailResource)
-                                throws Exception {
-
+    private void loadMailResources(MailResourceIntf mailResource) throws Exception {
         if (mailResource == null) {
             _logger.log(Level.FINE,
                 "MailConfiguration: no MailResource object. mailResource=null");
@@ -189,7 +185,7 @@ public class MailConfiguration implements Serializable {
      * @return the username.
      */
     public String getUsername() {
-    return this.username;
+        return this.username;
     }
 
     /**
@@ -197,7 +193,7 @@ public class MailConfiguration implements Serializable {
      * @return the from address.
      */
     public String getMailFrom() {
-    return this.mailFrom;
+        return this.mailFrom;
     }
 
     /**
@@ -205,7 +201,7 @@ public class MailConfiguration implements Serializable {
      * @return the hostname of the mail server.
      */
     public String getMailHost() {
-    return this.mailHost;
+        return this.mailHost;
     }
 
     /**

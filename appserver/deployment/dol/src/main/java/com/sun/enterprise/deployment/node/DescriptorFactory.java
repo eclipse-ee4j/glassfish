@@ -63,20 +63,20 @@ public class DescriptorFactory {
         // Application
         register(new XMLElement(RuntimeTagNames.APPLICATION_PARAM), EnvironmentProperty.class);
 
-    //connector
-    register(new XMLElement(ConnectorTagNames.CONNECTOR), ConnectorDescriptor.class);
-    register(new XMLElement(ConnectorTagNames.OUTBOUND_RESOURCE_ADAPTER), OutboundResourceAdapter.class);
-    register(new XMLElement(ConnectorTagNames.INBOUND_RESOURCE_ADAPTER), InboundResourceAdapter.class);
-    register(new XMLElement(ConnectorTagNames.RESOURCE_ADAPTER), OutboundResourceAdapter.class);
-    register(new XMLElement(ConnectorTagNames.AUTH_MECHANISM), AuthMechanism.class);
-    register(new XMLElement(ConnectorTagNames.SECURITY_PERMISSION), SecurityPermission.class);
-    register(new XMLElement(ConnectorTagNames.LICENSE), LicenseDescriptor.class);
-    register(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY), ConnectorConfigProperty.class);
-    register(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP), ConnectorConfigProperty.class);
-    register(new XMLElement(ConnectorTagNames.MSG_LISTENER), MessageListener.class);
-    register(new XMLElement(ConnectorTagNames.ACTIVATION_SPEC),MessageListener.class);
-    register(new XMLElement(ConnectorTagNames.ADMIN_OBJECT), AdminObject.class);
-    register(new XMLElement(ConnectorTagNames.CONNECTION_DEFINITION), ConnectionDefDescriptor.class);
+        //connector
+        register(new XMLElement(ConnectorTagNames.CONNECTOR), ConnectorDescriptor.class);
+        register(new XMLElement(ConnectorTagNames.OUTBOUND_RESOURCE_ADAPTER), OutboundResourceAdapter.class);
+        register(new XMLElement(ConnectorTagNames.INBOUND_RESOURCE_ADAPTER), InboundResourceAdapter.class);
+        register(new XMLElement(ConnectorTagNames.RESOURCE_ADAPTER), OutboundResourceAdapter.class);
+        register(new XMLElement(ConnectorTagNames.AUTH_MECHANISM), AuthMechanism.class);
+        register(new XMLElement(ConnectorTagNames.SECURITY_PERMISSION), SecurityPermission.class);
+        register(new XMLElement(ConnectorTagNames.LICENSE), LicenseDescriptor.class);
+        register(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY), ConnectorConfigProperty.class);
+        register(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP), ConnectorConfigProperty.class);
+        register(new XMLElement(ConnectorTagNames.MSG_LISTENER), MessageListener.class);
+        register(new XMLElement(ConnectorTagNames.ACTIVATION_SPEC),MessageListener.class);
+        register(new XMLElement(ConnectorTagNames.ADMIN_OBJECT), AdminObject.class);
+        register(new XMLElement(ConnectorTagNames.CONNECTION_DEFINITION), ConnectionDefDescriptor.class);
 
         // JSR 109 integration
         register(new XMLElement(WebServicesTagNames.SERVICE_REF),ServiceReferenceDescriptor.class);
@@ -108,7 +108,7 @@ public class DescriptorFactory {
         if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
             DOLUtils.getDefaultLogger().fine("Register " + clazz + " to handle " + xmlPath.getQName());
         }
-    descriptorClasses.put(xmlPath.getQName(), clazz);
+        descriptorClasses.put(xmlPath.getQName(), clazz);
     }
 
     /**
@@ -128,23 +128,24 @@ public class DescriptorFactory {
             } else {
                 xmlPath=null;
             }
-        } while (xmlPath!=null);
-    if(DOLUtils.getDefaultLogger().isLoggable(Level.SEVERE)) {
+        } while (xmlPath != null);
+
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.SEVERE)) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {"No descriptor registered for " + s});
-    }
+        }
         return null;
     }
 
+
     /**
      * @return a new instance of a registered descriptor class for the
-     * supplied XPath
+     *         supplied XPath
      */
-    public static Object  getDescriptor(String xmlPath) {
-
+    public static Object getDescriptor(String xmlPath) {
         try {
             Class c = getDescriptorClass(xmlPath);
-        if (c!=null) {
+            if (c != null) {
                 return c.newInstance();
             }
         } catch (Throwable t) {

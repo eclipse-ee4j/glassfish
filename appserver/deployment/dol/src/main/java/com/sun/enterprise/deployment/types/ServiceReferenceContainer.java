@@ -33,20 +33,20 @@ public interface ServiceReferenceContainer {
     /**
      * get a particular service reference by name
      */
-    public ServiceReferenceDescriptor getServiceReferenceByName(String name);
+    ServiceReferenceDescriptor getServiceReferenceByName(String name);
 
     /**
      * return the list of service references
      */
-    public Set getServiceReferenceDescriptors();
+    Set getServiceReferenceDescriptors();
 
     /**
      * Add a new service reference
      */
-    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
+    void addServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
 
     /**
      * remove a service reference
      */
-    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
+    void removeServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
 }

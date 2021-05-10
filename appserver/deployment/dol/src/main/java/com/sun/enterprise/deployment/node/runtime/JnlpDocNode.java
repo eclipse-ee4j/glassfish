@@ -32,27 +32,30 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
  * @author tjquinn
  */
 public class JnlpDocNode extends DeploymentDescriptorNode<JavaWebStartAccessDescriptor> {
+
     protected JavaWebStartAccessDescriptor descriptor;
 
     public JnlpDocNode() {
-
     }
+
+
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+     * @return the descriptor instance to associate with this XMLNode
+     */
     @Override
     public JavaWebStartAccessDescriptor getDescriptor() {
-    if (descriptor==null) {
-        XMLNode parentNode = getParentNode();
+        if (descriptor == null) {
+            XMLNode parentNode = getParentNode();
             if (parentNode != null) {
                 Object parentDescriptor = parentNode.getDescriptor();
-                if (parentDescriptor != null && (parentDescriptor instanceof JavaWebStartAccessDescriptor) ) {
+                if (parentDescriptor != null && (parentDescriptor instanceof JavaWebStartAccessDescriptor)) {
                     descriptor = (JavaWebStartAccessDescriptor) parentDescriptor;
                 }
             }
+        }
+        return descriptor;
     }
-    return descriptor;
-    }
+
 
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
@@ -64,12 +67,12 @@ public class JnlpDocNode extends DeploymentDescriptorNode<JavaWebStartAccessDesc
         }
     }
 
+
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (element.getQName().equals(RuntimeTagNames.JNLP_DOC)) {
             getDescriptor().setJnlpDocument(value);
         }
     }
-
 
 }

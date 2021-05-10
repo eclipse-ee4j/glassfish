@@ -46,6 +46,7 @@ public class LocalizedNode extends DeploymentDescriptorNode {
     /**
      * @return the descriptor for this node
      */
+    @Override
     public Object getDescriptor() {
         return getParentNode().getDescriptor();
     }
@@ -53,9 +54,10 @@ public class LocalizedNode extends DeploymentDescriptorNode {
     /**
      * notification of element start with attributes.
      */
+    @Override
     public void startElement(XMLElement element, Attributes attributes) {
-        if (attributes.getLength()>0) {
-            for (int i=0;i<attributes.getLength();i++) {
+        if (attributes.getLength() > 0) {
+            for (int i = 0; i < attributes.getLength(); i++) {
                 if (attributes.getLocalName(i).equals(TagNames.LANG)) {
                     lang = attributes.getValue(i);
                 }
@@ -69,11 +71,13 @@ public class LocalizedNode extends DeploymentDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (element.equals(getXMLRootTag())) {
             localizedValue=value;
-        } else
+        } else {
             super.setElementValue(element, value);
+        }
     }
 
     /**
@@ -81,16 +85,19 @@ public class LocalizedNode extends DeploymentDescriptorNode {
      * the lang attribute to a DOM node
      */
     public void writeLocalizedMap(Node parentNode, String tagName, Map localizedMap) {
-        if (localizedMap!=null) {
+        if (localizedMap != null) {
             Set<Map.Entry> entrySet = localizedMap.entrySet();
             Iterator<Map.Entry> entryIt = entrySet.iterator();
             while (entryIt.hasNext()) {
                 Map.Entry entry = entryIt.next();
-                String lang = (String)entry.getKey();
+                String lang = (String) entry.getKey();
                 Element aLocalizedNode = (Element) appendTextChild(parentNode, tagName, (String) entry.getValue());
-                if ((aLocalizedNode!=null) && (Locale.getDefault().getLanguage().equals(lang))) {
-            aLocalizedNode.setAttributeNS(TagNames.XML_NAMESPACE, TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG, lang);
-          }
+                if (aLocalizedNode != null && Locale.getDefault().getLanguage().equals(lang)) {
+                    aLocalizedNode.setAttributeNS(
+                        TagNames.XML_NAMESPACE,
+                        TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG,
+                        lang);
+                }
             }
         }
     }

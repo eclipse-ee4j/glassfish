@@ -28,14 +28,14 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 /**
  * This class was based on the schema2beans generated one modified
  * to remove its dependencies on schema2beans libraries.
-
- * @author  Jerome Dochez
+ *
+ * @author Jerome Dochez
  * @version
  */
-public class ResourceAdapter extends RuntimeDescriptor
-{
-    static public final String DESCRIPTION = "Description";    // NOI18N
-    static public final String PROPERTY = "PropertyElement";    // NOI18N
+public class ResourceAdapter extends RuntimeDescriptor {
+
+    static public final String DESCRIPTION = "Description"; // NOI18N
+    static public final String PROPERTY = "PropertyElement"; // NOI18N
 
     static public final String JNDI_NAME = "JndiName";
     static public final String MAX_POOL_SIZE = "MaxPoolSize";
@@ -44,62 +44,61 @@ public class ResourceAdapter extends RuntimeDescriptor
     static public final String IDLE_TIMEOUT_IN_SECONDS = "IdleTimeoutInSeconds";
 
     // This attribute is an array, possibly empty
-    public void setPropertyElement(int index, NameValuePairDescriptor value)
-    {
-    this.setValue(PROPERTY, index, value);
+    public void setPropertyElement(int index, NameValuePairDescriptor value) {
+        this.setValue(PROPERTY, index, value);
     }
 
+
     //
-    public boolean isPropertyElement(int index)
-    {
-    NameValuePairDescriptor ret = (NameValuePairDescriptor)this.getValue(PROPERTY, index);
-    return ret != null;
+    public boolean isPropertyElement(int index) {
+        NameValuePairDescriptor ret = (NameValuePairDescriptor) this.getValue(PROPERTY, index);
+        return ret != null;
     }
+
 
     // This attribute is an array, possibly empty
-    public void setPropertyElement(NameValuePairDescriptor[] values)
-    {
-    this.setValues(PROPERTY, values);
+    public void setPropertyElement(NameValuePairDescriptor[] values) {
+        this.setValues(PROPERTY, values);
     }
+
 
     //
-    public NameValuePairDescriptor[] getPropertyElement()
-    {
-    return (NameValuePairDescriptor[])this.getValues(PROPERTY);
+    public NameValuePairDescriptor[] getPropertyElement() {
+        return (NameValuePairDescriptor[]) this.getValues(PROPERTY);
     }
+
 
     // Return the number of properties
-    public int sizePropertyElement()
-    {
-    return this.size(PROPERTY);
+    public int sizePropertyElement() {
+        return this.size(PROPERTY);
     }
 
+
     // Add a new element returning its index in the list
-    public int addPropertyElement(NameValuePairDescriptor value)
-    {
-    return this.addValue(PROPERTY, value);
+    public int addPropertyElement(NameValuePairDescriptor value) {
+        return this.addValue(PROPERTY, value);
     }
+
 
     //
     // Remove an element using its reference
     // Returns the index the element had in the list
     //
-    public int removePropertyElement(NameValuePairDescriptor value)
-    {
-    return this.removeValue(PROPERTY, value);
+    public int removePropertyElement(NameValuePairDescriptor value) {
+        return this.removeValue(PROPERTY, value);
     }
+
 
     //
     // Remove an element using its index
     //
-    public void removePropertyElement(int index)
-    {
-    this.removeValue(PROPERTY, index);
+    public void removePropertyElement(int index) {
+        this.removeValue(PROPERTY, index);
     }
 
+
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 }

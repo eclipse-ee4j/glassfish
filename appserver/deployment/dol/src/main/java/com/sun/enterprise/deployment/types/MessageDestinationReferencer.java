@@ -21,88 +21,84 @@ import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 
 /**
- *
- *
  * @author Kenneth Saks
  */
-
 public interface MessageDestinationReferencer {
 
     /**
      * @return true if this referencer is linked to a message destination
-     * and false otherwise.
+     *         and false otherwise.
      */
-    public boolean isLinkedToMessageDestination();
+    boolean isLinkedToMessageDestination();
 
     /**
      * Gets the link name of the reference. Points to the associated
      * message destination within the J2EE application. Can be NULL
      * if link is not set.
+     *
      * @return the link name.
      */
-    public String getMessageDestinationLinkName();
+    String getMessageDestinationLinkName();
 
     /**
      * Sets the link name of the reference. Points to the associated
-     * message destination within the J2EE application.  Can be NULL
+     * message destination within the J2EE application. Can be NULL
      * if link is not set.
+     *
      * @param the link name.
      */
-    public void setMessageDestinationLinkName(String linkName);
+    void setMessageDestinationLinkName(String linkName);
 
     /**
      * Sets the name of the message destination to which I refer.
-     * @param resolve if true,  *try* to resolve link to the target message
-     * destination.
      *
+     * @param resolve if true, *try* to resolve link to the target message
+     *            destination.
      * @return MessageDestination to which link was resolved, or null if
-     * link name resolution failed.
+     *         link name resolution failed.
      */
-    public MessageDestinationDescriptor setMessageDestinationLinkName
-        (String linkName, boolean resolve);
+    MessageDestinationDescriptor setMessageDestinationLinkName(String linkName, boolean resolve);
 
     /**
      * Try to resolve the current link name value to a MessageDestination
      * object.
      *
      * @return MessageDestination to which link was resolved, or null if
-     * link name resolution failed.
+     *         link name resolution failed.
      */
-    public MessageDestinationDescriptor resolveLinkName();
+    MessageDestinationDescriptor resolveLinkName();
 
     /**
      * @return the message destination object to which this message destination
-     * ref is linked.  Can be NULL.
+     *         ref is linked. Can be NULL.
      */
-    public MessageDestinationDescriptor getMessageDestination();
+    MessageDestinationDescriptor getMessageDestination();
 
     /**
      * @param destination set the message destination object to which this
-     * message destination ref is linked.  Can be NULL.
-     *
+     *            message destination ref is linked. Can be NULL.
      */
-    public void setMessageDestination(MessageDestinationDescriptor destination);
+    void setMessageDestination(MessageDestinationDescriptor destination);
 
     /**
      * True if the owner is a message destination reference.
      */
-    public boolean ownedByMessageDestinationRef();
+    boolean ownedByMessageDestinationRef();
 
     /**
      * Get the descriptor for the message destination reference owner.
      */
-    public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner
-        ();
+    MessageDestinationReferenceDescriptor getMessageDestinationRefOwner();
 
     /**
      * True if the owner is a message-driven bean.
      */
-    public boolean ownedByMessageBean();
+    boolean ownedByMessageBean();
 
     /**
      * Get the descriptor for the message-driven bean owner.
      */
-    public EjbMessageBeanDescriptor getMessageBeanOwner();
+    EjbMessageBeanDescriptor getMessageBeanOwner();
 
 }
 

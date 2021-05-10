@@ -21,6 +21,9 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import javax.sql.DataSource;
+
+import org.glassfish.deployment.common.Descriptor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +34,6 @@ import java.util.logging.Logger;
  * This descriptor represents a dependency on a resource.
  * @author Danny Coward
  */
-
 public class ResourceReferenceDescriptor extends EnvironmentProperty
     implements NamedDescriptor, ResourceReference {
 
@@ -100,10 +102,9 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @param the description
      * @param the type of the resource reference.
      */
-    public ResourceReferenceDescriptor(String name, String description,
-                    String type) {
-    super(name, "", description);
-    rType = type;
+    public ResourceReferenceDescriptor(String name, String description, String type) {
+        super(name, "", description);
+        rType = type;
     }
 
     /**
@@ -122,6 +123,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * Return the JNDI name of this resource reference.
      * @return the JNDI name of the resource reference.
      */
+    @Override
     public String getJndiName() {
         String jndiName = super.getValue();
         if (! jndiName.equals("")) {
@@ -137,14 +139,17 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * Set the JNDI name of this resource reference.
      * @param the JNDI name of the resource reference.
      */
+    @Override
     public void setJndiName(String jndiName) {
-    super.setValue(jndiName);
+        super.setValue(jndiName);
     }
 
+    @Override
     public String getInjectResourceType() {
         return rType;
     }
 
+    @Override
     public void setInjectResourceType(String resourceType) {
         rType = resourceType;
     }
@@ -162,10 +167,10 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @return the sharing scope.
      */
     public String getSharingScope() {
-    if ( sharingScope == null ) {
-        return RESOURCE_SHAREABLE;
-    }
-    return sharingScope;
+        if ( sharingScope == null ) {
+            return RESOURCE_SHAREABLE;
+        }
+        return sharingScope;
     }
 
     /**
@@ -173,7 +178,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @param the sharing scope.
      */
     public void setSharingScope(String ss) {
-    sharingScope = ss;
+        sharingScope = ss;
     }
 
 
@@ -182,7 +187,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @return true if the resource reference has a JNDI name, false otherwise
      */
     public boolean isResolved() {
-    return true;
+        return true;
     }
 
     /**
@@ -199,7 +204,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @return true if authorization is container managed.
      */
     public boolean isContainerAuthorization() {
-    return this.getAuthorization().equals(CONTAINER_AUTHORIZATION);
+        return this.getAuthorization().equals(CONTAINER_AUTHORIZATION);
     }
 
     /**
@@ -207,19 +212,21 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * is APPLICATION_AUTHORIZATION
      * @return the authorization type of the resource.
      */
+    @Override
     public String getAuthorization() {
-    if (this.authorization == null) {
-        this.authorization = APPLICATION_AUTHORIZATION;
-    }
-    return this.authorization;
+        if (this.authorization == null) {
+            this.authorization = APPLICATION_AUTHORIZATION;
+        }
+        return this.authorization;
     }
 
     /**
      * Sets the authorization type of this resource.
      * @param the authorization type.
      */
+    @Override
     public void setAuthorization(String authorization) {
-    this.authorization = authorization;
+        this.authorization = authorization;
     }
 
     /**
@@ -244,17 +251,17 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * Lookup the datasource from the namespace based on the JNDI name.
      * @return the data source
      */
-    public DataSource getJDBCDataSource()
-    {
-    if ( dataSource == null ) {
-        try {
-        // Get JDBC DataSource for database
-        javax.naming.Context ctx = new javax.naming.InitialContext();
-        // cache the datasource to avoid JNDI lookup overheads
-        dataSource = (DataSource)ctx.lookup(getJndiName());
-        } catch ( Exception ex ) { }
-    }
-    return dataSource;
+    public DataSource getJDBCDataSource() {
+        if (dataSource == null) {
+            try {
+                // Get JDBC DataSource for database
+                javax.naming.Context ctx = new javax.naming.InitialContext();
+                // cache the datasource to avoid JNDI lookup overheads
+                dataSource = (DataSource) ctx.lookup(getJndiName());
+            } catch (Exception ex) {
+            }
+        }
+        return dataSource;
     }
 
     public boolean isWebServiceContext() {
@@ -311,7 +318,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @return the principal.
      */
     public ResourcePrincipal getResourcePrincipal() {
-    return this.resourcePrincipal;
+        return this.resourcePrincipal;
     }
 
     /**
@@ -319,7 +326,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @param the principal.
      */
     public void setResourcePrincipal(ResourcePrincipal resourcePrincipal) {
-    this.resourcePrincipal = resourcePrincipal;
+        this.resourcePrincipal = resourcePrincipal;
     }
 
     /**
@@ -327,27 +334,27 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @param the mail configuration object.
      */
     public void setMailConfiguration(MailConfiguration mailConfiguration) {
-    this.mailConfiguration = mailConfiguration;
+        this.mailConfiguration = mailConfiguration;
     }
 
     /**
      * Add a new runtime property to this cmp resource
      */
      public void addProperty(NameValuePairDescriptor newProp) {
-     if (runtimeProps==null) {
-         runtimeProps = new ArrayList();
-     }
-     runtimeProps.add(newProp);
+         if (runtimeProps==null) {
+             runtimeProps = new ArrayList();
+         }
+         runtimeProps.add(newProp);
      }
 
      /**
       * @return the runtime properties for this cmp resource
       */
      public Iterator getProperties() {
-     if (runtimeProps==null) {
-         return null;
-     }
-     return runtimeProps.iterator();
+         if (runtimeProps==null) {
+             return null;
+         }
+         return runtimeProps.iterator();
      }
 
     /**
@@ -355,7 +362,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
      * @return the mail configuration object.
      */
     public MailConfiguration getMailConfiguration() {
-    return this.mailConfiguration;
+        return this.mailConfiguration;
     }
 
     /**
@@ -421,14 +428,16 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     /**
      * Equality on name.
      */
+    @Override
     public boolean equals(Object object) {
-    if (object instanceof ResourceReference) {
-        ResourceReference resourceReference = (ResourceReference) object;
-        return resourceReference.getName().equals(this.getName());
-    }
-    return false;
+        if (object instanceof ResourceReference) {
+            ResourceReference resourceReference = (ResourceReference) object;
+            return resourceReference.getName().equals(this.getName());
+        }
+        return false;
     }
 
+    @Override
     public int hashCode() {
         int result = NULL_HASH_CODE;
         String name = getName();
@@ -441,6 +450,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     /**
      * Returns a formatted string representing my state.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         StringBuffer sb = toStringBuffer;
         sb.append("Res-Ref-Env-Property: ");
@@ -449,18 +459,18 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
         sb.append(getType());
         sb.append("@");
         sb.append(getDescription());
-    if (this.isResolved()) {
-        sb.append(" resolved as: jndi: ");
-            sb.append(getJndiName());
-            sb.append("@res principal: ");
-            sb.append(getResourcePrincipal());
-            sb.append("@mail: ");
-            sb.append(getMailConfiguration());
-    }
+        if (this.isResolved()) {
+            sb.append(" resolved as: jndi: ");
+                sb.append(getJndiName());
+                sb.append("@res principal: ");
+                sb.append(getResourcePrincipal());
+                sb.append("@mail: ");
+                sb.append(getMailConfiguration());
+        }
         if (runtimeProps!=null) {
-            for (Iterator itr = runtimeProps.iterator();itr.hasNext();) {
+            for (Object runtimeProp : runtimeProps) {
                 sb.append("\nPropery : ");
-                sb.append(itr.next());
+                sb.append(runtimeProp);
             }
         } else {
             sb.append("\nNo Runtime properties");
@@ -494,37 +504,37 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
     */
     public void checkType() {
         if (rType == null) {
-        if (this.isBoundsChecking()) {
+        if (Descriptor.isBoundsChecking()) {
             throw new IllegalArgumentException(localStrings.getLocalString(
                 "enterprise.deployment.exceptiontypenotallowedpropertytype",
                 "{0} is not an allowed property value type",
                 new Object[] {"null"}));
             }
         }
-    if (rType != null) {
-        Class typeClass = null;
-        // is it loadable ?
-        try {
-            // Bug fix 4850684: for resource-refs that are user-defined classes,
-            // the classloader used to load them cannot be the one associated
-            // with the application deployed, since the classloader instance
-            // would have no idea about classes not included in app
-            // for e.g connector module with res-ref that points to the
-            // ConnectionFactory class of a resource adapter
+        if (rType != null) {
+            Class typeClass = null;
+            // is it loadable ?
+            try {
+                // Bug fix 4850684: for resource-refs that are user-defined classes,
+                // the classloader used to load them cannot be the one associated
+                // with the application deployed, since the classloader instance
+                // would have no idea about classes not included in app
+                // for e.g connector module with res-ref that points to the
+                // ConnectionFactory class of a resource adapter
 
-            typeClass = Class.forName(rType, true,
-                      Thread.currentThread().getContextClassLoader());
+                typeClass = Class.forName(rType, true,
+                          Thread.currentThread().getContextClassLoader());
 
-        } catch (Throwable t) {
-            if (this.isBoundsChecking()) {
-            throw new IllegalArgumentException(localStrings.getLocalString(
-                  "enterprise.deployment.exceptiontypenotallowedpropertytype",
-                  "{0} is not an allowed property value type",
-                  new Object[] {rType}));
-        } else {
-            return;
-        }
-        }
+            } catch (Throwable t) {
+                if (Descriptor.isBoundsChecking()) {
+                    throw new IllegalArgumentException(localStrings.getLocalString(
+                          "enterprise.deployment.exceptiontypenotallowedpropertytype",
+                          "{0} is not an allowed property value type",
+                          new Object[] {rType}));
+                } else {
+                    return;
+                }
+            }
         }
     }
     // END OF IASRI 4718559, 4729298

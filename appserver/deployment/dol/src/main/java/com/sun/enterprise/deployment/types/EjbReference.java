@@ -25,108 +25,107 @@ import com.sun.enterprise.deployment.InjectionCapable;
  *
  * @author Jerome Dochez
  */
-
 public interface EjbReference  extends NamedInformation, InjectionCapable {
 
     /**
      * Get the type of the EJB (Session, Entity or Message-Driven).
      * @return the type of the EJB.
      */
-    public String getType();
+    String getType();
 
     /**
      * Set the type of the EJB. Allowed values are Session, Entity or
      * Message-driven.
      * @param the type of the EJB.
      */
-    public void setType(String type);
+    void setType(String type);
 
     /**
      * Gets the home classname of the referee EJB.
      * @return the class name of the EJB home.
      */
-    public String getEjbHomeInterface();
+    String getEjbHomeInterface();
 
     /**
      * Sets the local or remote home classname of the referee EJB.
      * @param the class name of the EJB home.
      */
-    public void setEjbHomeInterface(String ejbHomeInterface);
+    void setEjbHomeInterface(String ejbHomeInterface);
 
     /**
      * Gets the local or remote interface classname of the referee EJB.
      * @return the classname of the EJB remote object.
      */
-    public String getEjbInterface();
+    String getEjbInterface();
 
     /**
      * Sets the local or remote bean interface classname of the referee EJB.
      * @param the classname of the EJB remote object.
      */
-    public void setEjbInterface(String ejbInterface);
+    void setEjbInterface(String ejbInterface);
 
     /**
      * Gets the link name of the reference. For use when linking to an EJB
      * within a J2EE application.
      * @return the link name.
      */
-    public String getLinkName();
+    String getLinkName();
 
     /**
      * Sets the link name of the reference. For use when linking to an EJB
      * within a J2EE application.
      * @param the link name.
      */
-    public void setLinkName(String linkName);
+    void setLinkName(String linkName);
 
     /**
      * Tests if the reference to the referree EJB is through local or
      * remote interface
      * @return true if using the local interfaces
      */
-    public boolean isLocal();
+    boolean isLocal();
 
     /**
      * Sets whether the reference uses the local or remote interfaces of
      * the referring EJB
      * @param true if using the local interface
      */
-    public void setLocal(boolean isLocal);
+    void setLocal(boolean isLocal);
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
      * EJB reference is declared.
      */
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
+    void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
      * EJB reference is declared.
      */
-    public BundleDescriptor getReferringBundleDescriptor();
+    BundleDescriptor getReferringBundleDescriptor();
 
     /**
      * Set the jndi name for this ejb reference
      */
-    public void setJndiName(String jndiName);
+    void setJndiName(String jndiName);
 
     /**
      * @return the jndi name for this ejb reference
      */
-    public String getJndiName();
+    String getJndiName();
 
-    public boolean hasJndiName();
+    boolean hasJndiName();
 
-    public boolean hasLookupName();
-    public String getLookupName();
+    boolean hasLookupName();
+    String getLookupName();
 
-    public EjbDescriptor getEjbDescriptor();
-    public void setEjbDescriptor(EjbDescriptor descriptor);
+    EjbDescriptor getEjbDescriptor();
+    void setEjbDescriptor(EjbDescriptor descriptor);
 
     /**
      * @return true if the EJB reference is a 30 client view
      */
-    public boolean isEJB30ClientView();
+    boolean isEJB30ClientView();
 
 }
 

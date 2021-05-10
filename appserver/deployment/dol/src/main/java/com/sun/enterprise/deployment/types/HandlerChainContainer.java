@@ -27,9 +27,9 @@ import java.util.List;
  */
 public interface HandlerChainContainer {
 
-    public void addHandlerChain(WebServiceHandlerChain chain);
+    void addHandlerChain(WebServiceHandlerChain chain);
 
-    public List<WebServiceHandlerChain> getHandlerChain();
+    List<WebServiceHandlerChain> getHandlerChain();
 
-    public boolean hasHandlerChain();
+    boolean hasHandlerChain();
 }

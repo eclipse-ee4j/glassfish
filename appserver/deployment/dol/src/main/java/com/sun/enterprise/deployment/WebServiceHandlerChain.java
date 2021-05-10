@@ -37,19 +37,19 @@ public class WebServiceHandlerChain extends Descriptor {
 
     // copy constructor
     public WebServiceHandlerChain(WebServiceHandlerChain other) {
-    super(other);
+        super(other);
         this.protocolBinding = other.protocolBinding;
         this.serviceNamePattern = other.serviceNamePattern;
         this.portNamePattern = other.portNamePattern;
-    if (other.handlers != null) {
+        if (other.handlers != null) {
             handlers = new LinkedList();
-        for (Iterator i = other.handlers.iterator(); i.hasNext();) {
-        WebServiceHandler wsh = (WebServiceHandler)i.next();
-        handlers.addLast(new WebServiceHandler(wsh));
+            for (Iterator i = other.handlers.iterator(); i.hasNext();) {
+                WebServiceHandler wsh = (WebServiceHandler) i.next();
+                handlers.addLast(new WebServiceHandler(wsh));
+            }
+        } else {
+            handlers = null;
         }
-    } else {
-        handlers = null;
-    }
     }
 
     public WebServiceHandlerChain() {
@@ -96,7 +96,6 @@ public class WebServiceHandlerChain extends Descriptor {
      */
     public void addHandler(WebServiceHandler handler) {
         handlers.addLast(handler);
-
     }
 
     public void removeHandler(WebServiceHandler handler) {
@@ -105,9 +104,9 @@ public class WebServiceHandlerChain extends Descriptor {
     }
 
     public void removeHandlerByName(String handlerName) {
-        for(Iterator iter = handlers.iterator(); iter.hasNext();) {
+        for (Iterator iter = handlers.iterator(); iter.hasNext();) {
             WebServiceHandler next = (WebServiceHandler) iter.next();
-            if( next.getHandlerName().equals(handlerName) ) {
+            if (next.getHandlerName().equals(handlerName)) {
                 iter.remove();
 
                 break;

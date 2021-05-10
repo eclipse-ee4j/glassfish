@@ -30,14 +30,16 @@ import org.w3c.dom.Node;
  */
 public class PrincipalNode extends DeploymentDescriptorNode {
 
-    PrincipalImpl principal=null;
+    PrincipalImpl principal = null;
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         return principal;
     }
+
 
     /**
      * receives notification of the value for a particular tag
@@ -45,12 +47,15 @@ public class PrincipalNode extends DeploymentDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
-
         if (RuntimeTagNames.NAME.equals(element.getQName())) {
             principal = new PrincipalImpl(value);
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -62,7 +67,7 @@ public class PrincipalNode extends DeploymentDescriptorNode {
      */
     public Node writeDescriptor(Node parent, String nodeName, PrincipalImpl descriptor) {
         Node principal = appendChild(parent, nodeName);
-    appendTextChild(principal, RuntimeTagNames.NAME, descriptor.getName());
+        appendTextChild(principal, RuntimeTagNames.NAME, descriptor.getName());
         return principal;
 
     }

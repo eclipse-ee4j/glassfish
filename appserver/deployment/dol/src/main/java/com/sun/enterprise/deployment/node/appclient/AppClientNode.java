@@ -77,23 +77,18 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     }
 
     public AppClientNode() {
-    registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY),
-                                                             EnvEntryNode.class, "addEnvironmentProperty");
+    registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
         JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-                                                             ResourceRefNode.class, "addResourceReferenceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
-                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class, "addResourceReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class, "addMessageDestinationReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION),
-                               MessageDestinationNode.class,
-                               "addMessageDestination");
+        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION), MessageDestinationNode.class, "addMessageDestination");
         registerElementHandler(new XMLElement(TagNames.POST_CONSTRUCT), LifecycleCallbackNode.class, "addPostConstructDescriptor");
         registerElementHandler(new XMLElement(TagNames.PRE_DESTROY), LifecycleCallbackNode.class, "addPreDestroyDescriptor");
         registerElementHandler(new XMLElement(TagNames.DATA_SOURCE), DataSourceDefinitionNode.class, "addResourceDescriptor");
@@ -119,7 +114,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
 
     @Override
     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, final Map<String, List<Class>> versionUpgrades) {
-        final Map<String,Class> result = new HashMap<String,Class>();
+        final Map<String,Class> result = new HashMap<>();
         result.put(AppClientRuntimeNode.registerBundle(publicIDToDTD), AppClientRuntimeNode.class);
         result.put(GFAppClientRuntimeNode.registerBundle(publicIDToDTD), GFAppClientRuntimeNode.class);
         return result;
@@ -129,8 +124,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     public void addDescriptor(Object  newDescriptor) {
         if (newDescriptor instanceof EjbReference) {
             DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
-            (getDescriptor()).addEjbReferenceDescriptor(
-                        (EjbReference) newDescriptor);
+            (getDescriptor()).addEjbReferenceDescriptor((EjbReference) newDescriptor);
         } else {
             super.addDescriptor(newDescriptor);
         }
@@ -183,7 +177,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
         ApplicationClientDescriptor appclientDesc) {
         Node appclientNode = super.writeDescriptor(parent, appclientDesc);
 
-    // env-entry*
+        // env-entry*
         writeEnvEntryDescriptors(appclientNode, appclientDesc.getEnvironmentProperties().iterator());
 
         // ejb-ref * and ejb-local-ref*
@@ -224,11 +218,10 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
 
         appendTextChild(appclientNode, ApplicationClientTagNames.CALLBACK_HANDLER, appclientDesc.getCallbackHandler());
 
-         // message-destination*
-        writeMessageDestinations
-           (appclientNode, appclientDesc.getMessageDestinations().iterator());
+        // message-destination*
+        writeMessageDestinations(appclientNode, appclientDesc.getMessageDestinations().iterator());
 
-    return appclientNode;
+        return appclientNode;
 
     }
 

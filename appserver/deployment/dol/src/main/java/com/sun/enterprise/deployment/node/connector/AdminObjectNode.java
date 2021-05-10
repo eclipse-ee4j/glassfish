@@ -38,15 +38,14 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
     private AdminObject adminObject = null;
 
     public AdminObjectNode() {
-    register();
+        register();
     }
 
     /**
      * method for registering the handlers with the various tags
      */
     private void register() {
-    registerElementHandler(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY),
-                   ConfigPropertyNode.class);
+        registerElementHandler(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY), ConfigPropertyNode.class);
     }
 
     /**
@@ -55,7 +54,6 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.ADMIN_OBJECT_INTERFACE, "setAdminObjectInterface");
@@ -69,15 +67,15 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
      *
      * @param descriptor the new descriptor
      */
-    public void addDescriptor(Object obj) {
-        if (obj instanceof ConnectorConfigProperty) {
-            adminObject.addConfigProperty((ConnectorConfigProperty)obj);
+    public void addDescriptor(Object descriptor) {
+        if (descriptor instanceof ConnectorConfigProperty) {
+            adminObject.addConfigProperty((ConnectorConfigProperty)descriptor);
         }
     }
 
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+     * @return the descriptor instance to associate with this XMLNode
+     */
     public Object getDescriptor() {
         if (adminObject == null) {
             adminObject = (AdminObject) DescriptorFactory.getDescriptor(getXMLPath());
@@ -89,26 +87,25 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
-
-        if (! (descriptor instanceof ConnectorDescriptor)) {
+        if (!(descriptor instanceof ConnectorDescriptor)) {
             throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
 
-    //adminObject info
-    for (Iterator adminObjects = ((ConnectorDescriptor)descriptor).getAdminObjects().iterator(); adminObjects.hasNext();) {
-        AdminObject adminObject = (AdminObject) adminObjects.next();
-        Node adminObjectNode = appendChild(parent, ConnectorTagNames.ADMIN_OBJECT);
-        appendTextChild(adminObjectNode, ConnectorTagNames.ADMIN_OBJECT_INTERFACE, adminObject.getAdminObjectInterface());
-        appendTextChild(adminObjectNode, ConnectorTagNames.ADMIN_OBJECT_CLASS, adminObject.getAdminObjectClass());
+        //adminObject info
+        for (Iterator adminObjects = ((ConnectorDescriptor)descriptor).getAdminObjects().iterator(); adminObjects.hasNext();) {
+            AdminObject adminObject = (AdminObject) adminObjects.next();
+            Node adminObjectNode = appendChild(parent, ConnectorTagNames.ADMIN_OBJECT);
+            appendTextChild(adminObjectNode, ConnectorTagNames.ADMIN_OBJECT_INTERFACE, adminObject.getAdminObjectInterface());
+            appendTextChild(adminObjectNode, ConnectorTagNames.ADMIN_OBJECT_CLASS, adminObject.getAdminObjectClass());
 
-        ConfigPropertyNode config = new ConfigPropertyNode();
-        adminObjectNode = config.writeDescriptor(adminObjectNode, adminObject);
-    }
+            ConfigPropertyNode config = new ConfigPropertyNode();
+            adminObjectNode = config.writeDescriptor(adminObjectNode, adminObject);
+        }
 
-    return parent;
+        return parent;
     }
 }

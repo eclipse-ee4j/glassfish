@@ -112,18 +112,16 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
      * Set the referring bundle, i.e. the bundle within which this
      * message destination reference is declared.
      */
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle)
-    {
-    this.referringBundle = referringBundle;
+    public void setReferringBundleDescriptor(BundleDescriptor referringBundle) {
+        this.referringBundle = referringBundle;
     }
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
      * message destination reference is declared.
      */
-    public BundleDescriptor getReferringBundleDescriptor()
-    {
-    return referringBundle;
+    public BundleDescriptor getReferringBundleDescriptor() {
+        return referringBundle;
     }
 
     //
@@ -148,8 +146,8 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
         referencer.setMessageDestinationLinkName(linkName);
     }
 
-    public MessageDestinationDescriptor setMessageDestinationLinkName
-        (String linkName, boolean resolveLink) {
+
+    public MessageDestinationDescriptor setMessageDestinationLinkName(String linkName, boolean resolveLink) {
         return referencer.setMessageDestinationLinkName(linkName, resolveLink);
     }
 
@@ -164,8 +162,7 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
     /**
      * Get the descriptor for the message destination reference owner.
      */
-    public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner
-        () {
+    public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner() {
         return this;
     }
 
@@ -197,17 +194,19 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
         referencer.setMessageDestination(newMsgDest);
     }
 
-    /** returns a formatted string representing me.
-    */
+
+    /**
+     * returns a formatted string representing me.
+     */
 
     public void print(StringBuffer toStringBuffer) {
         if (isLinkedToMessageDestination()) {
-        toStringBuffer.append("Resolved Message-Destination-Ref ").append(getName()).append(
-                "points to logical message destination ").append(getMessageDestination().getName());
-    } else {
-        toStringBuffer.append("Unresolved Message-Destination-Ref ").append(getName()).append(
-                "@").append(getType()).append("@").append(usage);
-    }
+            toStringBuffer.append("Resolved Message-Destination-Ref ").append(getName())
+                .append("points to logical message destination ").append(getMessageDestination().getName());
+        } else {
+            toStringBuffer.append("Unresolved Message-Destination-Ref ").append(getName()).append("@").append(getType())
+                .append("@").append(usage);
+        }
     }
 
     public boolean isConflict(MessageDestinationReferenceDescriptor other) {
@@ -222,13 +221,13 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty
 
     /* Equality on name. */
     public boolean equals(Object object) {
-    if (object instanceof MessageDestinationReference) {
-        MessageDestinationReference reference =
-                (MessageDestinationReference) object;
-        return reference.getName().equals(this.getName());
+        if (object instanceof MessageDestinationReference) {
+            MessageDestinationReference reference = (MessageDestinationReference) object;
+            return reference.getName().equals(this.getName());
+        }
+        return false;
     }
-    return false;
-    }
+
 
     public int hashCode() {
         int result = NULL_HASH_CODE;

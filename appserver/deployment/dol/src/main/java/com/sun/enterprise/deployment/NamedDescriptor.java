@@ -16,36 +16,34 @@
 
  package com.sun.enterprise.deployment;
 
-    /**
-    * Objects implementing this interface have a JNDI
-    ** name property.
-    *
-    *@author Danny Coward
-    */
-
-public interface NamedDescriptor {
-
-    /**
-    * The name of this descriptor.
-    *
-     * @return java.lang.String name
-     */
-    public String getName();
+ /**
+  * Objects implementing this interface have a JNDI
+  * name property.
+  *
+  * @author Danny Coward
+  */
+ public interface NamedDescriptor {
 
      /**
-     * Returns the JNDI name property of the receiver.
-     *
-     * @return java.lang.String JNDI name
-     */
+      * The name of this descriptor.
+      *
+      * @return java.lang.String name
+      */
+     String getName();
 
-    public String getJndiName();
+     /**
+      * Returns the JNDI name property of the receiver.
+      *
+      * @return java.lang.String JNDI name
+      */
 
-    /**
-     * Sets the JNDI name property of the reciever as a String.
-     *
-     * @param jndiName the new JNDI name of the receiver.
-     *
-     */
-    public void setJndiName(String jndiName);
+     String getJndiName();
 
-}
+     /**
+      * Sets the JNDI name property of the reciever as a String.
+      *
+      * @param jndiName the new JNDI name of the receiver.
+      */
+     void setJndiName(String jndiName);
+
+ }

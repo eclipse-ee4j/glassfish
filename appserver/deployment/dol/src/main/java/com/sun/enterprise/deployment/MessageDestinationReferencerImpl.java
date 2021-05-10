@@ -17,13 +17,14 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Collection;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * Shared implementation for deployment descriptor entities that can refer
@@ -34,7 +35,6 @@ import java.util.Collection;
  * @author Kenneth Saks
  *
 */
-
 public class MessageDestinationReferencerImpl implements
     MessageDestinationReferencer, Serializable {
 
@@ -49,11 +49,11 @@ public class MessageDestinationReferencerImpl implements
     private EjbMessageBeanDescriptor ownerMsgBean = null;
 
     public MessageDestinationReferencerImpl(MessageDestinationReferencerImpl other) {
-    //super(other);
-    messageDestinationLinkName = other.messageDestinationLinkName; // immutable String
-    messageDestination = other.messageDestination; // copy as-is
-    ownerMsgDestRef = other.ownerMsgDestRef; // copy as-is
-    ownerMsgBean = other.ownerMsgBean; // copy as-is
+        //super(other);
+        messageDestinationLinkName = other.messageDestinationLinkName; // immutable String
+        messageDestination = other.messageDestination; // copy as-is
+        ownerMsgDestRef = other.ownerMsgDestRef; // copy as-is
+        ownerMsgBean = other.ownerMsgBean; // copy as-is
     }
 
     public MessageDestinationReferencerImpl(Descriptor desc) {
@@ -76,8 +76,7 @@ public class MessageDestinationReferencerImpl implements
     /**
      * Get the descriptor for the message destination reference owner.
      */
-    public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner
-        () {
+    public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner() {
         return ownerMsgDestRef;
     }
 
@@ -101,7 +100,7 @@ public class MessageDestinationReferencerImpl implements
      * object.
      */
     public boolean isLinkedToMessageDestination() {
-    return (messageDestination != null);
+        return (messageDestination != null);
     }
 
     private BundleDescriptor getBundleDescriptor() {
@@ -139,13 +138,11 @@ public class MessageDestinationReferencerImpl implements
      * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
-    public MessageDestinationDescriptor setMessageDestinationLinkName
-        (String linkName, boolean resolve) {
-
+    public MessageDestinationDescriptor setMessageDestinationLinkName(String linkName, boolean resolve) {
         messageDestinationLinkName = linkName;
         MessageDestinationDescriptor msgDest = null;
 
-        if( resolve ) {
+        if (resolve) {
             msgDest = resolveLinkName();
         }
         return msgDest;
@@ -174,14 +171,13 @@ public class MessageDestinationReferencerImpl implements
             BundleDescriptor targetBundle = null;
             String msgDestName = linkName;
 
-            if( app != null ) {
+            if (app != null) {
 
                 // explicit reference to another module
-                if( hashIndex != -1 )  {
+                if (hashIndex != -1) {
                     String relativeModuleUri = linkName.substring(0, hashIndex);
                     msgDestName = linkName.substring(hashIndex + 1);
-                    targetBundle = app.getRelativeBundle(bundleDescriptor,
-                                                         relativeModuleUri);
+                    targetBundle = app.getRelativeBundle(bundleDescriptor, relativeModuleUri);
                 } else {
                     // Default is to find message destination within this
                     // module.  If it's not there, try searching the other
@@ -191,13 +187,11 @@ public class MessageDestinationReferencerImpl implements
                     // reference have names that are unique within all the
                     // message destinations in the .ear.  There is no
                     // required search ordering.
-                    if( !bundleDescriptor.hasMessageDestinationByName
-                          (msgDestName) ) {
+                    if (!bundleDescriptor.hasMessageDestinationByName(msgDestName)) {
                         Set modules = app.getBundleDescriptors();
-                        for(Iterator iter = modules.iterator(); iter.hasNext();)
-                        {
-                            BundleDescriptor next=(BundleDescriptor)iter.next();
-                            if( next.hasMessageDestinationByName(msgDestName) ) {
+                        for (Iterator iter = modules.iterator(); iter.hasNext();) {
+                            BundleDescriptor next = (BundleDescriptor) iter.next();
+                            if (next.hasMessageDestinationByName(msgDestName)) {
                                 targetBundle = next;
                                 break;
                             }
@@ -223,13 +217,13 @@ public class MessageDestinationReferencerImpl implements
                 }
             }
             try {
-                if( targetBundle != null ) {
-                    msgDest = targetBundle.getMessageDestinationByName
-                        (msgDestName);
+                if (targetBundle != null) {
+                    msgDest = targetBundle.getMessageDestinationByName(msgDestName);
                 }
-            } catch(IllegalArgumentException iae) {}
+            } catch (IllegalArgumentException iae) {
+            }
         }
-        if( msgDest != null ) {
+        if (msgDest != null) {
             setMessageDestination(msgDest);
         }
 
@@ -240,29 +234,27 @@ public class MessageDestinationReferencerImpl implements
      * @return the message destination to which I refer. Can be NULL.
     */
     public MessageDestinationDescriptor getMessageDestination() {
-    return messageDestination;
+        return messageDestination;
     }
 
     /**
-     * @param messageDestiation the message destination to which I refer.
+     * @param newMsgDest the message destination to which I refer.
      */
     public void setMessageDestination(MessageDestinationDescriptor newMsgDest) {
-        if( messageDestination != null ) {
+        if (messageDestination != null) {
             messageDestination.removeReferencer(this);
         }
-        if( newMsgDest != null ) {
+        if (newMsgDest != null) {
             newMsgDest.addReferencer(this);
 
             // Keep message destination link name in synch with message
             // destination object.
             BundleDescriptor bundleDescriptor = getBundleDescriptor();
-            BundleDescriptor targetBundleDescriptor =
-                newMsgDest.getBundleDescriptor();
+            BundleDescriptor targetBundleDescriptor = newMsgDest.getBundleDescriptor();
             String linkName = newMsgDest.getName();
-            if( bundleDescriptor != targetBundleDescriptor ) {
+            if (bundleDescriptor != targetBundleDescriptor) {
                 Application app = bundleDescriptor.getApplication();
-                String relativeUri = app.getRelativeUri(bundleDescriptor,
-                                                        targetBundleDescriptor);
+                String relativeUri = app.getRelativeUri(bundleDescriptor, targetBundleDescriptor);
                 linkName = relativeUri + "#" + linkName;
             }
             messageDestinationLinkName = linkName;

@@ -24,7 +24,7 @@ import java.util.Set;
  * This type defines the behaviour of a J2EE Component containing
  * resources env references.
  *
- * @author  Jeome Dochez
+ * @author Jeome Dochez
  * @version
  */
 public interface ResourceEnvReferenceContainer {
@@ -32,21 +32,22 @@ public interface ResourceEnvReferenceContainer {
     /**
      * Add a resource environment reference to myself
      *
-     * @param the new resource environment ref
+     * @param resourceEnvReference the new resource environment ref
      */
-    public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference);
+    void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference);
 
     /**
-     * Return a resource environment reference by the same name or throw an IllegalArgumentException.
+     * Return a resource environment reference by the same name or throw an
+     * IllegalArgumentException.
      *
-     * @param the resource environment reference name
+     * @param name the resource environment reference name
      */
-    public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name);
+    ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name);
 
-   /**
-    * Return the set of resource environment references
-    */
-    public Set getResourceEnvReferenceDescriptors();
+    /**
+     * Return the set of resource environment references
+     */
+    Set getResourceEnvReferenceDescriptors();
 
 }
 

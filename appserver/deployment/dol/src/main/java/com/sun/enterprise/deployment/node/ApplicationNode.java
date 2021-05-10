@@ -35,7 +35,6 @@ import com.sun.enterprise.deployment.xml.ApplicationTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
@@ -200,8 +199,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
             }
            descriptor.addBundleDescriptor((BundleDescriptor) newDescriptor);
         } else if (newDescriptor instanceof EjbReference) {
-            descriptor.addEjbReferenceDescriptor(
-                        (EjbReference) newDescriptor);
+            descriptor.addEjbReferenceDescriptor((EjbReference) newDescriptor);
         }
     }
 

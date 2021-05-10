@@ -21,29 +21,35 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class encapsulates the xmltags: description and security-permission-spec
- * @ Sheetal Vartak
+ *
+ * @author Sheetal Vartak
  */
 public class SecurityPermission extends Descriptor {
 
     private String permissionSpec;
 
-    public SecurityPermission(){}
+    public SecurityPermission() {
+    }
 
-    public SecurityPermission(String description,String permissionSpec ){
+
+    public SecurityPermission(String description, String permissionSpec) {
         super.setDescription(description);
-           this.permissionSpec = permissionSpec;
+        this.permissionSpec = permissionSpec;
     }
 
-    /** get permission
+
+    /**
+     * get permission
      */
-    public String getPermission(){
-        return(permissionSpec);
+    public String getPermission() {
+        return (permissionSpec);
     }
 
-    /** set permission
+
+    /**
+     * set permission
      */
-    public void setPermission(String permissionSpec){
-        this.permissionSpec=permissionSpec;
+    public void setPermission(String permissionSpec) {
+        this.permissionSpec = permissionSpec;
     }
-
 }

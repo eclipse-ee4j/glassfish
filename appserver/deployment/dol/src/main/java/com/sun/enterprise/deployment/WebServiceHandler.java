@@ -47,15 +47,15 @@ public class WebServiceHandler extends Descriptor {
     * copy constructor.
     */
     public WebServiceHandler(WebServiceHandler other) {
-    super(other);
-    handlerName = other.handlerName; // String
-    handlerClass = other.handlerClass; // String
-    portNames.addAll(other.portNames); // Set of String
-    soapRoles.addAll(other.soapRoles); // Set of String
-    soapHeaders.addAll(other.soapHeaders); // Set of QName (immutable)
-    for (Iterator i = other.initParams.iterator(); i.hasNext();) {
-        initParams.add(new NameValuePairDescriptor((NameValuePairDescriptor)i.next()));
-    }
+        super(other);
+        handlerName = other.handlerName; // String
+        handlerClass = other.handlerClass; // String
+        portNames.addAll(other.portNames); // Set of String
+        soapRoles.addAll(other.soapRoles); // Set of String
+        soapHeaders.addAll(other.soapHeaders); // Set of QName (immutable)
+        for (Iterator i = other.initParams.iterator(); i.hasNext();) {
+            initParams.add(new NameValuePairDescriptor((NameValuePairDescriptor) i.next()));
+        }
     }
 
     public WebServiceHandler() {
@@ -67,7 +67,6 @@ public class WebServiceHandler extends Descriptor {
      */
     public void setHandlerClass(String className) {
         handlerClass = className;
-
     }
 
     /**
@@ -156,7 +155,7 @@ public class WebServiceHandler extends Descriptor {
     }
 
     /**
-     * @return a string describing the values I hold
+     * Appends a string describing the values I hold
      */
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nHandler name = ").append(handlerName).append(

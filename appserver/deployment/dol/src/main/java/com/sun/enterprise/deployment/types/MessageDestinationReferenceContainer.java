@@ -24,7 +24,7 @@ import java.util.Set;
  * This type defines the behaviour of a J2EE Component containing
  * message destination references.
  *
- * @author  Kennneth Saks
+ * @author Kennneth Saks
  * @version
  */
 public interface MessageDestinationReferenceContainer {
@@ -34,27 +34,25 @@ public interface MessageDestinationReferenceContainer {
      *
      * @param the new message destination ref
      */
-    public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference);
+    void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference);
 
     /**
      * Return a message destination reference by the same name or throw an IllegalArgumentException.
      *
      * @param the message destination reference name
      */
-    public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
+    MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
 
-   /**
-    * Return the set of message destination references declared.
-    */
-    public Set getMessageDestinationReferenceDescriptors();
+    /**
+     * Return the set of message destination references declared.
+     */
+    Set getMessageDestinationReferenceDescriptors();
 
     /**
      * Removes the specified message destination reference from the receiver.
      *
      * @param ref MessageDestinationReferenceDescriptor to remove.
-     *
      */
-    public void removeMessageDestinationReferenceDescriptor
-        (MessageDestinationReferenceDescriptor msgDestRef);
+    void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef);
 }
 

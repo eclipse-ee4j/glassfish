@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
  * This node handles the runtime deployment descriptor tag
  * default-resource-principal
  *
- * @author  Jerome Dochez
+ * @author Jerome Dochez
  * @version
  */
 public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
@@ -35,12 +35,14 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
     private String name = null;
     private String passwd = null;
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         return null;
     }
+
 
     /**
      * receives notification of the value for a particular tag
@@ -48,24 +50,31 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (RuntimeTagNames.NAME.equals(element.getQName())) {
             name = value;
-        } else  if (RuntimeTagNames.PASSWORD.equals(element.getQName())) {
+        } else if (RuntimeTagNames.PASSWORD.equals(element.getQName())) {
             passwd = value;
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
+
 
     /**
      * notification of the end of XML parsing for this node
      */
+    @Override
     public void postParsing() {
         if (getParentNode().getDescriptor() instanceof ResourceReferenceDescriptor) {
-            ((ResourceReferenceDescriptor) getParentNode().getDescriptor()).setResourcePrincipal(new ResourcePrincipal(name, passwd));
+            ((ResourceReferenceDescriptor) getParentNode().getDescriptor())
+                .setResourcePrincipal(new ResourcePrincipal(name, passwd));
         } else {
             getParentNode().addDescriptor(new ResourcePrincipal(name, passwd));
         }
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -78,7 +87,7 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
     public Node writeDescriptor(Node parent, String nodeName, ResourcePrincipal rpDescriptor) {
         Node principalNode = super.writeDescriptor(parent, nodeName, null);
         appendTextChild(principalNode, RuntimeTagNames.NAME, rpDescriptor.getName());
-    appendTextChild(principalNode, RuntimeTagNames.PASSWORD, rpDescriptor.getPassword());
+        appendTextChild(principalNode, RuntimeTagNames.PASSWORD, rpDescriptor.getPassword());
         return principalNode;
     }
 }

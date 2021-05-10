@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
 import org.glassfish.deployment.common.Descriptor;
 
@@ -22,89 +22,102 @@ import java.util.Set;
 
 /**
  * connector1.5
- * <!ELEMENT messagelistener (messagelistener-type,
- *           activationspec)>
+ * <!ELEMENT messagelistener (messagelistener-type, activationspec)>
  *
  * @author Sheetal Vartak
  */
 public class MessageListener extends Descriptor {
-
 
     private String msgListenerType;
     private String activationSpecClass;
     private Set configProperties;
     private Set requiredConfigProperties;
 
-    //default constructor
+    // default constructor
     public MessageListener() {
-    this.configProperties = new OrderedSet();
-    this.requiredConfigProperties = new OrderedSet();
+        this.configProperties = new OrderedSet();
+        this.requiredConfigProperties = new OrderedSet();
     }
-
 
 
     public String getMessageListenerType() {
-    return msgListenerType;
+        return msgListenerType;
     }
+
 
     public void setMessageListenerType(String msgListenerType) {
-    this.msgListenerType = msgListenerType;
+        this.msgListenerType = msgListenerType;
     }
+
 
     public String getActivationSpecClass() {
-    return activationSpecClass;
+        return activationSpecClass;
     }
+
 
     public void setActivationSpecClass(String activationSpecClass) {
-    this.activationSpecClass = activationSpecClass;
+        this.activationSpecClass = activationSpecClass;
     }
 
 
-    /** add a connector-configProperty to the set
+    /**
+     * add a connector-configProperty to the set
      */
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
-    this.configProperties.add(configProperty);
+        this.configProperties.add(configProperty);
     }
 
-    /** remove a connector-configProperty from the set
+
+    /**
+     * remove a connector-configProperty from the set
      */
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
-    this.configProperties.remove(configProperty);
+        this.configProperties.remove(configProperty);
     }
 
-    /** Set of ConnectorConfigProperty
+
+    /**
+     * Set of ConnectorConfigProperty
      */
     public Set getConfigProperties() {
         return configProperties;
     }
 
-    /** add a configProperty to the set
+
+    /**
+     * add a configProperty to the set
      */
     public void addRequiredConfigProperty(EnvironmentProperty configProperty) {
-    this.requiredConfigProperties.add(configProperty);
+        this.requiredConfigProperties.add(configProperty);
     }
 
-    /** remove a configProperty from the set
+
+    /**
+     * remove a configProperty from the set
      */
     public void removeRequiredConfigProperty(EnvironmentProperty configProperty) {
-    this.requiredConfigProperties.remove(configProperty);
+        this.requiredConfigProperties.remove(configProperty);
     }
 
-    /** Set of EnvironmentProperty
+
+    /**
+     * Set of EnvironmentProperty
      */
     public Set getRequiredConfigProperties() {
         return requiredConfigProperties;
     }
 
-    //return the msg listener name
-    //FIXME.  No longer valid.  Use messagelistener-type instead of name
+
+    // return the msg listener name
+    // FIXME. No longer valid. Use messagelistener-type instead of name
     public String getMessageListenerName() {
         throw new UnsupportedOperationException();
     }
 
-    //set the msg listener name
-    //FIXME.  No longer valid.  Use messagelistener-type instead of name
+
+    // set the msg listener name
+    // FIXME. No longer valid. Use messagelistener-type instead of name
     public void setMessageListenerName(String msgListenerName) {
         throw new UnsupportedOperationException();
     }
-  }
+}

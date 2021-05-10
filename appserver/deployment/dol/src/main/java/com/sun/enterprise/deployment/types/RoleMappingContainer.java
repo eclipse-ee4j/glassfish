@@ -30,7 +30,6 @@ public interface RoleMappingContainer {
      * Return my mapping of rolename to users and groups on a particular
      * server.
      */
-    public SecurityRoleMapper getRoleMapper();
-
+    SecurityRoleMapper getRoleMapper();
 }
 

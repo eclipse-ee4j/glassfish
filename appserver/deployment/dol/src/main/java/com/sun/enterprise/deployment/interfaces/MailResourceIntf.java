@@ -20,33 +20,33 @@
 
  public interface MailResourceIntf {
 
-    public String getName();
+    String getName();
 
-    public String getDescription();
+    String getDescription();
 
-    public boolean isEnabled();
+    boolean isEnabled();
 
-    public Set getProperties();
+    Set getProperties();
 
-    public int getType();
+    int getType();
 
-    public String getResType();
+    String getResType();
 
-    public String getFactoryClass() ;
+    String getFactoryClass() ;
 
-    public String getStoreProtocol();
+    String getStoreProtocol();
 
-    public String getStoreProtocolClass();
+    String getStoreProtocolClass();
 
-    public String getTransportProtocol();
+    String getTransportProtocol();
 
-    public String getTransportProtocolClass();
+    String getTransportProtocolClass();
 
-    public String getMailHost();
+    String getMailHost();
 
-    public String getUsername();
+    String getUsername();
 
-    public String getMailFrom();
+    String getMailFrom();
 
-    public boolean isDebug();
+    boolean isDebug();
  }

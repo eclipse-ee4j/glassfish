@@ -28,18 +28,18 @@ public class NameValuePairDescriptor extends Descriptor {
     private String value=null;
 
     /**
-    * copy constructor.
-    */
+     * copy constructor.
+     */
     public NameValuePairDescriptor(NameValuePairDescriptor other) {
-    super(other);
-    value = other.value;
+        super(other);
+        value = other.value;
     }
 
     /**
-    * standard constructor.
-    */
+     * standard constructor.
+     */
     public NameValuePairDescriptor() {
-    super();
+        super();
     }
 
     /**
@@ -57,8 +57,9 @@ public class NameValuePairDescriptor extends Descriptor {
     }
 
     /**
-     * @return a string describing the values I hold
+     * Appends a string describing the values I hold
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nProp : ").append(getName()).append("->").append(value);
     }

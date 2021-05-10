@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * This node is responsible for handling the Connector DTD related security-permission XML tag
  *
- * @author  Sheetal Vartak
+ * @author Sheetal Vartak
  * @version
  */
 public class SecurityPermissionNode extends DeploymentDescriptorNode {
@@ -40,11 +40,13 @@ public class SecurityPermissionNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
+    @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.SECURITY_PERMISSION_SPEC, "setPermission");
-    return table;
+        return table;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -54,18 +56,17 @@ public class SecurityPermissionNode extends DeploymentDescriptorNode {
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, ConnectorDescriptor descriptor) {
-
-    Iterator secPerms = descriptor.getSecurityPermissions().iterator();
-
-    //auth mechanism info
-    for (;secPerms.hasNext();) {
-
-        //for (Iterator secPerms = ((OutboundResourceAdapter)descriptor).getSecurityPermissions().iterator(); secPerms.hasNext();) {
-        SecurityPermission secPerm = (SecurityPermission) secPerms.next();
-        Node secNode = appendChild(parent, ConnectorTagNames.SECURITY_PERMISSION);
+        Iterator secPerms = descriptor.getSecurityPermissions().iterator();
+        // auth mechanism info
+        for (; secPerms.hasNext();) {
+            // for (Iterator secPerms =
+            // ((OutboundResourceAdapter)descriptor).getSecurityPermissions().iterator();
+            // secPerms.hasNext();) {
+            SecurityPermission secPerm = (SecurityPermission) secPerms.next();
+            Node secNode = appendChild(parent, ConnectorTagNames.SECURITY_PERMISSION);
             writeLocalizedDescriptions(secNode, secPerm);
             appendTextChild(secNode, ConnectorTagNames.SECURITY_PERMISSION_SPEC, secPerm.getPermission());
-    }
-    return null;
+        }
+        return null;
     }
 }

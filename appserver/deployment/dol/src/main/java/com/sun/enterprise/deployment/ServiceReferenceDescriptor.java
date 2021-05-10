@@ -31,9 +31,7 @@ import java.lang.annotation.Annotation;
  *
  * @author Kenneth Saks
  */
-
-public class ServiceReferenceDescriptor extends EnvironmentProperty
-        implements HandlerChainContainer {
+public class ServiceReferenceDescriptor extends EnvironmentProperty implements HandlerChainContainer {
 
     static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
 
@@ -124,9 +122,7 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
      * In addition to MTOM,Addressing , RespectBinding
      * pass over other annotations too.
      */
-
-   private Map<Class<? extends Annotation>, Annotation> otherAnnotations =
-            new HashMap<Class<? extends Annotation>, Annotation>();
+    private Map<Class<? extends Annotation>, Annotation> otherAnnotations = new HashMap<>();
 
     public boolean isRespectBindingEnabled() {
         return respectBinding.isEnabled();
@@ -177,8 +173,7 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
         this.mtomThreshold = mtomThreshold;
     }
 
-    public ServiceReferenceDescriptor(String name, String description,
-                                      String service) {
+    public ServiceReferenceDescriptor(String name, String description, String service) {
         super(name, "", description);
         handlers = new LinkedList();
         handlerChain = new LinkedList();
@@ -290,7 +285,6 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
         serviceNamespaceUri = serviceName.getNamespaceURI();
         serviceLocalPart = serviceName.getLocalPart();
         serviceNameNamespacePrefix = prefix;
-
     }
 
     public void setServiceNamespaceUri(String uri) {
@@ -341,7 +335,6 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
     public void addPortInfo(ServiceRefPortInfo portInfo) {
         portInfo.setServiceReference(this);
         portsInfo.add(portInfo);
-
     }
 
     public void removePortInfo(ServiceRefPortInfo portInfo) {
@@ -357,18 +350,16 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
     public void addRuntimePortInfo(ServiceRefPortInfo runtimePortInfo) {
         ServiceRefPortInfo existing = null;
 
-        if( runtimePortInfo.hasServiceEndpointInterface() ) {
-            existing =
-                getPortInfoBySEI(runtimePortInfo.getServiceEndpointInterface());
+        if (runtimePortInfo.hasServiceEndpointInterface()) {
+            existing = getPortInfoBySEI(runtimePortInfo.getServiceEndpointInterface());
         }
-        if( (existing == null) && runtimePortInfo.hasWsdlPort() ) {
+        if ((existing == null) && runtimePortInfo.hasWsdlPort()) {
             existing = getPortInfoByPort(runtimePortInfo.getWsdlPort());
         }
 
-        if( existing == null ) {
-            if (portsInfo!=null && portsInfo.size()>0) {
-                LocalStringManagerImpl localStrings =
-                    new LocalStringManagerImpl(ServiceReferenceDescriptor.class);
+        if (existing == null) {
+            if (portsInfo != null && portsInfo.size() > 0) {
+                LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ServiceReferenceDescriptor.class);
                 DOLUtils.getDefaultLogger().warning(
                     localStrings.getLocalString("enterprise.deployment.unknownportforruntimeinfo",
                     "Runtime port info SEI {0} is not declared in standard service-ref " +
@@ -377,36 +368,29 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
             }
             addPortInfo(runtimePortInfo);
         } else {
-            if( !existing.hasServiceEndpointInterface() ) {
-                existing.setServiceEndpointInterface
-                    (runtimePortInfo.getServiceEndpointInterface());
+            if (!existing.hasServiceEndpointInterface()) {
+                existing.setServiceEndpointInterface(runtimePortInfo.getServiceEndpointInterface());
             }
-            if( !existing.hasWsdlPort() ) {
+            if (!existing.hasWsdlPort()) {
                 existing.setWsdlPort(runtimePortInfo.getWsdlPort());
             }
-            for(Iterator iter = runtimePortInfo.
-                    getStubProperties().iterator(); iter.hasNext();) {
-                NameValuePairDescriptor next =
-                    (NameValuePairDescriptor) iter.next();
+            for (Iterator iter = runtimePortInfo.getStubProperties().iterator(); iter.hasNext();) {
+                NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
                 // adds using name as key
                 existing.addStubProperty(next);
             }
-            for(Iterator iter = runtimePortInfo.getCallProperties()
-                    .iterator(); iter.hasNext();) {
-                NameValuePairDescriptor next =
-                    (NameValuePairDescriptor) iter.next();
+            for (Iterator iter = runtimePortInfo.getCallProperties().iterator(); iter.hasNext();) {
+                NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
                 // adds using name as key
                 existing.addCallProperty(next);
             }
             if (runtimePortInfo.getMessageSecurityBinding() != null) {
-                existing.setMessageSecurityBinding(
-                    runtimePortInfo.getMessageSecurityBinding());
+                existing.setMessageSecurityBinding(runtimePortInfo.getMessageSecurityBinding());
             }
         }
     }
 
-    public ServiceRefPortInfo addContainerManagedPort
-        (String serviceEndpointInterface) {
+    public ServiceRefPortInfo addContainerManagedPort(String serviceEndpointInterface) {
         ServiceRefPortInfo info = new ServiceRefPortInfo();
         info.setServiceEndpointInterface(serviceEndpointInterface);
         info.setIsContainerManaged(true);
@@ -418,9 +402,9 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
 
     public boolean hasContainerManagedPorts() {
         boolean containerManaged = false;
-        for(Iterator iter = portsInfo.iterator(); iter.hasNext();) {
+        for (Iterator iter = portsInfo.iterator(); iter.hasNext();) {
             ServiceRefPortInfo next = (ServiceRefPortInfo) iter.next();
-            if( next.isContainerManaged() ) {
+            if (next.isContainerManaged()) {
                 containerManaged = true;
                 break;
             }
@@ -430,9 +414,9 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
 
     public boolean hasClientManagedPorts() {
         boolean clientManaged = false;
-        for(Iterator iter = portsInfo.iterator(); iter.hasNext();) {
+        for (Iterator iter = portsInfo.iterator(); iter.hasNext();) {
             ServiceRefPortInfo next = (ServiceRefPortInfo) iter.next();
-            if( next.isClientManaged() ) {
+            if (next.isClientManaged()) {
                 clientManaged = true;
                 break;
             }
@@ -450,12 +434,10 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
     /**
      * Lookup port info by service endpoint interface.
      */
-    public ServiceRefPortInfo getPortInfoBySEI(String serviceEndpointInterface)
-    {
-        for(Iterator iter = portsInfo.iterator(); iter.hasNext();) {
+    public ServiceRefPortInfo getPortInfoBySEI(String serviceEndpointInterface) {
+        for (Iterator iter = portsInfo.iterator(); iter.hasNext();) {
             ServiceRefPortInfo next = (ServiceRefPortInfo) iter.next();
-            if( serviceEndpointInterface.equals
-                (next.getServiceEndpointInterface()) ) {
+            if (serviceEndpointInterface.equals(next.getServiceEndpointInterface())) {
                 return next;
             }
         }
@@ -480,18 +462,16 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
      */
     public void addHandler(WebServiceHandler handler) {
         handlers.addLast(handler);
-
     }
 
     public void removeHandler(WebServiceHandler handler) {
         handlers.remove(handler);
-
     }
 
     public void removeHandlerByName(String handlerName) {
-        for(Iterator iter = handlers.iterator(); iter.hasNext();) {
+        for (Iterator iter = handlers.iterator(); iter.hasNext();) {
             WebServiceHandler next = (WebServiceHandler) iter.next();
-            if( next.getHandlerName().equals(handlerName) ) {
+            if (next.getHandlerName().equals(handlerName)) {
                 iter.remove();
 
                 break;
@@ -534,17 +514,15 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
     /**
      * Runtime information.
      */
-
     public Set getCallProperties() {
         return callProperties;
     }
 
     public NameValuePairDescriptor getCallPropertyByName(String name) {
         NameValuePairDescriptor prop = null;
-        for(Iterator iter = callProperties.iterator(); iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor)
-                iter.next();
-            if( next.getName().equals(name) ) {
+        for (Iterator iter = callProperties.iterator(); iter.hasNext();) {
+            NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
+            if (next.getName().equals(name)) {
                 prop = next;
                 break;
             }
@@ -558,9 +536,8 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
      * the same name.
      */
     public void addCallProperty(NameValuePairDescriptor property) {
-        NameValuePairDescriptor prop =
-            getCallPropertyByName(property.getName());
-        if( prop != null ) {
+        NameValuePairDescriptor prop = getCallPropertyByName(property.getName());
+        if (prop != null) {
             prop.setValue(property.getValue());
         } else {
             callProperties.add(property);
@@ -574,9 +551,8 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
      * the matching name.
      */
     public void removeCallProperty(NameValuePairDescriptor property) {
-        NameValuePairDescriptor prop =
-            getCallPropertyByName(property.getName());
-        if( prop != null ) {
+        NameValuePairDescriptor prop = getCallPropertyByName(property.getName());
+        if (prop != null) {
             callProperties.remove(property);
         }
     }
@@ -617,8 +593,7 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty
     @Override
     public boolean equals(Object object) {
         if (object instanceof ServiceReferenceDescriptor) {
-            ServiceReferenceDescriptor thatReference =
-                (ServiceReferenceDescriptor) object;
+            ServiceReferenceDescriptor thatReference = (ServiceReferenceDescriptor) object;
             return thatReference.getName().equals(this.getName());
         }
         return false;

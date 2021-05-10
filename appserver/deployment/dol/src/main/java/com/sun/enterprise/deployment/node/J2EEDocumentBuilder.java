@@ -187,13 +187,14 @@ public class J2EEDocumentBuilder {
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
     }
 
+
     public static String descriptorToString(Descriptor descriptor, final DeploymentDescriptorFile ddFile)
-                                throws Exception {
+        throws Exception {
         java.io.StringWriter sw = new java.io.StringWriter();
         StreamResult sr = new StreamResult(sw);
-    if (descriptor != null) {
-        write(descriptor, ddFile.getRootXMLNode(descriptor), sr);
-    }
+        if (descriptor != null) {
+            write(descriptor, ddFile.getRootXMLNode(descriptor), sr);
+        }
         return sw.toString();
     }
 }

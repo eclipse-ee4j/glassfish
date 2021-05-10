@@ -25,19 +25,19 @@ public class LocaleEncodingMappingDescriptor extends Descriptor {
     private String locale = "en";
     private String encoding = "UTF-8";
 
-    /*
+    /**
      * standard constructor
      */
     public LocaleEncodingMappingDescriptor() {
     }
 
-    /*
+    /**
      * copy constructor
      */
     public LocaleEncodingMappingDescriptor(LocaleEncodingMappingDescriptor other) {
-    super(other);
-    locale = other.locale;
-    encoding = other.encoding;
+        super(other);
+        locale = other.locale;
+        encoding = other.encoding;
     }
 
     /**
@@ -71,6 +71,7 @@ public class LocaleEncodingMappingDescriptor extends Descriptor {
     /**
      * @return a string describing the values I hold
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nProp : ").append(getLocale()).append("->").append(getEncoding());
     }

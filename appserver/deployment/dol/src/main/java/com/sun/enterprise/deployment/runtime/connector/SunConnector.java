@@ -57,40 +57,37 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
  * @author  Jerome Dochez
  * @version
  */
-public class SunConnector extends RuntimeDescriptor
-{
+public class SunConnector extends RuntimeDescriptor {
 
-    static public final String RESOURCE_ADAPTER = "ResourceAdapter";    // NOI18N
-    static public final String ROLE_MAP = "RoleMap";    // NOI18N
-
+    static public final String RESOURCE_ADAPTER = "ResourceAdapter"; // NOI18N
+    static public final String ROLE_MAP = "RoleMap"; // NOI18N
 
     // This attribute is mandatory
-    public void setResourceAdapter(ResourceAdapter value)
-    {
-    this.setValue(RESOURCE_ADAPTER, value);
+    public void setResourceAdapter(ResourceAdapter value) {
+        this.setValue(RESOURCE_ADAPTER, value);
     }
 
+
     //
-    public ResourceAdapter getResourceAdapter()
-    {
-    return (ResourceAdapter)this.getValue(RESOURCE_ADAPTER);
+    public ResourceAdapter getResourceAdapter() {
+        return (ResourceAdapter) this.getValue(RESOURCE_ADAPTER);
     }
+
 
     // This attribute is optional
-    public void setRoleMap(RoleMap value)
-    {
-    this.setValue(ROLE_MAP, value);
+    public void setRoleMap(RoleMap value) {
+        this.setValue(ROLE_MAP, value);
     }
+
 
     //
-    public RoleMap getRoleMap()
-    {
-    return (RoleMap)this.getValue(ROLE_MAP);
+    public RoleMap getRoleMap() {
+        return (RoleMap) this.getValue(ROLE_MAP);
     }
 
+
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 }

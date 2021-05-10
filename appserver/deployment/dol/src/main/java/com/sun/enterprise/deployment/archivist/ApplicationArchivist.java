@@ -94,9 +94,9 @@ public class ApplicationArchivist extends Archivist<Application> {
 
         Vector filesToSkip = new Vector();
 
-        if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-        DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
-    }
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+            DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
+        }
 
         // any files already written to the output should never be rewritten
         for (Enumeration alreadyWritten = out.entries(); alreadyWritten.hasMoreElements();) {
@@ -632,8 +632,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     }
 
     private List<ModuleDescriptor> sortModules(Application app) {
-        List<ModuleDescriptor> sortedModules =
-            new ArrayList<ModuleDescriptor>();
+        List<ModuleDescriptor> sortedModules = new ArrayList<ModuleDescriptor>();
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.rarType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.ejbType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.warType()));

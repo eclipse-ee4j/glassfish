@@ -24,90 +24,93 @@ import java.io.IOException;
 import java.util.Hashtable;
 
 public class FileClassLoader extends ClassLoader {
+
     String codebase;
     Hashtable cache = new Hashtable();
 
-    private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(FileClassLoader.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(FileClassLoader.class);
 
-    public FileClassLoader(String codebase)
-    {
-    this.codebase = codebase;
+    public FileClassLoader(String codebase) {
+        this.codebase = codebase;
     }
 
-    private byte[] loadClassData(String name)
-    throws IOException
-    {
+
+    private byte[] loadClassData(String name) throws IOException {
         // load the class data from the codebase
-    String sep = System.getProperty("file.separator");
-    String c = name.replace('.', sep.charAt(0)) + ".class";
-    File file = new File(codebase + sep + c);
-    if (!file.exists()) {
-        File wf = new File(codebase + sep + "WEB-INF" + sep + "classes" + sep + c);
-        if (wf.exists()) {
-        file = wf;
+        String sep = System.getProperty("file.separator");
+        String c = name.replace('.', sep.charAt(0)) + ".class";
+        File file = new File(codebase + sep + c);
+        if (!file.exists()) {
+            File wf = new File(codebase + sep + "WEB-INF" + sep + "classes" + sep + c);
+            if (wf.exists()) {
+                file = wf;
+            }
         }
-    }
-    FileInputStream fis = null;
+        FileInputStream fis = null;
         byte[] buf = null;
         try {
-          fis = new FileInputStream(file);
-          int avail = fis.available();
-          buf = new byte[avail];
-          fis.read(buf);
+            fis = new FileInputStream(file);
+            int avail = fis.available();
+            buf = new byte[avail];
+            fis.read(buf);
         } finally {
-          if (fis != null)
-            fis.close();
+            if (fis != null) {
+                fis.close();
+            }
         }
-    return buf;
+        return buf;
     }
 
+
     String getClassName(File f) throws IOException, ClassFormatError {
-    FileInputStream fis = null;
+        FileInputStream fis = null;
         byte[] buf = null;
         int avail = 0;
         try {
-          fis = new FileInputStream(f);
-          avail = fis.available();
-          buf = new byte[avail];
-          fis.read(buf);
+            fis = new FileInputStream(f);
+            avail = fis.available();
+            buf = new byte[avail];
+            fis.read(buf);
         } finally {
-          if (fis != null)
-            fis.close();
+            if (fis != null) {
+                fis.close();
+            }
         }
-    Class c = super.defineClass(null, buf, 0, avail);
-    return c.getName();
+        Class c = super.defineClass(null, buf, 0, avail);
+        return c.getName();
     }
+
 
     /**
      * @exception ClassNotFoundException if class load fails
      */
-    public synchronized Class loadClass(String name, boolean resolve)
-    throws ClassNotFoundException
-    {
-        Class c = (Class)cache.get(name);
+    @Override
+    public synchronized Class loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        Class c = (Class) cache.get(name);
         if (c == null) {
-        try {
+            try {
                 byte data[] = loadClassData(name);
-                c = defineClass(null,data, 0, data.length);
-                if( !name.equals(c.getName()) ) {
-                    throw new ClassNotFoundException(localStrings.getLocalString("classloader.wrongpackage", "", new Object[] { name, c.getName() }));
+                c = defineClass(null, data, 0, data.length);
+                if (!name.equals(c.getName())) {
+                    throw new ClassNotFoundException(
+                        localStrings.getLocalString("classloader.wrongpackage", "", new Object[] {name, c.getName()}));
                 }
-        }
-        catch ( Exception ex ) {
-        // Try to use default classloader. If this fails,
-        // then a ClassNotFoundException is thrown.
-        c = Class.forName(name);
-        }
+            } catch (Exception ex) {
+                // Try to use default classloader. If this fails,
+                // then a ClassNotFoundException is thrown.
+                c = Class.forName(name);
+            }
             cache.put(name, c);
         }
-        if (resolve)
+        if (resolve) {
             resolveClass(c);
+        }
         return c;
     }
 
-    public String toString()
-    {
-    return "FileClassLoader: Codebase = "+codebase+"\n";
+
+    @Override
+    public String toString() {
+        return "FileClassLoader: Codebase = " + codebase + "\n";
     }
 }

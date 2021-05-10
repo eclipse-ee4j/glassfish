@@ -42,6 +42,7 @@ public class ConnectorDeploymentDescriptorFile extends DeploymentDescriptorFile 
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
         return DESC_PATH;
     }
@@ -52,9 +53,8 @@ public class ConnectorDeploymentDescriptorFile extends DeploymentDescriptorFile 
      *
      * @param the descriptor for which we need the node
      */
+    @Override
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-
-    return new ConnectorNode();
+        return new ConnectorNode();
     }
-
 }

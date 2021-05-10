@@ -33,7 +33,7 @@ public interface ResourceReferenceContainer {
      *
      * @param the reference descriptor to add
      */
-    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor ejbReference);
+    void addResourceReferenceDescriptor(ResourceReferenceDescriptor ejbReference);
 
     /**
      * Looks up a reference to a resource by its name (getName()). Throws an IllegalArgumentException
@@ -41,11 +41,11 @@ public interface ResourceReferenceContainer {
      *
      * @param the name of the resource reference
      */
-    public ResourceReferenceDescriptor getResourceReferenceByName(String name);
+    ResourceReferenceDescriptor getResourceReferenceByName(String name);
 
     /**
     * Return the set of references to resources that I have.
     */
-    public Set getResourceReferenceDescriptors();
+    Set getResourceReferenceDescriptors();
 }
 

@@ -23,9 +23,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
  * An object representing a link to another ejb.
  *
  * @author Jerome Dochez
- *
-*/
-
+ */
 public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbReference, NamedDescriptor {
 
     static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
@@ -80,7 +78,6 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     /**
     * Constructs a reference in the exterrnal state.
     */
-
     public EjbReferenceDescriptor() {
     }
 
@@ -89,9 +86,8 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      * EJB reference is declared.
      */
     @Override
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle)
-    {
-    this.referringBundle = referringBundle;
+    public void setReferringBundleDescriptor(BundleDescriptor referringBundle) {
+        this.referringBundle = referringBundle;
     }
 
     /**
@@ -99,9 +95,8 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      * EJB reference is declared.
      */
     @Override
-    public BundleDescriptor getReferringBundleDescriptor()
-    {
-    return referringBundle;
+    public BundleDescriptor getReferringBundleDescriptor() {
+        return referringBundle;
     }
 
     /**
@@ -110,11 +105,11 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      */
     @Override
     public void setEjbDescriptor(EjbDescriptor ejbDescriptor) {
-    if (this.ejbDescriptor != null) {
+        if (this.ejbDescriptor != null) {
             this.ejbDescriptor.removeEjbReferencer(this); // remove previous referencer
-    }
+        }
         this.ejbDescriptor=ejbDescriptor;
-    if (ejbDescriptor!=null) {
+        if (ejbDescriptor!=null) {
             ejbDescriptor.addEjbReferencer(this);
             if (isLocal()) {
                 if (!ejbDescriptor.isLocalInterfacesSupported() &&
@@ -132,45 +127,45 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
                     "Trying to set an ejb-ref on an EJB, while the EJB [{0}] does not define remote interfaces", new Object[] {ejbDescriptor.getName()}));
                 }
             }
+        }
     }
     }
 
 
     /**
-    * Sets the jndi name of the bean type which I am referring.*/
-
+     * Sets the jndi name of the bean type which I am referring.
+     */
     @Override
     public void setJndiName(String jndiName) {
-    this.setValue(jndiName);
+        this.setValue(jndiName);
     }
 
     @Override
     public boolean hasJndiName() {
         String name = getJndiName();
-        return ( (name != null) && !name.equals("") );
+        return ((name != null) && !name.equals(""));
     }
 
-    /** return true if I know the name of the ejb to which I refer.
-    */
-
+    /**
+     * return true if I know the name of the ejb to which I refer.
+     */
     public boolean isLinked() {
-    return ejbLink!=null;
+        return ejbLink != null;
     }
 
     /**
      * @return the name of the ejb to which I refer
-    */
-
+     */
     @Override
     public String getLinkName() {
-    if (ejbDescriptor==null) {
+        if (ejbDescriptor == null) {
             return ejbLink;
         } else {
-            if (ejbLink != null && ejbLink.length()!=0) {
+            if (ejbLink != null && ejbLink.length() != 0) {
                 return ejbLink;
             }
-        return ejbDescriptor.getName();
-    }
+            return ejbDescriptor.getName();
+        }
     }
 
     /**
@@ -180,10 +175,10 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     public void setLinkName(String linkName) {
         ejbLink = linkName;
     }
+
     /**
      * return the jndi name of the bean to which I refer.
      */
-
     @Override
     public String getJndiName() {
         String jndiName = this.getValue();
@@ -199,14 +194,13 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     }
 
     /**
-    * Return the jndi name of the bean to which I refer.
-    */
-
+     * Return the jndi name of the bean to which I refer.
+     */
     @Override
     public String getValue() {
-    if (ejbDescriptor == null) {
+        if (ejbDescriptor == null) {
             return super.getValue();
-    } else {
+        } else {
             if (isLocal()) {
                 return super.getValue();
             } else {
@@ -235,7 +229,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
 
     @Override
     public EjbDescriptor getEjbDescriptor() {
-    return ejbDescriptor;
+        return ejbDescriptor;
     }
 
     /**
@@ -272,7 +266,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     */
     @Override
     public void setType(String type) {
-    refType=type;
+        refType=type;
     }
 
     @Override
@@ -363,9 +357,9 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
         return (getHomeClassName() == null);
     }
 
-    /** returns a formatted string representing me.
-    */
-
+    /**
+     * returns a formatted string representing me.
+     */
     @Override
     public void print(StringBuffer toStringBuffer) {
         String localVsRemote = isLocal() ? "Local" : "Remote";
@@ -395,13 +389,14 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     /* Equality on name. */
     @Override
     public boolean equals(Object object) {
-    if (object instanceof EjbReference) {
-        EjbReference ejbReference = (EjbReference) object;
-        return ejbReference.getName().equals(this.getName());
-    }
-    return false;
+        if (object instanceof EjbReference) {
+            EjbReference ejbReference = (EjbReference) object;
+            return ejbReference.getName().equals(this.getName());
+        }
+        return false;
     }
 
+    @Override
     public int hashCode() {
         int result = NULL_HASH_CODE;
         String name = getName();

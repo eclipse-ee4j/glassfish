@@ -36,6 +36,7 @@ public class NameValuePairNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
+    @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(TagNames.NAME_VALUE_PAIR_NAME, "setName");
@@ -53,10 +54,8 @@ public class NameValuePairNode extends DeploymentDescriptorNode {
      */
     public Node writeDescriptor(Node parent, String nodeName, NameValuePairDescriptor descriptor) {
         Node envEntryNode = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_NAME,
-                        descriptor.getName());
-        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_VALUE,
-                        descriptor.getValue());
+        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_NAME, descriptor.getName());
+        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_VALUE, descriptor.getValue());
         return envEntryNode;
     }
 
@@ -69,12 +68,13 @@ public class NameValuePairNode extends DeploymentDescriptorNode {
      * @return the DOM tree top node
      */
     public void writeDescriptor(Node parent, String nodeName, Iterator props) {
-    if (props==null)
-        return;
+        if (props == null) {
+            return;
+        }
 
-    while(props.hasNext()) {
-        NameValuePairDescriptor aProp = (NameValuePairDescriptor) props.next();
-        writeDescriptor(parent, nodeName, aProp);
-    }
+        while (props.hasNext()) {
+            NameValuePairDescriptor aProp = (NameValuePairDescriptor) props.next();
+            writeDescriptor(parent, nodeName, aProp);
+        }
     }
 }

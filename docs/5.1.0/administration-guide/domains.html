@@ -1,0 +1,2389 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Domains</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Domains</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="general-administration.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jvm.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00006"></a><a id="ggnop"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-domains">3 Administering Domains</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for administering domains in the
+GlassFish Server Open Source Edition environment by using the <code>asadmin</code>
+command-line utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggoek">About Administering Domains</a></p>
+</li>
+<li>
+<p><a href="#gitvz">Creating, Logging In To, and Deleting a Domain</a></p>
+</li>
+<li>
+<p><a href="#gitwj">Starting and Stopping a Domain</a></p>
+</li>
+<li>
+<p><a href="#gglqp">Configuring a DAS or a GlassFish Server Instance for
+Automatic Restart</a></p>
+</li>
+<li>
+<p><a href="#gityo">Backing Up and Restoring a Domain</a></p>
+</li>
+<li>
+<p><a href="#gglri">Re-Creating the Domain Administration Server (DAS)</a></p>
+</li>
+<li>
+<p><a href="#gitvn">Additional Domain Tasks</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggoek"></a><a id="GSADG00535"></a><a id="about-administering-domains"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_administering_domains">About Administering Domains</h3>
+<div class="paragraph">
+<p>A domain contains a group of GlassFish Server instances that are
+administered together. Each domain has a domain administration server
+(DAS) that hosts administrative applications. These concepts are
+explained in more detail in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#geolm">GlassFish Server Instances</a></p>
+</li>
+<li>
+<p><a href="#geojp">Domains for Administering GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#geojl">Domain Administration Server (DAS)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="geolm"></a><a id="GSADG00715"></a><a id="glassfish-server-instances"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_glassfish_server_instances">GlassFish Server Instances</h4>
+<div class="paragraph">
+<p>A GlassFish Server instance is a single Virtual Machine for the Java
+platform (Java Virtual Machine or JVM machine) on a single node in which
+GlassFish Server is running. A node defines the host where the GlassFish
+Server instance resides. The JVM machine must be compatible with the
+Java Platform, Enterprise Edition (Java EE).</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server instances form the basis of an application deployment.</p>
+</div>
+<div class="paragraph">
+<p>Whenever a domain is created, GlassFish Server creates a default
+instance that is named <code>server</code>. If a single instance meets your
+requirements, you can use this instance for deploying applications
+without the need to administer GlassFish Server instances explicitly.
+You administer the default instance when you administer its domain.</p>
+</div>
+<div class="paragraph">
+<p>If you require multiple instances, you must administer the instances
+explicitly. For more information, see "<a href="../ha-administration-guide/instances.html#GSHAG00006">Administering
+GlassFish Server Instances</a>" in GlassFish Server Open Source Edition
+High Availability Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>For an instance, you can also create virtual servers. Virtual servers do
+not span instances. For many purposes, you can use virtual servers
+instead of multiple instances in operational deployments. Virtual
+servers enable you to offer, within a single instance, separate domain
+names, IP addresses, and some administration capabilities to
+organizations or individuals. To these users, a virtual server behaves
+like a dedicated web server, but without the hardware and basic web
+server maintenance.</p>
+</div>
+<div class="paragraph">
+<p>For more information about virtual servers, see
+<a href="http_https.html#ggncs">Administering Virtual Servers</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="geojp"></a><a id="GSADG00716"></a><a id="domains-for-administering-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_domains_for_administering_glassfish_server">Domains for Administering GlassFish Server</h4>
+<div class="paragraph">
+<p>A domain is an administrative boundary that contains a group of
+GlassFish Server instances that are administered together. Each instance
+can belong to only one domain. A domain provides a preconfigured runtime
+for user applications. Each domain has its own configuration data, log
+files, and application deployment areas that are independent of other
+domains. If the configuration is changed for one domain, the
+configurations of other domains are not affected.</p>
+</div>
+<div class="paragraph">
+<p>Domains enable different organizations and administrators to share
+securely a single GlassFish Server installation. Each organization or
+administrator can administer the instances in a single domain without
+affecting the instances in other domains.</p>
+</div>
+<div class="paragraph">
+<p>At installation time, GlassFish Server creates a default domain that is
+named <code>domain1</code>. After installation, you can create additional domains
+as necessary.</p>
+</div>
+<div class="paragraph">
+<p>When a domain is created, you are prompted for the administration user
+name and password. If you accept the default, the user <code>admin</code> is
+created without password. To reset the administration password, see
+"<a href="../security-guide/system-security.html#GSSCG00095">To Change an Administration Password</a>" in GlassFish
+Server Open Source Edition Security Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="geojl"></a><a id="GSADG00717"></a><a id="domain-administration-server-das"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_domain_administration_server_das">Domain Administration Server (DAS)</h4>
+<div class="paragraph">
+<p>The domain administration server (DAS) is a specially designated
+GlassFish Server instance that hosts administrative applications. The
+DAS is similar to any other GlassFish Server instance, except that the
+DAS has additional administration capabilities. The DAS authenticates
+the administrator, accepts requests from administration tools, and
+communicates with other instances in the domain to carry out the
+requests from administration tools.</p>
+</div>
+<div class="paragraph">
+<p>Each domain has its own DAS with a unique administration port number.
+The default administration port is 4848, but a different port can be
+specified when a domain is created.</p>
+</div>
+<div class="paragraph">
+<p>The DAS has the master copy of the configuration data for all instances
+in a domain. If an instance is destroyed, for example, because a host
+failed, the instance can be re-created from the data in the DAS.</p>
+</div>
+<div class="paragraph">
+<p>The DAS is the default GlassFish Server instance in a domain and is
+named <code>server</code>. If a single instance meets your requirements, you can
+use the DAS for deploying applications and for administering the domain.</p>
+</div>
+<div class="paragraph">
+<p>The graphical Administration Console communicates with a specific DAS to
+administer the domain that is associated with the DAS. Each
+Administration Console session enables you to configure and manage only
+one domain. If you create multiple domains, you must start a separate
+Administration Console session to manage each domain.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitvz"></a><a id="GSADG00536"></a><a id="creating-logging-in-to-and-deleting-a-domain"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_logging_in_to_and_deleting_a_domain">Creating, Logging In To, and Deleting a Domain</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggoei">To Create a Domain</a></p>
+</li>
+<li>
+<p><a href="#gldel">To Create a Domain From a Custom Template</a></p>
+</li>
+<li>
+<p><a href="#ggoco">To List Domains</a></p>
+</li>
+<li>
+<p><a href="#ghhjz">To Log In to a Domain</a></p>
+</li>
+<li>
+<p><a href="#ggofa">To Delete a Domain</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggoei"></a><a id="GSADG00330"></a><a id="to-create-a-domain"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_domain">To Create a Domain</h4>
+<div class="paragraph">
+<p>After installing GlassFish Server and creating the default domain
+(<code>domain1</code>), you can create additional domains by using the local
+<code>create-domain</code> subcommand. This subcommand creates the configuration of
+a domain. Any user who has access to the <code>asadmin</code> utility on a given
+system can create a domain and store the domain configuration in a
+folder of choice. By default, the domain configuration is created in the
+default directory for domains. You can override this location to store
+the configuration elsewhere.</p>
+</div>
+<div class="paragraph">
+<p>You are required to specify an administrative user when you create a
+domain, or you can accept the default login identity which is username
+<code>admin</code> with no password.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select a name for the domain that you are creating.<br>
+You can verify that a name is not already in use by using the
+<a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code></a> subcommand</p>
+</li>
+<li>
+<p>Create a domain by using the <a href="../reference-manual/create-domain.html#GSRFM00023"><code>create-domain</code></a>
+subcommand.<br>
+Information about the options for this subcommand is included in this
+help page.</p>
+</li>
+<li>
+<p>Type an admin user name and password for the domain.<br>
+To avoid setting up an admin login, you can accept the default <code>admin</code>,
+with no password. Pressing Return also selects the default.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00126"></a><a id="ggoeu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-1 Creating a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example creates a domain named <code>domain1</code> . When you type the
+command, you might be prompted for login information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-domain --adminport 4848 domain1
+Enter admin user name[Enter to accept default]&gt;
+Using port 4848 for Admin.
+Default port 8080 for HTTP Instance is in use. Using 1161
+Using default port 7676 for JMS.
+Using default port 3700 for IIOP.
+Using default port 8081 for HTTP_SSL.
+Using default port 3820 for IIOP_SSL.
+Using default port 3920 for IIOP_MUTUALAUTH.
+Default port 8686 for JMX_ADMIN is in use. Using 1162
+Distinguished Name of the self-signed X.509 Server Certificate is:
+[CN=moonbeam.gateway.2wire.net,OU=GlassFish,O=Oracle Corp.,L=Redwood Shores,ST
+California,C=US]
+Domain domain1 created.
+Command create-domain executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To start the Administration Console in a browser, enter the URL in the
+following format:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://hostname:5000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For this example, the domain&#8217;s log files, configuration files, and
+deployed applications now reside in the following directory:</p>
+</div>
+<div class="paragraph">
+<p>domain-root-dir`/mydomain`</p>
+</div>
+<div id="GSADG819" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gldel"></a><a id="GSADG00331"></a><a id="to-create-a-domain-from-a-custom-template"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_domain_from_a_custom_template">To Create a Domain From a Custom Template</h4>
+<div class="paragraph">
+<p>A custom template enables you to customize the configuration of any
+domain that you create from the template.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a domain to use as the basis for the template.<br>
+For more information, see <a href="#ggoei">To Create a Domain</a>.</p>
+</li>
+<li>
+<p>Use the <code>asadmin</code> utility or the Administration Console to configure
+the domain.<br>
+Your configuration changes will be included in the template that you
+create from the domain.</p>
+</li>
+<li>
+<p>Copy the domain&#8217;s <code>domain.xml</code> file under a new name to the
+as-install`/lib/templates` directory.<br>
+A domain&#8217;s <code>domain.xml</code> file is located in the domain-dir`/config`
+directory.</p>
+</li>
+<li>
+<p>In a plain text editor, edit the file that you copied to replace
+with tokens values that are to be substituted when a domain is created.<br>
+Each token is identified as <code>%%%`token-name</code>%%%`, where token-name is</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">one of the following names</dt>
+<dd>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>ADMIN_PORT</code></dt>
+<dd>
+<p>Represents the port number of the HTTP port or the HTTPS port for
+administration. This token is replaced with one of the following
+values in the command to create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>The value of the <code>--adminport</code> option</p>
+</li>
+<li>
+<p>The value of the <code>domain.adminPort</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>CONFIG_MODEL_NAME</code></dt>
+<dd>
+<p>Represents the name of the configuration that is created for the
+domain that is being created. This token is replaced with the string
+<code>server-config</code>.</p>
+</dd>
+<dt class="hdlist1"><code>DOMAIN_NAME</code></dt>
+<dd>
+<p>Represents the name of the domain that is being created. This token is
+replaced with the operand of <code>create-domain</code> subcommand.</p>
+</dd>
+<dt class="hdlist1"><code>HOST_NAME</code></dt>
+<dd>
+<p>Represents the name of the host on which the domain is being created.
+This token is replaced with the fully qualified host name of the host
+where the domain is being created.</p>
+</dd>
+<dt class="hdlist1"><code>HTTP_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used to listen for HTTP
+requests. This token is replaced with one of the following values in
+the command to create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>The value of the <code>--instanceport</code> option</p>
+</li>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>domain.instancePort</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>HTTP_SSL_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used to listen for
+secure HTTP requests. This token is replaced with one of the following
+values in the command to create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>http.ssl.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>JAVA_DEBUGGER_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used for connections to
+the
+<a href="http://docs.oracle.com/javase/8/docs/technotes/guides/jpda/architecture.html">Java
+Platform Debugger Architecture (JPDA)</a> debugger. This token is
+replaced with one of the following values in the command to create a
+domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>java.debugger.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>JMS_PROVIDER_PORT</code></dt>
+<dd>
+<p>Represents the port number for the Java Message Service provider. This
+token is replaced with one of the following values in the command to
+create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>jms.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>JMX_SYSTEM_CONNECTOR_PORT</code></dt>
+<dd>
+<p>Represents the port number on which the JMX connector listens. This
+token is replaced with one of the following values in the command to
+create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>domain.jmxPort</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>ORB_LISTENER_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used for IIOP
+connections. This token is replaced with one of the following values
+in the command to create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>orb.listener.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>ORB_MUTUALAUTH_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used for secure IIOP
+connections with client authentication. This token is replaced with
+one of the following values in the command to create a domain from the
+template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>orb.mutualauth.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>ORB_SSL_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used for secure IIOP
+connections. This token is replaced with one of the following values
+in the command to create a domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>orb.ssl.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>OSGI_SHELL_TELNET_PORT</code></dt>
+<dd>
+<p>Represents the port number of the port that is used for connections to
+the
+<a href="http://felix.apache.org/documentation/subprojects/apache-felix-remote-shell.html">Apache
+Felix Remote Shell</a> . This shell uses the Felix shell service to
+interact with the OSGi module management subsystem. This token is
+replaced with one of the following values in the command to create a
+domain from the template:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>A value that the <code>create-domain</code> subcommand calculates from the
+value of the <code>--portbase</code> option</p>
+</li>
+<li>
+<p>The value of the <code>osgi.shell.telnet.port</code> property</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>SERVER_ID</code></dt>
+<dd>
+<p>Represents the name of the DAS for the domain that is being created.
+This token is replaced with the string <code>server</code>.<br></p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+</li>
+</ol>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For information about how these tokens are used in the default template,
+examine the as-install`/lib/templates/domain.xml` file.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the domain that you want to be based on a custom template.<br>
+In the command to create the domain, pass the name of file that you
+edited in the previous step as the <code>--template</code> option of the
+<a href="../reference-manual/create-domain.html#GSRFM00023"><code>create-domain</code></a> subcommand.</p>
+</li>
+<li>
+<p>Before starting the domain, verify that the domain&#8217;s <code>domain.xml</code>
+file is valid.<br>
+Use the <a href="../reference-manual/verify-domain-xml.html#GSRFM00260"><code>verify-domain-xml</code></a> subcommand for this
+purpose.<br>
+Information about the options for this subcommand is included in the
+subcommand&#8217;s help page.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG820" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggoei">To Create a Domain</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/create-domain.html#GSRFM00023"><code>create-domain</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/verify-domain-xml.html#GSRFM00260"><code>verify-domain-xml</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help create-domain</code></p>
+</li>
+<li>
+<p><code>asadmin help verify-domain-xml</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggoco"></a><a id="GSADG00332"></a><a id="to-list-domains"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_domains">To List Domains</h4>
+<div class="paragraph">
+<p>Use the <code>list-domains</code> subcommand to display a list of domains and their
+statuses. If the domain directory is not specified, the contents of the
+domain-root-dir, the default for which is as-install`/domains`, is
+listed. If there is more than one domain, the domain name must be
+specified.</p>
+</div>
+<div class="paragraph">
+<p>To list domains that were created in other directories, specify the
+<code>--domaindir</code> option.</p>
+</div>
+<div class="paragraph">
+<p>List domains by using the <a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code></a> subcommand.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00127"></a><a id="ggpfv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-2 Listing Domains</p>
+</div>
+<div class="paragraph">
+<p>This example lists the domains in the default domain root directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-domains
+Name: domain1 Status: Running
+Name: domain4 Status: Not Running
+Name: domain6 Status: Not Running
+Command list-domains executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG821" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghhjz"></a><a id="GSADG00333"></a><a id="to-log-in-to-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_log_in_to_a_domain">To Log In to a Domain</h4>
+<div class="paragraph">
+<p>All remote subcommands require that credentials be specified in terms of
+an administration user name and its password. By default, the domain is
+created with an identity that allows an <code>asadmin</code> user to perform
+administrative operations when no identity is explicitly or implicitly
+specified.</p>
+</div>
+<div class="paragraph">
+<p>The default identity is in the form of a user whose name is <code>admin</code> and
+has no password. If you specify no user name on the command line or on
+prompt, and specify no password in the <code>--passwordfile</code> option or on
+prompt, and you have never logged in to a domain using either the
+<code>login</code> subcommand or the <code>create-domain</code> subcommand with the
+<code>--savelogin</code> option, then the <code>asadmin</code> utility will attempt to perform
+a given administrative operation without specifying any identity.</p>
+</div>
+<div class="paragraph">
+<p>A server (domain) allows administrative operations to be run using this
+default identity if the following conditions are true:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The server (domain) uses file realm for authentication of
+administrative users.<br>
+If this condition is not true, you will need to specify the user name
+and password.</p>
+</li>
+<li>
+<p>The file realm has one and only one user (what the user name is does
+not matter).<br>
+If this condition is not true, you will also need to specify the user
+name.</p>
+</li>
+<li>
+<p>That one user has no password.<br>
+If this condition is not true, you will need to specify the password.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>By default, all of these conditions are true, unless you have created
+the domain with a specific user name and password. Thus, by default, the
+only administrative user is <code>admin</code> with no password.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>login</code> subcommand in local mode to authenticate yourself (log
+in to) a specific domain. After such login, you do not need to specify
+the administration user or password for subsequent operations on the
+domain. The <code>login</code> subcommand can only be used to specify the
+administration password. For other passwords that remote subcommands
+require, use the <code>--passwordfile</code> option, or specify the password at the
+command prompt. You are always prompted for the administration user name
+and password.</p>
+</div>
+<div class="paragraph">
+<p>There is no logout subcommand. If you want to log in to another domain,
+invoke <code>asadmin login</code> with new values for <code>--host</code> and <code>--port</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Determine the name of the domain that you are logging in to.<br>
+To list the existing domains:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin list-domains</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Log in to the domain by using the o<a href="GSRFM00210"><code>login</code></a> command.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00128"></a><a id="ghlfx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-3 Logging In To a Domain on a Remote Machine</p>
+</div>
+<div class="paragraph">
+<p>This example logs into a domain located on another machine. Options are
+specified before the <code>login</code> subcommand.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; --host foo --port 8282 login
+Please enter the admin user name&gt;admin Please enter the admin password&gt;
+Trying to authenticate for administration of server at host [foo] and port [8282] ...
+Login information relevant to admin user name [admin]
+for host [foo] and admin port [8282] stored at [/.asadminpass] successfully.
+Make sure that this file remains protected. Information stored in this
+file will be used by asadmin commands to manage associated domain.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00129"></a><a id="ghldv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-4 Logging In to a Domain on the Default Port of Localhost</p>
+</div>
+<div class="paragraph">
+<p>This example logs into a domain on <code>myhost</code> on the default port. Options
+are specified before the login subcommand.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; --host myhost login
+Please enter the admin user name&gt;admin
+Please enter the admin password&gt;
+Trying to authenticate for administration of server at host [myhost] and port [4848] ...
+An entry for login exists for host [myhost] and port [4848], probably from
+an earlier login operation.
+Do you want to overwrite this entry (y/n)?y
+Login information relevant to admin user name [admin] for host [myhost]
+and admin port [4848] stored at [/home/joe/.asadminpass] successfully.
+Make sure that this file remains protected. Information stored in this file will be used by
+asadmin commands to manage associated domain.</code></pre>
+</div>
+</div>
+<div id="GSADG822" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help login</code> at the command line. For additional
+information about passwords, see "<a href="../security-guide/system-security.html#GSSCG00144">Administering
+Passwords</a>" in GlassFish Server Open Source Edition Security Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggofa"></a><a id="GSADG00334"></a><a id="to-delete-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_domain">To Delete a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>delete-domain</code> subcommand to delete an existing domain from a
+server. Only the root user or the operating system user who is
+authorized to administer the domain can run this subcommand.</p>
+</div>
+<div id="GSADG823" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>A domain must be stopped before it can be deleted.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List domains by using the <a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify domain users that the domain is being deleted.</p>
+</li>
+<li>
+<p>Ensure that the domain you want to delete is stopped.<br>
+If needed, see <a href="#ggoch">To Stop a Domain</a>.</p>
+</li>
+<li>
+<p>Delete the domain by using the <a href="../reference-manual/delete-domain.html#GSRFM00075"><code>delete-domain</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00130"></a><a id="ggoiy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-5 Deleting a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example deletes a domain named <code>domain1</code> from the location
+specified.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-domain --domaindir ..\domains domain1
+Domain domain1 deleted.
+Command delete-domain executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG824" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitwj"></a><a id="GSADG00537"></a><a id="starting-and-stopping-a-domain"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_starting_and_stopping_a_domain">Starting and Stopping a Domain</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggoda">To Start a Domain</a></p>
+</li>
+<li>
+<p><a href="#ggoch">To Stop a Domain</a></p>
+</li>
+<li>
+<p><a href="#ginqj">To Restart a Domain</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggoda"></a><a id="GSADG00335"></a><a id="to-start-a-domain"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_start_a_domain">To Start a Domain</h4>
+<div class="paragraph">
+<p>When you start a domain or server, the domain administration server
+(DAS) is started. After startup, the DAS runs constantly, listening for
+and accepting requests.</p>
+</div>
+<div class="paragraph">
+<p>If the domain directory is not specified, the domain in the default
+domain root directory is started. If there are two or more domains, the
+<code>domain_name</code> operand must be specified. Each domain must be started
+separately.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For Microsoft Windows, you can use an alternate method to start a
+domain. From the Windows Start menu, select the command for your
+distribution of GlassFish Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are using the Full Platform, select Programs &gt; Oracle GlassFish
+Server &gt; Start Admin Server.</p>
+</li>
+<li>
+<p>If you are using the Web Profile, select Programs &gt; Oracle GlassFish
+Server Web Profile &gt; Start Admin Server.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This subcommand is supported in local mode only.</p>
+</div>
+<div class="paragraph">
+<p>Start a domain by using the <a href="../reference-manual/start-domain.html#GSRFM00235"><code>start-domain</code></a> subcommand.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00131"></a><a id="ggocw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-6 Starting a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example starts <code>domain2</code> in the default domain directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-domain domain2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If there is only one domain, you can omit the domain name. If you do not
+include the password, you might be prompted to supply it.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Name of the domain started: [domain1] and its location:
+[C:\prelude\v3_prelude_release\distributions\web\target\glassfish
+domains\domain1].
+Admin port for the domain: [4848].</code></pre>
+</div>
+</div>
+<div id="GSADG825" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help start-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggoch"></a><a id="GSADG00336"></a><a id="to-stop-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_stop_a_domain">To Stop a Domain</h4>
+<div class="paragraph">
+<p>Stopping a domain or server shuts down its domain administration server
+(DAS). When stopping a domain, the DAS stops accepting new connections
+and then waits for all outstanding connections to complete. This
+shutdown process takes a few seconds. While the domain is stopped, the
+Administration Console and most of the <code>asadmin</code> subcommands cannot be
+used. This subcommand is particularly useful in stopping a runaway
+server. For more controlled situations, you can use the
+<a href="../reference-manual/restart-domain.html#GSRFM00218"><code>restart-domain</code></a> subcommand.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>For Microsoft Windows, you can use an alternate method to stop a domain.
+From the Start menu, select the command for your distribution of
+GlassFish Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are using the Full Platform, select Programs &gt; Oracle GlassFish
+Server &gt; Stop Admin Server.</p>
+</li>
+<li>
+<p>If you are using the Web Profile, select Programs &gt; Oracle GlassFish
+Server Web Profile &gt; Stop Admin Server.</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If necessary, notify users that you are going to stop the domain.</p>
+</li>
+<li>
+<p>Stop the domain by using the <a href="../reference-manual/stop-domain.html#GSRFM00240"><code>stop-domain</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00132"></a><a id="gioes"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-7 Stopping a Domain (or Server)</p>
+</div>
+<div class="paragraph">
+<p>This example stops <code>domain1</code> in the default directory, where <code>domain1</code>
+is the only domain present in the directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; stop-domain
+Waiting for the domain to stop ...........
+Command stop-domain executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG826" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help stop-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ginqj"></a><a id="GSADG00337"></a><a id="to-restart-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_restart_a_domain">To Restart a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>restart-domain</code> subcommand in remote mode to restart the Domain
+Administration Server (DAS) of the specified host. When restarting a
+domain, the DAS stops accepting new connections and then waits for all
+outstanding connections to complete. This shutdown process takes a few
+seconds. Until the domain has restarted, the Administration Console and
+most of the <code>asadmin</code> subcommands cannot be used.</p>
+</div>
+<div class="paragraph">
+<p>This subcommand is particularly useful for environments where the server
+machine is secured and difficult to get to. With the right credentials,
+you can restart the server from a remote location as well as from the
+same machine.</p>
+</div>
+<div class="paragraph">
+<p>If the server will not restart, use the <a href="../reference-manual/stop-domain.html#GSRFM00240"><code>stop-domain</code></a>
+subcommand followed by the <a href="../reference-manual/start-domain.html#GSRFM00235"><code>start-domain</code></a> subcommand.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Restart the domain by using the <a href="../reference-manual/restart-domain.html#GSRFM00218"><code>restart-domain</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00133"></a><a id="ggoet"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-8 Restarting a Domain (or Server)</p>
+</div>
+<div class="paragraph">
+<p>This example restarts <code>mydoimain4</code> in the default directory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; restart-domain mydomain4
+Waiting for the domain to restart ...........
+Command restart-domain executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00134"></a><a id="giupx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-9 Restarting a Domain in a Browser</p>
+</div>
+<div class="paragraph">
+<p>This example invokes the <code>restart-domain</code> subcommand in a browser.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">http://yourhost:4848/__asadmin/restart-domain</code></pre>
+</div>
+</div>
+<div id="GSADG827" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help restart-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gglqp"></a><a id="GSADG00538"></a><a id="configuring-a-das-or-a-glassfish-server-instance-for-automatic-restart"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_a_das_or_a_glassfish_server_instance_for_automatic_restart">Configuring a DAS or a GlassFish Server Instance for Automatic Restart</h3>
+<div class="paragraph">
+<p>Use the <code>create-service</code> subcommand in local mode to configure your
+system to automatically restart a domain administration server (DAS) or
+a GlassFish Server instance. GlassFish Server enables you to configure a
+DAS or an instance for automatic restart on the following operating
+systems:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Windows</p>
+</li>
+<li>
+<p>Linux</p>
+</li>
+<li>
+<p>Oracle Solaris</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To ensure that automatic restart functions correctly on Windows, you
+must prevent service shutdown when a user logs out.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjzfg">To Configure a DAS or an Instance for Automatic Restart on
+Windows</a></p>
+</li>
+<li>
+<p><a href="#giurs">To Configure a DAS or an Instance for Automatic Restart on
+Linux</a></p>
+</li>
+<li>
+<p><a href="#giusi">To Configure a DAS or an Instance for Automatic Restart on
+Oracle Solaris</a></p>
+</li>
+<li>
+<p><a href="#giurf">To Prevent Service Shutdown When a User Logs Out on
+Windows</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjzfg"></a><a id="GSADG00338"></a><a id="to-configure-a-das-or-an-instance-for-automatic-restart-on-windows"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_a_das_or_an_instance_for_automatic_restart_on_windows">To Configure a DAS or an Instance for Automatic Restart on Windows</h4>
+<div class="paragraph">
+<p>On Windows systems, the <code>create-service</code> subcommand creates a Windows
+service to represent the DAS or instance. The service is created in the
+disabled state. After this subcommand creates the service, you must use
+the Windows Services Manager or the Windows Services Wrapper to start,
+stop, uninstall, or install the service. To administer the service from
+the Windows command line, use the <code>sc.exe</code> tool.</p>
+</div>
+<div class="paragraph">
+<p>This subcommand must be run as the OS-level administrator user.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the service by using the <a href="../reference-manual/create-service.html#GSRFM00057"><code>create-service</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>After the service is created, start the service by using the Windows
+Services Manager or the Windows Services Wrapper.<br>
+For example, to start the service for the default domain by using the
+<code>sc.exe</code> tool, type:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>C:\&gt; sc start domain1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are using the <code>sc.exe</code> tool to administer the service, use the
+tool as follows:
+* To obtain information about the service, use the <code>sc query</code> command.
+* To stop the service, use the <code>sc stop</code> command.
+* To uninstall the service, use the <code>sc delete</code> command.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00135"></a><a id="gjzix"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-10 Creating a Service to Restart a DAS Automatically on
+Windows</p>
+</div>
+<div class="paragraph">
+<p>This example creates a service for the default domain on a system that
+is running Windows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-service
+Found the Windows Service and successfully uninstalled it.
+The Windows Service was created successfully.  It is ready to be started.  Here are
+the details:
+ID of the service: domain1
+Display Name of the service:domain1 GlassFish Server
+Domain Directory: C:\glassfishv3\glassfish\domains\domain1
+Configuration file for Windows Services Wrapper: C:\glassfishv3\glassfish\domains\
+domain1\bin\domain1Service.xml
+The service can be controlled using the Windows Services Manager or you can use the
+Windows Services Wrapper instead:
+Start Command:  C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe  start
+Stop Command:   C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe  stop
+Uninstall Command:  C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe
+uninstall
+Install Command:  C:\glassfishv3\glassfish\domains\domain1\bin\domain1Service.exe
+install
+
+This message is also available in a file named PlatformServices.log in the domain's
+root directory
+Command create-service executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00136"></a><a id="gktso"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-11 Querying the Service to Restart a DAS Automatically on
+Windows</p>
+</div>
+<div class="paragraph">
+<p>This obtains information about the service for the default domain on a
+system that is running Windows.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">C:\&gt; sc query domain1
+
+SERVICE_NAME: domain1
+        TYPE               : 10  WIN32_OWN_PROCESS
+        STATE              : 1  STOPPED
+        WIN32_EXIT_CODE    : 1077  (0x435)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="giurs"></a><a id="GSADG00339"></a><a id="to-configure-a-das-or-an-instance-for-automatic-restart-on-linux"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_configure_a_das_or_an_instance_for_automatic_restart_on_linux">To Configure a DAS or an Instance for Automatic Restart on Linux</h4>
+<div class="paragraph">
+<p>On Linux systems, the <code>create-service</code> subcommand creates a
+System-V-style initialization script
+<code>/etc/init.d/GlassFish_`domain-or-instance-name and installs a link to
+this script in any `/etc/rc`N</code>.d` directory that is present, where N is
+<code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, and <code>S</code>. After this subcommand
+creates the script, you must use this script to start, stop, or restart
+the domain or instance.</p>
+</div>
+<div class="paragraph">
+<p>The script automatically restarts the domain or instance only during a
+reboot. If the domain or instance is stopped, but the host remains
+running, the domain or instance is not restarted automatically. To
+restart the domain or instance, you must run the script manually.</p>
+</div>
+<div class="paragraph">
+<p>You might no longer require the domain or instance to be automatically
+restarted during a reboot. In this situation, use the operating system
+to delete the initialization script and the link to the script that the
+<code>create-service</code> subcommand creates.</p>
+</div>
+<div class="paragraph">
+<p>The <code>create-service</code> subcommand must be run as the OS-level root user.</p>
+</div>
+<div class="paragraph">
+<p>Create the service by using the <a href="../reference-manual/create-service.html#GSRFM00057"><code>create-service</code></a>
+subcommand.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG828"></a><a id="sthref19"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-12 Creating a Service to Restart a DAS Automatically on Linux</p>
+</div>
+<div class="paragraph">
+<p>This example creates a service for the default domain on a system that
+is running Linux.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-service
+Found the Linux Service and successfully uninstalled it.
+The Service was created successfully. Here are the details:
+Name of the service:domain1
+Type of the service:Domain
+Configuration location of the service:/etc/init.d/GlassFish_domain1
+User account that will run the service: root
+You have created the service but you need to start it yourself.
+Here are the most typical Linux commands of interest:
+
+* /etc/init.d/GlassFish_domain1 start
+* /etc/init.d/GlassFish_domain1 stop
+* /etc/init.d/GlassFish_domain1 restart
+
+For your convenience this message has also been saved to this file:
+/export/glassfish3/glassfish/domains/domain1/PlatformServices.log
+Command create-service executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="giusi"></a><a id="GSADG00340"></a><a id="to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris"></a></p>
+</div>
+<div class="paragraph">
+<p>To Configure a DAS or an Instance for Automatic Restart on Oracle
+Solaris
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup>^</p>
+</div>
+<div class="paragraph">
+<p>On Oracle Solaris systems, the <code>create-service</code> subcommand creates an
+Oracle Solaris Service Management Facility (SMF) service that restarts a
+DAS or an instance. The service grants to the process the privileges of
+the user that runs the process. When you create an SMF service, the
+default user is the superuser. If you require a different user to run
+the process, specify the user in <code>method_credential</code>.</p>
+</div>
+<div class="paragraph">
+<p>If your process is to bind to a privileged port of Oracle Solaris, the
+process requires the <code>net_privaddr</code> privilege. The privileged ports of
+the Oracle Solaris operating system have port numbers less than 1024.</p>
+</div>
+<div class="paragraph">
+<p>To determine if a user has the <code>net_privaddr</code> privilege, log in as that
+user and type the command <code>ppriv -l | grep net_privaddr</code>.</p>
+</div>
+<div class="paragraph">
+<p>After you create and enable the SMF service, if the domain or instance
+is stopped, SMF restarts it.</p>
+</div>
+<div id="GSADG829" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>To run the <code>create-service</code> subcommand, you must have <code>solaris.smf.*</code>
+authorization. For information about how to set the authorizations, see
+the
+<a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Museradd-1m"><code>useradd</code>(1M)</a>
+man page and the
+<a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Musermod-1m"><code>usermod</code>(1M)</a>
+man page. You must also have write permission in the directory tree:
+<code>/var/svc/manifest/application/SUNWappserver</code>. Usually, the superuser
+has both of these permissions. Additionally, Oracle Solaris
+administration commands such as
+<a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Msvccfg-1m"><code>svccfg</code></a>,
+<a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1svcs-1"><code>svcs</code></a>,
+and
+<a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1auths-1"><code>auths</code></a>
+must be available in the PATH.</p>
+</div>
+<div class="paragraph">
+<p>If a particular GlassFish Server domain or instance should not have
+default user privileges, modify the manifest of the service and reimport
+the service.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the service by using the <a href="../reference-manual/create-service.html#GSRFM00057"><code>create-service</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>After the service is created, enable the service by using the
+<code>svacdm enable</code> command.<br>
+For example, to enable the SMF service for the default domain, type:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>svacdm enable /appserver/domains/domain1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00137"></a><a id="giuqp"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-13 Creating a Service to Restart a Domain Automatically on
+Oracle Solaris</p>
+</div>
+<div class="paragraph">
+<p>This example creates a service for the default domain on a system that
+is running Oracle Solaris.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-service
+The Service was created successfully. Here are the details:
+Name of the service:application/GlassFish/domain1
+Type of the service:Domain
+Configuration location of the service:/home/gfuser/glassfish-installations
+/glassfishv3/glassfish/domains
+Manifest file location on the system:/var/svc/manifest/application
+/GlassFish/domain1_home_gfuser_glassfish-installations_glassfishv3
+_glassfish_domains/Domain-service-smf.xml.
+You have created the service but you need to start it yourself.
+Here are the most typical Solaris commands of interest:
+* /usr/bin/svcs -a | grep domain1 // status
+* /usr/sbin/svcadm enable domain1 // start
+* /usr/sbin/svcadm disable domain1 // stop
+* /usr/sbin/svccfg delete domain1 // uninstall
+Command create-service executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG830" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For information about administering the service, see the following
+Oracle Solaris documentation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>"http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=SYSADV1hbrunlevels-25516[Managing
+Services (Overview)]" in System Administration Guide: Basic
+Administration</p>
+</li>
+<li>
+<p>"http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=SYSADV1faauf[Managing
+Services (Tasks)]" in System Administration Guide: Basic Administration</p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1auths-1"><code>auths</code>(1)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1svcs-1"><code>svcs</code>(1)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Msvcadm-1m"><code>svcadm</code>(1M)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Msvccfg-1m"><code>svccfg</code>(1M)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Museradd-1m"><code>useradd</code>(1M)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN1Musermod-1m"><code>usermod</code>(1M)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN5rbac-5"><code>rbac</code>(5)</a></p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/pls/topic/lookup?ctx=E18752&amp;id=REFMAN5smf-security-5"><code>smf_security</code>(5)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giurf"></a><a id="GSADG00341"></a><a id="to-prevent-service-shutdown-when-a-user-logs-out-on-windows"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_prevent_service_shutdown_when_a_user_logs_out_on_windows">To Prevent Service Shutdown When a User Logs Out on Windows</h4>
+<div class="paragraph">
+<p>By default, the Java Virtual Machine (VM) receives signals from Windows
+that indicate that Windows is shutting down, or that a user is logging
+out of Windows, which causes the system to shut itself down cleanly.
+This behavior causes the GlassFish Server service to shut down. To
+prevent the service from shutting down when a user logs out, you must
+set the <code>-Xrs</code> Java VM option
+(<code>https://javaee.github.io/glassfish/documentation</code>).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.</p>
+</li>
+<li>
+<p>Set the <code>-Xrs</code> Java VM option for the DAS.<br>
+Use the <a href="../reference-manual/create-jvm-options.html#GSRFM00042"><code>create-jvm-options</code></a> subcommand for this
+purpose.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-jvm-options -Xrs</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set the <code>-Xrs</code> Java VM option for the Java VM within which the
+<code>asadmin</code> utility runs.<br>
+To set this option, edit the <code>asadmin.bat</code> file to add the <code>-Xrs</code> option
+to the line that runs the <code>admin-cli.jar</code> file.</p>
+</li>
+<li>
+<p>In the as-install`\bin\asadmin.bat` file, edit the line to read as
+follows:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>%JAVA% -Xrs -jar "%~dp0..\modules\admin-cli.jar" %*</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>In the as-install-parent`\bin\asadmin.bat` file, edit the line to
+read as follows:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>%JAVA% -Xrs -jar "%~dp0..\glassfish\modules\admin-cli.jar" %*</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If the GlassFish Server service is running, restart the service for
+your changes to take effect.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gityo"></a><a id="GSADG00541"></a><a id="backing-up-and-restoring-a-domain"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_backing_up_and_restoring_a_domain">Backing Up and Restoring a Domain</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggocq">To Back Up a Domain</a></p>
+</li>
+<li>
+<p><a href="#ggody">To Restore a Domain</a></p>
+</li>
+<li>
+<p><a href="#ghgod">To List Domain Backups</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggocq"></a><a id="GSADG00352"></a><a id="to-back-up-a-domain"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_back_up_a_domain">To Back Up a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>backup-domain</code> subcommand in local mode to make a backup of a
+specified domain.</p>
+</div>
+<div class="paragraph">
+<p>When you use the <code>backup-domain</code> subcommand, GlassFish Server creates a
+ZIP file backup of all the files and subdirectories in the domain&#8217;s
+directory, domain-root-dir`/<code>domain-dir, except for the `backups</code>
+subdirectory.</p>
+</div>
+<div class="paragraph">
+<p>The <code>backup-domain</code> subcommand provides several options to meet
+particular needs, including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--backupdir</code> to specify a directory in which to store the backup
+instead of the default domain-root-dir`/<code>domain-dir</code>/backups`.</p>
+</li>
+<li>
+<p><code>--description</code> to provide a description of the backup to be stored in
+the backup itself.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the domain is stopped .<br>
+The <code>backup-domain</code> subcommand operates only when the domain is stopped.</p>
+</li>
+<li>
+<p>Back up the domain by using the <a href="../reference-manual/backup-domain.html#GSRFM00003"><code>backup-domain</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>Restore the domain to its previous state, if necessary.<br>
+Start or resume the domain.</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00149"></a><a id="ggoxt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-14 Backing Up the Default Domain</p>
+</div>
+<div class="paragraph">
+<p>This example makes a backup of the default domain, <code>domain1</code>, storing
+the backup file in <code>/net/backups.example.com/glassfish</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; backup-domain --backupdir /net/backups.example.com/glassfish domain1
+Backed up domain1 at Mon Jan 17 08:16:22 PST 2011.
+Command backup-domain executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG842" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help backup-domain</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggody"></a><a id="GSADG00353"></a><a id="to-restore-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_restore_a_domain">To Restore a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>restore-domain</code> subcommand in local mode to use a backup file
+to restore the files and subdirectories in a specified domain&#8217;s
+directory.</p>
+</div>
+<div class="paragraph">
+<p>The <code>restore-domain</code> subcommand can use backup files created by the
+<code>backup-domain</code> subcommand and by automatic backup configurations, both
+full backups and configuration-only backups. Automatic backup
+configurations are available only in Oracle GlassFish Server.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If necessary, notify domain users that the domain is being restored
+from backup.</p>
+</li>
+<li>
+<p>Ensure that the domain is stopped.<br>
+The <code>restore-domain</code> subcommand operates only when the domain is
+stopped.<br>
+To determine whether the domain is running, use the
+<a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code></a> subcommand, as described in
+<a href="#ggoco">To List Domains</a>.<br>
+To stop the domain, use the <a href="../reference-manual/stop-domain.html#GSRFM00240"><code>stop-domain</code></a> subcommand
+as described in <a href="#ggoch">To Stop a Domain</a>.</p>
+</li>
+<li>
+<p>Restore backup files for a domain by using the
+<a href="../reference-manual/restore-domain.html#GSRFM00221"><code>restore-domain</code></a> subcommand.</p>
+</li>
+<li>
+<p>Verify that the restore has succeeded.</p>
+</li>
+<li>
+<p>If necessary, notify users that the domain has been restored and is
+available.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00150"></a><a id="ggoys"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-15 Restoring the Default Domain</p>
+</div>
+<div class="paragraph">
+<p>This example restores files for the default domain, <code>domain1</code>, from the
+most recent backup stored in a specified backup directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; restore-domain --backupdir /net/backups.example.com/glassfish domain1
+Restored the domain (domain1) to /home/user1/glassfish3/glassfish/domains/domain1
+Command restore-domain executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG843" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin restore-domain --help</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghgod"></a><a id="GSADG00354"></a><a id="to-list-domain-backups"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_domain_backups">To List Domain Backups</h4>
+<div class="paragraph">
+<p>Use the <code>list-backups</code> subcommand in local mode to display information
+about backups of a specified domain stored in a specified backup
+directory.</p>
+</div>
+<div class="paragraph">
+<p>The <code>list-backups</code> subcommand provides several options to meet
+particular needs, including <code>--backupdir</code> to specify a directory where
+backups are stored instead of the default domain-dir`/backups`.</p>
+</div>
+<div class="paragraph">
+<p>List backups by using the <code>list-backups</code> subcommand.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00151"></a><a id="ghgsv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-16 Listing Backups of the Default Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists the backups of the default domain, <code>domain1</code>, that
+are stored in the <code>/net/backups.example.com/glassfish</code> directory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-backups --backupdir /net/backups.example.com/glassfish domain1
+CONFIG        USER   BACKUP DATE                   FILENAME
+              user1  Mon Jan 17 08:16:22 PST 2011  domain1_2011_01_17_v00001.zip
+monthly-full  user1  Wed Dec 01 00:00:00 PST 2010  domain1_2010_12_01_v00001.zip
+monthly-full  user1  Sat Jan 01 00:00:03 PST 2011  domain1_2011_01_01_v00001.zip
+monthly-full  user1  Tue Feb 01 00:00:01 PST 2011  domain1_2011_02_01_v00001.zip
+Command list-backups executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that this listing includes backups created automatically by a
+backup configuration. This feature is available only in Oracle GlassFish
+Server.</p>
+</div>
+<div id="GSADG844" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-backups</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gglri"></a><a id="GSADG00542"></a><a id="re-creating-the-domain-administration-server-das"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_re_creating_the_domain_administration_server_das">Re-Creating the Domain Administration Server (DAS)</h3>
+<div class="paragraph">
+<p>For mirroring purposes, and to provide a working copy of the DAS, you
+must have:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>One host (olddashost) that contains the original DAS.</p>
+</li>
+<li>
+<p>A second host (apphost) that contains a cluster with server instances
+running applications and catering to clients. The cluster is configured
+using the DAS on the first host.</p>
+</li>
+<li>
+<p>A third host (newdashost) where the DAS needs to be re-created in a
+situation where the first host crashes or is being taken out of service.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must maintain a backup of the DAS from the first host using the
+o<a href="GSRFM00003"><code>backup-domain</code></a> subcommand as described in
+<a href="#ggocq">To Back Up a Domain</a>. You can automatically maintain a
+backup of the DAS using the automatic backups feature of Oracle
+GlassFish Server.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Oracle GlassFish Server includes <code>asadmin</code> subcommands that simplify
+this procedure. If you are using Oracle GlassFish Server, see
+<a href="#gglnp">To Migrate the DAS</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gglnp"></a><a id="GSADG00355"></a><a id="to-migrate-the-das"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_migrate_the_das">To Migrate the DAS</h4>
+<div class="paragraph">
+<p>The following steps are required to migrate the DAS from the first host
+(olddashost) to the third host (newdashost).</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install GlassFish Server on newdashost just as it was installed on
+olddashost.<br>
+This is required so that the DAS can be properly restored on newdashost
+without causing path conflicts.</p>
+</li>
+<li>
+<p>Use the <code>restore-domain</code> subcommand to restore the latest backup
+file onto newdashost.<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; restore-domain --backupdir /net/backups.example.com/glassfish</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example assumes that backups are stored in a network-accessible
+location. If this is not the case, manually copy the latest backup file
+from offline storage to a directory on newdashost.<br>
+You can backup any domain. However, while re-creating the domain, the
+domain name should be same as the original.
+3.  Stop the domain on olddashost, if it is running.
+4.  Start the domain on newdashost by using the
+<a href="../reference-manual/start-domain.html#GSRFM00235"><code>start-domain</code></a> subcommand.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-domain domain1</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If the domain on olddashost was centrally administered, set up
+centralized administration on newdashost.<br>
+See "<a href="../ha-administration-guide/ssh-setup.html#GSHAG00003">Enabling Centralized Administration of GlassFish
+Server Instances</a>" in GlassFish Server Open Source Edition High
+Availability Administration Guide for instructions.</p>
+</li>
+<li>
+<p>Verify that instances on other hosts are visible to the new DAS on
+newdashost:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances --long</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Change the DAS host values for properties under the node on apphost.<br>
+In the file as-install`/nodes/<code>node-name</code>/agent/config/das.properties`
+file, change the <code>agent.das.host</code> property value to refer to newdashost
+instead of olddasnost.</p>
+</li>
+<li>
+<p>Use the new DAS to restart clusters and standalone instances on
+apphost:<br>
+Restarting the clustered and standalone instances on apphost triggers
+their recognition of the new DAS on newdashost.</p>
+</li>
+<li>
+<p>Use the <code>list-clusters</code> subcommand to list the clusters in the
+domain.</p>
+</li>
+<li>
+<p>Use the <code>stop-cluster</code> subcommand to stop each cluster.</p>
+</li>
+<li>
+<p>Use the <code>list-instances</code> subcommand to list the instances in the
+domain.</p>
+</li>
+<li>
+<p>Use the <code>restart-instance</code> subcommand to restart each standalone
+instance.</p>
+</li>
+<li>
+<p>Use the <code>start-cluster</code> subcommand to start each cluster.<br>
+If the domain does not use centralized administration, use the
+<code>start-local-instance</code> subcommand to start the cluster instances on
+apphost.</p>
+</li>
+<li>
+<p>Verify that instances on apphost are running:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances --long</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Decommission and discontinue use of the DAS on olddashost.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gitvn"></a><a id="GSADG00543"></a><a id="additional-domain-tasks"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_additional_domain_tasks">Additional Domain Tasks</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghhnt">To Display Domain Uptime</a></p>
+</li>
+<li>
+<p><a href="#ghmbn">To Switch a Domain to Another Supported Java Version</a></p>
+</li>
+<li>
+<p><a href="#gkvkb">To Change the Administration Port of a Domain</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghhnt"></a><a id="GSADG00356"></a><a id="to-display-domain-uptime"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_display_domain_uptime">To Display Domain Uptime</h4>
+<div class="paragraph">
+<p>Use the <code>uptime</code> subcommand in remote mode to display the length of time
+that the domain administration server (DAS) has been running since it
+was last started.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Display uptime by using the <a href="../reference-manual/uptime.html#GSRFM00258"><code>uptime</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00152"></a><a id="ghlds"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-17 Displaying the DAS Uptime</p>
+</div>
+<div class="paragraph">
+<p>This example displays the length of time that the DAS has been running.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; uptime
+Uptime: 1 Weeks, 4 days, 0 hours, 17 minutes, 14 seconds, Total milliseconds: 951434595
+Command uptime executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG845" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help uptime</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghmbn"></a><a id="GSADG00357"></a><a id="to-switch-a-domain-to-another-supported-java-version"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_switch_a_domain_to_another_supported_java_version">To Switch a Domain to Another Supported Java Version</h4>
+<div class="paragraph">
+<p>GlassFish Server 5.0 requires Java SE 8 as the underlying virtual
+machine for the Java platform (Java Virtual Machine or JVM machine).</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not downgrade to an earlier Java version after a domain has been
+created with a newer JVM machine. If you must downgrade your JVM
+machine, downgrade it only for individual domains.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>If you have not already done so, download the desired Java SDK (not
+the JRE) and install it on your system.<br>
+The Java SDK can be downloaded from the
+<a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java
+SE Downloads page</a> .</p>
+</li>
+<li>
+<p>Start the domain for which you are changing the JDK.<br>
+Use the following format:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>as-install/bin/asadmin start-domain domain-name</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a valid JVM installation, locations are checked in the following
+order:
+1.  <code>domain.xml</code> (<code>java-home</code> inside <code>java-config</code>)
+2.  <code>asenv.conf</code> (setting <code>AS_JAVA="path to java home"</code>)<br>
+If a legal JDK is not found, a fatal error occurs and the problem is
+reported back to you.
+3.  If necessary, change the JVM machine attributes for the domain.<br>
+In particular, you might need to change the <code>JAVA_HOME</code> environment
+variable. For example, to change the <code>JAVA_HOME</code> variable, type:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">as-install/bin/asadmin set "server.java-config.java-home=path-to-java-home"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkvkb"></a><a id="GSADG00358"></a><a id="to-change-the-administration-port-of-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_change_the_administration_port_of_a_domain">To Change the Administration Port of a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>set</code> subcommand in remote mode to change the administration
+port of a domain.</p>
+</div>
+<div class="paragraph">
+<p>The HTTP port or the HTTPS port for administration of a domain is
+defined by the <code>--adminport</code> option of the
+<a href="../reference-manual/create-domain.html#GSRFM00023"><code>create-domain</code></a> subcommand when the domain is created.
+If this port must be reallocated for another purpose, change the port on
+which the DAS listens for administration requests.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Set the port number to its new value.<br>
+Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand for this purpose.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin set
+server-config.network-config.network-listeners.network-listener.admin-listener.port=new-port-number</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The new-port-number is the new value that you are setting for the port
+number.<br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After you set the port number to its new value, running the
+<code>list-domains</code> subcommand incorrectly reports that the DAS is not
+running. The <code>list-domains</code> subcommand reports the correct state again
+only after you stop and restart the domain as explained in the steps
+that follow.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Stop the domain, specifying the host on which the DAS is running and
+the old administration port number of the domain.<br>
+You must specify the old port number because the DAS is still listening
+for administration requests on this port. If you omit the port number,
+the command fails because the <code>stop-domain</code> subcommand attempts to
+contact the DAS through the new port number.<br></p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for controlling the
+behavior of the domain, see the o<a href="GSRFM00240"><code>stop-domain</code>(1)</a> help
+page.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin --host host-name --port old-port-number stop-domain</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">host-name</dt>
+<dd>
+<p>The name of the host on which the DAS is running. If you run the
+<code>stop-domain</code> subcommand on the host where the DAS is running, you
+must specify the actual host name and not <code>localhost</code>. If you specify
+<code>localhost</code>, the <code>stop-domain</code> subcommand fails.</p>
+</dd>
+<dt class="hdlist1">old-port-number</dt>
+<dd>
+<p>The value of administration port number of the domain before you
+changed it in the preceding step.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start the domain.<br></p>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for controlling the
+behavior of the domain, see the o<a href="GSRFM00235"><code>start-domain</code>(1)</a> help
+page.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ start-domain [domain-name]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The domain-name is the name of the domain to start. If only one domain
+subdirectory is contained in the <code>domains</code> directory, you may omit this
+option.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00153"></a><a id="gkvkl"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-18 Changing the Administration Port of a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example changes the administration port of the domain <code>domain1</code>
+from 4848 to 4849. The DAS is running on the host <code>xk01.example.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ asadmin set
+server-config.network-config.network-listeners.network-listener.admin-listener.port=4849
+server-config.network-config.network-listeners.network-listener.admin-listener.port=4849
+Command set executed successfully.
+$ asadmin --host xk01.example.com --port 4848 stop-domain
+Waiting for the domain to stop ....
+Command stop-domain executed successfully.
+$ asadmin start-domain
+Waiting for domain1 to start ........................
+Successfully started the domain : domain1
+domain  Location: /export/glassfish3/glassfish/domains/domain1
+Log File: /export/glassfish3/glassfish/domains/domain1/logs/server.log
+Admin Port: 4849
+Command start-domain executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG846" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/create-domain.html#GSRFM00023"><code>create-domain</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/set.html#GSRFM00226"><code>set</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/start-domain.html#GSRFM00235"><code>start-domain</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/stop-domain.html#GSRFM00240"><code>stop-domain</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help create-domain</code></p>
+</li>
+<li>
+<p><code>asadmin help set</code></p>
+</li>
+<li>
+<p><code>asadmin help start-domain</code></p>
+</li>
+<li>
+<p><code>asadmin help stop-domain</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="general-administration.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jvm.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

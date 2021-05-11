@@ -1,0 +1,974 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Developing Connectors</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Developing Connectors</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="java-clients.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="lifecycle-listeners.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00013"></a><a id="bealk"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-connectors">11 Developing Connectors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes Oracle GlassFish Server support for the Java EE
+Connector Architecture, also known as
+<a href="http://jcp.org/en/jsr/detail?id=322">JSR 322</a>
+(<code>http://jcp.org/en/jsr/detail?id=322</code>).</p>
+</div>
+<div class="paragraph">
+<p>The Java EE Connector Architecture provides a Java solution to the
+problem of connectivity between multiple application servers and
+existing enterprise information systems (EISs). By using the Java EE
+Connector architecture, EIS vendors no longer need to customize their
+product for each application server. Application server vendors who
+conform to the Java EE Connector architecture do not need to write
+custom code to add connectivity to a new EIS.</p>
+</div>
+<div class="paragraph">
+<p>This chapter uses the terms connector and resource adapter
+interchangeably. Both terms refer to a resource adapter module that is
+developed in conformance with the Java EE Connector Architecture
+Specification.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you installed the Web Profile, connector modules that use only
+outbound communication features and work-management that does not
+involve inbound communication features are supported. Other connector
+features are supported only in the full GlassFish Server.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For more information about connectors, see
+"https://javaee.github.io/tutorial/resources.html[Resource Adapters and
+Contracts]" in The Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p>For information about deploying a connector to the GlassFish Server, see
+the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application
+Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beall">Connector Support in the GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#bealr">Advanced Connector Configuration Options</a></p>
+</li>
+<li>
+<p><a href="#bealz">Inbound Communication Support</a></p>
+</li>
+<li>
+<p><a href="#gizdm">Outbound Communication Support</a></p>
+</li>
+<li>
+<p><a href="#beama">Configuring a Message Driven Bean to Use a Resource
+Adapter</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beall"></a><a id="GSDVG00162"></a><a id="connector-support-in-the-glassfish-server"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_connector_support_in_the_glassfish_server">Connector Support in the GlassFish Server</h3>
+<div class="paragraph">
+<p>The GlassFish Server supports the development and deployment of resource
+adapters that are compatible with the Connector 1.6 specification (and,
+for backward compatibility, the Connector 1.0 and 1.5 specifications).</p>
+</div>
+<div class="paragraph">
+<p>The Connector 1.0 specification defines the outbound connectivity system
+contracts between the resource adapter and the GlassFish Server. The
+Connector 1.5 specification introduces major additions in defining
+system level contracts between the GlassFish Server and the resource
+adapter with respect to inbound connectivity, life cycle management, and
+thread management. The Connector 1.6 specification introduces further
+additions in defining system level contracts between the GlassFish
+Server and the resource adapter with respect to the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generic work context contract — A generic contract that enables a
+resource adapter to control the execution context of a <code>Work</code> instance
+that it has submitted to the GlassFish Server for execution. The
+<code>Generic</code> work contract provides the mechanism for a resource adapter to
+augment the runtime context of a <code>Work</code> instance with additional
+contextual information flown-in from the EIS. This contract enables a
+resource adapter to control, in a more flexible manner, the contexts in
+which the <code>Work</code> instances submitted by it are executed by the
+application server&#8217;s <code>WorkManager</code>.</p>
+</li>
+<li>
+<p>Security work context — A standard contract that enables a resource
+adapter to establish security information while submitting a <code>Work</code>
+instance for execution to a <code>WorkManager</code> and while delivering
+messages-to-message endpoints residing in the GlassFish Server. This
+contract provides a mechanism to support the execution of a <code>Work</code>
+instance in the context of an established identity. It also supports the
+propagation of user information or Principal information from an EIS to
+a <code>MessageEndpoint</code> during message inflow.</p>
+</li>
+<li>
+<p>Transaction context — The transaction context contract between the
+resource adapter and the application server leverages the Generic Work
+Context mechanism by describing a standard <code>WorkContext</code>, the
+<code>TransactionContext</code>. It represents the standard interface a resource
+adapter can use to propagate transaction context information from the
+EIS to the application server.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="bealm"></a><a id="GSDVG00474"></a><a id="connector-architecture-for-jms-and-jdbc"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_connector_architecture_for_jms_and_jdbc">Connector Architecture for JMS and JDBC</h4>
+<div class="paragraph">
+<p>In the Administration Console, connector, JMS, and JDBC resources are
+handled differently, but they use the same underlying Connector
+architecture. In the GlassFish Server, all communication to an EIS,
+whether to a message provider or an RDBMS, happens through the Connector
+architecture. To provide JMS infrastructure to clients, the GlassFish
+Server uses the Open Message Queue software. To provide JDBC
+infrastructure to clients, the GlassFish Server uses its own JDBC system
+resource adapters. The GlassFish Server automatically makes these system
+resource adapters available to any client that requires them.</p>
+</div>
+<div class="paragraph">
+<p>For more information about JMS in the GlassFish Server, see
+<a href="jms.html#beaob">Using the Java Message Service</a>. For more information
+about JDBC in the GlassFish Server, see <a href="jdbc.html#beamj">Using the
+JDBC API for Database Access</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealn"></a><a id="GSDVG00475"></a><a id="connector-configuration"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_connector_configuration">Connector Configuration</h4>
+<div class="paragraph">
+<p>The GlassFish Server does not need to use <code>sun-ra.xml</code>, which previous
+GlassFish Server versions used, to store server-specific deployment
+information inside a Resource Adapter Archive (RAR) file. (However, the
+<code>sun-ra.xml</code> file is still supported for backward compatibility.)
+Instead, the information is stored in the server configuration. As a
+result, you can create multiple connector connection pools for a
+connection definition in a functional resource adapter instance, and you
+can create multiple user-accessible connector resources (that is,
+registering a resource with a JNDI name) for a connector connection
+pool. In addition, dynamic changes can be made to connector connection
+pools and the connector resource properties without restarting the
+GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealr"></a><a id="GSDVG00163"></a><a id="advanced-connector-configuration-options"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_advanced_connector_configuration_options">Advanced Connector Configuration Options</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beals">Thread Associations</a></p>
+</li>
+<li>
+<p><a href="#bealt">Security Maps</a></p>
+</li>
+<li>
+<p><a href="#giqgt">Work Security Maps</a></p>
+</li>
+<li>
+<p><a href="#bealu">Overriding Configuration Properties</a></p>
+</li>
+<li>
+<p><a href="#bealv">Testing a Connector Connection Pool</a></p>
+</li>
+<li>
+<p><a href="#gizcv">Flushing a Connector Connection Pool</a></p>
+</li>
+<li>
+<p><a href="#bealw">Handling Invalid Connections</a></p>
+</li>
+<li>
+<p><a href="#bealx">Setting the Shutdown Timeout</a></p>
+</li>
+<li>
+<p><a href="#gjjyy">Specifying the Class Loading Policy</a></p>
+</li>
+<li>
+<p><a href="#bealy">Using Last Agent Optimization of Transactions</a></p>
+</li>
+<li>
+<p><a href="#gizba">Disabling Pooling for a Connection</a></p>
+</li>
+<li>
+<p><a href="#gizcs">Using Application-Scoped Connectors</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beals"></a><a id="GSDVG00476"></a><a id="thread-associations"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_thread_associations">Thread Associations</h4>
+<div class="paragraph">
+<p>Connectors can submit work instances to the GlassFish Server for
+execution. By default, the GlassFish Server services work requests for
+all connectors from its default thread pool. However, you can associate
+a specific user-created thread pool to service work requests from a
+connector. A thread pool can service work requests from multiple
+resource adapters. To create a thread pool:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, select Thread Pools under the relevant
+configuration. For details, click the Help button in the Administration
+Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin create-threadpool</code> command. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To associate a connector with a thread pool:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Applications component and
+select Resource Adapter Configs. Specify the name of the thread pool in
+the Thread Pool ID field. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>--threadpoolid</code> option of the
+<code>asadmin create-resource-adapter-config</code> command. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you create a resource adapter configuration for a connector module
+that is already deployed, the connector module deployment is restarted
+with the new configuration properties.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealt"></a><a id="GSDVG00477"></a><a id="security-maps"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_security_maps">Security Maps</h4>
+<div class="paragraph">
+<p>Create a security map for a connector connection pool to map an
+application principal or a user group to a back end EIS principal. The
+security map is usually used in situations where one or more EIS back
+end principals are used to execute operations (on the EIS) initiated by
+various principals or user groups in the application.</p>
+</div>
+<div class="paragraph">
+<p>To create or update security maps for a connector connection pool:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Resources component, select
+Connectors, select Connector Connection Pools, and select the Security
+Maps tab. For details, click the Help button in the Administration
+Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin create-connector-security-map</code> command. For details,
+see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference
+Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a security map already exists for a connector connection pool, the
+new security map is appended to the previous one. The connector security
+map configuration supports the use of the wildcard asterisk (<code>*</code>) to
+indicate all users or all user groups.</p>
+</div>
+<div class="paragraph">
+<p>When an application principal initiates a request to an EIS, the
+GlassFish Server first checks for an exact match to a mapped back end
+EIS principal using the security map defined for the connector
+connection pool. If there is no exact match, the GlassFish Server uses
+the wild card character specification, if any, to determined the mapped
+back end EIS principal.</p>
+</div>
+<div class="paragraph">
+<p><a id="giqgt"></a><a id="GSDVG00478"></a><a id="work-security-maps"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_work_security_maps">Work Security Maps</h4>
+<div class="paragraph">
+<p>A work security map for a resource adapter maps an EIS principal or
+group to a application principal or group. A work security map is useful
+in situations where one or more application principals execute
+operations initiated by principals or user groups in the EIS. A resource
+adapter can have multiple work security maps. A work security map can
+map either principals or groups, but not both.</p>
+</div>
+<div class="paragraph">
+<p>To create a work security map, use the
+<code>asadmin create-connector-work-security-map</code> command. For details, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The work security map configuration supports the wildcard asterisk (<code>*</code>)
+character to indicate all users or all user groups. When an EIS
+principal sends a request to the GlassFish Server, the GlassFish Server
+first checks for an exact match to a mapped application principal using
+the work security map defined for the resource adapter. If there is no
+exact match, the GlassFish Server uses the wild card character
+specification, if any, to determine the application principal.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealu"></a><a id="GSDVG00479"></a><a id="overriding-configuration-properties"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_overriding_configuration_properties">Overriding Configuration Properties</h4>
+<div class="paragraph">
+<p>You can override the properties (<code>config-property</code> elements) specified
+in the <code>ra.xml</code> file of a resource adapter:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Resources component and select
+Resource Adapter Configs. Create a new resource adapter configuration or
+select an existing one to edit. Then enter property names and values in
+the Additional Properties table. For details, click the Help button in
+the Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin create-resource-adapter-config</code> command to create a
+configuration for a resource adapter. Use this command&#8217;s <code>--property</code>
+option to specify a name-value pair for a resource adapter property. For
+details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can specify configuration properties either before or after resource
+adapter deployment. If you specify properties after deploying the
+resource adapter, the existing resource adapter is restarted with the
+new properties.</p>
+</div>
+<div class="paragraph">
+<p>You can also use token replacement for overriding resource adapter
+configuration properties in individual server instances when the
+resource adapter is deployed to a cluster. For example, for a property
+called <code>inboundPort</code>, you can assign the value <code>${inboundPort}</code>. You can
+then assign a different value to this property for each server instance.
+Changes to system properties take effect upon server restart.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealv"></a><a id="GSDVG00480"></a><a id="testing-a-connector-connection-pool"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_testing_a_connector_connection_pool">Testing a Connector Connection Pool</h4>
+<div class="paragraph">
+<p>You can test a connector connection pool for usability in one of these
+ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Resources component, open the
+Connector component, select Connection Pools, and select the connection
+pool you want to test. Then select the Ping button in the top right
+corner of the page. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin ping-connection-pool</code> command. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both these commands fail and display an error message unless they
+successfully connect to the connection pool.</p>
+</div>
+<div class="paragraph">
+<p>You can also specify that a connection pool is automatically tested when
+created or reconfigured by setting the Ping attribute to <code>true</code> (the
+default is <code>false</code>) in one of the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enter a Ping value in the Connector Connection Pools page in the
+Administration Console. For more information, click the Help button in
+the Administration Console.</p>
+</li>
+<li>
+<p>Specify the <code>--ping</code> option in the
+<code>asadmin create-connector-connection-pool</code> command. For more
+information, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gizcv"></a><a id="GSDVG00481"></a><a id="flushing-a-connector-connection-pool"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_flushing_a_connector_connection_pool">Flushing a Connector Connection Pool</h4>
+<div class="paragraph">
+<p>Flushing a connector connection pool recreates all the connections in
+the pool and brings the pool to the steady pool size without the need
+for reconfiguring the pool. Connection pool reconfiguration can result
+in application redeployment, which is a time-consuming operation.
+Flushing destroys existing connections, and any existing transactions
+are lost and must be retired.</p>
+</div>
+<div class="paragraph">
+<p>You can flush a connector connection pool in one of these ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Resources component, open the
+Connector component, select Connection Pools, and select the connection
+pool you want to flush. Then select the Flush button in the top right
+corner of the page. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin flush-connection-pool</code> command. For details, see the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="bealw"></a><a id="GSDVG00482"></a><a id="handling-invalid-connections"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_handling_invalid_connections">Handling Invalid Connections</h4>
+<div class="paragraph">
+<p>If a resource adapter generates a <code>ConnectionErrorOccured</code> event, the
+GlassFish Server considers the connection invalid and removes the
+connection from the connection pool. Typically, a resource adapter
+generates a <code>ConnectionErrorOccured</code> event when it finds a
+<code>ManagedConnection</code> object unusable. Reasons can be network failure with
+the EIS, EIS failure, fatal problems with the resource adapter, and so
+on.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>fail-all-connections</code> setting in the connection pool
+configuration is set to <code>true</code>, and a single connection fails, all
+connections are closed and recreated. If this setting is <code>false</code>,
+individual connections are recreated only when they are used. The
+default is <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>is-connection-validation-required</code> setting specifies whether
+connections have to be validated before being given to the application.
+If a resource&#8217;s validation fails, it is destroyed, and a new resource is
+created and returned. The default is <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>prefer-validate-over-recreate</code> property specifies that validating
+idle connections is preferable to closing them. This property has no
+effect on non-idle connections. If set to <code>true</code>, idle connections are
+validated during pool resizing, and only those found to be invalid are
+destroyed and recreated. If <code>false</code>, all idle connections are destroyed
+and recreated during pool resizing. The default is <code>false</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can set the <code>fail-all-connections</code>,
+<code>is-connection-validation-required</code>, and <code>prefer-validate-over-recreate</code>
+configuration settings during creation of a connector connection pool.
+Or, you can use the <code>asadmin set</code> command to dynamically reconfigure a
+setting. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server.resources.connector-connection-pool.CCP1.fail-all-connections="true"
+asadmin set server.resources.connector-connection-pool.CCP1.is-connection-validation-required="true"
+asadmin set server.resources.connector-connection-pool.CCP1.property.prefer-validate-over-recreate="true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The interface ValidatingManagedConnectionFactory exposes the method
+<code>getInvalidConnections</code> to allow retrieval of the invalid connections.
+The GlassFish Server checks if the resource adapter implements this
+interface, and if it does, invalid connections are removed when the
+connection pool is resized.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealx"></a><a id="GSDVG00483"></a><a id="setting-the-shutdown-timeout"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_setting_the_shutdown_timeout">Setting the Shutdown Timeout</h4>
+<div class="paragraph">
+<p>According to the Connector specification, while an application server
+shuts down, all resource adapters should be stopped. A resource adapter
+might hang during shutdown, since shutdown is typically a resource
+intensive operation. To avoid such a situation, you can set a timeout
+that aborts resource adapter shutdown if exceeded. The default timeout
+is 30 seconds per resource adapter module. To configure this timeout:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, select Connector Service under the
+relevant configuration and edit the shutdown Timeout field. For details,
+click the Help button in the Administration Console.</p>
+</li>
+<li>
+<p>Use the following <code>asadmin set</code> command:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set server.connector-service.shutdown-timeout-in-seconds="num-secs"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server deactivates all message-driven bean deployments
+before stopping a resource adapter.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjjyy"></a><a id="GSDVG00484"></a><a id="specifying-the-class-loading-policy"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_the_class_loading_policy">Specifying the Class Loading Policy</h4>
+<div class="paragraph">
+<p>Use the <code>class-loading-policy</code> setting to determine which resource
+adapters accessible to applications. Allowed values are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>derived</code> — Applications access resource adapters based on references
+in their deployment descriptors. These references can be <code>resource-ref</code>,
+<code>resource-env-ref</code>, <code>resource-adapter-mid</code>, or equivalent annotations.</p>
+</li>
+<li>
+<p><code>global</code> — All stand-alone resource adapters are available to all
+applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To configure this setting, use the <code>asadmin set</code> command. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server.connector-service.class-loading-policy="global"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealy"></a><a id="GSDVG00485"></a><a id="using-last-agent-optimization-of-transactions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_last_agent_optimization_of_transactions">Using Last Agent Optimization of Transactions</h4>
+<div class="paragraph">
+<p>Transactions that involve multiple resources or multiple participant
+processes are distributed or global transactions. A global transaction
+can involve one non-XA resource if last agent optimization is enabled.
+Otherwise, all resources must be XA. For more information about
+transactions in the GlassFish Server, see
+<a href="transaction-service.html#beanm">Using the Transaction Service</a>.</p>
+</div>
+<div class="paragraph">
+<p>The Connector specification requires that if a resource adapter supports
+<code>XATransaction</code>, the <code>ManagedConnection</code> created from that resource
+adapter must support both distributed and local transactions. Therefore,
+even if a resource adapter supports <code>XATransaction</code>, you can configure
+its connector connection pools as non-XA or without transaction support
+for better performance. A non-XA resource adapter becomes the last agent
+in the transactions in which it participates.</p>
+</div>
+<div class="paragraph">
+<p>The value of the connection pool configuration property
+<code>transaction-support</code> defaults to the value of the <code>transaction-support</code>
+property in the <code>ra.xml</code> file. The connection pool configuration
+property can override the <code>ra.xml</code> file property if the transaction
+level in the connection pool configuration property is lower. If the
+value in the connection pool configuration property is higher, it is
+ignored.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizba"></a><a id="GSDVG00486"></a><a id="disabling-pooling-for-a-connection"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_disabling_pooling_for_a_connection">Disabling Pooling for a Connection</h4>
+<div class="paragraph">
+<p>To disable connection pooling, set the Pooling attribute to false. The
+default is true. You can enable or disable connection pooling in one of
+the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Enter a Pooling value in the Connector Connection Pools page in the
+Administration Console. For more information, click the Help button in
+the Administration Console.</p>
+</li>
+<li>
+<p>Specify the <code>--pooling</code> option in the
+<code>asadmin create-connector-connection-pool</code> command. For more
+information, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition
+Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gizcs"></a><a id="GSDVG00487"></a><a id="using-application-scoped-connectors"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_application_scoped_connectors">Using Application-Scoped Connectors</h4>
+<div class="paragraph">
+<p>You can define an application-scoped connector or other resource for an
+enterprise application, web module, EJB module, connector module, or
+application client module by supplying a <code>glassfish-resources.xml</code>
+deployment descriptor file. For details, see
+"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00075">Application-Scoped Resources</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="bealz"></a><a id="GSDVG00164"></a><a id="inbound-communication-support"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_inbound_communication_support">Inbound Communication Support</h3>
+<div class="paragraph">
+<p>The Connector specification defines the transaction and message inflow
+system contracts for achieving inbound connectivity from an EIS. The
+message inflow contract also serves as a standard message provider
+pluggability contract, thereby allowing various message providers to
+seamlessly plug in their products with any application server that
+supports the message inflow contract. In the inbound communication
+model, the EIS initiates all communication to an application. An
+application can be composed of enterprise beans (session, entity, or
+message-driven beans), which reside in an EJB container.</p>
+</div>
+<div class="paragraph">
+<p>Incoming messages are received through a message endpoint, which is a
+message-driven bean. This message-driven bean asynchronously consumes
+messages from a message provider. An application can also synchronously
+send and receive messages directly using messaging style APIs.</p>
+</div>
+<div class="paragraph">
+<p>A resource adapter supporting inbound communication provides an instance
+of an <code>ActivationSpec</code> JavaBean class for each supported message
+listener type. Each class contains a set of configurable properties that
+specify endpoint activation configuration information during
+message-driven bean deployment. The required <code>config-property</code> element
+in the <code>ra.xml</code> file provides a list of configuration property names
+required for each activation specification. An endpoint activation fails
+if the required property values are not specified. Values for the
+properties that are overridden in the message-driven bean&#8217;s deployment
+descriptor are applied to the <code>ActivationSpec</code> JavaBean when the
+message-driven bean is deployed.</p>
+</div>
+<div class="paragraph">
+<p>Administered objects can also be specified for a resource adapter, and
+these JavaBeans are specific to a messaging style or message provider.
+For example, some messaging styles may need applications to use special
+administered objects (such as Queue and Topic objects in JMS).
+Applications use these objects to send and synchronously receive
+messages using connection objects using messaging style APIs. For more
+information about administered objects, see <a href="jms.html#beaob">Using the
+Java Message Service</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gizdm"></a><a id="GSDVG00165"></a><a id="outbound-communication-support"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_outbound_communication_support">Outbound Communication Support</h3>
+<div class="paragraph">
+<p>The Connector specification defines the system contracts for achieving
+outbound connectivity from an EIS. A resource adapter supporting
+outbound communication provides an instance of a
+<code>ManagedConnectionFactory</code> JavaBean class. A <code>ManagedConnectionFactory</code>
+JavaBean represents outbound connectivity information to an EIS instance
+from an application.</p>
+</div>
+<div class="paragraph">
+<p>The 1.6 Connector specification introduces a mechanism through which the
+transaction level of a <code>ManagedConnectionFactory</code> can be detected at
+runtime. During the configuration of a <code>ManagedConnectionFactory</code> in the
+Connector Connection Pools page in the Administration Console, the
+Administration Console can instantiate the <code>ManagedConnectionFactory</code>
+and show the level of transaction support. The three levels are <code>no-tx</code>,
+<code>local-tx</code>, <code>xa-tx</code>. If a <code>ManagedConnectionFactory</code> returns <code>local-tx</code>
+as the level it can support, it is assumed that <code>xa-tx</code> is not
+supported, and the Administration Console shows only <code>no-tx</code> and
+<code>local-tx</code> as the available support levels.</p>
+</div>
+<div class="paragraph">
+<p>For more information, click the Help button in the Administration
+Console.</p>
+</div>
+<div class="paragraph">
+<p><a id="beama"></a><a id="GSDVG00166"></a><a id="configuring-a-message-driven-bean-to-use-a-resource-adapter"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_a_message_driven_bean_to_use_a_resource_adapter">Configuring a Message Driven Bean to Use a Resource Adapter</h3>
+<div class="paragraph">
+<p>The Connectors specification&#8217;s message inflow contract provides a
+generic mechanism to plug in a wide-range of message providers,
+including JMS, into a Java-EE-compatible application server. Message
+providers use a resource adapter and dispatch messages to message
+endpoints, which are implemented as message-driven beans.</p>
+</div>
+<div class="paragraph">
+<p>The message-driven bean developer provides activation configuration
+information in the message-driven bean&#8217;s <code>ejb-jar.xml</code> file.
+Configuration information includes messaging-style-specific
+configuration details, and possibly message-provider-specific details as
+well. The message-driven bean deployer uses this configuration
+information to set up the activation specification JavaBean. The
+activation configuration properties specified in <code>ejb-jar.xml</code> override
+configuration properties in the activation specification definition in
+the <code>ra.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p>According to the EJB specification, the messaging-style-specific
+descriptor elements contained within the activation configuration
+element are not specified because they are specific to a messaging
+provider. In the following sample message-driven bean <code>ejb-jar.xml</code>, a
+message-driven bean has the following activation configuration property
+names: <code>destinationType</code>, <code>SubscriptionDurability</code>, and
+<code>MessageSelector</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;!--  A sample MDB that listens to a JMS Topic --&gt;
+&lt;!-- message-driven bean deployment descriptor --&gt;
+...
+ &lt;activation-config&gt;
+   &lt;activation-config-property&gt;
+     &lt;activation-config-property-name&gt;
+       destinationType
+     &lt;/activation-config-property-name&gt;
+     &lt;activation-config-property-value&gt;
+       javax.jms.Topic
+     &lt;/activation-config-property-value&gt;
+  &lt;/activation-config-property&gt;
+  &lt;activation-config-property&gt;
+     &lt;activation-config-property-name&gt;
+       SubscriptionDurability
+     &lt;/activation-config-property-name&gt;
+     &lt;activation-config-property-value&gt;
+       Durable
+     &lt;/activation-config-property-value&gt;
+  &lt;/activation-config-property&gt;
+  &lt;activation-config-property&gt;
+     &lt;activation-config-property-name&gt;
+       MessageSelector
+     &lt;/activation-config-property-name&gt;
+     &lt;activation-config-property-value&gt;
+       JMSType = 'car' AND color = 'blue'
+     &lt;/activation-config-property-value&gt;
+  &lt;/activation-config-property&gt;
+ ...
+ &lt;/activation-config&gt;
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the message-driven bean is deployed, the value for the
+<code>resource-adapter-mid</code> element in the <code>glassfish-ejb-jar.xml</code> file is
+set to the resource adapter module name that delivers messages to the
+message endpoint (to the message-driven bean). In the following example,
+the <code>jmsra</code> JMS resource adapter, which is the bundled resource adapter
+for the Message Queue message provider, is specified as the resource
+adapter module identifier for the <code>SampleMDB</code> bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-ejb-jar&gt;
+&lt;enterprise-beans&gt;
+    &lt;unique-id&gt;1&lt;/unique-id&gt;
+    &lt;ejb&gt;
+       &lt;ejb-name&gt;SampleMDB&lt;/ejb-name&gt;
+       &lt;jndi-name&gt;SampleQueue&lt;/jndi-name&gt;
+    &lt;!-- JNDI name of the destination from which messages would be
+         delivered from MDB needs to listen to --&gt;
+    ...
+    &lt;mdb-resource-adapter&gt;
+       &lt;resource-adapter-mid&gt;jmsra&lt;/resource-adapter-mid&gt;
+       &lt;!-- Resource Adapter Module Id that would deliver messages to
+            this message endpoint --&gt;
+       &lt;/mdb-resource-adapter&gt;
+    ...
+ &lt;/ejb&gt;
+ ...
+&lt;/enterprise-beans&gt;
+...
+&lt;/glassfish-ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the message-driven bean is deployed, the GlassFish Server uses the
+<code>resourceadapter-mid</code> setting to associate the resource adapter with a
+message endpoint through the message inflow contract. This message
+inflow contract with the GlassFish Server gives the resource adapter a
+handle to the <code>MessageEndpointFactory</code> and the <code>ActivationSpec</code>
+JavaBean, and the adapter uses this handle to deliver messages to the
+message endpoint instances (which are created by the
+<code>MessageEndpointFactory</code>).</p>
+</div>
+<div class="paragraph">
+<p>When a message-driven bean first created for use on the GlassFish Server
+7 is deployed, the Connector runtime transparently transforms the
+previous deployment style to the current connector-based deployment
+style. If the deployer specifies neither a <code>resource-adapter-mid</code>
+element nor the Message Queue resource adapter&#8217;s activation
+configuration properties, the Connector runtime maps the message-driven
+bean to the <code>jmsra</code> system resource adapter and converts the
+JMS-specific configuration to the Message Queue resource adapter&#8217;s
+activation configuration properties.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="java-clients.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="lifecycle-listeners.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

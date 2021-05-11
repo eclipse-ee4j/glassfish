@@ -1,0 +1,4651 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering the Monitoring Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering the Monitoring Service</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="logging.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="lifecycle-modules.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00011"></a><a id="ablur"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-the-monitoring-service">8 Administering the Monitoring Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter explains how to monitor the GlassFish Server Open Source
+Edition 5.0 components and services by using the <code>asadmin</code> command-line
+utility. Instructions for configuring JConsole to monitor GlassFish
+Server resources are also provided.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablus">About Monitoring</a></p>
+</li>
+<li>
+<p><a href="#ablvp">Configuring Monitoring</a></p>
+</li>
+<li>
+<p><a href="#ablvs">Viewing Common Monitoring Data</a></p>
+</li>
+<li>
+<p><a href="#ghmct">Viewing Comprehensive Monitoring Data</a></p>
+</li>
+<li>
+<p><a href="#giwqm">Configuring JConsole to View GlassFish Server Monitoring
+Data</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for monitoring by using the Administration Console are
+contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p>For information on using REST interfaces for monitoring, see
+<a href="general-administration.html#gjipx">Using REST Interfaces to
+Administer GlassFish Server</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablus"></a><a id="GSADG00557"></a><a id="about-monitoring"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_monitoring">About Monitoring</h3>
+<div class="paragraph">
+<p>Monitoring is the process of reviewing the statistics of a system to
+improve performance or solve problems. The monitoring service can track
+and display operational statistics, such as the number of requests per
+second, the average response time, and the throughput. By monitoring the
+state of various components and services deployed in GlassFish Server,
+you can identify performance bottlenecks, predict failures, perform root
+cause analysis, and ensure that everything is functioning as expected.
+Data gathered by monitoring can also be useful in performance tuning and
+capacity planning.</p>
+</div>
+<div class="paragraph">
+<p>For this release of GlassFish Server, monitoring is exposed in a modular
+way so that many client modules can access and display the monitoring
+statistics. These clients include the Administration Console, the
+<code>asadmin</code> utility, AMX, and REST interfaces.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghbaz">How the Monitoring Tree Structure Works</a></p>
+</li>
+<li>
+<p><a href="#gitkq">About Monitoring for Add-on Components</a></p>
+</li>
+<li>
+<p><a href="#ghbfq">Tools for Monitoring GlassFish Server</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghbaz"></a><a id="GSADG00727"></a><a id="how-the-monitoring-tree-structure-works"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_how_the_monitoring_tree_structure_works">How the Monitoring Tree Structure Works</h4>
+<div class="paragraph">
+<p>A monitorable object is a component, subcomponent, or service that can
+be monitored. GlassFish Server uses a tree structure to track
+monitorable objects. Because the tree is dynamic, the tree changes as
+GlassFish Server components are added or removed.</p>
+</div>
+<div class="paragraph">
+<p>In the tree, a monitorable object can have child objects (nodes) that
+represent exactly what can be monitored for that object. All child
+objects are addressed using the dot (.) character as a separator. These
+constructed names are referred to as dotted names. Detailed information
+on dotted names is available in the
+<a href="../reference-manual/dotted-names.html#GSRFM00268"><code>dotted-names</code>(5ASC)</a> help page.</p>
+</div>
+<div class="paragraph">
+<p>The following command lists the monitorable child objects of the
+instance <code>server</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list --monitor "server.*"
+
+server.applications
+server.connector-service
+server.http-service
+server.jms-service
+server.jvm
+server.network
+server.orb
+server.resources
+server.security
+server.thread-pool
+server.transaction-service
+server.web</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each object is represented by a dotted name. Dotted names can also
+address specific attributes in monitorable objects. For example, the
+<code>jvm</code> object has a <code>memory</code> attribute with a statistic called
+<code>maxheapsize</code>. The following dotted name addresses the attribute:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.memory.maxheapsize</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Although an object is monitorable, it is not necessarily being actively
+monitored. For instructions on activating monitoring, see
+<a href="#ablvp">Configuring Monitoring</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="abluv"></a><a id="GSADG00647"></a><a id="tree-structure-of-monitorable-objects"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_tree_structure_of_monitorable_objects">Tree Structure of Monitorable Objects</h5>
+<div class="paragraph">
+<p>Each monitorable object has a hierarchical tree structure. In the tree,
+a replaceable such as *statistics represents the name of the attribute
+that you can show statistics for.</p>
+</div>
+<div class="paragraph">
+<p>The following node tree hierarchies are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abluw">Applications Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#abluz">Connector Service Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#ghlin">HTTP Service Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#ablva">JMS/Container Service Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#ghlic">JVM Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#giznj">Network Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#ablvb">ORB Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#giqdo">Resources Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#gjios">Security Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#ablvc">Thread Pool Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#gitci">Transactions Service Tree Hierarchy</a></p>
+</li>
+<li>
+<p><a href="#ghlff">Web Tree Hierarchy</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abluw"></a><a id="GSADG00040"></a><a id="applications-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Applications Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>applications</code> tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications
+   |--- application1
+   |    |--- ejb-module-1
+   |    |        |--- ejb1 *
+   |    |                  |--- bean-cache (for entity/sfsb) *
+   |    |                  |--- bean-pool (for slsb/mdb/entity) *
+   |    |                  |--- bean-methods
+   |    |                       |---method1 *
+   |    |                       |---method2 *
+   |    |                  |--- timers (for s1sb/entity/mdb) *
+   |    |--- web-module-1
+   |    |        |--- virtual-server-1 *
+   |    |                       |---servlet1  *
+   |    |                       |---servlet2  *
+   |--- standalone-web-module-1
+   |    |        |----- virtual-server-2 *
+   |    |                       |---servlet3 *
+   |    |                       |---servlet4 *
+   |    |        |----- virtual-server-3 *
+   |    |                       |---servlet3 *(same servlet on different vs)
+   |    |                       |---servlet5 *
+   |--- standalone-ejb-module-1
+   |    |        |--- ejb2 *
+   |    |                  |--- bean-cache (for entity/sfsb) *
+   |    |                  |--- bean-pool (for slsb/mdb/entity) *
+   |    |                  |--- bean-methods
+   |    |                       |--- method1 *
+   |    |                       |--- method2 *
+   |    |                  |--- timers (for s1sb/entity/mdb) *
+   |--- jersey-application-1
+   |    |--- jersey
+   |    |        |--- resources
+                           resource-0
+                               hitcount
+                                    *statistic
+   |--- application2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.hello.server.request.maxtime</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name under the EJB <code>method</code> node might be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.ejbsfapp1.ejbsfapp1ejbmod1\.jar.SFApp1EJB1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example Jersey dotted name might be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.helloworld-webapp.jersey.resources.resource-0.hitcount.resourcehitcount-count</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For available statistics, see <a href="#gjkbi">EJB Statistics</a>,
+<a href="#gjjyb">Jersey Statistics</a>, and <a href="#ablvf">Web Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="abluz"></a><a id="GSADG00041"></a><a id="connector-service-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Connector Service Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>connector-service</code> tree holds monitorable attributes for pools such
+as the connector connection pool. The <code>connector-service</code> tree contains
+the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.connector-service
+        resource-adapter-1
+             connection-pools
+                  pool-1
+             work-management</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be
+<code>server.connector-service.resource-adapter-1.connection-pools.pool-1</code>.
+For available statistics, see <a href="#ablvi">JMS/Connector Service
+Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlin"></a><a id="GSADG00042"></a><a id="http-service-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>HTTP Service Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>http-service</code> tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.http-service
+       virtual-server
+           request
+               *statistic
+       _asadmin
+           request
+               *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name under the virutal-server node might be
+<code>server.http-service.virtual-server1.request.requestcount</code>. For
+available statistics, see <a href="#ablvg">HTTP Service Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablva"></a><a id="GSADG00043"></a><a id="jmscontainer-service-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>JMS/Container Service Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>jms-service</code> tree holds monitorable attributes for connection
+factories (connection pools for resource adapters) and work management
+(for Message Queue resource adapters). The <code>jms-service</code> tree contains
+the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jms-service
+        connection-factories
+             connection-factory-1
+        work-management</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name under the <code>connection-factories</code> node might be
+<code>server.jms-service.connection-factories.connection-factory-1</code> which
+shows all the statistics for this connection factory. For available
+statistics, see <a href="#ablvi">JMS/Connector Service Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlic"></a><a id="GSADG00044"></a><a id="jvm-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>jvm</code> tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm
+           class-loading-system
+           compilation-system
+           garbage-collectors
+           memory
+           operating-system
+           runtime</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name under the <code>memory</code> node might be
+<code>server.jvm.memory.maxheapsize</code>. For available statistics, see
+<a href="#ablvm">JVM Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="giznj"></a><a id="GSADG00045"></a><a id="network-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Network Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The network statistics apply to the network listener, such as
+<code>admin-listener</code>, <code>http-listener-1</code>, <code>ttp-listener-2</code>. The <code>network</code>
+tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.network
+          type-of-listener
+              keep-alive
+                    *statistic
+              file-cache
+                    *statistic
+              thread-pool
+                    *statistic
+              connection-queue
+                     *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name under the <code>network</code> node might be
+<code>server.network.admin-listener.keep-alive.maxrequests-count</code>. For
+available statistics, see <a href="#gjipy">Network Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablvb"></a><a id="GSADG00046"></a><a id="orb-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>ORB Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>orb</code> tree holds monitorable attributes for connection managers. The
+<code>orb</code> tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.orb
+    transport
+        connectioncache
+            inbound
+                *statistic
+            outbound
+                *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be
+<code>server.orb.transport.connectioncache.inbound.connectionsidle-count</code>.
+For available statistics, see <a href="#ablvj">ORB Statistics (Connection
+Manager)</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="giqdo"></a><a id="GSADG00047"></a><a id="resources-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Resources Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>resources</code> tree holds monitorable attributes for pools such as the
+JDBC connection pool and connector connection pool. The <code>resources</code> tree
+contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.resources
+       connection-pool
+           request
+               *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be
+<code>server.resources.jdbc-connection-pool1.numconnfree.count</code>. For
+available statistics, see <a href="#gipzv">Resource Statistics (Connection
+Pool)</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gjios"></a><a id="GSADG00048"></a><a id="security-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Security Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The security tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.security
+       ejb
+          *statistic
+       web
+          *statistic
+       realm
+          *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be
+<code>server.security.realm.realmcount-starttime</code>. For available statistics,
+see <a href="#gjiov">Security Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablvc"></a><a id="GSADG00049"></a><a id="thread-pool-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Thread Pool Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>thread-pool</code> tree holds monitorable attributes for connection
+managers, and contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.thread-pool
+                orb
+                    threadpool
+                            thread-pool-1
+                                *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be
+<code>server.thread-pool.orb.threadpool.thread-pool-1.averagetimeinqueue-current</code>.
+For available statistics, see <a href="#ablvk">Thread Pool Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitci"></a><a id="GSADG00050"></a><a id="transactions-service-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Transactions Service Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>transaction-service</code> tree holds monitorable attributes for the
+transaction subsystem for the purpose of rolling back transactions. The
+<code>transaction-service</code> tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.transaction-service
+         statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name might be <code>server.tranaction-service.activeids</code>.
+For available statistics, see <a href="#ablvl">Transaction Service
+Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghlff"></a><a id="GSADG00051"></a><a id="web-tree-hierarchy"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Tree Hierarchy</p>
+</div>
+<div class="paragraph">
+<p>The <code>web</code> tree contains the following nodes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.web
+           jsp
+              *statistic
+           servlet
+              *statistic
+           session
+              *statistic
+           request
+              *statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An example dotted name for the <code>servlet</code> node might be
+<code>server.web.servlet.activeservletsloadedcount</code>. For available
+statistics, see <a href="#ghljx">Web Module Common Statistics</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gitkq"></a><a id="GSADG00728"></a><a id="about-monitoring-for-add-on-components"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_about_monitoring_for_add_on_components">About Monitoring for Add-on Components</h4>
+<div class="paragraph">
+<p>An add-on component typically generates statistics that GlassFish Server
+can gather at runtime. Adding monitoring capabilities enables an add-on
+component to provide statistics to GlassFish Server in the same way as
+components that are supplied in the GlassFish Server distributions. As a
+result, you can use the same administrative interfaces to monitor
+statistics from any installed GlassFish Server component, regardless of
+the origin of the component.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghbfq"></a><a id="GSADG00729"></a><a id="tools-for-monitoring-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tools_for_monitoring_glassfish_server">Tools for Monitoring GlassFish Server</h4>
+<div class="paragraph">
+<p>The following <code>asadmin</code> subcommands are provided for monitoring the
+services and components of GlassFish Server:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>enable-monitoring</code>, <code>disable-monitoring</code>, or the <code>get</code> and <code>set</code>
+subcommands are used to turn monitoring on or off. For instructions, see
+<a href="#ablvp">Configuring Monitoring</a>.</p>
+</li>
+<li>
+<p>The <code>monitor</code> <code>type</code> subcommand is used to display basic data for a
+particular type of monitorable object. For instructions, see
+<a href="#ablvs">Viewing Common Monitoring Data</a>.</p>
+</li>
+<li>
+<p>The <code>list</code> <code>--monitor</code> subcommand is used to display the objects that
+can be monitored with the <code>monitor</code> subcommand. For guidelines and
+instructions, see <a href="#ablwh">Guidelines for Using the <code>list</code> and <code>get</code>
+Subcommands for Monitoring</a>.</p>
+</li>
+<li>
+<p>The <code>get</code> subcommand is used to display comprehensive data, such as
+the attributes and values for a dotted name. The <code>get</code> subcommand used
+with a wildcard parameter displays all available attributes for any
+monitorable object. For additional information, see
+<a href="#ablwh">Guidelines for Using the <code>list</code> and <code>get</code> Subcommands for
+Monitoring</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablvp"></a><a id="GSADG00558"></a><a id="configuring-monitoring"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_monitoring">Configuring Monitoring</h3>
+<div class="paragraph">
+<p>By default, the monitoring service is enabled for GlassFish Server, but
+monitoring for the individual modules is not. To enable monitoring for a
+module, you change the monitoring level for that module to LOW or HIGH,
+You can choose to leave monitoring OFF for objects that do not need to
+be monitored.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>LOW. Simple statistics, such as create count, byte count, and so on</p>
+</li>
+<li>
+<p>HIGH. Simple statistics plus method statistics, such as method count,
+duration, and so on</p>
+</li>
+<li>
+<p>OFF. No monitoring, no impact on performance</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following tasks are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablvr">To Enable Monitoring</a></p>
+</li>
+<li>
+<p><a href="#gglcu">To Disable Monitoring</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablvr"></a><a id="GSADG00386"></a><a id="to-enable-monitoring"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_monitoring">To Enable Monitoring</h4>
+<div class="paragraph">
+<p>Use the <code>enable-monitoring</code> subcommand to enable the monitoring service
+itself, or to enable monitoring for individual modules. Monitoring is
+immediately activated, without restarting GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to enable
+monitoring for a module. Using the <code>set</code> command is not a dynamic
+procedure, so you need to restart GlassFish Server for your changes to
+take effect.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Determine which services and components are currently enabled for
+monitoring.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; get server.monitoring-service.module-monitoring-levels.*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example output shows that the HTTP service is not enabled (OFF for
+monitoring), but other objects are enabled:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
+       configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=OFF
+           configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Enable monitoring by using the o<a href="GSRFM00128"><code>enable-monitoring</code></a>
+subcommand.<br>
+Server restart is not required.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00188"></a><a id="gixri"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-1 Enabling the Monitoring Service Dynamically</p>
+</div>
+<div class="paragraph">
+<p>This example enables the monitoring service without affecting monitoring
+for individual modules.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; enable-monitoring
+Command enable-monitoring executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00189"></a><a id="gixre"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-2 Enabling Monitoring for Modules Dynamically</p>
+</div>
+<div class="paragraph">
+<p>This example enables monitoring for the <code>ejb-container</code> module.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; enable-monitoring --level ejb-container=HIGH
+Command enable-monitoring executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00190"></a><a id="gjcmm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-3 Enabling Monitoring for Modules by Using the <code>set</code>
+Subcommand</p>
+</div>
+<div class="paragraph">
+<p>This example enables monitoring for the HTTP service by setting the
+monitoring level to HIGH (you must restart the server for changes to
+take effect).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.monitoring-service.module-monitoring-levels.http-service=HIGH
+Command set executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG875" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help enable-monitoring</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gglcu"></a><a id="GSADG00387"></a><a id="to-disable-monitoring"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_disable_monitoring">To Disable Monitoring</h4>
+<div class="paragraph">
+<p>Use the <code>disable-monitoring</code> subcommand to disable the monitoring
+service itself, or to disable monitoring for individual modules.
+Monitoring is immediately stopped, without restarting GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>You can also use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to disable
+monitoring for a module. Using the <code>set</code> command is not a dynamic
+procedure, so you need to restart GlassFish Server for your changes to
+take effect.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Determine which services and components currently are enabled for
+monitoring.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin get server.monitoring-service.module-monitoring-levels.*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example output shows that monitoring is enabled for
+<code>web-container</code>, <code>http-service</code>, and <code>jvm</code>:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
+       configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH
+              configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Disable monitoring for a service or module by using the
+<a href="../reference-manual/disable-monitoring.html#GSRFM00120"><code>disable-monitoring</code></a> subcommand.<br>
+Server restart is not required.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00191"></a><a id="gixsc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-4 Disabling the Monitoring Service Dynamically</p>
+</div>
+<div class="paragraph">
+<p>This example disables the monitoring service without changing the
+monitoring levels for individual modules.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; disable-monitoring
+Command disable-monitoring executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00192"></a><a id="gjcnw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-5 Disabling Monitoring for Modules Dynamically</p>
+</div>
+<div class="paragraph">
+<p>This example disables monitoring for specific modules. Their monitoring
+levels are set to OFF.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; disable-monitoring --modules web-container,ejb-container
+Command disable-monitoring executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00193"></a><a id="gixpg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-6 Disabling Monitoring by Using the <code>set</code> Subcommand</p>
+</div>
+<div class="paragraph">
+<p>This example disables monitoring for the HTTP service (you must restart
+the server for changes to take effect).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set server.monitoring-service.module-monitoring-levels.http-service=OFF
+Command set executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG876" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help disable-monitoring</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablvs"></a><a id="GSADG00559"></a><a id="viewing-common-monitoring-data"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_viewing_common_monitoring_data">Viewing Common Monitoring Data</h3>
+<div class="paragraph">
+<p>Use the <code>monitor</code> subcommand to display basic data on commonly-monitored
+objects.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gelol">To View Common Monitoring Data</a></p>
+</li>
+<li>
+<p><a href="#ghmdc">Common Monitoring Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gelol"></a><a id="GSADG00388"></a><a id="to-view-common-monitoring-data"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_view_common_monitoring_data">To View Common Monitoring Data</h4>
+<div class="paragraph">
+<p>Use the <code>--type</code> option of the <code>monitor</code> subcommand to specify the
+object for which you want to display data, such as <code>httplistener</code>,
+<code>jvm</code>, <code>webmodule</code>. If you use the <code>monitor</code> subcommand without
+specifying a type, an error message is displayed.</p>
+</div>
+<div class="paragraph">
+<p>Output from the subcommand is displayed continuously in a tabular
+format. The <code>--interval</code> option can be used to display output at a
+particular interval (the default is 30 seconds).</p>
+</div>
+<div id="GSADG877" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>A monitorable object must be configured for monitoring before you can
+display data on the object. See <a href="#ablvr">To Enable Monitoring</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Determine which type of monitorable object you want to monitor.<br>
+Your choices for 5.0 are <code>jvm</code>, <code>httplistener</code>, and <code>webmodule</code>.</p>
+</li>
+<li>
+<p>Request the monitoring data by using the <a href="../reference-manual/monitor.html#GSRFM00212"><code>monitor</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00194"></a><a id="ghljw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-7 Viewing Common Monitoring Data</p>
+</div>
+<div class="paragraph">
+<p>This example requests common data for type <code>jvm</code> on instance <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; monitor --type jvm server
+
+UpTime(ms)                          Heap and NonHeap Memory(bytes)
+current                   min        max        low        high       count
+
+9437266                   8585216    619642880  0          0          93093888
+9467250                   8585216    619642880  0          0          93093888</code></pre>
+</div>
+</div>
+<div id="GSADG878" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help monitor</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghmdc"></a><a id="GSADG00730"></a><a id="common-monitoring-statistics"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_common_monitoring_statistics">Common Monitoring Statistics</h4>
+<div class="paragraph">
+<p>Common monitoring statistics are described in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghltk">HTTP Listener Common Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghlvm">JVM Common Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghljx">Web Module Common Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghltk"></a><a id="GSADG00648"></a><a id="http-listener-common-statistics"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_http_listener_common_statistics">HTTP Listener Common Statistics</h5>
+<div class="paragraph">
+<p>The statistics available for the <code>httplistener</code> type are shown in the
+following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG879"></a><a id="sthref28"></a><a id="ghlta"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-1 HTTP Listener Common Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 17%;">
+<col style="width: 83%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Error count. Cumulative value of the error count</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum time. Longest response time for a request; not a
+cumulative value, but the largest response time from among the response
+times</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Processing time. Cumulative value of the times taken to process
+each request, with processing time being the average of request
+processing times over request</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Request count. Cumulative number of requests processed so far</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghlvm"></a><a id="GSADG00649"></a><a id="jvm-common-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jvm_common_statistics">JVM Common Statistics</h5>
+<div class="paragraph">
+<p>The statistics available for the <code>jvm</code> type are shown in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG880"></a><a id="sthref29"></a><a id="ghlsl"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-2 JVM Common Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 19%;">
+<col style="width: 81%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amount of memory (in bytes) that is guaranteed to be available
+for use by the JVM machine</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>high</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retained for compatibility with other releases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>low</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Retained for compatibility with other releases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum amount of memory that can be used for memory
+management.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>min</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial amount of memory (in bytes) that the JVM machine
+requests from the operating system for memory management during startup</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UpTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of milliseconds that the JVM machine has been running
+since it was last started</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghljx"></a><a id="GSADG00650"></a><a id="web-module-common-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_web_module_common_statistics">Web Module Common Statistics</h5>
+<div class="paragraph">
+<p>The statistics available for the <code>webmodule</code> type are shown in the
+following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG881"></a><a id="sthref30"></a><a id="ghqly"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-3 Web Module Common Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 18%;">
+<col style="width: 82%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ajlc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of active JavaServer Pages (JSP) technology pages that
+are loaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>asc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current active sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aslc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of active servlets that are loaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ast</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total active sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mjlc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of JSP pages that are loaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mslc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of servlets that are loaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rst</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total rejected sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>st</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tjlc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of JSP pages that are loaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tslc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of servlets that are loaded</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghmct"></a><a id="GSADG00560"></a><a id="viewing-comprehensive-monitoring-data"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_viewing_comprehensive_monitoring_data">Viewing Comprehensive Monitoring Data</h3>
+<div class="paragraph">
+<p>By applying the <code>list</code> and <code>get</code> subcommands against the tree structure
+using dotted names, you can display more comprehensive monitoring data,
+such as a description of each of the statistics and its unit of
+measurement.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablwh">Guidelines for Using the <code>list</code> and <code>get</code> Subcommands for
+Monitoring</a></p>
+</li>
+<li>
+<p><a href="#ablvv">To View Comprehensive Monitoring Data</a></p>
+</li>
+<li>
+<p><a href="#ghmcn">Comprehensive Monitoring Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablwh"></a><a id="GSADG00731"></a><a id="guidelines-for-using-the-list-and-get-subcommands-for-monitoring"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_guidelines_for_using_the_code_list_code_and_code_get_code_subcommands_for_monitoring">Guidelines for Using the <code>list</code> and <code>get</code> Subcommands for Monitoring</h4>
+<div class="paragraph">
+<p>The underlying assumptions for using the <code>list</code> and <code>get</code> subcommands
+with dotted names are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>list</code> subcommand that specifies a dotted name that is not followed
+by a wildcard (<code>*</code>) lists the current node&#8217;s immediate children. For
+example, the following subcommand lists all immediate children belonging
+to the <code>server</code> node:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>list --monitor server</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>list</code> subcommand that specifies a dotted name followed by a
+wildcard of the form <code>.*</code> lists a hierarchical tree of child nodes from
+the specified node. For example, the following subcommand lists all
+children of the <code>applications</code> node, their subsequent child nodes, and
+so on:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>list --monitor server.applications.*</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>list</code> subcommand that specifies a dotted name preceded or followed
+by a wildcard of the form *dottedname or dotted * name or dottedname *
+lists all nodes and their children that match the regular expression
+created by the specified matching pattern.</p>
+</li>
+<li>
+<p>A <code>get</code> subcommand followed by a <code>.*</code> or a <code>*</code> gets the set of
+attributes and their values that belong to the node specified.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, the following table explains the output of the <code>list</code> and
+<code>get</code> subcommands used with the dotted name for the <code>resources</code> node.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG882"></a><a id="sthref31"></a><a id="ggnpb"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-4 Example Resources Level Dotted Names</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 41%;">
+<col style="width: 36%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Subcommand</th>
+<th class="tableblock halign-left valign-top">Dotted Name</th>
+<th class="tableblock halign-left valign-top">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list --monitor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server.resources</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of pool names.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list --monitor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server.resources.``connection-pool1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No attributes,
+but a message saying "Use <code>get</code> subcommand with the <code>--monitor</code> option
+to view this node&#8217;s attributes and values."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>get --monitor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>server.resources.``connection-pool1.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of
+attributes and values corresponding to connection pool attributes.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For detailed information on dotted names, see the
+<a href="../reference-manual/dotted-names.html#GSRFM00268"><code>dotted-names</code>(5ASC)</a> help page.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablvv"></a><a id="GSADG00389"></a><a id="to-view-comprehensive-monitoring-data"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_view_comprehensive_monitoring_data">To View Comprehensive Monitoring Data</h4>
+<div class="paragraph">
+<p>Although the <code>monitor</code> subcommand is useful in many situations, it does
+not offer the complete list of all monitorable objects. To work with
+comprehensive data for an object type, use the <code>list</code> <code>monitor</code> and the
+<code>get</code> <code>monitor</code> subcommands followed by the dotted name of a monitorable
+object.</p>
+</div>
+<div id="GSADG883" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>A monitorable object must be configured for monitoring before you can
+display information about the object. See <a href="#ablvr">To Enable
+Monitoring</a> if needed.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>List the objects that are enabled for monitoring by using the
+<a href="../reference-manual/list.html#GSRFM00145"><code>list</code></a> subcommand.<br>
+For example, the following subcommand lists all components and services
+that have monitoring enabled for instance <code>server</code>.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list --monitor "*"
+server.web
+server.connector-service
+server.orb
+server.jms-serviceserver.jvm
+server.applications
+server.http-service
+server.thread-pools</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get data for a monitored component or service by using the
+<a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00195"></a><a id="ghlre"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-8 Viewing Attributes for a Specific Type</p>
+</div>
+<div class="paragraph">
+<p>This example gets information about all the attributes for object type
+<code>jvm</code> on instance <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get --monitor server.jvm.*
+server.jvm.class-loading-system.loadedclasscount = 3715
+server.jvm.class-loading-system.totalloadedclasscount = 3731
+server.jvm.class-loading-system.unloadedclasscount = 16
+server.jvm.compilation-system.name-current = HotSpot Client Compiler
+server.jvm.compilation-system.totalcompilationtime = 769
+server.jvm.garbage-collectors.Copy.collectioncount = 285
+server.jvm.garbage-collectors.Copy.collectiontime = 980
+server.jvm.garbage-collectors.MarkSweepCompact.collectioncount = 2
+server.jvm.garbage-collectors.MarkSweepCompact.collectiontime = 383
+server.jvm.memory.committedheapsize = 23498752
+server.jvm.memory.committednonheapsize = 13598720
+server.jvm.memory.initheapsize = 0
+server.jvm.memory.initnonheapsize = 8585216
+server.jvm.memory.maxheapsize = 66650112
+server.jvm.memory.maxnonheapsize = 100663296
+server.jvm.memory.objectpendingfinalizationcount = 0
+server.jvm.memory.usedheapsize = 19741184
+server.jvm.memory.usednonheapsize = 13398352
+server.jvm.operating-system.arch-current = x86
+server.jvm.operating-system.availableprocessors = 2
+server.jvm.operating-system.name-current = Windows XP
+server.jvm.operating-system.version-current = 5.1
+server.jvm.runtime.classpath-current = glassfish.jar
+server.jvm.runtime.inputarguments-current = []
+server.jvm.runtime.managementspecversion-current = 1.0
+server.jvm.runtime.name-current = 4372@ABBAGANI_WORK
+server.jvm.runtime.specname-current = Java Virtual Machine Specification
+server.jvm.runtime.specvendor-current = Sun Microsystems Inc.
+server.jvm.runtime.specversion-current = 1.0
+server.jvm.runtime.uptime = 84813
+server.jvm.runtime.vmname-current = Java HotSpot(TM) Client VM
+server.jvm.runtime.vmvendor-current = Sun Microsystems Inc.
+server.jvm.runtime.vmversion-current = 1.5.0_11-b03</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00196"></a><a id="ghbgv"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-9 Viewing Monitorable Applications</p>
+</div>
+<div class="paragraph">
+<p>This example lists all the monitorable applications for instance
+<code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list --monitor server.applications.*
+server.applications.app1
+server.applications.app2
+server.applications.app1.virtual-server1
+server.applications.app2.virtual-server1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00197"></a><a id="ghbfj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-10 Viewing Attributes for an Application</p>
+</div>
+<div class="paragraph">
+<p>This example gets information about all the attributes for application
+<code>hello</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get --monitor server.applications.hello.*
+server.applications.hello.server.activatedsessionstotal = 0
+server.applications.hello.server.activejspsloadedcount = 1
+server.applications.hello.server.activeservletsloadedcount = 1
+server.applications.hello.server.activesessionscurrent = 1
+server.applications.hello.server.activesessionshigh = 1
+server.applications.hello.server.errorcount = 0
+server.applications.hello.server.expiredsessionstotal = 0
+server.applications.hello.server.maxjspsloadedcount = 1
+server.applications.hello.server.maxservletsloadedcount = 0
+server.applications.hello.server.maxtime = 0
+server.applications.hello.server.passivatedsessionstotal = 0
+server.applications.hello.server.persistedsessionstotal = 0
+server.applications.hello.server.processingtime = 0.0
+server.applications.hello.server.rejectedsessionstotal = 0
+server.applications.hello.server.requestcount = 0
+server.applications.hello.server.sessionstotal =
+server.applications.hello.server.totaljspsloadedcount = 0
+server.applications.hello.server.totalservletsloadedcount = 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00198"></a><a id="ghbge"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 8-11 Viewing a Specific Attribute</p>
+</div>
+<div class="paragraph">
+<p>This example gets information about the <code>jvm</code> attribute
+<code>runtime.vmversion-current</code> on instance <code>server</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; get --monitor server.jvm.runtime.vmversion-current
+server.jvm.runtime.vmversion-current = 10.0-b23</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="ghmcn"></a><a id="GSADG00732"></a><a id="comprehensive-monitoring-statistics"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_comprehensive_monitoring_statistics">Comprehensive Monitoring Statistics</h4>
+<div class="paragraph">
+<p>You can get comprehensive monitoring statistics by forming a dotted name
+that specifies the statistic you are looking for. For example, the
+following dotted name will display the cumulative number of requests for
+the HTTP service on <code>virtual-server1</code>:</p>
+</div>
+<div class="paragraph">
+<p><code>server.http-service.virtual-server1.request.requestcount</code></p>
+</div>
+<div class="paragraph">
+<p>The tables in the following sections list the statistics that are
+available for each monitorable object:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjkbi">EJB Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvg">HTTP Service Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjjyb">Jersey Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvi">JMS/Connector Service Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvm">JVM Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjipy">Network Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvj">ORB Statistics (Connection Manager)</a></p>
+</li>
+<li>
+<p><a href="#gipzv">Resource Statistics (Connection Pool)</a></p>
+</li>
+<li>
+<p><a href="#gjiov">Security Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvk">Thread Pool Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvl">Transaction Service Statistics</a></p>
+</li>
+<li>
+<p><a href="#ablvf">Web Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjkbi"></a><a id="GSADG00651"></a><a id="ejb-statistics"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_ejb_statistics">EJB Statistics</h5>
+<div class="paragraph">
+<p>EJBs fit into the tree of objects as shown in <a href="#abluw">Applications
+Tree Hierarchy</a>. Use the following dotted name pattern to get EJB
+statistics for an application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.appname.ejbmodulename.ejbname.bean-cache.statistic</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>EJB statistics for an application are available after the application is
+executed. If the application is deployed but has not yet been executed,
+all counts will show default values. When the application is undeployed,
+all its monitoring data is lost.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Statistics available for applications are shown in the following
+sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gisyw">EJB Cache Statistics</a></p>
+</li>
+<li>
+<p><a href="#giszu">EJB Container Statistics</a></p>
+</li>
+<li>
+<p><a href="#gisyx">EJB Method Statistics</a></p>
+</li>
+<li>
+<p><a href="#gisza">EJB Pool Statistics</a></p>
+</li>
+<li>
+<p><a href="#gisyr">Timer Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gisyw"></a><a id="GSADG00052"></a><a id="ejb-cache-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>EJB Cache Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for EJB cache statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.appname.ejbmodulename.bean-cache.ejbname.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for EJB caches are listed in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG884"></a><a id="sthref32"></a><a id="gelod"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-5 EJB Cache Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 37%;">
+<col style="width: 16%;">
+<col style="width: 47%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cachemisses</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of times a user request does
+not find a bean in the cache.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cachehits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of times a user request found
+an entry in the cache.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numbeansincache</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of beans in the cache.
+This is the current size of the cache.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numpassivations</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of passivated beans. Applies
+only to stateful session beans.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numpassivationerrors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of errors during
+passivation. Applies only to stateful session beans.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numexpiredsessionsremoved</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of expired sessions
+removed by the cleanup thread. Applies only to stateful session beans.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numpassivationsuccess</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times passivation
+completed successfully. Applies only to stateful session beans.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="giszu"></a><a id="GSADG00053"></a><a id="ejb-container-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>EJB Container Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for EJB container statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.appname.ejbmodulename.container.ejbname</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for EJB containers are listed in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG885"></a><a id="sthref33"></a><a id="gelns"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-6 EJB Container Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 24%;">
+<col style="width: 16%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>createcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times an EJB&#8217;s <code>create</code> method
+is called.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>messagecount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of messages received for a
+message-driven bean.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>methodreadycount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of stateful or stateless
+session beans that are in the <code>MethodReady</code> state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>passivecount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of stateful session beans that
+are in <code>Passive</code> state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pooledcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of entity beans in pooled state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>readycount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of entity beans in ready state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>removecount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times an EJB&#8217;s <code>remove</code> method
+is called.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gisyx"></a><a id="GSADG00054"></a><a id="ejb-method-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>EJB Method Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for EJB method statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.appname.ejbmodulename.bean-methods.ejbname.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for EJB method invocations are listed in the
+following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG886"></a><a id="sthref34"></a><a id="gelnu"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-7 EJB Method Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 16%;">
+<col style="width: 61%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>executiontime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time, in milliseconds, spent executing
+the method for the last successful/unsuccessful attempt to run the
+operation. This is collected for stateless and stateful session beans
+and entity beans if monitoring is enabled on the EJB container.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>methodstatistic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TimeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times an operation is
+called; the total time that is spent during the invocation, and so on.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalnumerrors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times the method execution
+resulted in an exception. This is collected for stateless and stateful
+session beans and entity beans if monitoring is enabled for the EJB
+container.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalnumsuccess</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times the method
+successfully executed. This is collected for stateless and stateful
+session beans and entity beans if monitoring enabled is true for EJB
+container.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gisza"></a><a id="GSADG00055"></a><a id="ejb-pool-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>EJB Pool Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for EJB pool statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.appname.ejbmodulename.bean-pool.ejbname.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for EJB pools are listed in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG887"></a><a id="sthref35"></a><a id="gelpe"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-8 EJB Pool Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 16%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jmsmaxmessagesload</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of messages to
+load into a JMS session at one time for a message-driven bean to serve.
+Default is 1. Applies only to pools for message driven beans.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numbeansinpool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of EJBs in the associated
+pool, providing information about how the pool is changing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numthreadswaiting</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of threads waiting for free
+beans, giving an indication of possible congestion of requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalbeanscreated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of beans created in
+associated pool since the gathering of data started.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalbeansdestroyed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of beans destroyed from
+associated pool since the gathering of data started.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gisyr"></a><a id="GSADG00057"></a><a id="timer-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Timer Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for timer statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.appname.ejbmodulename.timers.ejbname.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for timers are listed in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG889"></a><a id="sthref36"></a><a id="gelob"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-9 Timer Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 16%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numtimerscreated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of timers created in the
+system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numtimersdelivered</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of timers delivered by the
+system.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numtimersremoved</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of timers removed from the
+system.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvg"></a><a id="GSADG00652"></a><a id="http-service-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_service_statistics">HTTP Service Statistics</h5>
+<div class="paragraph">
+<p>The HTTP service fits into the tree of objects as shown in
+<a href="#ghlin">HTTP Service Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghqdi"></a><a id="GSADG00059"></a><a id="http-service-virtual-server-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>HTTP Service Virtual Server Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for HTTP service virtual server
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.http-service.virtual-server.request.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The HTTP service statistics for virtual servers are shown in the
+following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG891"></a><a id="sthref37"></a><a id="gelnm"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-10 HTTP Service Virtual Server Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 21%;">
+<col style="width: 16%;">
+<col style="width: 63%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count200</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 200</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count2xx</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code in
+the 2xx range</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count302</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 302</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count304</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 304</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count3xx</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal in the 3xx range</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count400</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 400</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count401</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 401</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count403</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 403</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count404</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 404</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count4xx</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal in the 4xx range</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count503</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal to 503</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count5xx</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+equal in the 5xx range</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countother</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of responses with a status code
+outside the 2xx, 3xx, 4xx, and 5xx range</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>errorcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative value of the error count, with
+error count representing the number of cases where the response code was
+greater than or equal to 400</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The host (alias) names of the virtual server</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longest response time for a request; not a
+cumulative value, but the largest response time from among the response
+times</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>processingtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative value of the times taken
+to process each request, with processing time being the average of
+request processing times over the request count</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative number of requests processed
+so far</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>state</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The state of the virtual server</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjjyb"></a><a id="GSADG00653"></a><a id="jersey-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jersey_statistics">Jersey Statistics</h5>
+<div class="paragraph">
+<p>Jersey fits into the tree of objects as shown in
+<a href="#abluw">Applications Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for Jersey statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.jersey-application.jersey.resources.resource-0.hitcount.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for Jersey are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG892"></a><a id="sthref38"></a><a id="gjjys"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-11 Jersey Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 21%;">
+<col style="width: 46%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resourcehitcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of hits on this resource
+class</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rootresourcehitcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of hits on this root
+resource class</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvi"></a><a id="GSADG00654"></a><a id="jmsconnector-service-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jms_connector_service_statistics">JMS/Connector Service Statistics</h5>
+<div class="paragraph">
+<p>The JMS/Connector Service fits into the tree of objects as shown in
+<a href="#ablva">JMS/Container Service Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>JMS/Connector Service statistics are shown in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giszy">Connector Connection Pool Statistics (JMS)</a></p>
+</li>
+<li>
+<p><a href="#giszh">Connector Work Management Statistics (JMS)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giszy"></a><a id="GSADG00060"></a><a id="connector-connection-pool-statistics-jms"></a></p>
+</div>
+<div class="paragraph">
+<p>Connector Connection Pool Statistics (JMS)</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JMS/Connector Service
+connection pool statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.connector-service.resource-adapter-1.connection-pool.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JMS/Connector Service statistics available for the connector connection
+pools are shown in the following table.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In order to improve system performance, connection pools are initialized
+lazily; that is, a pool is not initialized until an application first
+uses the pool or the pool is explicitly pinged. Monitoring statistics
+for a connection pool are not available until the pool is initialized.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSADG893"></a><a id="sthref39"></a><a id="gelot"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-12 Connector Connection Pool Monitoring Statistics (JMS)</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 37%;">
+<col style="width: 16%;">
+<col style="width: 47%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>averageconnwaittime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average wait time of connections
+before they are serviced by the connection pool.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectionrequestwaittime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The longest and shortest
+wait times of connection requests. The current value indicates the wait
+time of the last request that was serviced by the pool.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnfailedvalidation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections
+in the connection pool that failed validation from the start time until
+the last sample time.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnused</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections that are
+currently being used, as well as information about the maximum number of
+connections that were used (the high water mark).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnfree</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of free connections in the
+pool as of the last sampling.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconntimedout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections in the
+pool that timed out between the start time and the last sample time.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconncreated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of physical connections, in
+milliseconds, that were created since the last reset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconndestroyed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of physical connections that
+were destroyed since the last reset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnacquired</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of logical connections
+acquired from the pool.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnreleased</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of logical connections
+released to the pool.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>waitqueuelenght</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connection requests in the
+queue waiting to be serviced.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="giszh"></a><a id="GSADG00061"></a><a id="connector-work-management-statistics-jms"></a></p>
+</div>
+<div class="paragraph">
+<p>Connector Work Management Statistics (JMS)</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JMS/Connector Service work
+management statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.connector-service.resource-adapter-1.work-management.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JMS/Connector Service statistics available for connector work management
+are listed in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG894"></a><a id="sthref40"></a><a id="gelnz"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-13 Connector Work Management Monitoring Statistics (JMS)</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 16%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activeworkcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of work objects executed by
+the connector.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>completedworkcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of work objects that were
+completed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rejectedworkcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of work objects rejected by
+the GlassFish Server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>submittedworkcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of work objects submitted
+by a connector module.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>waitqueuelength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of work objects waiting in
+the queue before executing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>workrequestwaittime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longest and shortest wait of a
+work object before it gets executed.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvm"></a><a id="GSADG00655"></a><a id="jvm-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jvm_statistics">JVM Statistics</h5>
+<div class="paragraph">
+<p>The JVM fits into the tree of objects as show in <a href="#ghlic">JVM Tree
+Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for the Virtual Machine for Java
+platform (Java Virtual Machine) or JVM machine are shown in the
+following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ablvn">JVM Class Loading System Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqfh">JVM Compilation System Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqea">JVM Garbage Collectors Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqdn">JVM Memory Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqec">JVM Operating System Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqby">JVM Runtime Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ablvn"></a><a id="GSADG00062"></a><a id="jvm-class-loading-system-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Class Loading System Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JVM class loading system
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.class-loading-system.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With Java SE, additional monitoring information can be obtained from the
+JVM. Set the monitoring level to LOW to enable the display of this
+additional information. Set the monitoring level to HIGH to also view
+information pertaining to each live thread in the system. More
+information about the additional monitoring features for Java SE is
+available in
+<a href="http://download.oracle.com/docs/cd/E17409_01/javase/6/docs/technotes/guides/management/">Monitoring
+and Management for the Java Platform</a> .</p>
+</div>
+<div class="paragraph">
+<p>The Java SE monitoring tools are discussed at
+<code>http://docs.oracle.com/javase/8/docs/technotes/tools/</code>.</p>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for class loading in the JVM for Java
+SE are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG895"></a><a id="sthref41"></a><a id="gelow"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-14 JVM Monitoring Statistics for Java SE Class Loading</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 31%;">
+<col style="width: 16%;">
+<col style="width: 53%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>loadedclasscount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of classes that are
+currently loaded in the JVM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalloadedclasscount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of classes that
+have been loaded since the JVM began execution</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>unloadedclasscount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of classes that have been
+unloaded from the JVM since the JVM began execution</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The statistics available for threads in the JVM in Java SE are shown in
+the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG896"></a><a id="sthref42"></a><a id="geloa"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-15 JVM Monitoring Statistics for Java SE - Threads</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 35%;">
+<col style="width: 16%;">
+<col style="width: 49%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>allthreadids</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of all live thread ids.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currentthreadcputime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU time for the current thread
+(in nanoseconds) if CPU time measurement is enabled. If CPU time
+measurement is disabled, returns -1.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>daemonthreadcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current number of live daemon
+threads.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>monitordeadlockedthreads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of thread ids that
+are monitor deadlocked.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>peakthreadcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Peak live thread count since the JVM
+started or the peak was reset.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>threadcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current number of live daemon and
+non-daemon threads.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalstartedthreadcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of threads
+created and/or started since the JVM started.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqfh"></a><a id="GSADG00063"></a><a id="jvm-compilation-system-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Compilation System Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JVM compilation system
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.compilation-system.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for compilation in the JVM for Java SE
+are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG897"></a><a id="sthref43"></a><a id="gelnt"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-16 JVM Monitoring Statistics for Java SE Compilation</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 20%;">
+<col style="width: 46%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the current compiler</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalcompilationtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accumulated time (in
+milliseconds) spent in compilation</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqea"></a><a id="GSADG00064"></a><a id="jvm-garbage-collectors-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Garbage Collectors Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JVM garbage collectors
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.garbage-collectors.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for garbage collection in the JVM for
+Java SE are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG898"></a><a id="sthref44"></a><a id="gelox"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-17 JVM Monitoring Statistics for Java SE Garbage Collectors</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 16%;">
+<col style="width: 61%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collectioncount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of collections that
+have occurred</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collectiontime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accumulated time (in milliseconds)
+spent in collection</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqdn"></a><a id="GSADG00065"></a><a id="jvm-memory-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Memory Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JVM memory statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.memory.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for memory in the JVM for Java SE are
+shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG899"></a><a id="sthref45"></a><a id="gelnx"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-18 JVM Monitoring Statistics for Java SE Memory</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 44%;">
+<col style="width: 16%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>committedheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amount of heap memory (in bytes)
+that is committed for the JVM to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>committednonheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amount of non-heap memory (in
+bytes) that is committed for the JVM to use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>initheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the heap initially requested by
+the JVM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>initnonheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the non-heap area initially
+requested by the JVM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of heap memory (in bytes)
+that can be used for memory management</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxnonheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of non-heap memory (in
+bytes) that can be used for memory management</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>objectpendingfinalizationcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Approximate number of
+objects that are pending finalization</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>usedheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the heap currently in use</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>usednonheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of the non-heap area currently
+in use</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqec"></a><a id="GSADG00066"></a><a id="jvm-operating-system-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Operating System Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JVM operating system
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.operating-system.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for the operating system for the JVM
+machine in Java SE are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG900"></a><a id="sthref46"></a><a id="gelog"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-19 JVM Statistics for the Java SE Operating System</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 16%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arch-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operating system architecture</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>availableprocessors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of processors available
+to the JVM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operating system name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operating system version</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqby"></a><a id="GSADG00067"></a><a id="jvm-runtime-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Runtime Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for JVM runtime statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.jvm.runtime.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics that are available for the runtime in the JVM runtime for
+Java SE are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG901"></a><a id="sthref47"></a><a id="gelop"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-20 JVM Monitoring Statistics for Java SE Runtime</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 42%;">
+<col style="width: 16%;">
+<col style="width: 42%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>classpath-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classpath that is used by the
+system class loader to search for class files</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inputarguments-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input arguments passed to
+the JVM; not including arguments to the <code>main</code> method</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>managementspecversion-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Management
+specification version implemented by the JVM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name representing the running JVM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>specname-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM specification name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>specvendor-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM specification vendor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>specversion-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM specification version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>uptime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Uptime of the JVM (in milliseconds)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmname-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM implementation name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmvendor-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM implementation vendor</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>vmversion-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JVM implementation version</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjipy"></a><a id="GSADG00656"></a><a id="network-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_network_statistics">Network Statistics</h5>
+<div class="paragraph">
+<p>Network fits into the tree of objects as shown in <a href="#giznj">Network
+Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>Network statistics are described in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjiqu">Network Keep Alive Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjjom">Network Connection Queue Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjjpi">Network File Cache Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjjpp">Network Thread Pool Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjiqu"></a><a id="GSADG00068"></a><a id="network-keep-alive-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Network Keep Alive Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for network keep alive statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.network.type-of-listener.keep-alive.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Statistics available for network keep alive are shown in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG902"></a><a id="sthref48"></a><a id="gjirp"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-21 Network Keep Alive Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 16%;">
+<col style="width: 59%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countconnections</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections in keep-alive
+mode.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>counttimeouts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of keep-alive connections that
+timed out.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>secondstimeouts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep-alive timeout value in seconds.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxrequests</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of requests allowed on a
+single keep-alive connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countflushes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of keep-alive connections that
+were closed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>counthits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of requests received by connections
+in keep-alive mode.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countrefusals</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of keep-alive connections that
+were rejected.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjjom"></a><a id="GSADG00069"></a><a id="network-connection-queue-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Network Connection Queue Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for network connection queue
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.network.type-of-listener.connection-queue.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Statistics available for network connection queue are shown in the
+following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG903"></a><a id="sthref49"></a><a id="gjjxc"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-22 Network Connection Queue Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 16%;">
+<col style="width: 44%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countopenconnections</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The number of open/active
+connections</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countoverflows</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times the queue has been
+too full to accommodate a connection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countqueued</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections currently in the
+queue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countqueued15minutesaverage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average number of
+connections queued in the last 15 minutes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countqueued1minuteaverage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average number of
+connections queued in the last 1 minute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>countqueued5minutesaverage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average number of
+connections queued in the last 5 minutes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>counttotalconnections</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections
+that have been accepted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>counttotalqueued</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections that
+have been queued</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxqueued</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size of the connection queue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>peakqueued</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Largest number of connections that were
+in the queue simultaneously</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>tickstotalqueued</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(Unsupported) Total number of ticks
+that connections have spent in the queue</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjjpi"></a><a id="GSADG00070"></a><a id="network-file-cache-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Network File Cache Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for network file cache statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.network.type-of-listener.file-cache.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Statistics available for network file cache are shown in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG904"></a><a id="sthref50"></a><a id="gjjpd"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-23 Network File Cache Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 16%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contenthits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of hits on cached file content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>contentmisses</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of misses on cached file
+content</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>heapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current cache size in bytes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of cache lookup hits</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>infohits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of hits on cached file info</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>infomisses</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of misses on cached file info</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mappedmemorysize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Size of mapped memory used for
+caching in bytes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxheapsize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum heap space used for cache in
+bytes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxmappedmemorysize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum memory map size used for
+caching in bytes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>misses</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of cache lookup misses data type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>opencacheentries</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of current open cache
+entries</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjjpp"></a><a id="GSADG00071"></a><a id="network-thread-pool-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Network Thread Pool Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for network thread pool
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.network.type-of-listener.thread-pool.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Statistics available for network thread pool are shown in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG905"></a><a id="sthref51"></a><a id="gjjov"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-24 Network Thread Pool Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 16%;">
+<col style="width: 56%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>corethreads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Core number of threads in the thread
+pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currentthreadcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides the number of request
+processing threads currently in the listener thread pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currentthreadsbusy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides the number of request
+processing threads currently in use in the listener thread pool serving
+requests</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxthreads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of threads allowed in the
+thread pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalexecutedtasks</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provides the total number of
+tasks, which were executed by the thread pool</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvj"></a><a id="GSADG00657"></a><a id="orb-statistics-connection-manager"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_orb_statistics_connection_manager">ORB Statistics (Connection Manager)</h5>
+<div class="paragraph">
+<p>The ORB fits into the tree of objects as shown in <a href="#ablvb">ORB Tree
+Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name patterns for ORB statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.orb.transport.connectioncache.inbound.statistic
+server.orb.transport.connectioncache.outbound.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for the connection manager in an ORB are listed
+in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG906"></a><a id="sthref52"></a><a id="gelqw"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-25 ORB Monitoring Statistics (Connection Manager)</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 24%;">
+<col style="width: 26%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectionsidle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections that are
+idle to the ORB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connectionsinuse</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections in use
+to the ORB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalconnections</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BoundedRangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of connections
+to the ORB</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gipzv"></a><a id="GSADG00658"></a><a id="resource-statistics-connection-pool"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_resource_statistics_connection_pool">Resource Statistics (Connection Pool)</h5>
+<div class="paragraph">
+<p>By monitoring connection pool resources you can measure performance and
+capture resource usage at runtime. Connections are expensive and
+frequently cause performance bottlenecks in applications. It is
+important to monitor how a connection pool is releasing and creating new
+connections and how many threads are waiting to retrieve a connection
+from a particular pool.</p>
+</div>
+<div class="paragraph">
+<p>The connection pool resources fit into the tree of objects as shown in
+<a href="#giqdo">Resources Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for general connection pool
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.resources.pool-name.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for application-scoped connection
+pool statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.application-name.resources.pool-name.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for module-scoped connection pool
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.application-name.module-name.resources.pool-name.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The connection pool statistics are shown in the following tables.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In order to improve system performance, connection pools are initialized
+lazily; that is, a pool is not initialized until an application first
+uses the pool or the pool is explicitly pinged. Monitoring statistics
+for a connection pool are not available until the pool is initialized.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="GSADG907"></a><a id="sthref53"></a><a id="gelqa"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-26 General Resource Monitoring Statistics (Connection Pool)</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 16%;">
+<col style="width: 41%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>averageconnwaittime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average wait-time-duration per
+successful connection request</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>connrequestwaittime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longest and shortest wait times,
+in milliseconds, of connection requests since the last sampling. current
+value indicates the wait time of the last request that was serviced by
+the pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnacquired</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of logical connections
+acquired from the pool since the last sampling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconncreated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of physical connections that
+were created by the pool since the last reset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconndestroyed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of physical connections that
+were destroyed since the last reset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnfailedvalidation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections in the
+connection pool that failed validation from the start time until the
+last sampling time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnfree</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of free connections in the pool
+as of the last sampling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnnotsuccessfullymatched</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections
+rejected during matching</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnreleased</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections released back
+to the pool since the last sampling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnsuccessfullymatched</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections
+successfully matched</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconntimedout</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections in the pool
+that timed out between the start time and the last sampling time</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnused</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections that are currently
+being used, as well as information about the maximum number of
+connections that were used (high water mark)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>frequsedsqlqueries</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of the most frequently used
+SQL queries (Available only when SQL Tracing is enabled)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numpotentialconnleak</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of potential connection
+leaks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numpotentialstatementleak</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of potential
+statement leaks (Available only when Statement Leak Dectection is
+enabled)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numstatementcachehit</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of statements that were
+found in the statement cache (Available only when the Statement Cache is
+enabled)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numstatementcachemiss</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of statements that were
+not found in the statement cache (Available only when the Statement
+Cache is enabled)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>waitqueuelength</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connection requests in the
+queue waiting to be serviced</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSADG908"></a><a id="sthref54"></a><a id="gktcp"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-27 Application Specific Resource Monitoring Statistics
+(Connection Pool)</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 16%;">
+<col style="width: 61%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnacquired</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of logical connections
+acquired from the pool since the last sampling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnreleased</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections released back
+to the pool since the last sampling</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numconnused</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of connections that are currently
+being used, as well as information about the maximum number of
+connections that were used (high water mark)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjiov"></a><a id="GSADG00659"></a><a id="security-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_security_statistics">Security Statistics</h5>
+<div class="paragraph">
+<p>Security fits into the tree of objects as shown in <a href="#gjios">Security
+Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>Statistics available for security are shown in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjira">EJB Security Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjirn">Web Security Statistics</a></p>
+</li>
+<li>
+<p><a href="#gjirj">Realm Security Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjira"></a><a id="GSADG00072"></a><a id="ejb-security-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>EJB Security Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for EJB security statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.security.ejb.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for EJB security are listed in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG909"></a><a id="sthref55"></a><a id="gjirc"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-28 EJB Security Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 18%;">
+<col style="width: 42%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>policyconfigurationcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of policy
+configuration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>securitymanagercount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of EJB security managers</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjirn"></a><a id="GSADG00073"></a><a id="web-security-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Security Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for web security statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.security.web.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for web security are listed in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG910"></a><a id="sthref56"></a><a id="gjiqv"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-29 Web Security Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 16%;">
+<col style="width: 44%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>websecuritymanagercount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of security managers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>webpolicyconfigurationcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of policy
+configuration objects</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gjirj"></a><a id="GSADG00074"></a><a id="realm-security-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Realm Security Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for realm security statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.security.realm.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for realm security are listed in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG911"></a><a id="sthref57"></a><a id="gjirq"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-30 Realm Security Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 32%;">
+<col style="width: 22%;">
+<col style="width: 46%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>realmcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of realms</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvk"></a><a id="GSADG00660"></a><a id="thread-pool-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_thread_pool_statistics">Thread Pool Statistics</h5>
+<div class="paragraph">
+<p>The thread pool fits into the tree of objects as shown in
+<a href="#ablvc">Thread Pool Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>The statistics available for thread pools are shown in the following
+sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gitct">Thread Pool Monitoring Statistics</a></p>
+</li>
+<li>
+<p><a href="#gitce">JVM Statistics for Java SE-Thread Information</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gitct"></a><a id="GSADG00075"></a><a id="thread-pool-monitoring-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Thread Pool Monitoring Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for thread pool statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.thread-pool.thread-pool.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for the thread pool are shown in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG912"></a><a id="sthref58"></a><a id="gelqt"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-31 Thread Pool Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 37%;">
+<col style="width: 26%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>averagetimeinqueue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BoundedRangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average amount of time (in
+milliseconds) a request waited in the queue before being processed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>averageworkcompletiontime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BoundedRangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average amount of
+time (in milliseconds) taken to complete an assignment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currentbusythreads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of busy threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>currentnumberofthreads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BoundedRangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current number of
+request processing threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberofavailablethreads</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of available threads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>numberofworkitemsinqueue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">BoundedRangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Current number of
+work items waiting in queue</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalworkitemsadded</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of work items added
+to the work queue as of last sampling</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gitce"></a><a id="GSADG00076"></a><a id="jvm-statistics-for-java-se-thread-information"></a></p>
+</div>
+<div class="paragraph">
+<p>JVM Statistics for Java SE-Thread Information</p>
+</div>
+<div class="paragraph">
+<p>The statistics available for <code>ThreadInfo</code> in the JVM in Java SE are
+shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG913"></a><a id="sthref59"></a><a id="geloy"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-32 JVM Monitoring Statistics for Java SE - Thread Info</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 16%;">
+<col style="width: 64%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blockedcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of times that the thread
+entered the <code>BLOCKED</code> state.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>blockedtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time elapsed (in milliseconds) since the
+thread entered the <code>BLOCKED</code> state. Returns -1 if thread contention
+monitoring is disabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lockname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String representation of the monitor lock
+that the thread is blocked to enter or waiting to be notified through
+the <code>Object.wait</code> method.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lockownerid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the thread that holds the monitor
+lock of an object on which this thread is blocking.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>lockownername</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the thread that holds the
+monitor lock of the object this thread is blocking on.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stacktrace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stack trace associated with this thread.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>threadid</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the thread.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>threadname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the thread.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>threadstate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">State of the thread.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>waitedtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Elapsed time (in milliseconds) that the
+thread has been in a <code>WAITING</code> state. Returns -1 if thread contention
+monitoring is disabled.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>waitedcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of times the thread was in
+<code>WAITING</code> or <code>TIMED_WAITING</code> states.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvl"></a><a id="GSADG00661"></a><a id="transaction-service-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_transaction_service_statistics">Transaction Service Statistics</h5>
+<div class="paragraph">
+<p>The transaction service allows the client to freeze the transaction
+subsystem in order to roll back transactions and determine which
+transactions are in process at the time of the freeze. The transaction
+service fits into the tree of objects as shown in
+<a href="#gitci">Transactions Service Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for transaction service
+statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.transaction-service.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The statistics available for the transaction service are shown in the
+following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG914"></a><a id="sthref60"></a><a id="gelpl"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-33 Transaction Service Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 16%;">
+<col style="width: 61%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activecount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of transactions currently active.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activeids</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID&#8217;s of the transactions that are
+currently active. Every such transaction can be rolled back after
+freezing the transaction service.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>committedcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of transactions that have been
+committed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rolledbackcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of transactions that have
+been rolled back.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>state</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">StringStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether or not the transaction has
+been frozen.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ablvf"></a><a id="GSADG00662"></a><a id="web-statistics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_web_statistics">Web Statistics</h5>
+<div class="paragraph">
+<p>The web module fits into the tree of objects as shown in <a href="#ghlff">Web
+Tree Hierarchy</a>.</p>
+</div>
+<div class="paragraph">
+<p>The available web statistics shown in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gjkaz">Web Module Servlet Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqge">Web JSP Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqga">Web Request Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqfu">Web Servlet Statistics</a></p>
+</li>
+<li>
+<p><a href="#ghqfr">Web Session Statistics</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gjkaz"></a><a id="GSADG00077"></a><a id="web-module-servlet-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Module Servlet Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for web module servlet statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.web-module.virtual-server.servlet.statistic
+server.applications.application.web-module.virtual-server.servlet.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The available web module servlet statistics are shown in the following
+table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG915"></a><a id="sthref61"></a><a id="gjkba"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-34 Web Module Servlet Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 21%;">
+<col style="width: 16%;">
+<col style="width: 63%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>errorcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative number of cases where the
+response code is greater than or equal to 400.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum amount of time the web container
+waits for requests.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>processingtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative value of the amount of
+time required to process each request. The processing time is the
+average of request processing times divided by the request count.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The total number of requests processed
+so far.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>servicetime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Aggregate response time in milliseconds.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqge"></a><a id="GSADG00079"></a><a id="web-jsp-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Web JSP Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for web JSP statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The available web JSP statistics are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG917"></a><a id="sthref62"></a><a id="givgh"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-35 Web JSP Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 24%;">
+<col style="width: 16%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jspcount-current</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of active JSP pages</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jsperrorcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of errors triggered by
+JSP page invocations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jspreloadedcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of JSP pages that were
+reloaded</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totaljspcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of JSP pages ever loaded</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqga"></a><a id="GSADG00080"></a><a id="web-request-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Request Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for web request statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The available web request statistics are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG918"></a><a id="sthref63"></a><a id="gjisw"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-36 Web Request Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 21%;">
+<col style="width: 16%;">
+<col style="width: 63%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>errorcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative value of the error count, with
+error count representing the number of cases where the response code was
+greater than or equal to 400</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Longest response time for a request; not a
+cumulative value, but the largest response time from among the response
+times</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>processingtime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Average request processing time, in
+milliseconds</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requestcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative number of the requests
+processed so far</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqfu"></a><a id="GSADG00081"></a><a id="web-servlet-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Servlet Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for web servlet statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The available web servlet statistics are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG919"></a><a id="sthref64"></a><a id="ghqiu"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-37 Web Servlet Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 37%;">
+<col style="width: 16%;">
+<col style="width: 47%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activeservletsloadedcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of currently loaded
+servlets</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>servletprocessingtimes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative servlet processing
+times , in milliseconds</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>totalservletsloadedcount</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cumulative number of
+servlets that have been loaded into the web module</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="ghqfr"></a><a id="GSADG00082"></a><a id="web-session-statistics"></a></p>
+</div>
+<div class="paragraph">
+<p>Web Session Statistics</p>
+</div>
+<div class="paragraph">
+<p>Use the following dotted name pattern for web session statistics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">server.applications.web-module.virtual-server.statistic
+server.applications.application.web-module.virtual-server.statistic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The available web session statistics are shown in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSADG920"></a><a id="sthref65"></a><a id="gellc"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 8-38 Web Session Monitoring Statistics</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 16%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Statistic</th>
+<th class="tableblock halign-left valign-top">Data Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activatedsessionstotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of activated
+sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activesessionscurrent</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">RangeStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of currently active
+sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>activesessionshigh</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum number of concurrently
+active sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>expiredsessionstotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of expired
+sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>passivatedsessionstotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of passivated
+sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>persistedsessionstotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of persisted
+sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rejectedsessionstotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of rejected
+sessions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sessionstotal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CountStatistic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Total number of sessions created</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="giwqm"></a><a id="GSADG00561"></a><a id="configuring-jconsole-to-view-glassfish-server-monitoring-data"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuring_jconsole_to_view_glassfish_server_monitoring_data">Configuring JConsole to View GlassFish Server Monitoring Data</h3>
+<div class="paragraph">
+<p>Java SE provides tools to connect to an MBean Server and view the MBeans
+registered with the server. JConsole is one such popular JMX Connector
+Client and is available as part of the standard Java SE distribution.
+When you configure JConsole for use with GlassFish Server, GlassFish
+Server becomes the JMX Connector&#8217;s server end and JConsole becomes the
+JMX connector&#8217;s client end.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggpfh"></a><a id="GSADG00390"></a><a id="to-connect-jconsole-to-glassfish-server"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_connect_jconsole_to_glassfish_server">To Connect JConsole to GlassFish Server</h4>
+<div class="paragraph">
+<p>Java SE 6 enhances management and monitoring of the virtual machine by
+including a Platform MBean Server and by including managed beans
+(MBeans) to configure the virtual machine.</p>
+</div>
+<div class="paragraph">
+<p>To view all MBeans, GlassFish Server provides a configuration of the
+standard JMX connector server called System JMX Connector Server. As
+part of GlassFish Server startup, an instance of this JMX Connector
+Server is started. Any compliant JMX connector client can connect to the
+server using the JMX Connector Server.</p>
+</div>
+<div class="paragraph">
+<p>By default, GlassFish Server is configured with a non-secure System JMX
+Connector Server. If this is an issue, the JMX connector can be removed.
+However, access can be restricted to a specific IP address (for example,
+the loopback address) by setting <code>address</code> to <code>locahost</code>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start the domain.<br>
+For instructions, see <a href="domains.html#ggoda">To Start a Domain</a>.</p>
+</li>
+<li>
+<p>Start JConsole using this format: JDK_HOME`/bin/jconsole`<br>
+For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/usr/java/bin/jconsole</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JConsole Connect to Agent window is displayed.
+3.  Click the Remote tab and type the host name and port.<br>
+Always connect remotely with JConsole, otherwise MBeans will not load
+automatically.
+4.  Click Connect.
+5.  In the Remote Process text box, specify the JMX Service URL.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">service:jmx:rmi:///jndi/rmi://localhost:8686/jmxrmi</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The JMX Service URL is emitted by the server at startup, looking
+something like this:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[#|2009-12-03T10:25:17.737-0800|INFO|glassfishv3.0|
+x..system.tools.admin.org.glassfish.server|_ThreadID=20;
+_ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService
+URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>However, in most cases, simply entering <code>host:port</code> is fine, such as,
+192.168.1.150:8686. The long Service URL is not needed.<br></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Another host name can be substituted for <code>localhost</code>. The default port
+number (8686) could change if the <code>jmx-connector</code> configuration has been
+modified.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Click Connect.<br>
+In the JConsole window you will see all your MBeans, JVM information,
+and so on, in various tabs. Most of the useful MBeans are to be found in
+the <code>amx</code> and <code>java.lang</code> domains.</p>
+</li>
+</ol>
+</div>
+<div id="GSADG921" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information about JConsole, see
+<code>http://docs.oracle.com/javase/8/docs/technotes/guides/management/jconsole.html</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="logging.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="lifecycle-modules.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

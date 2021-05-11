@@ -1,0 +1,554 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering the Virtual Machine for the Java Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering the Virtual Machine for the Java Platform</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="domains.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="threadpools.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00007"></a><a id="ablwj"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-the-virtual-machine-for-the-java-platform">4 Administering the Virtual Machine for the Java Platform</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides procedures for administering the Virtual Machine
+for the Java platform (Java Virtual Machine) or JVM machine) in the
+GlassFish Server Open Source Edition 5.0 environment by using the
+<code>asadmin</code> command-line utility.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gepzd">Administering JVM Options</a></p>
+</li>
+<li>
+<p><a href="#ggnde">Administering the Profiler</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing these tasks by using the Administration
+Console are contained in the Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gepzd"></a><a id="GSADG00544"></a><a id="administering-jvm-options"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_administering_jvm_options">Administering JVM Options</h3>
+<div class="paragraph">
+<p>The Java Virtual Machine is an interpretive computing engine responsible
+for running the byte codes in a compiled Java program. The virtual
+machine translates the Java byte codes into the native instructions of
+the host machine. GlassFish Server, being a Java process, requires a
+virtual machine to run and support the Java applications running on it.
+JVM settings are part of an GlassFish Server configuration.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggnes">To Create JVM Options</a></p>
+</li>
+<li>
+<p><a href="#ggnce">To List JVM Options</a></p>
+</li>
+<li>
+<p><a href="#ggnfi">To Delete JVM Options</a></p>
+</li>
+<li>
+<p><a href="#ggnbu">To Generate a JVM Report</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggnes"></a><a id="GSADG00359"></a><a id="to-create-jvm-options"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_jvm_options">To Create JVM Options</h4>
+<div class="paragraph">
+<p>Use the <code>create-jvm-options</code> subcommand in remote mode to create JVM
+options in the Java configuration or the profiler elements of the
+<code>domain.xml</code> file. If JVM options are created for a profiler, these
+options are used to record the settings that initiate the profiler.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create JVM options by using the
+<a href="../reference-manual/create-jvm-options.html#GSRFM00042"><code>create-jvm-options</code></a> subcommand.<br>
+To create more than one JVM option, use a colon (:) to separate the
+options. If the JVM option itself contains a colon (:), use the
+backslash (\) to offset the colon delimiter.<br>
+Information about properties for the subcommand is included in this help
+page.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server. See
+<a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00154"></a><a id="ghqwm"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-1 Creating JVM Options</p>
+</div>
+<div class="paragraph">
+<p>This example sets multiple Java system properties.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jvm-options -Dunixlocation=/root/example:
+-Dvariable=\$HOME:
+-Dwindowslocation=d\\:\\\sun\\\appserver:
+-Doption1=-value1
+created 4 option(s)
+Command create-jvm-options executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG847" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-jvm-options</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnce"></a><a id="GSADG00360"></a><a id="to-list-jvm-options"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_jvm_options">To List JVM Options</h4>
+<div class="paragraph">
+<p>Use the <code>list-jvm-options</code> subcommand in remote mode to list the
+existing JVM options.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List JVM options by using the <a href="../reference-manual/list-jvm-options.html#GSRFM00180"><code>list-jvm-options</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00155"></a><a id="ggphx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-2 Listing JVM Options</p>
+</div>
+<div class="paragraph">
+<p>This example lists all JVM options.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jvm-options
+-Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf
+-XX: LogVMOutput
+-XX: UnlockDiagnosticVMOptions
+-Dcom.sun.enterprise.config.config_environment_factory_class=com.sun.enterprise.
+config.serverbeans.AppserverConfigEnvironmentFactory
+-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks
+-XX:NewRatio=2
+-Djava.security.policy=${com.sun.aas.instanceRoot}/config/server.policy
+-Djdbc.drivers=org.apache.derby.jdbc.ClientDriver
+-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks
+-client
+-Djava.ext.dirs=${com.sun.aas.javaRoot}/lib/ext${path.separator}${com.sun.aas.ja
+vaRoot}/jre/lib/ext${path.separator}${com.sun.aas.instanceRoot}/lib/ext${path.se
+parator}${com.sun.aas.derbyRoot}/lib
+-Xmx512m
+-XX:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
+-Djava.endorsed.dirs=${com.sun.aas.installRoot}/lib/endorsed
+Command list-jvm-options executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG848" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-jvm-options</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnfi"></a><a id="GSADG00361"></a><a id="to-delete-jvm-options"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_jvm_options">To Delete JVM Options</h4>
+<div class="paragraph">
+<p>Use the <code>delete-jvm-options</code> subcommand in remote mode to delete JVM
+options from the Java configuration or profiler elements of the
+<code>domain.xml</code> file.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>List JVM options by using the <a href="../reference-manual/list-jvm-options.html#GSRFM00180"><code>list-jvm-options</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>If necessary, notify users that the JVM option is being deleted.</p>
+</li>
+<li>
+<p>Delete JVM options by using the
+<a href="../reference-manual/delete-jvm-options.html#GSRFM00094"><code>delete-jvm-options</code></a> subcommand.<br>
+To remove more than one JVM option, use a colon (:) to separate the
+options. If the JVM option itself contains a colon, use the backslash
+(\) to offset the colon delimiter.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server. See
+<a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00156"></a><a id="ggpgz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-3 Deleting a JVM Option</p>
+</div>
+<div class="paragraph">
+<p>This example removes a single JVM option.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jvm-options -Dopt1=A
+
+deleted 1 option(s)
+Command delete-jvm-options executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00157"></a><a id="ggpkr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-4 Deleting Multiple JVM Options</p>
+</div>
+<div class="paragraph">
+<p>This example removes multiple JVM options.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jvm-options -Doption1=-value1:-Dvariable=\$HOME
+deleted 2 option(s)
+Command delete-jvm-options executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG849" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-jvm-options</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnbu"></a><a id="GSADG00362"></a><a id="to-generate-a-jvm-report"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_generate_a_jvm_report">To Generate a JVM Report</h4>
+<div class="paragraph">
+<p>Use the <code>generate-jvm-report</code> subcommand in remote mode to generate a
+JVM report showing the threads (dump of a stack trace), classes, memory,
+and loggers for a specified instance, including the domain
+administration server (DAS). You can generate the following types of
+reports: summary (default), class, thread, log.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Generate the report by using the
+<a href="../reference-manual/generate-jvm-report.html#GSRFM00138"><code>generate-jvm-report</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00158"></a><a id="ghhkr"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-5 Generating a JVM Report</p>
+</div>
+<div class="paragraph">
+<p>This example displays summary information about the threads, classes,
+and memory.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; generate-jvm-report --type summary
+Operating System Information:
+Name of the Operating System: Windows XP
+Binary Architecture name of the Operating System: x86, Version: 5.1
+Number of processors available on the Operating System: 2
+System load on the available processors for the last minute: NOT_AVAILABLE.
+(Sum of running and queued runnable entities per minute).
+.
+,
+.
+user.home = C:\Documents and Settings\Jennifer
+user.language = en
+user.name = Jennifer
+user.timezone = America/New_York
+user.variant =
+variable = \$HOME
+web.home = C:\Preview\v3_Preview_release\distributions\web\target\
+glassfish\modules\web
+Command generate-jvm-report executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG850" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help generate-jvm-report</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnde"></a><a id="GSADG00545"></a><a id="administering-the-profiler"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_the_profiler">Administering the Profiler</h3>
+<div class="paragraph">
+<p>A profiler generates information used to analyze server performance.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggneb">To Create a Profiler</a></p>
+</li>
+<li>
+<p><a href="#ggnem">To Delete a Profiler</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggneb"></a><a id="GSADG00363"></a><a id="to-create-a-profiler"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_profiler">To Create a Profiler</h4>
+<div class="paragraph">
+<p>A server instance is tied to a particular profiler by the profiler
+element in the Java configuration. If JVM options are created for a
+profiler, the options are used to record the settings needed to activate
+a particular profiler. Use the <code>create-profiler</code> subcommand in remote
+mode to create the profiler element in the Java configuration.</p>
+</div>
+<div class="paragraph">
+<p>Only one profiler can exist. If a profiler already exists, you receive
+an error message that directs you to delete the existing profiler before
+creating a new one.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a profiler by using the <a href="../reference-manual/create-profiler.html#GSRFM00050"><code>create-profiler</code></a>
+subcommand.<br>
+Information about properties for the subcommand is included in this help
+page.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00159"></a><a id="ggpla"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-6 Creating a Profiler</p>
+</div>
+<div class="paragraph">
+<p>This example creates a profiler named <code>sample_profiler</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-profiler --classpath=/home/appserver/ --nativelibrarypath=/u/home/lib
+--enabled=false --property=defaultuser=admin:password=adminadmin sample_profiler
+Command create-profiler executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG851" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-profiler</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggnem"></a><a id="GSADG00365"></a><a id="to-delete-a-profiler"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_profiler">To Delete a Profiler</h4>
+<div class="paragraph">
+<p>Use the <code>delete-profiler</code> subcommand in remote mode to delete the
+profiler element from the Java configuration. You can then create a new
+profiler.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Delete the profiler by using the <a href="../reference-manual/delete-profiler.html#GSRFM00102"><code>delete-profiler</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>To apply your changes, restart GlassFish Server.<br>
+See <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00161"></a><a id="ggpkc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-7 Deleting a Profiler</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the profiler named <code>sample_profiler</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-profiler sample_profiler
+Command delete-profiler executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG852" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-profiler</code> at the command line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="domains.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="threadpools.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

@@ -1,0 +1,1467 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>GlassFish Server Deployment Descriptor Files</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>GlassFish Server Deployment Descriptor Files</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="asadmin-deployment-subcommands.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="dd-elements.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDPG00006"></a><a id="giida"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="b-glassfish-server-deployment-descriptor-files">B GlassFish Server Deployment Descriptor Files</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This appendix describes the element hierarchies in the GlassFish Server
+deployment descriptors that are included in this release of the
+GlassFish Server Open Source Edition software.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giiie">About the GlassFish Server Deployment Descriptors</a></p>
+</li>
+<li>
+<p><a href="#beaqk">The glassfish-application.xml File</a></p>
+</li>
+<li>
+<p><a href="#beaql">The glassfish-web.xml File</a></p>
+</li>
+<li>
+<p><a href="#beaqm">The glassfish-ejb-jar.xml File</a></p>
+</li>
+<li>
+<p><a href="#beaqn">The sun-cmp-mappings.xml File</a></p>
+</li>
+<li>
+<p><a href="#beaqo">The glassfish-application-client.xml file</a></p>
+</li>
+<li>
+<p><a href="#beaqp">The sun-acc.xml File</a></p>
+</li>
+<li>
+<p><a href="#giyhh">The glassfish-resources.xml File</a></p>
+</li>
+<li>
+<p><a href="#gkiot">WebLogic Server Deployment Descriptor Support in GlassFish
+Server</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giiie"></a><a id="GSDPG00076"></a><a id="about-the-glassfish-server-deployment-descriptors"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_the_glassfish_server_deployment_descriptors">About the GlassFish Server Deployment Descriptors</h3>
+<div class="paragraph">
+<p>Each deployment descriptor XML file has a corresponding Document Type
+Definition (DTD) file, which defines the elements, data, and attributes
+that the deployment descriptor file can contain. For example, the
+<code>glassfish-application_6_0-1.dtd</code> file defines the structure of the
+<code>glassfish-application.xml</code> file. The DTD files for the GlassFish Server
+deployment descriptors are located in the as-install`/lib/dtds`
+directory.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server deployment descriptor files must be readable and
+writable by the file owners. In each deployment descriptor file,
+subelements must be defined in the order in which they are listed under
+each Subelements heading, unless otherwise noted. For general
+information about DTD files and XML, see the XML specification at
+<code>http://www.w3.org/TR/REC-xml</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not edit the DTD files; their contents change only with new versions
+of GlassFish Server.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The following table lists the GlassFish Server deployment descriptors
+and their DTD files.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG835"></a><a id="sthref6"></a><a id="giiht"></a></p>
+</div>
+<div class="paragraph">
+<p>Table B-1 GlassFish Server Deployment Descriptors and DTDs</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 39%;">
+<col style="width: 31%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Deployment Descriptor</th>
+<th class="tableblock halign-left valign-top">DTD File</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-application.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-application_6_0-1.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures an entire Java EE application (EAR file).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-web.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-web-app_3_0-1.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures a web
+application (WAR file).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-ejb-jar.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-ejb-jar_3_1-1.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures an
+enterprise bean (EJB JAR file).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sun-cmp-mappings.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sun-cmp-mapping_1_2.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures
+container-managed persistence for an EJB 2.0 or 2.1 entity bean.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-application-client.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-application-client_6_0-1.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures an Application
+Client Container (ACC) client (JAR file).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sun-acc.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sun-application-client-container_1_2.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures
+the Application Client Container. This is more of a configuration file
+than a deployment descriptor. GlassFish Server provides a default file
+in the domain-dir`/config` directory. Specifying a different file is
+optional.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-resources.xml</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>glassfish-resources_1_5.dtd</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configures
+application-scoped resources.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>sun-application.xml</code>, <code>sun-web.xml</code>, <code>sun-ejb-jar.xml</code>,
+<code>sun-application-client.xml</code>, and <code>sun-resources.xml</code> deployment
+descriptors are supported for backward compatibility.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beaqk"></a><a id="GSDPG00077"></a><a id="the-glassfish-application.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_glassfish_application_xml_file">The glassfish-application.xml File</h3>
+<div class="paragraph">
+<p>The <code>glassfish-application.xml</code> file configures an entire Java EE
+application (EAR file). The element hierarchy is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">glassfish-application
+.  web
+.  .  web-uri
+.  .  context-root
+.  pass-by-reference
+.  unique-id
+.  security-role-mapping
+.  .  role-name
+.  .  principal-name
+.  .  group-name
+.  realm
+.  ejb-ref
+.  .  ejb-ref-name
+.  .  jndi-name
+.  resource-ref
+.  .  res-ref-name
+.  .  jndi-name
+.  .  default-resource-principal
+.  .  .  name
+.  .  .  password
+.  resource-env-ref
+.  .  resource-env-ref-name
+.  .  jndi-name
+.  service-ref
+.  .  service-ref-name
+.  .  port-info
+.  .  .  service-endpoint-interface
+.  .  .  wsdl-port
+.  .  .  .  namespaceURI
+.  .  .  .  localpart
+.  .  .  stub-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  call-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  call-property
+.  .  .  name
+.  .  .  value
+.  .  wsdl-override
+.  .  service-impl-class
+.  .  service-qname
+.  .  .  namespaceURI
+.  .  .  localpart
+.  message-destination-ref
+.  .  message-destination-ref-name
+.  .  jndi-name
+.  message-destination
+.  .  message-destination-name
+.  .  jndi-name
+.  archive-name
+.  compatibility
+.  keep-state
+.  version-identifier</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a sample <code>glassfish-application.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;!DOCTYPE glassfish-application PUBLIC "-//GlassFish.org//DTD
+GlassFish Application Server 3.1 Java EE Application 6.0//EN"
+"http://glassfish.org/dtds/glassfish-application_6_0-1.dtd"&gt;
+&lt;glassfish-application&gt;
+   &lt;unique-id&gt;67488732739338240&lt;/unique-id&gt;
+&lt;/glassfish-application&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaql"></a><a id="GSDPG00078"></a><a id="the-glassfish-web.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_glassfish_web_xml_file">The glassfish-web.xml File</h3>
+<div class="paragraph">
+<p>The <code>glassfish-web.xml</code> file configures a web application (WAR file).
+The element hierarchy is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">glassfish-web-app
+.  context-root
+.  security-role-mapping
+.  .  role-name
+.  .  principal-name
+.  .  group-name
+.  servlet
+.  .  servlet-name
+.  .  principal-name
+.  .  webservice-endpoint
+.  .  .  port-component-name
+.  .  .  endpoint-address-uri
+.  .  .  login-config
+.  .  .  .  auth-method
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  .  transport-guarantee
+.  .  .  service-qname
+.  .  .  tie-class
+.  .  .  servlet-impl-class
+.  .  .  debugging-enabled
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  idempotent-url-pattern
+.  session-config
+.  .  session-manager
+.  .  .  manager-properties
+.  .  .  .  property (with attributes)
+.  .  .  .  .  description
+.  .  .  store-properties
+.  .  .  .  property (with attributes)
+.  .  .  .  .  description
+.  .  session-properties
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  .  cookie-properties
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  ejb-ref
+.  .  ejb-ref-name
+.  .  jndi-name
+.  resource-ref
+.  .  res-ref-name
+.  .  jndi-name
+.  .  default-resource-principal
+.  .  .  name
+.  .  .  password
+.  resource-env-ref
+.  .  resource-env-ref-name
+.  .  jndi-name
+.  service-ref
+.  .  service-ref-name
+.  .  port-info
+.  .  .  service-endpoint-interface
+.  .  .  wsdl-port
+.  .  .  .  namespaceURI
+.  .  .  .  localpart
+.  .  .  stub-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  call-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  call-property
+.  .  .  name
+.  .  .  value
+.  .  wsdl-override
+.  .  service-impl-class
+.  .  service-qname
+.  .  .  namespaceURI
+.  .  .  localpart
+.  message-destination-ref
+.  .  message-destination-ref-name
+.  .  jndi-name
+.  cache
+.  .  cache-helper
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  .  default-helper
+.  .  .  property (with attributes)
+.  .  .  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  .  cache-mapping
+.  .  .  servlet-name
+.  .  .  url-pattern
+.  .  .  cache-helper-ref
+.  .  .  dispatcher
+.  .  .  timeout
+.  .  .  refresh-field
+.  .  .  http-method
+.  .  .  key-field
+.  .  .  constraint-field
+.  .  .  .  constraint-field-value
+.  class-loader
+.  .  property (with attributes)
+.  .  .  description
+.  jsp-config
+.  locale-charset-info
+.  .  locale-charset-map
+.  .  parameter-encoding
+.  parameter-encoding
+.  property (with attributes)
+.  .  description
+.  valve
+.  message-destination
+.  .  message-destination-name
+.  .  jndi-name
+.  webservice-description
+.  .  webservice-description-name
+.  .  wsdl-publish-location
+.  keep-state
+.  version-identifier</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a sample <code>glassfish-web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD
+GlassFish Application Server 3.1 Servlet 3.0//EN"
+"http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd"&gt;
+&lt;glassfish-web-app&gt;
+   &lt;session-config&gt;
+      &lt;session-manager/&gt;
+   &lt;/session-config&gt;
+   &lt;resource-ref&gt;
+      &lt;res-ref-name&gt;mail/Session&lt;/res-ref-name&gt;
+      &lt;jndi-name&gt;mail/Session&lt;/jndi-name&gt;
+   &lt;/resource-ref&gt;
+   &lt;jsp-config/&gt;
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaqm"></a><a id="GSDPG00079"></a><a id="the-glassfish-ejb-jar.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_glassfish_ejb_jar_xml_file">The glassfish-ejb-jar.xml File</h3>
+<div class="paragraph">
+<p>The <code>glassfish-ejb-jar.xml</code> file configures an enterprise bean (EJB JAR
+file). The element hierarchy is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">glassfish-ejb-jar
+.  security-role-mapping
+.  .  role-name
+.  .  principal-name
+.  .  group-name
+.  enterprise-beans
+.  .  name
+.  .  unique-id
+.  .  ejb
+.  .  .  ejb-name
+.  .  .  jndi-name
+.  .  .  ejb-ref
+.  .  .  .  ejb-ref-name
+.  .  .  .  jndi-name
+.  .  .  resource-ref
+.  .  .  .  res-ref-name
+.  .  .  .  jndi-name
+.  .  .  .  default-resource-principal
+.  .  .  .  .  name
+.  .  .  .  .  password
+.  .  .  resource-env-ref
+.  .  .  .  resource-env-ref-name
+.  .  .  .  jndi-name
+.  .  .  service-ref
+.  .  .  .  service-ref-name
+.  .  .  .  port-info
+.  .  .  .  .  service-endpoint-interface
+.  .  .  .  .  wsdl-port
+.  .  .  .  .  .  namespaceURI
+.  .  .  .  .  .  localpart
+.  .  .  .  .  stub-property
+.  .  .  .  .  .  name
+.  .  .  .  .  .  value
+.  .  .  .  .  call-property
+.  .  .  .  .  .  name
+.  .  .  .  .  .  value
+.  .  .  .  .  message-security-binding
+.  .  .  .  .  .  message-security
+.  .  .  .  .  .  .  message
+.  .  .  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  .  .  operation-name
+.  .  .  .  .  .  .  request-protection
+.  .  .  .  .  .  .  response-protection
+.  .  .  .  call-property
+.  .  .  .  .  name
+.  .  .  .  .  value
+.  .  .  .  wsdl-override
+.  .  .  .  service-impl-class
+.  .  .  .  service-qname
+.  .  .  .  .  namespaceURI
+.  .  .  .  .  localpart
+.  .  .  message-destination-ref
+.  .  .  .  message-destination-ref-name
+.  .  .  .  jndi-name
+.  .  .  pass-by-reference
+.  .  .  cmp
+.  .  .  .  mapping-properties
+.  .  .  .  is-one-one-cmp
+.  .  .  .  one-one-finders
+.  .  .  .  .  finder
+.  .  .  .  .  .  method-name
+.  .  .  .  .  .  query-params
+.  .  .  .  .  .  query-filter
+.  .  .  .  .  .  query-variables
+.  .  .  .  .  .  query-ordering
+.  .  .  .  prefetch-disabled
+.  .  .  .  .  query-method
+.  .  .  .  .  .  method-name
+.  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  method-param
+.  .  .  principal
+.  .  .  .  name
+.  .  .  mdb-connection-factory
+.  .  .  .  jndi-name
+.  .  .  .  default-resource-principal
+.  .  .  .  .  name
+.  .  .  .  .  password
+.  .  .  jms-durable-subscription-name
+.  .  .  jms-max-messages-load
+.  .  .  ior-security-config
+.  .  .  .  transport-config
+.  .  .  .  .  integrity
+.  .  .  .  .  confidentiality
+.  .  .  .  .  establish-trust-in-target
+.  .  .  .  .  establish-trust-in-client
+.  .  .  .  as-context
+.  .  .  .  .  auth-method
+.  .  .  .  .  realm
+.  .  .  .  .  required
+.  .  .  .  sas-context
+.  .  .  .  .  caller-propagation
+.  .  .  is-read-only-bean
+.  .  .  refresh-period-in-seconds
+.  .  .  commit-option
+.  .  .  cmt-timeout-in-seconds
+.  .  .  use-thread-pool-id
+.  .  .  gen-classes
+.  .  .  .  remote-impl
+.  .  .  .  local-impl
+.  .  .  .  remote-home-impl
+.  .  .  .  local-home-impl
+.  .  .  bean-pool
+.  .  .  .  steady-pool-size
+.  .  .  .  resize-quantity
+.  .  .  .  max-pool-size
+.  .  .  .  pool-idle-timeout-in-seconds
+.  .  .  .  max-wait-time-in-millis
+.  .  .  bean-cache
+.  .  .  .  max-cache-size
+.  .  .  .  resize-quantity
+.  .  .  .  is-cache-overflow-allowed
+.  .  .  .  cache-idle-timeout-in-seconds
+.  .  .  .  removal-timeout-in-seconds
+.  .  .  .  victim-selection-policy
+.  .  .  mdb-resource-adapter
+.  .  .  .  resource-adapter-mid
+.  .  .  .  activation-config
+.  .  .  .  .  description
+.  .  .  .  .  activation-config-property
+.  .  .  .  .  .  activation-config-property-name
+.  .  .  .  .  .  activation-config-property-value
+.  .  .  webservice-endpoint
+.  .  .  .  port-component-name
+.  .  .  .  endpoint-address-uri
+.  .  .  .  login-config
+.  .  .  .  .  auth-method
+.  .  .  .  .  realm
+.  .  .  .  message-security-binding
+.  .  .  .  .  message-security
+.  .  .  .  .  .  message
+.  .  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  .  operation-name
+.  .  .  .  .  .  request-protection
+.  .  .  .  .  .  response-protection
+.  .  .  .  transport-guarantee
+.  .  .  .  service-qname
+.  .  .  .  tie-class
+.  .  .  .  servlet-impl-class
+.  .  .  .  debugging-enabled
+.  .  .  .  property (with subelements)
+.  .  .  .  .  name
+.  .  .  .  .  value
+.  .  .  flush-at-end-of-method
+.  .  .  .  method
+.  .  .  .  .  description
+.  .  .  .  .  ejb-name
+.  .  .  .  .  method-name
+.  .  .  .  .  method-intf
+.  .  .  .  .  method-params
+.  .  .  .  .  .  method-param
+.  .  .  checkpointed-methods
+.  .  .  checkpoint-at-end-of-method
+.  .  .  .  method
+.  .  .  .  .  description
+.  .  .  .  .  ejb-name
+.  .  .  .  .  method-name
+.  .  .  .  .  method-intf
+.  .  .  .  .  method-params
+.  .  .  .  .  .  method-param
+.  .  .  per-request-load-balancing
+.  .  pm-descriptors
+.  .  cmp-resource
+.  .  .  jndi-name
+.  .  .  default-resource-principal
+.  .  .  .  name
+.  .  .  .  password
+.  .  .  property (with subelements)
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  create-tables-at-deploy
+.  .  .  drop-tables-at-undeploy
+.  .  .  database-vendor-name
+.  .  .  schema-generator-properties
+.  .  .  .  property (with subelements)
+.  .  .  .  .  name
+.  .  .  .  .  value
+.  .  message-destination
+.  .  .  message-destination-name
+.  .  .  jndi-name
+.  .  webservice-description
+.  .  .  webservice-description-name
+.  .  .  wsdl-publish-location
+.  .  property (with subelements)
+.  .  .  name
+.  .  .  value
+.  compatibility
+.  disable-nonportable-jndi-names
+.  keep-state
+.  version-identifier</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If any configuration information for an enterprise bean is not specified
+in the <code>glassfish-ejb-jar.xml</code> file, it defaults to a corresponding
+setting in the EJB container if an equivalency exists.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Here is a sample <code>glassfish-ejb-jar.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;!DOCTYPE glassfish-ejb-jar PUBLIC "-//GlassFish.org//
+DTD GlassFish Application Server 3.1 EJB 3.1//EN"
+"http://glassfish.org/dtds/glassfish-ejb-jar_3_1-1.dtd"&gt;
+&lt;glassfish-ejb-jar&gt;
+&lt;display-name&gt;First Module&lt;/display-name&gt;
+&lt;enterprise-beans&gt;
+    &lt;ejb&gt;
+        &lt;ejb-name&gt;CustomerEJB&lt;/ejb-name&gt;
+        &lt;jndi-name&gt;customer&lt;/jndi-name&gt;
+        &lt;bean-pool&gt;
+            &lt;steady-pool-size&gt;10&lt;/steady-pool-size&gt;
+            &lt;resize-quantity&gt;10&lt;/resize-quantity&gt;
+            &lt;max-pool-size&gt;100&lt;/max-pool-size&gt;
+            &lt;pool-idle-timeout-in-seconds&gt;600&lt;/pool-idle-timeout-in-seconds&gt;
+        &lt;/bean-pool&gt;
+        &lt;bean-cache&gt;
+            &lt;max-cache-size&gt;100&lt;/max-cache-size&gt;
+            &lt;resize-quantity&gt;10&lt;/resize-quantity&gt;
+            &lt;removal-timeout-in-seconds&gt;3600&lt;/removal-timeout-in-seconds&gt;
+            &lt;victim-selection-policy&gt;LRU&lt;/victim-selection-policy&gt;
+        &lt;/bean-cache&gt;
+    &lt;/ejb&gt;
+    &lt;cmp-resource&gt;
+        &lt;jndi-name&gt;jdbc/__default&lt;/jndi-name&gt;
+        &lt;create-tables-at-deploy&gt;true&lt;/create-tables-at-deploy&gt;
+        &lt;drop-tables-at-undeploy&gt;true&lt;/drop-tables-at-undeploy&gt;
+    &lt;/cmp-resource&gt;
+&lt;/enterprise-beans&gt;
+&lt;keep-state&gt;true&lt;/keep-state&gt;
+&lt;/glassfish-ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaqn"></a><a id="GSDPG00080"></a><a id="the-sun-cmp-mappings.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_sun_cmp_mappings_xml_file">The sun-cmp-mappings.xml File</h3>
+<div class="paragraph">
+<p>The <code>sun-cmp-mappings.xml</code> file configures container-managed persistence
+for an EJB 2.0 or 2.1 entity bean. The element hierarchy is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">sun-cmp-mappings
+.  sun-cmp-mapping
+.  .  schema
+.  .  entity-mapping
+.  .  .  ejb-name
+.  .  .  table-name
+.  .  .  cmp-field-mapping
+.  .  .  .  field-name
+.  .  .  .  column-name
+.  .  .  .  read-only
+.  .  .  .  fetched-with
+.  .  .  .  .  default
+.  .  .  .  .  level
+.  .  .  .  .  named-group
+.  .  .  .  .  none
+.  .  .  cmr-field-mapping
+.  .  .  .  cmr-field-name
+.  .  .  .  column-pair
+.  .  .  .  .  column-name
+.  .  .  .  fetched-with
+.  .  .  .  .  default
+.  .  .  .  .  level
+.  .  .  .  .  named-group
+.  .  .  .  .  none
+.  .  .  secondary-table
+.  .  .  .  table-name
+.  .  .  .  column-pair
+.  .  .  .  .  column-name
+.  .  .  consistency
+.  .  .  .  none
+.  .  .  .  check-modified-at-commit
+.  .  .  .  lock-when-loaded
+.  .  .  .  check-all-at-commit
+.  .  .  .  lock-when-modified
+.  .  .  .  check-version-of-accessed-instances
+.  .  .  .  .  column-name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a sample database schema definition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create table TEAMEJB (
+   TEAMID varchar2(256) not null,
+   NAME varchar2(120) null,
+   CITY char(30) not null,
+   LEAGUEEJB_LEAGUEID varchar2(256) null,
+   constraint PK_TEAMEJB primary key (TEAMID)
+)
+create table PLAYEREJB (
+   POSITION varchar2(15) null,
+   PLAYERID varchar2(256) not null,
+   NAME char(64) null,
+   SALARY number(10, 2) not null,
+   constraint PK_PLAYEREJB primary key (PLAYERID)
+)
+create table LEAGUEEJB (
+   LEAGUEID varchar2(256) not null,
+   NAME varchar2(256) null,
+   SPORT varchar2(256) null,
+   constraint PK_LEAGUEEJB primary key (LEAGUEID)
+)
+create table PLAYEREJBTEAMEJB (
+   PLAYEREJB_PLAYERID varchar2(256) null,
+   TEAMEJB_TEAMID varchar2(256) null
+)
+alter table TEAMEJB
+   add constraint FK_LEAGUE foreign key (LEAGUEEJB_LEAGUEID)
+   references LEAGUEEJB (LEAGUEID)
+
+alter table PLAYEREJBTEAMEJB
+   add constraint FK_TEAMS foreign key (PLAYEREJB_PLAYERID)
+   references PLAYEREJB (PLAYERID)
+
+alter table PLAYEREJBTEAMEJB
+   add constraint FK_PLAYERS foreign key (TEAMEJB_TEAMID)
+   references TEAMEJB (TEAMID)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a corresponding sample <code>sun-cmp-mappings.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;sun-cmp-mappings&gt;
+&lt;sun-cmp-mapping&gt;
+    &lt;schema&gt;Roster&lt;/schema&gt;
+    &lt;entity-mapping&gt;
+        &lt;ejb-name&gt;TeamEJB&lt;/ejb-name&gt;
+        &lt;table-name&gt;TEAMEJB&lt;/table-name&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;teamId&lt;/field-name&gt;
+            &lt;column-name&gt;TEAMEJB.TEAMID&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;name&lt;/field-name&gt;
+            &lt;column-name&gt;TEAMEJB.NAME&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;city&lt;/field-name&gt;
+            &lt;column-name&gt;TEAMEJB.CITY&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmr-field-mapping&gt;
+            &lt;cmr-field-name&gt;league&lt;/cmr-field-name&gt;
+            &lt;column-pair&gt;
+                &lt;column-name&gt;TEAMEJB.LEAGUEEJB_LEAGUEID&lt;/column-name&gt;
+                &lt;column-name&gt;LEAGUEEJB.LEAGUEID&lt;/column-name&gt;
+            &lt;/column-pair&gt;
+            &lt;fetched-with&gt;
+                &lt;none/&gt;
+            &lt;/fetched-with&gt;
+        &lt;/cmr-field-mapping&gt;
+        &lt;cmr-field-mapping&gt;
+            &lt;cmr-field-name&gt;players&lt;/cmr-field-name&gt;
+            &lt;column-pair&gt;
+                &lt;column-name&gt;TEAMEJB.TEAMID&lt;/column-name&gt;
+                &lt;column-name&gt;PLAYEREJBTEAMEJB.TEAMEJB_TEAMID&lt;/column-name&gt;
+            &lt;/column-pair&gt;
+            &lt;column-pair&gt;
+                &lt;column-name&gt;PLAYEREJBTEAMEJB.PLAYEREJB_PLAYERID&lt;/column-name&gt;
+                &lt;column-name&gt;PLAYEREJB.PLAYERID&lt;/column-name&gt;
+            &lt;/column-pair&gt;
+            &lt;fetched-with&gt;
+                &lt;none/&gt;
+            &lt;/fetched-with&gt;
+        &lt;/cmr-field-mapping&gt;
+    &lt;/entity-mapping&gt;
+    &lt;entity-mapping&gt;
+        &lt;ejb-name&gt;PlayerEJB&lt;/ejb-name&gt;
+        &lt;table-name&gt;PLAYEREJB&lt;/table-name&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;position&lt;/field-name&gt;
+            &lt;column-name&gt;PLAYEREJB.POSITION&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;playerId&lt;/field-name&gt;
+            &lt;column-name&gt;PLAYEREJB.PLAYERID&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;name&lt;/field-name&gt;
+            &lt;column-name&gt;PLAYEREJB.NAME&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;salary&lt;/field-name&gt;
+            &lt;column-name&gt;PLAYEREJB.SALARY&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmr-field-mapping&gt;
+            &lt;cmr-field-name&gt;teams&lt;/cmr-field-name&gt;
+            &lt;column-pair&gt;
+                &lt;column-name&gt;PLAYEREJB.PLAYERID&lt;/column-name&gt;
+                &lt;column-name&gt;PLAYEREJBTEAMEJB.PLAYEREJB_PLAYERID&lt;/column-name&gt;
+            &lt;/column-pair&gt;
+            &lt;column-pair&gt;
+                &lt;column-name&gt;PLAYEREJBTEAMEJB.TEAMEJB_TEAMID&lt;/column-name&gt;
+                &lt;column-name&gt;TEAMEJB.TEAMID&lt;/column-name&gt;
+            &lt;/column-pair&gt;
+            &lt;fetched-with&gt;
+                &lt;none/&gt;
+            &lt;/fetched-with&gt;
+        &lt;/cmr-field-mapping&gt;
+    &lt;/entity-mapping&gt;
+    &lt;entity-mapping&gt;
+        &lt;ejb-name&gt;LeagueEJB&lt;/ejb-name&gt;
+        &lt;table-name&gt;LEAGUEEJB&lt;/table-name&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;leagueId&lt;/field-name&gt;
+            &lt;column-name&gt;LEAGUEEJB.LEAGUEID&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;name&lt;/field-name&gt;
+            &lt;column-name&gt;LEAGUEEJB.NAME&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmp-field-mapping&gt;
+            &lt;field-name&gt;sport&lt;/field-name&gt;
+            &lt;column-name&gt;LEAGUEEJB.SPORT&lt;/column-name&gt;
+        &lt;/cmp-field-mapping&gt;
+        &lt;cmr-field-mapping&gt;
+            &lt;cmr-field-name&gt;teams&lt;/cmr-field-name&gt;
+            &lt;column-pair&gt;
+                &lt;column-name&gt;LEAGUEEJB.LEAGUEID&lt;/column-name&gt;
+                &lt;column-name&gt;TEAMEJB.LEAGUEEJB_LEAGUEID&lt;/column-name&gt;
+            &lt;/column-pair&gt;
+            &lt;fetched-with&gt;
+                &lt;none/&gt;
+            &lt;/fetched-with&gt;
+        &lt;/cmr-field-mapping&gt;
+    &lt;/entity-mapping&gt;
+&lt;/sun-cmp-mapping&gt;
+&lt;/sun-cmp-mappings&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaqo"></a><a id="GSDPG00081"></a><a id="the-glassfish-application-client.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_glassfish_application_client_xml_file">The glassfish-application-client.xml file</h3>
+<div class="paragraph">
+<p>The <code>glassfish-application-client.xml</code> file configures an Application
+Client Container (ACC) client (JAR file). The element hierarchy is as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">glassfish-application-client
+.  ejb-ref
+.  .  ejb-ref-name
+.  .  jndi-name
+.  resource-ref
+.  .  res-ref-name
+.  .  jndi-name
+.  .  default-resource-principal
+.  .  .  name
+.  .  .  password
+.  resource-env-ref
+.  .  resource-env-ref-name
+.  .  jndi-name
+.  service-ref
+.  .  service-ref-name
+.  .  port-info
+.  .  .  service-endpoint-interface
+.  .  .  wsdl-port
+.  .  .  .  namespaceURI
+.  .  .  .  localpart
+.  .  .  stub-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  call-property
+.  .  .  .  name
+.  .  .  .  value
+.  .  .  message-security-binding
+.  .  .  .  message-security
+.  .  .  .  .  message
+.  .  .  .  .  .  java-method
+.  .  .  .  .  .  .  method-name
+.  .  .  .  .  .  .  method-params
+.  .  .  .  .  .  .  .  method-param
+.  .  .  .  .  .  operation-name
+.  .  .  .  .  request-protection
+.  .  .  .  .  response-protection
+.  .  call-property
+.  .  .  name
+.  .  .  value
+.  .  wsdl-override
+.  .  service-impl-class
+.  .  service-qname
+.  .  .  namespaceURI
+.  .  .  localpart
+.  message-destination-ref
+.  .  message-destination-ref-name
+.  .  jndi-name
+.  message-destination
+.  .  message-destination-name
+.  .  jndi-name
+.  java-web-start-access
+.  .  context-root
+.  .  eligible
+.  .  vendor
+.  .  jnlp-doc
+.  version-identifier</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is a sample <code>glassfish-application-client.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE glassfish-application-client PUBLIC ""-//GlassFish.org//DTD
+GlassFish Application Server 3.1 Application Client 6.0//EN""
+"http://glassfish.org/dtds/glassfish-application-client_6_0-1.dtd"&gt;
+&lt;glassfish-application-client&gt;
+  &lt;message-destination-ref&gt;
+    &lt;message-destination-ref-name&gt;ClientQueue&lt;/message-destination-ref-name&gt;
+    &lt;jndi-name&gt;jms/security_mdb_OutQueue&lt;/jndi-name&gt;
+  &lt;/message-destination-ref&gt;
+&lt;/glassfish-application-client&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaqp"></a><a id="GSDPG00082"></a><a id="the-sun-acc.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_sun_acc_xml_file">The sun-acc.xml File</h3>
+<div class="paragraph">
+<p>The <code>sun-acc.xml</code> file configures the Application Client Container. This
+is more of a configuration file than a deployment descriptor. GlassFish
+Server provides a default file in the domain-dir`/config` directory.
+Specifying a different file is optional. The element hierarchy is as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">client-container
+.  target-server
+.  .  description
+.  .  security
+.  .  .  ssl
+.  .  .  cert-db
+.  auth-realm
+.  .  property (with attributes)
+.  client-credential
+.  .  property (with attributes)
+.  log-service
+.  .  property (with attributes)
+.  message-security-config
+.  .  provider-config
+.  .  .  request-policy
+.  .  .  response-policy
+.  .  .  property (with attributes)
+.  property (with attributes)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="giyhh"></a><a id="GSDPG00083"></a><a id="the-glassfish-resources.xml-file"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_glassfish_resources_xml_file">The glassfish-resources.xml File</h3>
+<div class="paragraph">
+<p>The <code>glassfish-resources.xml</code> file configures application-scoped
+resources. The element hierarchy is as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">resources
+.  custom-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  external-jndi-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  jdbc-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  mail-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  admin-object-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  connector-resource
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  resource-adapter-config
+.  .  property (with attributes)
+.  .  .  description
+.  jdbc-connection-pool
+.  .  description
+.  .  property (with attributes)
+.  .  .  description
+.  connector-connection-pool
+.  .  description
+.  .  security-map
+.  .  .  principal
+.  .  .  user-group
+.  .  .  backend-principal
+.  .  property (with attributes)
+.  .  .  description
+.  work-security-map
+.  .  description
+.  .  principal-map
+.  .  group-map</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkiot"></a><a id="GSDPG00084"></a><a id="weblogic-server-deployment-descriptor-support-in-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_weblogic_server_deployment_descriptor_support_in_glassfish_server">WebLogic Server Deployment Descriptor Support in GlassFish Server</h3>
+<div class="paragraph">
+<p>GlassFish Server offers limited support for the
+<code>weblogic-application.xml</code>, <code>weblogic.xml</code>, and
+<code>weblogic-webservices.xml</code> deployment descriptor files.</p>
+</div>
+<div class="paragraph">
+<p>The only element in <code>weblogic-application.xml</code> that GlassFish Server
+supports is <code>security</code>. The equivalent element in the
+<code>glassfish-application.xml</code> file is <code>security-role-mapping</code>.</p>
+</div>
+<div class="paragraph">
+<p>The elements of <code>weblogic.xml</code> that GlassFish Server supports are
+explained in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG836"></a><a id="sthref7"></a><a id="gkinm"></a></p>
+</div>
+<div class="paragraph">
+<p>Table B-2 <code>weblogic.xml</code> Support in GlassFish Server</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 57.0%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>weblogic.xml</code> Element Name</th>
+<th class="tableblock halign-left valign-top">GlassFish Server Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>role-name</code> under <code>security-role-assignment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>role-name</code> under
+<code>security-role-mapping</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal-name</code> under <code>security-role-assignment</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal-name</code>
+under <code>security-role-mapping</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource-description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource-ref</code> <code>glassfish-web.xml</code> equivalent,
+but <code>resource-link</code> not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource-env-description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>resource-env-ref</code> <code>glassfish-web.xml</code>
+equivalent, but <code>resource-link</code> not supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ejb-reference-description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ejb-ref</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>service-reference-description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>service-ref</code> <code>glassfish-web.xml</code>
+equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeout-secs</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>timeoutSeconds</code> property of
+<code>session-properties</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>invalidation-interval-secs</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reapIntervalSeconds</code> property of <code>manager-properties</code>
+<code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>max-in-memory-sessions</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maxSessions</code>
+property of <code>manager-properties</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>persistent-store-dir</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>directory</code> property
+of <code>store-properties</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>prefer-web-inf-classes</code> under <code>container-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>delegate</code>
+attribute of <code>class-loader</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>context-root</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>context-root</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookies-enabled</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-name</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-path</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-domain</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-comment</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-secure</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-max-age-secs</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cookie-http-only</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>url-rewriting-enabled</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servlet 3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>persistent-store-cookie-name</code> under <code>session-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cookie-based
+persistence is supported</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keepgenerated</code> under <code>jsp-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keepgenerated init parameter of
+<code>JspServlet</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>working-dir</code> under <code>jsp-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">scratchdir init parameter of
+<code>JspServlet</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compress-html-template</code> under <code>jsp-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trimSpaces init
+parameter of <code>JspServlet</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>index-directory-enabled</code> under <code>container-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">listings init
+parameter of <code>DefaultServlet</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>index-directory-sort-by</code> under <code>container-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sortedBy init
+parameter of <code>DefaultServlet</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>save-sessions-enabled</code> under <code>container-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as
+<code>asadmin redeploy</code> <code>--keepstate=true</code> or <code>keep-state</code> in
+<code>glassfish-web.xml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>run-as-principal-name</code> under <code>servlet-descriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>principal-name</code>
+under <code>servlet</code> <code>glassfish-web.xml</code> equivalent</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The elements of <code>weblogic-webservices.xml</code> that GlassFish Server
+supports are explained in the following table.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDPG837"></a><a id="sthref8"></a><a id="gkkht"></a></p>
+</div>
+<div class="paragraph">
+<p>Table B-3 <code>weblogic-webservices.xml</code> Support in GlassFish Server</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 34%;">
+<col style="width: 66%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>weblogic-webservices.xml</code> Element Name</th>
+<th class="tableblock halign-left valign-top">GlassFish Server Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>webservice-type</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Possible values are <code>JAXRPC</code> or <code>JAXWS</code>. GlassFish
+Server does not support JAX-RPC web services with JSR 181 annotations.
+The use of this element is limited, because the container can find out
+if the type is JAX-WS or JAX-RPC based on presence of JSR 181
+annotations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wsdl-publish-file</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as <code>wsdl-publish-location</code> in
+<code>glassfish-web.xml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>service-endpoint-address</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Similar to <code>endpoint-address-uri</code> in
+<code>glassfish-web.xml</code>, except that <code>webservice-contextpath</code> and
+<code>webservice-serviceuri</code> are specified separately</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>j2ee:login-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as <code>login-config</code> in <code>glassfish-web.xml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>j2ee:transport-guarantee</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same as <code>transport-guarantee</code> in
+<code>glassfish-web.xml</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>exposed</code> under <code>wsdl</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accepts <code>true</code> or <code>false</code>, defaults to <code>true</code>.
+Controls the publishing of WSDL to clients.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>stream-attachments</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accepts <code>true</code> or <code>false</code>, defaults to <code>true</code>.
+Only for JAX-WS web services. Configures the JAX-WS runtime to send
+attachments in streaming fashion.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate-request</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Accepts <code>true</code> or <code>false</code>, defaults to <code>false</code>.
+Only for JAX-WS web services. Configures the JAX-WS runtime to validate
+that request messages are as the WSDL definitions specify.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>http-response-buffersize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Property of <code>ReliabilityMessagingFeature</code>
+configuration, similar to
+<code>ReliableMessagingFeature.setDestinationBufferQuota()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Partially supported. Subelements map to Metro&#8217;s
+<code>ReliabilityMessagingFeature</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>inactivity-timeout</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps to
+<code>ReliableMessagingFeature.getSequenceInactivityTimeout()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>base-retransmission-interval</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps to
+<code>ReliableMessagingFeature.``getMessageRetransmissionInterval()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>retransmission-exponential-``backoff</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps
+to <code>ReliableMessagingFeature.``getRetransmissionBackoffAlgorithm()</code>.
+Returns enum values, one of them is <code>exponential</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>acknowledgement-interval</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps to
+<code>ReliableMessagingFeature.``getAcknowledgementTransmissionInterval()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sequence-expiration</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps to
+<code>ReliableMessagingFeature.``getSequenceInactivityTimeout()</code>. In WebLogic
+Server this value applies regardless of activity. In Metro it applies
+only to inactive sequences.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buffer-retry-count</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps to
+<code>ReliableMessagingFeature.``getMaxMessageRetransmissionCount()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buffer-retry-delay</code> under <code>reliability-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maps to
+<code>ReliableMessagingFeature.``getMessageRetransmissionInterval()</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="asadmin-deployment-subcommands.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="dd-elements.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

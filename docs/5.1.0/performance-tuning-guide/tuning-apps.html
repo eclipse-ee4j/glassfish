@@ -1,0 +1,2062 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Tuning Your Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Tuning Your Application</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="overview.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="tuning-glassfish.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSPTG00004"></a><a id="abebe"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tuning-your-application">2 Tuning Your Application</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter provides information on tuning applications for maximum
+performance. A complete guide to writing high performance Java and Java
+EE applications is beyond the scope of this document.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abebf">Java Programming Guidelines</a></p>
+</li>
+<li>
+<p><a href="#abebp">Java Server Page and Servlet Tuning</a></p>
+</li>
+<li>
+<p><a href="#abebw">EJB Performance Tuning</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebf"></a><a id="GSPTG00052"></a><a id="java-programming-guidelines"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_java_programming_guidelines">Java Programming Guidelines</h3>
+<div class="paragraph">
+<p>This section covers issues related to Java coding and performance. The
+guidelines outlined are not specific to GlassFish Server, but are
+general rules that are useful in many situations. For a complete
+discussion of Java coding best practices, see the
+<a href="http://www.oracle.com/technetwork/java/javaee/blueprints/index.html">Java
+Blueprints</a>
+(<code>http://www.oracle.com/technetwork/java/javaee/blueprints/index.html</code>).</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abebg">Avoid Serialization and Deserialization</a></p>
+</li>
+<li>
+<p><a href="#abebh">Use <code>StringBuilder</code> to Concatenate Strings</a></p>
+</li>
+<li>
+<p><a href="#abebi">Assign null to Variables That Are No Longer Needed</a></p>
+</li>
+<li>
+<p><a href="#abebj">Declare Methods as final Only If Necessary</a></p>
+</li>
+<li>
+<p><a href="#abebk">Declare Constants as static final</a></p>
+</li>
+<li>
+<p><a href="#abebl">Avoid Finalizers</a></p>
+</li>
+<li>
+<p><a href="#abebm">Declare Method Arguments final</a></p>
+</li>
+<li>
+<p><a href="#abebn">Synchronize Only When Necessary</a></p>
+</li>
+<li>
+<p><a href="#abebo">Use DataHandlers for SOAP Attachments</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebg"></a><a id="GSPTG00161"></a><a id="avoid-serialization-and-deserialization"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_avoid_serialization_and_deserialization">Avoid Serialization and Deserialization</h4>
+<div class="paragraph">
+<p>Serialization and deserialization of objects is a CPU-intensive
+procedure and is likely to slow down your application. Use the
+<code>transient</code> keyword to reduce the amount of data serialized.
+Additionally, customized <code>readObject()</code> and <code>writeObject()</code> methods may
+be beneficial in some cases.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebh"></a><a id="GSPTG00162"></a><a id="use-stringbuilder-to-concatenate-strings"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_use_code_stringbuilder_code_to_concatenate_strings">Use <code>StringBuilder</code> to Concatenate Strings</h4>
+<div class="paragraph">
+<p>To improve performance, instead of using string concatenation, use
+<code>StringBuilder.append()</code>.</p>
+</div>
+<div class="paragraph">
+<p>String objects are immutable - that is, they never change after
+creation. For example, consider the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">String str = "testing";
+str = str + "abc";
+str = str + "def";</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The compiler translates this code as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">String str = "testing";
+StringBuilder tmp = new StringBuilder(str);
+tmp.append("abc");
+str = tmp.toString();
+StringBulder tmp = new StringBuilder(str);
+tmp.append("def");
+str = tmp.toString();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This copying is inherently expensive and overusing it can reduce
+performance significantly. You are far better off writing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">StringBuilder tmp = new StringBuilder("testing");
+tmp.append("abc");
+tmp.append("def");
+String str = tmp.toString();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abebi"></a><a id="GSPTG00163"></a><a id="assign-null-to-variables-that-are-no-longer-needed"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_assign_null_to_variables_that_are_no_longer_needed">Assign null to Variables That Are No Longer Needed</h4>
+<div class="paragraph">
+<p>Explicitly assigning a null value to variables that are no longer needed
+helps the garbage collector to identify the parts of memory that can be
+safely reclaimed. Although Java provides memory management, it does not
+prevent memory leaks or using excessive amounts of memory.</p>
+</div>
+<div class="paragraph">
+<p>An application may induce memory leaks by not releasing object
+references. Doing so prevents the Java garbage collector from reclaiming
+those objects, and results in increasing amounts of memory being used.
+Explicitly nullifying references to variables after their use allows the
+garbage collector to reclaim memory.</p>
+</div>
+<div class="paragraph">
+<p>One way to detect memory leaks is to employ profiling tools and take
+memory snapshots after each transaction. A leak-free application in
+steady state will show a steady active heap memory after garbage
+collections.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebj"></a><a id="GSPTG00164"></a><a id="declare-methods-as-final-only-if-necessary"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_declare_methods_as_final_only_if_necessary">Declare Methods as final Only If Necessary</h4>
+<div class="paragraph">
+<p>Modern optimizing dynamic compilers can perform inlining and other
+inter-procedural optimizations, even if Java methods are not declared
+<code>final</code>. Use the keyword <code>final</code> as it was originally intended: for
+program architecture reasons and maintainability.</p>
+</div>
+<div class="paragraph">
+<p>Only if you are absolutely certain that a method must not be overridden,
+use the <code>final</code> keyword.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebk"></a><a id="GSPTG00165"></a><a id="declare-constants-as-static-final"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_declare_constants_as_static_final">Declare Constants as static final</h4>
+<div class="paragraph">
+<p>The dynamic compiler can perform some constant folding optimizations
+easily, when you declare constants as <code>static final</code> variables.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebl"></a><a id="GSPTG00166"></a><a id="avoid-finalizers"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_avoid_finalizers">Avoid Finalizers</h4>
+<div class="paragraph">
+<p>Adding finalizers to code makes the garbage collector more expensive and
+unpredictable. The virtual machine does not guarantee the time at which
+finalizers are run. Finalizers may not always be executed, before the
+program exits. Releasing critical resources in <code>finalize()</code> methods may
+lead to unpredictable application behavior.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebm"></a><a id="GSPTG00167"></a><a id="declare-method-arguments-final"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_declare_method_arguments_final">Declare Method Arguments final</h4>
+<div class="paragraph">
+<p>Declare method arguments <code>final</code> if they are not modified in the method.
+In general, declare all variables <code>final</code> if they are not modified after
+being initialized or set to some value.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebn"></a><a id="GSPTG00168"></a><a id="synchronize-only-when-necessary"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_synchronize_only_when_necessary">Synchronize Only When Necessary</h4>
+<div class="paragraph">
+<p>Do not synchronize code blocks or methods unless synchronization is
+required. Keep synchronized blocks or methods as short as possible to
+avoid scalability bottlenecks. Use the Java Collections Framework for
+unsynchronized data structures instead of more expensive alternatives
+such as`java.util.HashTable`.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebo"></a><a id="GSPTG00169"></a><a id="use-datahandlers-for-soap-attachments"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_use_datahandlers_for_soap_attachments">Use DataHandlers for SOAP Attachments</h4>
+<div class="paragraph">
+<p>Using a <code>javax.activation.DataHandler</code> for a SOAP attachment will
+improve performance.</p>
+</div>
+<div class="paragraph">
+<p>JAX-RPC specifies:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A mapping of certain MIME types to Java types.</p>
+</li>
+<li>
+<p>Any MIME type is mappable to a <code>javax.activation.DataHandler</code> .</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As a result, send an attachment (<code>.gif</code> or XML document) as a SOAP
+attachment to an RPC style web service by utilizing the Java type
+mappings. When passing in any of the mandated Java type mappings
+(appropriate for the attachment&#8217;s MIME type) as an argument for the web
+service, the JAX-RPC runtime handles these as SOAP attachments.</p>
+</div>
+<div class="paragraph">
+<p>For example, to send out an <code>image/gif</code> attachment, use
+<code>java.awt.Image</code>, or create a <code>DataHandler</code> wrapper over your image. The
+advantages of using the wrapper are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Reduced coding: You can reuse generic attachment code to handle the
+attachments because the <code>DataHandler</code> determines the content type of the
+contained data automatically. This feature is especially useful when
+using a document style service. Since the content is known at runtime,
+there is no need to make calls to
+<code>attachment.setContent(stringContent, "image/gif")</code>, for example.</p>
+</li>
+<li>
+<p>Improved Performance: Informal tests have shown that using
+<code>DataHandler</code> wrappers doubles throughput for <code>image/gif</code> MIME types,
+and multiplies throughput by approximately 1.5 for <code>text/xml</code> or
+<code>java.awt.Image</code> for <code>image/*</code> types.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebp"></a><a id="GSPTG00053"></a><a id="java-server-page-and-servlet-tuning"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_server_page_and_servlet_tuning">Java Server Page and Servlet Tuning</h3>
+<div class="paragraph">
+<p>Many applications running on the GlassFish Server use servlets or
+JavaServer Pages (JSP) technology in the presentation tier. This section
+describes how to improve performance of such applications, both through
+coding practices and through deployment and configuration settings.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebq"></a><a id="GSPTG00170"></a><a id="suggested-coding-practices"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_suggested_coding_practices">Suggested Coding Practices</h4>
+<div class="paragraph">
+<p>This section provides some tips on coding practices that improve servlet
+and JSP application performance.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abebr">General Guidelines</a></p>
+</li>
+<li>
+<p><a href="#abebs">Avoid Shared Modified Class Variables</a></p>
+</li>
+<li>
+<p><a href="#abebt">HTTP Session Handling</a></p>
+</li>
+<li>
+<p><a href="#abebu">Configuration and Deployment Tips</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebr"></a><a id="GSPTG00082"></a><a id="general-guidelines"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_general_guidelines">General Guidelines</h5>
+<div class="paragraph">
+<p>Follow these general guidelines to increase performance of the
+presentation tier:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Minimize Java synchronization in servlets.</p>
+</li>
+<li>
+<p>Do not use the single thread model for servlets.</p>
+</li>
+<li>
+<p>Use the servlet&#8217;s <code>init()</code> method to perform expensive one-time
+initialization.</p>
+</li>
+<li>
+<p>Avoid using <code>System.out.println()</code> calls.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebs"></a><a id="GSPTG00083"></a><a id="avoid-shared-modified-class-variables"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_avoid_shared_modified_class_variables">Avoid Shared Modified Class Variables</h5>
+<div class="paragraph">
+<p>In the servlet multithread model (the default), a single instance of a
+servlet is created for each application server instance. All requests
+for a servlet on that application instance share the same servlet
+instance. This can lead to thread contention if there are
+synchronization blocks in the servlet code. Therefore, avoid using
+shared modified class variables because they create the need for
+synchronization.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebt"></a><a id="GSPTG00084"></a><a id="http-session-handling"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_http_session_handling">HTTP Session Handling</h5>
+<div class="paragraph">
+<p>Follow these guidelines when using HTTP sessions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Create sessions sparingly. Session creation is not free. If a session
+is not required, do not create one.</p>
+</li>
+<li>
+<p>Use <code>javax.servlet.http.HttpSession.invalidate()</code> to release sessions
+when they are no longer needed.</p>
+</li>
+<li>
+<p>Keep session size small, to reduce response times. If possible, keep
+session size below 7 kilobytes.</p>
+</li>
+<li>
+<p>Use the directive <code>&lt;%page session="false"%&gt;</code> in JSP files to prevent
+the GlassFish Server from automatically creating sessions when they are
+not necessary.</p>
+</li>
+<li>
+<p>Avoid large object graphs in an <code>HttpSession</code>. They force
+serialization and add computational overhead. Generally, do not store
+large objects as <code>HttpSession</code> variables.</p>
+</li>
+<li>
+<p>Do not cache transaction data in an <code>HttpSession</code>. Access to data in
+an <code>HttpSession</code> is not transactional. Do not use it as a cache of
+transactional data, which is better kept in the database and accessed
+using entity beans. Transactions will rollback upon failures to their
+original state. However, stale and inaccurate data may remain in
+<code>HttpSession</code> objects. GlassFish Server provides "read-only"
+bean-managed persistence entity beans for cached access to read-only
+data.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebu"></a><a id="GSPTG00085"></a><a id="configuration-and-deployment-tips"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuration_and_deployment_tips">Configuration and Deployment Tips</h5>
+<div class="paragraph">
+<p>Follow these configuration tips to improve performance. These tips are
+intended for production environments, not development environments.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To improve class loading time, avoid having excessive directories in
+the server <code>CLASSPATH</code>. Put application-related classes into JAR files.</p>
+</li>
+<li>
+<p>HTTP response times are dependent on how the keep-alive subsystem and
+the HTTP server is tuned in general. For more information, see
+<a href="tuning-glassfish.html#abeet">HTTP Service Settings</a>.</p>
+</li>
+<li>
+<p>Cache servlet results when possible. For more information, see
+"<a href="../application-development-guide/webapps.html#GSDVG00009">Developing Web Applications</a>" in GlassFish Server Open
+Source Edition Application Development Guide.</p>
+</li>
+<li>
+<p>If an application does not contain any EJB components, deploy the
+application as a WAR file, not an EAR file.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gfqnu"></a><a id="GSPTG00009"></a><a id="optimize-ssl"></a></p>
+</div>
+<div class="paragraph">
+<p>Optimize SSL</p>
+</div>
+<div class="paragraph">
+<p>Optimize SSL by using routines in the appropriate operating system
+library for concurrent access to heap space. The library to use depends
+on the version of the Solaris Operating System (SolarisOS) that you are
+using. To ensure that you use the correct library, set the <code>LD_PRELOAD</code>
+environment variable to specify the correct library file. For more
+information, refer to the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 23%;">
+<col style="width: 23%;">
+<col style="width: 54%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Solaris OS Version</th>
+<th class="tableblock halign-left valign-top">Library</th>
+<th class="tableblock halign-left valign-top">Setting of <code>LD_PRELOAD</code> Environment
+Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>libumem3LIB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/usr/lib/libumem.so</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>libmtmalloc3LIB</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/usr/lib/libmtmalloc.so</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>To set the <code>LD_PRELOAD</code> environment variable, edit the entry for this
+environment variable in the <code>startserv</code> script. The <code>startserv</code> script
+is located is located in the <code>bin/startserv</code> directory of your domain.</p>
+</div>
+<div class="paragraph">
+<p>The exact syntax to define an environment variable depends on the shell
+that you are using.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebv"></a><a id="GSPTG00010"></a><a id="disable-security-manager"></a></p>
+</div>
+<div class="paragraph">
+<p>Disable Security Manager</p>
+</div>
+<div class="paragraph">
+<p>The security manager is expensive because calls to required resources
+must call the <code>doPrivileged()</code> method and must also check the resource
+with the <code>server.policy</code> file. If you are sure that no malicious code
+will be run on the server and you do not use authentication within your
+application, then you can disable the security manager.</p>
+</div>
+<div class="paragraph">
+<p>See "<a href="../application-development-guide/securing-apps.html#GSDVG00373">Enabling and Disabling the Security Manager</a>" in
+GlassFish Server Open Source Edition Application Development Guide for
+instructions on enabling or disabling the security manager. If using the
+GlassFish Server Administration Console, navigate to the
+Configurations&gt;configuration-name&gt;Security node and check or uncheck the
+Security Manager option as desired. Refer to the Administration Console
+online help for more information.</p>
+</div>
+<div class="paragraph">
+<p><a id="abebw"></a><a id="GSPTG00054"></a><a id="ejb-performance-tuning"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejb_performance_tuning">EJB Performance Tuning</h3>
+<div class="paragraph">
+<p>The GlassFish Server&#8217;s high-performance EJB container has numerous
+parameters that affect performance. Individual EJB components also have
+parameters that affect performance. The value of individual EJB
+component&#8217;s parameter overrides the value of the same parameter for the
+EJB container. The default values are designed for a single-processor
+computer system. Modify these values as appropriate to optimize for
+other system configurations.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abebx">Goals</a></p>
+</li>
+<li>
+<p><a href="#abeby">Monitoring EJB Components</a></p>
+</li>
+<li>
+<p><a href="#abeca">General Guidelines</a></p>
+</li>
+<li>
+<p><a href="#abecg">Using Local and Remote Interfaces</a></p>
+</li>
+<li>
+<p><a href="#abecj">Improving Performance of EJB Transactions</a></p>
+</li>
+<li>
+<p><a href="#abecs">Using Special Techniques</a></p>
+</li>
+<li>
+<p><a href="#abecv">Tuning Tips for Specific Types of EJB Components</a></p>
+</li>
+<li>
+<p><a href="#abedd">JDBC and Database Access</a></p>
+</li>
+<li>
+<p><a href="#abedi">Tuning Message-Driven Beans</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abebx"></a><a id="GSPTG00171"></a><a id="goals"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_goals">Goals</h4>
+<div class="paragraph">
+<p>The goals of EJB performance tuning are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Increased speed: Cache as many beans in the EJB caches as possible to
+increase speed (equivalently, decrease response time). Caching
+eliminates CPU-intensive operations. However, since memory is finite, as
+the caches become larger, housekeeping for them (including garbage
+collection) takes longer.</p>
+</li>
+<li>
+<p>Decreased memory consumption: Beans in the pools or caches consume
+memory from the Java virtual machine heap. Very large pools and caches
+degrade performance because they require longer and more frequent
+garbage collection cycles.</p>
+</li>
+<li>
+<p>Improved functional properties: Functional properties such as user
+timeout, commit options, security, and transaction options, are mostly
+related to the functionality and configuration of the application.
+Generally, they do not compromise functionality for performance. In some
+cases, you might be forced to make a "trade-off" decision between
+functionality and performance. This section offers suggestions in such
+cases.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abeby"></a><a id="GSPTG00172"></a><a id="monitoring-ejb-components"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_monitoring_ejb_components">Monitoring EJB Components</h4>
+<div class="paragraph">
+<p>When the EJB container has monitoring enabled, you can examine
+statistics for individual beans based on the bean pool and cache
+settings.</p>
+</div>
+<div class="paragraph">
+<p>For example, the monitoring command below returns the Bean Cache
+statistics for a stateful session bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin get --user admin --host e4800-241-a --port 4848
+-m specjcmp.application.SPECjAppServer.ejb-module.
+   supplier_jar.stateful-session-bean.BuyerSes.bean-cache.*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following is a sample of the monitoring output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">resize-quantity = -1
+ cache-misses = 0
+ idle-timeout-in-seconds = 0
+ num-passivations = 0
+ cache-hits = 59
+ num-passivation-errors = 0
+ total-beans-in-cache = 59
+ num-expired-sessions-removed = 0
+ max-beans-in-cache = 4096
+ num-passivation-success = 0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The monitoring command below gives the bean pool statistics for an
+entity bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin get --user admin --host e4800-241-a --port 4848
+-m specjcmp.application.SPECjAppServer.ejb-module.
+   supplier_jar.stateful-entity-bean.ItemEnt.bean-pool.*
+idle-timeout-in-seconds = 0
+steady-pool-size = 0
+total-beans-destroyed = 0
+num-threads-waiting = 0
+num-beans-in-pool = 54
+max-pool-size = 2147483647
+pool-resize-quantity = 0
+total-beans-created = 255</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The monitoring command below gives the bean pool statistics for a
+stateless bean.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin get --user admin --host e4800-241-a --port 4848
+-m test.application.testEjbMon.ejb-module.slsb.stateless-session-bean.slsb.bean-pool.*
+idle-timeout-in-seconds = 200
+steady-pool-size = 32
+total-beans-destroyed = 12
+num-threads-waiting = 0
+num-beans-in-pool = 4
+max-pool-size = 1024
+pool-resize-quantity = 12
+total-beans-created = 42</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tuning the bean involves charting the behavior of the cache and pool for
+the bean in question over a period of time.</p>
+</div>
+<div class="paragraph">
+<p>If too many passivations are happening and the JVM heap remains fairly
+small, then the <code>max-cache-size</code> or the <code>cache-idle-timeout-in-seconds</code>
+can be increased. If garbage collection is happening too frequently, and
+the pool size is growing, but the cache hit rate is small, then the
+<code>pool-idle-timeout-in-seconds</code> can be reduced to destroy the instances.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Specifying a <code>max-pool-size</code> of zero (0) means that the pool is
+unbounded. The pooled beans remain in memory unless they are removed by
+specifying a small interval for <code>pool-idle-timeout-in-seconds</code>. For
+production systems, specifying the pool as unbounded is NOT recommended.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="abebz"></a><a id="GSPTG00086"></a><a id="monitoring-individual-ejb-components"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_monitoring_individual_ejb_components">Monitoring Individual EJB Components</h5>
+<div class="paragraph">
+<p>To gather method invocation statistics for all methods in a bean, use
+the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin get -m monitorableObject.*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where monitorableObject is a fully-qualified identifier from the
+hierarchy of objects that can be monitored, shown below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">serverInstance.application.applicationName.ejb-module.moduleName</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where moduleName is <code>x_jar</code> for module <code>x.jar</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>.stateless-session-bean.beanName .bean-pool .bean-method.methodName</code></p>
+</li>
+<li>
+<p><code>.stateful-session-bean.beanName .bean-cache .bean-method.methodName</code></p>
+</li>
+<li>
+<p><code>.entity-bean.beanName .bean-cache .bean-pool .bean-method.methodName</code></p>
+</li>
+<li>
+<p><code>.message-driven-bean.beanName .bean-pool .bean-method.methodName (methodName = onMessage)</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For standalone beans, use this pattern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">serverInstance.application.applicationName.standalone-ejb-module.moduleName</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The possible identifiers are the same as for <code>ejb-module</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example, to get statistics for a method in an entity bean, use this
+command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin get -m serverInstance.application.appName.ejb-module.moduleName
+.entity-bean.beanName.bean-method.methodName.*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about administering the monitoring service in
+general, see "<a href="../administration-guide/monitoring.html#GSADG00011">Administering the Monitoring Service</a>" in
+GlassFish Server Open Source Edition Administration Guide. For
+information about viewing comprehensive EJB monitoring statistics, see
+"<a href="../administration-guide/monitoring.html#GSADG00651">EJB Statistics</a>" in GlassFish Server Open Source
+Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p>To configure EJB monitoring using the GlassFish Server Administration
+Console, navigate to the Configurations&gt;configuration-name&gt;Monitoring
+node. After configuring monitoring, you can view monitoring statistics
+by navigating to the server (Admin Server) node and then selecting the
+Monitor tab. Refer to the Administration Console online help for
+instructions on each of these procedures.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, to list EJB statistics, use the <code>asadmin list</code>
+subcommand. For more information, see <a href="../reference-manual/list.html#GSRFM00145"><code>list</code>(1)</a>.</p>
+</div>
+<div class="paragraph">
+<p>For statistics on stateful session bean passivations, use this command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin get -m serverInstance.application.appName.ejb-module.moduleName
+.stateful-session-bean.beanName.bean-cache.*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>From the attribute values that are returned, use this command:</p>
+</div>
+<div class="paragraph">
+<p><code>num-passivationsnum-passivation-errorsnum-passivation-success</code></p>
+</div>
+<div class="paragraph">
+<p><a id="abeca"></a><a id="GSPTG00173"></a><a id="general-guidelines-1"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_general_guidelines_2">General Guidelines</h4>
+<div class="paragraph">
+<p>The following guidelines can improve performance of EJB components. Keep
+in mind that decomposing an application into many EJB components creates
+overhead and can degrade performance. EJB components are not simply Java
+objects. They are components with semantics for remote call interfaces,
+security, and transactions, as well as properties and methods.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecb"></a><a id="GSPTG00087"></a><a id="use-high-performance-beans"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_use_high_performance_beans">Use High Performance Beans</h5>
+<div class="paragraph">
+<p>Use high-performance beans as much as possible to improve the overall
+performance of your application. For more information, see
+<a href="#abecv">Tuning Tips for Specific Types of EJB Components</a>.</p>
+</div>
+<div class="paragraph">
+<p>The types of EJB components are listed below, from the highest
+performance to the lowest:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Stateless Session Beans and Message Driven Beans</p>
+</li>
+<li>
+<p>Stateful Session Beans</p>
+</li>
+<li>
+<p>Container Managed Persistence (CMP) entity beans configured as
+read-only</p>
+</li>
+<li>
+<p>Bean Managed Persistence (BMP) entity beans configured as read-only</p>
+</li>
+<li>
+<p>CMP beans</p>
+</li>
+<li>
+<p>BMP beans</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For more information about configuring high availability session
+persistence, see "<a href="../ha-administration-guide/session-persistence-and-failover.html#GSHAG00011">Configuring High Availability Session
+Persistence and Failover</a>" in GlassFish Server Open Source Edition High
+Availability Administration Guide. To configure EJB beans using the
+GlassFish Server Administration Console, navigate to the
+Configurations&gt;configuration-name&gt;EJB Container node and then refer to
+the Administration Console online help for detailed instructions.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecc"></a><a id="GSPTG00088"></a><a id="use-caching"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_use_caching">Use Caching</h5>
+<div class="paragraph">
+<p>Caching can greatly improve performance when used wisely. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Cache EJB references: To avoid a JNDI lookup for every request, cache
+EJB references in servlets.</p>
+</li>
+<li>
+<p>Cache home interfaces: Since repeated lookups to a home interface can
+be expensive, cache references to <code>EJBHomes</code> in the <code>init()</code> methods of
+servlets.</p>
+</li>
+<li>
+<p>Cache EJB resources: Use <code>setSessionContext()</code> or <code>ejbCreate()</code> to
+cache bean resources. This is again an example of using bean lifecycle
+methods to perform application actions only once where possible.
+Remember to release acquired resources in the <code>ejbRemove()</code> method.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abecd"></a><a id="GSPTG00089"></a><a id="use-the-appropriate-stubs"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_use_the_appropriate_stubs">Use the Appropriate Stubs</h5>
+<div class="paragraph">
+<p>The stub classes needed by EJB applications are generated dynamically at
+runtime when an EJB client needs them. This means that it is not
+necessary to generate the stubs or retrieve the client JAR file when
+deploying an application with remote EJB components. When deploying an
+application, it is no longer necessary to specify the <code>--retrieve</code>
+option, which can speed up deployment.</p>
+</div>
+<div class="paragraph">
+<p>If you have a legacy rich-client application that directly uses the
+CosNaming service (not a recommended configuration), then you must
+generate the stubs for your application explicitly using RMIC. For more
+information, see the <a href="../troubleshooting-guide/toc.html#GSTSG">GlassFish Server Open Source Edition
+Troubleshooting Guide</a> for more details.</p>
+</div>
+<div class="paragraph">
+<p><a id="abece"></a><a id="GSPTG00090"></a><a id="remove-unneeded-stateful-session-beans"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_remove_unneeded_stateful_session_beans">Remove Unneeded Stateful Session Beans</h5>
+<div class="paragraph">
+<p>Removing unneeded stateful session beans avoids passivating them, which
+requires disk operations.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecf"></a><a id="GSPTG00091"></a><a id="cache-and-pool-tuning-tips"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_cache_and_pool_tuning_tips">Cache and Pool Tuning Tips</h5>
+<div class="paragraph">
+<p>Follow these tips when using the EJB cache and pools to improve
+performance:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Explicitly call <code>remove()</code>: Allow stateful session EJB components to
+be removed from the container cache by explicitly calling of the
+<code>remove()</code> method in the client.</p>
+</li>
+<li>
+<p>Tune the entity EJB component&#8217;s pool size: Entity Beans use both the
+EJB pool and cache settings. Tune the entity EJB component&#8217;s pool size
+to minimize the creation and destruction of beans. Populating the pool
+with a non-zero steady size before hand is useful for getting better
+response for initial requests.</p>
+</li>
+<li>
+<p>Cache bean-specific resources: Use the <code>setEntityContext()</code> method to
+cache bean specific resources and release them using the
+<code>unSetEntityContext()</code> method.</p>
+</li>
+<li>
+<p>Load related data efficiently for container-managed relationships
+(CMRs). For more information, see <a href="#abedc">Pre-Fetching Container
+Managed Relationship (CMR) Beans</a>.</p>
+</li>
+<li>
+<p>Identify read-only beans: Configure read-only entity beans for read
+only operations. For more information, see <a href="#abeda">Read-Only Entity
+Beans</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abecg"></a><a id="GSPTG00174"></a><a id="using-local-and-remote-interfaces"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_local_and_remote_interfaces">Using Local and Remote Interfaces</h4>
+<div class="paragraph">
+<p>This section describes some considerations when EJB components are used
+by local and remote clients.</p>
+</div>
+<div class="paragraph">
+<p><a id="abech"></a><a id="GSPTG00092"></a><a id="prefer-local-interfaces"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_prefer_local_interfaces">Prefer Local Interfaces</h5>
+<div class="paragraph">
+<p>An EJB component can have remote and local interfaces. Clients not
+located in the same application server instance as the bean (remote
+clients) use the remote interface to access the bean. Calls to the
+remote interface require marshalling arguments, transportation of the
+marshalled data over the network, un-marshaling the arguments, and
+dispatch at the receiving end. Thus, using the remote interface entails
+significant overhead.</p>
+</div>
+<div class="paragraph">
+<p>If an EJB component has a local interface, then local clients in the
+same application server instance can use it instead of the remote
+interface. Using the local interface is more efficient, since it does
+not require argument marshalling, transportation, and un-marshalling.</p>
+</div>
+<div class="paragraph">
+<p>If a bean is to be used only by local clients then it makes sense to
+provide only the local interface. If, on the other hand, the bean is to
+be location-independent, then you should provide both the remote and
+local interfaces so that remote clients use the remote interface and
+local clients can use the local interface for efficiency.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeci"></a><a id="GSPTG00093"></a><a id="using-pass-by-reference-semantics"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_using_pass_by_reference_semantics">Using Pass-By-Reference Semantics</h5>
+<div class="paragraph">
+<p>By default, the GlassFish Server uses pass-by-value semantics for
+calling the remote interface of a bean, even if it is co-located. This
+can be expensive, since clients using pass-by-value semantics must copy
+arguments before passing them to the EJB component.</p>
+</div>
+<div class="paragraph">
+<p>However, local clients can use pass-by-reference semantics and thus the
+local and remote interfaces can share the passed objects. But this means
+that the argument objects must be implemented properly, so that they are
+shareable. In general, it is more efficient to use pass-by-reference
+semantics when possible.</p>
+</div>
+<div class="paragraph">
+<p>Using the remote and local interfaces appropriately means that clients
+can access EJB components efficiently. That is, local clients use the
+local interface with pass-by-reference semantics, while remote clients
+use the remote interface with pass-by-value semantics.</p>
+</div>
+<div class="paragraph">
+<p>However, in some instances it might not be possible to use the local
+interface, for example when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The application predates the EJB 2.0 specification and was written
+without any local interfaces.</p>
+</li>
+<li>
+<p>There are bean-to-bean calls and the client beans are written without
+making any co-location assumptions about the called beans.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For these cases, the GlassFish Server provides a pass-by-reference
+option that clients can use to pass arguments by reference to the remote
+interface of a co-located EJB component.</p>
+</div>
+<div class="paragraph">
+<p>You can specify the pass-by-reference option for an entire application
+or a single EJB component. When specified at the application level, all
+beans in the application use pass-by-reference semantics when passing
+arguments to their remote interfaces. When specified at the bean level,
+all calls to the remote interface of the bean use pass-by-reference
+semantics. See "<a href="../application-development-guide/ejb.html#GSDVG00145">Value Added Features</a>" in GlassFish
+Server Open Source Edition Application Development Guide for more
+details about the pass-by-reference flag.</p>
+</div>
+<div class="paragraph">
+<p>To specify that an EJB component will use pass by reference semantics,
+use the following tag in the <code>sun-ejb-jar.xml</code> deployment descriptor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;pass-by-reference&gt;true&lt;/pass-by-reference&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This avoids copying arguments when the EJB component&#8217;s methods are
+invoked and avoids copying results when methods return. However,
+problems will arise if the data is modified by another source during the
+invocation.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecj"></a><a id="GSPTG00175"></a><a id="improving-performance-of-ejb-transactions"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_improving_performance_of_ejb_transactions">Improving Performance of EJB Transactions</h4>
+<div class="paragraph">
+<p>This section provides some tips to improve performance when using
+transactions.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abeck">Use Container-Managed Transactions</a></p>
+</li>
+<li>
+<p><a href="#abecl">Do Not Encompass User Input Time</a></p>
+</li>
+<li>
+<p><a href="#abecm">Identify Non-Transactional Methods</a></p>
+</li>
+<li>
+<p><a href="#abecn">Use <code>TX_REQUIRED</code> for Long Transaction Chains</a></p>
+</li>
+<li>
+<p><a href="#abeco">Use Lowest Cost Database Locking</a></p>
+</li>
+<li>
+<p><a href="#abecp">Use XA-Capable Data Sources Only When Needed</a></p>
+</li>
+<li>
+<p><a href="#abecq">Configure JDBC Resources as One-Phase Commit Resources</a></p>
+</li>
+<li>
+<p><a href="#abecr">Use the Least Expensive Transaction Attribute</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abeck"></a><a id="GSPTG00094"></a><a id="use-container-managed-transactions"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_use_container_managed_transactions">Use Container-Managed Transactions</h5>
+<div class="paragraph">
+<p>Container-managed transactions are preferred for consistency, and
+provide better performance.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecl"></a><a id="GSPTG00095"></a><a id="do-not-encompass-user-input-time"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_do_not_encompass_user_input_time">Do Not Encompass User Input Time</h5>
+<div class="paragraph">
+<p>To avoid resources being held unnecessarily for long periods, a
+transaction should not encompass user input or user think time.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecm"></a><a id="GSPTG00096"></a><a id="identify-non-transactional-methods"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_identify_non_transactional_methods">Identify Non-Transactional Methods</h5>
+<div class="paragraph">
+<p>Declare non-transactional methods of session EJB components with
+<code>NotSupported</code> or <code>Never</code> transaction attributes. These attributes can
+be found in the <code>ejb-jar.xml</code> deployment descriptor file. Transactions
+should span the minimum time possible since they lock database rows.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecn"></a><a id="GSPTG00097"></a><a id="use-tx_required-for-long-transaction-chains"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_use_code_tx_required_code_for_long_transaction_chains">Use <code>TX_REQUIRED</code> for Long Transaction Chains</h5>
+<div class="paragraph">
+<p>For very large transaction chains, use the transaction attribute
+<code>TX_REQUIRED.</code> To ensure EJB methods in a call chain, use the same
+transaction.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeco"></a><a id="GSPTG00098"></a><a id="use-lowest-cost-database-locking"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_use_lowest_cost_database_locking">Use Lowest Cost Database Locking</h5>
+<div class="paragraph">
+<p>Use the lowest cost locking available from the database that is
+consistent with any transaction. Commit the data after the transaction
+completes rather than after each method call.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecp"></a><a id="GSPTG00099"></a><a id="use-xa-capable-data-sources-only-when-needed"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_use_xa_capable_data_sources_only_when_needed">Use XA-Capable Data Sources Only When Needed</h5>
+<div class="paragraph">
+<p>When multiple database resources, connector resources or JMS resources
+are involved in one transaction, a distributed or global transaction
+needs to be performed. This requires XA capable resource managers and
+data sources. Use XA capable data sources, only when two or more data
+source are going to be involved in a transaction. If a database
+participates in some distributed transactions, but mostly in local or
+single database transactions, it is advisable to register two separate
+JDBC resources and use the appropriate resource in the application.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecq"></a><a id="GSPTG00100"></a><a id="configure-jdbc-resources-as-one-phase-commit-resources"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configure_jdbc_resources_as_one_phase_commit_resources">Configure JDBC Resources as One-Phase Commit Resources</h5>
+<div class="paragraph">
+<p>To improve performance of transactions involving multiple resources, the
+GlassFish Server uses last agent optimization (LAO), which allows the
+configuration of one of the resources in a distributed transaction as a
+one-phase commit (1PC) resource. Since the overhead of multiple-resource
+transactions is much higher for a JDBC resource than a message queue,
+LAO substantially improves performance of distributed transactions
+involving one JDBC resource and one or more message queues. To take
+advantage of LAO, configure a JDBC resource as a 1PC resource. Nothing
+special needs to be done to configure JMS resources.</p>
+</div>
+<div class="paragraph">
+<p>In global transactions involving multiple JDBC resources, LAO will still
+improve performance, however, not as much as for one JDBC resource. In
+this situation, one of the JDBC resources should be configured as 1PC,
+and all others should be configured as XA.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecr"></a><a id="GSPTG00101"></a><a id="use-the-least-expensive-transaction-attribute"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_use_the_least_expensive_transaction_attribute">Use the Least Expensive Transaction Attribute</h5>
+<div class="paragraph">
+<p>Set the following transaction attributes in the EJB deployment
+descriptor file (<code>ejb-jar.xml</code>). Options are listed from best
+performance to worst. To improve performance, choose the least expensive
+attribute that will provide the functionality your application needs:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>NEVER</code></p>
+</li>
+<li>
+<p><code>TX_NOTSUPPORTED</code></p>
+</li>
+<li>
+<p><code>TX_MANDATORY</code></p>
+</li>
+<li>
+<p><code>TX_SUPPORTS</code></p>
+</li>
+<li>
+<p><code>TX_REQUIRED</code></p>
+</li>
+<li>
+<p><code>TX_REQUIRESNEW</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="abecs"></a><a id="GSPTG00176"></a><a id="using-special-techniques"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_special_techniques">Using Special Techniques</h4>
+<div class="paragraph">
+<p>Special performance-enhancing techniques are discussed in the following
+sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abect">Version Consistency</a></p>
+</li>
+<li>
+<p><a href="#abecu">Request Partitioning</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abect"></a><a id="GSPTG00102"></a><a id="version-consistency"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_version_consistency">Version Consistency</h5>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>The technique in section applies only to the EJB 2.1 architecture. In
+the EJB 3.0 architecture, use the Java Persistence API (JPA).</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Use version consistency to improve performance while protecting the
+integrity of data in the database. Since the application server can use
+multiple copies of an EJB component simultaneously, an EJB component&#8217;s
+state can potentially become corrupted through simultaneous access.</p>
+</div>
+<div class="paragraph">
+<p>The standard way of preventing corruption is to lock the database row
+associated with a particular bean. This prevents the bean from being
+accessed by two simultaneous transactions and thus protects data.
+However, it also decreases performance, since it effectively serializes
+all EJB access.</p>
+</div>
+<div class="paragraph">
+<p>Version consistency is another approach to protecting EJB data
+integrity. To use version consistency, you specify a column in the
+database to use as a version number. The EJB lifecycle then proceeds
+like this:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The first time the bean is used, the <code>ejbLoad()</code> method loads the bean
+as normal, including loading the version number from the database.</p>
+</li>
+<li>
+<p>The <code>ejbStore()</code> method checks the version number in the database
+versus its value when the EJB component was loaded.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If the version number has been modified, it means that there has been
+simultaneous access to the EJB component and <code>ejbStore()</code> throws a
+<code>ConcurrentModificationException</code>.</p>
+</li>
+<li>
+<p>Otherwise, <code>ejbStore()</code> stores the data and completes as normal.<br>
+The <code>ejbStore()</code> method performs this validation at the end of the
+transaction regardless of whether any data in the bean was modified.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Subsequent uses of the bean behave similarly, except that the
+<code>ejbLoad()</code> method loads its initial data (including the version number)
+from an internal cache. This saves a trip to the database. When the
+<code>ejbStore()</code> method is called, the version number is checked to ensure
+that the correct data was used in the transaction.</p>
+</div>
+<div class="paragraph">
+<p>Version consistency is advantageous when you have EJB components that
+are rarely modified, because it allows two transactions to use the same
+EJB component at the same time. Because neither transaction modifies the
+data, the version number is unchanged at the end of both transactions,
+and both succeed. But now the transactions can run in parallel. If two
+transactions occasionally modify the same EJB component, one will
+succeed and one will fail and can be retried using the new values—which
+can still be faster than serializing all access to the EJB component if
+the retries are infrequent enough (though now your application logic has
+to be prepared to perform the retry operation).</p>
+</div>
+<div class="paragraph">
+<p>To use version consistency, the database schema for a particular table
+must include a column where the version can be stored. You then specify
+that table in the <code>sun-cmp-mapping.xml</code> deployment descriptor for a
+particular bean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;entity-mapping&gt;
+    &lt;cmp-field-mapping&gt;
+        ...
+    &lt;/cmp-field-mapping&gt;
+    &lt;consistency&gt;
+        &lt;check-version-of-accessed-instances&gt;
+            &lt;column-name&gt;OrderTable.VC_VERSION_NUMBER&lt;/column-name&gt;
+        &lt;/check-version-of-accessed-instances&gt;
+    &lt;/consistency&gt;
+&lt;/entity-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition, you must establish a trigger on the database to
+automatically update the version column when data in the specified table
+is modified. The GlassFish Server requires such a trigger to use version
+consistency. Having such a trigger also ensures that external
+applications that modify the EJB data will not conflict with EJB
+transactions in progress.</p>
+</div>
+<div class="paragraph">
+<p>For example, the following DDL illustrates how to create a trigger for
+the <code>Order</code> table:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">CREATE TRIGGER OrderTrigger
+  BEFORE UPDATE ON OrderTable
+  FOR EACH ROW
+  WHEN (new.VC_VERSION_NUMBER = old.VC_VERSION_NUMBER)
+  DECLARE
+  BEGIN
+    :NEW.VC_VERSION_NUMBER := :OLD.VC_VERSION_NUMBER + 1;
+  END;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abecu"></a><a id="GSPTG00103"></a><a id="request-partitioning"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_request_partitioning">Request Partitioning</h5>
+<div class="paragraph">
+<p>Request partitioning enables you to assign a request priority to an EJB
+component. This gives you the flexibility to make certain EJB components
+execute with higher priorities than others.</p>
+</div>
+<div class="paragraph">
+<p>An EJB component which has a request priority assigned to it will have
+its requests (services) executed within an assigned threadpool. By
+assigning a threadpool to its execution, the EJB component can execute
+independently of other pending requests. In short, request partitioning
+enables you to meet service-level agreements that have differing levels
+of priority assigned to different services.</p>
+</div>
+<div class="paragraph">
+<p>Request partitioning applies only to remote EJB components (those that
+implement a remote interface). Local EJB components are executed in
+their calling thread (for example, when a servlet calls a local bean,
+the local bean invocation occurs on the servlet&#8217;s thread).</p>
+</div>
+<div class="paragraph">
+<p><a id="gacmw"></a><a id="GSPTG00037"></a><a id="to-enable-request-partitioning"></a></p>
+</div>
+<div class="paragraph">
+<p>To Enable Request Partitioning</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure additional threadpools for EJB execution.<br>
+Using the GlassFish Server Administration Console, navigate to the
+Configurations&gt;configuration-name&gt;Thread Pools node. Refer to the
+Administration Console online help for more information. Alternatively,
+you can follow the instructions in "<a href="../administration-guide/threadpools.html#GSADG00008">Administering
+Thread Pools</a>" in GlassFish Server Open Source Edition Administration
+Guide.<br>
+Configure the threadpools as follows:</p>
+</li>
+<li>
+<p>Add the additional threadpool IDs to the GlassFish Server&#8217;s ORB.<br>
+This can be done on the Configurations&gt;configuration-name&gt;ORB node in
+the Administration Console.<br>
+For example, enable threadpools named <code>priority-1</code> and <code>priority-2</code> to
+the <code>&lt;orb&gt;</code> element as follows:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;orb max-connections="1024" message-fragment-size="1024"
+    use-thread-pool-ids="thread-pool-1,priority-1,priority-2"&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Include the threadpool ID in the <code>use-thread-pool-id</code> element of the
+EJB component&#8217;s <code>sun-ejb-jar.xml</code> deployment descriptor.<br>
+For example, the following <code>sun-ejb-jar.xml</code> deployment descriptor for
+an EJB component named "<code>TheGreeter</code>" is assigned to a thread pool named
+<code>priority-2</code>:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;sun-ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;unique-id&gt;1&lt;/unique-id&gt;
+    &lt;ejb&gt;
+      &lt;ejb-name&gt;TheGreeter&lt;/ejb-name&gt;
+      &lt;jndi-name&gt;greeter&lt;/jndi-name&gt;
+      &lt;use-thread-pool-id&gt;priority-1&lt;/use-thread-pool-id&gt;
+    &lt;/ejb&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/sun-ejb-jar&gt;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the GlassFish Server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="abecv"></a><a id="GSPTG00177"></a><a id="tuning-tips-for-specific-types-of-ejb-components"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tuning_tips_for_specific_types_of_ejb_components">Tuning Tips for Specific Types of EJB Components</h4>
+<div class="paragraph">
+<p>This section provides tips for tuning various specific types of EJB
+components:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abecw">Entity Beans</a></p>
+</li>
+<li>
+<p><a href="#abecx">Stateful Session Beans</a></p>
+</li>
+<li>
+<p><a href="#abecz">Stateless Session Beans</a></p>
+</li>
+<li>
+<p><a href="#abeda">Read-Only Entity Beans</a></p>
+</li>
+<li>
+<p><a href="#abedc">Pre-Fetching Container Managed Relationship (CMR) Beans</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These components can all be configured in the GlassFish Server
+Administration Console from the Configurations&gt;configuration-name&gt;EJB
+Container node. Alternatively, you can perform these configurations by
+following the instructions in "<a href="../ha-administration-guide/rmi-iiop.html#GSHAG00013">RMI-IIOP Load Balancing
+and Failover</a>" in GlassFish Server Open Source Edition High Availability
+Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecw"></a><a id="GSPTG00104"></a><a id="entity-beans"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_entity_beans">Entity Beans</h5>
+<div class="paragraph">
+<p>Depending on the usage of a particular entity bean, one should tune
+<code>max-cache-size</code> so that the beans that are used less frequently (for
+example, an order that is created and never used after the transaction
+is over) are cached less, and beans that are used frequently (for
+example, an item in the inventory that gets referenced very often), are
+cached more.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecx"></a><a id="GSPTG00105"></a><a id="stateful-session-beans"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_stateful_session_beans">Stateful Session Beans</h5>
+<div class="paragraph">
+<p>When a stateful bean represents a user, a reasonable <code>max-cache-size</code> of
+beans is the expected number of concurrent users on the application
+server process. If this value is too low (in relation to the steady load
+of users), beans would be frequently passivated and activated, causing a
+negative impact on the response times, due to CPU intensive
+serialization and deserialization as well as disk I/O.</p>
+</div>
+<div class="paragraph">
+<p>Another important variable for tuning is <code>cache-idle-timeout-in-seconds</code>
+where at periodic intervals of <code>cache-idle-timeout-in-seconds</code>, all the
+beans in the cache that have not been accessed for more than
+<code>cache-idle-timeout-in-seconds</code> time, are passivated. Similar to an HTTP
+session timeout, the bean is removed after it has not been accessed for
+<code>removal-timeout-in-seconds</code>. Passivated beans are stored on disk in
+serialized form. A large number of passivated beans could not only mean
+many files on the disk system, but also slower response time as the
+session state has to be de-serialized before the invocation.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecy"></a><a id="GSPTG00011"></a><a id="checkpoint-only-when-needed"></a></p>
+</div>
+<div class="paragraph">
+<p>Checkpoint only when needed</p>
+</div>
+<div class="paragraph">
+<p>In high availability mode, when using stateful session beans, consider
+checkpointing only those methods that alter the state of the bean
+significantly. This reduces the number of times the bean state has to be
+checkpointed into the persistent store.</p>
+</div>
+<div class="paragraph">
+<p><a id="abecz"></a><a id="GSPTG00106"></a><a id="stateless-session-beans"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_stateless_session_beans">Stateless Session Beans</h5>
+<div class="paragraph">
+<p>Stateless session beans are more readily pooled than entity or the
+stateful session beans. Valid values for <code>steady-pool-size</code>,
+<code>pool-resize-quantity</code> and <code>max-pool-size</code> are the best tunables for
+these type of beans. Set the <code>steady-pool-size</code> to greater than zero if
+you want to pre-populate the pool. This way, when the container comes
+up, it creates a pool with <code>steady-pool-size</code> number of beans. By
+pre-populating the pool it is possible to avoid the object creation time
+during method invocations.</p>
+</div>
+<div class="paragraph">
+<p>Setting the <code>steady-pool size</code> to a very large value can cause unwanted
+memory growth and can result in large garbage collection times.
+<code>pool-resize-quantity</code> determines the rate of growth as well as the rate
+of decay of the pool. Setting it to a small value is better as the decay
+behaves like an exponential decay. Setting a small <code>max-pool-size</code> can
+cause excessive object destruction (and as a result excessive object
+creation) as instances are destroyed from the pool if the current pool
+size exceeds <code>max-pool-size</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeda"></a><a id="GSPTG00107"></a><a id="read-only-entity-beans"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_read_only_entity_beans">Read-Only Entity Beans</h5>
+<div class="paragraph">
+<p>Read-only entity beans cache data from the database. GlassFish Server
+supports read-only beans that use both bean-managed persistence (BMP)
+and container-managed persistence (CMP). Of the two types, CMP read-only
+beans provide significantly better performance. In the EJB lifecycle,
+the EJB container calls the <code>ejbLoad()</code> method of a read-only bean once.
+The container makes multiple copies of the EJB component from that data,
+and since the beans do not update the database, the container never
+calls the <code>ejbStore()</code> method. This greatly reduces database traffic for
+these beans.</p>
+</div>
+<div class="paragraph">
+<p>If there is a bean that never updates the database, use a read-only bean
+in its place to improve performance. A read-only bean is appropriate if
+either:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Database rows represented by the bean do not change.</p>
+</li>
+<li>
+<p>The application can tolerate using out-of-date values for the bean.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, an application might use a read-only bean to represent a
+list of best-seller books. Although the list might change occasionally
+in the database (say, from another bean entirely), the change need not
+be reflected immediately in an application.</p>
+</div>
+<div class="paragraph">
+<p>The <code>ejbLoad()</code> method of a read-only bean is handled differently for
+CMP and BMP beans. For CMP beans, the EJB container calls <code>ejbLoad()</code>
+only once to load the data from the database; subsequent uses of the
+bean just copy that data. For BMP beans, the EJB container calls
+<code>ejbLoad()</code> the first time a bean is used in a transaction. Subsequent
+uses of that bean within the transaction use the same values. The
+container calls <code>ejbLoad()</code> for a BMP bean that doesn&#8217;t run within a
+transaction every time the bean is used. Therefore, read-only BMP beans
+still make a number of calls to the database.</p>
+</div>
+<div class="paragraph">
+<p>To create a read-only bean, add the following to the EJB deployment
+descriptor <code>sun-ejb-jar.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;is-read-only-bean&gt;true&lt;/is-read-only-bean&gt;
+&lt;refresh-period-in-seconds&gt;600&lt;/refresh-period-in-seconds&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abedb"></a><a id="GSPTG00012"></a><a id="refresh-period"></a></p>
+</div>
+<div class="paragraph">
+<p>Refresh Period</p>
+</div>
+<div class="paragraph">
+<p>An important parameter for tuning read-only beans is the refresh period,
+represented by the deployment descriptor entity
+<code>refresh-period-in-seconds</code>. For CMP beans, the first access to a bean
+loads the bean&#8217;s state. The first access after the refresh period
+reloads the data from the database. All subsequent uses of the bean uses
+the newly refreshed data (until another refresh period elapses). For BMP
+beans, an <code>ejbLoad()</code> method within an existing transaction uses the
+cached data unless the refresh period has expired (in which case, the
+container calls <code>ejbLoad()</code> again).</p>
+</div>
+<div class="paragraph">
+<p>This parameter enables the EJB component to periodically refresh its
+"snapshot" of the database values it represents. If the refresh period
+is less than or equal to 0, the bean is never refreshed from the
+database (the default behavior if no refresh period is given).</p>
+</div>
+<div class="paragraph">
+<p><a id="abedc"></a><a id="GSPTG00108"></a><a id="pre-fetching-container-managed-relationship-cmr-beans"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_pre_fetching_container_managed_relationship_cmr_beans">Pre-Fetching Container Managed Relationship (CMR) Beans</h5>
+<div class="paragraph">
+<p>If a container-managed relationship (CMR) exists in your application,
+loading one bean will load all its related beans. The canonical example
+of CMR is an order-orderline relationship where you have one <code>Order</code> EJB
+component that has related <code>OrderLine</code> EJB components. In previous
+releases of the application server, to use all those beans would require
+multiple database queries: one for the <code>Order</code> bean and one for each of
+the <code>OrderLine</code> beans in the relationship.</p>
+</div>
+<div class="paragraph">
+<p>In general, if a bean has n relationships, using all the data of the
+bean would require n+1 database accesses. Use CMR pre-fetching to
+retrieve all the data for the bean and all its related beans in one
+database access.</p>
+</div>
+<div class="paragraph">
+<p>For example, you have this relationship defined in the <code>ejb-jar.xml</code>
+file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;relationships&gt;
+    &lt;ejb-relation&gt;
+        &lt;description&gt;Order-OrderLine&lt;/description&gt;
+        &lt;ejb-relation-name&gt;Order-OrderLine&lt;/ejb-relation-name&gt;
+        &lt;ejb-relationship-role&gt;
+            &lt;ejb-relationship-role-name&gt;
+                Order-has-N-OrderLines
+            &lt;/ejb-relationship-role-name&gt;
+            &lt;multiplicity&gt;One&lt;/multiplicity&gt;
+            &lt;relationship-role-source&gt;
+                &lt;ejb-name&gt;OrderEJB&lt;/ejb-name&gt;
+            &lt;/relationship-role-source&gt;
+            &lt;cmr-field&gt;
+                &lt;cmr-field-name&gt;orderLines&lt;/cmr-field-name&gt;
+                &lt;cmr-field-type&gt;java.util.Collection&lt;/cmr-field-type&gt;
+            &lt;/cmr-field&gt;
+        &lt;/ejb-relationship-role&gt;
+    &lt;/ejb-relation&gt;
+&lt;/relationships&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When a particular <code>Order</code> is loaded, you can load its related
+<code>OrderLines</code> by adding this to the <code>sun-cmp-mapping.xml</code> file for the
+application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;entity-mapping&gt;
+    &lt;ejb-name&gt;Order&lt;/ejb-name&gt;
+    &lt;table-name&gt;...&lt;/table-name&gt;
+    &lt;cmp-field-mapping&gt;...&lt;/cmp-field-mapping&gt;
+    &lt;cmr-field-mapping&gt;
+        &lt;cmr-field-name&gt;orderLines&lt;/cmr-field-name&gt;
+        &lt;column-pair&gt;
+            &lt;column-name&gt;OrderTable.OrderID&lt;/column-name&gt;
+            &lt;column-name&gt;OrderLineTable.OrderLine_OrderID&lt;/column-name&gt;
+        &lt;/column-pair&gt;
+        &lt;fetched-with&gt;
+            &lt;default&gt;
+        &lt;/fetched-with&gt;
+    &lt;/cmr-field-mapping&gt;
+&lt;/entity-mappping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now when an <code>Order</code> is retrieved, the CMP engine issues SQL to retrieve
+all related <code>OrderLines</code> with a <code>SELECT</code> statement that has the
+following <code>WHERE</code> clause:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">OrderTable.OrderID = OrderLineTable.OrderLine_OrderID</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This clause indicates an outer join. These <code>OrderLines</code> are pre-fetched.</p>
+</div>
+<div class="paragraph">
+<p>Pre-fetching generally improves performance because it reduces the
+number of database accesses. However, if the business logic often uses
+<code>Orders</code> without referencing their <code>OrderLines</code>, then this can have a
+performance penalty, that is, the system has spent the effort to
+pre-fetch the <code>OrderLines</code> that are not actually needed.</p>
+</div>
+<div class="paragraph">
+<p>Avoid pre-fetching for specific finder methods; this can often avoid
+that penalty. For example, consider an order bean has two finder
+methods: a <code>findByPrimaryKey</code> method that uses the <code>Orderlines</code>, and a
+<code>findByCustomerId</code> method that returns only order information and
+therefore does not use the <code>Orderlines</code>. If you have enabled CMR
+pre-fetching for the <code>Orderlines</code>, both finder methods will pre-fetch
+the <code>Orderlines</code>. However, you can prevent pre-fetching for the
+<code>findByCustomerId</code> method by including this information in the
+<code>sun-ejb-jar.xml</code> descriptor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;ejb&gt;
+    &lt;ejb-name&gt;OrderBean&lt;/ejb-name&gt;
+    ...
+    &lt;cmp&gt;
+        &lt;prefetch-disabled&gt;
+            &lt;query-method&gt;
+                &lt;method-name&gt;findByCustomerId&lt;/method-name&gt;
+            &lt;/query-method&gt;
+        &lt;/prefetch-disabled&gt;
+     &lt;/cmp&gt;
+&lt;/ejb&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abedd"></a><a id="GSPTG00178"></a><a id="jdbc-and-database-access"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jdbc_and_database_access">JDBC and Database Access</h4>
+<div class="paragraph">
+<p>The following are some tips to improve the performance of database
+access:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abede">Use JDBC Directly</a></p>
+</li>
+<li>
+<p><a href="#abedf">Encapsulate Business Logic in Entity EJB Components</a></p>
+</li>
+<li>
+<p><a href="#abedg">Close Connections</a></p>
+</li>
+<li>
+<p><a href="#abedh">Minimize the Database Transaction Isolation Level</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abede"></a><a id="GSPTG00109"></a><a id="use-jdbc-directly"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_use_jdbc_directly">Use JDBC Directly</h5>
+<div class="paragraph">
+<p>When dealing with large amounts of data, such as searching a large
+database, use JDBC directly rather than using Entity EJB components.</p>
+</div>
+<div class="paragraph">
+<p><a id="abedf"></a><a id="GSPTG00110"></a><a id="encapsulate-business-logic-in-entity-ejb-components"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_encapsulate_business_logic_in_entity_ejb_components">Encapsulate Business Logic in Entity EJB Components</h5>
+<div class="paragraph">
+<p>Combine business logic with the Entity EJB component that holds the data
+needed for that logic to process.</p>
+</div>
+<div class="paragraph">
+<p><a id="abedg"></a><a id="GSPTG00111"></a><a id="close-connections"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_close_connections">Close Connections</h5>
+<div class="paragraph">
+<p>To ensure that connections are returned to the pool, always close the
+connections after use.</p>
+</div>
+<div class="paragraph">
+<p><a id="abedh"></a><a id="GSPTG00112"></a><a id="minimize-the-database-transaction-isolation-level"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_minimize_the_database_transaction_isolation_level">Minimize the Database Transaction Isolation Level</h5>
+<div class="paragraph">
+<p>Use the default isolation level provided by the JDBC driver rather than
+calling <code>setTransactionIsolationLevel()</code>, unless you are certain that
+your application behaves correctly and performs better at a different
+isolation level.</p>
+</div>
+<div class="paragraph">
+<p>Reduce the database transaction isolation level when appropriate.
+Reduced isolation levels reduce work in the database tier, and could
+lead to better application performance. However, this must be done after
+carefully analyzing the database table usage patterns.</p>
+</div>
+<div class="paragraph">
+<p>To set the database transaction isolation level using the GlassFish
+Server Administration Console, navigate to the Resources&gt;JDBC&gt;JDBC
+Connection Pools&gt;pool-name node. Refer to the Administration Console
+online help for complete instructions. Alternatively, follow the
+instructions in "<a href="../administration-guide/jdbc.html#GSADG00015">Administering Database Connectivity</a>"
+in GlassFish Server Open Source Edition Administration Guide. For more
+information on tuning JDBC connection pools, see
+<a href="tuning-glassfish.html#abehq">JDBC Connection Pool Settings</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="abedi"></a><a id="GSPTG00179"></a><a id="tuning-message-driven-beans"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tuning_message_driven_beans">Tuning Message-Driven Beans</h4>
+<div class="paragraph">
+<p>This section provides some tips to improve performance when using JMS
+with message-driven beans (MDBs).</p>
+</div>
+<div class="paragraph">
+<p><a id="abedj"></a><a id="GSPTG00113"></a><a id="use-getconnection"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_use_code_getconnection_code">Use <code>getConnection()</code></h5>
+<div class="paragraph">
+<p>JMS connections are served from a connection pool. This means that
+calling <code>getConnection()</code> on a Queue connection factory is fast.</p>
+</div>
+<div class="paragraph">
+<p><a id="abedk"></a><a id="GSPTG00114"></a><a id="tune-the-message-driven-beans-pool-size"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_tune_the_message_driven_bean_s_pool_size">Tune the Message-Driven Bean&#8217;s Pool Size</h5>
+<div class="paragraph">
+<p>The container for message-driven beans (MDB) is different than the
+containers for entity and session beans. In the MDB container, sessions
+and threads are attached to the beans in the MDB pool. This design makes
+it possible to pool the threads for executing message-driven requests in
+the container.</p>
+</div>
+<div class="paragraph">
+<p>Tune the Message-Driven bean&#8217;s pool size to optimize the concurrent
+processing of messages. Set the size of the MDB pool to, based on all
+the parameters of the server (taking other applications into account).
+For example, a value greater than 500 is generally too large.</p>
+</div>
+<div class="paragraph">
+<p>To configure MDB pool settings in the GlassFish Server Administration
+Console, navigate to the Configurations&gt;configuration-name&gt;EJB Container
+node and then select the MDB Settings tab. Refer to the Administration
+Console online help for more information. Alternatively, you can set the
+MDB pool size by using the following <code>asadmin set</code> subcommand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin set server.mdb-container.max-pool-size = value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abedl"></a><a id="GSPTG00115"></a><a id="cache-bean-specific-resources"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_cache_bean_specific_resources">Cache Bean-Specific Resources</h5>
+<div class="paragraph">
+<p>Use the <code>setMessageDrivenContext()</code> or <code>ejbCreate()</code> method to cache
+bean specific resources, and release those resources from the
+<code>ejbRemove()</code> method.</p>
+</div>
+<div class="paragraph">
+<p><a id="abedm"></a><a id="GSPTG00116"></a><a id="limit-use-of-jms-connections"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_limit_use_of_jms_connections">Limit Use of JMS Connections</h5>
+<div class="paragraph">
+<p>When designing an application that uses JMS connections make sure you
+use a methodology that sparingly uses connections, by either pooling
+them or using the same connection for multiple sessions.</p>
+</div>
+<div class="paragraph">
+<p>The JMS connection uses two threads and the sessions use one thread
+each. Since these threads are not taken from a pool and the resultant
+objects aren&#8217;t pooled, you could run out of memory during periods of
+heavy usage.</p>
+</div>
+<div class="paragraph">
+<p>One workaround is to move <code>createTopicConnection</code> into the <code>init</code> of the
+servlet.</p>
+</div>
+<div class="paragraph">
+<p>Make sure to specifically close the session, or it will stay open, which
+ties up resources.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="overview.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="tuning-glassfish.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

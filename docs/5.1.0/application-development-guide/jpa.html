@@ -1,0 +1,1188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Configuring the Java Persistence Provider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Configuring the Java Persistence Provider</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="webservices.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="webapps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00008"></a><a id="gbxjk"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-the-java-persistence-provider">6 Configuring the Java Persistence Provider</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes Oracle TopLink, the default persistence provider
+in GlassFish Server Open Source Edition, and introduces how to use it.
+This chapter also tells how to set the default persistence provider in
+GlassFish Server and how to use persistence-related features specific to
+GlassFish Server such as automatic schema generation.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#CHDJJAEI">Overview of Oracle TopLink</a></p>
+</li>
+<li>
+<p><a href="#CHDHDABJ">Using Oracle TopLink in GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#gbwmj">Specifying the Database for an Application</a></p>
+</li>
+<li>
+<p><a href="#gdkwf">Specifying the Persistence Provider for an Application</a></p>
+</li>
+<li>
+<p><a href="#gescc">Primary Key Generation Defaults</a></p>
+</li>
+<li>
+<p><a href="#gbwlh">Automatic Schema Generation</a></p>
+</li>
+<li>
+<p><a href="#gbxjh">Restrictions and Optimizations</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDJJAEI"></a><a id="GSDVG537"></a><a id="overview-of-oracle-toplink"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_overview_of_oracle_toplink">Overview of Oracle TopLink</h3>
+<div class="paragraph">
+<p>Oracle TopLink is the default persistence provider in Oracle GlassFish
+Server. It is a comprehensive standards-based object-persistence and
+object-transformation framework that provides APIs, schemas, and
+run-time services for the persistence layer of an application.</p>
+</div>
+<div class="paragraph">
+<p>TopLink includes all of EclipseLink, from the Eclipse Foundation.
+EclipseLink is the default persistence provider in GlassFish Server Open
+Source Edition. EclipseLink is the open source implementation of the
+development framework and the runtime provided in TopLink. EclipseLink
+implements the following specifications, plus value-added extensions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java Persistence Architecture (JPA) 2.0.<br>
+JPA 2.0 is part of Java Platform, Enterprise Edition 6 (Java EE 6). It
+includes improvements and enhancements to domain modeling,
+object/relational mapping, <code>EntityManager</code> and <code>Query</code> interfaces, and
+the Java Persistence Query Language (JPQL). It includes an API for
+criteria queries, a metamodel API, and support for validation. The Java
+Persistence API can be used with non-EJB components outside the EJB
+container.<br>
+For the JPA 2.0 Specification, see
+<a href="http://jcp.org/aboutJava/communityprocess/pfd/jsr317/index.html">Java
+Specification Request (JSR) 317</a>. For basic information about the Java
+Persistence API, see
+"https://javaee.github.io/tutorial/partpersist.html[Persistence]" in The
+Java EE 8 Tutorial.</p>
+</li>
+<li>
+<p>Java Architecture for XML Binding (JAXB) 2.0. The EclipseLink JAXB
+implementation, plus EclipseLink extensions, is called MOXy. The
+<code>org.eclipse.persistence.moxy.jar</code> file is bundled with GlassFish
+Server. For more information about MOXy support in GlassFish Server, see
+<a href="webservices.html#CHDEBBCH">The Databinding Provider</a>.<br>
+For the JAXB 2.0 specification, see
+<a href="http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html">Java
+Specification Request (JSR) 222</a>.</p>
+</li>
+<li>
+<p>EclipseLink utilities are not included but can be used with GlassFish
+Server. Download the EclipseLink zip file at
+<code>http://www.eclipse.org/eclipselink/downloads/</code> and unzip it. The
+utility files are located here:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>bin/jaxb-compiler.cmd
+bin/jaxb-compiler.sh</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In addition to all of EclipseLink, Oracle TopLink includes TopLink Grid,
+an integration between TopLink and Oracle Coherence that allows TopLink
+to use Oracle Coherence as a level 2 (L2) cache and persistence layer
+for entities. The <code>toplink-grid.jar</code> file is bundled with Oracle
+GlassFish Server.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must have a license for Oracle Coherence to be able to use TopLink
+Grid.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For information about developing, deploying, and configuring Oracle
+TopLink, EclipseLink, and TopLink Grid applications, see the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://docs.oracle.com/html/E25034_01/toc.html">Oracle Fusion Middleware
+Solution Guide for Oracle TopLink</a></p>
+</li>
+<li>
+<p>EclipseLink project home at <code>http://wiki.eclipse.org/EclipseLink</code></p>
+</li>
+<li>
+<p>EclipseLink Documentation Center at
+<code>http://wiki.eclipse.org/EclipseLink/UserGuide</code></p>
+</li>
+<li>
+<p>Java API Reference for EclipseLink at
+<code>http://www.eclipse.org/eclipselink/api/latest/index.html</code></p>
+</li>
+<li>
+<p>EclipseLink examples at <code>http://wiki.eclipse.org/EclipseLink/Examples</code></p>
+</li>
+<li>
+<p><a href="http://docs.oracle.com/cd/E18686_01/coh.37/e18677/toc.html">Oracle
+Coherence Developer&#8217;s Guide</a></p>
+</li>
+<li>
+<p><a href="http://docs.oracle.com/cd/E17904_01/doc.1111/e16596/toc.html">Oracle
+Fusion Middleware Integration Guide for Oracle TopLink with Coherence
+Grid</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDHDABJ"></a><a id="GSDVG538"></a><a id="using-oracle-toplink-in-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_oracle_toplink_in_glassfish_server">Using Oracle TopLink in GlassFish Server</h3>
+<div class="paragraph">
+<p>To run TopLink JPA applications in GlassFish Server, you must configure
+the server and coordinate certain server and application settings. These
+are described in the following steps. For a summary of these steps, see
+"http://docs.oracle.com/html/E25034_01/tlandgs.html#CIHDDACF[Using
+TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
+Guide for Oracle TopLink. For more detailed explanations of these steps,
+see the links in the steps.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Set up the datasource. See "<a href="../administration-guide/jdbc.html#GSADG00015">Administering Database
+Connectivity</a>" in GlassFish Server Open Source Edition Administration
+Guide.</p>
+</li>
+<li>
+<p>Create the application. For guidance in writing your application,
+see "https://javaee.github.io/tutorial/partpersist.html[Persistence]" in
+The Java EE 8 Tutorial.</p>
+</li>
+<li>
+<p>Create the <code>persistence.xml</code> file. See <a href="#gbwmj">Specifying the
+Database for an Application</a> for considerations specific to GlassFish
+Server.<br>
+If you are using the Java Persistence API by calling
+<code>Persistence.createEMF()</code>, see <a href="#gdkwf">Specifying the Persistence
+Provider for an Application</a>.</p>
+</li>
+<li>
+<p>If the security manager is enabled and you are using the Java
+Persistence API by calling <code>Persistence.createEMF()</code>, see
+<a href="securing-apps.html#gbyah">Enabling and Disabling the Security
+Manager</a>.</p>
+</li>
+<li>
+<p>Deploy the application. See the GlassFish Server Open Source Edition
+Application Deployment Guide.</p>
+</li>
+<li>
+<p>Run the application. See "Application Client Launch" and "To Launch
+an Application" in Administration Console online help.</p>
+</li>
+<li>
+<p>Monitor the application. See "<a href="../administration-guide/monitoring.html#GSADG00011">Administering the
+Monitoring Service</a>" in GlassFish Server Open Source Edition
+Administration Guide.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gbwmj"></a><a id="GSDVG00130"></a><a id="specifying-the-database-for-an-application"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_specifying_the_database_for_an_application">Specifying the Database for an Application</h3>
+<div class="paragraph">
+<p>GlassFish Server uses the bundled Apache Derby database by default,
+named <code>jdbc/__default</code>. If the <code>transaction-type</code> element is omitted or
+specified as <code>JTA</code> and both the <code>jta-data-source</code> and
+<code>non-jta-data-source</code> elements are omitted in the <code>persistence.xml</code>
+file, Apache Derby is used as a JTA data source. If <code>transaction-type</code>
+is specified as <code>RESOURCE_LOCAL</code> and both <code>jta-data-source</code> and
+<code>non-jta-data-source</code> are omitted, Apache Derby is used as a non-JTA
+data source.</p>
+</div>
+<div class="paragraph">
+<p>To use a non-default database, either specify a value for the
+<code>jta-data-source</code> element, or set the <code>transaction-type</code> element to
+<code>RESOURCE_LOCAL</code> and specify a value for the <code>non-jta-data-source</code>
+element.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the default persistence provider, the provider attempts
+to automatically detect the database type based on the connection
+metadata. This database type is used to issue SQL statements specific to
+the detected database type&#8217;s dialect. You can specify the optional
+<code>eclipselink.target-database</code> property to guarantee that the database
+type is correct. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;persistence xmlns="http://java.sun.com/xml/ns/persistence"&gt;
+        &lt;persistence-unit name ="em1"&gt;
+            &lt;jta-data-source&gt;jdbc/MyDB2DB&lt;/jta-data-source&gt;
+            &lt;properties&gt;
+                &lt;property name="eclipselink.target-database"
+                    value="DB2"/&gt;
+            &lt;/properties&gt;
+        &lt;/persistence-unit&gt;
+    &lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following <code>eclipselink.target-database</code> property values are allowed.
+Supported platforms have been tested with the GlassFish Server and are
+found to be Java EE compatible.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">//Supported platforms
+JavaDB
+Derby
+Oracle
+MySQL4
+//Others available
+SQLServer
+DB2
+Sybase
+PostgreSQL
+Informix
+TimesTen
+Attunity
+HSQL
+SQLAnyWhere
+DBase
+DB2Mainframe
+Cloudscape
+PointBase</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>eclipselink.target-database</code> property,
+see
+<a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Session.2C_Target_Database_and_Target_Application_Server">Using
+EclipseLink JPA Extensions for Session, Target Database and Target
+Application Server</a>
+(<code>http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Session.2C_Target_Database_and_Target_Application_Server</code>).</p>
+</div>
+<div class="paragraph">
+<p>If you are using the Java Persistence API by calling
+<code>Persistence.createEMF()</code>, do not specify the <code>jta-data-source</code> or
+<code>non-jta-data-source</code> elements. Instead, specify the <code>provider</code> element
+and any additional properties required by the JDBC driver or the
+database. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0"&gt;
+        &lt;persistence-unit name ="em2"&gt;
+            &lt;provider&gt;org.eclipse.persistence.jpa.PersistenceProvider&lt;/provider&gt;
+            &lt;class&gt;ejb3.war.servlet.JpaBean&lt;/class&gt;
+            &lt;properties&gt;
+                &lt;property name="eclipselink.target-database"
+                    value="Derby"/&gt;
+                &lt;!-- JDBC connection properties --&gt;
+                &lt;property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/&gt;
+                &lt;property name="eclipselink.jdbc.url"
+value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage=true;create=true;"/&gt;
+                &lt;property name="eclipselink.jdbc.user" value="APP"/&gt;
+                &lt;property name="eclipselink.jdbc.password" value="APP"/&gt;
+            &lt;/properties&gt;
+        &lt;/persistence-unit&gt;
+    &lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For a list of the JDBC drivers currently supported by the GlassFish
+Server, see the <a href="../release-notes/toc.html#GSRLN">GlassFish Server Open Source Edition Release
+Notes</a>. For configurations of supported and other drivers, see
+"<a href="../administration-guide/jdbc.html#GSADG00579">Configuration Specifics for JDBC Drivers</a>" in
+GlassFish Server Open Source Edition Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="gdkwf"></a><a id="GSDVG00138"></a><a id="specifying-the-persistence-provider-for-an-application"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_specifying_the_persistence_provider_for_an_application">Specifying the Persistence Provider for an Application</h3>
+<div class="paragraph">
+<p>If you are using the default persistence provider in an application that
+uses the Java Persistence API by injecting or looking up an entity
+manager or entity manager factory, you do not need to specify the
+provider.</p>
+</div>
+<div class="paragraph">
+<p>If you are using the Java Persistence API by calling
+<code>Persistence.createEMF()</code>, you should always specify the persistence
+provider for specification compliance. To specify the default provider,
+set the <code>provider</code> element of the <code>persistence.xml</code> file to
+<code>org.eclipse.persistence.jpa.PersistenceProvider</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can specify a non-default persistence provider for an application in
+the manner described in the Java Persistence API Specification:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install the provider. Copy the provider JAR files to the
+domain-dir`/lib` directory, and restart the GlassFish Server. For more
+information about the domain-dir`/lib` directory, see
+<a href="class-loaders.html#beadj">Using the Common Class Loader</a>. The new
+persistence provider is now available to all modules and applications
+deployed on servers that share the same configuration.<br>
+However, the default provider remains the same, Oracle TopLink or
+EclipseLink.</p>
+</li>
+<li>
+<p>In your persistence unit, specify the provider and any properties
+the provider requires in the <code>persistence.xml</code> file. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+    &lt;persistence xmlns="http://java.sun.com/xml/ns/persistence"&gt;
+        &lt;persistence-unit name ="em3"&gt;
+            &lt;provider&gt;com.company22.persistence.PersistenceProviderImpl&lt;/provider&gt;
+            &lt;properties&gt;
+                &lt;property name="company22.database.name" value="MyDB"/&gt;
+            &lt;/properties&gt;
+        &lt;/persistence-unit&gt;
+    &lt;/persistence&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To specify the provider programmatically instead of in the
+<code>persistence.xml</code> file, set the <code>javax.persistence.provider</code> property
+and pass it to the <code>Map</code> parameter of the following method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.persistence.Persistence.createEntityManagerFactory(String, Map)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gescc"></a><a id="GSDVG00135"></a><a id="primary-key-generation-defaults"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_primary_key_generation_defaults">Primary Key Generation Defaults</h3>
+<div class="paragraph">
+<p>In the descriptions of the <code>@GeneratedValue</code>, <code>@SequenceGenerator</code>, and
+<code>@TableGenerator</code> annotations in the Java Persistence Specification,
+certain defaults are noted as specific to the persistence provider. The
+default persistence provider&#8217;s primary key generation defaults are
+listed here.</p>
+</div>
+<div class="paragraph">
+<p><code>@GeneratedValue</code> defaults are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>strategy=AUTO</code> (or no <code>strategy</code>) creates a <code>@TableGenerator</code>
+named <code>SEQ_GEN</code> with default settings. Specifying a <code>generator</code> has no
+effect.</p>
+</li>
+<li>
+<p>Using <code>strategy=TABLE</code> without specifying a <code>generator</code> creates a
+<code>@TableGenerator</code> named <code>SEQ_GEN_TABLE</code> with default settings.
+Specifying a <code>generator</code> but no <code>@TableGenerator</code> creates and names a
+<code>@TableGenerator</code> with default settings.</p>
+</li>
+<li>
+<p>Using <code>strategy=IDENTITY</code> or <code>strategy=SEQUENCE</code> produces the same
+results, which are database-specific.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For Oracle databases, not specifying a <code>generator</code> creates a
+<code>@SequenceGenerator</code> named <code>SEQ_GEN_SEQUENCE</code> with default settings.
+Specifying a <code>generator</code> but no <code>@SequenceGenerator</code> creates and names a
+<code>@SequenceGenerator</code> with default settings.</p>
+</li>
+<li>
+<p>For PostgreSQL databases, a <code>SERIAL</code> column named
+entity-table`_`pk-column`_SEQ` is created.</p>
+</li>
+<li>
+<p>For MySQL databases, an <code>AUTO_INCREMENT</code> column is created.</p>
+</li>
+<li>
+<p>For other supported databases, an <code>IDENTITY</code> column is created.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>@SequenceGenerator</code> annotation has one default specific to the
+default provider. The default <code>sequenceName</code> is the specified <code>name</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>@TableGenerator</code> defaults are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The default <code>table</code> is <code>SEQUENCE</code>.</p>
+</li>
+<li>
+<p>The default <code>pkColumnName</code> is <code>SEQ_NAME</code>.</p>
+</li>
+<li>
+<p>The default <code>valueColumnName</code> is <code>SEQ_COUNT</code>.</p>
+</li>
+<li>
+<p>The default <code>pkColumnValue</code> is the specified <code>name</code>, or the default
+<code>name</code> if no <code>name</code> is specified.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gbwlh"></a><a id="GSDVG00136"></a><a id="automatic-schema-generation"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_automatic_schema_generation">Automatic Schema Generation</h3>
+<div class="paragraph">
+<p>The automatic schema generation feature of the GlassFish Server defines
+database tables based on the fields or properties in entities and the
+relationships between the fields or properties. This insulates
+developers from many of the database related aspects of development,
+allowing them to focus on entity development. The resulting schema is
+usable as-is or can be given to a database administrator for tuning with
+respect to performance, security, and so on.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gcjgl">Annotations</a></p>
+</li>
+<li>
+<p><a href="#gbwmk">Generation Options</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Automatic schema generation is supported on an all-or-none basis: it
+expects that no tables exist in the database before it is executed. It
+is not intended to be used as a tool to generate extra tables or
+constraints.</p>
+</div>
+<div class="paragraph">
+<p>Deployment won&#8217;t fail if all tables are not created, and undeployment
+won&#8217;t fail if not all tables are dropped. Instead, an error is written
+to the server log. This is done to allow you to investigate the problem
+and fix it manually. You should not rely on the partially created
+database schema to be correct for running the application.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gcjgl"></a><a id="GSDVG00388"></a><a id="annotations"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_annotations">Annotations</h4>
+<div class="paragraph">
+<p>The following annotations are used in automatic schema generation:
+<code>@AssociationOverride</code>, <code>@AssociationOverrides</code>, <code>@AttributeOverride</code>,
+<code>@AttributeOverrides</code>, <code>@Column</code>, <code>@DiscriminatorColumn</code>,
+<code>@DiscriminatorValue</code>, <code>@Embedded</code>, <code>@EmbeddedId</code>, <code>@GeneratedValue</code>,
+<code>@Id</code>, <code>@IdClass</code>, <code>@JoinColumn</code>, <code>@JoinColumns</code>, <code>@JoinTable</code>, <code>@Lob</code>,
+<code>@ManyToMany</code>, <code>@ManyToOne</code>, <code>@OneToMany</code>, <code>@OneToOne</code>,
+<code>@PrimaryKeyJoinColumn</code>, <code>@PrimaryKeyJoinColumns</code>, <code>@SecondaryTable</code>,
+<code>@SecondaryTables</code>, <code>@SequenceGenerator</code>, <code>@Table</code>, <code>@TableGenerator</code>,
+<code>@UniqueConstraint</code>, and <code>@Version</code>. For information about these
+annotations, see the Java Persistence Specification.</p>
+</div>
+<div class="paragraph">
+<p>For <code>@Column</code> annotations, the <code>insertable</code> and <code>updatable</code> elements are
+not used in automatic schema generation.</p>
+</div>
+<div class="paragraph">
+<p>For <code>@OneToMany</code> and <code>@ManyToOne</code> annotations, no <code>ForeignKeyConstraint</code>
+is created in the resulting DDL files.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbwmk"></a><a id="GSDVG00389"></a><a id="generation-options"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_generation_options">Generation Options</h4>
+<div class="paragraph">
+<p>Schema generation properties or <code>asadmin</code> command line options can
+control automatic schema generation by the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating tables during deployment</p>
+</li>
+<li>
+<p>Dropping tables during undeployment</p>
+</li>
+<li>
+<p>Dropping and creating tables during redeployment</p>
+</li>
+<li>
+<p>Generating the DDL files</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Before using these options, make sure you have a properly configured
+database. See <a href="#gbwmj">Specifying the Database for an Application</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Optional schema generation properties control the automatic creation of
+database tables. You can specify them in the <code>persistence.xml</code> file. For
+more information, see
+<a href="http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Schema_Generation">Using
+EclipseLink JPA Extensions for Schema Generation</a>
+(<code>http://wiki.eclipse.org/Using_EclipseLink_JPA_Extensions_(ELUG)#Using_EclipseLink_JPA_Extensions_for_Schema_Generation</code>).</p>
+</div>
+<div class="paragraph">
+<p>The following options of the <code>asadmin deploy</code> or <code>asadmin deploydir</code>
+command control the automatic creation of database tables at deployment.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG539"></a><a id="sthref11"></a><a id="gbwlr"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 6-1 The <code>asadmin deploy</code> and <code>asadmin deploydir</code> Generation
+Options</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 14%;">
+<col style="width: 49%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--createtables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, causes database tables to be created
+for entities that need them. No unique constraints are created. If
+<code>false</code>, does not create tables. If not specified, the value of the
+<code>eclipselink.ddl-generation</code> property in <code>persistence.xml</code> is used.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--dropandcreatetables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>If <code>true</code>, and if tables were automatically created when this
+application was last deployed, tables from the earlier deployment are
+dropped and fresh ones are created.</p>
+</div>
+<div class="paragraph">
+<p>If <code>true</code>, and if tables were not automatically created when this
+application was last deployed, no attempt is made to drop any tables. If
+tables with the same names as those that would have been automatically
+created are found, the deployment proceeds, but a warning is thrown to
+indicate that tables could not be created.</p>
+</div>
+<div class="paragraph">
+<p>If <code>false</code>, the <code>eclipselink.ddl-generation</code> property setting in
+<code>persistence.xml</code> is overridden.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following options of the <code>asadmin undeploy</code> command control the
+automatic removal of database tables at undeployment.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSDVG540"></a><a id="sthref12"></a><a id="gbwmm"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 6-2 The <code>asadmin undeploy</code> Generation Options</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 9%;">
+<col style="width: 49%;">
+<col style="width: 42%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--droptables</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>If <code>true</code>, causes database tables that were automatically created when
+the entities were last deployed to be dropped when the entities are
+undeployed. If <code>false</code>, does not drop tables.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, tables are dropped only if the
+<code>eclipselink.ddl-generation</code> property setting in <code>persistence.xml</code> is
+<code>drop-and-create-tables</code>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For more information about the <code>asadmin deploy</code>, <code>asadmin deploydir</code>,
+and <code>asadmin undeploy</code> commands, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server
+Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>When <code>asadmin</code> deployment options and <code>persistence.xml</code> options are both
+specified, the <code>asadmin</code> deployment options take precedence.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbxjh"></a><a id="GSDVG00139"></a><a id="restrictions-and-optimizations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_restrictions_and_optimizations">Restrictions and Optimizations</h3>
+<div class="paragraph">
+<p>This section discusses restrictions and performance optimizations that
+affect using the Java Persistence API.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giqbi">Oracle Database Enhancements</a></p>
+</li>
+<li>
+<p><a href="#ghdtr">Extended Persistence Context</a></p>
+</li>
+<li>
+<p><a href="#gezxw">Using @OrderBy with a Shared Session Cache</a></p>
+</li>
+<li>
+<p><a href="#gdwqi">Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</a></p>
+</li>
+<li>
+<p><a href="#geqvh">Database Case Sensitivity</a></p>
+</li>
+<li>
+<p><a href="#gbxjg">Sybase Finder Limitation</a></p>
+</li>
+<li>
+<p><a href="#gbxjp">MySQL Database Restrictions</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giqbi"></a><a id="GSDVG00390"></a><a id="oracle-database-enhancements"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_oracle_database_enhancements">Oracle Database Enhancements</h4>
+<div class="paragraph">
+<p>EclipseLink features a number of enhancements for use with Oracle
+databases. These enhancements require classes from the Oracle JDBC
+driver JAR files to be visible to EclipseLink at runtime. If you place
+the JDBC driver JAR files in domain-dir`/lib`, the classes are not
+visible to GlassFish Server components, including EclipseLink.</p>
+</div>
+<div class="paragraph">
+<p>If you are using an Oracle database, put JDBC driver JAR files in
+domain-dir`/lib/ext` instead. This ensures that the JDBC driver classes
+are visible to EclipseLink.</p>
+</div>
+<div class="paragraph">
+<p>If you do not want to take advantage of Oracle-specific extensions from
+EclipseLink or you cannot put JDBC driver JAR files in
+domain-dir`/lib/ext`, set the <code>eclipselink.target-database</code> property to
+the value <code>org.eclipse.persistence.platform.database.OraclePlatform</code>.
+For more information about the <code>eclipselink.target-database</code> property,
+see <a href="#gbwmj">Specifying the Database for an Application</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="ghdtr"></a><a id="GSDVG00391"></a><a id="extended-persistence-context"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_extended_persistence_context">Extended Persistence Context</h4>
+<div class="paragraph">
+<p>The Java Persistence API specification does not specify how the
+container and persistence provider should work together to serialize an
+extended persistence context. This also prevents successful
+serialization of a reference to an extended persistence context in a
+stateful session bean.</p>
+</div>
+<div class="paragraph">
+<p>Even in a single-instance environment, if a stateful session bean is
+passivated, its extended persistence context could be lost when the
+stateful session bean is activated.</p>
+</div>
+<div class="paragraph">
+<p>Therefore, in GlassFish Server, a stateful session bean with an extended
+persistence context is never passivated and cannot be failed over.</p>
+</div>
+<div class="paragraph">
+<p><a id="gezxw"></a><a id="GSDVG00392"></a><a id="using-orderby-with-a-shared-session-cache"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_orderby_with_a_shared_session_cache">Using @OrderBy with a Shared Session Cache</h4>
+<div class="paragraph">
+<p>Setting <code>@OrderBy</code> on a <code>ManyToMany</code> or <code>OneToMany</code> relationship field
+in which a <code>List</code> represents the Many side doesn&#8217;t work if the session
+cache is shared. Use one of the following workarounds:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Have the application maintain the order so the <code>List</code> is cached
+properly.</p>
+</li>
+<li>
+<p>Refresh the session cache using <code>EntityManager.refresh()</code> if you don&#8217;t
+want to maintain the order during creation or modification of the
+<code>List</code>.</p>
+</li>
+<li>
+<p>Disable session cache sharing in <code>persistence.xml</code> as follows:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;property name="eclipselink.cache.shared.default" value="false"/&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gdwqi"></a><a id="GSDVG00393"></a><a id="using-blob-or-clob-types-with-the-inet-oraxo-jdbc-driver"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_blob_or_clob_types_with_the_inet_oraxo_jdbc_driver">Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver</h4>
+<div class="paragraph">
+<p>To use BLOB or CLOB data types larger than 4 KB for persistence using
+the Inet Oraxo JDBC Driver for Oracle Databases, you must set the
+database&#8217;s <code>streamstolob</code> property value to <code>true</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqvh"></a><a id="GSDVG00394"></a><a id="database-case-sensitivity"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_database_case_sensitivity">Database Case Sensitivity</h4>
+<div class="paragraph">
+<p>Mapping references to column or table names must be in accordance with
+the expected column or table name case, and ensuring this is the
+programmer&#8217;s responsibility. If column or table names are not explicitly
+specified for a field or entity, the GlassFish Server uses upper case
+column names by default, so any mapping references to the column or
+table names must be in upper case. If column or table names are
+explicitly specified, the case of all mapping references to the column
+or table names must be in accordance with the case used in the specified
+names.</p>
+</div>
+<div class="paragraph">
+<p>The following are examples of how case sensitivity affects mapping
+elements that refer to columns or tables. Keep case sensitivity in mind
+when writing these mappings.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqvc"></a><a id="GSDVG00246"></a><a id="unique-constraints"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_unique_constraints">Unique Constraints</h5>
+<div class="paragraph">
+<p>If column names are not explicitly specified on a field, unique
+constraints and foreign key mappings must be specified using uppercase
+references. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Table(name="Department", uniqueConstraints={ @UniqueConstraint ( columnNames= { "DEPTNAME" } ) } )</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The other way to handle this is by specifying explicit column names for
+each field with the required case. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">@Table(name="Department", uniqueConstraints={ @UniqueConstraint ( columnNames= { "deptName" } ) } )
+public class Department{ @Column(name="deptName") private String deptName; }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Otherwise, the <code>ALTER TABLE</code> statement generated by the GlassFish Server
+uses the incorrect case, and the creation of the unique constraint
+fails.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqvk"></a><a id="GSDVG00247"></a><a id="foreign-key-mapping"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_foreign_key_mapping">Foreign Key Mapping</h5>
+<div class="paragraph">
+<p>Use <code>@OneToMany(mappedBy="COMPANY")</code> or specify an explicit column name
+for the <code>Company</code> field on the <code>Many</code> side of the relationship.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqvi"></a><a id="GSDVG00248"></a><a id="sql-result-set-mapping"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_sql_result_set_mapping">SQL Result Set Mapping</h5>
+<div class="paragraph">
+<p>Use the following elements:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;sql-result-set-mapping name="SRSMName"&gt;
+   &lt;entity-result entity-class="entities.someEntity" /&gt;
+   &lt;column-result name="UPPERCASECOLUMNNAME" /&gt;
+&lt;/sql-result-set-mapping&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or specify an explicit column name for the <code>upperCaseColumnName</code> field.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqvo"></a><a id="GSDVG00249"></a><a id="named-native-queries-and-jdbc-queries"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_named_native_queries_and_jdbc_queries">Named Native Queries and JDBC Queries</h5>
+<div class="paragraph">
+<p>Column or table names specified in SQL queries must be in accordance
+with the expected case. For example, MySQL requires column names in the
+<code>SELECT</code> clause of JDBC queries to be uppercase, while PostgreSQL and
+Sybase require table names to be uppercase in all JDBC queries.</p>
+</div>
+<div class="paragraph">
+<p><a id="geqxc"></a><a id="GSDVG00250"></a><a id="postgresql-case-sensitivity"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_postgresql_case_sensitivity">PostgreSQL Case Sensitivity</h5>
+<div class="paragraph">
+<p>PostgreSQL stores column and table names in lower case. JDBC queries on
+PostgreSQL retrieve column or table names in lowercase unless the names
+are quoted. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">use aliases Select m.ID AS \"ID\" from Department m</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the backslash as an escape character in the class file, but not in
+the <code>persistence.xml</code> file.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbxjg"></a><a id="GSDVG00395"></a><a id="sybase-finder-limitation"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sybase_finder_limitation">Sybase Finder Limitation</h4>
+<div class="paragraph">
+<p>If a finder method with an input greater than 255 characters is executed
+and the primary key column is mapped to a VARCHAR column, Sybase
+attempts to convert type VARCHAR to type TEXT and generates the
+following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype
+'TEXT' to 'VARCHAR' is not allowed. Use the CONVERT function to run this query.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To avoid this error, make sure the finder method input is less than 255
+characters.</p>
+</div>
+<div class="paragraph">
+<p><a id="gbxjp"></a><a id="GSDVG00396"></a><a id="mysql-database-restrictions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mysql_database_restrictions">MySQL Database Restrictions</h4>
+<div class="paragraph">
+<p>The following restrictions apply when you use a MySQL database with the
+GlassFish Server for persistence.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MySQL treats <code>int1</code> and <code>int2</code> as reserved words. If you want to
+define <code>int1</code> and <code>int2</code> as fields in your table, use <code>\`int1\`</code> and
+<code>\`int2\`</code> field names in your SQL file.</p>
+</li>
+<li>
+<p>When <code>VARCHAR</code> fields get truncated, a warning is displayed instead of
+an error. To get an error message, start the MySQL database in strict
+SQL mode.</p>
+</li>
+<li>
+<p>The order of fields in a foreign key index must match the order in the
+explicitly created index on the primary table.</p>
+</li>
+<li>
+<p>The <code>CREATE TABLE</code> syntax in the SQL file must end with the following
+line.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>)  Engine=InnoDB;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>InnoDB</code> provides MySQL with a transaction-safe (ACID compliant) storage
+engine having commit, rollback, and crash recovery capabilities.
+* For a <code>FLOAT</code> type field, the correct precision must be defined. By
+default, MySQL uses four bytes to store a <code>FLOAT</code> type that does not
+have an explicit precision definition. For example, this causes a number
+such as 12345.67890123 to be rounded off to 12345.7 during an <code>INSERT</code>.
+To prevent this, specify <code>FLOAT(10,2)</code> in the DDL file, which forces the
+database to use an eight-byte double-precision column. For more
+information, see <code>http://dev.mysql.com/doc/mysql/en/numeric-types.html</code>.
+* To use <code>||</code> as the string concatenation symbol, start the MySQL server
+with the <code>--sql-mode="PIPES_AS_CONCAT"</code> option. For more information,
+see <code>http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html</code> and
+<code>http://dev.mysql.com/doc/mysql/en/ansi-mode.html</code>.
+* MySQL always starts a new connection when <code>autoCommit==true</code> is set.
+This ensures that each SQL statement forms a single transaction on its
+own. If you try to rollback or commit an SQL statement, you get an error
+message.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">javax.transaction.SystemException: java.sql.SQLException:
+Can't call rollback when autocommit=true
+
+javax.transaction.SystemException: java.sql.SQLException:
+Error open transaction is not closed</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve this issue, add <code>relaxAutoCommit=true</code> to the JDBC URL. For
+more information, see <code>http://forums.mysql.com/read.php?39,31326,31404</code>.
+* MySQL does not allow a <code>DELETE</code> on a row that contains a reference to
+itself. Here is an example that illustrates the issue.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This example fails with the following error message.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">ERROR 1217 (23000): Cannot delete or update a parent row:
+a foreign key constraint fails</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To resolve this issue, change the table creation script to the
+following:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">create table EMPLOYEE (
+        empId   int         NOT NULL,
+        salary  float(25,2) NULL,
+        mgrId   int         NULL,
+        PRIMARY KEY (empId),
+        FOREIGN KEY (mgrId) REFERENCES EMPLOYEE (empId)
+        ON DELETE SET NULL
+        ) ENGINE=InnoDB;
+
+        insert into Employee values (1, 1234.34, 1);
+        delete from Employee where empId = 1;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This can be done only if the foreign key field is allowed to be null.
+For more information, see
+<code>http://dev.mysql.com/doc/mysql/en/innodb-foreign-key-constraints.html</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="webservices.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="webapps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

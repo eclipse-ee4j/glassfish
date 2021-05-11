@@ -1,0 +1,359 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Developing Lifecycle Listeners</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Developing Lifecycle Listeners</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="connectors.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="osgi.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00014"></a><a id="beamc"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="developing-lifecycle-listeners">12 Developing Lifecycle Listeners</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Lifecycle listener modules provide a means of running short or long
+duration Java-based tasks within the Oracle GlassFish Server
+environment, such as instantiation of singletons or RMI servers. These
+modules are automatically initiated at server startup and are notified
+at various phases of the server life cycle.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Lifecycle listener modules are deprecated. Support for them is included
+for backward compatibility. Implementing the org.glassfish.api.Startup
+interface instead is recommended.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>All lifecycle module classes and interfaces are in the
+as-install`/modules/``glassfish-api.jar` file.</p>
+</div>
+<div class="paragraph">
+<p>For Javadoc tool pages relevant to lifecycle modules, see the
+<code>com.sun.appserv.server</code> package.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beamd">Server Life Cycle Events</a></p>
+</li>
+<li>
+<p><a href="#beame">The LifecycleListener Interface</a></p>
+</li>
+<li>
+<p><a href="#beamf">The <code>LifecycleEvent</code> Class</a></p>
+</li>
+<li>
+<p><a href="#beamg">The Server Lifecycle Event Context</a></p>
+</li>
+<li>
+<p><a href="#beamh">Deploying a Lifecycle Module</a></p>
+</li>
+<li>
+<p><a href="#beami">Considerations for Lifecycle Modules</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beamd"></a><a id="GSDVG00167"></a><a id="server-life-cycle-events"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_server_life_cycle_events">Server Life Cycle Events</h3>
+<div class="paragraph">
+<p>A lifecycle module listens for and performs its tasks in response to the
+following events in the server life cycle:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>After the <code>INIT_EVENT</code>, the server reads the configuration,
+initializes built-in subsystems (such as security and logging services),
+and creates the containers.</p>
+</li>
+<li>
+<p>After the <code>STARTUP_EVENT</code>, the server loads and initializes deployed
+applications.</p>
+</li>
+<li>
+<p>After the <code>READY_EVENT</code>, the server is ready to service requests.</p>
+</li>
+<li>
+<p>After the <code>SHUTDOWN_EVENT</code>, the server destroys loaded applications
+and stops.</p>
+</li>
+<li>
+<p>After the <code>TERMINATION_EVENT</code>, the server closes the containers, the
+built-in subsystems, and the server runtime environment.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These events are defined in the <code>LifecycleEvent</code> class.</p>
+</div>
+<div class="paragraph">
+<p>The lifecycle modules that listen for these events implement the
+LifecycleListener interface.</p>
+</div>
+<div class="paragraph">
+<p><a id="beame"></a><a id="GSDVG00168"></a><a id="the-lifecyclelistener-interface"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_lifecyclelistener_interface">The LifecycleListener Interface</h3>
+<div class="paragraph">
+<p>To create a lifecycle module is to configure a customized class that
+implements the com.sun.appserv.server.LifecycleListener interface. You
+can create and simultaneously execute multiple lifecycle modules.</p>
+</div>
+<div class="paragraph">
+<p>The LifecycleListener interface defines this method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">public void handleEvent(com.sun.appserv.server.LifecycleEvent event)
+throws ServerLifecycleException</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method responds to a lifecycle event and throws a
+<code>com.sun.appserv.server.ServerLifecycleException</code> if an error occurs.</p>
+</div>
+<div class="paragraph">
+<p>A sample implementation of the LifecycleListener interface is the
+<code>LifecycleListenerImpl.java</code> file, which you can use for testing
+lifecycle events.</p>
+</div>
+<div class="paragraph">
+<p><a id="beamf"></a><a id="GSDVG00169"></a><a id="the-lifecycleevent-class"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_code_lifecycleevent_code_class">The <code>LifecycleEvent</code> Class</h3>
+<div class="paragraph">
+<p>The <code>com.sun.appserv.server.LifecycleEvent</code> class defines a server life
+cycle event. The following methods are associated with the event:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>public java.lang.Object.getData()</code><br>
+This method returns an instance of <code>java.util.Properties</code> that contains
+the properties defined for the lifecycle module.</p>
+</li>
+<li>
+<p><code>public int getEventType()</code><br>
+This method returns the type of the last event, which is <code>INIT_EVENT</code>,
+<code>STARTUP_EVENT</code>, <code>READY_EVENT</code>, <code>SHUTDOWN_EVENT</code>, or
+<code>TERMINATION_EVENT</code>.</p>
+</li>
+<li>
+<p><code>public com.sun.appserv.server.LifecycleEventContext.getLifecycleEventContext()</code><br>
+This method returns the lifecycle event context, described next.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A <code>LifecycleEvent</code> instance is passed to the
+<code>LifecycleListener.handleEvent</code> method.</p>
+</div>
+<div class="paragraph">
+<p><a id="beamg"></a><a id="GSDVG00170"></a><a id="the-server-lifecycle-event-context"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_server_lifecycle_event_context">The Server Lifecycle Event Context</h3>
+<div class="paragraph">
+<p>The com.sun.appserv.server.LifecycleEventContext interface exposes
+runtime information about the server. The lifecycle event context is
+created when the <code>LifecycleEvent</code> class is instantiated at server
+initialization. The LifecycleEventContext interface defines these
+methods:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>public java.lang.String[].getCmdLineArgs()</code><br>
+This method returns the server startup command-line arguments.</p>
+</li>
+<li>
+<p><code>public java.lang.String.getInstallRoot()</code><br>
+This method returns the server installation root directory.</p>
+</li>
+<li>
+<p><code>public java.lang.String.getInstanceName()</code><br>
+This method returns the server instance name.</p>
+</li>
+<li>
+<p><code>public javax.naming.InitialContext.getInitialContext()</code><br>
+This method returns the initial JNDI naming context. The naming
+environment for lifecycle modules is installed after the
+<code>STARTUP_EVENT</code>. A lifecycle module can look up any resource by its
+<code>jndi-name</code> attribute after the <code>READY_EVENT</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a lifecycle module needs to look up resources, it can do so after the
+<code>READY_EVENT</code>. It can use the <code>getInitialContext</code> method to get the
+initial context to which all the resources are bound.</p>
+</div>
+<div class="paragraph">
+<p><a id="beamh"></a><a id="GSDVG00171"></a><a id="deploying-a-lifecycle-module"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deploying_a_lifecycle_module">Deploying a Lifecycle Module</h3>
+<div class="paragraph">
+<p>For instructions on how to deploy a lifecycle module, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>, or see the <code>asadmin create-lifecycle-module</code> command in the
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>You do not need to specify a classpath for the lifecycle module if you
+place it in the domain-dir`/lib` or domain-dir`/lib/classes` directory
+for the Domain Administration Server. Do not place it in the lib
+directory for a particular instance, or it will be deleted when that
+instance synchronizes with the Domain Administration Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="beami"></a><a id="GSDVG00172"></a><a id="considerations-for-lifecycle-modules"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_considerations_for_lifecycle_modules">Considerations for Lifecycle Modules</h3>
+<div class="paragraph">
+<p>The resources allocated at initialization or startup should be freed at
+shutdown or termination. The lifecycle module classes are called
+synchronously from the main server thread, therefore it is important to
+ensure that these classes don&#8217;t block the server. Lifecycle modules can
+create threads if appropriate, but these threads must be stopped in the
+shutdown and termination phases.</p>
+</div>
+<div class="paragraph">
+<p>The LifeCycleModule class loader is the parent class loader for
+lifecycle modules. Each lifecycle module&#8217;s classpath is used to
+construct its class loader. All the support classes needed by a
+lifecycle module must be available to the LifeCycleModule class loader
+or its parent, the Connector class loader.</p>
+</div>
+<div class="paragraph">
+<p>You must ensure that the <code>server.policy</code> file is appropriately set up,
+or a lifecycle module trying to perform a <code>System.exec()</code> might cause a
+security access violation. For details, see
+<a href="securing-apps.html#beabx">The <code>server.policy</code> File</a>.</p>
+</div>
+<div class="paragraph">
+<p>The configured properties for a lifecycle module are passed as
+properties after the <code>INIT_EVENT</code>. The JNDI naming context is not
+available before the <code>STARTUP_EVENT</code>. If a lifecycle module requires the
+naming context, it can get this after the <code>STARTUP_EVENT</code>,
+<code>READY_EVENT</code>, or <code>SHUTDOWN_EVENT</code>.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="connectors.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="osgi.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering Security in Cluster Mode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering Security in Cluster Mode</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="message-security.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="administrative-security.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSSCG00038"></a><a id="gknpf"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-security-in-cluster-mode">4 Administering Security in Cluster Mode</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes important information about administering
+security in a cluster.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are described:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksam">Configuring Certificates in Cluster Mode</a></p>
+</li>
+<li>
+<p><a href="#gkmhh">Dynamic Reconfiguration</a></p>
+</li>
+<li>
+<p><a href="#gktgi">Understanding Synchronization</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This chapter assumes that you are familiar with security features such
+as authentication, authorization, and certificates. If you are not, see
+<a href="system-security.html#ablnk">Administering System Security</a>.</p>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the tasks specific to GlassFish Server by
+using the Administration Console are contained in the Administration
+Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksam"></a><a id="GSSCG00159"></a><a id="configuring-certificates-in-cluster-mode"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_configuring_certificates_in_cluster_mode">Configuring Certificates in Cluster Mode</h3>
+<div class="paragraph">
+<p>The sections <a href="system-security.html#abloj">Certificates and SSL</a> and
+<a href="system-security.html#ablqz">Administering JSSE Certificates</a> describe
+the relevant concepts and use of certificates in GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>By default, GlassFish Server uses self-signed certificates. The
+self-signed certificates that GlassFish Server uses might not be trusted
+by clients by default because a certificate authority does not vouch for
+the authenticity of the certificate.</p>
+</div>
+<div class="paragraph">
+<p>You can instead use your own certificates, as described in
+<a href="administrative-security.html#gkped">Using Your Own Certificates</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkmhh"></a><a id="GSSCG00160"></a><a id="dynamic-reconfiguration"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_reconfiguration">Dynamic Reconfiguration</h3>
+<div class="paragraph">
+<p>Administrative commands that you execute on the domain administration
+server (DAS) must either be replicated on the affected server instances,
+or on all server instances that are part of the cluster. GlassFish
+Server replicates the commands by sending the same administration
+command request that was sent to the DAS to the server instances. As a
+result of replicating the commands on the DAS and the individual
+instances, the DAS and the instances make the same changes to their
+respective copies of the domain&#8217;s configuration.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Oracle recommends that you enable secure admin as described in
+<a href="administrative-security.html#gknqh">Managing Administrative Security</a>
+so that GlassFish Server securely transfers these files on the network.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Dynamic reconfiguration refers to using the <code>--target</code> operand to CLI
+subcommands to make a change to a server instance (if the user-specified
+target is a server instance), or all server instances that are part of
+the cluster (if the user-specified target is a cluster). For
+example:<code>asadmin create-jdbc-resource some-options --target some-target</code>.</p>
+</div>
+<div class="paragraph">
+<p>The --target operand allows the following values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>server</code> - Performs the command on the default server instance. This
+is the default value.</p>
+</li>
+<li>
+<p>configuration_name - Performs the command in the specified
+configuration.</p>
+</li>
+<li>
+<p>cluster_name - Performs the command on all server instances in the
+specified cluster.</p>
+</li>
+<li>
+<p>instance_name - Performs the command on a specified server instance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If a command fails for a cluster, the status shows all server instances
+where dynamic reconfiguration failed, and suggests corrective next
+steps.</p>
+</div>
+<div class="paragraph">
+<p>The command status also shows when a restart is required for each server
+instance.</p>
+</div>
+<div class="paragraph">
+<p>The --target operand is supported for the following security-related CLI
+subcommands:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>create-jacc-provider</p>
+</li>
+<li>
+<p>delete-jacc-provider</p>
+</li>
+<li>
+<p>list-jacc-providers</p>
+</li>
+<li>
+<p>create-audit-module</p>
+</li>
+<li>
+<p>create-auth-realm</p>
+</li>
+<li>
+<p>create-file-user</p>
+</li>
+<li>
+<p>delete-audit-module</p>
+</li>
+<li>
+<p>delete-auth-realm</p>
+</li>
+<li>
+<p>delete-file-user</p>
+</li>
+<li>
+<p>update-file-user</p>
+</li>
+<li>
+<p>create-message-security-provider</p>
+</li>
+<li>
+<p>delete-message-security-provider</p>
+</li>
+<li>
+<p>list-audit-modules</p>
+</li>
+<li>
+<p>list-file-groups</p>
+</li>
+<li>
+<p>list-file-users</p>
+</li>
+<li>
+<p>login</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkned"></a><a id="GSSCG00226"></a><a id="enabling-dynamic-configuration"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_enabling_dynamic_configuration">Enabling Dynamic Configuration</h4>
+<div class="paragraph">
+<p>Dynamic configuration is enabled by default and no additional action is
+required.</p>
+</div>
+<div class="paragraph">
+<p>Use the following command to enable dynamic configuration from the
+command line:</p>
+</div>
+<div class="paragraph">
+<p><code>asadmin --user user --passwordfile password-file set cluster-name-config.dynamic-reconfiguration-enabled=true</code>.</p>
+</div>
+<div class="paragraph">
+<p>To enable dynamic configuration from the Administration Console, perform
+the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Expand the Configurations node.</p>
+</li>
+<li>
+<p>Click the name of the cluster&#8217;s configuration.</p>
+</li>
+<li>
+<p>On the Configuration System Properties page, check the Dynamic
+Reconfiguration Enabled box.</p>
+</li>
+<li>
+<p>Click Save.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The dynamic reconfiguration feature applies only to server instances,
+not the DAS. Therefore, you cannot "disable" dynamic reconfiguration on
+the DAS. There is no way to make changes to the DAS configuration using
+<code>asadmin</code> commands, the Administration Console, or the REST interface
+without having those changes take effect immediately.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gktgi"></a><a id="GSSCG00161"></a><a id="understanding-synchronization"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_understanding_synchronization">Understanding Synchronization</h3>
+<div class="paragraph">
+<p>As described in "<a href="../ha-administration-guide/instances.html#GSHAG00189">Resynchronizing GlassFish Server
+Instances and the DAS</a>" in GlassFish Server Open Source Edition High
+Availability Administration Guide, configuration data for a GlassFish
+Server instance is stored in the repository of the DAS and in a cache on
+the host that is local to the instance. The configuration data in these
+locations must be synchronized. The cache is synchronized only when a
+user uses the administration tools to start or restart an instance.</p>
+</div>
+<div class="paragraph">
+<p>See "<a href="../ha-administration-guide/instances.html#GSHAG00189">Resynchronizing GlassFish Server Instances and the
+DAS</a>" in GlassFish Server Open Source Edition High Availability
+Administration Guide for information about default synchronization for
+files and directories, for the steps required to resynchronize an
+instance and the DAS, and for additional synchronization topics.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="message-security.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="administrative-security.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

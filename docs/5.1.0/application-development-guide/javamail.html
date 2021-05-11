@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Using the JavaMail API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Using the JavaMail API</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jms.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00021"></a><a id="beaow"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-the-javamail-api">18 Using the JavaMail API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to use the JavaMail API, which provides a set
+of abstract classes defining objects that comprise a mail system.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaox">Introducing JavaMail</a></p>
+</li>
+<li>
+<p><a href="#beaoy">Creating a JavaMail Session</a></p>
+</li>
+<li>
+<p><a href="#beaoz">JavaMail Session Properties</a></p>
+</li>
+<li>
+<p><a href="#beapa">Looking Up a JavaMail Session</a></p>
+</li>
+<li>
+<p><a href="#fwfiy">Sending and Reading Messages Using JavaMail</a></p>
+</li>
+<li>
+<p><a href="#gkpfg">Using Application-Scoped JavaMail Resources</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>JavaMail resources are supported only in the full OracleGlassFish
+Server, not in the Web Profile.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beaox"></a><a id="GSDVG00200"></a><a id="introducing-javamail"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_introducing_javamail">Introducing JavaMail</h3>
+<div class="paragraph">
+<p>The JavaMail API defines classes such as <code>Message</code>, <code>Store</code>, and
+<code>Transport</code>. The API can be extended and can be subclassed to provide
+new protocols and to add functionality when necessary. In addition, the
+API provides concrete subclasses of the abstract classes. These
+subclasses, including <code>MimeMessage</code> and <code>MimeBodyPart</code>, implement widely
+used Internet mail protocols and conform to the RFC822 and RFC2045
+specifications. The JavaMail API includes support for the IMAP4, POP3,
+and SMTP protocols.</p>
+</div>
+<div class="paragraph">
+<p>The JavaMail architectural components are as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The abstract layer declares classes, interfaces, and abstract methods
+intended to support mail handling functions that all mail systems
+support.</p>
+</li>
+<li>
+<p>The internet implementation layer implements part of the abstract
+layer using the RFC822 and MIME internet standards.</p>
+</li>
+<li>
+<p>JavaMail uses the JavaBeans Activation Framework (JAF) to encapsulate
+message data and to handle commands intended to interact with that data.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For more information, see "<a href="../administration-guide/javamail.html#GSADG00019">Administering the JavaMail
+Service</a>" in GlassFish Server Open Source Edition Administration Guide
+and the JavaMail specification at
+<code>http://www.oracle.com/technetwork/java/javamail/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaoy"></a><a id="GSDVG00201"></a><a id="creating-a-javamail-session"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_a_javamail_session">Creating a JavaMail Session</h3>
+<div class="paragraph">
+<p>You can create a JavaMail session in the following ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the Administration Console, open the Resources component and select
+JavaMail Sessions. For details, click the Help button in the
+Administration Console.</p>
+</li>
+<li>
+<p>Use the <code>asadmin create-javamail-resource</code> command. For details, see
+the <a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaoz"></a><a id="GSDVG00202"></a><a id="javamail-session-properties"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javamail_session_properties">JavaMail Session Properties</h3>
+<div class="paragraph">
+<p>You can set properties for a JavaMail <code>Session</code> object. Every property
+name must start with a <code>mail-</code> prefix. The GlassFish Server changes the
+dash (<code>-</code>) character to a period (<code>.</code>) in the name of the property and
+saves the property to the <code>MailConfiguration</code> and JavaMail <code>Session</code>
+objects. If the name of the property doesn&#8217;t start with <code>mail-</code>, the
+property is ignored.</p>
+</div>
+<div class="paragraph">
+<p>For example, if you want to define the property <code>mail.from</code> in a
+JavaMail <code>Session</code> object, first define the property as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Name - <code>mail-from</code></p>
+</li>
+<li>
+<p>Value - <code>john.doe@sun.com</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beapa"></a><a id="GSDVG00203"></a><a id="looking-up-a-javamail-session"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_looking_up_a_javamail_session">Looking Up a JavaMail Session</h3>
+<div class="paragraph">
+<p>The standard Java Naming and Directory Interface (JNDI) subcontext for
+JavaMail sessions is <code>java:comp/env/mail</code>.</p>
+</div>
+<div class="paragraph">
+<p>Registering JavaMail sessions in the <code>mail</code> naming subcontext of a JNDI
+namespace, or in one of its child subcontexts, is standard. The JNDI
+namespace is hierarchical, like a file system&#8217;s directory structure, so
+it is easy to find and nest references. A JavaMail session is bound to a
+logical JNDI name. The name identifies a subcontext, <code>mail</code>, of the root
+context, and a logical name. To change the JavaMail session, you can
+change its entry in the JNDI namespace without having to modify the
+application.</p>
+</div>
+<div class="paragraph">
+<p>The resource lookup in the application code looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (Session)ic.lookup(snName);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the JNDI API, see <a href="jndi.html#beanr">Using
+the Java Naming and Directory Interface</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="fwfiy"></a><a id="GSDVG00204"></a><a id="sending-and-reading-messages-using-javamail"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sending_and_reading_messages_using_javamail">Sending and Reading Messages Using JavaMail</h3>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beapb">To Send a Message Using JavaMail</a></p>
+</li>
+<li>
+<p><a href="#beapc">To Read a Message Using JavaMail</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beapb"></a><a id="GSDVG00079"></a><a id="to-send-a-message-using-javamail"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_send_a_message_using_javamail">To Send a Message Using JavaMail</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Import the packages that you need.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import java.util.*;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.naming.*;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Look up the JavaMail session.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (Session)ic.lookup(snName);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="#beapa">Looking Up a JavaMail Session</a>.
+3.  Override the JavaMail session properties if necessary.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Properties props = session.getProperties();
+props.put("mail.from", "user2@mailserver.com");</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a <code>MimeMessage</code>.<br>
+The msgRecipient, msgSubject, and msgTxt variables in the following
+example contain input from the user:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Message msg = new MimeMessage(session);
+msg.setSubject(msgSubject);
+msg.setSentDate(new Date());
+msg.setFrom();
+msg.setRecipients(Message.RecipientType.TO,
+   InternetAddress.parse(msgRecipient, false));
+msg.setText(msgTxt);</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Send the message.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Transport.send(msg);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beapc"></a><a id="GSDVG00080"></a><a id="to-read-a-message-using-javamail"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_read_a_message_using_javamail">To Read a Message Using JavaMail</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Import the packages that you need.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import java.util.*;
+import javax.activation.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import javax.naming.*;</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Look up the JavaMail session.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>InitialContext ic = new InitialContext();
+String snName = "java:comp/env/mail/MyMailSession";
+Session session = (javax.mail.Session)ic.lookup(snName);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information, see <a href="#beapa">Looking Up a JavaMail Session</a>.
+3.  Override the JavaMail session properties if necessary.<br>
+For example:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Properties props = session.getProperties();
+props.put("mail.from", "user2@mailserver.com");</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get a <code>Store</code> object from the <code>Session</code>, then connect to the mail
+server using the Store object&#8217;s <code>connect</code> method.<br>
+You must supply a mail server name, a mail user name, and a password.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Store store = session.getStore();
+store.connect("MailServer", "MailUser", "secret");</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Get the INBOX folder.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Folder folder = store.getFolder("INBOX");</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>It is efficient to read the <code>Message</code> objects (which represent
+messages on the server) into an array.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Message[] messages = folder.getMessages();</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkpfg"></a><a id="GSDVG00205"></a><a id="using-application-scoped-javamail-resources"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_application_scoped_javamail_resources">Using Application-Scoped JavaMail Resources</h3>
+<div class="paragraph">
+<p>You can define an application-scoped JavaMail or other resource for an
+enterprise application, web module, EJB module, connector module, or
+application client module by supplying a <code>glassfish-resources.xml</code>
+deployment descriptor file. For details, see
+"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00075">Application-Scoped Resources</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jms.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

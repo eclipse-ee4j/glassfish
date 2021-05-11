@@ -1,0 +1,1276 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Subcommands for the asadmin Utility</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Subcommands for the asadmin Utility</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="part-appendixes.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00023"></a><a id="gcode"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="a-subcommands-for-the-asadmin-utility">A Subcommands for the <code>asadmin</code> Utility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This appendix lists the <code>asadmin</code> subcommands that are included with
+this release of the GlassFish Server Open Source Edition 5.0 software.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggltk">General Administration Subcommands</a></p>
+</li>
+<li>
+<p><a href="#CHDJGEEG">Batch Jobs Subcommands</a></p>
+</li>
+<li>
+<p><a href="#CHDECJFC">Concurrent Resources Subcommands</a></p>
+</li>
+<li>
+<p><a href="#giowb">Connectivity Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gitwu">Domain Subcommands</a></p>
+</li>
+<li>
+<p><a href="#ggltm">Internet Connectivity Subcommands</a></p>
+</li>
+<li>
+<p><a href="#ggltf">JavaMail Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gipen">JMS Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gitws">JNDI Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gglsk">JVM Subcommands</a></p>
+</li>
+<li>
+<p><a href="#giuzl">Life Cycle Module Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gitxd">Logging and Monitoring Subcommands</a></p>
+</li>
+<li>
+<p><a href="#giusq">ORB Subcommands</a></p>
+</li>
+<li>
+<p><a href="#giuqr">Thread Pool Subcommands</a></p>
+</li>
+<li>
+<p><a href="#gitxi">Transaction Service Subcommands</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information and instructions on using the <code>asadmin</code> application
+deployment subcommands, see the <a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source
+Edition Application Deployment Guide</a>.</p>
+</div>
+<div class="paragraph">
+<p>Online help for the <code>asadmin</code> subcommands can be invoked on the command
+line, for example, <code>asadmin create-domain</code> <code>help</code>. The
+<a href="../reference-manual/toc.html#GSRFM">GlassFish Server Open Source Edition Reference Manual</a> also
+provides a collection of these help pages.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The common options used with remote subcommands are described in the
+o<a href="GSRFM00263"><code>asadmin</code>(1M)</a> help page.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="ggltk"></a><a id="GSADG00610"></a><a id="general-administration-subcommands"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_general_administration_subcommands">General Administration Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/add-resources.html#GSRFM00001"><code>add-resources</code></a></dt>
+<dd>
+<p>Creates the resources named in the specified XML file. Supported in
+remote mode only. For procedural information in this guide, see
+<a href="general-administration.html#ggoeh">To Add Resources From an XML
+File</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code></a></dt>
+<dd>
+<p>Describes how the <code>asadmin</code> utility works.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/attach.html#GSRFM825"><code>attach</code></a></dt>
+<dd>
+<p>Attaches to subcommands that were started using the <code>asadmin --detach</code>
+option or that contain progress information. For procedural
+information in this guide, see
+<a href="general-administration.html#CACDDHBA">To Run <code>asadmin</code> Subcommands
+in <code>--detach</code> Mode</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/configure-managed-jobs.html#GSRFM836"><code>configure-managed-jobs</code></a></dt>
+<dd>
+<p>Configures how long information about subcommands (jobs) that were
+started using the <code>asadmin --detach</code> option or that contain progress
+information is kept. For procedural information in this guide, see
+<a href="general-administration.html#CACDDHBA">To Run <code>asadmin</code> Subcommands
+in <code>--detach</code> Mode</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-module-config.html#GSRFM844"><code>create-module-config</code></a></dt>
+<dd>
+<p>Adds the default configuration of a module to <code>domain.xml</code>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-service.html#GSRFM00057"><code>create-service</code></a></dt>
+<dd>
+<p>Configures the starting of a domain administration server (DAS) on an
+unattended boot. On Oracle Solaris 10, this subcommand uses the
+Service Management Facility (SMF). For procedural information in this
+guide, see <a href="domains.html#giusi">To Configure a DAS or an Instance
+for Automatic Restart on Oracle Solaris</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-system-properties.html#GSRFM00059"><code>create-system-properties</code></a></dt>
+<dd>
+<p>Creates or updates system properties. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="general-administration.html#ggonc">To Create System Properties</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-module-config.html#GSRFM854"><code>delete-module-config</code></a></dt>
+<dd>
+<p>Removes the configuration of a module from <code>domain.xml</code>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-system-property.html#GSRFM00110"><code>delete-system-property</code></a></dt>
+<dd>
+<p>Deletes system properties of a domain or configuration, or server
+instance. Supported in remote mode only. For procedural information in
+this guide, see <a href="general-administration.html#ggomm">To Delete a
+System Property</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a></dt>
+<dd>
+<p>Gets an attribute of an element in the <code>domain.xml</code> file. With the
+<code>-m</code> option, gets the names and values of the monitorable or
+configurable attributes. For procedural information in this guide, see
+<a href="monitoring.html#ablwh">Guidelines for Using the <code>list</code> and <code>get</code>
+Subcommands for Monitoring</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/get-active-module-config.html#GSRFM859"><code>get-active-module-config</code></a></dt>
+<dd>
+<p>Displays the current active configuration of a module.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list.html#GSRFM00145"><code>list</code></a></dt>
+<dd>
+<p>Lists the configurable element. On Oracle Solaris, quotes are needed
+when running subcommands with <code>*</code> as the option value or operand. For
+procedural information in this guide, see
+<a href="monitoring.html#ablwh">Guidelines for Using the <code>list</code> and <code>get</code>
+Subcommands for Monitoring</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-commands.html#GSRFM00154"><code>list-commands</code></a></dt>
+<dd>
+<p>Lists all the <code>asadmin</code> subcommands, local subcommands first, then
+remote subcommands. You can specify that only remote subcommands or
+only local subcommands be displayed. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="general-administration.html#ggoeg">To List Subcommands</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-containers.html#GSRFM00161"><code>list-containers</code></a></dt>
+<dd>
+<p>Lists application containers and the status of each container.
+Supported in remote mode only. For procedural information in this
+guide, see <a href="general-administration.html#ggocv">To List Containers</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jobs.html#GSRFM867"><code>list-jobs</code></a></dt>
+<dd>
+<p>Lists information about subcommands that were started using the
+<code>asadmin --detach</code> option or that contain progress information. For
+procedural information in this guide, see
+<a href="general-administration.html#CACDDHBA">To Run <code>asadmin</code> Subcommands
+in <code>--detach</code> Mode</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-modules.html#GSRFM00185"><code>list-modules</code></a></dt>
+<dd>
+<p>Lists modules that are accessible to the GlassFish Server subsystem.
+The status of each module is included. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="general-administration.html#ghlgf">To List Modules</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-system-properties.html#GSRFM00203"><code>list-system-properties</code></a></dt>
+<dd>
+<p>Lists the system properties of a domain or configuration. Supported in
+remote mode only. For procedural information in this guide, see
+<a href="general-administration.html#ggodt">To List System Properties</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-timers.html#GSRFM00205"><code>list-timers</code></a></dt>
+<dd>
+<p>List the timers owned by a specific server instance. Supported in
+remote mode only. For procedural information in this guide, see
+<a href="general-administration.html#giojd">To List Timers</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/multimode.html#GSRFM00213"><code>multimode</code></a></dt>
+<dd>
+<p>Provides an <code>asadmin&gt;</code> prompt for running multiple subcommands while
+preserving options and environment settings. Supported in local mode
+only. For procedural information, see
+<a href="general-administration.html#giobi">Using the <code>asadmin</code> Utility</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/osgi.html#GSRFM877"><code>osgi</code></a></dt>
+<dd>
+<p>Delegates the command line to the Apache Felix Gogo remote shell for
+the execution of OSGi shell commands. For procedural information in
+this guide, see <a href="overview.html#CJAGIGII">To Run Apache Felix Gogo
+Remote Shell Commands</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/osgi-shell.html#GSRFM890"><code>osgi-shell</code></a></dt>
+<dd>
+<p>Provides interactive access to the Apache Felix Gogo remote shell for
+the execution of OSGi shell commands. For procedural information in
+this guide, see <a href="overview.html#CJAGIGII">To Run Apache Felix Gogo
+Remote Shell Commands</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a></dt>
+<dd>
+<p>Sets the values of one or more configurable attributes. For procedural
+information in this guide, see <a href="monitoring.html#ablvp">Configuring
+Monitoring</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/setup-local-dcom.html#GSRFM893"><code>setup-local-dcom</code></a></dt>
+<dd>
+<p>Sets up the Distributed Component Object Model (DCOM) remote protocol
+on the host where the subcommand is run. The DCOM remote protocol is
+available only on Windows systems.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/show-component-status.html#GSRFM00232"><code>show-component-status</code></a></dt>
+<dd>
+<p>Lists the status of existing components. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="general-administration.html#giyjd">To Show Component Status</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/start-database.html#GSRFM00234"><code>start-database</code></a></dt>
+<dd>
+<p>Starts the Apache Derby database server. Use this subcommand only for
+working with applications deployed to the GlassFish Server. For
+procedural information in this guide, see <a href="jdbc.html#ggndz">To Start
+the Database</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/stop-database.html#GSRFM00239"><code>stop-database</code></a></dt>
+<dd>
+<p>Stops a process of the Apache Derby DB database server. For procedural
+information in this guide, see <a href="jdbc.html#ggnbw">To Stop the
+Database</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/version.html#GSRFM00261"><code>version</code></a></dt>
+<dd>
+<p>Displays the version information for the option specified in archive
+or folder format. Supported in remote mode only. For procedural
+information in this guide, see
+<a href="general-administration.html#ghhox">To Display the GlassFish Server
+Version</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="CHDJGEEG"></a><a id="GSADG1155"></a><a id="batch-jobs-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_batch_jobs_subcommands">Batch Jobs Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/list-batch-jobs.html#GSRFM861"><code>list-batch-jobs</code></a></dt>
+<dd>
+<p>Lists batch jobs and job details. For procedural information in this
+guide, see <a href="batch.html#BABIBFDJ">To List Batch Jobs</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-batch-job-executions.html#GSRFM884"><code>list-batch-job-executions</code></a></dt>
+<dd>
+<p>Lists batch job executions and execution details. For procedural
+information in this guide, see <a href="batch.html#BABFBGJB">To List Batch
+Job Executions</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-batch-job-steps.html#GSRFM895"><code>list-batch-job-steps</code></a></dt>
+<dd>
+<p>Lists steps for a specific batch job execution. For procedural
+information in this guide, see <a href="batch.html#BABGJIDD">To List Batch
+Job Steps</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-batch-runtime-configuration.html#GSRFM863"><code>list-batch-runtime-configuration</code></a></dt>
+<dd>
+<p>Displays the configuration of the batch runtime. For procedural
+information in this guide, see <a href="batch.html#BABBGHCJ">To List the
+Batch Runtime Configuration</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/set-batch-runtime-configuration.html#GSRFM897"><code>set-batch-runtime-configuration</code></a></dt>
+<dd>
+<p>Configures the batch runtime. For procedural information in this
+guide, see <a href="batch.html#BABFEJAD">To Configure the Batch Runtime</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="CHDECJFC"></a><a id="GSADG1156"></a><a id="concurrent-resources-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_concurrent_resources_subcommands">Concurrent Resources Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-context-service.html#GSRFM838"><code>create-context-service</code></a></dt>
+<dd>
+<p>Creates a context service resource. For procedural information in this
+guide, see <a href="concurrent.html#DAFJACDI">To Create a Context Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-managed-executor-service.html#GSRFM840"><code>create-managed-executor-service</code></a></dt>
+<dd>
+<p>Creates a managed executor service resource. For procedural
+information in this guide, see <a href="concurrent.html#DAFJIEGA">To Create
+a Managed Executor Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-managed-scheduled-executo.html#GSRFM680"><code>create-managed-scheduled-executor-service</code></a></dt>
+<dd>
+<p>Creates a managed scheduled executor service resource. For procedural
+information in this guide, see <a href="concurrent.html#DAFFGDGG">To Create
+a Managed Scheduled Executor Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-managed-thread-factory.html#GSRFM842"><code>create-managed-thread-factory</code></a></dt>
+<dd>
+<p>Creates a managed thread factory resource. For procedural information
+in this guide, see <a href="concurrent.html#DAFGFAEI">To Create a Managed
+Thread Factory</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-context-service.html#GSRFM838"><code>list-context-services</code></a></dt>
+<dd>
+<p>Lists context service resources. For procedural information in this
+guide, see <a href="concurrent.html#DAFDCFCB">To List Context Services</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-managed-executor-service.html#GSRFM840"><code>list-managed-executor-services</code></a></dt>
+<dd>
+<p>Lists managed executor service resources. For procedural information
+in this guide, see <a href="concurrent.html#DAFIJDAE">To List Managed
+Executor Services</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-managed-scheduled-executo.html#GSRFM680"><code>list-managed-scheduled-executor-services</code></a></dt>
+<dd>
+<p>Lists managed scheduled executor service resources. For procedural
+information in this guide, see <a href="concurrent.html#DAFJBADD">To List
+Managed Scheduled Executor Services</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-managed-thread-factory.html#GSRFM842"><code>list-managed-thread-factories</code></a></dt>
+<dd>
+<p>Lists managed thread factory resources. For procedural information in
+this guide, see <a href="concurrent.html#DAFDGEGE">To List Managed Thread
+Factories</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-context-service.html#GSRFM846"><code>delete-context-service</code></a></dt>
+<dd>
+<p>Removes a context service resource. For procedural information in this
+guide, see <a href="concurrent.html#DAFGGGEC">To Delete a Context Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-managed-executor-service.html#GSRFM848"><code>delete-managed-executor-service</code></a></dt>
+<dd>
+<p>Removes a managed executor service resource. For procedural
+information in this guide, see <a href="concurrent.html#DAFDAGAD">To Delete
+a Managed Executor Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-managed-scheduled-executo.html#GSRFM850"><code>delete-managed-scheduled-executor-service</code></a></dt>
+<dd>
+<p>Removes a managed scheduled executor service resource. For procedural
+information in this guide, see <a href="concurrent.html#DAFEBEGC">To Delete
+a Managed Scheduled Executor Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-managed-thread-factory.html#GSRFM852"><code>delete-managed-thread-factory</code></a></dt>
+<dd>
+<p>Removes a managed thread factory resource. For procedural information
+in this guide, see <a href="concurrent.html#DAFCEDEI">To Delete a Managed
+Thread Factory</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="giowb"></a><a id="GSADG00611"></a><a id="connectivity-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_connectivity_subcommands">Connectivity Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-admin-object.html#GSRFM00012"><code>create-admin-object</code></a></dt>
+<dd>
+<p>Creates an administered object. For procedural information in this
+guide, see <a href="connectors.html#giolr">To Create an Administered
+Object</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-connector-connection-pool.html#GSRFM00018"><code>create-connector-connection-pool</code></a></dt>
+<dd>
+<p>Adds a new connector connection pool with the specified connection
+pool name. For procedural information in this guide, see
+<a href="connectors.html#gioce">To Create a Connector Connection Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-connector-resource.html#GSRFM00019"><code>create-connector-resource</code></a></dt>
+<dd>
+<p>Creates a connector resource. For procedural information in this
+guide, see <a href="connectors.html#giogt">To Create a Connector Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-connector-security-map.html#GSRFM00020"><code>create-connector-security-map</code></a></dt>
+<dd>
+<p>Creates a connector security map for the specified connector
+connection pool. For procedural information, see
+<a href="connectors.html#gitzz">To Create a Connector Security Map</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-connector-work-security-m.html#GSRFM00021"><code>create-connector-work-security-map</code></a></dt>
+<dd>
+<p>Creates a connector work security map for the specified resource
+adapter. Supported in remote mode only. For procedural information in
+this guide, see <a href="connectors.html#giofz">To Create a Connector Work
+Security Map</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-jdbc-resource.html#GSRFM00037"><code>create-jdbc-resource</code></a></dt>
+<dd>
+<p>Creates a new JDBC resource. Supported in remote mode only. For
+procedural information in this guide, see <a href="jdbc.html#ggnda">To
+Create a JDBC Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-jdbc-connection-pool.html#GSRFM00036"><code>create-jdbc-connection-pool</code></a></dt>
+<dd>
+<p>Registers a new JDBC connection pool with the specified JDBC
+connection pool name. Supported in remote mode only. For procedural
+information in this guide, see <a href="jdbc.html#ggnfv">To Create a JDBC
+Connection Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-resource-adapter-config.html#GSRFM00054"><code>create-resource-adapter-config</code></a></dt>
+<dd>
+<p>Creates configuration information for the connector module. Supported
+in remote mode only. For procedural information in this guide, see
+<a href="connectors.html#gioqx">To Create Configuration Information for a
+Resource Adapter</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-admin-object.html#GSRFM00063"><code>delete-admin-object</code></a></dt>
+<dd>
+<p>Deletes an administered object. For procedural information in this
+guide, see <a href="connectors.html#gioma">To Delete an Administered
+Object</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-connector-connection-pool.html#GSRFM00070"><code>delete-connector-connection-pool</code></a></dt>
+<dd>
+<p>Removes the connector connection pool specified using the
+<code>connector_connection_pool_name</code> operand. For procedural information
+in this guide, see <a href="connectors.html#giocp">To Delete a Connector
+Connection Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-connector-resource.html#GSRFM00071"><code>delete-connector-resource</code></a></dt>
+<dd>
+<p>Deletes connector resource. For procedural information in this guide,
+see <a href="connectors.html#giofs">To Delete a Connector Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-connector-security-map.html#GSRFM00072"><code>delete-connector-security-map</code></a></dt>
+<dd>
+<p>Deletes a specified connector security map. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="connectors.html#gitvf">To Delete a Connector Security Map</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-connector-work-security-m.html#GSRFM00073"><code>delete-connector-work-security-map</code></a></dt>
+<dd>
+<p>Deletes a specified connector work security map. Supported in remote
+mode only. For procedural information in this guide, see
+<a href="connectors.html#gioin">To Delete a Connector Work Security Map</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088"><code>delete-jdbc-connection-pool</code></a></dt>
+<dd>
+<p>Deletes the specified JDBC connection pool. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jdbc.html#ggngb">To Delete a JDBC Connection Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jdbc-resource.html#GSRFM00089"><code>delete-jdbc-resource</code></a></dt>
+<dd>
+<p>Deletes a JDBC resource. The specified JNDI name identifies the
+resource to be deleted. Supported in remote mode only. For procedural
+information in this guide, see <a href="jdbc.html#ggnhz">To Delete a JDBC
+Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-resource-adapter-config.html#GSRFM00106"><code>delete-resource-adapter-config</code></a></dt>
+<dd>
+<p>Deletes configuration information for the connector module. Supported
+in remote mode only. For procedural information in this guide, see
+<a href="connectors.html#gionv">To Delete a Resource Adapter Configuration</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/flush-connection-pool.html#GSRFM00135"><code>flush-connection-pool</code></a></dt>
+<dd>
+<p>Reintializes all connections established in the specified connection.
+For procedural information in this guide, see <a href="jdbc.html#gjiqp">To
+Reset (Flush) a Connection Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-admin-objects.html#GSRFM00146"><code>list-admin-objects</code></a></dt>
+<dd>
+<p>Lists administered objects. For procedural information in this guide,
+see <a href="connectors.html#giokm">To List Administered Objects</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-connector-connection-pools.html#GSRFM00157"><code>list-connector-connection-pools</code></a></dt>
+<dd>
+<p>Lists the connector connection pools that have been created. For
+procedural information in this guide, see <a href="connectors.html#giocg">To
+List Connector Connection Pools</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-connector-resources.html#GSRFM00158"><code>list-connector-resources</code></a></dt>
+<dd>
+<p>Creates connector resources. For procedural information in this guide,
+see <a href="connectors.html#giohs">To List Connector Resources</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-connector-security-maps.html#GSRFM00159"><code>list-connector-security-maps</code></a></dt>
+<dd>
+<p>Lists the connector security maps belonging to a specified connector
+connection pool. For procedural information in this guide, see
+<a href="connectors.html#gitwx">To List Connector Security Maps</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-connector-work-security-map.html#GSRFM00160"><code>list-connector-work-security-maps</code></a></dt>
+<dd>
+<p>Lists the existing connector work security maps for a resource
+adapter. Supported in remote mode only. For procedural information in
+this guide, see <a href="connectors.html#gioir">To List Connector Work
+Security Maps</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jdbc-connection-pools.html#GSRFM00173"><code>list-jdbc-connection-pools</code></a></dt>
+<dd>
+<p>Lists the existing JDBC connection pools. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jdbc.html#ggnby">To List JDBC Connection Pools</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jdbc-resources.html#GSRFM00174"><code>list-jdbc-resources</code></a></dt>
+<dd>
+<p>Lists the existing JDBC resources. Supported in remote mode only. For
+procedural information in this guide, see <a href="jdbc.html#ggnhl">To List
+JDBC Resources</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-resource-adapter-configs.html#GSRFM00196"><code>list-resource-adapter-configs</code></a></dt>
+<dd>
+<p>Lists configuration information for the connector modules. Supported
+in remote mode only. For procedural information in this guide, see
+<a href="connectors.html#giorn">To List Resource Adapter Configurations</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/ping-connection-pool.html#GSRFM00214"><code>ping-connection-pool</code></a></dt>
+<dd>
+<p>Tests if a JDBC connection pool is usable. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jdbc.html#ggnwn">To Contact (Ping) a Connection Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/update-connector-security-map.html#GSRFM00252"><code>update-connector-security-map</code></a></dt>
+<dd>
+<p>Modifies a security map for the specified connector connection pool.
+For procedural information in this guide, see
+<a href="connectors.html#gityj">To Update a Connector Security Map</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/update-connector-work-security-m.html#GSRFM00253"><code>update-connector-work-security-map</code></a></dt>
+<dd>
+<p>Modifies a work security map that belongs to a specific resource
+adapter (connector module). For procedure information in this guide,
+see <a href="connectors.html#giogm">To Update a Connector Work Security
+Map</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gitwu"></a><a id="GSADG00612"></a><a id="domain-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_domain_subcommands">Domain Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/backup-domain.html#GSRFM00003"><code>backup-domain</code></a></dt>
+<dd>
+<p>Describes how to back up a domain. Supported in local mode only. For
+procedural information in this guide, see <a href="domains.html#ggocq">To
+Back Up a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-domain.html#GSRFM00023"><code>create-domain</code></a></dt>
+<dd>
+<p>Creates the configuration of a domain. A domain can exist independent
+of other domains. Any user who has access to the <code>asadmin</code> utility on
+a given host can create a domain and store its configuration in a
+location of choice. For procedural information in this guide, see
+<a href="domains.html#ggoei">To Create a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-domain.html#GSRFM00075"><code>delete-domain</code></a></dt>
+<dd>
+<p>Deletes the specified domain. The domain must be stopped before it can
+be deleted. For procedural information in this guide, see
+<a href="domains.html#ggofa">To Delete a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-backups.html#GSRFM00152"><code>list-backups</code></a></dt>
+<dd>
+<p>Lists the existing domain backups. Supported in local mode only. For
+procedural information in this guide, see <a href="domains.html#ghgod">To
+List Domain Backups</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-domains.html#GSRFM00163"><code>list-domains</code></a></dt>
+<dd>
+<p>Lists the existing domains and their statuses. If the domain directory
+is not specified, the domains in the domain-root-dir, the default for
+which is as-install`/domains`, are displayed. For procedural
+information in this guide, see <a href="domains.html#ggoco">To List
+Domains</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/login.html#GSRFM00210"><code>login</code></a></dt>
+<dd>
+<p>Allows you to log in to a domain. For procedural information in this
+guide, see <a href="domains.html#ghhjz">To Log In to a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/restart-domain.html#GSRFM00218"><code>restart-domain</code></a></dt>
+<dd>
+<p>Restarts the Domain Administration Server (DAS) of the specified
+domain. Supported in remote mode only. For procedural information in
+this guide, see <a href="domains.html#ginqj">To Restart a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/restore-domain.html#GSRFM00221"><code>restore-domain</code></a></dt>
+<dd>
+<p>Recovers and domain from a backup file. Supported in local mode only.
+For procedural information in this guide, see
+<a href="domains.html#ggody">To Restore a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/start-domain.html#GSRFM00235"><code>start-domain</code></a></dt>
+<dd>
+<p>Starts a domain. If the domain directory is not specified, the default
+<code>domain1</code> in the default domain-root-dir directory is started. If
+there are two or more domains, the domain_name operand must be
+specified. For procedural information in this guide, see
+<a href="domains.html#ggoda">To Start a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/stop-domain.html#GSRFM00240"><code>stop-domain</code></a></dt>
+<dd>
+<p>Stops the domain administration server (DAS) of the specified domain.
+Supported in remote mode only. For procedural information in this
+guide, see <a href="domains.html#ggoch">To Stop a Domain</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/uptime.html#GSRFM00258"><code>uptime</code></a></dt>
+<dd>
+<p>Displays the length of time that the domain administration server
+(DAS) has been running since the last restart. Supported in remote
+mode only. For procedural information in this guide, see
+<a href="domains.html#ghhnt">To Display Domain Uptime</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="ggltm"></a><a id="GSADG00613"></a><a id="internet-connectivity-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_internet_connectivity_subcommands">Internet Connectivity Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-http.html#GSRFM00025"><code>create-http</code></a></dt>
+<dd>
+<p>Creates a set of HTTP parameters for a protocol, which in turn
+configures one or more network listeners. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="http_https.html#gjhqc">To Create an HTTP Configuration</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-http-listener.html#GSRFM00030"><code>create-http-listener</code></a></dt>
+<dd>
+<p>Creates a new HTTP listener socket. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#ggnfh">To
+Create an Internet Connection</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-network-listener.html#GSRFM00046"><code>create-network-listener</code></a></dt>
+<dd>
+<p>Creates a new HTTP listener socket. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#ggnfh">To
+Create an Internet Connection</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-protocol.html#GSRFM00051"><code>create-protocol</code></a></dt>
+<dd>
+<p>Creates a protocol for a listener. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#gjhot">To
+Create a Protocol</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-transport.html#GSRFM00061"><code>create-transport</code></a></dt>
+<dd>
+<p>Creates a transport for a listener. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#gjhps">To
+Create a Transport</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-virtual-server.html#GSRFM00062"><code>create-virtual-server</code></a></dt>
+<dd>
+<p>Creates the specified virtual server element. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="http_https.html#ggnfr">To Create a Virtual Server</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-ssl.html#GSRFM00058"><code>create-ssl</code></a></dt>
+<dd>
+<p>Creates and configures the SSL element in the selected HTTP listener
+to enable secure communication on that listener/service. Supported in
+remote mode only. For procedural information in this guide, see
+<a href="http_https.html#ggnbj">To Configure an HTTP Listener for SSL</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-http.html#GSRFM00077"><code>delete-http</code></a></dt>
+<dd>
+<p>Deletes an existing HTTP configuration. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="http_https.html#gjhqa">To Delete an HTTP Configuration</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-http-listener.html#GSRFM00082"><code>delete-http-listener</code></a></dt>
+<dd>
+<p>Deletes the specified HTTP listener. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="http_https.html#ggndu">To Delete an HTTP Network Listener</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-network-listener.html#GSRFM00098"><code>delete-network-listener</code></a></dt>
+<dd>
+<p>Deletes the specified HTTP listener. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="http_https.html#ggndu">To Delete an HTTP Network Listener</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-protocol.html#GSRFM00103"><code>delete-protocol</code></a></dt>
+<dd>
+<p>Deletes and existing HTTP protocol. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#gjhnx">To
+Delete a Protocol</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-ssl.html#GSRFM00109"><code>delete-ssl</code></a></dt>
+<dd>
+<p>Deletes the SSL element in the selected HTTP listener. Supported in
+remote mode only. For procedural information in this guide, see
+<a href="http_https.html#ggncl">To Delete SSL From an HTTP Listener</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-transport.html#GSRFM00112"><code>delete-transport</code></a></dt>
+<dd>
+<p>Deletes and existing HTTP transport. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="http_https.html#gjhqp">To Delete a Transport</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-virtual-server.html#GSRFM00113"><code>delete-virtual-server</code></a></dt>
+<dd>
+<p>Deletes the specified virtual server element. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="http_https.html#ggnen">To Delete a Virtual Server</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-http-listeners.html#GSRFM00168"><code>list-http-listeners</code></a></dt>
+<dd>
+<p>Lists the existing HTTP listeners. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#ggnbv">To
+List HTTP Network Listeners</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-network-listeners.html#GSRFM00186"><code>list-network-listeners</code></a></dt>
+<dd>
+<p>Lists the existing HTTP listeners. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#ggnbv">To
+List HTTP Network Listeners</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-protocols.html#GSRFM00195"><code>list-protocols</code></a></dt>
+<dd>
+<p>Lists the existing HTTP protocols. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#gjhna">To
+List Protocols</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-transports.html#GSRFM00206"><code>list-transports</code></a></dt>
+<dd>
+<p>Lists the existing HTTP transports. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#gjhmx">To
+List Transports</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-virtual-servers.html#GSRFM00207"><code>list-virtual-servers</code></a></dt>
+<dd>
+<p>Lists the existing virtual servers. Supported in remote mode only. For
+procedural information in this guide, see <a href="http_https.html#ggndw">To
+List Virtual Servers</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="ggltf"></a><a id="GSADG00614"></a><a id="javamail-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javamail_subcommands">JavaMail Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-javamail-resource.html#GSRFM00035"><code>create-javamail-resource</code></a></dt>
+<dd>
+<p>Creates a JavaMail session resource. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="javamail.html#giowd">To Create a JavaMail Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-javamail-resource.html#GSRFM00087"><code>delete-javamail-resource</code></a></dt>
+<dd>
+<p>Deletes a JavaMail session resource. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="javamail.html#gioxj">To Delete a JavaMail Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-javamail-resources.html#GSRFM00172"><code>list-javamail-resources</code></a></dt>
+<dd>
+<p>Creates JavaMail session resources. Supported in remote mode only. For
+procedural information in this guide, see <a href="javamail.html#giowq">To
+List JavaMail Resources</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gipen"></a><a id="GSADG00615"></a><a id="jms-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jms_subcommands">JMS Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-jmsdest.html#GSRFM00038"><code>create-jmsdest</code></a></dt>
+<dd>
+<p>Creates a JMS physical destination. Along with the physical
+destination, you use the <code>create-jms-resource</code> subcommand to create a
+JMS destination resource that has a <code>Name</code> property that specifies the
+physical destination. Supported in remote mode only. For procedural
+information in this guide, see <a href="jms.html#gioue">To Create a JMS
+Physical Destination</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-jms-host.html#GSRFM00039"><code>create-jms-host</code></a></dt>
+<dd>
+<p>Creates a JMS host within the JMS service. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jms.html#gipbh">To Create a JMS Host</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-jms-resource.html#GSRFM00040"><code>create-jms-resource</code></a></dt>
+<dd>
+<p>Creates a JMS connection factory resource or JMS destination resource.
+Supported in remote mode only. Supported in remote mode only. For
+procedural information in this guide, see <a href="jms.html#giotd">To Create
+a Connection Factory or Destination Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jmsdest.html#GSRFM00090"><code>delete-jmsdest</code></a></dt>
+<dd>
+<p>Removes the specified JMS destination. Supported in remote mode only.
+For procedural information in this guide, see <a href="jms.html#giouv">To
+Delete a JMS Physical Destination</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jms-host.html#GSRFM00091"><code>delete-jms-host</code></a></dt>
+<dd>
+<p>Deletes a JMS host within the JMS service. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jms.html#gipbv">To Delete a JMS Host</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jms-resource.html#GSRFM00092"><code>delete-jms-resource</code></a></dt>
+<dd>
+<p>Deletes a JMS connection factory resource or JMS destination resource.
+Supported in remote mode only. For procedural information in this
+guide, see <a href="jms.html#giouw">To Delete a Connection Factory or
+Destination Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/flush-jmsdest.html#GSRFM00136"><code>flush-jmsdest</code></a></dt>
+<dd>
+<p>Purges the messages from a physical destination in the specified JMS
+Service configuration of the specified target. Supported in remote
+mode only. For procedural information in this guide, see
+<a href="jms.html#giowx">To Purge Messages From a Physical Destination</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/jms-ping.html#GSRFM00144"><code>jms-ping</code></a></dt>
+<dd>
+<p>Checks if the JMS service (also known as the JMS provider) is up and
+running. Supported in remote mode only. For procedural information in
+this guide, see <a href="jms.html#gipnh">Troubleshooting the JMS Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jmsdest.html#GSRFM00175"><code>list-jmsdest</code></a></dt>
+<dd>
+<p>Lists the JMS physical destinations. Supported in remote mode only.
+For procedural information in this guide, see <a href="jms.html#gioyp">To
+List JMS Physical Destinations</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jms-hosts.html#GSRFM00176"><code>list-jms-hosts</code></a></dt>
+<dd>
+<p>Lists the existing JMS hosts. Supported in remote mode only. For
+procedural information in this guide, see <a href="jms.html#gipbz">To List
+JMS Hosts</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jms-resources.html#GSRFM00177"><code>list-jms-resources</code></a></dt>
+<dd>
+<p>Lists the existing JMS connection factory or destination resources.
+Supported in remote mode only. For procedural information in this
+guide, see <a href="jms.html#giosx">To List JMS Resources</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gitws"></a><a id="GSADG00616"></a><a id="jndi-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jndi_subcommands">JNDI Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-custom-resource.html#GSRFM00022"><code>create-custom-resource</code></a></dt>
+<dd>
+<p>Creates a custom JNDI resource. Supported in remote mode only. For
+procedural information in this guide, see <a href="jndi.html#giowe">To
+Create a Custom JNDI Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-jndi-resource.html#GSRFM00041"><code>create-jndi-resource</code></a></dt>
+<dd>
+<p>Creates an external JNDI resource. Supported in remote mode only. For
+procedural information in this guide, see <a href="jndi.html#gitxn">To
+Register an External JNDI Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-custom-resource.html#GSRFM00074"><code>delete-custom-resource</code></a></dt>
+<dd>
+<p>Deletes a custom JNDI resource. Supported in remote mode only. For
+procedural information in this guide, see <a href="jndi.html#gioxl">To
+Delete a Custom JNDI Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jndi-resource.html#GSRFM00093"><code>delete-jndi-resource</code></a></dt>
+<dd>
+<p>Deletes an external JNDI resource. Supported in remote mode only. For
+procedural information in this guide, see <a href="jndi.html#gitvt">To
+Delete an External JNDI Resource</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-custom-resources.html#GSRFM00162"><code>list-custom-resources</code></a></dt>
+<dd>
+<p>Lists the existing custom JNDI resources. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jndi.html#gioxb">To List Custom JNDI Resources</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jndi-entries.html#GSRFM00178"><code>list-jndi-entries</code></a></dt>
+<dd>
+<p>Lists the entries in the JNDI tree. Supported in remote mode only. For
+procedural information in this guide, see <a href="jndi.html#gitwc">To List
+External JNDI Entries</a>,</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jndi-resources.html#GSRFM00179"><code>list-jndi-resources</code></a></dt>
+<dd>
+<p>Lists the existing external JNDI resources. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jndi.html#gitvj">To List External JNDI Resources</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gglsk"></a><a id="GSADG00617"></a><a id="jvm-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jvm_subcommands">JVM Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-jvm-options.html#GSRFM00042"><code>create-jvm-options</code></a></dt>
+<dd>
+<p>Creates a JVM option in the Java configuration or profiler elements of
+the <code>domain.xml</code> file. Supported in remote mode only. For procedural
+information in this guide, see <a href="jvm.html#ggnes">To Create JVM
+Options</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/create-profiler.html#GSRFM00050"><code>create-profiler</code></a></dt>
+<dd>
+<p>Creates a profiler element. Supported in remote mode only. For
+procedural information in this guide, see <a href="jvm.html#ggneb">To Create
+a Profiler</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-jvm-options.html#GSRFM00094"><code>delete-jvm-options</code></a></dt>
+<dd>
+<p>Deletes the specified JVM option from the Java configuration or
+profiler elements of the <code>domain.xml</code> file. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jvm.html#ggnfi">To Delete JVM Options</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-profiler.html#GSRFM00102"><code>delete-profiler</code></a></dt>
+<dd>
+<p>Deletes the specified profiler element. Supported in remote mode only.
+For procedural information in this guide, see <a href="jvm.html#ggnem">To
+Delete a Profiler</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/generate-jvm-report.html#GSRFM00138"><code>generate-jvm-report</code></a></dt>
+<dd>
+<p>Generates a report showing the threads, classes, and memory for the
+virtual machine that runs GlassFish Server. For procedural information
+in this guide, see <a href="jvm.html#ggnbu">To Generate a JVM Report</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-jvm-options.html#GSRFM00180"><code>list-jvm-options</code></a></dt>
+<dd>
+<p>Lists the command-line options that are passed to the Java application
+launcher when GlassFish Server is started. Supported in remote mode
+only. For procedural information in this guide, see
+<a href="jvm.html#ggnce">To List JVM Options</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="giuzl"></a><a id="GSADG00618"></a><a id="life-cycle-module-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_life_cycle_module_subcommands">Life Cycle Module Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-lifecycle-module.html#GSRFM00043"><code>create-lifecycle-module</code></a></dt>
+<dd>
+<p>Creates a new life cycle module. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="lifecycle-modules.html#giuus">To Create a Life Cycle Module</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-lifecycle-modules.html#GSRFM00181"><code>list-lifecycle-modules</code></a></dt>
+<dd>
+<p>Lists life cycle modules. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="lifecycle-modules.html#giuvh">To List Life Cycle Modules</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-lifecycle-module.html#GSRFM00095"><code>delete-lifecycle-module</code></a></dt>
+<dd>
+<p>Deletes an existing life cycle module. Supported in remote mode only.
+For procedural information in this guide, see
+<a href="lifecycle-modules.html#giuux">To Delete a Life Cycle Module</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gitxd"></a><a id="GSADG00619"></a><a id="logging-and-monitoring-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_logging_and_monitoring_subcommands">Logging and Monitoring Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/collect-log-files.html#GSRFM00007"><code>collect-log-files</code></a></dt>
+<dd>
+<p>Collects all available log files and creates a ZIP archive. Supported
+in remote mode only. For procedural information in this guide, see
+<a href="logging.html#gklbi">To Collect Log Files into a ZIP Archive</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/disable-monitoring.html#GSRFM00120"><code>disable-monitoring</code></a></dt>
+<dd>
+<p>Disables the monitoring service. Supported in remote mode only. For
+procedural information in this guide, see <a href="monitoring.html#gglcu">To
+Disable Monitoring</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/enable-monitoring.html#GSRFM00128"><code>enable-monitoring</code></a></dt>
+<dd>
+<p>Enables the monitoring service. Supported in remote mode only. For
+procedural information in this guide, see <a href="monitoring.html#ablvr">To
+Enable Monitoring</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-log-attributes.html#GSRFM00182"><code>list-log-attributes</code></a></dt>
+<dd>
+<p>Lists log file attributes. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="logging.html#gklmn">Configuring the Logging Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-log-levels.html#GSRFM00183"><code>list-log-levels</code></a></dt>
+<dd>
+<p>Lists the existing loggers. Supported in remote mode only. For
+procedural information in this guide, see <a href="logging.html#gjirr">To
+List Log Levels</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-loggers.html#GSRFM869"><code>list-loggers</code></a></dt>
+<dd>
+<p>Lists all public loggers in your distribution of GlassFish Server Open
+Source Edition. Internal loggers are not listed. For procedural
+information in this guide, see <a href="logging.html#CEGGICGF">To List
+Loggers</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/monitor.html#GSRFM00212"><code>monitor</code></a></dt>
+<dd>
+<p>Displays monitoring information for the common GlassFish Server
+resources. Supported in remote mode only. For procedural information
+in this guide, see <a href="monitoring.html#gelol">To View Common Monitoring
+Data</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/rotate-log.html#GSRFM00224"><code>rotate-log</code></a></dt>
+<dd>
+<p>Rotates the <code>server.log</code> file and stores the old data in a
+time-stamped file. Supported in remote mode only. For procedural
+information in this guide, see <a href="logging.html#gkmau">To Rotate Log
+Files Manually</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/set-log-attributes.html#GSRFM00227"><code>set-log-attributes</code></a></dt>
+<dd>
+<p>Sets log file attributes. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="logging.html#gklmn">Configuring the Logging Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/set-log-file-format.html#GSRFM879"><code>set-log-file-format</code></a></dt>
+<dd>
+<p>Sets the formatter used to format log records in log files. For
+procedural information in this guide, see
+<a href="logging.html#CEGDJEBG">Setting the Log File Format</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/set-log-levels.html#GSRFM00228"><code>set-log-levels</code></a></dt>
+<dd>
+<p>Sets the log level for a module. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="logging.html#gklml">Setting Log Levels</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="giusq"></a><a id="GSADG00620"></a><a id="orb-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_orb_subcommands">ORB Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-iiop-listener.html#GSRFM00032"><code>create-iiop-listener</code></a></dt>
+<dd>
+<p>Creates an IIOP listener. Supported in remote mode only. For
+procedural information in this guide, see <a href="orb.html#gioyo">To Create
+an IIOP Listener</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-iiop-listener.html#GSRFM00084"><code>delete-iiop-listener</code></a></dt>
+<dd>
+<p>Deletes an IIOP listener. Supported in remote mode only. For
+procedural information in this guide, see <a href="orb.html#giowj">To Delete
+an IIOP Listener</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-iiop-listeners.html#GSRFM00169"><code>list-iiop-listeners</code></a></dt>
+<dd>
+<p>Lists the existing IIOP listeners. Supported in remote mode only. For
+procedural information in this guide, see <a href="orb.html#giowc">To List
+IIOP Listeners</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="giuqr"></a><a id="GSADG00621"></a><a id="thread-pool-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_thread_pool_subcommands">Thread Pool Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/create-threadpool.html#GSRFM00060"><code>create-threadpool</code></a></dt>
+<dd>
+<p>Creates a new thread pool. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="threadpools.html#ggkwj">To Create a Thread Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/delete-threadpool.html#GSRFM00111"><code>delete-threadpool</code></a></dt>
+<dd>
+<p>Deletes the specified thread pool. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="threadpools.html#ggkwy">To Delete a Thread Pool</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/list-threadpools.html#GSRFM00204"><code>list-threadpools</code></a></dt>
+<dd>
+<p>Lists the existing thread pools. Supported in remote mode only. For
+procedural information in this guide, see
+<a href="threadpools.html#giuff">To List Thread Pools</a>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gitxi"></a><a id="GSADG00622"></a><a id="transaction-service-subcommands"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transaction_service_subcommands">Transaction Service Subcommands</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="../reference-manual/freeze-transaction-service.html#GSRFM00137"><code>freeze-transaction-service</code></a></dt>
+<dd>
+<p>Freezes the transaction subsystem during which time all the in-flight
+transactions are suspended. Supported in remote mode only. For
+procedural information, see <a href="transactions.html#giufn">To Stop the
+Transaction Service</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/recover-transactions.html#GSRFM00216"><code>recover-transactions</code></a></dt>
+<dd>
+<p>Manually recovers pending transactions. Supported in remote mode only.
+For procedural information, see <a href="transactions.html#giuhe">To
+Manually Recover Transactions</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/rollback-transaction.html#GSRFM00223"><code>rollback-transaction</code></a></dt>
+<dd>
+<p>Rolls back the named transaction. Supported in remote mode only. For
+procedural information, see <a href="transactions.html#giugk">To Roll Back a
+Transaction</a>.</p>
+</dd>
+<dt class="hdlist1"><a href="../reference-manual/unfreeze-transaction-service.html#GSRFM00245"><code>unfreeze-transaction-service</code></a></dt>
+<dd>
+<p>Resumes all the suspended in-flight transactions. Invoke this
+subcommand on an already frozen transaction. Supported in remote mode
+only. For procedural information, see <a href="transactions.html#giuet">To
+Restart the Transaction Service</a>.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="part-appendixes.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

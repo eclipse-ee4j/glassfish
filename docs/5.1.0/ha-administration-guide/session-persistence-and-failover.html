@@ -1,0 +1,1106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Configuring High Availability Session Persistence and Failover</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Configuring High Availability Session Persistence and Failover</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="rolling-upgrade.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jms.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00011"></a><a id="abdkz"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-high-availability-session-persistence-and-failover">9 Configuring High Availability Session Persistence and Failover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter explains how to enable and configure high availability
+session persistence.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdla">Overview of Session Persistence and Failover</a></p>
+</li>
+<li>
+<p><a href="#abdle">Enabling the High Availability Session Persistence
+Service</a></p>
+</li>
+<li>
+<p><a href="#abdlp">Stateful Session Bean Failover</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdla"></a><a id="GSHAG00209"></a><a id="overview-of-session-persistence-and-failover"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_overview_of_session_persistence_and_failover">Overview of Session Persistence and Failover</h3>
+<div class="paragraph">
+<p>GlassFish Server provides high availability session persistence through
+failover of HTTP session data and stateful session bean (SFSB) session
+data. Failover means that in the event of an server instance or hardware
+failure, another server instance in a cluster takes over a distributed
+session.</p>
+</div>
+<div class="paragraph">
+<p>For example, Java EE applications typically have significant amounts of
+session state data. A web shopping cart is the classic example of
+session state. Also, an application can cache frequently-needed data in
+the session object. In fact, almost all applications with significant
+user interactions need to maintain session state.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>When using high availability session persistence together with a load
+balancer, use a load balancer that includes session-based stickiness as
+part of its load-balancing algorithm. Otherwise, session data can be
+misdirected or lost. An example of a load balancer that includes
+session-based stickiness is the Loadbalancer Plug-In available in Oracle
+GlassFish Server.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdlb">Requirements</a></p>
+</li>
+<li>
+<p><a href="#abdlc">Restrictions</a></p>
+</li>
+<li>
+<p><a href="#gksoq">Scope</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdlb"></a><a id="GSHAG00300"></a><a id="requirements"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_requirements">Requirements</h4>
+<div class="paragraph">
+<p>A distributed session can run in multiple Oracle GlassFish Server
+instances, if:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each server instance has access to the same session state data.
+GlassFish Server supports in-memory session replication on other servers
+in the cluster for maintaining HTTP session and stateful session bean
+data. In-memory session replication is enabled by default for GlassFish
+Server clustered environments if the Group Management Service is
+enabled.<br>
+The use of in-memory replication requires the Group Management Service
+(GMS) to be enabled. For more information about GMS, see
+<a href="clusters.html#gjfnl">Group Management Service</a>.<br>
+If server instances in a cluster are located on different hosts, ensure
+that the following prerequisites are met:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To ensure that GMS and in-memory replication function correctly, the
+hosts must be on the same subnet.</p>
+</li>
+<li>
+<p>To ensure that in-memory replication functions correctly, the system
+clocks on all hosts in the cluster must be synchronized as closely as
+possible.<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server 4.0 does not support High Availability Database (HADB)
+configurations. Instead, use in-memory replication, as described in
+<a href="overview.html#gaynn">High Availability Session Persistence</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p>Each server instance has the same distributable web application
+deployed to it. The <code>web-app</code> element of the <code>web.xml</code> deployment
+descriptor file must contain the <code>distributable</code> element.</p>
+</li>
+<li>
+<p>The web application uses high-availability session persistence. If a
+non-distributable web application is configured to use high-availability
+session persistence, the server writes an error to the log file.</p>
+</li>
+<li>
+<p>The web application must be deployed using the <code>deploy</code> or <code>deploydir</code>
+subcommand with the <code>--availabilityenabled</code> option set to <code>true</code>. For
+more information on these subcommands, see <a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code>(1)</a>
+and <a href="../reference-manual/deploydir.html#GSRFM00115"><code>deploydir</code>(1)</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdlc"></a><a id="GSHAG00301"></a><a id="restrictions"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_restrictions">Restrictions</h4>
+<div class="paragraph">
+<p>When configuring session persistence and failover, note the following
+restrictions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When a session fails over, any references to open files or network
+connections are lost. Applications must be coded with this restriction
+in mind.</p>
+</li>
+<li>
+<p>EJB Singletons are created for each server instance in a cluster, and
+not once per cluster.</p>
+</li>
+<li>
+<p>The high availability session persistence service is not compatible
+with dynamic deployment, dynamic reloading, and autodeployment. These
+features are for development, not production environments, so you must
+disable them before enabling the session persistence service. For
+information about how to disable these features, see the
+<a href="../application-deployment-guide/toc.html#GSDPG">GlassFish Server Open Source Edition Application Deployment
+Guide</a>.</p>
+</li>
+<li>
+<p>GlassFish Server 4.0 does not support High Availability Database
+(HADB) configurations. Instead, use in-memory replication, as described
+in <a href="overview.html#gaynn">High Availability Session Persistence</a>.</p>
+</li>
+<li>
+<p>You can only bind certain objects to distributed sessions that support
+failover. Contrary to the Servlet 2.4 specification, GlassFish Server
+4.0 does not throw an <code>IllegalArgumentException</code> if an object type not
+supported for failover is bound into a distributed session.<br>
+You can bind the following objects into a distributed session that
+supports failover:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Local home and object references for all EJB components.</p>
+</li>
+<li>
+<p>Colocated stateless session, stateful session, or entity bean
+reference .</p>
+</li>
+<li>
+<p>Distributed stateless session, stateful session, or entity bean
+reference.</p>
+</li>
+<li>
+<p>JNDI Context for <code>InitialContext</code> and <code>java:comp/env</code>.</p>
+</li>
+<li>
+<p><code>UserTransaction</code> objects. However, if the instance that fails is
+never restarted, any prepared global transactions are lost and might not
+be correctly rolled back or committed.</p>
+</li>
+<li>
+<p>Serializable Java types.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>You cannot bind the following object types into sessions that support
+failover:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>JDBC DataSource</p>
+</li>
+<li>
+<p>Java Message Service (JMS) <code>ConnectionFactory</code> and <code>Destination</code>
+objects</p>
+</li>
+<li>
+<p>JavaMail Session</p>
+</li>
+<li>
+<p>Connection Factory</p>
+</li>
+<li>
+<p>Administered Objects</p>
+</li>
+<li>
+<p>Web service reference<br>
+In general, for these objects, failover will not work. However, failover
+might work in some cases, if for example the object is serializable.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksoq"></a><a id="GSHAG00302"></a><a id="scope"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_scope">Scope</h4>
+<div class="paragraph">
+<p>The availability service can be enabled for the following scopes,
+ranging from highest to lowest:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Cluster</p>
+</li>
+<li>
+<p>Standalone server instance (not part of a cluster)</p>
+</li>
+<li>
+<p>Web, EJB, or JMS container in a cluster</p>
+</li>
+<li>
+<p>Application</p>
+</li>
+<li>
+<p>Standalone Web, EJB, or JMS module</p>
+</li>
+<li>
+<p>Individual Stateful Session Bean (SFSB)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In general, enabling or disabling availability session persistence for a
+cluster or container involves setting the boolean <code>availability-service</code>
+property to <code>true</code> or <code>false</code> by means of the <code>asadmin set</code> subcommand.
+The availability service is enabled by default for GlassFish Server
+clusters and all Web, EJB, and JMS containers running in a cluster.</p>
+</div>
+<div class="paragraph">
+<p>The value set for the <code>availability-service</code> property is inherited by
+all child objects running in a given cluster or container unless the
+value is explicitly overridden at the individual module or application
+level. For example, if the <code>availability-service</code> property is set to
+<code>true</code> for an EJB container, the availability service will be enabled by
+default for all EJB modules running in that container.</p>
+</div>
+<div class="paragraph">
+<p>Conversely, to enable availability at a given scope, you must enable it
+at all higher levels as well. For example, to enable availability at the
+application level, you must also enable it at the cluster or server
+instance and container levels.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdle"></a><a id="GSHAG00210"></a><a id="enabling-the-high-availability-session-persistence-service"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enabling_the_high_availability_session_persistence_service">Enabling the High Availability Session Persistence Service</h3>
+<div class="paragraph">
+<p>This section explains how to configure and enable the high availability
+session persistence service.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdlf">To Enable Availability for a Cluster, Standalone Instance
+or Container</a></p>
+</li>
+<li>
+<p><a href="#abdll">Configuring Availability for Individual Web Applications</a></p>
+</li>
+<li>
+<p><a href="#gkwqu">Configuring Replication and Multi-Threaded Concurrent
+Access to <code>HttpSessions</code></a></p>
+</li>
+<li>
+<p><a href="#abdln">Using Single Sign-on with Session Failover</a></p>
+</li>
+<li>
+<p><a href="#gkyyl">Using Coherence*Web for HTTP Session Persistence</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdlf"></a><a id="GSHAG00154"></a><a id="to-enable-availability-for-a-cluster-standalone-instance-or-container"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_enable_availability_for_a_cluster_standalone_instance_or_container">To Enable Availability for a Cluster, Standalone Instance or Container</h4>
+<div class="paragraph">
+<p>This procedure explains how to enable high availability for a cluster as
+a whole, or for Web, EJB, or JMS containers that run in a cluster, or
+for a standalone server instance that is not part of a cluster.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a GlassFish Server cluster.<br>
+For more information, see <a href="clusters.html#gkqdm">To Create a Cluster</a>.</p>
+</li>
+<li>
+<p>Set up load balancing for the cluster.<br>
+For instructions, see <a href="http-load-balancing.html#abdgx">Setting Up HTTP
+Load Balancing</a>.</p>
+</li>
+<li>
+<p>Verify that the cluster and all instances within the cluster for
+which you want to enable availability is running.<br>
+These steps are also necessary when enabling availability for a Web,
+EJB, or JMS container running in a cluster. The cluster and all
+instances in the cluster for which you want to enable availability must
+be running.</p>
+</li>
+<li>
+<p>Verify that the cluster is running.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-clusters</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A list of clusters and their status (running, not running) is displayed.
+If the cluster for which you want to enable availability is not running,
+you can start it with the following command:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-cluster cluster-name</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Verify that all instances in the cluster are running.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-instances</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A list of instances and their status is displayed. If the instances for
+which you want to enable availability are not running, you can start
+them by using the following command for each instance:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; start-instance instance-name</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use one of the following <code>asadmin</code> o<a href="GSRFM00226"><code>set</code></a>
+subcommands to enable availability for a specific cluster, or for a
+specific Web, EJB, or JMS container.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For a cluster as a whole<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set cluster-name-config.availability-service.availability-enabled=true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, for a cluster named <code>c1</code>:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set c1-config.availability-service.availability-enabled=true</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the Web container in a cluster<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set cluster-name-config.availability-service \
+.web-container-availability.availability-enabled=true</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the EJB container in a cluster<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set cluster-name-config.availability-service \
+.ejb-container-availability.availability-enabled=true</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For the JMS container in a cluster<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set cluster-name-config.availability-service \
+.jms-availability.availability-enabled=true</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For a standalone server instance (not part of a cluster)<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; set instance-name-config.availability-service.availability-enabled=true</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Restart the standalone server instance or each server instance in
+the cluster.</p>
+</li>
+<li>
+<p>Enable availability for any SFSB that requires it.<br>
+Select methods for which checkpointing the session state is necessary.
+For more information, see <a href="#abdlu">Configuring Availability for an
+Individual Bean</a>.</p>
+</li>
+<li>
+<p>Make each web module distributable if you want it to be highly
+available.<br>
+For more information, see "<a href="../application-deployment-guide/deploying-applications.html#GSDPG00067">Web Module Deployment
+Guidelines</a>" in GlassFish Server Open Source Edition Application
+Deployment Guide.</p>
+</li>
+<li>
+<p>Enable availability for individual applications, web modules, or EJB
+modules during deployment.<br>
+See the links below for instructions.</p>
+</li>
+</ol>
+</div>
+<div id="GSHAG430" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abdll">Configuring Availability for Individual Web Applications</a></p>
+</li>
+<li>
+<p><a href="#abdln">Using Single Sign-on with Session Failover</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdll"></a><a id="GSHAG00303"></a><a id="configuring-availability-for-individual-web-applications"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_availability_for_individual_web_applications">Configuring Availability for Individual Web Applications</h4>
+<div class="paragraph">
+<p>To enable and configure availability for an individual web application,
+edit the application deployment descriptor file, <code>glassfish-web.xml</code>.
+The settings in an application&#8217;s deployment descriptor override the web
+container&#8217;s availability settings.</p>
+</div>
+<div class="paragraph">
+<p>The <code>session-manager</code> element&#8217;s <code>persistence-type</code> attribute determines
+the type of session persistence an application uses. It must be set to
+<code>replicated</code> to enable high availability session persistence.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdlm"></a><a id="GSHAG00247"></a><a id="example"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_example">Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app&gt; ...
+  &lt;session-config&gt;
+    &lt;session-manager persistence-type="replicated"&gt;
+      &lt;manager-properties&gt;
+        &lt;property name="persistenceFrequency" value="web-method" /&gt;
+      &lt;/manager-properties&gt;
+      &lt;store-properties&gt;
+        &lt;property name="persistenceScope" value="session" /&gt;
+      &lt;/store-properties&gt;
+    &lt;/session-manager&gt; ...
+&lt;/session-config&gt; ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gkwqu"></a><a id="GSHAG00304"></a><a id="configuring-replication-and-multi-threaded-concurrent-access-to-httpsessions"></a></p>
+</div>
+<div class="paragraph">
+<p>Configuring Replication and Multi-Threaded Concurrent Access to
+<code>HttpSessions</code>
+<sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup><sup>^</sup></p>
+</div>
+<div class="paragraph">
+<p>If you are using Memory Replication and your web application involves
+multiple client threads concurrently accessing the same session ID, then
+you may experience session loss even without any instance failure. The
+problem is that the GlassFish Server 4.0 memory replication framework
+makes use of session versioning. This feature was designed with the more
+traditional HTTP request/response communication model in mind.</p>
+</div>
+<div class="paragraph">
+<p>However, for some types of applications, the traditional
+request/response model does not work. Examples include many Ajax-related
+frameworks and the use of Frames. Another example is when a page
+includes many static resources, such as JPG files. In these situations,
+most browsers will optimize the loading of these resources by using
+multiple parallel connections, each of which is handled by a separate
+request processing thread. If the application has already established a
+session, then this will also involve more than one thread at a time
+accessing a single <code>HttpSession</code>.</p>
+</div>
+<div class="paragraph">
+<p>The solution in such cases is to use the <code>relaxVersionSemantics</code>
+property in the <code>glassfish-web.xml</code> deployment descriptor file for the
+application. This enables the web container to return for each
+requesting thread whatever version of the session that is in the active
+cache regardless of the version number. This is critical when multiple
+threads are interacting in an essentially non-deterministic fashion with
+the container.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkwrj"></a><a id="GSHAG00248"></a><a id="example-1"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_example_2">Example</h5>
+<div class="paragraph">
+<p>The following is an example snippet from a <code>glassfish-web.xml</code> file that
+illustrates where to add the <code>relaxVersionSemantics</code> property.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-web-app&gt;
+  &lt;session-config&gt;
+    &lt;session-manager persistence-type="replicated"&gt;
+      &lt;manager-properties&gt;
+    &lt;property name="relaxCacheVersionSemantics" value="true"/&gt;
+      &lt;/manager-properties&gt;
+    &lt;/session-manager&gt;
+  &lt;/session-config&gt;
+
+.....
+&lt;/glassfish-web-app&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abdln"></a><a id="GSHAG00305"></a><a id="using-single-sign-on-with-session-failover"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_single_sign_on_with_session_failover">Using Single Sign-on with Session Failover</h4>
+<div class="paragraph">
+<p>In a single application server instance, once a user is authenticated by
+an application, the user is not required to re-authenticate individually
+to other applications running on the same instance. This is called
+single sign-on.</p>
+</div>
+<div class="paragraph">
+<p>For this feature to continue to work even when an HTTP session fails
+over to another instance in a cluster, single sign-on information must
+be persisted using in-memory replication. To persist single sign-on
+information, first, enable availability for the server instance and the
+web container, then enable single-sign-on state failover.</p>
+</div>
+<div class="paragraph">
+<p>You can enable single sign-on state failover by using the <code>asadmin set</code>
+command to set the configuration&#8217;s
+<code>availability-service.web-container-availability.sso-failover-enabled</code>
+property to true.</p>
+</div>
+<div class="paragraph">
+<p>For example, use the <code>set</code> command as follows, where <code>config1</code> is the
+configuration name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set config1.availability-service.web-container-availability. \
+sso-failover-enabled="true"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abdlo"></a><a id="GSHAG00249"></a><a id="single-sign-on-groups"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_single_sign_on_groups">Single Sign-On Groups</h5>
+<div class="paragraph">
+<p>Applications that can be accessed through a single name and password
+combination constitute a single sign-on group. For HTTP sessions
+corresponding to applications that are part of a single sign-on group,
+if one of the sessions times out, other sessions are not invalidated and
+continue to be available. This is because time out of one session should
+not affect the availability of other sessions.</p>
+</div>
+<div class="paragraph">
+<p>As a corollary of this behavior, if a session times out and you try to
+access the corresponding application from the same browser window that
+was running the session, you are not required to authenticate again.
+However, a new session is created.</p>
+</div>
+<div class="paragraph">
+<p>Take the example of a shopping cart application that is a part of a
+single sign-on group with two other applications. Assume that the
+session time out value for the other two applications is higher than the
+session time out value for the shopping cart application. If your
+session for the shopping cart application times out and you try to run
+the shopping cart application from the same browser window that was
+running the session, you are not required to authenticate again.
+However, the previous shopping cart is lost, and you have to create a
+new shopping cart. The other two applications continue to run as usual
+even though the session running the shopping cart application has timed
+out.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, suppose a session corresponding to any of the other two
+applications times out. You are not required to authenticate again while
+connecting to the application from the same browser window in which you
+were running the session.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>This behavior applies only to cases where the session times out. If
+single sign-on is enabled and you invalidate one of the sessions using
+<code>HttpSession.invalidate()</code>, the sessions for all applications belonging
+to the single sign-on group are invalidated. If you try to access any
+application belonging to the single sign-on group, you are required to
+authenticate again, and a new session is created for the client
+accessing the application.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkyyl"></a><a id="GSHAG00306"></a><a id="using-coherenceweb-for-http-session-persistence"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_coherence_web_for_http_session_persistence">Using Coherence*Web for HTTP Session Persistence</h4>
+<div class="paragraph">
+<p>Built on top of Oracle Coherence, Coherence*Web is an HTTP session
+management module dedicated to managing session state in clustered
+environments. Starting with Coherence 3.7 and GlassFish Server 4.0,
+there is a new feature of Coherence*Web called ActiveCache for
+GlassFish. ActiveCache for GlassFish provides Coherence*Web
+functionality in web applications deployed on GlassFish Servers. Within
+GlassFish Server, Coherence*Web functions as an additional web container
+persistence type, named <code>coherence-web</code>.</p>
+</div>
+<div class="paragraph">
+<p>For information about how to configure and deploy Coherence*Web on
+GlassFish Server, see
+<a href="http://download.oracle.com/docs/cd/E18686_01/coh.37/e18690/glassfish.html">Using
+Coherence*Web with GlassFish Server</a>
+(<code>http://docs.oracle.com/cd/E18686_01/coh.37/e18690/glassfish.html</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="abdlp"></a><a id="GSHAG00211"></a><a id="stateful-session-bean-failover"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stateful_session_bean_failover">Stateful Session Bean Failover</h3>
+<div class="paragraph">
+<p>Stateful session beans (SFSBs) contain client-specific state. There is a
+one-to-one relationship between clients and the stateful session beans.
+At creation, the EJB container gives each SFSB a unique session ID that
+binds it to a client.</p>
+</div>
+<div class="paragraph">
+<p>An SFSB&#8217;s state can be saved in a persistent store in case a server
+instance fails. The state of an SFSB is saved to the persistent store at
+predefined points in its life cycle. This is called</p>
+</div>
+<div class="paragraph">
+<p>checkpointing. If enabled, checkpointing generally occurs after the bean
+completes any transaction, even if the transaction rolls back.</p>
+</div>
+<div class="paragraph">
+<p>However, if an SFSB participates in a bean-managed transaction, the
+transaction might be committed in the middle of the execution of a bean
+method. Since the bean&#8217;s state might be undergoing transition as a
+result of the method invocation, this is not an appropriate time to
+checkpoint the bean&#8217;s state. In this case, the EJB container checkpoints
+the bean&#8217;s state at the end of the corresponding method, provided the
+bean is not in the scope of another transaction when that method ends.
+If a bean-managed transaction spans across multiple methods,
+checkpointing is delayed until there is no active transaction at the end
+of a subsequent method.</p>
+</div>
+<div class="paragraph">
+<p>The state of an SFSB is not necessarily transactional and might be
+significantly modified as a result of non-transactional business
+methods. If this is the case for an SFSB, you can specify a list of
+checkpointed methods, as described in <a href="#abdlw">Specifying Methods to
+Be Checkpointed</a></p>
+</div>
+<div class="paragraph">
+<p>If a distributable web application references an SFSB, and the web
+application&#8217;s session fails over, the EJB reference is also failed over.</p>
+</div>
+<div class="paragraph">
+<p>If an SFSB that uses session persistence is undeployed while the
+GlassFish Server instance is stopped, the session data in the
+persistence store might not be cleared. To prevent this, undeploy the
+SFSB while the GlassFish Server instance is running.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdlq"></a><a id="GSHAG00307"></a><a id="configuring-availability-for-the-ejb-container"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_configuring_availability_for_the_ejb_container">Configuring Availability for the EJB Container</h4>
+<div class="paragraph">
+<p>To enable availability for the EJB container use the <code>asadmin set</code>
+command to set the following three properties for the configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>availability-service.ejb-container-availability.availability-enabled</code></p>
+</li>
+<li>
+<p><code>availability-service.ejb-container-availability.sfsb-persistence-type</code></p>
+</li>
+<li>
+<p><code>availability-service.ejb-container-availability.sfsb-ha-persistence-type</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For example, if <code>config1</code> is the configuration name, use the following
+commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set --user admin --passwordfile password.txt
+--host localhost
+--port 4849
+config1.availability-service.
+ejb-container-availability.availability-enabled="true"
+
+asadmin&gt; set --user admin --passwordfile password.txt --host localhost --port
+4849
+config1.availability-service.
+ejb-container-availability.sfsb-persistence-type="file"
+asadmin&gt; set --user admin --passwordfile password.txt
+--host localhost
+--port 4849
+config1.availability-service.
+ejb-container-availability.sfsb-ha-persistence-type="replicated"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abdls"></a><a id="GSHAG00250"></a><a id="configuring-the-sfsb-session-store-when-availability-is-disabled"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_configuring_the_sfsb_session_store_when_availability_is_disabled">Configuring the SFSB Session Store When Availability Is Disabled</h5>
+<div class="paragraph">
+<p>If availability is disabled, the local file system is used for SFSB
+state passivation, but not persistence. To change where the SFSB state
+is stored, change the Session Store Location setting in the EJB
+container. For information about configuring store properties, see the
+Administration Console online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="abdlt"></a><a id="GSHAG00308"></a><a id="configuring-availability-for-an-individual-application-or-ejb-module"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_availability_for_an_individual_application_or_ejb_module">Configuring Availability for an Individual Application or EJB Module</h4>
+<div class="paragraph">
+<p>You can enable SFSB availability for an individual application or EJB
+module during deployment:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you are deploying with the Administration Console, check the
+Availability Enabled checkbox.</p>
+</li>
+<li>
+<p>If you are deploying using use the <code>asadmin deploy</code> or
+<code>asadmin deploydir</code> commands, set the <code>--availabilityenabled</code> option to
+<code>true</code>. For more information, see <a href="../reference-manual/deploy.html#GSRFM00114"><code>deploy</code>(1)</a> and
+<a href="../reference-manual/deploydir.html#GSRFM00115"><code>deploydir</code>(1)</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abdlu"></a><a id="GSHAG00309"></a><a id="configuring-availability-for-an-individual-bean"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_availability_for_an_individual_bean">Configuring Availability for an Individual Bean</h4>
+<div class="paragraph">
+<p>To enable availability and select methods to be checkpointed for an
+individual SFSB, use the <code>glassfish-ejb-jar.xml</code> deployment descriptor
+file.</p>
+</div>
+<div class="paragraph">
+<p>To enable high availability session persistence, set
+<code>availability-enabled="true"</code> in the <code>ejb</code> element.</p>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00068"></a><a id="fxjqx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 9-1 Example of an EJB Deployment Descriptor With Availability
+Enabled</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-ejb-jar&gt;
+    ...
+    &lt;enterprise-beans&gt;
+        ...
+        &lt;ejb availability-enabled="true"&gt;
+            &lt;ejb-name&gt;MySFSB&lt;/ejb-name&gt;
+        &lt;/ejb&gt;
+        ...
+    &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abdlw"></a><a id="GSHAG00310"></a><a id="specifying-methods-to-be-checkpointed"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_specifying_methods_to_be_checkpointed">Specifying Methods to Be Checkpointed</h4>
+<div class="paragraph">
+<p>If enabled, checkpointing generally occurs after the bean completes any
+transaction, even if the transaction rolls back. To specify additional
+optional checkpointing of SFSBs at the end of non-transactional business
+methods that cause important modifications to the bean&#8217;s state, use the
+<code>checkpoint-at-end-of-method</code> element in the <code>ejb</code> element of the
+<code>glassfish-ejb-jar.xml</code> deployment descriptor file.</p>
+</div>
+<div class="paragraph">
+<p>The non-transactional methods in the <code>checkpoint-at-end-of-method</code>
+element can be:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create()</code> methods defined in the home interface of the SFSB, if you
+want to checkpoint the initial state of the SFSB immediately after
+creation</p>
+</li>
+<li>
+<p>For SFSBs using container managed transactions only, methods in the
+remote interface of the bean marked with the transaction attribute
+<code>TX_NOT_SUPPORTED</code> or <code>TX_NEVER</code></p>
+</li>
+<li>
+<p>For SFSBs using bean managed transactions only, methods in which a
+bean managed transaction is neither started nor committed<br>
+Any other methods mentioned in this list are ignored. At the end of
+invocation of each of these methods, the EJB container saves the state
+of the SFSB to persistent store.</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>If an SFSB does not participate in any transaction, and if none of its
+methods are explicitly specified in the <code>checkpoint-at-end-of-method</code>
+element, the bean&#8217;s state is not checkpointed at all even if
+<code>availability-enabled="true"</code> for this bean.</p>
+</div>
+<div class="paragraph">
+<p>For better performance, specify a small subset of methods. The methods
+should accomplish a significant amount of work or result in important
+modification to the bean&#8217;s state.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSHAG00069"></a><a id="fxjqg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 9-2 Example of EJB Deployment Descriptor Specifying Methods
+Checkpointing</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;glassfish-ejb-jar&gt;
+    ...
+    &lt;enterprise-beans&gt;
+        ...
+        &lt;ejb availability-enabled="true"&gt;
+            &lt;ejb-name&gt;ShoppingCartEJB&lt;/ejb-name&gt;
+            &lt;checkpoint-at-end-of-method&gt;
+                &lt;method&gt;
+                    &lt;method-name&gt;addToCart&lt;/method-name&gt;
+                &lt;/method&gt;
+            &lt;/checkpoint-at-end-of-method&gt;
+        &lt;/ejb&gt;
+        ...
+    &lt;/enterprise-beans&gt;
+&lt;/glassfish-ejb-jar&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="rolling-upgrade.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jms.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

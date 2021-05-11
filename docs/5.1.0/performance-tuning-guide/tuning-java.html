@@ -1,0 +1,920 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Tuning the Java Runtime System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Tuning the Java Runtime System</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="tuning-glassfish.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="tuning-os.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSPTG00006"></a><a id="abeia"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tuning-the-java-runtime-system">4 Tuning the Java Runtime System</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abeib">Java Virtual Machine Settings</a></p>
+</li>
+<li>
+<p><a href="#gfpzy">Start Options</a></p>
+</li>
+<li>
+<p><a href="#glaat">Tuning High Availability Persistence</a></p>
+</li>
+<li>
+<p><a href="#abeic">Managing Memory and Garbage Collection</a></p>
+</li>
+<li>
+<p><a href="#abeiq">Further Information</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abeib"></a><a id="GSPTG00069"></a><a id="java-virtual-machine-settings"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_java_virtual_machine_settings">Java Virtual Machine Settings</h3>
+<div class="paragraph">
+<p>Java SE 7 provides two implementations of the HotSpot Java virtual
+machine (JVM):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The client VM is tuned for reducing startup time and memory footprint.
+Invoke it by using the <code>-client</code> JVM command-line option.</p>
+</li>
+<li>
+<p>The server VM is designed for maximum program execution speed. Invoke
+it by using the <code>-server</code> JVM command-line option.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>By default, the GlassFish Server uses the JVM setting appropriate to the
+purpose:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Developer Profile, targeted at application developers, uses the
+<code>-client</code> JVM flag to optimize startup performance and conserve memory
+resources.</p>
+</li>
+<li>
+<p>Enterprise Profile, targeted at production deployments, uses the
+<code>-server</code> JVM flag to maximize program execution speed.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can override the default JVM options by following the instructions
+in "<a href="../administration-guide/jvm.html#GSADG00544">Administering JVM Options</a>" in GlassFish Server
+Open Source Edition Administration Guide. If using the Administration
+Console, navigate to the Configurations&gt;configuration-name&gt;JVM Settings
+node, and then click the JVM Options tab. Refer to the online help for
+complete information about the settings on this page.</p>
+</div>
+<div class="paragraph">
+<p>For more information on server-class machine detection in Java SE 7, see
+<a href="http://download.oracle.com/javase/6/docs/technotes/guides/vm/server-class.html">Server-Class
+Machine Detection</a>
+(<code>http://docs.oracle.com/javase/7/docs/technotes/guides/vm/server-class.html</code>).</p>
+</div>
+<div class="paragraph">
+<p>For more information on JVMs, see
+<a href="http://download.oracle.com/javase/6/docs/">Java Virtual Machines</a>
+(<code>http://docs.oracle.com/javase/7/docs/</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="gfpzy"></a><a id="GSPTG00070"></a><a id="start-options"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_start_options">Start Options</h3>
+<div class="paragraph">
+<p>In some situations, performance can be improved by using large page
+sizes. For Ultrasparc CMT systems, include the <code>-XX:+UseLargePages</code> and
+<code>-XX:LargePageSizeInBytes=256m</code> arguments with your JVM tuning.</p>
+</div>
+<div class="paragraph">
+<p><a id="glaat"></a><a id="GSPTG00071"></a><a id="tuning-high-availability-persistence"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tuning_high_availability_persistence">Tuning High Availability Persistence</h3>
+<div class="paragraph">
+<p>If session <code>s1</code> and <code>s2</code> need to be replicated to an instance (backup
+server), the replication module batches the replication messages to be
+sent to that instance instead of sending separate replication messages.
+This improves performance. In configurations in which a lot of session
+replication is performed, you may find better performance by tuning the
+<code>org.shoal.cache.transmitter.max.batch.size</code> system property. This
+property determines the number of replication messages that constitute
+one batch.</p>
+</div>
+<div class="paragraph">
+<p>The default value for this property is <code>20</code>. You can try setting it as
+high as <code>90</code>, depending on system loads. Like all system properties,
+this property is set with the <code>-D</code> flag in your Java arguments.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeic"></a><a id="GSPTG00072"></a><a id="managing-memory-and-garbage-collection"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_managing_memory_and_garbage_collection">Managing Memory and Garbage Collection</h3>
+<div class="paragraph">
+<p>The efficiency of any application depends on how well memory and garbage
+collection are managed. The following sections provide information on
+optimizing memory and allocation functions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abeid">Tuning the Garbage Collector</a></p>
+</li>
+<li>
+<p><a href="#abeig">Tracing Garbage Collection</a></p>
+</li>
+<li>
+<p><a href="#abeih">Other Garbage Collector Settings</a></p>
+</li>
+<li>
+<p><a href="#abeii">Tuning the Java Heap</a></p>
+</li>
+<li>
+<p><a href="#abeio">Rebasing DLLs on Windows</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abeid"></a><a id="GSPTG00205"></a><a id="tuning-the-garbage-collector"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_tuning_the_garbage_collector">Tuning the Garbage Collector</h4>
+<div class="paragraph">
+<p>Garbage collection (GC) reclaims the heap space previously allocated to
+objects no longer needed. The process of locating and removing the dead
+objects can stall any application and consume as much as 25 percent
+throughput.</p>
+</div>
+<div class="paragraph">
+<p>Almost all Java Runtime Environments come with a generational object
+memory system and sophisticated GC algorithms. A generational memory
+system divides the heap into a few carefully sized partitions called
+generations. The efficiency of a generational memory system is based on
+the observation that most of the objects are short lived. As these
+objects accumulate, a low memory condition occurs forcing GC to take
+place.</p>
+</div>
+<div class="paragraph">
+<p>The heap space is divided into the old and the new generation. The new
+generation includes the new object space (eden), and two survivor
+spaces. The JVM allocates new objects in the eden space, and moves
+longer lived objects from the new generation to the old generation.</p>
+</div>
+<div class="paragraph">
+<p>The young generation uses a fast copying garbage collector which employs
+two semi-spaces (survivor spaces) in the eden, copying surviving objects
+from one survivor space to the second. Objects that survive multiple
+young space collections are tenured, meaning they are copied to the
+tenured generation. The tenured generation is larger and fills up less
+quickly. So, it is garbage collected less frequently; and each
+collection takes longer than a young space only collection. Collecting
+the tenured space is also referred to as doing a full generation
+collection.</p>
+</div>
+<div class="paragraph">
+<p>The frequent young space collections are quick (a few milliseconds),
+while the full generation collection takes a longer (tens of
+milliseconds to a few seconds, depending upon the heap size).</p>
+</div>
+<div class="paragraph">
+<p>Other GC algorithms, such as the Concurrent Mark Sweep (CMS) algorithm,
+are incremental. They divide the full GC into several incremental
+pieces. This provides a high probability of small pauses. This process
+comes with an overhead and is not required for enterprise web
+applications.</p>
+</div>
+<div class="paragraph">
+<p>When the new generation fills up, it triggers a minor collection in
+which the surviving objects are moved to the old generation. When the
+old generation fills up, it triggers a major collection which involves
+the entire object heap.</p>
+</div>
+<div class="paragraph">
+<p>Both HotSpot and Solaris JDK use thread local object allocation pools
+for lock-free, fast, and scalable object allocation. So, custom object
+pooling is not often required. Consider pooling only if object
+construction cost is high and significantly affects execution profiles.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeie"></a><a id="GSPTG00146"></a><a id="choosing-the-garbage-collection-algorithm"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_choosing_the_garbage_collection_algorithm">Choosing the Garbage Collection Algorithm</h5>
+<div class="paragraph">
+<p>The default collector for Java server class machines will optimize for
+throughput but be tolerant of somewhat long pause times. If you would
+prefer to have minimal pause times at the expense of some throughput and
+increased CPU usage, consider using the CMS collector.</p>
+</div>
+<div class="paragraph">
+<p><a id="gaclx"></a><a id="GSPTG00038"></a><a id="to-use-the-cms-collector"></a></p>
+</div>
+<div class="paragraph">
+<p>To use the CMS collector</p>
+</div>
+<div class="paragraph">
+<p>Follow this procedure.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make sure that the system is not using 100 percent of its CPU.</p>
+</li>
+<li>
+<p>Configure the CMS collector in the server instance.<br>
+To do this, add the following JVM options:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-XX:+UseConcMarkSweepGC</code></p>
+</li>
+<li>
+<p><code>-XX:SoftRefLRUPolicyMSPerMB=1</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="abeif"></a><a id="GSPTG00147"></a><a id="additional-information"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_additional_information">Additional Information</h5>
+<div class="paragraph">
+<p>Use the <code>jvmstat</code> utility to monitor HotSpot garbage collection. (See
+<a href="#abeiq">Further Information</a>.)</p>
+</div>
+<div class="paragraph">
+<p>For detailed information on tuning the garbage collector, see
+<a href="http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html">Java
+SE 6 HotSpot Virtual Machine Garbage Collection Tuning</a>
+(<code>http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="abeig"></a><a id="GSPTG00206"></a><a id="tracing-garbage-collection"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tracing_garbage_collection">Tracing Garbage Collection</h4>
+<div class="paragraph">
+<p>The two primary measures of garbage collection performance are
+throughput and pauses. Throughput is the percentage of the total time
+spent on other activities apart from GC. Pauses are times when an
+application appears unresponsive due to GC.</p>
+</div>
+<div class="paragraph">
+<p>Two other considerations are footprint and promptness. Footprint is the
+working size of the JVM process, measured in pages and cache lines.
+Promptness is the time between when an object becomes dead, and when the
+memory becomes available. This is an important consideration for
+distributed systems.</p>
+</div>
+<div class="paragraph">
+<p>A particular generation size makes a trade-off between these four
+metrics. For example, a large young generation likely maximizes
+throughput, but at the cost of footprint and promptness. Conversely,
+using a small young generation and incremental GC will minimize pauses,
+and thus increase promptness, but decrease throughput.</p>
+</div>
+<div class="paragraph">
+<p>JVM diagnostic output will display information on pauses due to garbage
+collection. If you start the server in verbose mode (use the command
+<code>asadmin start-domain --verbose</code> domain), then the command line argument
+<code>-verbose:gc</code> prints information for every collection. Here is an
+example of output of the information generated with this JVM flag:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">[GC 50650K-&gt;21808K(76868K), 0.0478645 secs]
+ [GC 51197K-&gt;22305K(76868K), 0.0478645 secs]
+ [GC 52293K-&gt;23867K(76868K), 0.0478645 secs]
+ [Full GC 52970K-&gt;1690K(76868K), 0.54789968 secs]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On each line, the first number is the combined size of live objects
+before GC, the second number is the size of live objects after GC, the
+number in parenthesis is the total available space, which is the total
+heap minus one of the survivor spaces. The final figure is the amount of
+time that the GC took. This example shows three minor collections and
+one major collection. In the first GC, 50650 KB of objects existed
+before collection and 21808 KB of objects after collection. This means
+that 28842 KB of objects were dead and collected. The total heap size is
+76868 KB. The collection process required 0.0478645 seconds.</p>
+</div>
+<div class="paragraph">
+<p>Other useful monitoring options include:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>-XX:+PrintGCDetails</code> for more detailed logging information</p>
+</li>
+<li>
+<p><code>-Xloggc:file</code> to save the information in a log file</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abeih"></a><a id="GSPTG00207"></a><a id="other-garbage-collector-settings"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_other_garbage_collector_settings">Other Garbage Collector Settings</h4>
+<div class="paragraph">
+<p>To specify the attributes for the Java virtual machine, use the
+Administration Console and set the property under config-name &gt; JVM
+settings (JVM options).</p>
+</div>
+<div class="paragraph">
+<p><a id="glgkm"></a><a id="GSPTG00148"></a><a id="setting-the-maximum-permanent-generation"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_setting_the_maximum_permanent_generation">Setting the Maximum Permanent Generation</h5>
+<div class="paragraph">
+<p>For applications that do not dynamically generate and load classes, the
+size of the permanent generation does not affect GC performance. For
+applications that dynamically generate and load classes (for example,
+JSP applications), the size of the permanent generation does affect GC
+performance, since filling the permanent generation can trigger a Full
+GC. Tune the maximum permanent generation with the <code>-XX:MaxPermSize</code>
+option.</p>
+</div>
+<div class="paragraph">
+<p><a id="glglk"></a><a id="GSPTG00149"></a><a id="disabling-explicit-garbage-collection"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_disabling_explicit_garbage_collection">Disabling Explicit Garbage Collection</h5>
+<div class="paragraph">
+<p>Although applications can explicitly invoke GC with the <code>System.gc()</code>
+method, doing so is a bad idea since this forces major collections, and
+inhibits scalability on large systems. It is best to disable explicit GC
+by using the flag <code>-XX:+DisableExplicitGC</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>On Windows systems, setting the <code>-XX:+DisableExplicitGC</code> option might
+prevent the renaming or removal of open application files. As a result,
+deployment, redeployment, or other operations that attempt to rename or
+delete files might fail.</p>
+</div>
+<div class="paragraph">
+<p>Application files can remain open because the files have been used by
+class loaders to find classes or resources, or have been opened
+explicitly by GlassFish Server or application code but never explicitly
+closed. On Windows systems, open files cannot be renamed or deleted. To
+overcome this limitation, GlassFish Server uses the <code>System.gc()</code> method
+to garbage collect the Java object that corresponds to an open file.
+When the Java object that corresponds to an open file is garbage
+collected, the object&#8217;s <code>finalize</code> method closes the open channel to the
+file. GlassFish Server can then delete or rename the file.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="glglr"></a><a id="GSPTG00150"></a><a id="setting-the-frequency-of-full-garbage-collection"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_setting_the_frequency_of_full_garbage_collection">Setting the Frequency of Full Garbage Collection</h5>
+<div class="paragraph">
+<p>GlassFish Server uses RMI in the Administration module for monitoring.
+Garbage cannot be collected in RMI-based distributed applications
+without occasional local collections, so RMI forces a periodic full
+collection. Control the frequency of these collections with the property
+<code>-sun.rmi.dgc.client.gcInterval</code>. For example,
+<code>- java -Dsun.rmi.dgc.client.gcInterval=3600000</code> specifies explicit
+collection once per hour instead of the default rate of once per minute.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeii"></a><a id="GSPTG00208"></a><a id="tuning-the-java-heap"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tuning_the_java_heap">Tuning the Java Heap</h4>
+<div class="paragraph">
+<p>This section discusses topics related to tuning the Java Heap for
+performance.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abeij">Guidelines for Java Heap Sizing</a></p>
+</li>
+<li>
+<p><a href="#abeik">Heap Tuning Parameters</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abeij"></a><a id="GSPTG00151"></a><a id="guidelines-for-java-heap-sizing"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_guidelines_for_java_heap_sizing">Guidelines for Java Heap Sizing</h5>
+<div class="paragraph">
+<p>Maximum heap size depends on maximum address space per process. The
+following table shows the maximum per-process address values for various
+platforms:</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref10"></a><a id="gacna"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 4-1 Maximum Address Space Per Process</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 62%;">
+<col style="width: 38%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operating System</th>
+<th class="tableblock halign-left valign-top">Maximum Address Space Per Process</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Oracle/Redhat/Ubuntu Linux 32-bit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Oracle/Redhat/Ubuntu Linux 64-bit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Terabytes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Windows XP/2008/7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solaris x86 (32-bit)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solaris 32-bit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Solaris 64-bit</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Terabytes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Maximum heap space is always smaller than maximum address space per
+process, because the process also needs space for stack, libraries, and
+so on. To determine the maximum heap space that can be allocated, use a
+profiling tool to examine the way memory is used. Gauge the maximum
+stack space the process uses and the amount of memory taken up libraries
+and other memory structures. The difference between the maximum address
+space and the total of those values is the amount of memory that can be
+allocated to the heap.</p>
+</div>
+<div class="paragraph">
+<p>You can improve performance by increasing your heap size or using a
+different garbage collector. In general, for long-running server
+applications, use the Java SE throughput collector on machines with
+multiple processors (<code>-XX:+AggressiveHeap</code>) and as large a heap as you
+can fit in the free memory of your machine.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeik"></a><a id="GSPTG00152"></a><a id="heap-tuning-parameters"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_heap_tuning_parameters">Heap Tuning Parameters</h5>
+<div class="paragraph">
+<p>You can control the heap size with the following JVM parameters:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>`-Xms`value</p>
+</li>
+<li>
+<p>`-Xmx`value</p>
+</li>
+<li>
+<p>`-XX:MinHeapFreeRatio=`minimum</p>
+</li>
+<li>
+<p>`-XX:MaxHeapFreeRatio=`maximum</p>
+</li>
+<li>
+<p>`-XX:NewRatio=`ratio</p>
+</li>
+<li>
+<p>`-XX:NewSize=`size</p>
+</li>
+<li>
+<p>`-XX:MaxNewSize=`size</p>
+</li>
+<li>
+<p><code>-XX:+AggressiveHeap</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>-Xms</code> and <code>-Xmx</code> parameters define the minimum and maximum heap
+sizes, respectively. Since GC occurs when the generations fill up,
+throughput is inversely proportional to the amount of the memory
+available. By default, the JVM grows or shrinks the heap at each GC to
+try to keep the proportion of free space to the living objects at each
+collection within a specific range. This range is set as a percentage by
+the parameters <code>-XX:MinHeapFreeRatio=`minimum and
+`-XX:MaxHeapFreeRatio=`maximum; and the total size bounded by `-Xms</code> and
+<code>-Xmx</code>.</p>
+</div>
+<div class="paragraph">
+<p>Set the values of <code>-Xms</code> and <code>-Xmx</code> equal to each other for a fixed heap
+size. When the heap grows or shrinks, the JVM must recalculate the old
+and new generation sizes to maintain a predefined <code>NewRatio</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>NewSize</code> and <code>MaxNewSize</code> parameters control the new generation&#8217;s
+minimum and maximum size. Regulate the new generation size by setting
+these parameters equal. The bigger the younger generation, the less
+often minor collections occur. The size of the young generation relative
+to the old generation is controlled by <code>NewRatio</code>. For example, setting
+<code>-XX:NewRatio=3</code> means that the ratio between the old and young
+generation is 1:3, the combined size of eden and the survivor spaces
+will be fourth of the heap.</p>
+</div>
+<div class="paragraph">
+<p>By default, the GlassFish Server is invoked with the Java HotSpot Server
+JVM. The default <code>NewRatio</code> for the Server JVM is 2: the old generation
+occupies 2/3 of the heap while the new generation occupies 1/3. The
+larger new generation can accommodate many more short-lived objects,
+decreasing the need for slow major collections. The old generation is
+still sufficiently large enough to hold many long-lived objects.</p>
+</div>
+<div class="paragraph">
+<p>To size the Java heap:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Decide the total amount of memory you can afford for the JVM.
+Accordingly, graph your own performance metric against young generation
+sizes to find the best setting.</p>
+</li>
+<li>
+<p>Make plenty of memory available to the young generation. The default
+is calculated from <code>NewRatio</code> and the <code>-Xmx</code> setting.</p>
+</li>
+<li>
+<p>Larger eden or younger generation spaces increase the spacing between
+full GCs. But young space collections could take a proportionally longer
+time. In general, keep the eden size between one fourth and one third
+the maximum heap size. The old generation must be larger than the new
+generation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For up-to-date defaults, see
+<a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">Java
+HotSpot VM Options</a>
+(<code>http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="GSPTG00032"></a><a id="fxxpw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-1 Heap Configuration on Solaris</p>
+</div>
+<div class="paragraph">
+<p>This is an exmple heap configuration used by GlassFish Server on Solaris
+for large applications:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">-Xms3584m
+ -Xmx3584m
+ -verbose:gc
+ -Dsun.rmi.dgc.client.gcInterval=3600000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="abeil"></a><a id="GSPTG00031"></a><a id="survivor-ratio-sizing"></a></p>
+</div>
+<div class="paragraph">
+<p>Survivor Ratio Sizing</p>
+</div>
+<div class="paragraph">
+<p>The <code>SurvivorRatio</code> parameter controls the size of the two survivor
+spaces. For example, <code>-XX:SurvivorRatio=6</code> sets the ratio between each
+survivor space and eden to be 1:6, each survivor space will be one
+eighth of the young generation. The default for Solaris is 32. If
+survivor spaces are too small, copying collection overflows directly
+into the old generation. If survivor spaces are too large, they will be
+empty. At each GC, the JVM determines the number of times an object can
+be copied before it is tenured, called the tenure threshold. This
+threshold is chosen to keep the survivor space half full.</p>
+</div>
+<div class="paragraph">
+<p>Use the option <code>-XX:+PrintTenuringDistribution</code> to show the threshold
+and ages of the objects in the new generation. It is useful for
+observing the lifetime distribution of an application.</p>
+</div>
+<div class="paragraph">
+<p><a id="abeio"></a><a id="GSPTG00209"></a><a id="rebasing-dlls-on-windows"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_rebasing_dlls_on_windows">Rebasing DLLs on Windows</h4>
+<div class="paragraph">
+<p>When the JVM initializes, it tries to allocate its heap using the <code>-Xms</code>
+setting. The base addresses of GlassFish Server DLLs can restrict the
+amount of contiguous address space available, causing JVM initialization
+to fail. The amount of contiguous address space available for Java
+memory varies depending on the base addresses assigned to the DLLs. You
+can increase the amount of contiguous address space available by
+rebasing the GlassFish Server DLLs.</p>
+</div>
+<div class="paragraph">
+<p>To prevent load address collisions, set preferred base addresses with
+the rebase utilty that comes with Visual Studio and the Platform SDK.
+Use the rebase utility to reassign the base addresses of the GlassFish
+Server DLLs to prevent relocations at load time and increase the
+available process memory for the Java heap.</p>
+</div>
+<div class="paragraph">
+<p>There are a few GlassFish Server DLLs that have non-default base
+addresses that can cause collisions. For example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>nspr</code> libraries have a preferred address of 0x30000000.</p>
+</li>
+<li>
+<p>The <code>icu</code> libraries have the address of 0x4A?00000.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Move these libraries near the system DLLs (<code>msvcrt.dll</code> is at
+<code>0x78000000</code>) to increase the available maximum contiguous address space
+substantially. Since rebasing can be done on any DLL, rebase to the DLLs
+after installing the GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p><a id="gacmt"></a><a id="GSPTG00039"></a><a id="to-rebase-the-glassfish-servers-dlls"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_rebase_the_glassfish_server_s_dlls">To rebase the GlassFish Server&#8217;s DLLs</h5>
+<div id="sthref11" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>To perform rebasing, you need:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Windows 2000</p>
+</li>
+<li>
+<p>Visual Studio and the Microsoft Framework SDK rebase utility</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Make as-install\ <code>bin</code> the default directory.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cd as-install\bin</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Enter this command:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>rebase -b 0x6000000 *.dll</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>dependencywalker</code> utility to make sure the DLLs were
+rebased correctly.<br>
+For more information, see the <a href="http://www.dependencywalker.com">Dependency
+Walker website</a> (<code>http://www.dependencywalker.com</code>).</p>
+</li>
+<li>
+<p>Increase the size for the Java heap, and set the JVM Option
+accordingly on the JVM Settings page in the Admin Console.</p>
+</li>
+<li>
+<p>Restart the GlassFish Server.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSPTG00033"></a><a id="fxxpz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 4-2 Heap Configuration on Windows</p>
+</div>
+<div class="paragraph">
+<p>This is an example heap configuration used by Oracle GlassFish Server
+for heavy server-centric applications, on Windows, as set in the
+<code>domain.xml</code> file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;jvm-options&gt; -Xms1400m &lt;/jvm-options&gt;
+&lt;jvm-options&gt; -Xmx1400m &lt;/jvm-options&gt;</code></pre>
+</div>
+</div>
+<div id="sthref12" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For more information on rebasing, see
+<a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/rebase.asp">MSDN
+documentation for rebase utility</a>
+(<code>http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/rebase.asp</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="abeiq"></a><a id="GSPTG00073"></a><a id="further-information"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_further_information">Further Information</h3>
+<div class="paragraph">
+<p>For more information on tuning the JVM, see:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">Java
+HotSpot VM Options</a>
+(<code>http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</code>)</p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/technetwork/java/hotspotfaq-138619.html">Frequently
+Asked Questions About the Java HotSpot Virtual Machine</a>
+(<code>http://www.oracle.com/technetwork/java/hotspotfaq-138619.html</code>)</p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html">Performance
+Documentation for the Java HotSpot VM</a>
+(<code>http://www.oracle.com/technetwork/java/javase/tech/index-jsp-136373.html</code>)</p>
+</li>
+<li>
+<p><a href="http://java.sun.com/javase/technologies/performance.jsp">Java
+performance web page</a>
+(<code>http://java.sun.com/javase/technologies/performance.jsp</code>)</p>
+</li>
+<li>
+<p><a href="http://java.sun.com/developer/technicalArticles/J2SE/monitoring/">Monitoring
+and Managing Java SE 6 Platform Applications</a>
+(<code>http://java.sun.com/developer/technicalArticles/J2SE/monitoring/</code>)</p>
+</li>
+<li>
+<p>The <a href="http://java.sun.com/performance/jvmstat/">jvmstat monitoring
+utility</a> (<code>http://java.sun.com/performance/jvmstat/</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="tuning-glassfish.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="tuning-os.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

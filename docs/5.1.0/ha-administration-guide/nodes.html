@@ -1,0 +1,2094 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering GlassFish Server Nodes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering GlassFish Server Nodes</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="ssh-setup.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="clusters.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSHAG00004"></a><a id="gkrle"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-glassfish-server-nodes">3 Administering GlassFish Server Nodes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A node represents a host on which the GlassFish Server software is
+installed. A node must exist for every host on which GlassFish Server
+instances reside. A node&#8217;s configuration contains information about the
+host such as the name of the host and the location where the GlassFish
+Server is installed on the host.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksgh">Types of GlassFish Server Nodes</a></p>
+</li>
+<li>
+<p><a href="#CHDBIHFJ">Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</a></p>
+</li>
+<li>
+<p><a href="#gkrkn">Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</a></p>
+</li>
+<li>
+<p><a href="#gkrnp">Creating, Listing, and Deleting <code>CONFIG</code> Nodes</a></p>
+</li>
+<li>
+<p><a href="#gksjd">Updating and Changing the Type of a Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksgh"></a><a id="GSHAG00179"></a><a id="types-of-glassfish-server-nodes"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_types_of_glassfish_server_nodes">Types of GlassFish Server Nodes</h3>
+<div class="paragraph">
+<p>Each GlassFish Server node is one of the following types of node:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>DCOM</code></dt>
+<dd>
+<p>A <code>DCOM</code> node supports communication over the Distributed Component
+Object Model (DCOM) remote protocol. The DCOM remote protocol is
+available only on Windows systems. If DCOM is set up and you plan to
+administer your GlassFish Server instances centrally, the instances
+must reside on <code>DCOM</code> nodes.<br>
+A <code>DCOM</code> node&#8217;s configuration contains the information that is
+required to connect to the host through DCOM. This information
+includes, for example, the user name of the Windows user and the port
+number for DCOM connections to the host.</p>
+</dd>
+<dt class="hdlist1"><code>SSH</code></dt>
+<dd>
+<p>An <code>SSH</code> node supports communication over secure shell (SSH). If SSH
+is set up and you plan to administer your GlassFish Server instances
+centrally, the instances must reside on <code>SSH</code> nodes.<br>
+An <code>SSH</code> node&#8217;s configuration contains the information that is
+required to connect to the host through SSH. This information
+includes, for example, the user name of the SSH user and the port
+number for SSH connections to the host.</p>
+</dd>
+<dt class="hdlist1"><code>CONFIG</code></dt>
+<dd>
+<p>A <code>CONFIG</code> node does not support remote communication. If neither DCOM
+nor SSH is set up and you plan to administer your instances locally,
+the instances can reside on <code>CONFIG</code> nodes. You cannot use <code>CONFIG</code>
+nodes for instances that you plan to administer centrally.<br>
+Each domain contains a predefined <code>CONFIG</code> node that is named
+`localhost-`domain, where domain is the name of the domain. On the
+host where the domain administration server (DAS) is running, this
+node represents the local host.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="CHDBIHFJ"></a><a id="GSHAG463"></a><a id="creating-listing-testing-and-deleting-dcom-nodes"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_listing_testing_and_deleting_code_dcom_code_nodes">Creating, Listing, Testing, and Deleting <code>DCOM</code> Nodes</h3>
+<div class="paragraph">
+<p>A <code>DCOM</code> node supports communication over DCOM. If DCOM is set up and
+you plan to administer your GlassFish Server instances centrally, the
+instances must reside on <code>DCOM</code> nodes. For information about setting up
+DCOM, see <a href="ssh-setup.html#gkshg">Enabling Centralized Administration
+of GlassFish Server Instances</a>.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server enables you to create <code>DCOM</code> nodes for use by
+instances, obtain information about <code>DCOM</code> nodes, test if <code>DCOM</code> nodes
+are reachable, and delete <code>DCOM</code> nodes that are no longer required.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#CHDIGBJB">To Create a <code>DCOM</code> Node</a></p>
+</li>
+<li>
+<p><a href="#CHDDCBEG">To List <code>DCOM</code> Nodes in a Domain</a></p>
+</li>
+<li>
+<p><a href="#CHDIFJCC">To Test if a <code>DCOM</code> Node is Reachable</a></p>
+</li>
+<li>
+<p><a href="#CHDCFHBA">To Delete a <code>DCOM</code> Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDIGBJB"></a><a id="GSHAG464"></a><a id="to-create-a-dcom-node"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_code_dcom_code_node">To Create a <code>DCOM</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>create-node-dcom</code> subcommand in remote mode to create a <code>DCOM</code>
+node.</p>
+</div>
+<div id="GSHAG465" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the Windows user can use DCOM to connect to the host that
+the node will represent. By default, the <code>create-node-dcom</code> subcommand
+validates the node&#8217;s parameters and the DCOM connection to the host. If
+the Windows user cannot use DCOM to connect to the host, the validation
+fails.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>For information about how to determine whether the Windows user can use
+DCOM to connect to the host, see <a href="ssh-setup.html#CEGJFADH">To Test the
+Connection Over DCOM to a Remote Host</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>create-node-dcom</code> subcommand.<br>
+Specify the file that contains the alias for the Windows user&#8217;s password
+through the <code>--passwordfile</code> option of the <code>asadmin</code> utility. For more
+information about this file, see <a href="ssh-setup.html#CEGCDCEF">To Set Up
+Password Authentication for the Windows User</a>.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+node, see the <a href="../reference-manual/create-node-dcom.html#GSRFM510"><code>create-node-dcom</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">C:\&gt; asadmin --passwordfile filename create-node-dcom
+--nodehost node-host [--installdir install-dir ]
+node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">filname</dt>
+<dd>
+<p>The name of the file that contains the alias for the Windows user&#8217;s
+password.</p>
+</dd>
+<dt class="hdlist1">node-host</dt>
+<dd>
+<p>The name of the host that the node represents. The name of the host
+must be specified. Otherwise, an error occurs.</p>
+</dd>
+<dt class="hdlist1">install-dir</dt>
+<dd>
+<p>The full path to the parent of the base installation directory of the
+GlassFish Server software on the host, for example, <code>C:\glassfish3</code>.
+If the GlassFish Server software is installed in the same directory on
+the node&#8217;s host and the DAS host, you can omit this option.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>Your choice of name for the node that you are creating.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG466"></a><a id="sthref13"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-1 Creating a <code>DCOM</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example creates the <code>DCOM</code> node <code>wpmdl1</code> to represent the host
+<code>wpmdl1.example.com</code>. The GlassFish Server software is installed in the
+same directory on the DAS host and on the host <code>wpmdl1.example.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">C:\&gt; asadmin --passwordfile aspwalias.txt create-node-dcom
+--nodehost wpmdl1.example.com wpmdl1
+Command create-node-dcom executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG467" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/create-node-dcom.html#GSRFM510"><code>create-node-dcom</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-node-dcom</code> at the command line.</p>
+</div>
+<div id="GSHAG468" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating a node, you can create instances on the node as explained
+in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDDCBEG"></a><a id="GSHAG469"></a><a id="to-list-dcom-nodes-in-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_code_dcom_code_nodes_in_a_domain">To List <code>DCOM</code> Nodes in a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>list-nodes-dcom</code> subcommand in remote mode to obtain
+information about existing <code>DCOM</code> nodes in a domain.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>To obtain information about all existing nodes in a domain, use the
+<a href="../reference-manual/list-nodes.html#GSRFM00187"><code>list-nodes</code></a> subcommand.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/list-nodes-dcom.html#GSRFM693"><code>list-nodes-dcom</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-nodes-dcom</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG470"></a><a id="sthref14"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-2 Listing Basic Information About All <code>DCOM</code> Nodes in a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists the name, type, and host of all <code>DCOM</code> nodes in the
+current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-dcom
+xkyd  DCOM  xkyd.example.com
+wpmdl2  DCOM  wpmdl2.example.com
+wpmdl1  DCOM  wpmdl1.example.com
+Command list-nodes-dcom executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG471"></a><a id="sthref15"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-3 Listing Detailed Information About All <code>DCOM</code> Nodes in a
+Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists detailed information about all <code>DCOM</code> nodes in the
+current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-dcom --long=true
+NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
+xkyd         DCOM   xkyd.example.com     C:\glassfish3
+wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish3       wdi2
+wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish3       wdi1
+Command list-nodes-dcom executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG472" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/list-nodes.html#GSRFM00187"><code>list-nodes</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-nodes-dcom.html#GSRFM693"><code>list-nodes-dcom</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help list-nodes</code></p>
+</li>
+<li>
+<p><code>asadmin help list-nodes-dcom</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDIFJCC"></a><a id="GSHAG473"></a><a id="to-test-if-a-dcom-node-is-reachable"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_test_if_a_code_dcom_code_node_is_reachable">To Test if a <code>DCOM</code> Node is Reachable</h4>
+<div class="paragraph">
+<p>Use the <code>ping-node-dcom</code> subcommand in remote mode to test if a <code>DCOM</code>
+node is reachable.</p>
+</div>
+<div id="GSHAG474" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that DCOM is configured on the host where the DAS is running and
+on the host that the node represents.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>ping-node-dcom</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for testing the node,
+see the <a href="../reference-manual/ping-node-dcom.html#GSRFM728"><code>ping-node-dcom</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; ping-node-dcom node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the node to test.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG475"></a><a id="sthref16"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-4 Testing if a <code>DCOM</code> Node Is Reachable</p>
+</div>
+<div class="paragraph">
+<p>This example tests if the <code>DCOM</code> node <code>wpmdl2</code> is reachable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; ping-node-dcom wpmdl2
+Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
+Command ping-node-dcom executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG476" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/ping-node-dcom.html#GSRFM728"><code>ping-node-dcom</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help ping-node-dcom</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDCFHBA"></a><a id="GSHAG477"></a><a id="to-delete-a-dcom-node"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_code_dcom_code_node">To Delete a <code>DCOM</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>delete-node-dcom</code> subcommand in remote mode to delete a <code>DCOM</code>
+node.</p>
+</div>
+<div class="paragraph">
+<p>Deleting a node removes the node from the configuration of the DAS. The
+node&#8217;s directories and files are deleted when the last GlassFish Server
+instance that resides on the node is deleted.</p>
+</div>
+<div id="GSHAG478" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that no GlassFish Server instances reside on the node that you
+are deleting. For information about how to delete an instance, see the
+following sections.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Confirm that no instances reside on the node that you are deleting.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-nodes-dcom --long=true</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the o<a href="GSRFM00100"><code>delete-node-dcom</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; delete-node-dcom node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the node that you are deleting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG479"></a><a id="sthref17"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-5 Deleting a <code>DCOM</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example confirms that no instances reside on the <code>DCOM</code> node <code>xkyd</code>
+and deletes the node <code>xkyd</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-dcom --long=true
+NODE NAME    TYPE   NODE HOST            INSTALL DIRECTORY   REFERENCED BY
+xkyd         DCOM   xkyd.example.com     C:\glassfish3
+wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish3       wdi2
+wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish3       wdi1
+Command list-nodes-dcom executed successfully.
+asadmin&gt; delete-node-dcom xkyd
+Command delete-node-dcom executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG480" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-node-dcom.html#GSRFM569"><code>delete-node-dcom</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-nodes-dcom.html#GSRFM693"><code>list-nodes-dcom</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help delete-node-dcom</code></p>
+</li>
+<li>
+<p><code>asadmin help list-nodes-dcom</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrkn"></a><a id="GSHAG00180"></a><a id="creating-listing-testing-and-deleting-ssh-nodes"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_listing_testing_and_deleting_code_ssh_code_nodes">Creating, Listing, Testing, and Deleting <code>SSH</code> Nodes</h3>
+<div class="paragraph">
+<p>An <code>SSH</code> node supports communication over SSH. If SSH is set up and you
+plan to administer your GlassFish Server instances centrally, the
+instances must reside on <code>SSH</code> nodes. For information about setting up
+SSH, see <a href="ssh-setup.html#gkshg">Enabling Centralized Administration of
+GlassFish Server Instances</a>.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Windows systems also support communications over DCOM as an alternative
+to SSH.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>GlassFish Server enables you to create <code>SSH</code> nodes for use by instances,
+obtain information about <code>SSH</code> nodes, test if <code>SSH</code> nodes are reachable,
+and delete <code>SSH</code> nodes that are no longer required.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkrnf">To Create an <code>SSH</code> Node</a></p>
+</li>
+<li>
+<p><a href="#gkrme">To List <code>SSH</code> Nodes in a Domain</a></p>
+</li>
+<li>
+<p><a href="#gksig">To Test if an <code>SSH</code> Node is Reachable</a></p>
+</li>
+<li>
+<p><a href="#gkrlz">To Delete an <code>SSH</code> Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrnf"></a><a id="GSHAG00088"></a><a id="to-create-an-ssh-node"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_an_code_ssh_code_node">To Create an <code>SSH</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>create-node-ssh</code> subcommand in remote mode to create an <code>SSH</code>
+node.</p>
+</div>
+<div id="GSHAG347" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the SSH user can use SSH to log in to the host that the node
+will represent. By default, the <code>create-node-ssh</code> subcommand validates
+the node&#8217;s parameters and the SSH connection to the host. If the SSH
+user cannot use SSH to log in to the host, the validation fails.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>create-node-ssh</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+node, see the <a href="../reference-manual/create-node-ssh.html#GSRFM00048"><code>create-node-ssh</code>(1)</a> help page.</p>
+</div>
+<div class="paragraph">
+<p>If you are using password authentication for the SSH user, you must
+specify a password file through the <code>--passwordfile</code> option of the
+<a href="../reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code></a> utility. For more information about SSH user
+authentication, see <a href="ssh-setup.html#gkshh">Setting Up SSH User
+Authentication</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-node-ssh --nodehost node-host [--installdir install-dir ]
+node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-host</dt>
+<dd>
+<p>The name of the host that the node represents. The name of the host
+must be specified. Otherwise, an error occurs.</p>
+</dd>
+<dt class="hdlist1">install-dir</dt>
+<dd>
+<p>The full path to the parent of the base installation directory of the
+GlassFish Server software on the host, for example,
+<code>/export/glassfish3/</code>. If the GlassFish Server software is installed
+in the same directory on the node&#8217;s host and the DAS host, you can
+omit this option.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>Your choice of name for the node that you are creating.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00020"></a><a id="gksih"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-6 Creating an <code>SSH</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example creates the <code>SSH</code> node <code>sj01</code> to represent the host
+<code>sj01.example.com</code>. The GlassFish Server software is installed in the
+same directory on the DAS host and on the host <code>sj01.example.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-node-ssh --nodehost sj01.example.com sj01
+Command create-node-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG348" class="paragraph">
+<p>Troubleshooting</p>
+</div>
+<div class="paragraph">
+<p>The <code>create-node-ssh</code> subcommand might fail to create the node and
+report the error <code>Illegal sftp packet len</code>. If this error occurs, ensure
+that no the startup file on the remote host displays text for
+noninteractive shells. Examples of startup files are <code>.bashrc</code>,
+<code>.cshrc</code>, <code>.login</code>, and <code>.profile</code>.</p>
+</div>
+<div class="paragraph">
+<p>The SSH session interprets any text message that is displayed during
+login as a file-transfer protocol packet. Therefore, any statement in a
+startup file that displays text messages corrupts the SSH session,
+causing this error.</p>
+</div>
+<div id="GSHAG349" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/create-node-ssh.html#GSRFM00048"><code>create-node-ssh</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-node-ssh</code> at the command line.</p>
+</div>
+<div id="GSHAG350" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating a node, you can create instances on the node as explained
+in the following sections:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqch">To Create an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqbl">To Create an Instance Locally</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrme"></a><a id="GSHAG00089"></a><a id="to-list-ssh-nodes-in-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_code_ssh_code_nodes_in_a_domain">To List <code>SSH</code> Nodes in a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>list-nodes-ssh</code> subcommand in remote mode to obtain information
+about existing <code>SSH</code> nodes in a domain.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>To obtain information about all existing nodes in a domain, use the
+<a href="../reference-manual/list-nodes.html#GSRFM00187"><code>list-nodes</code></a> subcommand.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/list-nodes-ssh.html#GSRFM00189"><code>list-nodes-ssh</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-nodes-ssh</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00021"></a><a id="gkskt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-7 Listing Basic Information About All <code>SSH</code> Nodes in a Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists the name, type, and host of all <code>SSH</code> nodes in the
+current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-ssh
+sj01  SSH  sj01.example.com
+sj02  SSH  sj02.example.com
+Command list-nodes-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00022"></a><a id="gkske"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-8 Listing Detailed Information About All <code>SSH</code> Nodes in a
+Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists detailed information about all <code>SSH</code> nodes in the
+current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-ssh --long=true
+NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
+sj01        SSH    sj01.example.com   /export/glassfish3   pmd-i1
+sj02        SSH    sj02.example.com   /export/glassfish3   pmd-i2
+Command list-nodes-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG351" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/list-nodes.html#GSRFM00187"><code>list-nodes</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-nodes-ssh.html#GSRFM00189"><code>list-nodes-ssh</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help list-nodes</code></p>
+</li>
+<li>
+<p><code>asadmin help list-nodes-ssh</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksig"></a><a id="GSHAG00090"></a><a id="to-test-if-an-ssh-node-is-reachable"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_test_if_an_code_ssh_code_node_is_reachable">To Test if an <code>SSH</code> Node is Reachable</h4>
+<div class="paragraph">
+<p>Use the <code>ping-node-ssh</code> subcommand in remote mode to test if an <code>SSH</code>
+node is reachable.</p>
+</div>
+<div id="GSHAG352" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that SSH is configured on the host where the DAS is running and
+on the host that the node represents.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>ping-node-ssh</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for testing the node,
+see the <a href="../reference-manual/ping-node-ssh.html#GSRFM00215"><code>ping-node-ssh</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; ping-node-ssh node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the node to test.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00023"></a><a id="gkshk"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-9 Testing if an <code>SSH</code> Node Is Reachable</p>
+</div>
+<div class="paragraph">
+<p>This example tests if the <code>SSH</code> node <code>sj01</code> is reachable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; ping-node-ssh sj01
+Successfully made SSH connection to node sj01 (sj01.example.com)
+Command ping-node-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG353" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/ping-node-ssh.html#GSRFM00215"><code>ping-node-ssh</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help ping-node-ssh</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkrlz"></a><a id="GSHAG00091"></a><a id="to-delete-an-ssh-node"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_an_code_ssh_code_node">To Delete an <code>SSH</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>delete-node-ssh</code> subcommand in remote mode to delete an <code>SSH</code>
+node.</p>
+</div>
+<div class="paragraph">
+<p>Deleting a node removes the node from the configuration of the DAS. The
+node&#8217;s directories and files are deleted when the last GlassFish Server
+instance that resides on the node is deleted.</p>
+</div>
+<div id="GSHAG354" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that no GlassFish Server instances reside on the node that you
+are deleting. For information about how to delete an instance, see the
+following sections.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Confirm that no instances reside on the node that you are deleting.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-nodes-ssh --long=true</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the o<a href="GSRFM00100"><code>delete-node-ssh</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; delete-node-ssh node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the node that you are deleting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00024"></a><a id="gksjg"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-10 Deleting an <code>SSH</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example confirms that no instances reside on the <code>SSH</code> node <code>sj01</code>
+and deletes the node <code>sj01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-ssh --long=true
+NODE NAME   TYPE   NODE HOST          INSTALL DIRECTORY    REFERENCED BY
+sj01        SSH    sj01.example.com   /export/glassfish3
+sj02        SSH    sj02.example.com   /export/glassfish3   pmd-i2
+Command list-nodes-ssh executed successfully.
+asadmin&gt; delete-node-ssh sj01
+Command delete-node-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG355" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqcw">To Delete an Instance Centrally</a></p>
+</li>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-node-ssh.html#GSRFM00100"><code>delete-node-ssh</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-nodes-ssh.html#GSRFM00189"><code>list-nodes-ssh</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help delete-node-ssh</code></p>
+</li>
+<li>
+<p><code>asadmin help list-nodes-ssh</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrnp"></a><a id="GSHAG00181"></a><a id="creating-listing-and-deleting-config-nodes"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_creating_listing_and_deleting_code_config_code_nodes">Creating, Listing, and Deleting <code>CONFIG</code> Nodes</h3>
+<div class="paragraph">
+<p>A <code>CONFIG</code> node does not support remote communication. If neither DCOM
+nor SSH is set up and you plan to administer your instances locally, the
+instances can reside on <code>CONFIG</code> nodes. You cannot use <code>CONFIG</code> nodes
+for instances that you plan to administer centrally.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server enables you to create <code>CONFIG</code> nodes for use by
+instances, obtain information about <code>CONFIG</code> nodes, and delete <code>CONFIG</code>
+nodes that are no longer required.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkrll">To Create a <code>CONFIG</code> Node</a></p>
+</li>
+<li>
+<p><a href="#gkrjr">To List <code>CONFIG</code> Nodes in a Domain</a></p>
+</li>
+<li>
+<p><a href="#gkrms">To Delete a <code>CONFIG</code> Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrll"></a><a id="GSHAG00092"></a><a id="to-create-a-config-node"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_code_config_code_node">To Create a <code>CONFIG</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>create-node-config</code> command in remote mode to create a <code>CONFIG</code>
+node.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>If you create an instance locally on a host for which no nodes are
+defined, you can create the instance without creating a node beforehand.
+In this situation, GlassFish Server creates a <code>CONFIG</code> node for you. The
+name of the node is the unqualified name of the host. For more
+information, see <a href="instances.html#gkqbl">To Create an Instance
+Locally</a>.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>create-node-config</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Only the options that are required to complete this task are provided in
+this step. For information about all the options for configuring the
+node, see the <a href="../reference-manual/create-node-config.html#GSRFM00047"><code>create-node-config</code>(1)</a> help page.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-node-config [--nodehost node-host] [--installdir install-dir ]
+node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-host</dt>
+<dd>
+<p>The name of the host that the node represents. You may omit this
+option. The name of the host can be determined when instances that
+reside on the node are created.</p>
+</dd>
+<dt class="hdlist1">install-dir</dt>
+<dd>
+<p>The full path to the parent of the base installation directory of the
+GlassFish Server software on the host, for example,
+<code>/export/glassfish3/</code>. You may omit this option. The installation
+directory can be determined when instances that reside on the node are
+created.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>Your choice of name for the node that you are creating.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00025"></a><a id="gkshu"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-11 Creating a <code>CONFIG</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example creates the <code>CONFIG</code> node <code>cfg01</code>. The host that the node
+represents and the installation directory of the GlassFish Server
+software on the host are to be determined when instances are added to
+the node.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-node-config cfg01
+Command create-node-config executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG356" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/create-node-config.html#GSRFM00047"><code>create-node-config</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-node-config</code> at the command line.</p>
+</div>
+<div id="GSHAG357" class="paragraph">
+<p>Next Steps</p>
+</div>
+<div class="paragraph">
+<p>After creating a node, you can create instances on the node as explained
+in <a href="instances.html#gkqbl">To Create an Instance Locally</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkrjr"></a><a id="GSHAG00093"></a><a id="to-list-config-nodes-in-a-domain"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_code_config_code_nodes_in_a_domain">To List <code>CONFIG</code> Nodes in a Domain</h4>
+<div class="paragraph">
+<p>Use the <code>list-nodes-config</code> subcommand in remote mode to obtain
+information about existing <code>CONFIG</code> nodes in a domain.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>To obtain information about all existing nodes in a domain, use the
+<a href="../reference-manual/list-nodes.html#GSRFM00187"><code>list-nodes</code></a> subcommand.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <a href="../reference-manual/list-nodes-config.html#GSRFM00188"><code>list-nodes-config</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-nodes-config</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00026"></a><a id="gkskp"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-12 Listing Basic Information About All <code>CONFIG</code> Nodes in a
+Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists the name, type, and host of all <code>CONFIG</code> nodes in the
+current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-config
+localhost-domain1  CONFIG  localhost
+cfg01  CONFIG  cfg01.example.com
+cfg02  CONFIG  cfg02.example.com
+Command list-nodes-config executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00027"></a><a id="gksjs"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-13 Listing Detailed Information About All <code>CONFIG</code> Nodes in a
+Domain</p>
+</div>
+<div class="paragraph">
+<p>This example lists detailed information about all <code>CONFIG</code> nodes in the
+current domain.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-config --long=true
+NODE NAME           TYPE     NODE HOST            INSTALL DIRECTORY    REFERENCED BY
+localhost-domain1   CONFIG   localhost            /export/glassfish3
+cfg01               CONFIG   cfg01.example.com    /export/glassfish3   yml-i1
+cfg02               CONFIG   cfg02.example.com    /export/glassfish3   yml-i2
+Command list-nodes-config executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG358" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/list-nodes.html#GSRFM00187"><code>list-nodes</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-nodes-config.html#GSRFM00188"><code>list-nodes-config</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help list-nodes</code></p>
+</li>
+<li>
+<p><code>asadmin help list-nodes-config</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkrms"></a><a id="GSHAG00094"></a><a id="to-delete-a-config-node"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_code_config_code_node">To Delete a <code>CONFIG</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>delete-node-config</code> subcommand in remote mode to delete a
+<code>CONFIG</code> node.</p>
+</div>
+<div class="paragraph">
+<p>Deleting a node removes the node from the configuration of the DAS. The
+node&#8217;s directories and files are deleted when the last GlassFish Server
+instance that resides on the node is deleted.</p>
+</div>
+<div id="GSHAG359" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that no GlassFish Server instances reside on the node that you
+are deleting. For information about how to delete an instance that
+resides on a <code>CONFIG</code> node, see <a href="instances.html#gkqed">To Delete an
+Instance Locally</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Confirm that no instances reside on the node that you are deleting.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; list-nodes-config --long=true</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the o<a href="GSRFM00099"><code>delete-node-config</code></a> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; delete-node-config node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the node that you are deleting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00028"></a><a id="gksla"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-14 Deleting a <code>CONFIG</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example confirms that no instances reside on the <code>CONFIG</code> node
+<code>cfg01</code> and deletes the node <code>cfg01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-nodes-config --long=true
+NODE NAME           TYPE     NODE HOST           INSTALL DIRECTORY    REFERENCED BY
+localhost-domain1   CONFIG   localhost           /export/glassfish3
+cfg01               CONFIG   cfg01.example.com   /export/glassfish3
+cfg02               CONFIG   cfg02.example.com   /export/glassfish3   yml-i2
+Command list-nodes-config executed successfully.
+asadmin&gt; delete-node-config cfg01
+Command delete-node-config executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG360" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="instances.html#gkqed">To Delete an Instance Locally</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/delete-node-config.html#GSRFM00099"><code>delete-node-config</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/list-nodes-config.html#GSRFM00188"><code>list-nodes-config</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommands by
+typing the following commands at the command line:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help delete-node-config</code></p>
+</li>
+<li>
+<p><code>asadmin help list-nodes-config</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksjd"></a><a id="GSHAG00182"></a><a id="updating-and-changing-the-type-of-a-node"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_updating_and_changing_the_type_of_a_node">Updating and Changing the Type of a Node</h3>
+<div class="paragraph">
+<p>GlassFish Server enables you to update the configuration data of any
+node and to change the type of a node.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#CHDHHAAE">To Update a <code>DCOM</code> Node</a></p>
+</li>
+<li>
+<p><a href="#gksjq">To Update an <code>SSH</code> Node</a></p>
+</li>
+<li>
+<p><a href="#gksjv">To Update a <code>CONFIG</code> Node</a></p>
+</li>
+<li>
+<p><a href="#gkski">To Change the Type of a Node</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDHHAAE"></a><a id="GSHAG481"></a><a id="to-update-a-dcom-node"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_code_dcom_code_node">To Update a <code>DCOM</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>update-node-dcom</code> subcommand in remote mode to update a <code>DCOM</code>
+node.</p>
+</div>
+<div class="paragraph">
+<p>Options of this subcommand specify the new values of the node&#8217;s
+configuration data. If you omit an option, the existing value is
+unchanged.</p>
+</div>
+<div id="GSHAG482" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>DCOM is configured on the host where the DAS is running and on the
+host that the node represents.</p>
+</li>
+<li>
+<p>The node that you are updating exists.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>update-node-dcom</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; update-node-dcom options node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">options</dt>
+<dd>
+<p>Options of the <code>update-node-dcom</code> subcommand for changing the node&#8217;s
+configuration data. For information about these options, see the
+<a href="../reference-manual/update-node-ssh.html#GSRFM789"><code>update-node-dcom</code>(1)</a> help page.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the <code>DCOM</code> node to update.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG483"></a><a id="sthref18"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-15 Updating a <code>DCOM</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example updates the host that the node <code>wpmdl1</code> represents to
+<code>wj01</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-node-dcom --nodehost wj01 wpmdl1
+Command update-node-dcom executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG484" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/update-node-ssh.html#GSRFM789"><code>update-node-dcom</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help update-node-dcom</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksjq"></a><a id="GSHAG00095"></a><a id="to-update-an-ssh-node"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_an_code_ssh_code_node">To Update an <code>SSH</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>update-node-ssh</code> subcommand in remote mode to update an <code>SSH</code>
+node.</p>
+</div>
+<div class="paragraph">
+<p>Options of this subcommand specify the new values of the node&#8217;s
+configuration data. If you omit an option, the existing value is
+unchanged.</p>
+</div>
+<div id="GSHAG361" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>SSH is configured on the host where the DAS is running and on the host
+that the node represents.</p>
+</li>
+<li>
+<p>The node that you are updating exists.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>update-node-ssh</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; update-node-ssh options node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">options</dt>
+<dd>
+<p>Options of the <code>update-node-ssh</code> subcommand for changing the node&#8217;s
+configuration data. For information about these options, see the
+<a href="../reference-manual/update-node-ssh001.html#GSRFM00256"><code>update-node-ssh</code>(1)</a> help page.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the <code>SSH</code> node to update.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00029"></a><a id="gkslc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-16 Updating an <code>SSH</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example updates the host that the node <code>sj01</code> represents to
+<code>adc01.example.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-node-ssh --nodehost adc01.example.com sj01
+Command update-node-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG362" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/update-node-ssh001.html#GSRFM00256"><code>update-node-ssh</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help update-node-ssh</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gksjv"></a><a id="GSHAG00096"></a><a id="to-update-a-config-node"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_code_config_code_node">To Update a <code>CONFIG</code> Node</h4>
+<div class="paragraph">
+<p>Use the <code>update-node-config</code> subcommand in remote mode to update a
+<code>CONFIG</code> node.</p>
+</div>
+<div class="paragraph">
+<p>Options of this subcommand specify the new values of the node&#8217;s
+configuration data. If you omit an option, the existing value is
+unchanged.</p>
+</div>
+<div id="GSHAG363" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the node that you are updating exists.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the <code>update-node-config</code> subcommand.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; uupdate-node-config options node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">options</dt>
+<dd>
+<p>Options of the <code>update-node-config</code> subcommand for changing the node&#8217;s
+configuration data. For information about these options, see the
+<a href="../reference-manual/update-node-config.html#GSRFM00255"><code>update-node-config</code>(1)</a> help page.</p>
+</dd>
+<dt class="hdlist1">node-name</dt>
+<dd>
+<p>The name of the <code>CONFIG</code> node to update.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00030"></a><a id="gkskc"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-17 Updating a <code>CONFIG</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example updates the host that the node <code>cfg02</code> represents to
+<code>adc02.example.com</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-node-config --nodehost adc02.example.com cfg02
+Command update-node-config executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG364" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p><a href="../reference-manual/update-node-config.html#GSRFM00255"><code>update-node-config</code>(1)</a></p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help update-node-config</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkski"></a><a id="GSHAG00097"></a><a id="to-change-the-type-of-a-node"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_change_the_type_of_a_node">To Change the Type of a Node</h4>
+<div class="paragraph">
+<p>The subcommands for updating a node can also be used to change the type
+of a node.</p>
+</div>
+<div class="paragraph">
+<p>Changing the type of a <code>CONFIG</code> node enables remote communication for
+the node. The type of the node after the change determines the protocol
+over which the node is enabled for remote communication:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>DCOM</code> node is enabled for communication over DCOM.</p>
+</li>
+<li>
+<p>An <code>SSH</code> node is enabled for communication over SSH.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As part of the process of changing the type of a node, you can also
+change other configuration data for the node.</p>
+</div>
+<div class="paragraph">
+<p>Options of the subcommands for updating a node specify the new values of
+the node&#8217;s configuration data. For most options, if you omit the option,
+the existing value is unchanged. However, default values are applied in
+the following situations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Any of the following options of the <code>update-node-dcom</code> subcommand is
+omitted:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--windowsuser</code></p>
+</li>
+<li>
+<p><code>--windowsdomain</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Any of the following options of the <code>update-node-ssh</code> subcommand is
+omitted:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--sshport</code></p>
+</li>
+<li>
+<p><code>--sshuser</code></p>
+</li>
+<li>
+<p><code>--sshkeyfile</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Caution:</p>
+</div>
+<div class="paragraph">
+<p>Changing a <code>DCOM</code> node or an <code>SSH</code> node to a <code>CONFIG</code> node disables
+remote communication for the node.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div id="GSHAG365" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that the following prerequisites are met:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>SSH or DCOM is configured on the host where the DAS is running and on
+the host that the node represents.</p>
+</li>
+<li>
+<p>The node the type of which you are changing exists.</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the DAS is running.<br>
+Remote subcommands require a running server.</p>
+</li>
+<li>
+<p>Run the appropriate subcommand for updating a node, depending on the
+type of the node after the change.</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>To change the type of a node to <code>DCOM</code>, run the <code>update-node-dcom</code>
+subcommand on the node.<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; update-node-dcom [options] config-or-ssh-node-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">options</dt>
+<dd>
+<p>Options of the <code>update-node-dcom</code> subcommand for changing the node&#8217;s
+configuration data. For information about these options, see the
+<a href="../reference-manual/update-node-ssh.html#GSRFM789"><code>update-node-dcom</code>(1)</a> help page.</p>
+</dd>
+<dt class="hdlist1">config-or-ssh-node-name</dt>
+<dd>
+<p>The name of the <code>CONFIG</code> node or the <code>SSH</code> node to change.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change the type of a node to <code>SSH</code>, run the <code>update-node-ssh</code>
+subcommand on the node.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-node-ssh [options] config-or-dcom-node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">options</dt>
+<dd>
+<p>Options of the <code>update-node-ssh</code> subcommand for changing the node&#8217;s
+configuration data. For information about these options, see the
+<a href="../reference-manual/update-node-ssh001.html#GSRFM00256"><code>update-node-ssh</code>(1)</a> help page.</p>
+</dd>
+<dt class="hdlist1">config-or-dcom-node-name</dt>
+<dd>
+<p>The name of the <code>CONFIG</code> node or the <code>DCOM</code> node to change.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>To change the type of a node to <code>CONFIG</code>, run the <code>update-node-config</code>
+subcommand on the node.<br></p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-node-config [options] dcom-or-ssh-node-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">options</dt>
+<dd>
+<p>Options of the <code>update-node-config</code> subcommand for changing the node&#8217;s
+configuration data. For information about these options, see the
+<a href="../reference-manual/update-node-config.html#GSRFM00255"><code>update-node-config</code>(1)</a> help page.</p>
+</dd>
+<dt class="hdlist1">dcom-or-ssh-node-name</dt>
+<dd>
+<p>The name of the <code>DCOM</code> node or the <code>SSH</code> node to change.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSHAG00031"></a><a id="gkshw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 3-18 Changing a <code>CONFIG</code> Node to an <code>SSH</code> Node</p>
+</div>
+<div class="paragraph">
+<p>This example changes the <code>CONFIG</code> node <code>cfg02</code> to an <code>SSH</code> node.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; update-node-ssh cfg02
+Command update-node-ssh executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSHAG366" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../reference-manual/update-node-config.html#GSRFM00255"><code>update-node-config</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/update-node-ssh.html#GSRFM789"><code>update-node-dcom</code>(1)</a></p>
+</li>
+<li>
+<p><a href="../reference-manual/update-node-ssh001.html#GSRFM00256"><code>update-node-ssh</code>(1)</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing the following commands at the command line.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin help update-node-config</code></p>
+</li>
+<li>
+<p><code>asadmin help update-node-dcom</code></p>
+</li>
+<li>
+<p><code>asadmin help update-node-ssh</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="ssh-setup.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="clusters.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

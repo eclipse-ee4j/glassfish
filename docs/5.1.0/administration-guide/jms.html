@@ -1,0 +1,4043 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Administering the Java Message Service (JMS)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Administering the Java Message Service (JMS)</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="javamail.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jndi.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSADG00020"></a><a id="abljw"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="administering-the-java-message-service-jms">17 Administering the Java Message Service (JMS)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Java Message Service (JMS) API is a messaging standard that allows
+Java EE applications and components, including message-driven beans
+(MDBs), to create, send, receive, and read messages. It enables
+distributed communication that is loosely coupled, reliable, and
+asynchronous.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server supports JMS messaging by communicating with a JMS
+provider through a Java EE Connector resource adapter. By default,
+GlassFish Server provides JMS messaging through its built-in jmsra
+resource adapter communicating with Open Message Queue, which is
+included with GlassFish Server. This combination, known as the JMS
+Service, is tightly integrated with GlassFish Server, providing a rich
+set of <code>asadmin</code> subcommands and Administration Console pages to
+simplify JMS messaging administration tasks.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server also supports the Generic Resource Adapter for JMS
+(GenericJMSRA) for use as a resource adapter to connect to other JMS
+providers. The last section in this chapter, <a href="#gbtvg">Using the
+Generic Resource Adapter for JMS to Integrate Supported External JMS
+Providers</a>, describes the GenericJMSRA and provides instructions for
+using it to make other supported JMS providers available to GlassFish
+Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gipit">About the JMS Service</a></p>
+</li>
+<li>
+<p><a href="#beaof">Updating the JMS Service Configuration</a></p>
+</li>
+<li>
+<p><a href="#gipbg">Administering JMS Hosts</a></p>
+</li>
+<li>
+<p><a href="#ablkb">Administering JMS Connection Factories and Destinations</a></p>
+</li>
+<li>
+<p><a href="#ablkj">Administering JMS Physical Destinations</a></p>
+</li>
+<li>
+<p><a href="#gkxgk">Special Situations When Using the JMS Service</a></p>
+</li>
+<li>
+<p><a href="#gipnh">Troubleshooting the JMS Service</a></p>
+</li>
+<li>
+<p><a href="#gbtvg">Using the Generic Resource Adapter for JMS to Integrate
+Supported External JMS Providers</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Instructions for accomplishing the task in this chapter by using the
+Administration Console are contained in the Administration Console
+online help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gipit"></a><a id="GSADG00595"></a><a id="about-the-jms-service"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_about_the_jms_service">About the JMS Service</h3>
+<div class="paragraph">
+<p>To support JMS messaging, the JMS Service provides the following
+administrative objects:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">JMS Service Configuration</dt>
+<dd>
+<p>The JMS service configuration is part of the overall configuration for
+a GlassFish standalone instance or cluster. It specifies how the JMS
+Service is to create and maintain connections with JMS Hosts.</p>
+</dd>
+<dt class="hdlist1">JMS Hosts</dt>
+<dd>
+<p>JMS hosts are the message servers that host destinations, store
+messages, and interact with applications to send and receive messages
+across connections. In Message Queue, JMS hosts are called brokers.<br>
+The JMS service supports these types of JMS hosts:<br></p>
+<div class="ulist">
+<ul>
+<li>
+<p>Embedded type, in which the JMS host runs in the same JVM as the
+GlassFish instance; its configuration and lifecycle are managed by the
+JMS service</p>
+</li>
+<li>
+<p>Local type, in which the JMS host runs separately on the same host
+as the GlassFish instance; its configuration and lifecycle are managed
+by the JMS service</p>
+</li>
+<li>
+<p>Remote type, in which the JMS host represents a Message Queue broker
+or broker cluster that is external to the JMS service; its operation
+is managed using Message Queue administrative tools<br>
+For more information about JMS host types, see <a href="#giplw">About JMS
+Host Types</a>.</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">JMS Connection Factory Resources</dt>
+<dd>
+<p>JMS connection factory resources house the information that
+applications use to connect to a JMS provider. For each JMS connection
+factory, the JMS service automatically maintains a GlassFish connector
+resource and a GlassFish connector connection pool in order to support
+connection pooling and failover.</p>
+</dd>
+<dt class="hdlist1">JMS Destination Resources</dt>
+<dd>
+<p>JMS destination resources house the information that applications use
+to specify the target destination of messages they produce and the
+source destination of messages they consume. For each JMS destination
+resource, the JMS service automatically maintains a GlassFish
+administered object.</p>
+</dd>
+<dt class="hdlist1">JMS Physical Destinations</dt>
+<dd>
+<p>JMS physical destinations provide a means to create and manage JMS
+destinations administratively instead of having them created
+dynamically when needed by an application. While dynamic creation of
+destinations is often sufficient during application development,
+administratively created physical destinations are more suitable for
+production environments.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gavqn"></a><a id="GSADG00773"></a><a id="jms-service-high-availability"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_jms_service_high_availability">JMS Service High Availability</h4>
+<div class="paragraph">
+<p>Just as GlassFish Server supports clusters of instances to provide high
+availability, Message Queue supports clusters of brokers to provide
+service availability or service and data availability, depending on the
+type of broker cluster, as described in "<a href="../../openmq/mq-tech-over/broker-clusters.html#GMTOV00028">Broker
+Clusters</a>" in Open Message Queue Technical Overview.</p>
+</div>
+<div class="paragraph">
+<p>The JMS service takes advantage of this Message Queue capability and
+automatically creates and manages a Message Queue broker cluster when a
+GlassFish cluster&#8217;s configuration specifies Embedded or Local type JMS
+hosts. Additionally, both GlassFish clusters and standalone instances
+can use Message Queue broker clusters as Remote type JMS hosts.</p>
+</div>
+<div class="paragraph">
+<p>For information about how the JMS service supports GlassFish clusters
+and Message Queue broker clusters, see "<a href="../ha-administration-guide/jms.html#GSHAG00012">Configuring
+Java Message Service High Availability</a>" in GlassFish Server Open Source
+Edition High Availability Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaof"></a><a id="GSADG00596"></a><a id="updating-the-jms-service-configuration"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_updating_the_jms_service_configuration">Updating the JMS Service Configuration</h3>
+<div class="paragraph">
+<p>Because the JMS service configuration is part of the overall
+configuration for a standalone instance or cluster, it is created when
+the standalone instance or cluster is created. You can then update the
+JMS service configuration by using the Java Message Service page for the
+configuration in the Administration Console, or by using a <code>set</code>
+subcommand of the following form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">set configs.config.config-name.jms-service.attribute-name=attribute-value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The attributes you can set are:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>type</code></dt>
+<dd>
+<p>The JMS host type the service is to use. Available choices are
+<code>EMBEDDED</code>, <code>LOCAL</code> and <code>REMOTE</code>. See <a href="#giplw">About JMS Host
+Types</a> for more information.</p>
+</dd>
+<dt class="hdlist1"><code>init-timeout-in-seconds</code></dt>
+<dd>
+<p>The number of seconds GlassFish Server waits for the JMS service to
+start before aborting the startup.</p>
+</dd>
+<dt class="hdlist1"><code>start-args</code></dt>
+<dd>
+<p>A list of arguments the JMS service passes to Embedded and Local type
+JMS hosts on startup. Permissible arguments are the options supported
+by the Message Queue <code>imqbrokerd</code> command, as described in
+"<a href="../../openmq/mq-admin-guide/command-line-reference.html#GMADG00280">Broker Utility</a>" in Open Message Queue
+Administration Guide.</p>
+</dd>
+<dt class="hdlist1"><code>default-jms-host</code></dt>
+<dd>
+<p>The name of the default JMS host.</p>
+</dd>
+<dt class="hdlist1"><code>reconnect-enabled</code></dt>
+<dd>
+<p>When set to <code>true</code>, the JMS service attempts to reconnect to a JMS
+host (or one of the JMS hosts in the AddressList) when a connection is
+lost.</p>
+</dd>
+<dt class="hdlist1"><code>reconnect-attempts</code></dt>
+<dd>
+<p>The number of attempts to connect (or reconnect) for each JMS host in
+the AddressList before the JMS service tries the next address in the
+list. A value of -1 indicates that the number of reconnect attempts is
+unlimited (the JMS service attempts to connect to the first address
+until it succeeds).</p>
+</dd>
+<dt class="hdlist1"><code>reconnect-interval-in-seconds</code></dt>
+<dd>
+<p>The number of seconds between reconnect attempts. This interval
+applies for attempts on each JMS host in the AddressList and for
+successive addresses in the list. If it is too short, this time
+interval does not give a JMS host time to recover. If it is too long,
+the reconnect might represent an unacceptable delay.</p>
+</dd>
+<dt class="hdlist1"><code>addresslist-behavior</code></dt>
+<dd>
+<p>The order of connection attempts. Available choices are:<br></p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>random</code></dt>
+<dd>
+<p>Select a JMS host from the AddressList randomly. If there are many
+clients attempting a connection using the same connection factory,
+specify <code>random</code> to prevent them from all being connected to the
+same JMS host.</p>
+</dd>
+<dt class="hdlist1"><code>priority</code></dt>
+<dd>
+<p>Always try to connect to the first JMS host in the AddressList and
+use another one only if the first one is not available.</p>
+</dd>
+</dl>
+</div>
+</dd>
+<dt class="hdlist1"><code>addresslist-iterations</code></dt>
+<dd>
+<p>The number of times the JMS service iterates through the AddressList
+in an effort to establish (or reestablish) a connection. A value of -1
+indicates that the number of attempts is unlimited.</p>
+</dd>
+<dt class="hdlist1"><code>mq-scheme</code></dt>
+<dt class="hdlist1"><code>mq-service</code></dt>
+<dd>
+<p>The Message Queue address scheme name and connection service name to
+use for the AddressList if a non-default scheme or service is to be
+used. See "<a href="../../openmq/mq-admin-guide/administered-object-attributes.html#GMADG00622">Connection Handling</a>" in Open Message
+Queue Administration Guide for syntax information.</p>
+</dd>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>After making changes to the JMS service configuration, GlassFish Server
+instances that use the configuration must be restarted in order for the
+changes to be propagated.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gkxgf"></a><a id="GSADG00774"></a><a id="setting-message-queue-broker-properties-in-the-jms-service-configuration"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_setting_message_queue_broker_properties_in_the_jms_service_configuration">Setting Message Queue Broker Properties in the JMS Service Configuration</h4>
+<div class="paragraph">
+<p>You can specify any Message Queue broker property in the JMS service
+configuration by adding it by name to the Additional Properties table on
+the Java Message Service page for the configuration in the
+Administration Console, or by using a <code>set</code> subcommand of the following
+form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">set configs.config.config-name.jms-service.property.broker-property-name=value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the broker property name includes dots, preface the dots with two
+backslashes (<code>\\</code>); for example, to set the <code>imq.system.max_count</code>
+property, specify <code>imq\\.system\\.max_count</code> in the <code>set</code> subcommand.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You can also set broker properties in the JMS host. If you set the same
+broker property in both the JMS service configuration and the JMS host,
+the value specified in the JMS host is used.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gipbg"></a><a id="GSADG00597"></a><a id="administering-jms-hosts"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_jms_hosts">Administering JMS Hosts</h3>
+<div class="paragraph">
+<p>A JMS host represents a Message Queue broker. JMS contains a JMS hosts
+list (the <code>AddressList</code> property) that contains all the JMS hosts that
+are used by GlassFish Server. The JMS hosts list is populated with the
+hosts and ports of the specified Message Queue brokers and is updated
+whenever a JMS host configuration changes. When you create JMS resources
+or deploy message driven beans, the resources or beans inherit the JMS
+hosts list.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giplw">About JMS Host Types</a></p>
+</li>
+<li>
+<p><a href="#gktfb">Configuring Embedded and Local JMS Hosts</a></p>
+</li>
+<li>
+<p><a href="#gipbh">To Create a JMS Host</a></p>
+</li>
+<li>
+<p><a href="#gipbz">To List JMS Hosts</a></p>
+</li>
+<li>
+<p><a href="#givno">To Update a JMS Host</a></p>
+</li>
+<li>
+<p><a href="#gipbv">To Delete a JMS Host</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For information about administering JMS hosts that are servicing
+GlassFish clusters, see "<a href="../ha-administration-guide/jms.html#GSHAG00312">Configuring GlassFish Clusters
+to Use Message Queue Broker Clusters</a>" in GlassFish Server Open Source
+Edition High Availability Administration Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="giplw"></a><a id="GSADG00775"></a><a id="about-jms-host-types"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_about_jms_host_types">About JMS Host Types</h4>
+<div class="paragraph">
+<p>The JMS service uses Message Queue (MQ) brokers as JMS hosts,
+integrating them in three ways:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Embedded Type</dt>
+<dd>
+<p>When the JMS service configuration&#8217;s <code>type</code> attribute is <code>EMBEDDED</code>,
+the MQ broker is co-located in the same JVM as the GlassFish server
+instance it services. The JMS service starts it in-process and manages
+its configuration and lifecycle.<br>
+For this type, the JMS service uses lazy initialization to start the
+broker when the first JMS operation is requested instead of
+immediately when the GlassFish instance is started. If necessary, you
+can force startup of the broker by using the
+<a href="../reference-manual/jms-ping.html#GSRFM00144"><code>jms-ping</code></a> command.<br>
+Additionally, if the GlassFish instance is a standalone instance (not
+a clustered instance), JMS operations use a Message Queue feature
+called direct mode to bypass the networking stack, leading to
+performance optimization.</p>
+</dd>
+<dt class="hdlist1">Local Type</dt>
+<dd>
+<p>When the JMS service configuration&#8217;s <code>type</code> attribute is <code>LOCAL</code>, the
+JMS service starts the MQ broker specified in the configuration as the
+default JMS host in a separate process on the same host as the
+GlassFish server instance. The JMS service manages its configuration
+and lifecycle.<br>
+For this type, the JMS service starts the broker immediately when the
+GlassFish instance is started.<br>
+The JMS service provides the Message Queue broker an additional port
+to start the RMI registry. This port number is equal to the broker&#8217;s
+JMS port plus 100. For example, if the JMS port number is 37676, then
+the additional port&#8217;s number will be 37776. Additionally, the
+<code>start-args</code> property of the JMS service configuration can be used to
+specify Message Queue broker startup options.</p>
+</dd>
+<dt class="hdlist1">Remote Type</dt>
+<dd>
+<p>When the JMS service configuration&#8217;s <code>type</code> attribute is <code>REMOTE</code>, the
+JMS service uses the information defined by the default JMS host to
+communicate with an MQ broker or broker cluster that has been
+configured and started using Message Queue tools, as described in the
+<a href="../../openmq/mq-admin-guide/toc.html#GMADG">Open Message Queue Administration Guide</a>. Ongoing
+administration and tuning of the broker or broker cluster are also
+performed using Message Queue tools.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gktfb"></a><a id="GSADG00776"></a><a id="configuring-embedded-and-local-jms-hosts"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_configuring_embedded_and_local_jms_hosts">Configuring Embedded and Local JMS Hosts</h4>
+<div class="paragraph">
+<p>Because the JMS service, not Message Queue, manages Embedded and Local
+JMS hosts automatically, you should avoid using Message Queue utilities
+to configure them. Instead, specify broker properties in the JMS service
+configuration or in the JMS host.</p>
+</div>
+<div class="paragraph">
+<p>Should the need to use Message Queue utilities arise, you must use the
+<code>-varhome</code> option when running certain Message Queue utilities to
+specify the <code>IMQ_VARHOME</code> location of the Embedded or Local JMS host.
+This location depends on which GlassFish instance the JMS host is
+servicing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For <code>server</code>, the Domain Administration Server (DAS), the
+<code>IMQ_VARHOME</code> location is:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>domain-root-dir/domain-dir/imq</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For any other GlassFish instance, the <code>IMQ_VARHOME</code> location is:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>as-install/nodes/node-name/instance-name/imq</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, the broker log file for an Embedded or Local JMS host
+servicing the DAS is available at
+domain-root-dir`/<code>domain-dir</code>/imq/instances/imqbroker/log/log.txt`, and
+the broker log file for an Embedded or Local JMS host servicing any
+other GlassFish instance is available at
+as-install`/nodes/<code>node-name</code>/<code>instance-name</code>/imq/instances/<code>mq-instance-name</code>/log/log.txt`.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When using Message Queue utilities on the Windows platform, you must
+explicitly use the Windows executable (<code>.exe</code>) versions of the
+utilities, even when running command shells such as Cygwin. For example,
+instead of running <code>imqcmd</code>, you must run <code>imqcmd.exe</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gipbh"></a><a id="GSADG00486"></a><a id="to-create-a-jms-host"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_jms_host">To Create a JMS Host</h4>
+<div class="paragraph">
+<p>The default JMS service configuration includes a JMS host,
+<code>default_JMS_host</code>. For most situations, this host is sufficient, so
+replacing it or creating additional JMS hosts is not often necessary and
+is a task for advanced users. Use the <code>create-jms-host</code> subcommand in
+remote <code>asadmin</code> mode to create an additional JMS host.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Create the JMS host by using the <a href="../reference-manual/create-jms-host.html#GSRFM00039"><code>create-jms-host</code></a>
+subcommand:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; create-jms-host --mqhost hostName --mqport portNumber
+--mquser adminUser --mqpassword adminPassword --target glassfishTarget
+--property mqBrokerPropList --force trueFalse jms-host-name</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--mqhost</code></dt>
+<dd>
+<p>The host name of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>--mqport</code></dt>
+<dd>
+<p>The port number of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>--mquser</code></dt>
+<dd>
+<p>The user name of the administrative user of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>--mqpassword</code></dt>
+<dd>
+<p>The password of the administrative user of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>--target</code></dt>
+<dd>
+<p>The GlassFish Server object for which the JMS host is being created.
+For details, see <a href="../reference-manual/create-jms-host.html#GSRFM00039"><code>create-jms-host</code>(1)</a>.</p>
+</dd>
+<dt class="hdlist1"><code>--property</code></dt>
+<dd>
+<p>A list of one or more Message Queue broker properties to configure the
+broker. The list is colon-separated (<code>:</code>) and has the form:<br></p>
+</dd>
+</dl>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">prop1Name=prop1Value:prop2Name=prop2Value:...</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+<dd>
+<p>If a broker property name includes dots, preface the dots with two
+backslashes (<code>\\</code>); for example, to include the <code>imq.system.max_count</code>
+property, specify <code>imq\\.system\\.max_count</code> in the <code>--property</code>
+option.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>You can also set broker properties in the JMS service configuration.
+If you set the same broker property in both the JMS host and the JMS
+service configuration, the value specified in the JMS host is used.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--force</code></dt>
+<dd>
+<p>Specifies whether the subcommand overwrites the existing JMS host of
+the same name. The default value is <code>false</code>.</p>
+</dd>
+<dt class="hdlist1">jms-host-name</dt>
+<dd>
+<p>The unique name of the JMS host.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00271"></a><a id="gipbb"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-1 Creating a JMS Host</p>
+</div>
+<div class="paragraph">
+<p>This example creates a JMS host named <code>MyNewHost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jms-host --mqhost pigeon --mqport 7677
+--mquser admin --mqpassword admin MyNewHost
+Jms Host MyNewHost created.
+Command create-jms-host executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1018" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-jms-host</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gipbz"></a><a id="GSADG00487"></a><a id="to-list-jms-hosts"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_jms_hosts">To List JMS Hosts</h4>
+<div class="paragraph">
+<p>Use the <code>list-jms-hosts</code> subcommand in remote <code>asadmin</code> mode to list the
+existing JMS hosts.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>List the JMS hosts by using the <a href="../reference-manual/list-jms-hosts.html#GSRFM00176"><code>list-jms-hosts</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00272"></a><a id="gipdw"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-2 Listing JMS Hosts</p>
+</div>
+<div class="paragraph">
+<p>The following subcommand lists the existing JMS hosts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jms-hosts
+default_JMS_host
+MyNewHost
+Command list-jmsdest executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="givno"></a><a id="GSADG00488"></a><a id="to-update-a-jms-host"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_update_a_jms_host">To Update a JMS Host</h4>
+<div class="paragraph">
+<p>Use the <code>set</code> subcommand in remote <code>asadmin</code> mode to update an existing
+JMS host.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Use the <a href="../reference-manual/get.html#GSRFM00139"><code>get</code></a> subcommand to list the current
+attribute values of the desired JMS host:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin&gt; get configs.config.config-name.jms-service.jms-host.jms-host-name.*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For information about JMS host attributes, see
+<a href="../reference-manual/create-jms-host.html#GSRFM00039"><code>create-jms-host</code>(1)</a>.
+3.  Use the <a href="../reference-manual/set.html#GSRFM00226"><code>set</code></a> subcommand to modify a JMS host
+attribute:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.config-name.jms-service.jmshost.
+jms-host-name.attribute-name=attribute-value</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">The attributes you can set are</dt>
+<dd>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>host</code></dt>
+<dd>
+<p>The host name of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>port</code></dt>
+<dd>
+<p>The port number of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>admin-user-name</code></dt>
+<dd>
+<p>The user name of the administrative user of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1"><code>admin-password</code></dt>
+<dd>
+<p>The password of the administrative user of the Message Queue broker.</p>
+</dd>
+<dt class="hdlist1">`property.`broker-property-name</dt>
+<dd>
+<p>A Message Queue broker property. The property, and the value assigned
+to it, are used to configure the Message Queue broker.<br>
+If the broker property name includes dots, preface the dots with two
+backslashes (<code>\\</code>); for example, to include the <code>imq.system.max_count</code>
+property, specify <code>imq\\.system\\.max_count</code> in the <code>set</code> subcommand.<br></p>
+</dd>
+</dl>
+</div>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>You can also set broker properties in the JMS service configuration.
+If you set the same broker property in both the JMS host and the JMS
+service configuration, the value specified in the JMS host is used.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="GSADG00273"></a><a id="givlz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-3 Updating a JMS Host</p>
+</div>
+<div class="paragraph">
+<p>This example changes the value of the <code>host</code> attribute of the JMS host
+<code>default_JMS_Host</code>. By default this value is <code>localhost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; set configs.config.server-config.jms-service.jms-host.default_JMS_host.host=
+"server1.middleware.example.com"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gipbv"></a><a id="GSADG00489"></a><a id="to-delete-a-jms-host"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_jms_host">To Delete a JMS Host</h4>
+<div class="paragraph">
+<p>Use the <code>delete-jms-host</code> subcommand in remote <code>asadmin</code> mode to delete
+a JMS host from the JMS service. If you delete the only JMS host, the
+JMS service will not be able to start until you create a new JMS host.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>List the JMS hosts by using the <a href="../reference-manual/list-jms-hosts.html#GSRFM00176"><code>list-jms-hosts</code></a>
+subcommand.</p>
+</li>
+<li>
+<p>Delete a JMS host by using the <a href="../reference-manual/delete-jms-host.html#GSRFM00091"><code>delete-jms-host</code></a>
+subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00274"></a><a id="gipbj"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-4 Deleting a JMS Host</p>
+</div>
+<div class="paragraph">
+<p>This example deletes a JMS host named <code>MyNewHost</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jms-host MyNewHost
+Command delete-jms-host executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1019" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-jms-host</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablkb"></a><a id="GSADG00598"></a><a id="administering-jms-connection-factories-and-destinations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_jms_connection_factories_and_destinations">Administering JMS Connection Factories and Destinations</h3>
+<div class="paragraph">
+<p>The JMS API uses two kinds of administered objects. Connection factory
+objects allow an application to create other JMS objects
+programmatically. Destination objects serve as repositories for
+messages. How these objects are created is specific to each
+implementation of JMS. In GlassFish Server, JMS is implemented by
+performing the following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creating a connection factory</p>
+</li>
+<li>
+<p>Creating a destination, which requires creating a physical destination
+and a destination resource that refers to the physical destination</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>JMS applications use the Java Naming and Directory Interface (JNDI) API
+to access the connection factory and destination resources. A JMS
+application normally uses at least one connection factory and at least
+one destination. By studying the application or consulting with the
+application developer, you can determine what resources must be created.
+The order in which the resources are created does not matter.</p>
+</div>
+<div class="paragraph">
+<p>The Java EE standard specifies that certain default resources be made
+available to applications, and defines specific JNDI names for these
+default resources. GlassFish Server makes these names available through
+the use of logical JNDI names, which map Java EE standard JNDI names to
+specific GlassFish Server resources. For JMS connection factory
+resources, the Java EE standard name
+<code>java:comp/DefaultJMSConnectionFactory</code> is mapped to the
+<code>jms/__defaultConnectionFactory</code> resource.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server provides the following types of connection factory
+objects:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>QueueConnectionFactory</code> objects, used for point-to-point
+communication</p>
+</li>
+<li>
+<p><code>TopicConnectionFactory</code> objects, used for publish-subscribe
+communication</p>
+</li>
+<li>
+<p><code>ConnectionFactory</code> objects, which can be used for both point-to-point
+and publish-subscribe communications (recommended for new applications)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>GlassFish Server provides the following types of destination objects:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Queue</code> objects, used for point-to-point communication</p>
+</li>
+<li>
+<p><code>Topic</code> objects, used for publish-subscribe communication</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#giotd">To Create a Connection Factory or Destination Resource</a></p>
+</li>
+<li>
+<p><a href="#giosx">To List JMS Resources</a></p>
+</li>
+<li>
+<p><a href="#giouw">To Delete a Connection Factory or Destination Resource</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The subcommands in this section can be used to administer both the
+connection factory resources and the destination resources. For
+information on JMS service support of connection pooling and failover,
+see "<a href="../ha-administration-guide/jms.html#GSHAG00213">Connection Failover</a>" in GlassFish Server Open
+Source Edition High Availability Administration Guide. For instructions
+on administering physical destinations, see <a href="#ablkj">Administering
+JMS Physical Destinations</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="giotd"></a><a id="GSADG00490"></a><a id="to-create-a-connection-factory-or-destination-resource"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_connection_factory_or_destination_resource">To Create a Connection Factory or Destination Resource</h4>
+<div class="paragraph">
+<p>For each JMS connection factory that you create, GlassFish Server
+creates a connector connection pool and connector resource. For each JMS
+destination that you create, GlassFish Server creates a connector admin
+object resource. If you delete a JMS resource, GlassFish Server
+automatically deletes the connector resources.</p>
+</div>
+<div class="paragraph">
+<p>Use the <code>create-jms-resource</code> command in remote <code>asadmin</code> mode to create
+a JMS connection factory resource or a destination resource.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To specify the <code>addresslist</code> property (in the format
+<code>host:mqport,host2:mqport,host3:mqport</code>) for the
+<code>asadmin create-jms-resource</code> command, escape the : by using <code>\\</code>. For
+example, <code>host1\\:mqport,host2\\:mqport,host3\\:mpqport</code>. For more
+information about using escape characters, see the
+o<a href="GSRFM00263"><code>asadmin</code>(1M)</a> help page.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To update a JMS connection factory, use the <code>set</code> subcommand for the
+underlying connector connection pool, See <a href="connectors.html#gioti">To
+Update a Connector Connection Pool</a>.</p>
+</div>
+<div class="paragraph">
+<p>To update a destination, use the <code>set</code> subcommand for the admin object
+resource. See <a href="connectors.html#giots">To Update an Administered
+Object</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a JMS resource by using the
+<a href="../reference-manual/create-jms-resource.html#GSRFM00040"><code>create-jms-resource</code></a> command.<br>
+Information about the properties for the subcommand is included in this
+help page.</p>
+</li>
+<li>
+<p>If needed, restart the server.<br>
+Some properties require server restart. See
+<a href="overview.html#ghciy">Configuration Changes That Require Restart</a>. If
+your server needs to be restarted, see <a href="domains.html#ginqj">To Restart
+a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00275"></a><a id="giovy"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-5 Creating a JMS Connection Factory</p>
+</div>
+<div class="paragraph">
+<p>This example creates a connection factory resource of type
+<code>javax.jms.ConnectionFactory</code> whose JNDI name is
+<code>jms/DurableConnectionFactory</code>. The <code>ClientId</code> property sets a client ID
+on the connection factory so that it can be used for durable
+subscriptions. The JNDI name for a JMS resource customarily includes the
+<code>jms/</code> naming subcontext.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jms-resource --restype javax.jms.ConnectionFactory
+--description "connection factory for durable subscriptions"
+--property ClientId=MyID jms/DurableConnectionFactory
+Command create-jms-resource executed successfully.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00276"></a><a id="giovn"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-6 Creating a JMS Destination</p>
+</div>
+<div class="paragraph">
+<p>This example creates a destination resource whose JNDI name is
+<code>jms/MyQueue</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jms-resource --restype javax.jms.Queue
+--property Name=PhysicalQueue jms/MyQueue
+Command create-jms-resource executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1020" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-jms-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giosx"></a><a id="GSADG00491"></a><a id="to-list-jms-resources"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_jms_resources">To List JMS Resources</h4>
+<div class="paragraph">
+<p>Use the <code>list-jms-resources</code> subcommand in remote <code>asadmin</code> mode to list
+the existing connection factory and destination resources.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing JMS resources by using the
+<a href="../reference-manual/list-jms-resources.html#GSRFM00177"><code>list-jms-resources</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00277"></a><a id="giovz"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-7 Listing All JMS Resources</p>
+</div>
+<div class="paragraph">
+<p>This example lists all the existing JMS connection factory and
+destination resources.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jms-resources
+jms/Queue
+jms/ConnectionFactory
+jms/DurableConnectionFactory
+jms/Topic
+Command list-jms-resources executed successfully</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00278"></a><a id="giovq"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-8 Listing a JMS Resources of a Specific Type</p>
+</div>
+<div class="paragraph">
+<p>This example lists the resources for the resource type <code>javax</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jms-resources --restype javax.jms.TopicConnectionFactory
+jms/DurableTopicConnectionFactory
+jms/TopicConnectionFactory
+Command list-jms-resources executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1021" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-jms-resources</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giouw"></a><a id="GSADG00492"></a><a id="to-delete-a-connection-factory-or-destination-resource"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_connection_factory_or_destination_resource">To Delete a Connection Factory or Destination Resource</h4>
+<div class="paragraph">
+<p>Use the <code>delete-jms-resource</code> subcommand in remote <code>asadmin</code> mode to
+remove the specified connection factory or destination resource.</p>
+</div>
+<div id="GSADG1022" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>Ensure that you remove all references to the specified JMS resource
+before running this subcommand.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing JMS resources by using the
+<a href="../reference-manual/list-jms-resources.html#GSRFM00177"><code>list-jms-resources</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete the JMS resource by using the
+<a href="../reference-manual/delete-jms-resource.html#GSRFM00092"><code>delete-jms-resource</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00279"></a><a id="giovi"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-9 Deleting a JMS Resource</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the <code>jms/Queue</code> resource.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jms-resource jms/Queue
+Command delete-jms-resource executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1023" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-jms-resource</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="ablkj"></a><a id="GSADG00599"></a><a id="administering-jms-physical-destinations"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_administering_jms_physical_destinations">Administering JMS Physical Destinations</h3>
+<div class="paragraph">
+<p>Messages are delivered for routing and delivery to consumers by using
+physical destinations in the JMS provider. A physical destination is
+identified and encapsulated by an administered object (such as a <code>Topic</code>
+or <code>Queue</code> destination resource) that an application component uses to
+specify the destination of messages it is producing and the source of
+messages it is consuming. For instructions on configuring a destination
+resource, see <a href="#giotd">To Create a Connection Factory or Destination
+Resource</a>.</p>
+</div>
+<div class="paragraph">
+<p>If a message-driven bean is deployed and the physical destination it
+listens to does not exist, GlassFish Server automatically creates the
+physical destination and sets the value of the <code>maxNumActiveConsumers</code>
+property to <code>-1</code>. However, it is good practice to create the physical
+destination beforehand. The first time that an application accesses a
+destination resource, Message Queue automatically creates the physical
+destination specified by the Name property of the destination resource.
+This automatically created physical destination is temporary and expires
+after a period specified by a Message Queue configuration property,
+provided that there are no messages in it and no message producers or
+consumers connected to it.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gioue">To Create a JMS Physical Destination</a></p>
+</li>
+<li>
+<p><a href="#gioyp">To List JMS Physical Destinations</a></p>
+</li>
+<li>
+<p><a href="#giowx">To Purge Messages From a Physical Destination</a></p>
+</li>
+<li>
+<p><a href="#giouv">To Delete a JMS Physical Destination</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gioue"></a><a id="GSADG00493"></a><a id="to-create-a-jms-physical-destination"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_create_a_jms_physical_destination">To Create a JMS Physical Destination</h4>
+<div class="paragraph">
+<p>For production purposes, always create physical destinations. During the
+development and testing phase, however, this step is not required. Use
+the <code>create-jmsdest</code> subcommand in remote <code>asadmin</code> mode to create a
+physical destination.</p>
+</div>
+<div class="paragraph">
+<p>Because a physical destination is actually a Message Queue object rather
+than a server object, you use Message Queue broker commands to update
+properties. For information on Message Queue properties, see the
+<a href="../../openmq/mq-admin-guide/toc.html#GMADG">Open Message Queue Administration Guide</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Create a JMS physical destination by using the
+<a href="../reference-manual/create-jmsdest.html#GSRFM00038"><code>create-jmsdest</code></a> subcommand.<br>
+Information about the properties for the subcommand is included in this
+help page.</p>
+</li>
+<li>
+<p>If needed, restart the server.<br>
+Some properties require server restart. See
+<a href="overview.html#ghciy">Configuration Changes That Require Restart</a>. If
+your server needs to be restarted, see <a href="domains.html#ginqj">To Restart
+a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00280"></a><a id="gioxt"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-10 Creating a JMS Physical Destination</p>
+</div>
+<div class="paragraph">
+<p>This example creates a queue named <code>PhysicalQueue</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jmsdest --desttype queue --property
+User=public:Password=public PhysicalQueue
+Command create-jmsdest executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1024" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help create-jmsdest</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gioyp"></a><a id="GSADG00494"></a><a id="to-list-jms-physical-destinations"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_list_jms_physical_destinations">To List JMS Physical Destinations</h4>
+<div class="paragraph">
+<p>Use the <code>list-jmsdest</code> subcommand in remote <code>asadmin</code> mode to list the
+existing JMS physical destinations.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing JMS physical destinations by using the
+<a href="../reference-manual/list-jmsdest.html#GSRFM00175"><code>list-jmsdest</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00281"></a><a id="gioxo"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-11 Listing JMS Physical Destinations</p>
+</div>
+<div class="paragraph">
+<p>This example lists the physical destinations for the default server
+instance.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; list-jmsdest
+PhysicalQueue queue {}
+PhysicalTopic topic {}
+Command list-jmsdest executed successfully.</code></pre>
+</div>
+</div>
+<div id="GSADG1025" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help list-jmsdest</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giowx"></a><a id="GSADG00495"></a><a id="to-purge-messages-from-a-physical-destination"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_purge_messages_from_a_physical_destination">To Purge Messages From a Physical Destination</h4>
+<div class="paragraph">
+<p>Use the <code>flush-jmsdest</code> subcommand in remote <code>asadmin</code> mode to purge the
+messages from a physical destination in the specified target&#8217;s JMS
+service configuration.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>Purge messages from the a JMS physical destination by using the
+<a href="../reference-manual/flush-jmsdest.html#GSRFM00136"><code>flush-jmsdest</code></a> subcommand.</p>
+</li>
+<li>
+<p>If needed, restart the server.<br>
+Some properties require server restart. See
+<a href="overview.html#ghciy">Configuration Changes That Require Restart</a>. If
+your server needs to be restarted, see <a href="domains.html#ginqj">To Restart
+a Domain</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00282"></a><a id="giows"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-12 Flushing Messages From a JMS Physical Destination</p>
+</div>
+<div class="paragraph">
+<p>This example purges messages from the queue named <code>PhysicalQueue</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; flush-jmsdest --desttype queue PhysicalQueue
+Command flush-jmsdest executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1026" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help flush-jmsdest</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="giouv"></a><a id="GSADG00496"></a><a id="to-delete-a-jms-physical-destination"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_delete_a_jms_physical_destination">To Delete a JMS Physical Destination</h4>
+<div class="paragraph">
+<p>Use the <code>delete-jmsdest</code> subcommand in remote <code>asadmin</code> mode to remove
+the specified JMS physical destination.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Ensure that the server is running.<br>
+Remote <code>asadmin</code> subcommands require a running server.</p>
+</li>
+<li>
+<p>List the existing JMS physical destinations by using the
+<a href="../reference-manual/list-jmsdest.html#GSRFM00175"><code>list-jmsdest</code></a> subcommand.</p>
+</li>
+<li>
+<p>Delete the physical resource by using the
+<a href="../reference-manual/delete-jmsdest.html#GSRFM00090"><code>delete-jmsdest</code></a> subcommand.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="GSADG00283"></a><a id="gioxx"></a></p>
+</div>
+<div class="paragraph">
+<p>Example 17-13 Deleting a Physical Destination</p>
+</div>
+<div class="paragraph">
+<p>This example deletes the queue named <code>PhysicalQueue</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; delete-jmsdest --desttype queue PhysicalQueue
+Command delete-jmsdest executed successfully</code></pre>
+</div>
+</div>
+<div id="GSADG1027" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>You can also view the full syntax and options of the subcommand by
+typing <code>asadmin help delete-jmsdest</code> at the command line.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkxgk"></a><a id="GSADG00600"></a><a id="special-situations-when-using-the-jms-service"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_special_situations_when_using_the_jms_service">Special Situations When Using the JMS Service</h3>
+<div class="paragraph">
+<p>As mentioned earlier, Message Queue, through the built-in <code>jmsra</code>
+resource adapter, is tightly integrated with GlassFish Server to provide
+JMS messaging managed through a rich set of <code>asadmin</code> subcommands and
+Administration Console pages to simplify JMS messaging administration
+tasks. In most instances, this tight integration is transparent and
+automatic, requiring no special effort on the part of an administrator.
+In certain special situations, though, an administrator must perform a
+task such a setting a Message Queue broker property or a GlassFish
+object attribute to enable or disable a capability of the integration.
+The topics in this section describe these situations.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Restarting an Embedded or Local Broker That Has Failed</dt>
+<dd>
+<p>Because the JMS service, not Message Queue, manages the lifecycle of
+brokers acting as Embedded and Local JMS hosts, do not use the
+<code>imqbrokerd</code> Message Queue utility to start such a broker that has
+failed. Instead, restart the GlassFish instance that the broker is
+servicing.</p>
+</dd>
+<dt class="hdlist1">Changing the Admin User Password for an Embedded or Local Broker</dt>
+<dd>
+<p>Follow these steps to change the <code>admin</code> user password for an Embedded
+or Local broker:<br></p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="CHDDHDIE"></a><br>
+Make sure the broker is running.</p>
+</li>
+<li>
+<p><a id="CHDHDFAH"></a><br>
+Use the <code>imqusermgr</code> Message Queue utility to change the password of
+the <code>admin</code> user.</p>
+</li>
+<li>
+<p><a id="CHDCJEFG"></a><br>
+Edit the configuration of the JMS host, changing the password of the
+<code>admin</code> user to the new password.</p>
+</li>
+<li>
+<p><a id="CHDFJECE"></a><br>
+  Restart the GlassFish instance that the broker is servicing.<br>
+  When changing the password for the brokers in a broker cluster, first
+  perform steps <a href="#CHDDHDIE">1</a> and <a href="#CHDHDFAH">2</a> on each broker.
+  Then, perform step <a href="#CHDCJEFG">3</a>. Finally, perform
+  step <a href="#CHDFJECE">4</a> on each broker.
+Using SSL to Connect to an Oracle Internet Directory (OID) or Oracle</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">Virtual Directory (OVD) User Respository</dt>
+<dd>
+<p>When using SSL to connect to an OID or OVD user repository, you must
+set the <code>imq.user_repository.ldap.ssl.socketfactory</code> Message Queue
+broker property to
+<code>com.sun.enterprise.security.auth.realm.ldap.CustomSocketFactory</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="gipnh"></a><a id="GSADG00601"></a><a id="troubleshooting-the-jms-service"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_troubleshooting_the_jms_service">Troubleshooting the JMS Service</h3>
+<div class="paragraph">
+<p>If you encounter problems, consider the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <a href="../reference-manual/jms-ping.html#GSRFM00144"><code>jms-ping</code></a> subcommand to confirm that the
+Message Queue broker is running.</p>
+</li>
+<li>
+<p>View the GlassFish Server log file. For <code>server</code>, the Domain
+Administrations Server (DAS), the log is available at
+domain-dir`/logs/server.log`; for other GlassFish instances, the log is
+available at
+as-install`/nodes/<code>node-name</code>/<code>instance-name</code>/logs/server.log`.<br>
+If the log file indicates that a Message Queue broker acting as a Remote
+JMS host did not respond to a message, stop the broker and then restart
+it.</p>
+</li>
+<li>
+<p>View the broker log. For a broker associated with the Domain
+Administration Server (DAS), the log is available at
+domain-dir`/imq/instances/imqbroker/log/log.txt`; for brokers associated
+with other GlassFish instances, the log is available at
+as-install`/nodes/<code>node-name</code>/<code>instance-name</code>/imq/instances/<code>mq-instance-name</code>/log/log.txt`.</p>
+</li>
+<li>
+<p>For Remote type JMS hosts, be sure to start Message Queue brokers
+first, then GlassFish Server instances.</p>
+</li>
+<li>
+<p>If all Message Queue brokers are down, it can take up to 30 minutes
+for GlassFish Server to go down or up when you are using the default
+values in JMS. You can change the default values for this timeout. For
+example:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin set domain1.jms-service.reconnect-interval-in-seconds=5</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gbtvg"></a><a id="GSADG00602"></a><a id="using-the-generic-resource-adapter-for-jms-to-integrate-supported-external-jms-providers"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_the_generic_resource_adapter_for_jms_to_integrate_supported_external_jms_providers">Using the Generic Resource Adapter for JMS to Integrate Supported External JMS Providers</h3>
+<div class="paragraph">
+<p>GlassFish Server supports the integration and use of Oracle WebLogic JMS
+and IBM WebSphere MQ JMS providers through the use of the Generic
+Resource Adapter for JMS (GenericJMSRA). This Java EE connector 1.5
+resource adapter can wrap the JMS client library of Oracle WebLogic JMS
+and IBM WebSphere MQ and make it available for use by GlassFish. The
+adapter is a <code>.rar</code> archive that can be deployed and configured using
+GlassFish Server administration tools.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkkvc">Configuring GenericJMSRA for Supported External JMS
+Providers</a></p>
+</li>
+<li>
+<p><a href="#gkkuy">Using GenericJMSRA with WebLogic JMS</a></p>
+</li>
+<li>
+<p><a href="#gkslb">Using GenericJMSRA with IBM WebSphere MQ</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkkvc"></a><a id="GSADG00777"></a><a id="configuring-genericjmsra-for-supported-external-jms-providers"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_configuring_genericjmsra_for_supported_external_jms_providers">Configuring GenericJMSRA for Supported External JMS Providers</h4>
+<div class="paragraph">
+<p>GenericJMSRA has three main properties that need to be configured:
+<code>SupportXA</code>, <code>DeliveryType</code>, and <code>ProviderIntegrationMode</code>. The values
+that need to be set for them depends on the capabilities of the JMS
+provider being used, as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SupportXA</code> — indicates whether the JMS provider supports XA or not.</p>
+</li>
+<li>
+<p><code>DeliveryType</code> — indicates whether an MDB should use a
+<code>ConnectionConsumer</code> or <code>Consumer.receive()</code> when consuming messages.</p>
+</li>
+<li>
+<p><code>ProviderIntegrationMode</code> — indicates what mode of integration is
+required. The available integration modes are jndi and javabean. Some
+JMS providers support only one integration mode while others may offer
+the choice of both</p>
+<div class="ulist">
+<ul>
+<li>
+<p>If jndi is specified, then the resource adapter will obtain JMS
+connection factories and destinations from the JMS provider&#8217;s JNDI
+repository.</p>
+</li>
+<li>
+<p>If javabean is specified then the resource adapter will obtain JMS
+connection factories and destinations by instantiating the appropriate
+classes directly.<br>
+Which option is specified determines which other properties need to be
+set.</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="giosy"></a><a id="GSADG00497"></a><a id="to-deploy-and-configure-genericjmsra"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_deploy_and_configure_genericjmsra">To Deploy and Configure GenericJMSRA</h5>
+<div class="paragraph">
+<p>Before deploying GenericJMSRA, JMS client libraries must be made
+available to GlassFish Server. For some JMS providers, client libraries
+might also include native libraries. In such cases, these native
+libraries must be made available to any GlassFish Server JVMs.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download the <code>genericra.rar</code> archive.</p>
+</li>
+<li>
+<p>Deploy GenericJMSRA the same way you would deploy a connector
+module.<br>
+See "<a href="../application-deployment-guide/deploying-applications.html#GSDPG00069">Deploying a Connector Module</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</li>
+<li>
+<p>Configure the resource adapter&#8217;s properties.<br>
+See <a href="#gbtvu">GenericJMSRA Configuration Properties</a>.</p>
+</li>
+<li>
+<p>Create a connector connection pool.<br>
+See <a href="connectors.html#gioce">To Create a Connector Connection Pool</a>.</p>
+</li>
+<li>
+<p>Create a connector resource.<br>
+See <a href="connectors.html#giogt">To Create a Connector Resource</a>.</p>
+</li>
+<li>
+<p>Create an administered object resource.<br>
+See <a href="connectors.html#giolr">To Create an Administered Object</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="gbtvu"></a><a id="GSADG00674"></a><a id="genericjmsra-configuration-properties"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_genericjmsra_configuration_properties">GenericJMSRA Configuration Properties</h5>
+<div class="paragraph">
+<p>The following table describes the properties that can be set to when
+configuring the resource adapter.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 19%;">
+<col style="width: 14%;">
+<col style="width: 39%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Values</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SupportsXA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true/false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether the JMS client
+supports XA transactions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeliveryType</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p><code>Synchronous/</code></p>
+</div>
+<div class="paragraph">
+<p><code>Asynchronous</code></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Asynchronous</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether an MDB should use a
+<code>ConnectionConsumer</code> (Asynchronous) or <code>consumer.receive()</code>
+(Synchronous) when consuming messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QueueConnectionFactoryClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name
+of <code>javax.jms.QueueConnectionFactory</code> implementation of the JMS client.
+This class must be made available on the application server classpath.
+Used if <code>ProviderIntegrationMode</code> is <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TopicConnectionFactoryClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name
+of <code>javax.jms.TopicConnectionFactory</code> implementation of the JMS client.
+This class must be made available on the application server classpath.
+Used if <code>ProviderIntegrationMode</code> is specified as <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XAConnectionFactoryClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class name of
+<code>javax.jms.ConnectionFactory</code> implementation of the JMS client. This
+class must be made available on the application server classpath. Used
+if <code>ProviderIntegrationMode</code> is specified as <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XAQueueConnectionFactoryClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class
+name of <code>javax.jms.``XAQueueConnectionFactory</code> implementation of the JMS
+client. This class must be made available on the application server
+classpath. Used if <code>ProviderIntegrationMode</code> is specified as <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>XATopicConnectionFactoryClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class
+name of <code>javax.jms.``XATopicConnectionFactory</code> implementation of the JMS
+client. This class must be made available on the application server
+classpath. Used if <code>ProviderIntegrationMode</code> is <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TopicClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class Name of
+<code>javax.jms.Topic</code> implementation of the JMS client. This class must be
+made available on the application server classpath. Used if
+<code>ProviderIntegrationMode</code> is <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>QueueClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid class name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class Name of
+<code>javax.jms.Queue</code> implementation of the JMS client. This class must be
+made available on the application server classpath. Used if
+<code>ProviderIntegrationMode</code> is specified as a <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name value pairs separated by comma</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>javabean</code> property names and values of the
+<code>ConnectionFactory</code> of the JMS client. Required only if
+<code>ProviderIntegrationMode</code> is <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JndiProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name value pairs separated by comma</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies
+the JNDI provider properties to be used for connecting to the JMS
+provider&#8217;s JNDI. Used only if <code>ProviderIntegrationMode</code> is <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CommonSetterMethodName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Method name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the common
+setter method name that some JMS vendors use to set the properties on
+their administered objects. Used only if <code>ProviderIntegrationMode</code> is
+<code>javabean</code>. For example, in the case of Message Queue, this would be
+<code>setProperty</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UserName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name of the JMS user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User name to connect to the JMS
+Provider.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password for the JMS user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password to connect to the
+JMS provider.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RMPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProviderManaged</code> or <code>OnePerPhysicalConnection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Provider``Managed</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>The <code>isSameRM</code> method on an <code>XAResource</code> is used by the Transaction
+Manager to determine if the Resource Manager instance represented by two
+<code>XAResources</code> are the same. When <code>RMPolicy</code> is set to <code>ProviderManaged</code>
+(the default value), the JMS provider is responsible for determining the
+<code>RMPolicy</code> and the <code>XAResource</code> wrappers in GenericJMSRA merely delegate
+the <code>isSameRM</code> call to the JMS provider&#8217;s XA resource implementations.
+This should ideally work for most JMS providers.</p>
+</div>
+<div class="paragraph">
+<p>Some <code>XAResource</code> implementations such as WebSphere MQ rely on a
+resource manager per physical connection and this causes issues when
+there is inbound and outbound communication to the same queue manager in
+a single transaction (for example, when an MDB sends a response to a
+destination). When <code>RMPolicy</code> is set to <code>OnePerPhysicalConnection</code>, the
+XAResource wrapper implementation&#8217;s <code>isSameRM</code> in GenericJMSRA would
+check if both the <code>XAResources</code> use the same physical connection, before
+delegating to the wrapped objects.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gbtwu"></a><a id="GSADG00675"></a><a id="connection-factory-properties"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_connection_factory_properties">Connection Factory Properties</h5>
+<div class="paragraph">
+<p><code>ManagedConnectionFactory</code> properties are specified when a
+<code>connector-connection-pool</code> is created. All the properties specified
+while creating the resource adapter can be overridden in a
+<code>ManagedConnectionFactory</code>. Additional properties available only in
+<code>ManagedConnectionFactory</code> are given below.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 8%;">
+<col style="width: 49%;">
+<col style="width: 23%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Value</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid client ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientID</code> as specified by JMS 1.1
+specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of the
+connection factory bound in the JNDI tree of the JMS provider. The
+administrator should provide all connection factory properties (except
+<code>clientID</code>) in the JMS provider itself. This property name will be used
+only if <code>ProviderIntegratinMode</code> is <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionValidationEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true/false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If set to true, the
+resource adapter will use an exception listener to catch any connection
+exception and will send a <code>CONNECTION_ERROR_OCCURED</code> event to
+application server.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gbtxa"></a><a id="GSADG00676"></a><a id="destination-properties"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_destination_properties">Destination Properties</h5>
+<div class="paragraph">
+<p>Properties in this section are specified when a destination (queue or
+topic) is created. All the resource adapter properties can be overridden
+in a destination. Additional properties available only in the
+destination are given below.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 31%;">
+<col style="width: 14%;">
+<col style="width: 11%;">
+<col style="width: 44%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Value</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of the destination
+bound in the JNDI tree of the JMS provider. The Administrator should
+provide all properties in the JMS provider itself. This property name
+will be used only if <code>ProviderIntegrationMode</code> is <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name value pairs separated by a comma</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>javabean</code> property names and values of the destination
+of the JMS client. Required only if <code>ProviderIntegrationMode</code> is
+<code>javabean</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gbtvf"></a><a id="GSADG00677"></a><a id="activation-spec-properties"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_activation_spec_properties">Activation Spec Properties</h5>
+<div class="paragraph">
+<p>Properties in this section are specified in the GlassFish Server
+<code>glassfish-ejb-jar.xml</code> deployment descriptor of an MDB as
+<code>activation-config-properties</code>. All the resource adapter properties can
+be overridden in an Activation Spec. Additional properties available
+only in ActivationSpec are given below.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 43%;">
+<col style="width: 14%;">
+<col style="width: 13%;">
+<col style="width: 30%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Value</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MaxPoolSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum size of server session pool
+internally created by the resource adapter for achieving concurrent
+message delivery. This should be equal to the maximum pool size of MDB
+objects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MaxWaitTime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The resource adapter will wait for the
+time in seconds specified by this property to obtain a server session
+from its internal pool. If this limit is exceeded, message delivery will
+fail.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SubscriptionDurability</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Durable or Non-Durable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-Durable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SubscriptionDurability</code> as specified by JMS 1.1 specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SubscriptionName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SubscriptionName</code> as specified by JMS
+1.1 specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSelector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid message selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSelector</code> as
+specified by JMS 1.1 specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid client ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientID</code> as specified by JMS 1.1
+specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of
+connection factory created in JMS provider. This connection factory will
+be used by resource adapter to create a connection to receive messages.
+Used only if <code>ProviderIntegrationMode</code> is configured as <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of
+destination created in JMS provider. This destination will be used by
+resource adapter to create a connection to receive messages from. Used
+only if <code>ProviderIntegrationMode</code> is configured as <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>javax.jms.Queue</code> or <code>javax.jms.Topic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type
+of the destination the MDB will listen to.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name-value pairs separated by comma</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>javabean</code> property names and values of the destination
+of the JMS client. Required only if <code>ProviderIntegrationMode</code> is
+<code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RedeliveryAttempts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times a message will be
+delivered if a message causes a runtime exception in the MDB.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Redelivery``Interval</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time in seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between repeated
+deliveries, if a message causes a runtime exception in the MDB.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SendBadMessagesToDMD</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true/false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">False</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indicates whether the
+resource adapter should send the messages to a dead message destination,
+if the number of delivery attempts is exceeded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeadMessageDestinationJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a valid JNDI name.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name
+of the destination created in the JMS provider. This is the target
+destination for dead messages. This is used only if
+<code>ProviderIntegrationMode</code> is <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeadMessageDestinationClassName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">class name of destination object.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used if <code>ProviderIntegrationMode</code> is <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeadMessageDestinationProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name Value Pairs separated by comma</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies the <code>javabean</code> property names and values of the
+destination of the JMS client. This is required only if
+<code>ProviderIntegrationMode</code> is <code>javabean</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeadMessageConnectionFactoryJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a valid JNDI name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI
+name of the connection factory created in the JMS provider. This is the
+target connection factory for dead messages. This is used only if
+<code>ProviderIntegrationMode</code> is <code>jndi</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeadMessageDestinationType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queue or topic destination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The
+destination type for dead messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReconnectAttempts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times a reconnect will be
+attempted in case exception listener catches an error on connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReconnectInterval</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time in seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between reconnects.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkkuy"></a><a id="GSADG00778"></a><a id="using-genericjmsra-with-weblogic-jms"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_genericjmsra_with_weblogic_jms">Using GenericJMSRA with WebLogic JMS</h4>
+<div class="paragraph">
+<p>You can configure GenericJMSRA to enable applications running in
+GlassFish Server to send messages to, and receive messages from, Oracle
+WebLogic JMS.</p>
+</div>
+<div class="paragraph">
+<p>GenericJMSRA should be used in conjunction with the WebLogic Server Thin
+T3 Client. Due to the nature of this client, messages exchanged between
+GlassFish Server and WebLogic Server cannot be sent or received in XA
+transactions. There is also only limited support for asynchronous
+receipt of messages in an MDB, as described in detail in
+<a href="#gkkvz">Limitations When Using GenericJMSRA with WebLogic JMS</a>.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkmeb">Deploy the WebLogic Thin T3 Client JAR in GlassFish
+Server</a></p>
+</li>
+<li>
+<p><a href="#gkmek">Configure WebLogic JMS Resources for Integration</a></p>
+</li>
+<li>
+<p><a href="#gkmee">Create a Resource Adapter Configuration for GenericJMSRA
+to Work With WebLogic JMS</a></p>
+</li>
+<li>
+<p><a href="#gkkxz">Deploy the GenericJMSRA Resource Archive</a></p>
+</li>
+<li>
+<p><a href="#gkkwq">Configuring an MDB to Receive Messages from WebLogic JMS</a></p>
+</li>
+<li>
+<p><a href="#gknjj">Accessing Connections and Destinations Directly</a></p>
+</li>
+<li>
+<p><a href="#gkkvz">Limitations When Using GenericJMSRA with WebLogic JMS</a></p>
+</li>
+<li>
+<p><a href="#gktfi">Configuration Reference of GenericJMSRA Properties for
+WebLogic JMS</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkmeb"></a><a id="GSADG00678"></a><a id="deploy-the-weblogic-thin-t3-client-jar-in-glassfish-server"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_deploy_the_weblogic_thin_t3_client_jar_in_glassfish_server">Deploy the WebLogic Thin T3 Client JAR in GlassFish Server</h5>
+<div class="paragraph">
+<p>WebLogic Server provides several different clients for use by standalone
+applications that run outside of WebLogic Server. These client are
+summarized in
+"http://www.oracle.com/pls/as1111/lookup?id=SACLT117[Overview of
+Stand-alone Clients"] in Programming Stand-alone Clients for Oracle
+WebLogic Server. When connecting from GlassFish Server to WebLogic JMS
+resources you must use the WebLogic Thin T3 client,
+<code>wlthint3client.jar</code>.</p>
+</div>
+<div class="paragraph">
+<p>There are a couple of methods to deploy the WebLogic Thin T3 client in
+GlassFish Server and make it available to GenericJMSRA:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To make the Thin T3 client available to all applications, copy the
+<code>wlthint3client.jar</code> to the as-install`/lib` directory under your
+GlassFish Server installation. The Thin T3 client can be found in a
+WebLogic Server installation in a directory similar to
+MW_HOME`/server/lib`.</p>
+</li>
+<li>
+<p>It is also possible to deploy the Thin T3 client in a less global
+manner, so that it is specific to an individual application. For
+information on how to do this, see
+"<a href="../application-development-guide/class-loaders.html#GSDVG00099">Application-Specific Class Loading</a>" in GlassFish
+Server Open Source Edition Application Development Guide.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkmek"></a><a id="GSADG00679"></a><a id="configure-weblogic-jms-resources-for-integration"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configure_weblogic_jms_resources_for_integration">Configure WebLogic JMS Resources for Integration</h5>
+<div class="paragraph">
+<p>If you need to configure the necessary WebLogic JMS resources on the
+WebLogic Server from which you want to access messages using GlassFish
+Server, then follow the instructions in the WebLogic Server
+documentation for configuring the necessary resources, such as
+destinations, and connection factories.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>JMS System Module Configuration</p>
+</li>
+<li>
+<p>Queue and Topic Destination Configuration</p>
+</li>
+<li>
+<p>Connection Factory Configuration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The example code snippets in this section refer to a WebLogic JMS
+connection factory named <code>WLoutboundQueueFactory</code> and queue destination
+named <code>WLoutboundQueue</code>. For conceptual overviews on configuring
+WebLogic JMS resources, refer to
+"http://www.oracle.com/pls/as1111/lookup?id=JMSAD123[Understanding JMS
+Resource Configuration]" in Configuring and Managing JMS for Oracle
+WebLogic Server. For detailed instructions on configuring WebLogic JMS
+resources, refer to
+"http://www.oracle.com/pls/as1111/lookup?id=WLACH01854[Configure JMS
+system modules and add JMS resources]" in the WebLogic Administration
+Console Online Help.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkmee"></a><a id="GSADG00680"></a><a id="create-a-resource-adapter-configuration-for-genericjmsra-to-work-with-weblogic-jms"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_create_a_resource_adapter_configuration_for_genericjmsra_to_work_with_weblogic_jms">Create a Resource Adapter Configuration for GenericJMSRA to Work With WebLogic JMS</h5>
+<div class="paragraph">
+<p>When you deploy GenericJMSRA, you also need to create a resource adapter
+configuration in GlassFish Server. You can do this using either the
+Administration Console or the <code>asadmin</code> command. If you use
+theAdministration Console then you need deploy the GenericJMSRA resource
+archive first. Here&#8217;s an example using <code>asadmin</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-resource-adapter-config --host localhost --port 4848 --property
+SupportsXA=false:DeliveryType=Synchronous:ProviderIntegrationMode
+                          =jndi:JndiProperties=java.naming.factory.initial\
+                          =weblogic.jndi.WLInitialContextFactory,java.naming.provider.url\
+                          =t3\://localhost\:7001,java.naming.factory.url.pkgs\
+                          =weblogic.corba.client.naming genericra</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This creates a resource adapter configuration with the name <code>genericra</code>,
+and Oracle recommends not changing the default name. The resource
+adapter configuration is configured with the properties specified using
+the <code>--properties</code> argument; multiple properties are configured as a
+colon-separated list of name-value pairs that are entered as a single
+line. You will also need to change the host and port that WebLogic
+Server is running on to suit your installation.</p>
+</div>
+<div class="paragraph">
+<p>In this example, the following properties are configured:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 72%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SupportsXA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeliveryType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Synchronous</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProviderIntegrationMode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JndiProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">java.naming.factory.initial
+=weblogic.jndi.WLInitialContextFactory,java.naming.provider.url
+=t3://localhost:7001,java.naming.factory.url.pkgs
+=weblogic.corba.client.naming
+
+(replace "localhost:7001" with the host:port of WebLogic Server)</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You must use the same values for <code>SupportsXA</code>, <code>DeliveryType</code> and
+<code>ProviderIntegrationMode</code> as the required values that are used in this
+table. The <code>JndiProperties</code> value must be set to a list of JNDI
+properties needed for connecting to WebLogic JNDI.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When using <code>asadmin</code> you need to escape each <code>=</code> and any <code>:</code> characters
+by prepending a backward slash <code>\</code>. The escape sequence is not necessary
+if the configuration is performed through the Administration Console.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For a description of all the resource adapter properties that are
+relevant for WebLogic JMS, see the <a href="#gktfi">Configuration Reference
+of GenericJMSRA Properties for WebLogic JMS</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkkxz"></a><a id="GSADG00498"></a><a id="deploy-the-genericjmsra-resource-archive"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_deploy_the_genericjmsra_resource_archive">Deploy the GenericJMSRA Resource Archive</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download the GenericJMSRA resource archive (genericra.rar).</p>
+</li>
+<li>
+<p>Deploy the resource adapter. You can do this using either the
+Administration Console or the <code>asadmin</code> deploy command. Here&#8217;s an
+example using the <code>asadmin</code> deploy command:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ asadmin deploy --user admin --password adminadmin
+  &lt;location of the generic resource adapter rar file&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you deploy the resource adapter using the Administration Console,
+then after deployment you need to create a resource adapter
+configuration as described in <a href="#gkmee">Create a Resource Adapter
+Configuration for GenericJMSRA to Work With WebLogic JMS</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkkwq"></a><a id="GSADG00499"></a><a id="configuring-an-mdb-to-receive-messages-from-weblogic-jms"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuring_an_mdb_to_receive_messages_from_weblogic_jms">Configuring an MDB to Receive Messages from WebLogic JMS</h5>
+<div class="paragraph">
+<p>In this example, all configuration information is defined in two
+deployment descriptor files: <code>ejb-jar.xml</code> and the GlassFish Server
+<code>glassfish-ejb-jar.xml</code> file. To configure a MDB to receive messages
+from WebLogic JMS, you would configure these deployment descriptor files
+as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the ejb-jar.xml deployment descriptor:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;message-driven&gt;
+      &lt;ejb-name&gt;SimpleMessageEJB&lt;/ejb-name&gt;
+      &lt;ejb-class&gt;test.simple.queue.ejb.SimpleMessageBean&lt;/ejb-class&gt;
+      &lt;transaction-type&gt;Container&lt;/transaction-type&gt;
+    &lt;/message-driven&gt;
+  &lt;/enterprise-beans&gt;
+  &lt;assembly-descriptor&gt;
+    &lt;container-transaction&gt;
+      &lt;method&gt;
+        &lt;ejb-name&gt;SimpleMessageEJB&lt;/ejb-name&gt;
+        &lt;method-name&gt;onMessage&lt;/method-name&gt;
+        &lt;method-params&gt;
+          &lt;method-param&gt;javax.jms.Message&lt;/method-param&gt;
+        &lt;/method-params&gt;
+      &lt;/method&gt;
+      &lt;trans-attribute&gt;NotSupported&lt;/trans-attribute&gt;
+    &lt;/container-transaction&gt;
+  &lt;/assembly-descriptor&gt;
+&lt;/ejb-jar&gt;</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If container-managed transactions are configured, then the transactional
+attribute must be set to <code>NotSupported</code>. For more information, see
+<a href="#gkkvz">Limitations When Using GenericJMSRA with WebLogic JMS</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Configure the glassfish-ejb-jar.xml deployment descriptor:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&lt;sun-ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;ejb&gt;
+      &lt;ejb-name&gt;SimpleMessageEJB&lt;/ejb-name&gt;
+      &lt;mdb-resource-adapter&gt;
+        &lt;resource-adapter-mid&gt;genericra&lt;/resource-adapter-mid&gt;
+        &lt;activation-config&gt;
+          &lt;activation-config-property&gt;
+            &lt;activation-config-property-name&gt;
+              ConnectionFactoryJndiName
+            &lt;/activation-config-property-name&gt;
+            &lt;activation-config-property-value&gt;
+              jms/WLInboundQueueFactory
+            &lt;/activation-config-property-value&gt;
+          &lt;/activation-config-property&gt;
+          &lt;activation-config-property&gt;
+            &lt;activation-config-property-name&gt;
+              DestinationJndiName
+            &lt;/activation-config-property-name&gt;
+            &lt;activation-config-property-value&gt;
+              jms/WLInboundQueue
+            &lt;/activation-config-property-value&gt;
+          &lt;/activation-config-property&gt;
+        &lt;/activation-config&gt;
+      &lt;/mdb-resource-adapter&gt;
+    &lt;/ejb&gt;
+  &lt;/enterprise-beans&gt;
+&lt;/sun-ejb-jar&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where:<br>
+The <code>&lt;resource-adapter-mid&gt;genericra&lt;/resource-adapter-mid&gt;</code> element is
+used to specify the resource adapter and resource adapter configurations
+that was deployed in the <a href="#gkmee">Create a Resource Adapter
+Configuration for GenericJMSRA to Work With WebLogic JMS</a> instructions.
+It is recommended you stick to <code>genericra</code> as is used here.<br>
+The <code>activation-config</code> element in <code>glassfish-ejb-jar.xml</code> is the one
+which defines how and where the MDB receives messages, as follows:
+* The <code>ConnectionFactoryJndiName</code> property must be set to the JNDI name
+of the connection factory in the WebLogic JNDI store that will be used
+to receive messages. Therefore, replace <code>jms/WLInboundQueueFactory</code> in
+the example above with the JNDI name used in your environment.
+* The <code>DestinationJndiName</code> property must be set to the JNDI name of the
+destination (the queue or topic from which messages will be consumed) in
+the WebLogic JNDI store. Therefore, replace <code>jms/WLInboundQueue</code> in the
+example above with the JNDI name used in your environment.<br>
+For a description of all the ActivationSpec properties that are relevant
+for WebLogic JMS, see the <a href="#gktfi">Configuration Reference of
+GenericJMSRA Properties for WebLogic JMS</a>.<br>
+Make sure to use the appropriate WebLogic administration tools, such as
+the WebLogic Administration Console or the WebLogic Scripting Tool
+(WLST). For more information, see
+"http://www.oracle.com/pls/as1111/lookup?id=WLACH01853[Configure
+Messaging]" in WebLogic Server Administration Console Online Help and
+<a href="http://www.oracle.com/pls/as1111/lookup?id=WLSTC112">WebLogic Server WLST
+Online and Offline Command Reference</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gknjj"></a><a id="GSADG00500"></a><a id="accessing-connections-and-destinations-directly"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_accessing_connections_and_destinations_directly">Accessing Connections and Destinations Directly</h5>
+<div class="paragraph">
+<p>When configuring a MDB to consume messages from WebLogic JMS your code
+does not need to access the WebLogic JMS connection factory and
+destination directly. You simply define them in the activation
+configuration, as shown in <a href="#gkkwq">Configuring an MDB to Receive
+Messages from WebLogic JMS</a>. However when configuring an MDB to send
+messages, or when configuring a EJB, Servlet, or application client to
+either send or receive messages, your code needs to obtain these objects
+using a JNDI lookup.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you want configure connections and destination resources using the
+Administration Console, this is explained in the Administration Console
+online help. When using Administration Console, follow the instructions
+for creating a new Connector Connection Pool and Admin Object Resources,
+and not the instructions for creating a JMS Connection Pool and
+Destination Resources. For more information about using <code>asadmin</code> to
+create these resources, see <a href="connectors.html#gioce">To Create a
+Connector Connection Pool</a> and <a href="connectors.html#giogt">To Create a
+Connector Resource</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Looking up the connection factory and destination<br>
+The following code looks up a connection factory with the JNDI name
+<code>jms/QCFactory</code> and a queue with the name`jms/outboundQueue` from the
+GlassFish Server JNDI store:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>     Context initialContect  = new InitialContext();
+     QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory)
+          jndiContext.lookup("java:comp/env/jms/MyQCFactory");
+     Queue queue = (Queue) jndiContext.lookup("java:comp/env/jms/outboundQueue");</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the resources used are GlassFish Server resources, not
+WebLogic JMS resources. For every connection factory or destination that
+you want to use in the WebLogic JMS JNDI store, you need to create a
+corresponding connection factory or destination in the GlassFish Server
+JNDI store and configure the GlassFish Server object to point to the
+corresponding WebLogic JMS object.
+2.  Declaring the connection factory and destination<br>
+In accordance with standard Java EE requirements, these resources need
+to be declared in the deployment descriptor for the MDB, EJB or other
+component. For example, for a session bean, configure the <code>ejb-jar.xml</code>
+with <code>&lt;resource-env-ref&gt;</code> elements, as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">&lt;ejb-jar&gt;
+  &lt;enterprise-beans&gt;
+    &lt;session&gt;
+      . . .
+      &lt;resource-env-ref&gt;
+        &lt;resource-env-ref-name&gt;jms/QCFactory&lt;/resource-env-ref-name&gt;
+        &lt;resource-env-ref-type&gt;javax.jms.QueueConnectionFactory&lt;/resource-env-ref-type&gt;
+      &lt;/resource-env-ref&gt;
+      &lt;resource-env-ref&gt;
+        &lt;resource-env-ref-name&gt;jms/outboundQueue&lt;/resource-env-ref-name&gt;
+        &lt;resource-env-ref-type&gt;javax.jms.Queue&lt;/resource-env-ref-type&gt;
+      &lt;/resource-env-ref&gt;</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create a Connector Connection Pool and Connector Resource by
+entering the following <code>asadmin</code> commands, both all in one line:<br>
+In order to configure a JMS Connection Factory using GenericJMSRA, a
+Connector connection pool and resource need to be created in GlassFish
+Server using names that map to the corresponding connection factory in
+the WebLogic JNDI store.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin create-connector-connection-pool --host localhost --port 4848
+   --raname genericra --connectiondefinition javax.jms.QueueConnectionFactory
+   --target server --transactionsupport LocalTransaction
+   --property ConnectionFactoryJndiName=jms/WLOutboundQueueFactory
+     qcpool
+
+asadmin create-connector-resource --host localhost --port 4848
+    --poolname qcpool --target server jms/QCFactory</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These <code>asadmin</code> commands together creates a connection factory in
+GlassFish Server and its corresponding connection pool.
+* The connection pool has the JNDI name <code>jms/WLoutboundQueueFactory</code> and
+obtains connections from a connection pool named <code>qcpool</code>.
+* The connection pool <code>qcpool</code> uses the resource adapter <code>genericra</code> and
+contains objects of type <code>javax.jms.QueueConnectionFactory</code>.
+* The <code>transactionsupport</code> argument is set to <code>LocalTransaction</code>, which
+specifies that the connection will be used in local transactions only.
+You can also specify <code>NoTransaction</code>. However, the default setting of
+<code>XATransaction</code> cannot be used. For more information, see
+<a href="#gkkvz">Limitations When Using GenericJMSRA with WebLogic JMS</a>.
+* The connection pool is configured with the properties specified using
+the <code>properties</code> argument; multiple properties are configured as a
+colon-separated list of name-value pairs. Only one property is
+configured in this example, as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">ConnectionFactoryJndiName=jms/WLOutboundQueueFactory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>ConnectionFactoryJndiName</code> property must be set to the JNDI name of
+the corresponding connection factory in the WebLogic JMS JNDI store.
+Therefore, replace <code>jms/WLOutboundQueueFactory</code> in the example above
+with the JNDI name used in your environment.
+* For a description of the <code>ManagedConnectionFactory</code> properties that
+are relevant for WebLogic JMS, see the <a href="#gktfi">Configuration
+Reference of GenericJMSRA Properties for WebLogic JMS</a>.
+4.  Create a destination object that refers to a corresponding WebLogic
+JMS destination by entering the following <code>asadmin</code> command, all in one
+line:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-admin-object --host localhost --port 4848 --target server
+    --restype javax.jms.Queue --property DestinationJndiName=jms/WLOutboundQueue
+    --raname genericra jms/outboundQueue</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This <code>asadmin</code> command creates a destination in GlassFish Server.
+* The destination has the JNDI name <code>jms/outboundQueue</code>, uses the
+resource adapter <code>genericra</code>, and is of type <code>javax.jms.Queue</code>.
+* The destination is configured with the properties specified using the
+<code>properties</code> argument; multiple properties are configured as a
+colon-separated list of name-value pairs. Only one property is
+configured in this example, as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">DestinationJndiName=jms/WLOutboundQueue</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>DestinationJndiName</code> property must be set to the JNDI name of the
+corresponding destination in the WebLogic JMS JNDI store. Therefore,
+replace <code>jms/WLOutboundQueue</code> in the example above with the JNDI name
+used in your environment.
+* For a description of the destination properties that are relevant for
+WebLogic JMS, see the <a href="#gktfi">Configuration Reference of
+GenericJMSRA Properties for WebLogic JMS</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkkvz"></a><a id="GSADG00681"></a><a id="limitations-when-using-genericjmsra-with-weblogic-jms"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_limitations_when_using_genericjmsra_with_weblogic_jms">Limitations When Using GenericJMSRA with WebLogic JMS</h5>
+<div class="paragraph">
+<p>Due to the nature of the WebLogic T3 Thin Client there are a number of
+limitations in the way in which it can be used with GenericJMSRA.</p>
+</div>
+<div class="paragraph">
+<p><a id="gknho"></a><a id="GSADG00091"></a><a id="no-support-for-xa-transactions"></a></p>
+</div>
+<div class="paragraph">
+<p>No Support for XA Transactions</p>
+</div>
+<div class="paragraph">
+<p>WebLogic JMS does not support the optional JMS "Chapter 8" interfaces
+for XA transactions in a form suitable for use outside of WebLogic
+Server. Therefore, the GenericJMSRA configuration must have the
+<code>SupportsXA</code> property set to <code>-false</code>. This has a number of implications
+for the way in which applications may be used, as described in this
+section.</p>
+</div>
+<div class="paragraph">
+<p>Using a MDB to Receive Messages: Container-managed Transactions (CMT)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If container-managed transactions are used, the transactional
+attribute of a MDB should be set to <code>NotSupported</code>. No transaction will
+be started. Messages will be received in a non-transacted session with
+an acknowledgeMode of <code>AUTO_ACKNOWLEDGE</code>.</p>
+</li>
+<li>
+<p>A transactional <code>Required</code> attribute should not be used; otherwise,
+MDB activation will fail with an exception:
+<code>javax.resource.ResourceException: MDB is configured to use container managed transaction. But SupportsXA is configured to false in the resource adapter.</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The remaining transactional attributes are normally considered
+inappropriate for use with a MDB. If used, the following behavior will
+occur:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If the transactional attribute is <code>RequiresNew</code>, then MDB activation
+will fail with an exception:
+<code>javax.resource.ResourceException: MDB is configured to use container managed transaction But SupportsXA is configured to false in the resource adapter.</code></p>
+</li>
+<li>
+<p>If the transactional attribute is <code>Mandatory</code>, the MDB can be
+activated but a <code>TransactionRequiredException</code> (or similar) will always
+be thrown by the server.</p>
+</li>
+<li>
+<p>If the transactional attribute is <code>Supports</code>, then no transaction will
+be started and the MDB will work as if <code>NotSupported</code> had been used.</p>
+</li>
+<li>
+<p>If the transactional attribute is <code>Never</code>, then no transaction will be
+started and the MDB will work as if <code>NotSupported</code> had been used.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Using a MDB to Receive Messages: Bean-managed Transactions (BMT)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If bean-managed transactions are configured in accordance with the EJB
+specification any <code>UserTransaction</code> started by the bean will have no
+effect on the consumption of messages.</p>
+</li>
+<li>
+<p>Messages will be received in a non-transacted session with an
+acknowledgeMode of <code>AUTO_ACKNOWLEDGE</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Accessing Connections and Destinations Directly - Container-managed
+Transactions (CMT)</p>
+</div>
+<div class="paragraph">
+<p>When accessing connections directly (such as when sending messages from
+a MDB or an EJB) and container-managed transactions are being used, the
+connection pool&#8217;s <code>transaction-support</code> property should be set to either
+<code>LocalTransaction</code> or <code>NoTransaction</code>. If the default value of
+<code>XATransaction</code> is used, an exception will be thrown at runtime when
+<code>createConnection()</code> is called. This is the case irrespective of the
+transactional attribute of the MDB or EJB. Note that MDBs must have
+their transactional attribute set to <code>NotSupported</code> as specified above;
+whereas, an EJB can use any transactional attribute.</p>
+</div>
+<div class="paragraph">
+<p>If there is no transaction in progress within the bean method (for
+example, <code>notSupported</code> is being used) then it does not make any
+difference whether the connection pool&#8217;s <code>transaction-support</code> property
+is set to <code>LocalTransaction</code> or <code>NoTransaction</code>; the transactional
+behavior will be determined by the arguments to <code>createSession()</code>. If
+you want the outbound message to be sent without a transaction, call
+<code>createSession(false, ...)</code>. If you want the outbound message to be sent
+in a local transaction call
+<code>createSession(true, Session.SESSION_TRANSACTED)</code>, remembering to call
+<code>session.commit()</code> or `session.rollback()`after the message is sent.</p>
+</div>
+<div class="paragraph">
+<p>If there is a transaction in progress within the bean method (which will
+only be possible for EJBs), then setting the connection pool&#8217;s
+<code>transaction-support</code> property to <code>LocalTransaction</code> or <code>NoTransaction</code>
+gives different results:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If it is set to <code>NoTransaction</code> then a non-transacted session will be
+used.</p>
+</li>
+<li>
+<p>If it is set to <code>LocalTransaction</code> then a (local, non-XA) transacted
+session will be used, which will be committed or rolled back when the
+<code>UserTransaction</code> is committed or rolled back. In this case, calling
+<code>session.commit()</code> or <code>session.rollback()</code> will cause an exception.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>No Support for Redelivery Limits and Dead Message Queue</p>
+</div>
+<div class="paragraph">
+<p>Due to the lack of XA support when using WebLogic JMS, there is no
+support for GenericJMSRA&#8217;s dead message queue feature, in which a
+message that has been redelivered to a MDB a defined number of times is
+sent to a dead message queue.</p>
+</div>
+<div class="paragraph">
+<p><a id="gknft"></a><a id="GSADG00092"></a><a id="limited-support-for-asynchronous-receipt-of-messages-in-a-mdb"></a></p>
+</div>
+<div class="paragraph">
+<p>Limited Support for Asynchronous Receipt of Messages In a MDB</p>
+</div>
+<div class="paragraph">
+<p>WebLogic JMS does not support the optional JMS "Chapter 8" interfaces
+for "Concurrent Processing of a Subscription&#8217;s Messages" (that is,
+<code>ServerSession</code>, <code>ServerSessionPool</code> and <code>ConnectionConsumer</code>) in a form
+suitable for use outside of WebLogic Server. Therefore, the generic
+JMSRA configuration must set the property <code>DeliveryType</code> to
+<code>Synchronous</code>.</p>
+</div>
+<div class="paragraph">
+<p>This affects the way in which MDBs consume messages from a queue or
+topic as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When messages are being received from a queue, each MDB instance will
+have its own session and consumer, and it will consume messages by
+repeatedly calling <code>receive(timeout)</code>. This allows the use of a pool of
+MDBs to process messages from the queue.</p>
+</li>
+<li>
+<p>When messages are being received from a topic, only one MDB instance
+will be used irrespective of the configured pool size. This means that a
+pool of multiple MDBs cannot be used to share the load of processing
+messages, which may reduce the rate at which messages can be received
+and processed.<br>
+This restriction is a consequence of the semantics of synchronously
+consuming messages from topics in JMS: In the case of non-durable topic
+subscriptions, each consumer receives a copy of all the messages on the
+topic, so using multiple consumers would result in multiple copies of
+each message being received rather than allowing the load to be shared
+among the multiple MDBs. In the case of durable topic subscriptions,
+only one active consumer is allowed to exist at a time.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gktfi"></a><a id="GSADG00682"></a><a id="configuration-reference-of-genericjmsra-properties-for-weblogic-jms"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuration_reference_of_genericjmsra_properties_for_weblogic_jms">Configuration Reference of GenericJMSRA Properties for WebLogic JMS</h5>
+<div class="paragraph">
+<p>The tables in this section list the properties that need to be set to
+configure the resource adapter and any activation specs, managed
+connections, and other administered objects that are relevant only when
+using GenericJMSRA to communicate with WebLogic JMS. For a complete list
+of properties, see the comprehensive table in <a href="#gbtvu">GenericJMSRA
+Configuration Properties</a></p>
+</div>
+<div class="paragraph">
+<p>Resource Adapter Properties</p>
+</div>
+<div class="paragraph">
+<p>These properties are used to configure the resource adapter itself when
+it is deployed, and can be specified using the
+<code>create-resource-adapter-config</code> command.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 42%;">
+<col style="width: 30%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Required Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SupportsXA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies whether the JMS client supports XA transactions.</p>
+</div>
+<div class="paragraph">
+<p>Set to <code>false</code> for WebLogic JMS.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeliveryType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Synchronous</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies whether an MDB should use a <code>ConnectionConsumer</code>
+(Asynchronous) or <code>consumer.receive()</code> (Synchronous) when consuming
+messages.</p>
+</div>
+<div class="paragraph">
+<p>Set to <code>Synchronous</code> for WebLogic JMS.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProviderIntegrationMode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Specifies that connection factories and destinations in GlassFish&#8217;s JNDI
+store are configured to refer to connection factories and destinations
+in WebLogic&#8217;s JNDI store.</p>
+</div>
+<div class="paragraph">
+<p>Set to <code>jndi</code> for WebLogic JMS.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JndiProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">java.naming.factory.initial
+=weblogic.jndi.WLInitialContextFactory,
+java.naming.provider.url
+=t3://localhost:7001,java.naming.factory.url.pkgs
+=weblogic.corba.client.naming
+(replace localhost:7001 with
+the host:port of WebLogic Server)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI properties for connect to WebLogic JNDI, specified as
+comma-separated list of name=value pairs without spaces.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UserName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Name of the WebLogic JMS user</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User name to connect to
+WebLogic JMS. The user name can be overridden in <code>ActivationSpec</code> and
+<code>ManagedConnection</code>. If no user name is specified anonymous connections
+will be used, if permitted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Password for the WebLogic JMS user</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password to connect
+to WebLogic JMS. The password can be overridden in <code>ActivationSpec</code> and
+<code>ManagedConnection</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LogLevel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Desired log level of JDK logger</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to specify the
+level of logging.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Connection Factory Properties</p>
+</div>
+<div class="paragraph">
+<p><code>ManagedConnectionFactory</code> objects are created in the GlassFish Server
+JNDI store using the Administration Console or the
+<code>asadmin connector-connection-pool</code> command. All the properties that can
+be set on a resource adapter configuration can be overridden by setting
+them on a destination object. The properties specific to
+<code>ManagedConnectionFactory</code> objects are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 39%;">
+<col style="width: 14%;">
+<col style="width: 10%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Value</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientId</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid client ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientID</code> as specified by JMS 1.1
+specification.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of
+connection factory in the GlassFish Server JNDI store. This connection
+factory should be configured to refer to the physical connection factory
+in the WebLogic JNDI store.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionValidationEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code> or <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FALSE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If set to
+<code>true</code>, the resource adapter will use an exception listener to catch any
+connection exception and will send a <code>CONNECTION_ERROR_OCCURED</code> event to
+GlassFish Server.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Destination Properties</p>
+</div>
+<div class="paragraph">
+<p>Destination (queue or topic) objects are created in the GlassFish Server
+JNDI store using the Administration Console or the
+<code>asadmin connector-admin-object</code> command. All the properties that can be
+set on a resource adapter configuration can be overridden by setting
+them on a destination object. The properties specific to destination
+objects are listed in the following table.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28%;">
+<col style="width: 14%;">
+<col style="width: 10%;">
+<col style="width: 48%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Value</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid JNDI name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of the
+destination object in the GlassFish Server JNDI store. This destination
+object should be configured to refer to the corresponding physical
+destination in the WebLogic JNDI store.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>ActivationSpec Properties</p>
+</div>
+<div class="paragraph">
+<p>An ActivationSpec is a set of properties that configures a MDB. It is
+defined either in the MDB&#8217;s GlassFish Server deployment descriptor
+<code>glassfish-ejb-jar.xml</code> using <code>activation-config-property</code> elements or
+in the MDB itself using annotation. All the resource adapter properties
+listed in the table above can be overridden in an ActivationSpec.
+Additional properties available only to a ActivationSpec are given
+below.</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 19%;">
+<col style="width: 14%;">
+<col style="width: 37%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Valid Value</th>
+<th class="tableblock halign-left valign-top">Default Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MaxPoolSize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Maximum size of server session pool internally created by the resource
+adapter for achieving concurrent message delivery. This should be equal
+to the maximum pool size of MDB objects.</p>
+</div>
+<div class="paragraph">
+<p>Only used for queues; ignored for topics, when a value of 1 is always
+used.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SubscriptionDurability</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Durable</code> or <code>Non-Durable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Non-Durable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only used for topics. Specifies whether the subscription is durable or
+non-durable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SubscriptionName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only used for topics when
+<code>SubscriptionDurability</code> is <code>Durable</code>. Specifies the name of the durable
+subscription.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSelector</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid message selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS message
+selector.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClientID</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid client ID</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS ClientID.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ConnectionFactoryJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of
+connection factory in the GlassFish Server JNDI store. This connection
+factory should be configured to refer to the physical connection factory
+in the WebLogic JNDI store.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationJndiName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A valid JNDI Name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI name of
+destination in the GlassFish Server JNDI store. This destination should
+be configured to refer to the physical destination in the WebLogic JNDI
+store.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DestinationType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>javax.jms.Queue</code> or <code>javax.jms.Topic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Null</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies whether the configured <code>DestinationJndiName</code> refers to a
+queue or topic.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReconnectAttempts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of times a reconnect will be
+attempted in case exception listener catches an error on connection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ReconnectInterval</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">time in seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interval between reconnection
+attempts.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkslb"></a><a id="GSADG00779"></a><a id="using-genericjmsra-with-ibm-websphere-mq"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_genericjmsra_with_ibm_websphere_mq">Using GenericJMSRA with IBM WebSphere MQ</h4>
+<div class="paragraph">
+<p>You can configure GenericJMSRA to enable applications running in
+GlassFish Server to send messages to, and receive messages from, IBM
+WebSphere MQ. GlassFish Serveronly supports using GenericJMSRA with
+WebSphere MQ version 6.0 and WebSphere MQ version 7.0</p>
+</div>
+<div class="paragraph">
+<p>These instructions assume that the WebSphere MQ broker and GlassFish
+Server are deployed and running on the same physical host/machine. If
+you have the WebSphere MQ broker running on a different machine and need
+to access it remotely, refer to the WebSphere MQ documentation for
+configuration details. The resource adapter configuration and other
+application server related configuration remains unchanged.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gksiw">Preliminary Setup Procedures for WebSphere MQ Integration</a></p>
+</li>
+<li>
+<p><a href="#gksli">Configure the WebSphere MQ Administered Objects</a></p>
+</li>
+<li>
+<p><a href="#gksni">Create a Resource Adapter Configuration for GenericJMSRA
+to Work With WebSphere MQ</a></p>
+</li>
+<li>
+<p><a href="#gksnh">Deploy the GenericJMSRA Archive</a></p>
+</li>
+<li>
+<p><a href="#gkson">Create the Connection Factories and Administered Objects
+in GlassFish Server</a></p>
+</li>
+<li>
+<p><a href="#gktmn">Configuring an MDB to Receive Messages from WebSphere MQ</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gksiw"></a><a id="GSADG00683"></a><a id="preliminary-setup-procedures-for-websphere-mq-integration"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_preliminary_setup_procedures_for_websphere_mq_integration">Preliminary Setup Procedures for WebSphere MQ Integration</h5>
+<div class="paragraph">
+<p>Before you can configure WebSphere MQ to exchange messages with
+GlassFish Server, you must complete the following tasks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The following permissions must be added to the <code>server.policy</code> and the
+<code>client.policy</code> file to deploy GenericJMSRA and to run the client
+application.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Use a text editor to modify the <code>server.policy</code> file in the
+`${appserver-install-dir}/domains/domain1/config/`directory by adding
+the following line to the default grant block:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>permission java.util.logging.LoggingPermission "control";
+permission java.util.PropertyPermission "*", "read,write";</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If you use an application client in your application, edit the
+client&#8217;s <code>client.policy</code> file in the
+<code>${appserver-install-dir}/lib/appclient/</code> directory by adding the
+following permission:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>permission javax.security.auth.PrivateCredentialPermission
+"javax.resource.spi.security.PasswordCredential * \"*\"","read";</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To integrate GlassFish Serverwith WebSphere MQ 6.0 or 7.0, copy the
+necessary JAR files to the as-install`/lib` directory:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>For WebSphere MQ 6.0, copy these JAR files to the as-install`/lib`
+directory:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/opt/mqm/java/lib/com.ibm.mq.jar
+/opt/mqm/java/lib/com.ibm.mq.jms.Nojndi.jar
+/opt/mqm/java/lib/com.ibm.mq.soap.jar
+/opt/mqm/java/lib/com.ibm.mqjms.jar
+/opt/mqm/java/lib/com.ibm.mqetclient.jar
+/opt/mqm/java/lib/commonservices.jar
+/opt/mqm/java/lib/dhbcore.jar
+/opt/mqm/java/lib/rmm.jar
+/opt/mqm/java/lib/providerutil.jar
+/opt/mqm/java/lib/CL3Export.jar
+/opt/mqm/java/lib/CL3Nonexport.jar</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>/opt/mqm</code> is the location of the WebSphere MQ 6.0 installation.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For WebSphere MQ 7.0, copy these JAR files to the as-install`/lib`
+directory:<br></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/opt/mqm/java/lib/com.ibm.mq.jar,
+/opt/mqm/java/lib/com.ibm.mq.jms.Nojndi.jar,
+/opt/mqm/java/lib/com.ibm.mq.soap.jar,
+/opt/mqm/java/lib/com.ibm.mqjms.jar,
+/opt/mqm/java/lib/com.ibm.mq.jmqi.jar,
+/opt/mqm/java/lib/com.ibm.mq.commonservices.jar,
+/opt/mqm/java/lib/dhbcore.jar,
+/opt/mqm/java/lib/rmm.jar,
+/opt/mqm/java/lib/providerutil.jar,
+/opt/mqm/java/lib/CL3Export.jar,
+/opt/mqm/java/lib/CL3Nonexport.jar</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>/opt/mqm</code> is the location of the WebSphere MQ 7.0 installation.
+* Set the <code>LD_LIBRARY_PATH</code> environment variable to the <code>java/lib</code>
+directory, and then restart GlassFish Server. For example, in a
+UNIX—based system, with WebSphere MQ installed under <code>/opt/mqm</code>, you
+would enter:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">$ export LD_LIBRARY_PATH=/opt/mqm/java/lib</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gksli"></a><a id="GSADG00501"></a><a id="configure-the-websphere-mq-administered-objects"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configure_the_websphere_mq_administered_objects">Configure the WebSphere MQ Administered Objects</h5>
+<div class="paragraph">
+<p>This section provides an example of how you could configure the
+necessary administered objects, such as destinations and connection
+factories, on the WebSphere MQ instance from which you want to access
+messages using GlassFish Server. Therefore, you will need to change the
+administered object names to suit your installation.</p>
+</div>
+<div id="GSADG1028" class="paragraph">
+<p>Before You Begin</p>
+</div>
+<div class="paragraph">
+<p>If WebSphere MQ created a user and a group named <code>mqm</code> during the
+installation, then you must specify a password for the <code>mqm</code> user using
+the <code>$ passwd mqm</code> command.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/websphere-mq.png" alt="This graphic represents all of the administered objects created in this example configuration."></span></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Switch to the <code>mqm</code> user:<br>
+<code>$ su mqm</code></p>
+</li>
+<li>
+<p>For Linux, set the following kernel version:<br>
+<code>$ export LD_ASSUME_KERNEL=2.2.5</code></p>
+</li>
+<li>
+<p>Create a new MQ queue manager named "QM1":<br>
+<code>$ crtmqm QM1</code></p>
+</li>
+<li>
+<p>Start the new MQ queue manager.<br>
+In the image above, <code>QM1</code> is associated with the IBM WebSphere MQ
+broker.<br>
+<code>$ strmqm QM1</code></p>
+</li>
+<li>
+<p>Start the MQ listener:<br>
+<code>$ runmqlsr -t tcp -m QM1 -p 1414 &amp;</code></p>
+</li>
+<li>
+<p>Modify the default JMSAdmin console configuration as follows:</p>
+</li>
+<li>
+<p>Edit the JMSAdmin script in the <code>/opt/mqm/java/bin</code> directory to
+change the JVM to a location of a valid JVM your system.</p>
+</li>
+<li>
+<p>Set the relevant environment variable required for JMSAdmin by
+sourcing the <code>setjmsenv</code> script located in the <code>/opt/mqm/java/bin</code>
+directory.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ cd /opt/mqm/java/bin
+$ source setjmsenv</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>/opt/mqm</code> is the location of the WebSphere MQ installation.
+3.  Change the JMSAdmin.config file to indicate the Initial Context
+Factory you will be using by setting the following name-value pairs and
+commenting out the rest:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">INITIAL_CONTEXT_FACTORY=com.sun.jndi.fscontext.RefFSContextFactory
+    PROVIDER_URL=file:/opt/tmp</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create WebSphere MQ queues using the runmqsc console and
+MQJMS_PSQ.mqsc script.<br>
+<code>$ runmqsc QM1 &lt; MQJMS_PSQ.mqsc</code></p>
+</li>
+<li>
+<p>Create user defined physical queue for your application using
+runmqsc console and an appropriate physical queue name. An example of
+how this could be done is shown below.<br>
+In the image above, <code>ORANGE.LOCAL.QUEUE</code> is associated with <code>QM1</code>.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>     $ runmqsc QM1
+             &gt; DEFINE QLOCAL(ORANGE.LOCAL.QUEUE)
+             &gt; end</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Start the WebSphere MQ Broker:<br>
+<code>$ strmqbrk -m QM1</code></p>
+</li>
+<li>
+<p>In the WebSphere MQ JMSAdmin console, use the following commands to
+create the connection factories, XA connection factories, and
+destinations for your application, as shown in the following sample,
+which lists each of the various JMS administered objects.<br>
+In the image above, <code>QCF</code> (for <code>QM1</code>) and <code>TQueue</code> (associated with
+<code>ORANGE.LOCAL.QUEUE</code>) are defined in the <code>FileSystem Naming Context</code>.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./JMSAdmin
+
+   InitCtx&gt;def qcf&lt;JNDI name to be given to the Queue Connection Factory&gt;
+     hostname&lt;IBM MQ server hostname&gt; port(1414) channel(SYSTEM.DEF.SVRCONN)
+     transport(CLIENT) qmanager&lt;name of queue manager defined&gt;
+
+     For example:
+     def qcf(QCF) hostname(localhost) port(1414) channel(SYSTEM.DEF.SVRCONN)
+      transport(CLIENT) qmanager(QM1)
+
+   InitCtx%def xaqcf&lt;JNDI name to be given to the XA Queue Connection Factory&gt;
+     hostname&lt;IBM MQ server hostname&gt; port(1414) channel(SYSTEM.DEF.SVRCONN)
+     transport(CLIENT) qmanager&lt;name of queue manager defined&gt;
+
+     For example:
+     def xaqcf(XAQCF) hostname(localhost) port(1414) channel(SYSTEM.DEF.SVRCONN)
+     transport(CLIENT) qmanager(QM1)
+
+   InitCtx%def q&lt;JNDI Name to be given to the Queue&gt; queue&lt;physical queue name&gt;
+     qmanager(name of queue manager defined )
+
+     For example: def q(TQueue) queue(ORANGE.LOCAL.QUEUE) qmanager(QM1)
+
+   InitCtx%def tcf&lt;JNDI Name to be given to the Topic Connection Factory&gt;
+     qmanager(name of queue manager defined )
+
+     For example: def tcf(TCF) qmanager(QM1)
+
+   InitCtx%def xatcf&lt;JNDI Name to be given to the  XA Topic Connection Factory&gt;
+     qmanager(name of queue manager defined )
+
+     For example: def xatcf(XATCF) qmanager(QM1)
+
+   InitCtx%def t&lt;JNDI Name to be given to the Topic&gt; topic&lt;sample topic name&gt;
+
+     For example: def t(TTopic) topic(topic)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gksni"></a><a id="GSADG00684"></a><a id="create-a-resource-adapter-configuration-for-genericjmsra-to-work-with-websphere-mq"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_create_a_resource_adapter_configuration_for_genericjmsra_to_work_with_websphere_mq">Create a Resource Adapter Configuration for GenericJMSRA to Work With WebSphere MQ</h5>
+<div class="paragraph">
+<p>Before deploying GenericJMSRA, you need to create a resource adapter
+configuration in GlassFish Server. You can do this using either the
+Administration Console or the <code>asadmin</code> command. Use the following
+<code>asadmin</code> command to create a resource adapter configuration for
+<code>genericra</code> to configure it to work with WebSphere MQ.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">                     asadmin&gt; create-resource-adapter-config
+                       --user &lt;adminname&gt; --password &lt;admin password&gt;
+                       --property SupportsXA=true:ProviderIntegrationMode
+                       =jndi:UserName=mqm:Password=###:RMPolicy
+                       =OnePerPhysicalConnection:JndiProperties
+                       =java.naming.factory.url.pkgs\\
+                       =com.ibm.mq.jms.naming,java.naming.factory.initial\\
+                       =com.sun.jndi.fscontext.RefFSContextFactory,java.naming.provider.url\\
+                       =file\\:\\/\\/opt\\/tmp:LogLevel=finest genericra</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When using <code>asadmin</code> you need to escape each <code>=</code> and any <code>:</code> characters
+by prepending a backward slash <code>\</code>. The escape sequence is not necessary
+if the configuration is performed through the Administration Console.
+Also , ensure that the provider URL is configured correctly depending on
+the platform. For example, on Windows systems it should be
+<code>file:/C:/opt/tmp</code> and on UNIX—based systems it is <code>file://opt/tmp</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This creates a resource adapter configuration with the name <code>genericra</code>,
+and Oracle recommends not changing the default name. The resource
+adapter configuration is configured with the properties specified using
+the <code>--properties</code> argument; multiple properties are configured as a
+colon-separated list of name-value pairs that are entered as a single
+line.</p>
+</div>
+<div class="paragraph">
+<p>In this example, the following properties are configured:</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The tables in this section describe the GenericJMSRA properties that are
+relevant only when integrating with WebSphere MQ. For a complete list of
+properties, see the comprehensive table in <a href="#gbtvu">GenericJMSRA
+Configuration Properties</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.9999%;">
+<col style="width: 43%;">
+<col style="width: 28.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property Name</th>
+<th class="tableblock halign-left valign-top">Required Value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SupportsXA</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the supports distributed transactions
+attribute to <code>true</code>. The level of transactional support the adapter
+provides&#8201;&#8212;&#8201;none, local, or XA&#8201;&#8212;&#8201;depends on the capabilities of the
+Enterprise Information System (EIS) being adapted. If an adapter
+supports XA transactions and this attribute is XA, the application can
+use distributed transactions to coordinate the EIS resource with JDBC
+and JMS resources.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProviderIntegrationMode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jndi</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specifies that connection factories
+and destinations in GlassFish&#8217;s JNDI store are configured to refer to
+connection factories and destinations in WebSphere MQ&#8217;s JNDI store.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JndiProperties</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">JndiProperties=
+java.naming.factory.url.pkgs\\
+=com.ibm.mq.jms.naming,java.naming.
+factory.initial\\=com.sun.jndi.fscontext.
+RefFSContextFactory,java.naming.
+provider.url\\
+=file\\:\\/\\/opt\\/tmp:
+LogLevel=finest genericra</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JNDI properties for connecting to WebSphere MQ&#8217;s JNDI, specified as
+comma-separated list of name=value pairs without spaces.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UserName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Name of the WebSphere MQ user</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>User name to connect to WebSphere MQ.</p>
+</div>
+<div class="paragraph">
+<p>The user name can be overridden in <code>ActivationSpec</code> and
+<code>ManagedConnection</code>. If no user name is specified anonymous connections
+will be used, if permitted.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Password for the WebSphere MQ user</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Password to connect to WebSphere MQ.</p>
+</div>
+<div class="paragraph">
+<p>The password can be overridden in <code>ActivationSpec</code> and
+<code>ManagedConnection</code>.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RMIPolicy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OnePerPhysicalConnection</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Some XAResource implementations, such as WebSphere MQ, rely on a
+Resource Manager per Physical Connection, and this causes issues when
+there is inbound and outbound communication to the same queue manager in
+a single transaction (for example, when an MDB sends a response to a
+destination).</p>
+</div>
+<div class="paragraph">
+<p>When RMPolicy is set to <code>OnePerPhysicalConnection</code>, the XAResource
+wrapper implementation&#8217;s <code>isSameRM</code> in GenericJMSRA would check if both
+the XAResources use the same physical connection, before delegating to
+the wrapped objects. Therefore, ensure that this attribute is set to
+<code>OnePerPhysicalConnection</code> if the application uses XA.</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LogLevel</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Desired log level of JDK logger</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to specify the
+level of logging.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>You must use the values for <code>SupportsXA</code>, <code>RMPolicy</code> and
+<code>ProviderIntegrationMode</code> as the required values that are used in this
+table.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gksnh"></a><a id="GSADG00685"></a><a id="deploy-the-genericjmsra-archive"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_deploy_the_genericjmsra_archive">Deploy the GenericJMSRA Archive</h5>
+<div class="paragraph">
+<p>For instructions on downloading and deploying GenericJMSRA, see
+<a href="#gkkxz">Deploy the GenericJMSRA Resource Archive</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkson"></a><a id="GSADG00686"></a><a id="create-the-connection-factories-and-administered-objects-in-glassfish-server"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_create_the_connection_factories_and_administered_objects_in_glassfish_server">Create the Connection Factories and Administered Objects in GlassFish Server</h5>
+<div class="paragraph">
+<p>In order to configure a JMS Connection Factory using GenericJMSRA, a
+Connector Connection Pool and resource needs to be created in GlassFish
+Server, as described in this section.</p>
+</div>
+<div class="paragraph">
+<p>Using the example WebSphere MQ configuration in <a href="#gksli">Configure
+the WebSphere MQ Administered Objects</a>, you will see <code>mypool</code> (pointing
+to <code>GenericJMSRA</code> and <code>QCF</code>) and <code>jms/MyQCF</code> (for <code>mypool</code>) created in
+GlassFish Server.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If you want configure connections and destination resources using the
+Administration Console, this is explained in the Administration Console
+online help. When using Administration Console, following the,
+instructions for creating a new Connector Connection Pool and Admin
+Object Resources, and not the instructions for creating a JMS Connection
+Pool and Destination Resources. For more information about using
+<code>asadmin</code> to create these resources, see <a href="connectors.html#gioce">To
+Create a Connector Connection Pool</a> and <a href="connectors.html#giogt">To
+Create a Connector Resource</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="gksro"></a><a id="GSADG00502"></a><a id="creating-connections-and-destinations"></a></p>
+</div>
+<div class="paragraph">
+<p>Creating Connections and Destinations</p>
+</div>
+<div class="paragraph">
+<p>In order to configure a JMS Connection Factory, using GenericJMSRA, a
+Connector Connection Pool and Destination resources need to be created
+in GlassFish Server using names that map to the corresponding connection
+and destination resources in WebSphere MQ. The connections and
+destination name in these steps map to the example WebSphere MQ
+configuration in <a href="#gksli">Configure the WebSphere MQ Administered
+Objects</a>.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create connection pools that point to the connection pools in
+WebSphere MQ.<br>
+The following <code>asadmin</code> command creates a Connection Pool called
+<code>mypool</code> and points to the <code>XAQCF</code> created in WebSphere MQ:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>     asadmin create-connector-connection-pool -- raname genericra connectiondefinition
+            javax.jms.QueueConnectionFactory --transactionsupport  XATransaction
+            --property ConnectionFactoryJndiName=QCF mypool</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following <code>asadmin</code> command creates a Connection Pool called
+<code>mypool2</code> and points to the <code>XATCF</code> created in WebSphere MQ:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">     asadmin create-connector-connection-pool
+            -- raname genericra connectiondefinition javax.jms.TopicConnectionFactory
+            --transactionsupport  XATransaction
+            --property ConnectionFactoryJndiName=XATCF mypool2</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the connector resources.<br>
+The following <code>asadmin</code> command creates a connector resource named
+<code>jms/MyQCF</code> and binds this resource to JNDI for applications to use:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>     asadmin create-connector-resource --poolname mypool jms/MyQCF</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following <code>asadmin</code> command creates a connector resource named
+<code>jms/MyTCF</code> and binds this resource to JNDI for applications to use:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">     asadmin create-connector-resource --poolname mypool2 jms/MyTCF</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the JMS destination resources as administered objects.<br>
+In the image above, <code>jms/MyQueue</code> (pointing to <code>GenericJMSRA</code> and
+<code>TQueue</code>) is created in GlassFish Server.<br>
+The following <code>asadmin</code> command creates a <code>javax.jms.Queue</code> administered
+object and binds it to the GlassFish Server JNDI tree at <code>jms/MyQueue</code>
+and points to the <code>jms/TQueue</code> created in WebSphere MQ.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>     asadmin create-admin-object --raname genericra --restype javax.jms.Queue
+            --property DestinationJndiName=TQueue jms/MyQueue</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following <code>asadmin</code> command creates a <code>javax.jms.Topic</code> administered
+object and binds it to the GlassFish Server JNDI tree at <code>jms/MyTopic</code>
+and points to the <code>jms/TTopic</code> created in WebSphere MQ.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">     asadmin create-admin-object --raname genericra --restype javax.jms.Topic
+            --property DestinationJndiName=TTopic jms/MyTopic</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="gktmn"></a><a id="GSADG00687"></a><a id="configuring-an-mdb-to-receive-messages-from-websphere-mq"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_configuring_an_mdb_to_receive_messages_from_websphere_mq">Configuring an MDB to Receive Messages from WebSphere MQ</h5>
+<div class="paragraph">
+<p>The administered object names in the sample deployment descriptor below
+map to the example WebSphere MQ configuration in <a href="#gksli">Configure
+the WebSphere MQ Administered Objects</a>. The deployment descriptors need
+to take into account the resource adapter and the connection resources
+that have been created. A sample <code>sun-ejb-jar.xml</code> for a Message Driven
+Bean that listens to a destination called <code>TQueue</code> in WebSphere MQ, and
+publishes back reply messages to a destination resource named
+<code>jms/replyQueue</code> in GlassFish Server, as shown below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">       &lt;sun-ejb-jar&gt;
+         &lt;enterprise-beans&gt;
+         &lt;unique-id.1&lt;/unique-id&gt;
+         &lt;ejb&gt;
+            &lt;ejb-name&gt;SimpleMessageEJB&lt;/ejb-name&gt;
+            &lt;jndi-name&gt;jms/SampleQueue&lt;/jndi-name&gt;
+             &lt;!-- QCF used to publish reply messages --&gt;
+            &lt;resource-ref&gt;
+               &lt;res-ref-name&gt;jms/MyQueueConnectionFactory&lt;/res-ref-name&gt;
+               &lt;jndi-name&gt;jms/MyQCF&lt;/jndi-name&gt;
+               &lt;default-resource-principal&gt;
+                  &lt;name&gt;mqm&lt;/name&gt;
+                  &lt;password&gt;mqm&lt;/password&gt;
+               &lt;/default-resource-principal&gt;
+            &lt;/resource-ref&gt;
+            &lt;!-- reply destination resource&gt; Creating of this replyQueue destination resource is not
+                 shown above, but the steps are similar to creating the  "jms/MyQueue" resource --&gt;
+            &lt;resource-env-ref&gt;
+               &lt;resource-env-ref-name&gt;jms/replyQueue&lt;/resource-env-ref-name&gt;
+               &lt;jndi-name&gt;jms/replyQueue&lt;/jndi-name&gt;
+            &lt;/resource-env-ref&gt;
+
+            &lt;!-- Activation related RA specific configuration for this MDB --&gt;
+            &lt;mdb-resource-adapter&gt;
+            &lt;!-- resource-adapter-mid points to the Generic Resource Adapter for JMS --&gt;
+            &lt;resource-adapter-mid&gt;genericra&lt;/resource-adapter-mid&gt;
+            &lt;activation-config&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;DestinationType&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;javax&gt;jms&gt;Queue&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;ConnectionFactoryJndiName&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;QCF&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;DestinationJndiName&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;TQueue&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;MaxPoolSize&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;32&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;RedeliveryAttempts&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;0&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;ReconnectAttempts&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;4&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;ReconnectInterval&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;10&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;RedeliveryInterval&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;1&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+               &lt;activation-config-property&gt;
+                  &lt;activation-config-property-name&gt;SendBadMessagesToDMD&lt;/activation-config-property-name&gt;
+                  &lt;activation-config-property-value&gt;false&lt;/activation-config-property-value&gt;
+               &lt;/activation-config-property&gt;
+            &lt;/activation-config&gt;
+          &lt;/mdb-resource-adapter&gt;
+          &lt;/ejb&gt;
+          &lt;/enterprise-beans&gt;
+       &lt;/sun-ejb-jar&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The business logic encoded in Message Driven Bean could then lookup the
+configured <code>QueueConnectionFactory/Destination</code> resource to create a
+connection as shown below.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">             Context context = null;
+             ConnectionFactory connectionFactory = null;
+             logger&gt;info("In PublisherBean&gt;ejbCreate()");
+             try {
+                 context = new InitialContext();
+                 queue = (javax&gt;jms&gt;Queue) context&gt;lookup ("java:comp/env/jms/replyQueue");
+                 connectionFactory = (ConnectionFactory) context&gt;lookup("java:comp/env/jms/MyQueueConnectionFactory");
+                 connection = connectionFactory&gt;createConnection();
+             } catch (Throwable t) {
+                 logger&gt;severe("PublisherBean&gt;ejbCreate:" + "Exception: " +
+                 t&gt;toString());
+             }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="javamail.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="jndi.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

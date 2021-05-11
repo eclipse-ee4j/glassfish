@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Using the Java Message Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Using the Java Message Service</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="jndi.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="javamail.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00020"></a><a id="beaob"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="using-the-java-message-service">17 Using the Java Message Service</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter describes how to use the Java Message Service (JMS) API.
+The Oracle GlassFish Server has a fully integrated JMS provider: the
+Open Message Queue software.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>JMS resources are supported only in the full GlassFish Server, not in
+the Web Profile.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For information about the JMS, see
+"https://javaee.github.io/tutorial/partmessaging.html[Messaging]" in The
+Java EE 8 Tutorial.</p>
+</div>
+<div class="paragraph">
+<p>For detailed information about JMS concepts and JMS support in the
+GlassFish Server, see "<a href="../administration-guide/jms.html#GSADG00020">Administering the Java Message
+Service (JMS)</a>" in GlassFish Server Open Source Edition Administration
+Guide.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gkpcz">Using Application-Scoped JMS Resources</a></p>
+</li>
+<li>
+<p><a href="#beaop">Load-Balanced Message Inflow</a></p>
+</li>
+<li>
+<p><a href="#beaor">Authentication With <code>ConnectionFactory</code></a></p>
+</li>
+<li>
+<p><a href="#beaot">Delivering SOAP Messages Using the JMS API</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gkpcz"></a><a id="GSDVG00196"></a><a id="using-application-scoped-jms-resources"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_using_application_scoped_jms_resources">Using Application-Scoped JMS Resources</h3>
+<div class="paragraph">
+<p>You can define an application-scoped JMS or other resource for an
+enterprise application, web module, EJB module, connector module, or
+application client module by supplying a <code>glassfish-resources.xml</code>
+deployment descriptor file. For details, see
+"<a href="../application-deployment-guide/deploying-applications.html#GSDPG00075">Application-Scoped Resources</a>" in GlassFish Server
+Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaop"></a><a id="GSDVG00197"></a><a id="load-balanced-message-inflow"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_load_balanced_message_inflow">Load-Balanced Message Inflow</h3>
+<div class="paragraph">
+<p>You can configure <code>ActivationSpec</code> properties of the <code>jmsra</code> resource
+adapter in the <code>glassfish-ejb-jar.xml</code> file for a message-driven bean
+using <code>activation-config-property</code> elements. Whenever a message-driven
+bean (<code>EndPointFactory</code>) is deployed, the connector runtime engine finds
+these properties and configures them accordingly in the resource
+adapter. See "<a href="../application-deployment-guide/dd-elements.html#GSDPG00086">activation-config-property</a>" in GlassFish
+Server Open Source Edition Application Deployment Guide.</p>
+</div>
+<div class="paragraph">
+<p>The GlassFish Server transparently enables messages to be delivered in
+random fashion to message-driven beans having same <code>ClientID</code>. The
+<code>ClientID</code> is required for durable subscribers.</p>
+</div>
+<div class="paragraph">
+<p>For nondurable subscribers in which the <code>ClientID</code> is not configured,
+all instances of a specific message-driven bean that subscribe to same
+topic are considered equal. When a message-driven bean is deployed to
+multiple instances of the GlassFish Server, only one of the
+message-driven beans receives the message. If multiple distinct
+message-driven beans subscribe to same topic, one instance of each
+message-driven bean receives a copy of the message.</p>
+</div>
+<div class="paragraph">
+<p>To support multiple consumers using the same queue, set the
+<code>maxNumActiveConsumers</code> property of the physical destination to a large
+value. If this property is set, the Oracle Message Queue software allows
+multiple message-driven beans to consume messages from same queue. The
+message is delivered randomly to the message-driven beans. If
+<code>maxNumActiveConsumers</code> is set to <code>-1</code>, there is no limit to the number
+of consumers.</p>
+</div>
+<div class="paragraph">
+<p>To ensure that local delivery is preferred, set <code>addresslist-behavior</code>
+to <code>priority</code>. This setting specifies that the first broker in the
+<code>AddressList</code> is selected first. This first broker is the local
+colocated Message Queue instance. If this broker is unavailable,
+connection attempts are made to brokers in the order in which they are
+listed in the <code>AddressList</code>. This setting is the default for GlassFish
+Server instances that belong to a cluster.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaor"></a><a id="GSDVG00198"></a><a id="authentication-with-connectionfactory"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_authentication_with_code_connectionfactory_code">Authentication With <code>ConnectionFactory</code></h3>
+<div class="paragraph">
+<p>If your web, EJB, or client module has <code>res-auth</code> set to <code>Container</code>,
+but you use the <code>ConnectionFactory.createConnection("user","password")</code>
+method to get a connection, the GlassFish Server searches the container
+for authentication information before using the supplied user and
+password. Version 7 of the GlassFish Server threw an exception in this
+situation.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaot"></a><a id="GSDVG00199"></a><a id="delivering-soap-messages-using-the-jms-api"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_delivering_soap_messages_using_the_jms_api">Delivering SOAP Messages Using the JMS API</h3>
+<div class="paragraph">
+<p>Web service clients use the Simple Object Access Protocol (SOAP) to
+communicate with web services. SOAP uses a combination of XML-based data
+structuring and Hyper Text Transfer Protocol (HTTP) to define a
+standardized way of invoking methods in objects distributed in diverse
+operating environments across the Internet.</p>
+</div>
+<div class="paragraph">
+<p>For more information about SOAP, see the Apache SOAP web site at
+<code>http://xml.apache.org/soap/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can take advantage of the JMS provider&#8217;s reliable messaging when
+delivering SOAP messages. You can convert a SOAP message into a JMS
+message, send the JMS message, then convert the JMS message back into a
+SOAP message.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beaou">To Send SOAP Messages Using the JMS API</a></p>
+</li>
+<li>
+<p><a href="#beaov">To Receive SOAP Messages Using the JMS API</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beaou"></a><a id="GSDVG00077"></a><a id="to-send-soap-messages-using-the-jms-api"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_send_soap_messages_using_the_jms_api">To Send SOAP Messages Using the JMS API</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Import the <code>MessageTransformer</code> library.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import com.sun.messaging.xml.MessageTransformer;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the utility whose methods you use to convert SOAP messages to
+JMS messages and the reverse. You can then send a JMS message containing
+a SOAP payload as if it were a normal JMS message.
+2.  Initialize the <code>TopicConnectionFactory</code>, <code>TopicConnection</code>,
+<code>TopicSession</code>, and publisher.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">tcf = new TopicConnectionFactory();
+tc = tcf.createTopicConnection();
+session = tc.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
+topic = session.createTopic(topicName);
+publisher = session.createPublisher(topic);</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Construct a SOAP message using the SOAP with Attachments API for
+Java (SAAJ).<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/*construct a default soap MessageFactory */
+MessageFactory mf = MessageFactory.newInstance();
+* Create a SOAP message object.*/
+SOAPMessage soapMessage = mf.createMessage();
+/** Get SOAP part.*/
+SOAPPart soapPart = soapMessage.getSOAPPart();
+/* Get SOAP envelope. */
+SOAPEnvelope soapEnvelope = soapPart.getEnvelope();
+/* Get SOAP body.*/
+SOAPBody soapBody = soapEnvelope.getBody();
+/* Create a name object. with name space */
+/* http://www.sun.com/imq. */
+Name name = soapEnvelope.createName("HelloWorld", "hw",
+ "http://www.sun.com/imq");
+* Add child element with the above name. */
+SOAPElement element = soapBody.addChildElement(name)
+/* Add another child element.*/
+element.addTextNode( "Welcome to GlassFish Web Services." );
+/* Create an atachment with activation API.*/
+URL url = new URL ("http://java.sun.com/webservices/");
+DataHandler dh = new DataHandler (url);
+AttachmentPart ap = soapMessage.createAttachmentPart(dh);
+/*set content type/ID. */
+ap.setContentType("text/html");
+ap.setContentId("cid-001");
+/** add the attachment to the SOAP message.*/
+soapMessage.addAttachmentPart(ap);
+soapMessage.saveChanges();</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Convert the SOAP message to a JMS message by calling the
+<code>MessageTransformer.SOAPMessageintoJMSMessage()</code> method.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Message m = MessageTransformer.SOAPMessageIntoJMSMessage (soapMessage,
+session );</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Publish the JMS message.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>publisher.publish(m);</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Close the JMS connection.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>tc.close();</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a id="beaov"></a><a id="GSDVG00078"></a><a id="to-receive-soap-messages-using-the-jms-api"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_to_receive_soap_messages_using_the_jms_api">To Receive SOAP Messages Using the JMS API</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Import the <code>MessageTransformer</code> library.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>import com.sun.messaging.xml.MessageTransformer;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the utility whose methods you use to convert SOAP messages to
+JMS messages and the reverse. The JMS message containing the SOAP
+payload is received as if it were a normal JMS message.
+2.  Initialize the <code>TopicConnectionFactory</code>, <code>TopicConnection</code>,
+<code>TopicSession</code>, <code>TopicSubscriber</code>, and Topic.<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">messageFactory = MessageFactory.newInstance();
+tcf = new com.sun.messaging.TopicConnectionFactory();
+tc = tcf.createTopicConnection();
+session = tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+topic = session.createTopic(topicName);
+subscriber = session.createSubscriber(topic);
+subscriber.setMessageListener(this);
+tc.start();</code></pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>OnMessage</code> method to receive the message. Use the
+<code>SOAPMessageFromJMSMessage</code> method to convert the JMS message to a SOAP
+message.<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public void onMessage (Message message) {
+SOAPMessage soapMessage =
+ MessageTransformer.SOAPMessageFromJMSMessage( message,
+ messageFactory ); }</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Retrieve the content of the SOAP message.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="jndi.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="javamail.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

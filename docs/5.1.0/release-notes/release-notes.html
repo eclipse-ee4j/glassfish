@@ -1,0 +1,1720 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Eclipse GlassFish Server 5.1 Release Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Eclipse GlassFish Server 5.1 Release Notes</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="preface.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSRLN00001"></a><a id="abppa"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="glassfish-server-open-source-edition-5.1-release-notes">1 Eclipse GlassFish Server 5.1 Release Notes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GlassFish Server provides a lightweight, modular server for the
+development of Java Platform Enterprise Edition (Java EE) 8
+applications. It is the Reference Implementation for Java EE. It
+delivers a highly productive platform for developing with the latest
+Java EE technologies.</p>
+</div>
+<div class="paragraph">
+<p>For any issue or information on Eclipse GlassFish Server,
+see the <a href="https://javaee.github.io/glassfish/">GlassFish Server Community</a>
+(<code>https://javaee.github.io/glassfish/</code>).</p>
+</div>
+<div class="paragraph">
+<p>These Release Notes provide late-breaking information about GlassFish
+Server 5.1 software and documentation. These Release Notes include
+summaries of supported hardware, operating environments, and JDK and
+JDBC/RDBMS requirements. Also included are a summary of new product
+features in the 5.1 release, and descriptions and workarounds for known
+issues and limitations.</p>
+</div>
+<div class="paragraph">
+<p>Refer to this document prior to installing, configuring, or using
+GlassFish Server 5.1 software. Consult this document periodically to
+view the most up-to-date product information.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ghmvk">"Revision History"</a></p>
+</li>
+<li>
+<p><a href="#glcmf">"What&#8217;s New in the GlassFish Server 5.1 Release?"</a></p>
+</li>
+<li>
+<p><a href="#abpaj">"Hardware and Software Requirements"</a></p>
+</li>
+<li>
+<p><a href="#glcmm">"Known Issues in GlassFish Server 5.1"</a></p>
+</li>
+<li>
+<p><a href="#ggqok">"Restrictions and Deprecated Functionality"</a></p>
+</li>
+<li>
+<p><a href="#BABDACBE">"Documentation Errata"</a></p>
+</li>
+<li>
+<p><a href="#giraq">"Features Available Only in the Full Platform"</a></p>
+</li>
+<li>
+<p><a href="#gipkz">"Java EE Standards Support"</a></p>
+</li>
+<li>
+<p><a href="#ghmtl">"Java EE SDK"</a></p>
+</li>
+<li>
+<p><a href="#abpha">"How to Report Problems and Provide Feedback"</a></p>
+</li>
+<li>
+<p><a href="#abphc">"Additional Resources"</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghmvk"></a><a id="GSRLN00128"></a><a id="revision-history"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_revision_history">Revision History</h3>
+<div class="paragraph">
+<p>This section lists the revision history for these Release Notes.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref2"></a><a id="gabzd"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 1-1 Revision History</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 84%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Date</th>
+<th class="tableblock halign-left valign-top">Description of Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">September 2017</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse GlassFish Server 5.1.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="glcmf"></a><a id="GSRLN00129"></a><a id="whats-new-in-the-glassfish-server-5.1-release"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_s_new_in_the_glassfish_server_5_1_release">What&#8217;s New in the GlassFish Server 5.1 Release?</h3>
+<div class="paragraph">
+<p>GlassFish is the Reference Implementation for Java EE. Java EE 8
+introduces the JSON Binding API (JSON-B) for mapping between JSON text
+and Java objects, building on the JSON Processing API (JSON-P). Servlet
+has been enhanced with the addition of support for the new HTTP/2
+protocol. JAX-RS adds support for server-sent events and, building on
+concurrency facilities added in Java SE 8, a reactive client API. The
+new Java EE Security API provides enhanced support for authentication
+and authorization in web modules, and also introduces APIs for access to
+identity stores. The Bean Validation facility is updated to reflect
+enhancements made in Java SE 8 and to extend the range of validated
+objects.</p>
+</div>
+<div class="paragraph">
+<p>GlassFish Server 5.1 includes the following new and updated Java EE
+standards.</p>
+</div>
+<div class="paragraph">
+<p>New Features</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java EE Security API 1.0</p>
+</li>
+<li>
+<p>Java API for JSON Binding (JSON-B) 1.0</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Updated</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java API for JSON Processing (JSON-P) 1.1</p>
+</li>
+<li>
+<p>Java API for WebSocket 1.1</p>
+</li>
+<li>
+<p>Java API for RESTful Web Services (JAX-RS) 2.1</p>
+</li>
+<li>
+<p>Contexts and Dependency Injection for Java EE (CDI) 2.0</p>
+</li>
+<li>
+<p>Java Persistence API (JPA) 2.2</p>
+</li>
+<li>
+<p>Common annotations 1.3</p>
+</li>
+<li>
+<p>JavaServer Faces (JSF) 2.3</p>
+</li>
+<li>
+<p>Java Servlet 5.1</p>
+</li>
+<li>
+<p>Bean Validation (BV) 2.0</p>
+</li>
+<li>
+<p>Interceptors 1.2</p>
+</li>
+<li>
+<p>JavaMail 1.6</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a complete list of the Java EE technologies included in GlassFish
+Server 5.1, see <a href="#gipkz">Java EE Standards Support</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The main thrust of the Eclipse GlassFish Server 5.1 release
+is to provide an application server for developers to explore and begin
+exploiting the new and updated technologies in the Java EE 8 platform.
+Thus, the following features of GlassFish Server were not a focus of
+this release:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Clusters and centralized management of standalone instances</p>
+</li>
+<li>
+<p>High availability features</p>
+</li>
+<li>
+<p>Upgrade</p>
+</li>
+<li>
+<p>Embedded Server</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These features are included in the release, but they may not function
+properly with some of the new features added in support of the Java EE 8
+platform.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="abpaj"></a><a id="GSRLN00131"></a><a id="hardware-and-software-requirements"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hardware_and_software_requirements">Hardware and Software Requirements</h3>
+<div class="paragraph">
+<p>This section lists the requirements that must be met before installing
+Eclipse GlassFish Server Release 5.1 software.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#abpak">Required JDK Versions</a></p>
+</li>
+<li>
+<p><a href="#ggppy">Required Disk Space</a></p>
+</li>
+<li>
+<p><a href="#ggpoq">Required Free Ports</a></p>
+</li>
+<li>
+<p><a href="#gkxlg">Message Queue Broker Requirements</a></p>
+</li>
+<li>
+<p><a href="#gfgps">Paths and Environment Settings for the JDK Software</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abpak"></a><a id="GSRLN00246"></a><a id="required-jdk-versions"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_required_jdk_versions">Required JDK Versions</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish Server Release 5.1 requires Oracle JDK 8
+Update 144 or later.</p>
+</div>
+<div class="paragraph">
+<p>Also be sure to see <a href="#gfgps">Paths and Environment Settings for the
+JDK Software</a> for important JDK configuration instructions.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>It is recommended that any machine that is hosting a GlassFish Server
+DAS or server instance have a minimum of 1 GB RAM.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="ggppy"></a><a id="GSRLN00248"></a><a id="required-disk-space"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_required_disk_space">Required Disk Space</h4>
+<div class="paragraph">
+<p>The download sizes for GlassFish Server 5.1 vary depending on the
+package you choose. The following are the approximate sizes of the ZIP
+packages for the Full and Web profiles:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full <code>*.zip</code>: 114 MB (136 MB unzipped)</p>
+</li>
+<li>
+<p>Web <code>*.zip</code>: 64.9 MB (82.9 MB unzipped)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The installation sizes will vary depending on your configuration, but
+the approximate amount of disk space used by GlassFish Server 5.1 is as
+follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full: 138 MB</p>
+</li>
+<li>
+<p>Web: 84.4 MB</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggpoq"></a><a id="GSRLN00249"></a><a id="required-free-ports"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_required_free_ports">Required Free Ports</h4>
+<div class="paragraph">
+<p>You must have sixteen unused ports available for the ports GlassFish
+Server uses. The installation program automatically detects ports that
+are in use and suggests currently unused ports for the default settings.
+The initial default port assignments are listed in the following table.
+If these default port numbers are in use, the installation program
+assigns a randomly selected port number from the dynamic port range. The
+selected port number might not be the next available port number.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref3"></a><a id="ggpmu"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 1-2 Default Port Assignments for GlassFish Server 5.1</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 52%;">
+<col style="width: 48%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Port Number</th>
+<th class="tableblock halign-left valign-top">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4848</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Administration Console</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8080</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8081</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8686</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pure JMX clients</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3700</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3820</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3920</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IIOP/SSL with mutual authentication</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSH port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9009</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java debugger</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7676</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JMS provider</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated from the operating system&#8217;s dynamic port range</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message
+Queue TCP port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated from the operating system&#8217;s dynamic port range</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Message
+Queue Admin port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9090</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS TCP start port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9200</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS TCP end port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-generated between GMS TCP start and end ports</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS listener port</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto generated between 2048 and 49151</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GMS multicast port</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In some situations, such as when multiple domains are running on a
+single host, port conflicts can arise in the auto-generated ports used
+by Message Queue and the GMS. To avoid these conflicts, you can
+configure the JMS host and the GMS to use specific ports.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref4"></a><a id="to-configure-specific-ports-for-a-jms-host"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_specific_ports_for_a_jms_host">To Configure Specific Ports for a JMS Host</h5>
+<div class="paragraph">
+<p>When you create a JMS Host, GlassFish server automatically selects ports
+for the JMS provider (called the portmapper port in Message Queue
+terminology), the Message Queue TCP port and the Message Queue admin
+port.</p>
+</div>
+<div class="paragraph">
+<p>To provide specific values for these ports, use the <code>--mqport</code> and
+<code>--property</code> options when creating the JMS host:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-jms-host --mqhost hostName --mqport portNumber \
+--mquser adminUser --mqpassword adminPassword --target glassfishTarget \
+--property imq\\.jms\\.tcp\\.port=tcpPort:imq\\.admin\\.tcp\\.port=adminPort \
+jms-host-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--mqport</code> <code>portNumber</code></dt>
+<dd>
+<p>This option specifies the JMS provider port number.</p>
+</dd>
+<dt class="hdlist1"><code>--property imq\\.jms\\.tcp\\.port=``tcpPort`</code>:imq\\.admin\\.tcp\\.port=``adminPort`</dt>
+<dd>
+<p>The <code>imq.jms.tcp.port</code> and <code>imq.admin.tcp.port</code> properties specify the
+TCP port and the admin port numbers. The double backslashes (<code>\\</code>) are
+used in the <code>--properties</code> option to escape the dots in the property
+names.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><a id="sthref5"></a><a id="to-configure-specific-gms-ports-for-a-cluster"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_to_configure_specific_gms_ports_for_a_cluster">To Configure Specific GMS Ports for a Cluster</h5>
+<div class="paragraph">
+<p>When you create a cluster, GlassFish server automatically selects a port
+for GMS multicast that does not conflict with the GMS multicast port of
+any other cluster in the domain. Additionally, when you start a cluster,
+the GMS automatically selects an available port in a specific range for
+its TCP listener.</p>
+</div>
+<div class="paragraph">
+<p>If two or more domains are running on the same host, configure the
+clusters in the domains to ensure that no GMS port conflicts can arise
+among the clusters. To avoid possible port conflicts, use the
+<code>--multicast</code> and <code>--properties</code> options when creating the cluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin&gt; create-cluster --multicastport multicast-port \
+--properties GMS_TCPSTARTPORT=start-port:GMS_TCPENDPORT=end-port \
+cluster-name</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>--multicastport</code> <code>multicast-port</code></dt>
+<dd>
+<p>This option specifies the port number for the GMS to use for UDP
+multicast.</p>
+</dd>
+<dt class="hdlist1"><code>--properties GMS_TCPSTARTPORT=``start-port`</code>:GMS_TCPENDPORT=``end-port`</dt>
+<dd>
+<p>The <code>GMS_TCPSTARTPORT</code> and <code>GMS_TCPENDPORT</code> properties specify the
+range of port numbers the GMS is to use when selecting an available
+port for its TCP listener.<br></p>
+</dd>
+</dl>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Note:</p>
+</div>
+<div class="paragraph">
+<p>Though you can create a cluster, there is no support for
+configuration, as this has not been tested.</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkxlg"></a><a id="GSRLN00250"></a><a id="message-queue-broker-requirements"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_message_queue_broker_requirements">Message Queue Broker Requirements</h4>
+<div class="paragraph">
+<p>GlassFish Server 5.1 is now bundled with Message Queue (MQ) Broker
+5.1.1. Refer to the
+<a href="https://javaee.github.io/glassfish/doc/5.1/mq-release-notes.pdf"><code>Open Message Queue Release Notes</code></a>
+for complete information about MQ Broker requirements.</p>
+</div>
+<div class="paragraph">
+<p><a id="gfgps"></a><a id="GSRLN00252"></a><a id="paths-and-environment-settings-for-the-jdk-software"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_paths_and_environment_settings_for_the_jdk_software">Paths and Environment Settings for the JDK Software</h4>
+<div class="paragraph">
+<p>Ensure that your JDK configuration settings on all local and remote
+GlassFish Server hosts adhere to the guidelines listed below. Failure to
+adhere to these guidelines can cause various problems that may be
+difficult to trace.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gldjj">Use the JDK Binaries</a></p>
+</li>
+<li>
+<p><a href="#gldgl">Set the <code>JAVA_HOME</code> Environment Variable</a></p>
+</li>
+<li>
+<p><a href="#gldho">Set Other Environment Variables As Necessary</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="gldjj"></a><a id="GSRLN00155"></a><a id="use-the-jdk-binaries"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_use_the_jdk_binaries">Use the JDK Binaries</h5>
+<div class="paragraph">
+<p>The following binary files that are used with GlassFish Server must come
+from the JDK software, not the Java Runtime Environment (JRE) software:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java</code></p>
+</li>
+<li>
+<p><code>keytool</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To meet this requirement, ensure that the <code>bin</code> directory for the JDK
+software precedes the <code>bin</code> directory for the JRE software in your path.</p>
+</div>
+<div class="paragraph">
+<p><a id="gldgl"></a><a id="GSRLN00156"></a><a id="set-the-java_home-environment-variable"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_set_the_code_java_home_code_environment_variable">Set the <code>JAVA_HOME</code> Environment Variable</h5>
+<div class="paragraph">
+<p>Before performing any GlassFish Server installation or configuration
+procedures, set the <code>JAVA_HOME</code> environment variable on the GlassFish
+Server host machine to point to the correct Java version. Also be sure
+to add the <code>JAVA_HOME/bin</code> directory to the <code>PATH</code> variable for your
+environment. The <code>JAVA_HOME</code> variable must be set on all local and
+remote GlassFish Server hosts.</p>
+</div>
+<div class="paragraph">
+<p><a id="gldho"></a><a id="GSRLN00157"></a><a id="set-other-environment-variables-as-necessary"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_set_other_environment_variables_as_necessary">Set Other Environment Variables As Necessary</h5>
+<div class="paragraph">
+<p>All remote <code>asadmin</code> subcommands require the correct version of Java to
+be available on the affected remote machine. For example, when creating
+a cluster or server instance on a remote machine, the remote machine
+uses its local default Java installation, not the Java installation that
+is on the DAS. Errors will therefore occur if the remote machine uses
+the wrong Java version.</p>
+</div>
+<div class="paragraph">
+<p>Depending on the remote subcommand, the errors may not occur when the
+subcommand is executed, but may occur later, when interacting with a
+configuration or resource created or modified by the subcommand. For
+example, when creating a clustered server instance on a remote machine,
+the error may only first appear when you attempt to deploy an
+application on that server instance.</p>
+</div>
+<div class="paragraph">
+<p>This issue is more likely to be encountered when GlassFish Server is
+installed on the remote server by means of a ZIP file package as you do
+not have the option to specifically choose your Java version while
+unzipping a ZIP file.</p>
+</div>
+<div class="paragraph">
+<p>Depending on what shell is invoked via SSH on the remote host, the
+<code>JAVA_HOME</code> and <code>PATH</code> environment variables may need to be explicitly
+set in <code>.bashrc</code>, <code>.cshrc</code>, or some other shell configuration file. This
+configuration file may differ from the one that is used when you log in
+to the machine, such as <code>.profile</code>.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can specifically set the Java path with the <code>AS_JAVA</code>
+property in the in the as-install`/config/asenv.conf` file.</p>
+</div>
+<div class="paragraph">
+<p><a id="glcmm"></a><a id="GSRLN00253"></a><a id="known-issues-in-glassfish-server-5.1"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_known_issues_in_glassfish_server_5_1">Known Issues in GlassFish Server 5.1</h3>
+<div class="paragraph">
+<p>This section describes known issues and any available workarounds for
+Eclipse GlassFish Server 5.1 software.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#CHDIBHHF">JAXB and JAX-WS no longer part of Java EE platform</a></p>
+</li>
+<li>
+<p><a href="#CHDIBEAJ">Resource validation property is enabled in the JVM
+option for deployment</a></p>
+</li>
+<li>
+<p><a href="#CHDBJDGF">Update Tool and pkg Command no longer part of GlassFish
+Server</a></p>
+</li>
+<li>
+<p><a href="#CHDJGJHD">Java DB has been replaced by Apache Derby</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="CHDIBHHF"></a><a id="jaxb-and-jax-ws-no-longer-part-of-java-ee-platform"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_jaxb_and_jax_ws_no_longer_part_of_java_ee_platform">JAXB and JAX-WS no longer part of Java EE platform</h4>
+<div class="paragraph">
+<p><a id="sthref6"></a><a id="description"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description">Description</h5>
+<div class="paragraph">
+<p>JAXB and JAX-WS are no longer part of Java EE platform, instead these
+technologies are shipped with Java SE since version 6. However, the jars
+are packaged in GlassFish. The APIs have been updated with newer
+versions (i.e 2.3.0) using the endorsed standard mechanism of JDK.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>These updated jars are present only in the full profile of GlassFish and
+not part of web profile.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="sthref7"></a><a id="workaround"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_workaround">Workaround</h5>
+<div class="paragraph">
+<p>None</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDIBEAJ"></a><a id="resource-validation-property-is-enabled-in-the-jvm-option-for-deployment"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resource_validation_property_is_enabled_in_the_jvm_option_for_deployment">Resource validation property is enabled in the JVM option for deployment</h4>
+<div class="paragraph">
+<p><a id="sthref8"></a><a id="description-1"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_2">Description</h5>
+<div class="paragraph">
+<p>A new JVM option for deployment - deployment.resource.validation is
+introduced in GlassFish Server 5.1. This property is set to True by
+default so that each resource is validated during deployment time. This
+ensures that all resources are created beforehand. This property is
+applicable for administration server as well as instances when clusters
+are involved.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>However, for deployment of applications containing embedded resource
+adapter, a connector resource is created after deployment. For the
+deployment of such applications to succeed, the server(s) must be
+started with this property set to false. For more information on JVM
+deployment options see
+<a href="https://javaee.github.io/glassfish/doc/5.1/administration-guide.pdf#G11.998994"><code>Administering JVM Options.</code></a></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="sthref9"></a><a id="workaround-1"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_workaround_2">Workaround</h5>
+<div class="paragraph">
+<p>In case you do not want the resource validation to take place during the
+deployment, you can set this property value to False.</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDBJDGF"></a><a id="update-tool-and-pkg-command-no-longer-part-of-glassfish-server"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_update_tool_and_pkg_command_no_longer_part_of_glassfish_server">Update Tool and pkg Command no longer part of GlassFish Server</h4>
+<div class="paragraph">
+<p><a id="sthref10"></a><a id="description-2"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_3">Description</h5>
+<div class="paragraph">
+<p>In previous releases, you could update your GlassFish Server software
+using the pkg command and the Update tool. Since the recent release of
+GlassFish server does not require the use of these features, they have
+been removed from the GlassFish server installation.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref11"></a><a id="workaround-2"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_workaround_3">Workaround</h5>
+<div class="paragraph">
+<p>No workaround.</p>
+</div>
+<div class="paragraph">
+<p><a id="CHDJGJHD"></a><a id="java-db-has-been-replaced-by-apache-derby"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_java_db_has_been_replaced_by_apache_derby">Java DB has been replaced by Apache Derby</h4>
+<div class="paragraph">
+<p><a id="sthref12"></a><a id="description-3"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_description_4">Description</h5>
+<div class="paragraph">
+<p>In the previous releases, Java DB was used as the database for GlassFish
+servers. With the release of GlassFish Server 5.1, Apache Derby
+10.13.1.1 has replaced Java DB as the database for GlassFish servers.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref13"></a><a id="workaround-3"></a></p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_workaround_4">Workaround</h5>
+<div class="paragraph">
+<p>No workaround.</p>
+</div>
+<div class="paragraph">
+<p><a id="ggqok"></a><a id="GSRLN00133"></a><a id="restrictions-and-deprecated-functionality"></a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_restrictions_and_deprecated_functionality">Restrictions and Deprecated Functionality</h3>
+<div class="paragraph">
+<p>This section describes restrictions and deprecated functionality in
+Oracle GlassFish Server 5.1.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#ggqoc"><code>asadmin</code> Subcommands</a></p>
+</li>
+<li>
+<p><a href="#abmbf">Deprecated, Unsupported, and Obsolete Options</a></p>
+</li>
+<li>
+<p><a href="#gkueg">Applications That Use Apache Derby</a></p>
+</li>
+<li>
+<p><a href="#ghpen">No Support for Client VM on Windows AMD64</a></p>
+</li>
+<li>
+<p><a href="#gkwbd">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ggqoc"></a><a id="GSRLN00258"></a><a id="asadmin-subcommands"></a></p>
+</div>
+<div class="sect3">
+<h4 id="__code_asadmin_code_subcommands"><code>asadmin</code> Subcommands</h4>
+<div class="paragraph">
+<p>In GlassFish Server 5.1, it is recommended that utility options of the
+<code>asadmin</code> command precede the subcommand. Utility options are options
+that control the behavior of the <code>asadmin</code> utility, as distinguished
+from subcommand options. Use of the following options after the
+subcommand is deprecated.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>--host</code></p>
+</li>
+<li>
+<p><code>--port</code></p>
+</li>
+<li>
+<p><code>--user</code></p>
+</li>
+<li>
+<p><code>--passwordfile</code></p>
+</li>
+<li>
+<p><code>--terse</code></p>
+</li>
+<li>
+<p><code>--secure</code></p>
+</li>
+<li>
+<p><code>--echo</code></p>
+</li>
+<li>
+<p><code>--interactive</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abmbf"></a><a id="GSRLN00259"></a><a id="deprecated-unsupported-and-obsolete-options"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deprecated_unsupported_and_obsolete_options">Deprecated, Unsupported, and Obsolete Options</h4>
+<div class="paragraph">
+<p>Options in <a href="#gaeki">Table 1-3</a> are deprecated or no longer supported,
+or are obsolete and are ignored.</p>
+</div>
+<div class="paragraph">
+<p><a id="sthref14"></a><a id="gaeki"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 1-3 Deprecated, Unsupported, and Obsolete Options for <code>asadmin</code>
+and Subcommands</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33%;">
+<col style="width: 67%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Affected Subcommands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--acceptlang</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--acls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--adminpassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all relevant subcommands. Use
+<code>--passwordfile</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autoapplyenabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-http-lb</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autohadb</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--autohadboverride</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>start-cluster</code> subcommand and
+the <code>stop-cluster</code> subcommand</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--blockingenabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-http-listener</code>
+subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--configfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--defaultobj</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--defaultvs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecated for the <code>create-http-listener</code> subcommand.
+Use <code>--default-virtual-server</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--description</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>restore-domain</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--devicesize</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haadminpassword</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haadminpasswordfile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haagentport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--haproperty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--hosts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>create-cluster</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--ignoreDescriptorItem</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Replaced by the all lowercase option
+<code>--ignoredescriptoritem</code> in the <code>set-web-context-param</code> subcommand and
+the <code>set-web-env-entry</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--mime</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-virtual-server</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all remote subcommands. Use
+<code>--passwordfile</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--path</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for the <code>create-domain</code> subcommand. Use
+<code>--domaindir</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--portbase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete only for the <code>create-cluster</code> subcommand. This
+option is still valid in other subcommands such as <code>create-domain</code>,
+<code>create-instance</code>, and <code>create-local-instance</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--resourcetype</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unsupported for all relevant subcommands. Use
+<code>--restype</code> instead.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--retrievefile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>export-http-lb-config</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--setenv</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Obsolete for the <code>start-instance</code> subcommand.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--target</code></p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>Obsolete only for the following subcommands:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>create-connector-connection-pool</code></p>
+</li>
+<li>
+<p><code>create-resource-adapter-config</code></p>
+</li>
+<li>
+<p><code>delete-connector-connection-pool</code></p>
+</li>
+<li>
+<p><code>delete-connector-security-map</code></p>
+</li>
+<li>
+<p><code>delete-jdbc-connection-pool</code></p>
+</li>
+<li>
+<p><code>delete-resource-ref</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Replaced by an operand in the <code>list-custom-resources</code> subcommand and the
+<code>list-jndi-entries</code> subcommand:</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><a id="gkueg"></a><a id="GSRLN00260"></a><a id="applications-that-use-apache-derby"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_applications_that_use_apache_derby">Applications That Use Apache Derby</h4>
+<div class="paragraph">
+<p>The directory location of Apache Derby in GlassFish Server 5.1 has
+changed from its location in previous installations. Suppose that you
+have deployed applications that use Apache Derby databases in your
+previous server installation, and you upgrade your existing installation
+to GlassFish Server 5.1. If you run the <code>asadmin start-database</code> command
+and successfully start Apache Derby, you could run into problems while
+trying to run applications that were deployed on your previous server
+installation.</p>
+</div>
+<div class="paragraph">
+<p>To solve this problem, you can copy the <code>databases</code> directory from your
+previous installation to as-install`/databases`. Make sure the database
+is not running when you do this.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can perform these steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the <code>asadmin start-database</code> command with the <code>--dbhome</code> option
+pointing to the <code>databases</code> directory in the older version of Apache
+Derby. For example:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>asadmin start-database --dbhome c:\glassfish\databases</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>After upgrade, start GlassFish Server 5.1.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="ghpen"></a><a id="GSRLN00261"></a><a id="no-support-for-client-vm-on-windows-amd64"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_no_support_for_client_vm_on_windows_amd64">No Support for Client VM on Windows AMD64</h4>
+<div class="paragraph">
+<p>By default, the GlassFish Server DAS uses the Client VM to achieve best
+startup and deployment performance. If you are using Windows AMD64, edit
+the <code>domain.xml</code> file to remove the line
+<code>&lt;jvm-options&gt;-client&lt;jvm-options&gt;</code>. In this case, JVM ergonomics
+chooses the appropriate kind of VM for the given platform. Note that
+server instances use the Server VM by default.</p>
+</div>
+<div class="paragraph">
+<p>For more information about platform support, see
+<a href="http://www.oracle.com/technetwork/java/ergo5-140223.html">Ergonomics in
+the 5.1 Java Virtual Machine</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkwbd"></a><a id="GSRLN00262"></a><a id="metro-reliable-messaging-in-inorder-delivery-mode"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_metro_reliable_messaging_in_code_inorder_code_delivery_mode">Metro Reliable Messaging in <code>InOrder</code> Delivery Mode</h4>
+<div class="paragraph">
+<p>The Metro Reliable Messaging in <code>InOrder</code> Delivery mode has not been
+tested for high availability in GlassFish Server 5.1. The feature may
+work, but it has not been formally tested and is therefore not a
+supported feature.</p>
+</div>
+<div class="paragraph">
+<p><a id="glgiy"></a><a id="GSRLN00263"></a><a id="no-support-for-kerberos-on-aix"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_no_support_for_kerberos_on_aix">No Support for Kerberos on AIX</h4>
+<div class="paragraph">
+<p>GlassFish Server 5.1 does not support Kerberos on the AIX platform.</p>
+</div>
+<div class="paragraph">
+<p>For the complete report about this issue, see
+<a href="https://github.com/javaee/glassfish/issues/16728"><code>Issue-16728</code></a></p>
+</div>
+<div class="paragraph">
+<p><a id="BABDACBE"></a><a id="documentation-errata"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_documentation_errata">Documentation Errata</h3>
+<div class="paragraph">
+<p>This section describes documentation errata.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#BABIDEHD">Upgrading to Oracle GlassFish Server Is Not Necessary</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="BABIDEHD"></a><a id="upgrading-to-oracle-glassfish-server-is-not-necessary"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_upgrading_to_oracle_glassfish_server_is_not_necessary">Upgrading to Oracle GlassFish Server Is Not Necessary</h4>
+<div class="paragraph">
+<p>The Eclipse GlassFish Server Administration Guide discusses
+upgrading Eclipse GlassFish Server to Oracle GlassFish
+Server. GlassFish Server 4.x is only an open source release, so this
+upgrade is not necessary.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Upgrading may not work for GlassFish Server 5.1</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="giraq"></a><a id="GSRLN00135"></a><a id="features-available-only-in-the-full-platform"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_features_available_only_in_the_full_platform">Features Available Only in the Full Platform</h3>
+<div class="paragraph">
+<p>The following features of GlassFish Server 5.1 are available only in the
+Full Platform:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EJB features that make up the full EJB 3.2 API, such as remote EJB
+components, message-driven beans, web service EJB endpoints, and the EJB
+Timer Service<br>
+The EJB 3.2 Lite specification is supported in the Web Profile. This
+specification allows enterprise beans within web applications and
+includes support for local stateless session beans, stateful session
+beans, and singleton session beans.</p>
+</li>
+<li>
+<p>Application Client Container</p>
+</li>
+<li>
+<p>JMS resources</p>
+</li>
+<li>
+<p>Web services<br>
+In the Web Profile, a servlet or EJB component cannot be a web service
+endpoint. The <code>sun-web.xml</code> and <code>sun-ejb-jar.xml</code> elements that are
+related to web services are ignored.</p>
+</li>
+<li>
+<p>Message security</p>
+</li>
+<li>
+<p>JavaMail resources</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Connector modules that use only outbound communication features and
+work-management that does not involve inbound communication features are
+supported in the Web Profile. Other connector features are supported
+only in the Eclipse GlassFish Server 5.1 full platform.</p>
+</div>
+<div class="paragraph">
+<p><a id="gipkz"></a><a id="GSRLN00136"></a><a id="java-ee-standards-support"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_ee_standards_support">Java EE Standards Support</h3>
+<div class="paragraph">
+<p><a href="#gjxcp">Table 1-4</a> lists the Java EE standards implemented in
+GlassFish Server 5.1. The table also indicates the distributions in
+which the implementation of a standard is available.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>X indicates that the implementation is available in the distribution.</p>
+</li>
+<li>
+<p>- indicates that the implementation is not available in the
+distribution.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="sthref15"></a><a id="gjxcp"></a></p>
+</div>
+<div class="paragraph">
+<p>Table 1-4 Java EE Standards Implementations in GlassFish Server 5.1</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 48%;">
+<col style="width: 24%;">
+<col style="width: 16%;">
+<col style="width: 12%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Java EE Standard</th>
+<th class="tableblock halign-left valign-top">Java Specification Request (JSR)</th>
+<th class="tableblock halign-left valign-top">GlassFish Server
+5.1 Full Platform</th>
+<th class="tableblock halign-left valign-top">GlassFish Server 5.1 Web Profile</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/javaee-spec/javadocs/">Java Platform,
+Enterprise Edition 8</a> <code>(https://javaee.github.io/javaee-spec/javadocs/)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=366">JSR 366</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java EE Security API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=375">JSR 375</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Batch Applications for the Java Platform 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=352">JSR 352</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Concurrency Utilities for Java EE 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=236">JSR 236</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java API for JSON Processing 1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=374">JSR 374</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java API for JSON Binding 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=367">JSR
+367</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java API for WebSocket 1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=356">JSR
+356</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/servlet-spec/<code class="Java Servlet Technology">(https://javaee.github.io/servlet-spec/)/</code>" class="bare">https://javaee.github.io/servlet-spec/<code class="Java Servlet Technology">(https://javaee.github.io/servlet-spec/)/</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=369">JSR 369</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JavaServer Pages 2.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=245">JSR 245</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expression Language 3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=341">JSR 341</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Debugging Support for Other Languages 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=45">JSR 45</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Tag Library for JavaServer Pages 1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=52">JSR 52</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://www.oracle.com/technetwork/java/javaee/javaserverfaces-139869.html">JavaServer
+Faces 2.3</a><code>(https://github.com/javaserverfaces/)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=372">JSR 372</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common Annotations for the Java Platform 1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=250">JSR 250</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/jta-spec">Java Transaction API 1.2</a>
+<code>(https://github.com/javaee/jta-spec)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=907">JSR 907</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/jpa-spec">Java Persistence API 2.2</a>
+<code>(https://github.com/javaee/jpa-spec)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=338">JSR 338</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Managed Beans 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=316">JSR 316</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interceptors 1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=318">JSR 318</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dependency Injection for Java 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=330">JSR 330</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/ejb-spec">Enterprise JavaBeans 3.2 Lite</a>
+<code>(https://github.com/javaee/ejb-spec)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=345">JSR 345</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/ejb-spec">Enterprise JavaBeans 3.2 Full
+API</a><code>(https://github.com/javaee/ejb-spec)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=345">JSR 345</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Contexts and Dependency Injection for Java EE 2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=365">JSR 365</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java API for RESTful Web Service (JAX-RS) 2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=370">JSR 370</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bean Validation 2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=349">JSR 380</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/connector-spec">Java EE Connector Architecture
+1.7</a><code>(https://github.com/javaee/connector-spec)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=322">JSR 322</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X<sup>*</sup></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/metro-jax-ws">Java API for XML-Based Web
+Services (JAX-WS) 2.3</a><code>(https://github.com/javaee/metro-jax-ws)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=224">JSR 224</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/jaxb-v2">Java Architecture for XML Binding
+(JAXB) 2.2</a><code>(https://github.com/javaee/jaxb-v2)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=222">JSR 222</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implementing Enterprise Web Services 1.4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=109">JSR 109</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Web Services Metadata for the Java Platform 2.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=181">JSR 181</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/jms-spec/<code class="Java Message Service">(https://javaee.github.io/jms-spec/)</code>" class="bare">https://javaee.github.io/jms-spec/<code class="Java Message Service">(https://javaee.github.io/jms-spec/)</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=343">JSR 343</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/javamail/<code class="JavaMail
+1.6">(https://javaee.github.io/javamail/)</code>" class="bare">https://javaee.github.io/javamail/<code class="JavaMail
+1.6">(https://javaee.github.io/javamail/)</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=919">JSR 919</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://javaee.github.io/jacc-spec/<code class="Java Authorization Contract for">(https://javaee.github.io/jacc-spec/)</code>" class="bare">https://javaee.github.io/jacc-spec/<code class="Java Authorization Contract for">(https://javaee.github.io/jacc-spec/)</code></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=115">JSR 115</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Authentication Service Provider Interface for Containers 1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=196">JSR 196</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java EE Application Deployment 1.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=88">JSR 88</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">J2EE Management 1.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=77">JSR 77</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/javaee/jax-rpc-ri">Java API for XML-Based Remote
+Procedure Calls (JAX-RPC) 1.1</a><code>(https://github.com/javaee/jax-rpc-ri/)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=101">JSR 101</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java API for XML-Based Registries (JAXR) 1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://jcp.org/en/jsr/detail?id=93">JSR 93</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><sup>*</sup> Standalone Connector 1.7 Container only.</p>
+</div>
+<div class="paragraph">
+<p>Building on these standards, GlassFish Server 5.1 provides a number of
+extensions, including the following:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ajax (asynchronous JavaScript and XML): Retrieves and displays new
+data for a portion of a web page without affecting the rest of the page.</p>
+</li>
+<li>
+<p>Metro: A web services stack that implements Java Architecture for XML
+Binding (JAXB) and Java APIs for XML Web Services 2.3 (JAX-WS 2.3).</p>
+</li>
+<li>
+<p>Grizzly: A framework for building scalable and robust servers using
+New I/O (NIO) APIs, which make scaling to thousands of users possible.
+The ability to embed components that support HTTP, Bayeux Protocol, Java
+Servlet API, and Comet is provided.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="ghmtl"></a><a id="GSRLN00137"></a><a id="java-ee-sdk"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_ee_sdk">Java EE SDK</h3>
+<div class="paragraph">
+<p>GlassFish Server 5.1 is available as part of the Java EE 8 SDK. The
+following versions of the Java EE 8 SDK are available:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java EE 8 SDK: This version includes GlassFish Server 5.1. This
+version is designed for developers who require the full set of Java EE
+APIs for enterprise application development.</p>
+</li>
+<li>
+<p>Java EE 8 Web Profile SDK: This version includes GlassFish Server 5.1
+Web Profile. This version contains web technologies that are subset of
+the Full Platform and is designed for developers who do not require the
+full set of Java EE APIs.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>More information about the Java EE SDK distributions are available at
+<a href="http://www.oracle.com/technetwork/java/javaee/documentation/index.html">Java
+EE Reference at a Glance</a>
+(<code>http://www.oracle.com/technetwork/java/javaee/documentation/index.html</code>).
+Java EE SDK distributions are available from the
+<a href="http://www.oracle.com/technetwork/java/javaee/downloads/index.html">Java
+EE SDK Downloads page</a>
+(<code>http://www.oracle.com/technetwork/java/javaee/downloads/index.html</code>).</p>
+</div>
+<div class="paragraph">
+<p><a id="abpha"></a><a id="GSRLN00138"></a><a id="how-to-report-problems-and-provide-feedback"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_to_report_problems_and_provide_feedback">How to Report Problems and Provide Feedback</h3>
+<div class="paragraph">
+<p>If you have problems with GlassFish Server 5.1, provide feedback through
+one of the following mechanisms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://javaee.groups.io/g/glassfish">GlassFish Server forum</a>
+(<code>https://javaee.groups.io/g/glassfish</code>) — A variety of GlassFish Server
+community for various interests and feedback</p>
+</li>
+<li>
+<p><a href="https://github.com/javaee/glassfish/issues">GlassFish Issue track</a>er
+(<code>https://github.com/javaee/glassfish/issues</code>) — GlassFish Server
+project dashboards and issue tracking database</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="abphc"></a><a id="GSRLN00139"></a><a id="additional-resources"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_additional_resources">Additional Resources</h3>
+<div class="paragraph">
+<p>Useful information can be found at the following locations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://javaee.github.io/glassfish/">GlassFish Server Community</a>
+(<code>https://javaee.github.io/glassfish/</code>)</p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/technetwork/index.html">Oracle Developer
+Information</a> (<code>http://www.oracle.com/technetwork/index.html</code>)</p>
+</li>
+<li>
+<p><a href="http://www.oracle.com/technetwork/indexes/documentation/index.html">Oracle
+product documentation</a>
+(<code>http://www.oracle.com/technetwork/indexes/documentation/index.html</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="preface.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

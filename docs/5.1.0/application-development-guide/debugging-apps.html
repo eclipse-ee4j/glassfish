@@ -1,0 +1,744 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Debugging Applications</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://use.fontawesome.com/96c4d89611.js"></script>
+  </head>
+  <body>
+<table id="doc-title" cellspacing="0" cellpadding="0">
+  <tr>
+  <td align="left" valign="top">
+  <b>Debugging Applications</b><br />
+      <p class="beta">DRAFT</p>
+  </td>
+  </tr>
+</table>
+<hr />
+
+<table width="90%" id="top-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>
+		<td align="left">
+		<a href="class-loaders.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-apps-and-app-comps.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class=" vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a id="GSDVG00004"></a><a id="beafc"></a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="debugging-applications">3 Debugging Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This chapter gives guidelines for debugging applications in the Oracle
+GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#beafd">Enabling Debugging</a></p>
+</li>
+<li>
+<p><a href="#beafe">JPDA Options</a></p>
+</li>
+<li>
+<p><a href="#beaff">Generating a Stack Trace for Debugging</a></p>
+</li>
+<li>
+<p><a href="#gekvq">Application Client Debugging</a></p>
+</li>
+<li>
+<p><a href="#beafk">Open Message Queue Debugging</a></p>
+</li>
+<li>
+<p><a href="#beafl">Enabling Verbose Mode</a></p>
+</li>
+<li>
+<p><a href="#gkpdk">Class Loader Debugging</a></p>
+</li>
+<li>
+<p><a href="#beafm">GlassFish Server Logging</a></p>
+</li>
+<li>
+<p><a href="#beafn">Profiling Tools</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><a id="beafd"></a><a id="GSDVG00101"></a><a id="enabling-debugging"></a></p>
+</div>
+<div class="sect2">
+<h3 id="_enabling_debugging">Enabling Debugging</h3>
+<div class="paragraph">
+<p>When you enable debugging, you enable both local and remote debugging.
+To start the server in debug mode, use the <code>--debug</code> option as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin start-domain --debug [domain-name]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then attach to the server from the Java Debugger (<code>jdb</code>) at its
+default Java Platform Debugger Architecture (JPDA) port, which is 9009.
+For example, for UNIX systems:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">jdb -attach 9009</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Windows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">jdb -connect com.sun.jdi.SocketAttach:port=9009</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more information about the <code>jdb</code> debugger, see the following links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Java Platform Debugger Architecture - The Java Debugger:
+<code>http://java.sun.com/javase/technologies/core/toolsapis/jpda/</code></p>
+</li>
+<li>
+<p>Java Platform Debugger Architecture - Connecting with JDB:
+<code>http://java.sun.com/javase/technologies/core/toolsapis/jpda/</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>GlassFish Server debugging is based on the JPDA. For more information,
+see <a href="#beafe">JPDA Options</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can attach to the GlassFish Server using any JPDA compliant
+debugger, including that of <a href="http://www.netbeans.org">NetBeans</a>
+(<code>http://www.netbeans.org</code>), Java Studio Enterprise, JBuilder, Eclipse,
+and so on.</p>
+</div>
+<div class="paragraph">
+<p>You can enable debugging even when the GlassFish Server is started
+without the <code>--debug</code> option. This is useful if you start the GlassFish
+Server from the Windows Start Menu, or if you want to make sure that
+debugging is always turned on.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvyit"></a><a id="GSDVG00049"></a><a id="to-set-the-server-to-automatically-start-up-in-debug-mode"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_to_set_the_server_to_automatically_start_up_in_debug_mode">To Set the Server to Automatically Start Up in Debug Mode</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the Administration Console. Select the JVM Settings component
+under the relevant configuration.</p>
+</li>
+<li>
+<p>Check the Debug Enabled box.</p>
+</li>
+<li>
+<p>To specify a different port (from 9009, the default) to use when
+attaching the JVM software to a debugger, specify <code>address=</code> port-number
+in the Debug Options field.</p>
+</li>
+<li>
+<p>To add JPDA options, add any desired JPDA debugging options in Debug
+Options. See <a href="#beafe">JPDA Options</a>.</p>
+</li>
+</ol>
+</div>
+<div id="GSDVG532" class="paragraph">
+<p>See Also</p>
+</div>
+<div class="paragraph">
+<p>For details, click the Help button in the Administration Console from
+the JVM Settings page.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafe"></a><a id="GSDVG00102"></a><a id="jpda-options"></a></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jpda_options">JPDA Options</h3>
+<div class="paragraph">
+<p>The default JPDA options in GlassFish Server are as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">-Xdebug -agentlib:transport=dt_socket,server=y,suspend=n,address=9009</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Windows, you can change <code>dt_socket</code> to <code>dt_shmem</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you substitute <code>suspend=y</code>, the JVM software starts in suspended mode
+and stays suspended until a debugger attaches to it. This is helpful if
+you want to start debugging as soon as the JVM software starts.</p>
+</div>
+<div class="paragraph">
+<p>To specify a different port (from 9009, the default) to use when
+attaching the JVM software to a debugger, specify `address=`port-number.</p>
+</div>
+<div class="paragraph">
+<p>You can include additional options. A list of JPDA debugging options is
+available at
+<code>http://java.sun.com/javase/technologies/core/toolsapis/jpda/</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beaff"></a><a id="GSDVG00103"></a><a id="generating-a-stack-trace-for-debugging"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generating_a_stack_trace_for_debugging">Generating a Stack Trace for Debugging</h3>
+<div class="paragraph">
+<p>To generate a Java stack trace for debugging, use the
+<code>asadmin generate-jvm-report --type=thread</code> command. The stack trace
+goes to the domain-dir`/logs/server.log` file and also appears on the
+command prompt screen. For more information about the
+<code>asadmin generate-jvm-report</code> command, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish
+Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gekvq"></a><a id="GSDVG00104"></a><a id="application-client-debugging"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_application_client_debugging">Application Client Debugging</h3>
+<div class="paragraph">
+<p>When the <code>appclient</code> script executes the <code>java</code> command to run the
+Application Client Container (ACC), which in turn runs the client, it
+includes on the command line the value of the <code>VMARGS</code> environment
+variable. You can set this variable to any suitable value. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">VMARGS=-agentlib:transport=dt_socket,server=y,suspend=y,address=8118</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For debugging an application client, you should set suspend to <code>y</code> so
+you can connect the debugger to the client before any code has actually
+executed. Otherwise, the client may start running and execute past the
+point you want to examine.</p>
+</div>
+<div class="paragraph">
+<p>You should use different ports for the server and client if you are
+debugging both concurrently. For details about setting the port, see
+<a href="#beafe">JPDA Options</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can also include JVM options in the <code>appclient</code> script directly. For
+information about the <code>appclient</code> script, see the <a href="../reference-manual/toc.html#GSRFM">GlassFish
+Server Open Source Edition Reference Manual</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Application Client Container is supported only in the full GlassFish
+Server, not in the Web Profile. See
+<a href="java-clients.html#beakt">Developing Java Clients</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beafk"></a><a id="GSDVG00105"></a><a id="open-message-queue-debugging"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_open_message_queue_debugging">Open Message Queue Debugging</h3>
+<div class="paragraph">
+<p>Open Message Queue has a broker logger, which can be useful for
+debugging Java Message Service (JMS) applications, including
+message-driven bean applications. You can adjust the logger&#8217;s verbosity,
+and you can send the logger output to the broker&#8217;s console using the
+broker&#8217;s <code>-tty</code> option. For more information, see the <a href="../../openmq/mq-admin-guide/toc.html#GMADG">Open
+Message Queue Administration Guide</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>JMS resources are supported only in the full GlassFish Server, not in
+the Web Profile. See <a href="jms.html#beaob">Using the Java Message Service</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><a id="beafl"></a><a id="GSDVG00106"></a><a id="enabling-verbose-mode"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_enabling_verbose_mode">Enabling Verbose Mode</h3>
+<div class="paragraph">
+<p>To have the server logs and messages printed to <code>System.out</code> on your
+command prompt screen, you can start the server in verbose mode. This
+makes it easy to do simple debugging using print statements, without
+having to view the <code>server.log</code> file every time.</p>
+</div>
+<div class="paragraph">
+<p>To start the server in verbose mode, use the <code>--verbose</code> option as
+follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin start-domain --verbose [domain-name]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the server is in verbose mode, messages are logged to the console
+or terminal window in addition to the log file. In addition, pressing
+Ctrl-C stops the server and pressing Ctrl-\ (on UNIX platforms) or
+Ctrl-Break (on Windows platforms) prints a thread dump. On UNIX
+platforms, you can also print a thread dump using the <code>jstack</code> command
+(see
+<code>http://docs.oracle.com/javase/8/docs/technotes/tools/share/jstack.html</code>)
+or the command <code>kill -QUIT</code> process_id.</p>
+</div>
+<div class="paragraph">
+<p><a id="gkpdk"></a><a id="GSDVG00107"></a><a id="class-loader-debugging"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_class_loader_debugging">Class Loader Debugging</h3>
+<div class="paragraph">
+<p>To generate class loading messages, use the following
+<code>asadmin create-jvm-options</code> command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -verbose\:class</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To send the JVM messages to a special JVM log file instead of <code>stdout</code>,
+use the following <code>asadmin create-jvm-options</code> commands:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">asadmin create-jvm-options -XX\:+LogVMOutput
+asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>These <code>-XX</code> options are specific to the OpenJDK (or Hotspot) JVM and do
+not work with the JRockit JVM.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>To send the GlassFish Server messages to the Administration Console
+instead of <code>stderr</code>, start the domain in verbose mode as described in
+<a href="#beafl">Enabling Verbose Mode</a>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafm"></a><a id="GSDVG00108"></a><a id="glassfish-server-logging"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_glassfish_server_logging">GlassFish Server Logging</h3>
+<div class="paragraph">
+<p>You can use the GlassFish Server&#8217;s log files to help debug your
+applications. Use the Administration Console. Select the Stand-Alone
+Instances component, select the instance from the table, then click the
+View Log Files button in the General Information page. Or select the
+Cluster component, select the cluster from the table, select the
+Instances tab, select the instance from the table, then click the View
+Log Files button in the General Information page.</p>
+</div>
+<div class="paragraph">
+<p>To change logging settings, select Logger Settings under the relevant
+configuration.</p>
+</div>
+<div class="paragraph">
+<p>For details about logging, click the Help button in the Administration
+Console.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafn"></a><a id="GSDVG00109"></a><a id="profiling-tools"></a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_profiling_tools">Profiling Tools</h3>
+<div class="paragraph">
+<p>You can use a profiler to perform remote profiling on the GlassFish
+Server to discover bottlenecks in server-side performance. This section
+describes how to configure profilers for use with GlassFish Server.</p>
+</div>
+<div class="paragraph">
+<p>The following topics are addressed here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gcicc">The NetBeans Profiler</a></p>
+</li>
+<li>
+<p><a href="#beafo">The HPROF Profiler</a></p>
+</li>
+<li>
+<p><a href="#beafr">The JProbe Profiler</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Information about comprehensive monitoring and management support in the
+Java 2 Platform, Standard Edition ( J2SE platform) is available at
+<code>http://docs.oracle.com/javase/8/docs/technotes/guides/management/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="gcicc"></a><a id="GSDVG00345"></a><a id="the-netbeans-profiler"></a></p>
+</div>
+<div class="sect3">
+<h4 id="_the_netbeans_profiler">The NetBeans Profiler</h4>
+<div class="paragraph">
+<p>For information on how to use the NetBeans profiler, see
+<code>http://profiler.netbeans.org/index.html</code>.</p>
+</div>
+<div class="paragraph">
+<p><a id="beafo"></a><a id="GSDVG00346"></a><a id="the-hprof-profiler"></a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_hprof_profiler">The HPROF Profiler</h4>
+<div class="paragraph">
+<p>The Heap and CPU Profiling Agent (HPROF) is a simple profiler agent
+shipped with the Java 2 SDK. It is a dynamically linked library that
+interacts with the Java Virtual Machine Profiler Interface (JVMPI) and
+writes out profiling information either to a file or to a socket in
+ASCII or binary format.</p>
+</div>
+<div class="paragraph">
+<p>HPROF can monitor CPU usage, heap allocation statistics, and contention
+profiles. In addition, it can also report complete heap dumps and states
+of all the monitors and threads in the Java virtual machine. For more
+details on the HPROF profiler, see the technical article at
+<code>http://java.sun.com/developer/technicalArticles/Programming/HPROF.html</code>.</p>
+</div>
+<div class="paragraph">
+<p>After HPROF is enabled using the following instructions, its libraries
+are loaded into the server process.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvylg"></a><a id="GSDVG00050"></a><a id="to-use-hprof-profiling-on-unix"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_use_hprof_profiling_on_unix">To Use HPROF Profiling on UNIX</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Use the Administration Console. Select the JVM Settings component
+under the relevant configuration. Then select the Profiler tab.</p>
+</li>
+<li>
+<p>Edit the following fields:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Profiler Name - <code>hprof</code></p>
+</li>
+<li>
+<p>Profiler Enabled - <code>true</code></p>
+</li>
+<li>
+<p>Classpath - (leave blank)</p>
+</li>
+<li>
+<p>Native Library Path - (leave blank)</p>
+</li>
+<li>
+<p>JVM Option - Select Add, type the HPROF JVM option in the Value field,
+then check its box. The syntax of the HPROF JVM option is as follows:<br></p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-Xrunhprof[:help]|[:param=value,param2=value2, ...]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is an example of params you can use:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">-Xrunhprof:file=log.txt,thread=y,depth=3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The file parameter determines where the stack dump is written.<br>
+Using help lists parameters that can be passed to HPROF. The output is
+as follows:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">Hprof usage: -Xrunhprof[:help]|[:&lt;option&gt;=&lt;value&gt;, ...]
+
+Option Name and Value   Description             Default
+---------------------   -----------             -------
+heap=dump|sites|all     heap profiling          all
+cpu=samples|old         CPU usage               off
+format=a|b              ascii or binary output  a
+file=&lt;file&gt;             write data to file      java.hprof
+                               (.txt for ascii)
+net=&lt;host&gt;:&lt;port&gt;       send data over a socket write to file
+depth=&lt;size&gt;            stack trace depth       4
+cutoff=&lt;value&gt;          output cutoff point     0.0001
+lineno=y|n              line number in traces?  y
+thread=y|n              thread in traces?       n
+doe=y|n                 dump on exit?           y</code></pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do not use help in the JVM Option field. This parameter prints text to
+the standard output and then exits.</p>
+</div>
+<div class="paragraph">
+<p>The help output refers to the parameters as options, but they are not
+the same thing as JVM options.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a id="hprofstp2"></a><br>
+Restart the GlassFish Server.<br>
+This writes an HPROF stack dump to the file you specified using the file
+HPROF parameter.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><a id="beafr"></a><a id="GSDVG00347"></a><a id="the-jprobe-profiler"></a></p>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_the_jprobe_profiler">The JProbe Profiler</h4>
+<div class="paragraph">
+<p>Information about JProbe from Sitraka is available at
+<code>http://www.quest.com/jprobe/</code>.</p>
+</div>
+<div class="paragraph">
+<p>After JProbe is installed using the following instructions, its
+libraries are loaded into the server process.</p>
+</div>
+<div class="paragraph">
+<p><a id="fvymj"></a><a id="GSDVG00051"></a><a id="to-enable-remote-profiling-with-jprobe"></a></p>
+</div>
+<div class="sect4">
+<h5 id="_to_enable_remote_profiling_with_jprobe">To Enable Remote Profiling With JProbe</h5>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Install JProbe 3.0.1.1.<br>
+For details, see the JProbe documentation.</p>
+</li>
+<li>
+<p>Configure GlassFish Server using the Administration Console:</p>
+</li>
+<li>
+<p>Select the JVM Settings component under the relevant configuration.
+Then select the Profiler tab.</p>
+</li>
+<li>
+<p>Edit the following fields before selecting Save and restarting the
+server:<br>
+Profiler Name - <code>jprobe</code><br>
+Profiler Enabled - <code>true</code><br>
+Classpath - (leave blank)<br>
+Native Library Path - JProbe-dir`/profiler`<br>
+JVM Option - For each of these options, select Add, type the option in
+the Value field, then check its box:<br></p>
+</li>
+</ol>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    -Xbootclasspath/p:JProbe-dir/profiler/jpagent.jar
+    -Xrunjprobeagent
+    -Xnoclassgc</pre>
+</div>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"></dt>
+</dl>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If any of the configuration options are missing or incorrect, the
+profiler might experience problems that affect the performance of the
+GlassFish Server.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When the server starts up with this configuration, you can attach the
+profiler.
+3.  Set the following environment variable:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-oac_no_warn" data-lang="oac_no_warn">JPROBE_ARGS_0=-jp_input=JPL-file-path</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See Step <a href="#jprbstp6">6</a> for instructions on how to create the JPL
+file.
+4.  Start the server instance.
+5.  Launch the <code>jpprofiler</code> and attach to Remote Session. The default
+port is <code>4444</code>.
+6.  <a id="jprbstp6"></a><br>
+Create the JPL file using the JProbe Launch Pad. Here are the required
+settings:
+1.  Select Server Side for the type of application.
+2.  On the Program tab, provide the following details:<br>
+Target Server - other-server<br>
+Server home Directory - as-install<br>
+Server class File - <code>com.sun.enterprise.server.J2EERunner</code><br>
+Working Directory - as-install<br>
+Classpath - as-install`/lib/appserv-rt.jar`<br>
+Source File Path - source-code-dir (in case you want to get the line
+level details)<br>
+Server class arguments - (optional)<br>
+Main Package - <code>com.sun.enterprise.server</code><br>
+You must also set VM, Attach, and Coverage tabs appropriately. For
+further details, see the JProbe documentation. After you have created
+the JPL file, use this an input to <code>JPROBE_ARGS_0</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<hr />
+
+<table width="90%" id="bottom-nav" cellspacing="0" cellpadding="0">
+	<colgroup>
+		<col width="12%"/>
+		<col width="12%"/>
+		<col width="*"/>
+	</colgroup>
+	<tr>		
+		<td align="left">
+		<a href="class-loaders.html">
+			<span class=" vector-font"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Previous</span>
+		</a>
+		</td>
+
+		<td align="left">
+		<a href="part-apps-and-app-comps.html">
+			<span class="vector-font"><i class="fa fa-arrow-circle-right vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Next</span>
+		</a>
+		</td>
+
+		<td align="right">
+		<a href="toc.html">
+			<span class="vector-font"><i class="fa fa-list vector-font" aria-hidden="true"></i></span>
+			<span style="position:relative;top:-2px;">Contents</span>
+		</a>
+		</td>
+	</tr>
+</table>
+
+<span id="copyright">
+        <img src="img/eclipse_foundation_logo_tiny.png" height="20px" alt="Eclipse Foundation Logo" align="top"/>&nbsp;            
+        <span >Copyright&nbsp;&copy;&nbsp;2019,&nbsp;Oracle&nbsp;and/or&nbsp;its&nbsp;affiliates.&nbsp;All&nbsp;rights&nbsp;reserved.</span>
+</span>
+
+<p align="center" class="beta">DRAFT</p>
+
+</body>
+</html>

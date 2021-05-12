@@ -59,8 +59,8 @@
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>javaee</artifactId>
-        <version>${project.version}</version>
-        <optional>true</optional>
+            <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

@@ -58,8 +58,8 @@
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>appserv-rt</artifactId>
-        <version>${project.version}</version>
-        <optional>true</optional>
+            <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

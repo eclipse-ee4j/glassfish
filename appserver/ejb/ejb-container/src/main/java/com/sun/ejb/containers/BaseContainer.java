@@ -236,18 +236,18 @@ public abstract class BaseContainer
     private static final int EJB_INTF_METHODS_LENGTH = 16;
     static final int EJBHome_remove_Handle      = 0;
     static final int EJBHome_remove_Pkey        = 1;
-    static final int EJBHome_getEJBMetaData        = 2;
+    static final int EJBHome_getEJBMetaData     = 2;
     static final int EJBHome_getHomeHandle      = 3;
     static final int EJBLocalHome_remove_Pkey   = 4;
     static final int EJBObject_getEJBHome       = 5;
-    protected static final int EJBObject_getPrimaryKey    = 6; //TODO - move related to entity-container
-    static final int EJBObject_remove            = 7;
+    protected static final int EJBObject_getPrimaryKey = 6; //TODO - move related to entity-container
+    static final int EJBObject_remove           = 7;
     static final int EJBObject_getHandle        = 8;
     static final int EJBObject_isIdentical      = 9;
     static final int EJBLocalObject_getEJBLocalHome = 10;
-    protected static final int EJBLocalObject_getPrimaryKey   = 11; //TODO - move related to entity-container
+    protected static final int EJBLocalObject_getPrimaryKey = 11; //TODO - move related to entity-container
     static final int EJBLocalObject_remove      = 12;
-    static final int EJBLocalObject_isIdentical    = 13;
+    static final int EJBLocalObject_isIdentical = 13;
     static final int EJBHome_create             = 14;
     static final int EJBLocalHome_create        = 15;
 
@@ -465,8 +465,7 @@ public abstract class BaseContainer
 
     protected boolean debugMonitorFlag = false;
 
-    private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(BaseContainer.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(BaseContainer.class);
 
     private ThreadLocal threadLocalContext = new ThreadLocal();
 
@@ -903,7 +902,7 @@ public abstract class BaseContainer
     }
 
     public String toString() {
-    return _debugDescription;
+        return _debugDescription;
     }
 
     public final void setStartedState() {
@@ -1730,12 +1729,12 @@ public abstract class BaseContainer
     }
 
     protected EJBContextImpl _constructEJBContextImpl(Object instance) {
-    // Overridden for any container that supports injection
-    throw new IllegalStateException();
+        // Overridden for any container that supports injection
+        throw new IllegalStateException();
     }
 
     protected Object _constructEJBInstance() throws Exception {
-    return ejbClass.newInstance();
+        return ejbClass.newInstance();
     }
 
     private void createEjbInterceptors(EJBContextImpl context,
@@ -1846,26 +1845,24 @@ public abstract class BaseContainer
         BeanContext bc = new BeanContext();
         final Thread currentThread = Thread.currentThread();
         bc.previousClassLoader = currentThread.getContextClassLoader();
-        if ( getClassLoader().equals(bc.previousClassLoader) == false ) {
+        if (getClassLoader().equals(bc.previousClassLoader) == false) {
+            if (System.getSecurityManager() == null) {
+                currentThread.setContextClassLoader(getClassLoader());
+            } else {
+                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
 
-        if (System.getSecurityManager() == null) {
-            currentThread.setContextClassLoader( getClassLoader());
-        } else {
-            java.security.AccessController.doPrivileged(
-                  new java.security.PrivilegedAction() {
-                          public java.lang.Object run() {
-                      currentThread.setContextClassLoader( getClassLoader());
-                      return null;
-                  }
-        });
-        }
+                    public java.lang.Object run() {
+                        currentThread.setContextClassLoader(getClassLoader());
+                        return null;
+                    }
+                });
+            }
             bc.classLoaderSwitched = true;
         }
 
-        ArrayDeque beanContextStack =
-            (ArrayDeque) threadLocalContext.get();
+        ArrayDeque beanContextStack = (ArrayDeque) threadLocalContext.get();
 
-        if ( beanContextStack == null ) {
+        if (beanContextStack == null) {
             beanContextStack = new ArrayDeque();
             threadLocalContext.set(beanContextStack);
         }
@@ -2500,38 +2497,30 @@ public abstract class BaseContainer
         return schedules.containsKey(m) || m.equals(ejbTimeoutMethod);
     }
 
+
     // internal API, implemented in subclasses
-    protected abstract EJBObjectImpl createEJBObjectImpl()
-        throws CreateException, RemoteException;
+    protected abstract EJBObjectImpl createEJBObjectImpl() throws CreateException, RemoteException;
+
 
     // Only applies to concrete session containers
-    EJBObjectImpl createRemoteBusinessObjectImpl() throws CreateException,
-        RemoteException
-    {
-        throw new EJBException(
-            "Internal ERROR: BaseContainer.createRemoteBusinessObject called");
+    EJBObjectImpl createRemoteBusinessObjectImpl() throws CreateException, RemoteException {
+        throw new EJBException("Internal ERROR: BaseContainer.createRemoteBusinessObject called");
     }
+
 
     // internal API, implemented in subclasses
-    protected EJBLocalObjectImpl createEJBLocalObjectImpl()
-        throws CreateException
-    {
-        throw new EJBException(
-            "Internal ERROR: BaseContainer.createEJBLocalObject called");
+    protected EJBLocalObjectImpl createEJBLocalObjectImpl() throws CreateException {
+        throw new EJBException("Internal ERROR: BaseContainer.createEJBLocalObject called");
     }
+
 
     // Only implemented in Stateless , Stateful, and Singleton session containers
-    EJBLocalObjectImpl createEJBLocalBusinessObjectImpl(boolean localBeanView)
-        throws CreateException
-    {
-        throw new EJBException(
-            "Internal ERROR: BaseContainer.createEJBLocalBusinessObject called");
+    EJBLocalObjectImpl createEJBLocalBusinessObjectImpl(boolean localBeanView) throws CreateException {
+        throw new EJBException("Internal ERROR: BaseContainer.createEJBLocalBusinessObject called");
     }
 
-    EJBLocalObjectImpl createEJBLocalBusinessObjectImpl(String clientIntf)
-        throws CreateException
-    {
 
+    EJBLocalObjectImpl createEJBLocalBusinessObjectImpl(String clientIntf) throws CreateException {
         boolean useLocalBeanView = isLocalBeanClass(clientIntf);
         return createEJBLocalBusinessObjectImpl(useLocalBeanView);
 
@@ -2928,7 +2917,6 @@ public abstract class BaseContainer
              && (methodClass != EJBLocalHome.class) ) {
             return true;
         }
-
 
         return false;
     }
@@ -4804,22 +4792,21 @@ public abstract class BaseContainer
             String appName, String modName, String ejbName);
 
     protected void createMonitoringRegistry() {
-    String appName = null;
-    String modName = null;
-    String ejbName = null;
+        String appName = null;
+        String modName = null;
+        String ejbName = null;
         boolean isMonitorRegistryMediatorCreated = false;
-    try {
-        appName = (ejbDescriptor.getApplication().isVirtual())
-        ? null: ejbDescriptor.getApplication().getRegistrationName();
-        if (appName == null) {
-        modName = ejbDescriptor.getApplication().getRegistrationName();
-        } else {
-        String archiveuri = ejbDescriptor.getEjbBundleDescriptor().
-            getModuleDescriptor().getArchiveUri();
-        modName =
-            com.sun.enterprise.util.io.FileUtils.makeFriendlyFilename(archiveuri);
-        }
-        ejbName = ejbDescriptor.getName();
+        try {
+            appName = (ejbDescriptor.getApplication().isVirtual())
+                ? null
+                : ejbDescriptor.getApplication().getRegistrationName();
+            if (appName == null) {
+                modName = ejbDescriptor.getApplication().getRegistrationName();
+            } else {
+                String archiveuri = ejbDescriptor.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri();
+                modName = com.sun.enterprise.util.io.FileUtils.makeFriendlyFilename(archiveuri);
+            }
+            ejbName = ejbDescriptor.getName();
             containerInfo = new ContainerInfo(appName, modName, ejbName);
 
             isMonitorRegistryMediatorCreated = true;
@@ -4829,15 +4816,16 @@ public abstract class BaseContainer
             ejbProbeListener.register();
 
             if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Created MonitoringRegistry: " +
-                        EjbMonitoringUtils.getDetailedLoggingName(appName, modName, ejbName));
+                _logger.log(Level.FINE, "Created MonitoringRegistry: "
+                    + EjbMonitoringUtils.getDetailedLoggingName(appName, modName, ejbName));
             }
-    } catch (Exception ex) {
-        _logger.log(Level.SEVERE, COULD_NOT_CREATE_MONITORREGISTRYMEDIATOR, new Object[]{EjbMonitoringUtils.getDetailedLoggingName(appName, modName, ejbName), ex});
-        if (!isMonitorRegistryMediatorCreated) {
-            registerEjbMonitoringProbeProvider(appName, modName, ejbName);
+        } catch (Exception ex) {
+            _logger.log(Level.SEVERE, COULD_NOT_CREATE_MONITORREGISTRYMEDIATOR,
+                new Object[] {EjbMonitoringUtils.getDetailedLoggingName(appName, modName, ejbName), ex});
+            if (!isMonitorRegistryMediatorCreated) {
+                registerEjbMonitoringProbeProvider(appName, modName, ejbName);
+            }
         }
-    }
     }
 
     private void registerEjbMonitoringProbeProvider(String appName, String modName, String ejbName) {
@@ -5036,14 +5024,14 @@ public abstract class BaseContainer
         }
     } //ContainerInfo
 
-  private static class BeanContext {
-    ClassLoader previousClassLoader;
-    boolean classLoaderSwitched;
-  }
+    private static class BeanContext {
+        ClassLoader previousClassLoader;
+        boolean classLoaderSwitched;
+    }
 } //BaseContainer{}
 
-final class CallFlowInfoImpl
-    implements CallFlowInfo
+
+final class CallFlowInfoImpl implements CallFlowInfo
 {
 
     private final BaseContainer container;

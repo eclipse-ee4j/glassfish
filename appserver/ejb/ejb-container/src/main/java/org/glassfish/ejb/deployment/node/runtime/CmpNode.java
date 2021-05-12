@@ -57,11 +57,11 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
 
     @Override
     protected Map getDispatchTable() {
-    Map dispatchTable = super.getDispatchTable();
-    dispatchTable.put(RuntimeTagNames.MAPPING_PROPERTIES, "setMappingProperties");
+        Map dispatchTable = super.getDispatchTable();
+        dispatchTable.put(RuntimeTagNames.MAPPING_PROPERTIES, "setMappingProperties");
         // deprecated element, will be ignored at reading
         dispatchTable.put(RuntimeTagNames.IS_ONE_ONE_CMP, null);
-    return dispatchTable;
+        return dispatchTable;
     }
 
     @Override
@@ -74,10 +74,11 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
         }
         if (newDescriptor instanceof IASEjbCMPFinder ) {
             descriptor.addOneOneFinder((IASEjbCMPFinder) newDescriptor);
-        }
-         else if (newDescriptor instanceof PrefetchDisabledDescriptor) {
+        } else if (newDescriptor instanceof PrefetchDisabledDescriptor) {
             descriptor.setPrefetchDisabledDescriptor((PrefetchDisabledDescriptor)newDescriptor);
-        } else super.addDescriptor(descriptor);
+        } else {
+            super.addDescriptor(descriptor);
+        }
     }
 
     @Override
@@ -98,8 +99,7 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
         PrefetchDisabledDescriptor prefetchDisabledDesc =  ejbDescriptor.getPrefetchDisabledDescriptor();
         if (prefetchDisabledDesc != null) {
             PrefetchDisabledNode prefetchDisabledNode = new PrefetchDisabledNode();
-            prefetchDisabledNode.writeDescriptor(cmpNode,
-                RuntimeTagNames.PREFETCH_DISABLED, prefetchDisabledDesc);
+            prefetchDisabledNode.writeDescriptor(cmpNode, RuntimeTagNames.PREFETCH_DISABLED, prefetchDisabledDesc);
         }
 
         return cmpNode;

@@ -43,22 +43,12 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
     public EnterpriseBeansRuntimeNode() {
         // we do not care about our standard DDS handles
         handlers = null;
-        registerElementHandler(new XMLElement(RuntimeTagNames.EJB),
-                               EjbNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.PM_DESCRIPTORS),
-                               PMDescriptorsNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.CMP_RESOURCE),
-                               CmpResourceNode.class);
-        registerElementHandler
-            (new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION),
-             MessageDestinationRuntimeNode.class);
-
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.WEB_SERVICE),
-             WebServiceRuntimeNode.class);
-
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
-                RuntimeNameValuePairNode.class, "addEnterpriseBeansProperty");
+        registerElementHandler(new XMLElement(RuntimeTagNames.EJB), EjbNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.PM_DESCRIPTORS), PMDescriptorsNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.CMP_RESOURCE), CmpResourceNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE), WebServiceRuntimeNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), RuntimeNameValuePairNode.class, "addEnterpriseBeansProperty");
     }
 
     @Override
@@ -83,7 +73,7 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
             DOLUtils.getDefaultLogger().finer("Ignoring unique id");
             return;
         }
-    super.setElementValue(element, value);
+        super.setElementValue(element, value);
     }
 
     /**
@@ -108,8 +98,8 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
         }
 
         // pm-descriptors?
-    PMDescriptorsNode pmsNode = new PMDescriptorsNode();
-    pmsNode.writeDescriptor(ejbs, RuntimeTagNames.PM_DESCRIPTORS, bundleDescriptor);
+        PMDescriptorsNode pmsNode = new PMDescriptorsNode();
+        pmsNode.writeDescriptor(ejbs, RuntimeTagNames.PM_DESCRIPTORS, bundleDescriptor);
 
         // cmpresource?
         ResourceReferenceDescriptor rrd = bundleDescriptor.getCMPResourceReference();

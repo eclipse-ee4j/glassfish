@@ -18,6 +18,7 @@ package com.sun.ejb.base.sfsb.util;
 
 
 import org.glassfish.internal.api.SharedSecureRandom;
+import org.glassfish.security.common.SharedSecureRandomImpl;
 
 import com.sun.enterprise.util.Utility;
 
@@ -31,83 +32,84 @@ import com.sun.enterprise.util.Utility;
  *
  * @author  Mahesh Kannan
  */
-public class ScrambledKeyGenerator
-    extends SimpleKeyGenerator
-{
+public class ScrambledKeyGenerator extends SimpleKeyGenerator {
 
     private int cachedTime = (int) System.currentTimeMillis();
 
     public ScrambledKeyGenerator() {
-    init((int) System.currentTimeMillis(), System.identityHashCode(this));
+        init((int) System.currentTimeMillis(), System.identityHashCode(this));
     }
+
 
     public ScrambledKeyGenerator(byte[] ipAddress, int port) {
-    init(Utility.bytesToInt(ipAddress, 0), port);
+        init(Utility.bytesToInt(ipAddress, 0), port);
     }
+
 
     public ScrambledKeyGenerator(long val) {
-    init((int) (val >>> 32), (int) ((val << 32) >>> 32));
+        init((int) (val >>> 32), (int) ((val << 32) >>> 32));
     }
 
+
     private void init(int hi, int lo) {
-    byte[] hiBytes = new byte[4];
-    Utility.intToBytes(hi, hiBytes, 0);
-    byte[] loBytes = new byte[4];
-    Utility.intToBytes(lo, loBytes, 0);
+        byte[] hiBytes = new byte[4];
+        Utility.intToBytes(hi, hiBytes, 0);
+        byte[] loBytes = new byte[4];
+        Utility.intToBytes(lo, loBytes, 0);
 
-    swapBytes(hiBytes, loBytes, 2, 3);
-    swapBytes(loBytes, loBytes, 2, 3);
-    swapBytes(hiBytes, loBytes, 3, 0);
-    swapBytes(hiBytes, hiBytes, 0, 3);
-    swapBytes(hiBytes, loBytes, 1, 3);
+        swapBytes(hiBytes, loBytes, 2, 3);
+        swapBytes(loBytes, loBytes, 2, 3);
+        swapBytes(hiBytes, loBytes, 3, 0);
+        swapBytes(hiBytes, hiBytes, 0, 3);
+        swapBytes(hiBytes, loBytes, 1, 3);
 
-    swapBytes(hiBytes, hiBytes, 0, 1);
-    swapBytes(loBytes, loBytes, 2, 3);
+        swapBytes(hiBytes, hiBytes, 0, 1);
+        swapBytes(loBytes, loBytes, 2, 3);
 
         this.prefix = Utility.bytesToInt(hiBytes, 0);
-    this.prefix <<= 32;
+        this.prefix <<= 32;
 
         this.suffix = Utility.bytesToInt(loBytes, 0);
-    this.suffix <<= 32;
+        this.suffix <<= 32;
 
-        //Inital isCounter value
+        // Inital isCounter value
         this.idCounter = 0;
 
-        //Set the default time value
+        // Set the default time value
         this.cachedTime = (int) System.currentTimeMillis();
     }
 
-    private static final void swapBytes(byte[] a, byte[] b,
-        int index1, int index2)
-    {
-    byte temp = a[index1];
-    a[index1] = b[index2];
-    b[index2] = temp;
+
+    private static final void swapBytes(byte[] a, byte[] b, int index1, int index2) {
+        byte temp = a[index1];
+        a[index1] = b[index2];
+        b[index2] = temp;
     }
+
 
     /**
      * Create and return the sessionKey.
+     *
      * @return the sessionKey object
      */
+    @Override
     public SimpleSessionKey createSessionKey() {
         int id = 0;
         synchronized (this) {
             id = ++idCounter;
             if (id < 0) {
-                //idCounter wrapped around!!
+                // idCounter wrapped around!!
                 id = idCounter = 1;
-        }
+            }
 
-        if ((id & 0x000000FF) == 0) {
+            if ((id & 0x000000FF) == 0) {
                 cachedTime = (int) System.currentTimeMillis();
             }
         }
 
-    return new SimpleSessionKey(
-        prefix + cachedTime,
-        //suffix + System.identityHashCode(new Object()), id
-        suffix + SharedSecureRandom.get().nextInt(), id
-    );
+        return new SimpleSessionKey(prefix + cachedTime,
+            // suffix + System.identityHashCode(new Object()), id
+            suffix + SharedSecureRandomImpl.get().nextInt(), id);
     }
 
 }

@@ -36,8 +36,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 public class RemoteGenerator extends Generator
     implements ClassGeneratorFactory {
 
-    private static LocalStringManagerImpl localStrings =
-    new LocalStringManagerImpl(RemoteGenerator.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(RemoteGenerator.class);
 
 
     private Class businessInterface;
@@ -64,21 +63,19 @@ public class RemoteGenerator extends Generator
     /**
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
-     * @exception GeneratorException.
+     * @exception GeneratorException
      */
-    public RemoteGenerator(ClassLoader cl, String businessIntf)
-    throws GeneratorException
-    {
-    super();
+    public RemoteGenerator(ClassLoader cl, String businessIntf) throws GeneratorException {
+        super();
 
-    try {
-        businessInterface = cl.loadClass(businessIntf);
-    } catch (ClassNotFoundException ex) {
-        throw new InvalidBean(
-        localStrings.getLocalString(
-        "generator.remote_interface_not_found",
-        "Remote interface not found "));
-    }
+        try {
+            businessInterface = cl.loadClass(businessIntf);
+        } catch (ClassNotFoundException ex) {
+            throw new InvalidBean(
+                localStrings.getLocalString(
+                    "generator.remote_interface_not_found",
+                    "Remote interface not found "));
+        }
 
         remoteInterfaceName = EJBUtils.getGeneratedRemoteIntfName
             (businessInterface.getName());
@@ -121,9 +118,7 @@ public class RemoteGenerator extends Generator
     }
 
 
-    private void printMethod(Method m)
-    {
-
+    private void printMethod(Method m) {
         boolean throwsRemoteException = false;
         List<Type> exceptionList = new LinkedList<Type>();
         for(Class exception : m.getExceptionTypes()) {
@@ -131,20 +126,19 @@ public class RemoteGenerator extends Generator
             if( exception.getName().equals("java.rmi.RemoteException") ) {
                 throwsRemoteException = true;
             }
-    }
+        }
         if( !throwsRemoteException ) {
             exceptionList.add(_t("java.rmi.RemoteException"));
         }
 
         exceptionList.add(_t("com.sun.ejb.containers.InternalEJBContainerException"));
-        _method( PUBLIC | ABSTRACT, Type.type(m.getReturnType()),
-                 m.getName(), exceptionList);
+        _method(PUBLIC | ABSTRACT, Type.type(m.getReturnType()), m.getName(), exceptionList);
 
         int i = 0;
         for(Class param : m.getParameterTypes()) {
             _arg(Type.type(param), "param" + i);
             i++;
-    }
+        }
 
         _end();
     }

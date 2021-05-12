@@ -111,7 +111,7 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
             }
             if (descriptor==null) {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                            new Object[]{element , value});
+                    new Object[]{element , value});
             } else {
                 if (availEnabled != null) {
                     descriptor.getIASEjbExtraDescriptors().setAttributeValue(IASEjbExtraDescriptors.AVAILABILITY_ENABLED, availEnabled);
@@ -120,40 +120,41 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
             return;
         } else if (descriptor==null && ! RuntimeTagNames.AVAILABILITY_ENABLED.equals(element.getQName())) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                            new Object[] {element.getQName() , value });
+                new Object[] {element.getQName() , value });
         }
         // if this is the availability-enabled attribute, save the value
         // and set it later
-    if (RuntimeTagNames.AVAILABILITY_ENABLED.equals(element.getQName())) {
+        if (RuntimeTagNames.AVAILABILITY_ENABLED.equals(element.getQName())) {
             availEnabled = value;
         } else if (RuntimeTagNames.NAME.equals(element.getQName())) {
-        // principal
+            // principal
             if (Boolean.FALSE.equals(descriptor.getUsesCallerIdentity())
                 && descriptor.getRunAsIdentity() != null) {
-                    descriptor.getRunAsIdentity().setPrincipal(value);
+                descriptor.getRunAsIdentity().setPrincipal(value);
             }
         } else if (RuntimeTagNames.PASS_BY_REFERENCE.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setPassByReference(Boolean.valueOf(value));
-    } else if (RuntimeTagNames.JMS_MAX_MESSAGES_LOAD.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setJmsMaxMessagesLoad(Integer.parseInt(value));
-    } else if (RuntimeTagNames.IS_READ_ONLY_BEAN.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setIsReadOnlyBean((Boolean.valueOf(value)).booleanValue());
-    } else if (RuntimeTagNames.REFRESH_PERIOD_IN_SECONDS.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setRefreshPeriodInSeconds(Integer.parseInt(value));
-    } else if (RuntimeTagNames.COMMIT_OPTION.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setCommitOption(value);
-    } else if (RuntimeTagNames.CMT_TIMEOUT_IN_SECONDS.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setCmtTimeoutInSeconds(Integer.parseInt(value));
-    } else if (RuntimeTagNames.USE_THREAD_POOL_ID.equals(element.getQName())) {
-        descriptor.getIASEjbExtraDescriptors().setUseThreadPoolId(value);
-    } else if (RuntimeTagNames.CHECKPOINTED_METHODS.equals(
+            descriptor.getIASEjbExtraDescriptors().setPassByReference(Boolean.valueOf(value));
+        } else if (RuntimeTagNames.JMS_MAX_MESSAGES_LOAD.equals(element.getQName())) {
+            descriptor.getIASEjbExtraDescriptors().setJmsMaxMessagesLoad(Integer.parseInt(value));
+        } else if (RuntimeTagNames.IS_READ_ONLY_BEAN.equals(element.getQName())) {
+            descriptor.getIASEjbExtraDescriptors().setIsReadOnlyBean((Boolean.valueOf(value)).booleanValue());
+        } else if (RuntimeTagNames.REFRESH_PERIOD_IN_SECONDS.equals(element.getQName())) {
+            descriptor.getIASEjbExtraDescriptors().setRefreshPeriodInSeconds(Integer.parseInt(value));
+        } else if (RuntimeTagNames.COMMIT_OPTION.equals(element.getQName())) {
+            descriptor.getIASEjbExtraDescriptors().setCommitOption(value);
+        } else if (RuntimeTagNames.CMT_TIMEOUT_IN_SECONDS.equals(element.getQName())) {
+            descriptor.getIASEjbExtraDescriptors().setCmtTimeoutInSeconds(Integer.parseInt(value));
+        } else if (RuntimeTagNames.USE_THREAD_POOL_ID.equals(element.getQName())) {
+            descriptor.getIASEjbExtraDescriptors().setUseThreadPoolId(value);
+        } else if (RuntimeTagNames.CHECKPOINTED_METHODS.equals(
             element.getQName())) {
             descriptor.getIASEjbExtraDescriptors().setCheckpointedMethods(
                 value);
         } else if(RuntimeTagNames.PER_REQUEST_LOAD_BALANCING.equals(element.getQName())) {
             descriptor.getIASEjbExtraDescriptors().setPerRequestLoadBalancing(Boolean.valueOf(value));
+        } else {
+            super.setElementValue(element, value);
         }
-        else super.setElementValue(element, value);
     }
 
     /**
@@ -193,28 +194,24 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
      * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
-     * @param descriptor the new descriptor
+     * @param newDescriptor the new descriptor
      */
     @Override
     public void addDescriptor(Object newDescriptor) {
-    if (newDescriptor instanceof MdbConnectionFactoryDescriptor) {
-        descriptor.getIASEjbExtraDescriptors().setMdbConnectionFactory(
-            (MdbConnectionFactoryDescriptor) newDescriptor);
-    } else
-    if (newDescriptor instanceof BeanPoolDescriptor) {
-        descriptor.getIASEjbExtraDescriptors().setBeanPool(
-        (BeanPoolDescriptor) newDescriptor);
-    } else
-    if (newDescriptor instanceof BeanCacheDescriptor) {
-        descriptor.getIASEjbExtraDescriptors().setBeanCache(
-        (BeanCacheDescriptor) newDescriptor);
-    } else
-    if (newDescriptor instanceof FlushAtEndOfMethodDescriptor) {
-        descriptor.getIASEjbExtraDescriptors().setFlushAtEndOfMethodDescriptor((FlushAtEndOfMethodDescriptor)newDescriptor);
-    } else
-    if (newDescriptor instanceof CheckpointAtEndOfMethodDescriptor) {
-        descriptor.getIASEjbExtraDescriptors().setCheckpointAtEndOfMethodDescriptor((CheckpointAtEndOfMethodDescriptor)newDescriptor);
-    }
+        if (newDescriptor instanceof MdbConnectionFactoryDescriptor) {
+            descriptor.getIASEjbExtraDescriptors()
+                .setMdbConnectionFactory((MdbConnectionFactoryDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof BeanPoolDescriptor) {
+            descriptor.getIASEjbExtraDescriptors().setBeanPool((BeanPoolDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof BeanCacheDescriptor) {
+            descriptor.getIASEjbExtraDescriptors().setBeanCache((BeanCacheDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof FlushAtEndOfMethodDescriptor) {
+            descriptor.getIASEjbExtraDescriptors()
+                .setFlushAtEndOfMethodDescriptor((FlushAtEndOfMethodDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof CheckpointAtEndOfMethodDescriptor) {
+            descriptor.getIASEjbExtraDescriptors()
+                .setCheckpointAtEndOfMethodDescriptor((CheckpointAtEndOfMethodDescriptor) newDescriptor);
+        }
     }
 
     /**
@@ -233,13 +230,13 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
 
         RuntimeDescriptorNode.writeCommonComponentInfo(ejbNode, ejbDescriptor);
 
-    appendTextChild(ejbNode, RuntimeTagNames.PASS_BY_REFERENCE,
-        String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getPassByReference()));
+        appendTextChild(ejbNode, RuntimeTagNames.PASS_BY_REFERENCE,
+            String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getPassByReference()));
 
-    if (ejbDescriptor instanceof IASEjbCMPEntityDescriptor) {
-        CmpNode cmpNode = new CmpNode();
-        cmpNode.writeDescriptor(ejbNode, RuntimeTagNames.CMP, (IASEjbCMPEntityDescriptor) ejbDescriptor);
-    }
+        if (ejbDescriptor instanceof IASEjbCMPEntityDescriptor) {
+            CmpNode cmpNode = new CmpNode();
+            cmpNode.writeDescriptor(ejbNode, RuntimeTagNames.CMP, (IASEjbCMPEntityDescriptor) ejbDescriptor);
+        }
 
         // principal
         if ( Boolean.FALSE.equals(ejbDescriptor.getUsesCallerIdentity()) ) {
@@ -250,8 +247,8 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
             }
         }
 
-    if (ejbDescriptor instanceof EjbMessageBeanDescriptor) {
-        EjbMessageBeanDescriptor msgBeanDesc = (EjbMessageBeanDescriptor) ejbDescriptor;
+        if (ejbDescriptor instanceof EjbMessageBeanDescriptor) {
+            EjbMessageBeanDescriptor msgBeanDesc = (EjbMessageBeanDescriptor) ejbDescriptor;
 
             // mdb-connection-factory?
             if (ejbDescriptor.getIASEjbExtraDescriptors().getMdbConnectionFactory()!=null) {
@@ -261,50 +258,50 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
             }
 
             // jms-durable-subscription-name
-        if (msgBeanDesc.hasDurableSubscription()) {
-        appendTextChild(ejbNode, RuntimeTagNames.DURABLE_SUBSCRIPTION,
-            msgBeanDesc.getDurableSubscriptionName());
+            if (msgBeanDesc.hasDurableSubscription()) {
+                appendTextChild(ejbNode, RuntimeTagNames.DURABLE_SUBSCRIPTION,
+                    msgBeanDesc.getDurableSubscriptionName());
+            }
+            appendTextChild(ejbNode, RuntimeTagNames.JMS_MAX_MESSAGES_LOAD,
+                String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getJmsMaxMessagesLoad()));
         }
-        appendTextChild(ejbNode, RuntimeTagNames.JMS_MAX_MESSAGES_LOAD,
-            String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getJmsMaxMessagesLoad()));
-    }
 
-    // ior-configuration
+        // ior-configuration
         IORConfigurationNode iorNode = new IORConfigurationNode();
         for (EjbIORConfigurationDescriptor iorConf : ejbDescriptor.getIORConfigurationDescriptors()) {
             iorNode.writeDescriptor(ejbNode,RuntimeTagNames.IOR_CONFIG, iorConf);
         }
 
-    appendTextChild(ejbNode, RuntimeTagNames.IS_READ_ONLY_BEAN,
-        String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().isIsReadOnlyBean()));
-    appendTextChild(ejbNode, RuntimeTagNames.REFRESH_PERIOD_IN_SECONDS,
-        String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getRefreshPeriodInSeconds()));
-    appendTextChild(ejbNode, RuntimeTagNames.COMMIT_OPTION,
-        ejbDescriptor.getIASEjbExtraDescriptors().getCommitOption());
-    appendTextChild(ejbNode, RuntimeTagNames.CMT_TIMEOUT_IN_SECONDS,
-        String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getCmtTimeoutInSeconds()));
-    appendTextChild(ejbNode, RuntimeTagNames.USE_THREAD_POOL_ID,
-        ejbDescriptor.getIASEjbExtraDescriptors().getUseThreadPoolId());
+        appendTextChild(ejbNode, RuntimeTagNames.IS_READ_ONLY_BEAN,
+            String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().isIsReadOnlyBean()));
+        appendTextChild(ejbNode, RuntimeTagNames.REFRESH_PERIOD_IN_SECONDS,
+            String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getRefreshPeriodInSeconds()));
+        appendTextChild(ejbNode, RuntimeTagNames.COMMIT_OPTION,
+            ejbDescriptor.getIASEjbExtraDescriptors().getCommitOption());
+        appendTextChild(ejbNode, RuntimeTagNames.CMT_TIMEOUT_IN_SECONDS,
+            String.valueOf(ejbDescriptor.getIASEjbExtraDescriptors().getCmtTimeoutInSeconds()));
+        appendTextChild(ejbNode, RuntimeTagNames.USE_THREAD_POOL_ID,
+            ejbDescriptor.getIASEjbExtraDescriptors().getUseThreadPoolId());
 
         // gen-classes
         writeGenClasses(ejbNode, ejbDescriptor);
 
-    // bean-pool
-    BeanPoolDescriptor beanPoolDesc = ejbDescriptor.getIASEjbExtraDescriptors().getBeanPool();
-    if (beanPoolDesc!=null) {
-        BeanPoolNode bpNode = new BeanPoolNode();
-        bpNode.writeDescriptor(ejbNode, RuntimeTagNames.BEAN_POOL, beanPoolDesc);
-    }
+        // bean-pool
+        BeanPoolDescriptor beanPoolDesc = ejbDescriptor.getIASEjbExtraDescriptors().getBeanPool();
+        if (beanPoolDesc!=null) {
+            BeanPoolNode bpNode = new BeanPoolNode();
+            bpNode.writeDescriptor(ejbNode, RuntimeTagNames.BEAN_POOL, beanPoolDesc);
+        }
 
-    // bean-cache
-    BeanCacheDescriptor beanCacheDesc = ejbDescriptor.getIASEjbExtraDescriptors().getBeanCache();
-    if (beanCacheDesc!=null) {
-        BeanCacheNode bcNode = new BeanCacheNode();
-        bcNode.writeDescriptor(ejbNode, RuntimeTagNames.BEAN_CACHE, beanCacheDesc);
-    }
+        // bean-cache
+        BeanCacheDescriptor beanCacheDesc = ejbDescriptor.getIASEjbExtraDescriptors().getBeanCache();
+        if (beanCacheDesc!=null) {
+            BeanCacheNode bcNode = new BeanCacheNode();
+            bcNode.writeDescriptor(ejbNode, RuntimeTagNames.BEAN_CACHE, beanCacheDesc);
+        }
 
-    if (ejbDescriptor instanceof EjbMessageBeanDescriptor) {
-        EjbMessageBeanDescriptor msgBeanDesc = (EjbMessageBeanDescriptor) ejbDescriptor;
+        if (ejbDescriptor instanceof EjbMessageBeanDescriptor) {
+            EjbMessageBeanDescriptor msgBeanDesc = (EjbMessageBeanDescriptor) ejbDescriptor;
             if (msgBeanDesc.hasResourceAdapterMid()) {
                 MDBResourceAdapterNode mdb = new MDBResourceAdapterNode();
                 mdb.writeDescriptor(ejbNode, RuntimeTagNames.MDB_RESOURCE_ADAPTER, msgBeanDesc);
@@ -316,12 +313,12 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
             wsRuntime.writeWebServiceEndpointInfo(ejbNode, ejbDescriptor);
         }
 
-    // flush-at-end-of-method
-    FlushAtEndOfMethodDescriptor flushMethodDesc = ejbDescriptor.getIASEjbExtraDescriptors().getFlushAtEndOfMethodDescriptor();
-    if (flushMethodDesc!=null) {
-        FlushAtEndOfMethodNode flushNode = new FlushAtEndOfMethodNode();
-        flushNode.writeDescriptor(ejbNode, RuntimeTagNames.FLUSH_AT_END_OF_METHOD, flushMethodDesc);
-    }
+        // flush-at-end-of-method
+        FlushAtEndOfMethodDescriptor flushMethodDesc = ejbDescriptor.getIASEjbExtraDescriptors().getFlushAtEndOfMethodDescriptor();
+        if (flushMethodDesc!=null) {
+            FlushAtEndOfMethodNode flushNode = new FlushAtEndOfMethodNode();
+            flushNode.writeDescriptor(ejbNode, RuntimeTagNames.FLUSH_AT_END_OF_METHOD, flushMethodDesc);
+        }
 
         // checkpointed-methods
         // checkpoint-at-end-of-method

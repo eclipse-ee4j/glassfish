@@ -333,7 +333,7 @@ public class TimerState {
         this.ownerId = ownerId;
 
         creationTime_ = new Date();
-    creationTimeRaw = creationTime_.getTime();
+        creationTimeRaw = creationTime_.getTime();
 
         initialExpirationRaw = initialExpiration.getTime();
         initialExpiration_ = initialExpiration;
@@ -377,8 +377,7 @@ public class TimerState {
     @PostLoad
     void load() {
 
-        lastExpiration_ = (lastExpirationRaw > 0) ?
-            new Date(lastExpirationRaw) : null;
+        lastExpiration_ = (lastExpirationRaw > 0) ? new Date(lastExpirationRaw) : null;
 
         // Populate derived state of immutable persistent fields.
         creationTime_ = new Date(creationTimeRaw);
@@ -429,8 +428,7 @@ public class TimerState {
     void setLastExpiration(Date lastExpiration) {
         // can be null
         lastExpiration_ = lastExpiration;
-        lastExpirationRaw = (lastExpiration != null) ?
-            lastExpiration.getTime() : 0;
+        lastExpirationRaw = (lastExpiration != null) ? lastExpiration.getTime() : 0;
     }
 
     boolean isActive() {

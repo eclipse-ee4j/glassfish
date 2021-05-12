@@ -17,21 +17,20 @@
 package com.sun.ejb.containers.util.cache;
 
 import com.sun.appserv.util.cache.CacheListener;
-
+import com.sun.ejb.base.stats.StatefulSessionStoreMonitor;
+import com.sun.ejb.monitoring.stats.EjbCacheStatsProviderDelegate;
 import com.sun.ejb.spi.container.SFSBContainerCallback;
 import com.sun.ejb.spi.container.StatefulEJBContext;
 
-import com.sun.ejb.base.stats.StatefulSessionStoreMonitor;
-import com.sun.ejb.monitoring.stats.EjbCacheStatsProviderDelegate;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.logging.Level;
 
 import org.glassfish.ha.store.api.BackingStore;
+import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.util.SimpleMetadata;
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.ha.store.api.BackingStoreException;
-
-import java.io.Serializable;
-import java.util.*;
-import java.util.logging.*;
 
 
 public class LruSessionCache
@@ -101,8 +100,8 @@ public class LruSessionCache
         level = "INFO")
     private static final String SFSB_NOT_FOUND_WHEN_PASSIVATION_DISABLED = "AS-EJB-00049";
 
-    protected int            cacheIdleTimeoutInSeconds;
-    protected int            removalTimeoutInSeconds;
+    protected int cacheIdleTimeoutInSeconds;
+    protected int removalTimeoutInSeconds;
 
     protected Object loadCountLock = new Object();
     protected int loadFromBackupCount;
@@ -120,14 +119,14 @@ public class LruSessionCache
 
     protected String configData;
 
-    private static final int        STATE_RUNNING = 0;
-    private static final int        STATE_SHUTTING_DOWN = 1;
-    private static final int        STATE_UNDEPLOYING = 2;
-    private static final int        STATE_DESTROYED = 3;
+    private static final int STATE_RUNNING = 0;
+    private static final int STATE_SHUTTING_DOWN = 1;
+    private static final int STATE_UNDEPLOYING = 2;
+    private static final int STATE_DESTROYED = 3;
 
-    private int                currentCacheState = STATE_RUNNING;
+    private int currentCacheState = STATE_RUNNING;
 
-    protected int    confMaxCacheSize = Integer.MAX_VALUE;
+    protected int confMaxCacheSize = Integer.MAX_VALUE;
 
     // TODO enable when enabling monitoring in SFSB container
     // private StatefulSessionStoreMonitor        sfsbStoreMonitor;
@@ -171,10 +170,9 @@ public class LruSessionCache
         this.backingStore = store;
     }
 
-    public void setStatefulSessionStoreMonitor(
-    StatefulSessionStoreMonitor storeMonitor)
-    {
-    // this.sfsbStoreMonitor = storeMonitor;
+
+    public void setStatefulSessionStoreMonitor(StatefulSessionStoreMonitor storeMonitor) {
+        // this.sfsbStoreMonitor = storeMonitor;
     }
 
     /**
@@ -201,20 +199,21 @@ public class LruSessionCache
         }
     }
 
+
     protected void itemAccessed(CacheItem item) {
         LruCacheItem lc = (LruCacheItem) item;
         synchronized (this) {
-        if (lc.isTrimmed()) {
-        lc.setTrimmed(false);
-        numVictimsAccessed += 1;
-        CacheItem overflow = super.itemAdded(item);
-        if (overflow != null) {
-            trimItem(overflow);
+            if (lc.isTrimmed()) {
+                lc.setTrimmed(false);
+                numVictimsAccessed += 1;
+                CacheItem overflow = super.itemAdded(item);
+                if (overflow != null) {
+                    trimItem(overflow);
+                }
+            } else {
+                super.itemAccessed(item);
+            }
         }
-        } else {
-        super.itemAccessed(item);
-        }
-    }
     }
 
     public int getLoadFromBackupCount() {
@@ -282,14 +281,13 @@ public class LruSessionCache
         }
 
         //This is the thread that actually does the I/O
-    long activationStartTime = -1;
-    /*if (sfsbStoreMonitor.isMonitoringOn()) {
-        activationStartTime = System.currentTimeMillis();
-    }*/
+        long activationStartTime = -1;
+        /*if (sfsbStoreMonitor.isMonitoringOn()) {
+            activationStartTime = System.currentTimeMillis();
+        }*/
         try {
             value = getStateFromStore(sessionKey, container);
-            newItem = new LruSessionCacheItem(hashCode, sessionKey,
-                    value, -1, CACHE_ITEM_LOADING);
+            newItem = new LruSessionCacheItem(hashCode, sessionKey, value, -1, CACHE_ITEM_LOADING);
             newItem.setNext( buckets[index] );
             buckets[index] = newItem;
 
@@ -297,9 +295,7 @@ public class LruSessionCache
                 if (value == null) {
                     //Remove the temp cacheItem that we created.
                     CacheItem prev = null;
-                    for (CacheItem current = buckets[index]; current != null;
-                            current = current.getNext())
-                    {
+                    for (CacheItem current = buckets[index]; current != null; current = current.getNext()) {
                         if (current == newItem) {
                             if (prev == null) {
                                 buckets[index] = current.getNext();
@@ -312,9 +308,8 @@ public class LruSessionCache
                         prev = current;
                     }
                 } else {
-                    container.activateEJB(sessionKey,
-                        (StatefulEJBContext) value, cookie);
-            // sfsbStoreMonitor.incrementActivationCount(true);
+                    container.activateEJB(sessionKey, (StatefulEJBContext) value, cookie);
+                    // sfsbStoreMonitor.incrementActivationCount(true);
 
                     CacheItem overflow = itemAdded(newItem);
                     incrementEntryCount();
@@ -325,7 +320,7 @@ public class LruSessionCache
                 }
             } //end of sync
         } catch (jakarta.ejb.EJBException ejbEx) {
-        //sfsbStoreMonitor.incrementActivationCount(false);
+            //sfsbStoreMonitor.incrementActivationCount(false);
             remove(sessionKey);
             value = null;
         } finally {
@@ -337,11 +332,10 @@ public class LruSessionCache
                     }
                 }
             }
-        if (activationStartTime != -1) {
-        long timeSpent = System.currentTimeMillis()
-            - activationStartTime;
-        //sfsbStoreMonitor.setActivationTime(timeSpent);
-        }
+            if (activationStartTime != -1) {
+                long timeSpent = System.currentTimeMillis() - activationStartTime;
+                // sfsbStoreMonitor.setActivationTime(timeSpent);
+            }
         }
 
         return (StatefulEJBContext) value;
@@ -350,7 +344,7 @@ public class LruSessionCache
     //Called from StatefulSessionContainer
     //public void deleteEJB(Object sessionKey)
     public Object remove(Object sessionKey) {
-    return remove(sessionKey, true);
+        return remove(sessionKey, true);
     }
 
     public Object remove(Object sessionKey, boolean removeFromStore) {
@@ -380,21 +374,21 @@ public class LruSessionCache
             //In case it had been checkpointed
 
             //  remove it from BackingStore outside sync block
-        if (removeFromStore) {
-        try {
-            if (backingStore != null) {
-                backingStore.remove((Serializable) sessionKey);
+            if (removeFromStore) {
+                try {
+                    if (backingStore != null) {
+                        backingStore.remove((Serializable) sessionKey);
+                    }
+                } catch (BackingStoreException sfsbEx) {
+                    _logger.log(Level.WARNING, EXCEPTION_BACKING_STORE_REMOVE,
+                        new Object[] {cacheName, sessionKey, sfsbEx});
+                }
             }
-        } catch (BackingStoreException sfsbEx) {
-            _logger.log(Level.WARNING, EXCEPTION_BACKING_STORE_REMOVE, new Object[]{cacheName, sessionKey, sfsbEx});
         }
-        }
-    }
 
         if (item != null) {
             decrementEntryCount();
             incrementRemovalCount();
-
             incrementHitCount();
         } else {
             incrementMissCount();
@@ -410,8 +404,7 @@ public class LruSessionCache
      */
     public boolean eligibleForRemovalFromCache(StatefulEJBContext ctx, Serializable sessionKey) {
         if (removeIfIdle) {
-            long idleThreshold = System.currentTimeMillis()
-                    - removalTimeoutInSeconds * 1000L;
+            long idleThreshold = System.currentTimeMillis() - removalTimeoutInSeconds * 1000L;
             if (ctx.getLastAccessTime() <= idleThreshold) {
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, cacheName
@@ -492,7 +485,7 @@ public class LruSessionCache
             return true;
         } catch (java.io.NotSerializableException notSerEx) {
             _logger.log(Level.FINE, "", notSerEx);
-        throw notSerEx;
+            throw notSerEx;
         } catch (Exception ex) {
             _logger.log(Level.WARNING, PASSIVATE_EJB_EXCEPTION_CAUGHT, new Object[]{cacheName, ex});
             _logger.log(Level.FINE, "", ex);
@@ -503,7 +496,6 @@ public class LruSessionCache
     private Object getStateFromStore(Serializable sessionKey, SFSBContainerCallback container) {
 
         Object object = null;
-
         try {
             SimpleMetadata beanState = null;
             if (backingStore != null) {
@@ -517,7 +509,7 @@ public class LruSessionCache
                     _logger.log(Level.SEVERE, CANNOT_LOAD_FROM_BACKUP_STORE, new Object[]{cacheName, sessionKey});
                 }
             }  else {
-        //sfsbStoreMonitor.setActivationSize(data.length);
+                //sfsbStoreMonitor.setActivationSize(data.length);
                 incrementLoadFromBackupCount();
                 object = container.deserializeData(data);
             }
@@ -535,29 +527,29 @@ public class LruSessionCache
     {
         byte[] data = container.serializeContext(ctx);
 
-    //If we are here then we were able to serialize the object successfully
+        //If we are here then we were able to serialize the object successfully
         boolean status = false;
 
-    if (data != null) {
-        SimpleMetadata beanState = new SimpleMetadata(
-        ctx.getVersion(), ctx.getLastAccessTime(), removalTimeoutInSeconds*1000L, data);
+        if (data != null) {
+            SimpleMetadata beanState = new SimpleMetadata(
+                ctx.getVersion(), ctx.getLastAccessTime(), removalTimeoutInSeconds*1000L, data);
 
-        //Note: Don't increment the version here because
-        //  this is called on an async thread and the client
-        //  already has the correct version
-        beanState.setVersion(ctx.getVersion());
-        try {
-            if(backingStore != null) {
-                backingStore.save(sessionKey, beanState, !ctx.existsInStore());
-                // sfsbStoreMonitor.setPassivationSize(data.length);
-                status = true;
+            //Note: Don't increment the version here because
+            //  this is called on an async thread and the client
+            //  already has the correct version
+            beanState.setVersion(ctx.getVersion());
+            try {
+                if(backingStore != null) {
+                    backingStore.save(sessionKey, beanState, !ctx.existsInStore());
+                    // sfsbStoreMonitor.setPassivationSize(data.length);
+                    status = true;
+                }
+            } catch (BackingStoreException sfsbEx) {
+                _logger.log(Level.WARNING, EXCEPTION_DURING_PASSIVATE_SAVE, new Object[]{cacheName, sessionKey, sfsbEx});
             }
-        } catch (BackingStoreException sfsbEx) {
-        _logger.log(Level.WARNING, EXCEPTION_DURING_PASSIVATE_SAVE, new Object[]{cacheName, sessionKey, sfsbEx});
         }
-    }
 
-    return status;
+        return status;
     }
 
     private void trimSelectedVictims(ArrayList victims) {
@@ -574,11 +566,11 @@ public class LruSessionCache
     }
 
     public void setShutdownState() {
-    currentCacheState = STATE_SHUTTING_DOWN;
+        currentCacheState = STATE_SHUTTING_DOWN;
     }
 
     public void setUndeployedState() {
-    currentCacheState = STATE_UNDEPLOYING;
+        currentCacheState = STATE_UNDEPLOYING;
     }
 
     /**
@@ -588,13 +580,13 @@ public class LruSessionCache
     public Iterator values() {
         ArrayList valueList = new ArrayList();
 
-    synchronized (this) {
+        synchronized (this) {
             LruCacheItem item = tail;
             while (item != null) {
                 StatefulEJBContext ctx = (StatefulEJBContext) item.getValue();
                 if (ctx != null) {
-            valueList.add(ctx);
-        }
+                    valueList.add(ctx);
+                }
 
                 //Ensure that for head the lPrev is null
                 if( (item == head) && (item.getLPrev() != null) ) {
@@ -603,8 +595,8 @@ public class LruSessionCache
                 }
                 // traverse to the previous one
                 item = item.getLPrev();
+            }
         }
-    }
 
         return valueList.iterator();
     }
@@ -669,10 +661,10 @@ public class LruSessionCache
             // traverse LRU list and collect victims into the victimList
             item = tail;
             while (true) {
-        if (currentCacheState != STATE_RUNNING) {
+                if (currentCacheState != STATE_RUNNING) {
                     _logger.log(Level.WARNING, EXITING_TRIM_TIMEDOUT_BEANS, new Object[]{cacheName, currentCacheState});
-            break;
-        }
+                    break;
+                }
 
                 StatefulEJBContext ctx = (StatefulEJBContext) item.getValue();
                 if (ctx != null) {
@@ -713,8 +705,9 @@ public class LruSessionCache
             }
 
             // there is at least one item selected for trimming
-            if (item == null)
+            if (item == null) {
                 head = null;
+            }
 
             tail = item;
             count = victimList.size();
@@ -758,7 +751,7 @@ public class LruSessionCache
             if (buckets[index] != null) {
                 synchronized (bucketLocks[index]) {
                     for (CacheItem item = buckets[index]; item != null;
-                         item = item.getNext()) {
+                        item = item.getNext()) {
                         StatefulEJBContext ctx =
                             (StatefulEJBContext) item.getValue();
                         //Note ctx can be null if bean is in BEING_REFRESHED state
@@ -767,11 +760,11 @@ public class LruSessionCache
                             ctx.canBePassivated()) {
                             LruCacheItem litem = (LruCacheItem)item;
                             synchronized (this) {
-                if (currentCacheState != STATE_RUNNING) {
-                    _logger.log(Level.WARNING, EXITING_TRIM_UNSORTED_TIMEDOUT_BEANS,
-                            new Object[]{cacheName, currentCacheState});
-                    break;
-                }
+                                if (currentCacheState != STATE_RUNNING) {
+                                    _logger.log(Level.WARNING, EXITING_TRIM_UNSORTED_TIMEDOUT_BEANS,
+                                        new Object[]{cacheName, currentCacheState});
+                                    break;
+                                }
                                 if (!litem.isTrimmed()) {
                                     itemRemoved(litem);
                                     litem.setTrimmed(true);
@@ -807,95 +800,87 @@ public class LruSessionCache
         return numVictimsAccessed;
     }
 
-    protected CacheItem createItem(int hashCode, Object sessionKey,
-            Object value, int size)
-    {
+    protected CacheItem createItem(int hashCode, Object sessionKey, Object value, int size) {
         return new LruSessionCacheItem(hashCode, sessionKey, value, size);
     }
 
     //*Class for LruSessionCacheItem
-    protected static class LruSessionCacheItem
-        extends LruCacheItem
-    {
+    protected static class LruSessionCacheItem extends LruCacheItem {
 
         protected byte waitCount;
         protected byte cacheItemState = CACHE_ITEM_VALID;
 
-        protected LruSessionCacheItem(int hashCode, Object key, Object value,
-                               int size)
-        {
+        protected LruSessionCacheItem(int hashCode, Object key, Object value, int size) {
             super(hashCode, key, value, size);
             this.cacheItemState = CACHE_ITEM_VALID;
         }
 
-        protected LruSessionCacheItem(int hashCode, Object key, Object value,
-                               int size, byte state)
-        {
+        protected LruSessionCacheItem(int hashCode, Object key, Object value, int size, byte state) {
             super(hashCode, key, value, size);
             this.cacheItemState = state;
         }
     }
 
     public void setConfigData(String configData) {
-    this.configData = configData;
+        this.configData = configData;
     }
 
     //Implementation of EjbCacheStatsProviderDelegate
 
     public void appendStats(StringBuffer sbuf) {
-    sbuf.append("[Cache: ")
+        sbuf.append("[Cache: ")
         .append("Size=").append(entryCount).append("; ")
         .append("HitCount=").append(hitCount).append("; ")
         .append("MissCount=").append(missCount).append("; ")
         .append("Passivations=").append(getNumPassivations()).append("; ");
-    if (configData != null) {
-        sbuf.append(configData);
-    }
-    sbuf.append("]");
+        if (configData != null) {
+            sbuf.append(configData);
+        }
+        sbuf.append("]");
     }
 
     public int getCacheHits() {
-    return hitCount;
+        return hitCount;
     }
 
     public int getCacheMisses() {
-    return missCount;
+        return missCount;
     }
 
     public int getNumBeansInCache() {
-    return entryCount;
+        return entryCount;
     }
 
     public int getNumExpiredSessionsRemoved() {
-    /*return (sfsbStoreMonitor == null)
+        /*return (sfsbStoreMonitor == null)
         ? 0 : sfsbStoreMonitor.getNumExpiredSessionsRemoved(); */
         return 0;
     }
 
     public int getNumPassivationErrors() {
-    /* return (sfsbStoreMonitor == null)
+        /* return (sfsbStoreMonitor == null)
         ? 0 : sfsbStoreMonitor.getNumPassivationErrors(); */
         return 0;
     }
 
     public int getNumPassivations() {
-     /* return (sfsbStoreMonitor == null)
+        /* return (sfsbStoreMonitor == null)
         ? 0 : sfsbStoreMonitor.getNumPassivations(); */
         return 0;
     }
 
     public int getNumPassivationSuccess() {
-    /*return (sfsbStoreMonitor == null)
+        /*return (sfsbStoreMonitor == null)
         ? 0 : sfsbStoreMonitor.getNumPassivationSuccess(); */
         return 0;
     }
 
     public void setMaxCacheSize(int val) {
-    this.confMaxCacheSize = val;
+        this.confMaxCacheSize = val;
     }
 
     public int getMaxCacheSize() {
-    return confMaxCacheSize;
+        return confMaxCacheSize;
     }
 
 }

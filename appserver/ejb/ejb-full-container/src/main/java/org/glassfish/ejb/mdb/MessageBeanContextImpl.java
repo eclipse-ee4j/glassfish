@@ -16,109 +16,112 @@
 
 package org.glassfish.ejb.mdb;
 
-import jakarta.ejb.*;
-
-import jakarta.transaction.UserTransaction;
 import com.sun.ejb.EjbInvocation;
 import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.ejb.containers.EJBObjectImpl;
 import com.sun.ejb.containers.EJBTimerService;
 import com.sun.ejb.containers.EJBTimerServiceWrapper;
+import com.sun.ejb.containers.EjbContainerUtilImpl;
+
 import org.glassfish.api.invocation.ComponentInvocation;
+
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.MessageDrivenContext;
+import jakarta.ejb.TimerService;
+import jakarta.transaction.UserTransaction;
 
 /**
  * Implementation of EJBContext for message-driven beans
  *
  * @author Kenneth Saks
  */
-
-public final class MessageBeanContextImpl
-        extends EJBContextImpl
-        implements MessageDrivenContext
-{
+public final class MessageBeanContextImpl extends EJBContextImpl implements MessageDrivenContext {
 
     private boolean afterSetContext = false;
 
-    MessageBeanContextImpl(Object ejb, BaseContainer container)
-    {
+    MessageBeanContextImpl(Object ejb, BaseContainer container) {
         super(ejb, container);
     }
 
-    void setEJBStub(EJBObject ejbStub)
-    {
-    throw new RuntimeException("No stubs for Message-driven beans");
+
+    void setEJBStub(EJBObject ejbStub) {
+        throw new RuntimeException("No stubs for Message-driven beans");
     }
 
-    void setEJBObjectImpl(EJBObjectImpl ejbo)
-    {
-    throw new RuntimeException("No EJB Object for Message-driven beans");
+
+    void setEJBObjectImpl(EJBObjectImpl ejbo) {
+        throw new RuntimeException("No EJB Object for Message-driven beans");
     }
 
-    //FIXME later
+
+    // FIXME later
     EJBObjectImpl getEJBObjectImpl() {
         throw new RuntimeException("No EJB Object for Message-driven beans");
     }
+
 
     public void setContextCalled() {
         this.afterSetContext = true;
     }
 
+
     /*****************************************************************
-     *    The following are implementations of EJBContext methods.
+     * The following are implementations of EJBContext methods.
      ******************************************************************/
 
     /**
      *
      */
-    public UserTransaction getUserTransaction()
-    throws java.lang.IllegalStateException
-    {
-    // The state check ensures that an exception is thrown if this
-    // was called from the constructor or setMessageDrivenContext.
-    // The remaining checks are performed by the container.
-    if ( !this.afterSetContext ) {
-        throw new java.lang.IllegalStateException("Operation not allowed");
+    @Override
+    public UserTransaction getUserTransaction() throws java.lang.IllegalStateException {
+        // The state check ensures that an exception is thrown if this
+        // was called from the constructor or setMessageDrivenContext.
+        // The remaining checks are performed by the container.
+        if (!this.afterSetContext) {
+            throw new java.lang.IllegalStateException("Operation not allowed");
         }
 
-    return ((BaseContainer)getContainer()).getUserTransaction();
+        return ((BaseContainer) getContainer()).getUserTransaction();
     }
 
-    /*
+
+    /**
      * Doesn't make any sense to get EJBHome object for
      * a message-driven ejb.
      */
-    public EJBHome getEJBHome()
-    {
-        RuntimeException exception = new java.lang.IllegalStateException
-            ("getEJBHome not allowed for message-driven beans");
+    @Override
+    public EJBHome getEJBHome() {
+        RuntimeException exception = new java.lang.IllegalStateException(
+            "getEJBHome not allowed for message-driven beans");
         throw exception;
     }
 
 
-    protected void checkAccessToCallerSecurity()
-        throws java.lang.IllegalStateException
-    {
+    @Override
+    protected void checkAccessToCallerSecurity() throws java.lang.IllegalStateException {
         // A message-driven ejb's state transitions past UNINITIALIZED
         // AFTER ejbCreate
-        if ( !operationsAllowed() ) {
+        if (!operationsAllowed()) {
             throw new java.lang.IllegalStateException("Operation not allowed");
         }
 
     }
 
+
+    @Override
     public boolean isCallerInRole(String roleRef) {
-        if ( roleRef == null )
+        if (roleRef == null) {
             throw new IllegalStateException("Argument is null");
+        }
 
         checkAccessToCallerSecurity();
 
-        ComponentInvocation inv =
-                    EjbContainerUtilImpl.getInstance().getCurrentInvocation();
-        if ( inv instanceof EjbInvocation) {
+        ComponentInvocation inv = EjbContainerUtilImpl.getInstance().getCurrentInvocation();
+        if (inv instanceof EjbInvocation) {
             EjbInvocation ejbInv = (EjbInvocation) inv;
-            if( ejbInv.isTimerCallback ) {
+            if (ejbInv.isTimerCallback) {
                 throw new IllegalStateException("isCallerInRole not allowed from timer callback");
             }
 
@@ -130,10 +133,10 @@ public final class MessageBeanContextImpl
         return sm.isCallerInRole(roleRef);
     }
 
-    public TimerService getTimerService()
-        throws java.lang.IllegalStateException {
 
-        if( !afterSetContext ) {
+    @Override
+    public TimerService getTimerService() throws java.lang.IllegalStateException {
+        if (!afterSetContext) {
             throw new java.lang.IllegalStateException("Operation not allowed");
         }
 
@@ -141,33 +144,37 @@ public final class MessageBeanContextImpl
         return new EJBTimerServiceWrapper(timerService, this);
     }
 
-    public void checkTimerServiceMethodAccess()
-        throws java.lang.IllegalStateException {
 
+    @Override
+    public void checkTimerServiceMethodAccess() throws java.lang.IllegalStateException {
         // A message-driven ejb's state transitions past UNINITIALIZED
         // AFTER ejbCreate
-        if ( !operationsAllowed() ) {
-            throw new java.lang.IllegalStateException
-                ("EJB Timer Service method calls cannot be called in " +
-                 " this context");
+        if (!operationsAllowed()) {
+            throw new java.lang.IllegalStateException(
+                "EJB Timer Service method calls cannot be called in " + " this context");
         }
     }
 
-    final boolean isInState(BeanState value) {
+
+    boolean isInState(BeanState value) {
         return getState() == value;
     }
+
 
     void setState(BeanState s) {
         state = s;
     }
 
+
     void setInEjbRemove(boolean beingRemoved) {
         inEjbRemove = beingRemoved;
     }
 
+
     boolean operationsAllowed() {
         return !(isUnitialized() || inEjbRemove);
     }
+
 
     /**
      * Returns true if this context has NOT progressed past its initial

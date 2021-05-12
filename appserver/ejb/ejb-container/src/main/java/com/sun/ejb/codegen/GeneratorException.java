@@ -20,28 +20,31 @@ package com.sun.ejb.codegen;
  * The Generator exception is thrown whenever there is an error in
  * generating the stubs and skeletons and other related files.
  */
-
 public class GeneratorException extends java.lang.Exception {
+
     /**
      * Constructs the Generator exception with the specified string.
+     *
      * @param the string description
      */
     public GeneratorException(String s) {
-    super(s);
-    this.reason = s;
+        super(s);
+        this.reason = s;
     }
+
 
     /**
      * Return the string representation of the exception.
+     *
      * @return the string representation of the exception.
      */
+    @Override
     public String toString() {
-    return reason;
+        return reason;
     }
 
     /**
      * @serial XXX needs doc
      */
-    private String reason;
+    private final String reason;
 }
-

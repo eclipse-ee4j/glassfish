@@ -63,16 +63,15 @@ final class ContainerSynchronization implements Synchronization
     SFSBTxCheckpointCoordinator sfsbTxCoordinator;
 
     // Note: this must be called only after a Tx is begun.
-    ContainerSynchronization(Transaction tx,
-                 EjbContainerUtil ejbContainerUtilImpl)
-    {
+    ContainerSynchronization(Transaction tx, EjbContainerUtil ejbContainerUtilImpl) {
         this.tx = tx;
         this.ejbContainerUtilImpl = ejbContainerUtilImpl;
     }
 
-    Vector  getBeanList(){
+
+    Vector getBeanList() {
         Vector vec = new Vector();
-        for (Iterator iter = beans.iterator(); iter.hasNext(); ) {
+        for (Iterator iter = beans.iterator(); iter.hasNext();) {
             vec.add(iter.next());
         }
         return vec;
@@ -111,37 +110,37 @@ final class ContainerSynchronization implements Synchronization
     public void beforeCompletion()
     {
         // first call beforeCompletion for each bean instance
-        for ( int i=0; i<beans.size(); i++ ) {
+        for (int i = 0; i < beans.size(); i++) {
             EJBContextImpl context = (EJBContextImpl)beans.get(i);
             BaseContainer container = (BaseContainer)context.getContainer();
             try {
                 if( container != null ) {
                     boolean allowTxCompletion = true;
-            if (container.isUndeployed()) {
+                    if (container.isUndeployed()) {
                         if (context instanceof SessionContextImpl) {
                             allowTxCompletion = ((SessionContextImpl) context).getInLifeCycleCallback();
                         } else {
                             allowTxCompletion = false;
-                    _logger.log(Level.WARNING, "Marking Tx for rollback "
-                        + " because container for " + container
-                        + " is undeployed");
+                            _logger.log(Level.WARNING, "Marking Tx for rollback "
+                                + " because container for " + container
+                                + " is undeployed");
                         }
                     }
 
                     if (!allowTxCompletion) {
-            try {
-                tx.setRollbackOnly();
-            } catch (SystemException sysEx) {
-                _logger.log(Level.FINE, "Error while trying to "
-                + "mark for rollback", sysEx);
-            }
-            } else {
-            container.beforeCompletion(context);
-            }
+                        try {
+                            tx.setRollbackOnly();
+                        } catch (SystemException sysEx) {
+                            _logger.log(Level.FINE, "Error while trying to "
+                                + "mark for rollback", sysEx);
+                        }
+                    } else {
+                        container.beforeCompletion(context);
+                    }
                 } else {
                     // Might be null if bean was removed.  Just skip it.
                     _logger.log(Level.FINE, "context with empty container in " +
-                                " ContainerSynchronization.beforeCompletion");
+                        " ContainerSynchronization.beforeCompletion");
                 }
             } catch ( RuntimeException ex ) {
                 logAndRollbackTransaction(ex);
@@ -154,7 +153,7 @@ final class ContainerSynchronization implements Synchronization
         }
 
         // now call beforeCompletion for all pmSyncs
-        for ( int i=0; i<pmSyncs.size(); i++ ) {
+        for (int i = 0; i < pmSyncs.size(); i++) {
             Synchronization sync = (Synchronization)pmSyncs.elementAt(i);
             try {
                 sync.beforeCompletion();

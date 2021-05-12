@@ -724,9 +724,9 @@ public final class StatefulSessionContainer
 
             _logger.log(Level.WARNING, CREATE_EJBLOCALOBJECT_EXCEPTION, new Object[]{ejbDescriptor.getName(), ex});
 
-            if (ex instanceof EJBException)
+            if (ex instanceof EJBException) {
                 throw (EJBException) ex;
-            else {
+            } else {
                 CreateException ce =
                         new CreateException("ERROR creating stateful SessionBean");
                 ce.initCause(ex);
@@ -735,15 +735,15 @@ public final class StatefulSessionContainer
         }
     }
 
-   @Override
-   protected EJBContextImpl _constructEJBContextImpl(Object instance) {
-    return new SessionContextImpl(instance, this);
+    @Override
+    protected EJBContextImpl _constructEJBContextImpl(Object instance) {
+        return new SessionContextImpl(instance, this);
     }
 
     @Override
     protected Object _constructEJBInstance() throws Exception {
-    return  (sfsbSerializedClass != null) ?
-        sfsbSerializedClass.newInstance() : ejbClass.newInstance();
+        return  (sfsbSerializedClass != null) ?
+            sfsbSerializedClass.newInstance() : ejbClass.newInstance();
     }
 
     @Override
@@ -2198,43 +2198,41 @@ public final class StatefulSessionContainer
         }
     }
 
-    private void callEjbAfterCompletion(SessionContextImpl context,
-                                        boolean status) {
-    if( afterCompletionMethod != null ) {
-        Object ejb = context.getEJB();
-        EjbInvocation ejbInv = createEjbInvocation(ejb, context);
-        invocationManager.preInvoke(ejbInv);
-        try {
-        context.setInAfterCompletion(true);
-        afterCompletionMethod.invoke(ejb, status);
 
-        // reset flags
-        context.setAfterCompletionDelayed(false);
-        context.setTxCompleting(false);
-        }
-        catch (Exception ex) {
-            Throwable realException = ex;
-            if( ex instanceof InvocationTargetException ) {
-                realException = ((InvocationTargetException)ex).getTargetException();
-            }
-        // Error during afterCompletion, so discard bean: EJB2.0 18.3.3
+    private void callEjbAfterCompletion(SessionContextImpl context, boolean status) {
+        if (afterCompletionMethod != null) {
+            Object ejb = context.getEJB();
+            EjbInvocation ejbInv = createEjbInvocation(ejb, context);
+            invocationManager.preInvoke(ejbInv);
+            try {
+                context.setInAfterCompletion(true);
+                afterCompletionMethod.invoke(ejb, status);
+
+                // reset flags
+                context.setAfterCompletionDelayed(false);
+                context.setTxCompleting(false);
+            } catch (Exception ex) {
+                Throwable realException = ex;
+                if( ex instanceof InvocationTargetException ) {
+                    realException = ((InvocationTargetException)ex).getTargetException();
+                }
+                // Error during afterCompletion, so discard bean: EJB2.0 18.3.3
                 try {
                     forceDestroyBean(context);
                 } catch (Exception e) {
                     _logger.log(Level.FINE, "error destroying bean", e);
                 }
 
-        _logger.log(Level.INFO, AFTER_COMPLETION_EXCEPTION, realException);
+                _logger.log(Level.INFO, AFTER_COMPLETION_EXCEPTION, realException);
 
-        // No use throwing an exception here, since the tx has already
-        // completed, and afterCompletion may be called asynchronously
-        // when there is no client to receive the exception.
+                // No use throwing an exception here, since the tx has already
+                // completed, and afterCompletion may be called asynchronously
+                // when there is no client to receive the exception.
+            } finally {
+                context.setInAfterCompletion(false);
+                invocationManager.postInvoke(ejbInv);
+            }
         }
-        finally {
-        context.setInAfterCompletion(false);
-        invocationManager.postInvoke(ejbInv);
-        }
-    }
     }
 
     public final boolean canPassivateEJB(ComponentContext context) {
@@ -2463,10 +2461,8 @@ public final class StatefulSessionContainer
     }
 
     // called from StatefulSessionStore
-    public void activateEJB(Object sessionKey, StatefulEJBContext sfsbCtx,
-                            Object cookie) {
-        SessionContextImpl context = (SessionContextImpl)
-                sfsbCtx.getSessionContext();
+    public void activateEJB(Object sessionKey, StatefulEJBContext sfsbCtx, Object cookie) {
+        SessionContextImpl context = (SessionContextImpl) sfsbCtx.getSessionContext();
 
         if (_logger.isLoggable(TRACE_LEVEL)) {
             logTraceInfo(context, "Attempting to activate");

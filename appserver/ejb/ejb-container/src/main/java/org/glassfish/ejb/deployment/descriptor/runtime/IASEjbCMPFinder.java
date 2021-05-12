@@ -20,67 +20,67 @@ import org.glassfish.deployment.common.Descriptor;
 
 public class IASEjbCMPFinder extends Descriptor {
 
-      private String method_name = null;
-      private String query_params = null;
-      private String query_filter = null;
-      private String query_variables = null;
-      private String query_ordering = null;
+    private String method_name = null;
+    private String query_params = null;
+    private String query_filter = null;
+    private String query_variables = null;
+    private String query_ordering = null;
 
-      public IASEjbCMPFinder () {
-      }
+    public IASEjbCMPFinder () {
+    }
 
-      public IASEjbCMPFinder(String method_name, String params, String filter) {
+    public IASEjbCMPFinder(String method_name, String params, String filter) {
         this.method_name = method_name;
         this.query_params = params;
         this.query_filter = filter;
         this.query_variables = "";
-      }
+    }
 
-      public IASEjbCMPFinder(String method_name, String params, String filter, String variables) {
+    public IASEjbCMPFinder(String method_name, String params, String filter, String variables) {
         this.method_name = method_name;
         this.query_params = params;
         this.query_filter = filter;
         this.query_variables = variables;
-      }
+    }
 
-      public String getMethodName() {
+    public String getMethodName() {
         return method_name;
-      }
+    }
 
-      public String getQueryParameterDeclaration() {
+    public String getQueryParameterDeclaration() {
         return query_params;
-      }
+    }
 
-      public String getQueryFilter() {
+    public String getQueryFilter() {
         return query_filter;
-      }
+    }
 
-      public String getQueryVariables() {
+    public String getQueryVariables() {
         return query_variables;
-      }
+    }
 
-      public void setMethodName(String name) {
+    public void setMethodName(String name) {
         method_name = name;
-      }
+    }
 
-      public void setQueryParameterDeclaration(String qry) {
+    public void setQueryParameterDeclaration(String qry) {
         query_params = qry;
-      }
+    }
 
-      public void setQueryVariables(String qryvariables) {
+    public void setQueryVariables(String qryvariables) {
         query_variables = qryvariables;
-      }
+    }
 
-      public void setQueryFilter(String qryfilter) {
+    public void setQueryFilter(String qryfilter) {
         query_filter = qryfilter;
-      }
+    }
 
-      public String getQueryOrdering() {
-      return query_ordering;
-      }
+    public String getQueryOrdering() {
+        return query_ordering;
+    }
 
-      public void setQueryOrdering(String qryordering) {
-      query_ordering = qryordering;
-      }
+    public void setQueryOrdering(String qryordering) {
+        query_ordering = qryordering;
+    }
 }
 

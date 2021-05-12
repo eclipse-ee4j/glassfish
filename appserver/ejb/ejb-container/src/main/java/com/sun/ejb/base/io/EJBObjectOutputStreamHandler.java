@@ -97,8 +97,8 @@ public class EJBObjectOutputStreamHandler
      * this runtime.
      */
     private ProtocolManager getProtocolManager() {
-    GlassFishORBHelper orbHelper = Globals.getDefaultHabitat().getService(GlassFishORBHelper.class);
-    return orbHelper.isORBInitialized() ? orbHelper.getProtocolManager() : null;
+        GlassFishORBHelper orbHelper = Globals.getDefaultHabitat().getService(GlassFishORBHelper.class);
+        return orbHelper.isORBInitialized() ? orbHelper.getProtocolManager() : null;
     }
 
     private Serializable getRemoteBusinessObjectFactory

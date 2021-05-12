@@ -48,10 +48,7 @@ final public class BeanMethodCalculatorImpl {
     // TODO - change logger if/when other EJB deployment classes are changed
     static final private Logger _logger = LogDomains.getLogger(BeanMethodCalculatorImpl.class, LogDomains.DPL_LOGGER);
 
-    public Vector getPossibleCmpCmrFields(ClassLoader cl,
-                                                 String className)
-        throws ClassNotFoundException {
-
+    public Vector getPossibleCmpCmrFields(ClassLoader cl, String className) throws ClassNotFoundException {
         Vector fieldDescriptors = new Vector();
         Class theClass = cl.loadClass(className);
 
@@ -136,13 +133,11 @@ final public class BeanMethodCalculatorImpl {
 
         Vector methods = new Vector();
         if (ejbDescriptor instanceof EjbSessionDescriptor) {
-            statefulSessionBean =
-                ((EjbSessionDescriptor) ejbDescriptor).isStateful();
+            statefulSessionBean = ((EjbSessionDescriptor) ejbDescriptor).isStateful();
 
-            boolean singletonSessionBean =
-                ((EjbSessionDescriptor) ejbDescriptor).isSingleton();
+            boolean singletonSessionBean = ((EjbSessionDescriptor) ejbDescriptor).isSingleton();
 
-        // Session Beans
+            // Session Beans
             if (ejbDescriptor.isRemoteInterfacesSupported()) {
                 Collection disallowedMethods = extractDisallowedMethodsFor(jakarta.ejb.EJBObject.class, sessionBeanMethodsDisallowed);
                 Collection potentials = getTransactionMethodsFor(loader, ejbDescriptor.getRemoteClassName() , disallowedMethods);

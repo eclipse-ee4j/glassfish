@@ -64,7 +64,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
     public EjbNode() {
         super();
         registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY),
-                                                             EnvEntryNode.class, "addEnvironmentProperty");
+            EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
         JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
@@ -72,7 +72,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
         registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-                                                             ResourceRefNode.class, "addResourceReferenceDescriptor");
+            ResourceRefNode.class, "addResourceReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.DATA_SOURCE), DataSourceDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.CONNECTION_FACTORY), ConnectionFactoryDefinitionNode.class, "addResourceDescriptor");
@@ -80,10 +80,9 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         registerElementHandler(new XMLElement(TagNames.JMS_CONNECTION_FACTORY), JMSConnectionFactoryDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
 
-        registerElementHandler(new XMLElement(EjbTagNames.SECURITY_IDENTITY),
-                                                            SecurityIdentityNode.class);
+        registerElementHandler(new XMLElement(EjbTagNames.SECURITY_IDENTITY), SecurityIdentityNode.class);
         registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
-                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
+            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_CONTEXT_REF), EntityManagerReferenceNode.class, "addEntityManagerReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
@@ -98,25 +97,20 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
             }
-            getEjbDescriptor().addEjbReferenceDescriptor(
-                        (EjbReference) newDescriptor);
+            getEjbDescriptor().addEjbReferenceDescriptor((EjbReference) newDescriptor);
         } else  if (newDescriptor instanceof RunAsIdentityDescriptor) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding security-identity" + newDescriptor);
             }
             getEjbDescriptor().setUsesCallerIdentity(false);
-        getEjbDescriptor().setRunAsIdentity((RunAsIdentityDescriptor) newDescriptor);
-        } else if( newDescriptor instanceof
-                   MessageDestinationReferenceDescriptor ) {
-            MessageDestinationReferenceDescriptor msgDestRef =
-                (MessageDestinationReferenceDescriptor) newDescriptor;
-            EjbBundleDescriptorImpl ejbBundle = (EjbBundleDescriptorImpl)
-                getParentNode().getDescriptor();
+            getEjbDescriptor().setRunAsIdentity((RunAsIdentityDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof MessageDestinationReferenceDescriptor) {
+            MessageDestinationReferenceDescriptor msgDestRef = (MessageDestinationReferenceDescriptor) newDescriptor;
+            EjbBundleDescriptorImpl ejbBundle = (EjbBundleDescriptorImpl) getParentNode().getDescriptor();
             // EjbBundle might not be set yet on EjbDescriptor, so set it
             // explicitly here.
             msgDestRef.setReferringBundleDescriptor(ejbBundle);
-            getEjbDescriptor().addMessageDestinationReferenceDescriptor
-                (msgDestRef);
+            getEjbDescriptor().addMessageDestinationReferenceDescriptor(msgDestRef);
         } else {
             super.addDescriptor(newDescriptor);
         }
@@ -157,8 +151,9 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
      * @param the EJB descriptor the security information to be retrieved
      */
     protected void writeSecurityIdentityDescriptor(Node parent,  EjbDescriptor descriptor) {
-        if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity()==null)
+        if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity()==null) {
             return;
+        }
 
         SecurityIdentityNode node = new SecurityIdentityNode();
         node.writeDescriptor(parent, EjbTagNames.SECURITY_IDENTITY,  descriptor);
@@ -172,39 +167,33 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
      */
     protected void writeRoleReferenceDescriptors(Node parentNode, Iterator refs) {
         SecurityRoleRefNode node = new SecurityRoleRefNode();
-        for (;refs.hasNext();) {
+        for (; refs.hasNext();) {
             RoleReference roleRef = (RoleReference) refs.next();
             node.writeDescriptor(parentNode, TagNames.ROLE_REFERENCE, roleRef);
         }
     }
 
-    protected static void writeAroundInvokeDescriptors
-            (Node parentNode, Iterator aroundInvokeDescs) {
-        if (aroundInvokeDescs == null || !aroundInvokeDescs.hasNext())
+    protected static void writeAroundInvokeDescriptors(Node parentNode, Iterator aroundInvokeDescs) {
+        if (aroundInvokeDescs == null || !aroundInvokeDescs.hasNext()) {
             return;
+        }
 
         AroundInvokeNode subNode = new AroundInvokeNode();
         for(; aroundInvokeDescs.hasNext();) {
-            LifecycleCallbackDescriptor next =
-                    (LifecycleCallbackDescriptor) aroundInvokeDescs.next();
-            subNode.writeDescriptor(parentNode,
-                    EjbTagNames.AROUND_INVOKE_METHOD, next);
+            LifecycleCallbackDescriptor next = (LifecycleCallbackDescriptor) aroundInvokeDescs.next();
+            subNode.writeDescriptor(parentNode, EjbTagNames.AROUND_INVOKE_METHOD, next);
         }
-
     }
 
-    protected static void writeAroundTimeoutDescriptors
-            (Node parentNode, Iterator aroundTimeoutDescs) {
-        if (aroundTimeoutDescs == null || !aroundTimeoutDescs.hasNext())
+    protected static void writeAroundTimeoutDescriptors(Node parentNode, Iterator aroundTimeoutDescs) {
+        if (aroundTimeoutDescs == null || !aroundTimeoutDescs.hasNext()) {
             return;
-
-        AroundTimeoutNode subNode = new AroundTimeoutNode();
-        for(; aroundTimeoutDescs.hasNext();) {
-            LifecycleCallbackDescriptor next =
-                    (LifecycleCallbackDescriptor) aroundTimeoutDescs.next();
-            subNode.writeDescriptor(parentNode,
-                    EjbTagNames.AROUND_TIMEOUT_METHOD, next);
         }
 
+        AroundTimeoutNode subNode = new AroundTimeoutNode();
+        for (; aroundTimeoutDescs.hasNext();) {
+            LifecycleCallbackDescriptor next = (LifecycleCallbackDescriptor) aroundTimeoutDescs.next();
+            subNode.writeDescriptor(parentNode, EjbTagNames.AROUND_TIMEOUT_METHOD, next);
+        }
     }
 }

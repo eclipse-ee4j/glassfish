@@ -20,33 +20,32 @@ import org.glassfish.deployment.common.Descriptor;
 
 public class PersistenceManagerInUse extends Descriptor {
 
-      private String pm_identifier;
-      private String pm_version;
+    private String pm_identifier;
+    private String pm_version;
 
-      public PersistenceManagerInUse () {
+    public PersistenceManagerInUse () {
 
-      }
+    }
 
-      public PersistenceManagerInUse(String id, String ver) {
+    public PersistenceManagerInUse(String id, String ver) {
         pm_identifier = id;
         pm_version = ver;
-      }
+    }
 
-      public String get_pm_identifier() {
+    public String get_pm_identifier() {
         return pm_identifier;
-      }
+    }
 
-      public String get_pm_version() {
+    public String get_pm_version() {
         return pm_version;
-      }
+    }
 
-      public void set_pm_identifier(String id) {
+    public void set_pm_identifier(String id) {
         pm_identifier = id;
-      }
+    }
 
-      public void set_pm_version(String ver) {
+    public void set_pm_version(String ver) {
         pm_version = ver;
-      }
+    }
 
 }
-

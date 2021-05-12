@@ -27,61 +27,61 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Danny Coward
  */
-
 public class FieldDescriptor extends Descriptor {
 
     /**
-    * Constructrs an empty field descriptor
-    */
+     * Constructrs an empty field descriptor
+     */
     public FieldDescriptor() {
     }
 
     /**
-    * Constructrs a field descriptor with the given name.
-    */
+     * Constructrs a field descriptor with the given name.
+     */
     public FieldDescriptor(String name) {
-    super(name, "no description");
+        super(name, "no description");
     }
 
     /**
-    * Constructrs a field descriptor with the given name and description.
-    */
+     * Constructrs a field descriptor with the given name and description.
+     */
     public FieldDescriptor(String name, String description) {
-    super(name, description);
+        super(name, description);
     }
 
     /**
-    * Constructs a field descriptor from the supplied java.lang.reflect.Field object.
-    */
-
+     * Constructs a field descriptor from the supplied java.lang.reflect.Field object.
+     */
     public FieldDescriptor(Field field) {
-    this(field.getName(), "no description");
-    }
-
-    /** Equality iff the other objects is a field descriptor with the same name.
-    */
-
-    public boolean equals(Object object) {
-    if (object instanceof FieldDescriptor) {
-        FieldDescriptor otherFieldDescriptor = (FieldDescriptor) object;
-        return otherFieldDescriptor.getName().equals(this.getName());
-    }
-    return false;
-    }
-
-    /** My hashcode.
-    */
-
-    public int hashCode() {
-    return this.getName().hashCode();
+        this(field.getName(), "no description");
     }
 
     /**
-    * Returns a formatted version of me as a String.
-    */
+     * Equality iff the other objects is a field descriptor with the same name.
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof FieldDescriptor) {
+            FieldDescriptor otherFieldDescriptor = (FieldDescriptor) object;
+            return otherFieldDescriptor.getName().equals(this.getName());
+        }
+        return false;
+    }
 
+    /**
+     * My hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
+
+    /**
+     * Returns a formatted version of me as a String.
+     */
+    @Override
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("Field: ").append(super.getName()).append("@").append(super.getDescription());
+        toStringBuffer.append("Field: ").append(super.getName()).append("@").append(super.getDescription());
     }
 
     /**
@@ -90,7 +90,7 @@ public class FieldDescriptor extends Descriptor {
      * letter)
      * </p>
      * @param fieldName is the field name to test
-     * @throw IllegalArgumentException if the name is unacceptable
+     * @throws IllegalArgumentException if the name is unacceptable
      */
     public static void checkFieldName(String fieldName) throws IllegalArgumentException {
 

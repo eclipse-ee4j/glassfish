@@ -22,116 +22,115 @@ package com.sun.ejb.base.stats;
  *
  * @author Mahesh Kannan
  */
-
 public class StatefulSessionStoreMonitor {
 
     private StatefulSessionStoreStatsImpl statsImpl;
 
     void setDelegate(StatefulSessionStoreStatsImpl delegate) {
-    this.statsImpl = delegate;
+        this.statsImpl = delegate;
     }
 
     final void appendStats(StringBuffer sbuf) {
-    if (statsImpl != null) {
-        statsImpl.appendStats(sbuf);
-    }
+        if (statsImpl != null) {
+            statsImpl.appendStats(sbuf);
+        }
     }
 
     //The following methods are called from StatefulSessionContainer
     //
     public final boolean isMonitoringOn() {
-    return (statsImpl != null);
+        return (statsImpl != null);
     }
 
     public final void incrementActivationCount(boolean success) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.incrementActivationCount(success);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.incrementActivationCount(success);
+        }
     }
 
     public final void incrementPassivationCount(boolean success) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.incrementPassivationCount(success);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.incrementPassivationCount(success);
+        }
     }
 
     public final void setActivationSize(long val) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.setActivationSize(val);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.setActivationSize(val);
+        }
     }
 
     public final void setActivationTime(long val) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.setActivationTime(val);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.setActivationTime(val);
+        }
     }
 
     public final void setPassivationSize(long val) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.setPassivationSize(val);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.setPassivationSize(val);
+        }
     }
 
     public final void setPassivationTime(long val) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.setPassivationTime(val);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.setPassivationTime(val);
+        }
     }
 
     public final void incrementExpiredSessionsRemoved(long val) {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    if (delegate != null) {
-        delegate.incrementExpiredSessionCountVal(val);
-    }
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        if (delegate != null) {
+            delegate.incrementExpiredSessionCountVal(val);
+        }
     }
 
     public void incrementCheckpointCount(boolean success) {
-    throw new RuntimeException("Checkpoint operation not allowed on non-HA store");
+        throw new RuntimeException("Checkpoint operation not allowed on non-HA store");
     }
 
     public void setCheckpointSize(long val) {
-    throw new RuntimeException("Checkpoint operation not allowed on non-HA store");
+        throw new RuntimeException("Checkpoint operation not allowed on non-HA store");
     }
 
     public void setCheckpointTime(long val) {
-    throw new RuntimeException("Checkpoint operation not allowed on non-HA store");
+        throw new RuntimeException("Checkpoint operation not allowed on non-HA store");
     }
 
     //The following methods are maintained for backward compatibility
     //Called from LruSessionCache
     public int getNumExpiredSessionsRemoved() {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    return (delegate != null)
-        ? delegate.getNumExpiredSessionCount()
-        : 0;
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        return (delegate != null)
+            ? delegate.getNumExpiredSessionCount()
+                : 0;
     }
 
     public int getNumPassivationErrors() {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    return (delegate != null)
-        ? delegate.getNumPassivationErrorCount()
-        : 0;
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        return (delegate != null)
+            ? delegate.getNumPassivationErrorCount()
+                : 0;
     }
 
     public int getNumPassivations() {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    return (delegate != null)
-        ? delegate.getNumPassivationCount()
-        : 0;
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        return (delegate != null)
+            ? delegate.getNumPassivationCount()
+                : 0;
     }
 
     public int getNumPassivationSuccess() {
-    StatefulSessionStoreStatsImpl delegate = statsImpl;
-    return (delegate != null)
-        ? delegate.getNumPassivationSuccessCount()
-        : 0;
+        StatefulSessionStoreStatsImpl delegate = statsImpl;
+        return (delegate != null)
+            ? delegate.getNumPassivationSuccessCount()
+                : 0;
     }
 
 }

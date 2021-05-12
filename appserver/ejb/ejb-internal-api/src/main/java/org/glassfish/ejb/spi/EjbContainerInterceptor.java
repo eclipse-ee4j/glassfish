@@ -26,7 +26,6 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  * extend the Ejb Container.
  *
  * @author Jeremy_Lv
- *
  */
 @Contract
 public interface EjbContainerInterceptor {
@@ -36,12 +35,12 @@ public interface EjbContainerInterceptor {
      * invoking the EJB application
      * @param ejbDesc
      */
-    public void preInvoke(EjbDescriptor ejbDesc);
+    void preInvoke(EjbDescriptor ejbDesc);
 
     /**
      * User can set some useful informations after
      * invoking the EJB application
      * @param ejbDesc
      */
-    public void postInvoke(EjbDescriptor ejbDesc);
+    void postInvoke(EjbDescriptor ejbDesc);
 }

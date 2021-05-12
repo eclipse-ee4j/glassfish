@@ -80,8 +80,7 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName,
-                                ResourceReferenceDescriptor descriptor) {
+    public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor descriptor) {
         Node cmp = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(cmp, RuntimeTagNames.JNDI_NAME, descriptor.getJndiName());
         if (descriptor.getResourcePrincipal() != null) {
@@ -91,13 +90,13 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
         }
         // properties*
         Iterator properties = descriptor.getProperties();
-    if (properties!=null) {
-        RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();
-        while (properties.hasNext()) {
-        NameValuePairDescriptor aProp = (NameValuePairDescriptor) properties.next();
-        propNode.writeDescriptor(cmp, RuntimeTagNames.PROPERTY, aProp);
+        if (properties!=null) {
+            RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();
+            while (properties.hasNext()) {
+                NameValuePairDescriptor aProp = (NameValuePairDescriptor) properties.next();
+                propNode.writeDescriptor(cmp, RuntimeTagNames.PROPERTY, aProp);
+            }
         }
-    }
 
         // createTableAtDeploy, dropTableAtUndeploy
         if (descriptor.isCreateTablesAtDeploy()) {

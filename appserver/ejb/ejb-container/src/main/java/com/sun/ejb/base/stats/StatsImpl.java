@@ -31,57 +31,54 @@ import java.util.logging.Logger;
  *
  * @author Mahesh Kannan
  */
-
-
-public abstract class StatsImpl
-    implements Stats
-{
+public abstract class StatsImpl implements Stats {
     protected static final Logger _logger = EjbContainerUtilImpl.getLogger();
 
-    private GenericStatsImpl        genericStatsDelegate;
+    private GenericStatsImpl genericStatsDelegate;
 
     protected StatsImpl() {
     }
 
     protected void initialize(String statInterfaceName) {
-    try {
-        genericStatsDelegate =  new GenericStatsImpl(statInterfaceName, this);
-    } catch(ClassNotFoundException cnfEx) {
-        throw new RuntimeException(statInterfaceName + " not found", cnfEx);
-    }
-    }
-
-    public Statistic getStatistic(String statName) {
-    return genericStatsDelegate.getStatistic(statName);
-    }
-
-    public String[] getStatisticNames() {
-    return genericStatsDelegate.getStatisticNames();
-    }
-
-    public Statistic[] getStatistics() {
-    return genericStatsDelegate.getStatistics();
-    }
-
-    public String statToString() {
-    StringBuffer sbuf = new StringBuffer();
-    Statistic[] stats = getStatistics();
-    int sz = stats.length;
-    for (int i=0; i<sz; i++) {
-        if (stats[i] instanceof CountStatistic) {
-        CountStatistic stat = (CountStatistic) stats[i];
-        sbuf.append(stat.getName()).append("=")
-            .append(stat.getCount()).append("; ");
-        } else if (stats[i]  instanceof BoundedRangeStatistic) {
-        BoundedRangeStatistic stat = (BoundedRangeStatistic) stats[i];
-        sbuf.append(stat.getName()).append("=")
-            .append(stat.getCurrent()).append("; ");
-        } else {
-        sbuf.append(stats[i].getName()).append("=?");
+        try {
+            genericStatsDelegate =  new GenericStatsImpl(statInterfaceName, this);
+        } catch(ClassNotFoundException cnfEx) {
+            throw new RuntimeException(statInterfaceName + " not found", cnfEx);
         }
     }
 
-    return sbuf.toString();
+    @Override
+    public Statistic getStatistic(String statName) {
+        return genericStatsDelegate.getStatistic(statName);
+    }
+
+    @Override
+    public String[] getStatisticNames() {
+        return genericStatsDelegate.getStatisticNames();
+    }
+
+    @Override
+    public Statistic[] getStatistics() {
+        return genericStatsDelegate.getStatistics();
+    }
+
+    public String statToString() {
+        StringBuffer sbuf = new StringBuffer();
+        Statistic[] stats = getStatistics();
+        int sz = stats.length;
+        for (int i = 0; i < sz; i++) {
+            if (stats[i] instanceof CountStatistic) {
+                CountStatistic stat = (CountStatistic) stats[i];
+                sbuf.append(stat.getName()).append("=").append(stat.getCount()).append("; ");
+            } else if (stats[i] instanceof BoundedRangeStatistic) {
+                BoundedRangeStatistic stat = (BoundedRangeStatistic) stats[i];
+                sbuf.append(stat.getName()).append("=").append(stat.getCurrent()).append("; ");
+            } else {
+                sbuf.append(stats[i].getName()).append("=?");
+            }
+        }
+
+        return sbuf.toString();
     }
 
 }

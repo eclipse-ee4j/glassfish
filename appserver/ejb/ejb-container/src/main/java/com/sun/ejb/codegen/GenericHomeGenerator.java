@@ -34,8 +34,7 @@ import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.*;
 public class GenericHomeGenerator extends Generator
     implements ClassGeneratorFactory {
 
-    private static LocalStringManagerImpl localStrings =
-    new LocalStringManagerImpl(GenericHomeGenerator.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GenericHomeGenerator.class);
 
     private String genericEJBHomeClassName;
     private ClassLoader loader;
@@ -53,9 +52,8 @@ public class GenericHomeGenerator extends Generator
         return getGeneratedClass();
     }
 
-    public GenericHomeGenerator(ClassLoader cl)
-        throws GeneratorException
-    {
+
+    public GenericHomeGenerator(ClassLoader cl) throws GeneratorException {
         super();
 
         genericEJBHomeClassName = EJBUtils.getGenericEJBHomeClassName();

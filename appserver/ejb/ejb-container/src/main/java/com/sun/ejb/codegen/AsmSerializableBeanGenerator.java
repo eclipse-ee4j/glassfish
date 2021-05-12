@@ -31,7 +31,7 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 public class AsmSerializableBeanGenerator
-    implements Opcodes {
+implements Opcodes {
 
     private static final int INTF_FLAGS = ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES;
 
@@ -69,53 +69,53 @@ public class AsmSerializableBeanGenerator
         ClassWriter cw = new ClassWriter(INTF_FLAGS);
 
         //ClassVisitor tv = //(_debug)
-                //new TraceClassVisitor(cw, new PrintWriter(System.out));
+        //new TraceClassVisitor(cw, new PrintWriter(System.out));
         ClassVisitor tv = cw;
         String subclassInternalName = subclassName.replace('.', '/');
 
         String[] interfaces = new String[] {
-             Type.getType(Serializable.class).getInternalName()
+            Type.getType(Serializable.class).getInternalName()
         };
 
         tv.visit(V1_1, ACC_PUBLIC,
-                subclassInternalName, null,
-                Type.getType(baseClass).getInternalName(), interfaces);
+            subclassInternalName, null,
+            Type.getType(baseClass).getInternalName(), interfaces);
 
 
-    // Generate constructor. The EJB spec only allows no-arg constructors, but
-    // JSR 299 added requirements that allow a single constructor to define
-    // parameters injected by CDI.
+        // Generate constructor. The EJB spec only allows no-arg constructors, but
+        // JSR 299 added requirements that allow a single constructor to define
+        // parameters injected by CDI.
 
-    Constructor[] ctors = baseClass.getConstructors();
-    Constructor ctorWithParams = null;
-    for(Constructor ctor : ctors) {
-        if(ctor.getParameterTypes().length == 0) {
+        Constructor[] ctors = baseClass.getConstructors();
+        Constructor ctorWithParams = null;
+        for(Constructor ctor : ctors) {
+            if(ctor.getParameterTypes().length == 0) {
                 ctorWithParams = null;    //exists the no-arg ctor, use it
                 break;
             } else if(ctorWithParams == null) {
-        ctorWithParams = ctor;
+                ctorWithParams = ctor;
+            }
         }
-    }
 
-    int numArgsToPass = 1; // default is 1 to just handle 'this'
-    String paramTypeString = "()V";
+        int numArgsToPass = 1; // default is 1 to just handle 'this'
+        String paramTypeString = "()V";
 
-    if( ctorWithParams != null ) {
-        Class[] paramTypes = ctorWithParams.getParameterTypes();
-        numArgsToPass = paramTypes.length + 1;
-        paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
-    }
+        if( ctorWithParams != null ) {
+            Class[] paramTypes = ctorWithParams.getParameterTypes();
+            numArgsToPass = paramTypes.length + 1;
+            paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
+        }
 
-    MethodVisitor ctorv = tv.visitMethod(ACC_PUBLIC, "<init>", paramTypeString, null, null);
+        MethodVisitor ctorv = tv.visitMethod(ACC_PUBLIC, "<init>", paramTypeString, null, null);
 
-    for(int i = 0; i < numArgsToPass; i++) {
-        ctorv.visitVarInsn(ALOAD, i);
-    }
+        for(int i = 0; i < numArgsToPass; i++) {
+            ctorv.visitVarInsn(ALOAD, i);
+        }
 
-    ctorv.visitMethodInsn(INVOKESPECIAL,  Type.getType(baseClass).getInternalName(), "<init>",
-               paramTypeString);
-    ctorv.visitInsn(RETURN);
-    ctorv.visitMaxs(numArgsToPass, numArgsToPass);
+        ctorv.visitMethodInsn(INVOKESPECIAL,  Type.getType(baseClass).getInternalName(), "<init>",
+            paramTypeString);
+        ctorv.visitInsn(RETURN);
+        ctorv.visitMaxs(numArgsToPass, numArgsToPass);
 
         MethodVisitor cv = cw.visitMethod(ACC_PRIVATE, "writeObject", "(Ljava/io/ObjectOutputStream;)V", null, new String[] { "java/io/IOException" });
         cv.visitVarInsn(ALOAD, 0);
@@ -177,8 +177,6 @@ public class AsmSerializableBeanGenerator
 
         **/
 
-
-
         tv.visitEnd();
 
         classData = cw.toByteArray();
@@ -192,49 +190,41 @@ public class AsmSerializableBeanGenerator
                 );
 
         return loadedClass;
-
-
     }
 
      // A Method for the protected ClassLoader.defineClass method, which we access
     // using reflection.  This requires the supressAccessChecks permission.
     private static final java.lang.reflect.Method defineClassMethod = AccessController.doPrivileged(
-    new PrivilegedAction<java.lang.reflect.Method>() {
-        public java.lang.reflect.Method run() {
-        try {
-            java.lang.reflect.Method meth = ClassLoader.class.getDeclaredMethod(
-            "defineClass", String.class,
-            byte[].class, int.class, int.class,
-            ProtectionDomain.class ) ;
-            meth.setAccessible( true ) ;
-            return meth ;
-        } catch (Exception exc) {
-            throw new RuntimeException(
-            "Could not find defineClass method!", exc ) ;
+        new PrivilegedAction<java.lang.reflect.Method>() {
+            public java.lang.reflect.Method run() {
+                try {
+                    java.lang.reflect.Method meth = ClassLoader.class.getDeclaredMethod(
+                        "defineClass", String.class,
+                        byte[].class, int.class, int.class,
+                        ProtectionDomain.class);
+                    meth.setAccessible(true);
+                    return meth;
+                } catch (Exception exc) {
+                    throw new RuntimeException(
+                        "Could not find defineClass method!", exc ) ;
+                }
+            }
         }
-        }
-    }
-    ) ;
+    );
 
-    private static final Permission accessControlPermission =
-        new ReflectPermission( "suppressAccessChecks" ) ;
+    private static final Permission accessControlPermission = new ReflectPermission("suppressAccessChecks");
 
     // This requires a permission check
-    private Class<?> makeClass( String name, byte[] def, ProtectionDomain pd,
-        ClassLoader loader ) {
+    private Class<?> makeClass(String name, byte[] def, ProtectionDomain pd, ClassLoader loader) {
+        SecurityManager sman = System.getSecurityManager() ;
+        if (sman != null) {
+            sman.checkPermission( accessControlPermission ) ;
+        }
 
-    SecurityManager sman = System.getSecurityManager() ;
-    if (sman != null)
-        sman.checkPermission( accessControlPermission ) ;
-
-    try {
-        return (Class)defineClassMethod.invoke( loader,
-        name, def, 0, def.length, pd ) ;
-    } catch (Exception exc) {
-        throw new RuntimeException( "Could not invoke defineClass!",
-        exc ) ;
+        try {
+            return (Class) defineClassMethod.invoke(loader, name, def, 0, def.length, pd);
+        } catch (Exception exc) {
+            throw new RuntimeException("Could not invoke defineClass!", exc);
+        }
     }
-    }
-
-
 }

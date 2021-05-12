@@ -17,10 +17,11 @@
 package com.sun.ejb.codegen;
 
 public class InvalidHome extends GeneratorException {
+
     /**
      * Constructs the InvalidHome exception with the specified string.
      */
     public InvalidHome(String s) {
-    super(s);
+        super(s);
     }
 }

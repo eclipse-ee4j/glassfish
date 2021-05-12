@@ -47,35 +47,32 @@ import java.util.logging.Logger;
  * does not have a notion of  pool limit. It is upto to the derived classes
  * to implement these features.
  */
-public abstract class AbstractPool
-    implements Pool
-{
+public abstract class AbstractPool implements Pool {
 
     protected static final Logger _logger = EjbContainerUtilImpl.getLogger();
 
-    protected ArrayList         list;
-    protected ObjectFactory  factory = null;
-    protected int         waitCount = 0;
-    protected int         createdCount = 0;
+    protected ArrayList list;
+    protected ObjectFactory factory = null;
+    protected int waitCount = 0;
+    protected int createdCount = 0;
 
-    protected int         steadyPoolSize;
-    protected int         resizeQuantity = 1;
-    protected int         maxPoolSize = Integer.MAX_VALUE;
-    protected long         maxWaitTimeInMillis;
-    protected int         idleTimeoutInSeconds;
+    protected int steadyPoolSize;
+    protected int resizeQuantity = 1;
+    protected int maxPoolSize = Integer.MAX_VALUE;
+    protected long maxWaitTimeInMillis;
+    protected int idleTimeoutInSeconds;
 
-
-    private AbstractPoolTimerTask  poolTimerTask;
+    private AbstractPoolTimerTask poolTimerTask;
 
     // class loader used as context class loader for asynchronous operations
-    protected ClassLoader       containerClassLoader;
+    protected ClassLoader containerClassLoader;
 
-    protected int           destroyedCount = 0;
-    protected int            poolSuccess = 0;
-    protected String           poolName;
-    protected int                  poolReturned = 0;
+    protected int destroyedCount = 0;
+    protected int poolSuccess = 0;
+    protected String poolName;
+    protected int poolReturned = 0;
 
-    protected String           configData;
+    protected String configData;
     protected EjbPoolProbeProvider poolProbeNotifier;
 
     protected String appName;
@@ -294,8 +291,8 @@ public abstract class AbstractPool
     }
 
     /**
-    * Close the pool
-    */
+     * Close the pool
+     */
     public void close() {
         synchronized (list) {
             if (poolTimerTask != null) {
@@ -370,10 +367,10 @@ public abstract class AbstractPool
 
     protected abstract void removeIdleObjects();
 
-    private class AbstractPoolTimerTask
-        extends java.util.TimerTask
-    {
-        AbstractPoolTimerTask() {}
+    private class AbstractPoolTimerTask extends java.util.TimerTask {
+
+        AbstractPoolTimerTask() {
+        }
 
         public void run() {
             //We need to set the context class loader for this (deamon)thread!!
@@ -468,42 +465,42 @@ public abstract class AbstractPool
     }
 
     public void setConfigData(String configData) {
-    this.configData = configData;
+        this.configData = configData;
     }
 
 
     //Methods on EJBPoolStatsProvider
     public void appendStats(StringBuffer sbuf) {
-    sbuf.append("[Pool: ")
-        .append("SZ=").append(list.size()).append("; ")
-        .append("CC=").append(createdCount).append("; ")
-        .append("DC=").append(destroyedCount).append("; ")
-        .append("WC=").append(waitCount).append("; ")
-        .append("MSG=0");
-    if (configData != null) {
-        sbuf.append(configData);
-    }
-    sbuf.append("]");
+        sbuf.append("[Pool: ")
+            .append("SZ=").append(list.size()).append("; ")
+            .append("CC=").append(createdCount).append("; ")
+            .append("DC=").append(destroyedCount).append("; ")
+            .append("WC=").append(waitCount).append("; ")
+            .append("MSG=0");
+        if (configData != null) {
+            sbuf.append(configData);
+        }
+        sbuf.append("]");
     }
 
     public int getJmsMaxMessagesLoad() {
-    return 0;
+        return 0;
     }
 
     public int getNumBeansInPool() {
-    return list.size();
+        return list.size();
     }
 
     public int getNumThreadsWaiting() {
-    return waitCount;
+        return waitCount;
     }
 
     public int getTotalBeansCreated() {
-    return createdCount;
+        return createdCount;
     }
 
     public int getTotalBeansDestroyed() {
-    return destroyedCount;
+        return destroyedCount;
     }
 
     public String getAllMonitoredAttrbuteValues() {
@@ -520,10 +517,11 @@ public abstract class AbstractPool
 
     public String getAllAttrValues() {
         StringBuffer sbuf = new StringBuffer();
-        if(null != poolName)
+        if(null != poolName) {
             sbuf.append(":").append(poolName);
-        else
+        } else {
             sbuf.append(":POOL");
+        }
 
         sbuf.append("[FP=").append(poolSuccess).append(",")
             .append("TC=").append(createdCount).append(",")
@@ -537,13 +535,13 @@ public abstract class AbstractPool
     }
 
     protected void unregisterProbeProvider () {
-            try {
-                ProbeProviderFactory probeFactory = EjbContainerUtilImpl.getInstance().getProbeProviderFactory();
-                probeFactory.unregisterProbeProvider(poolProbeNotifier);
-            } catch (Exception ex) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Error getting the EjbPoolProbeProvider");
-                }
+        try {
+            ProbeProviderFactory probeFactory = EjbContainerUtilImpl.getInstance().getProbeProviderFactory();
+            probeFactory.unregisterProbeProvider(poolProbeNotifier);
+        } catch (Exception ex) {
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, "Error getting the EjbPoolProbeProvider");
             }
+        }
     }
 }

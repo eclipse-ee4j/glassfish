@@ -68,7 +68,8 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-/*
+
+/**
  * Persistent support part of the EJBTimerService
  *
  * @author Marina Vatkina
@@ -197,7 +198,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
         TransactionManager tm = ejbContainerUtil.getTransactionManager();
 
         Set toRestore = null;
-    int totalTimersMigrated = 0;
+        int totalTimersMigrated = 0;
 
         try {
 
@@ -531,8 +532,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
                         // In this case, at least one expiration has occurred
                         // but that was less than one period ago so there were
                         // no missed expirations.
-                        expirationTime =
-                            calcNextFixedRateExpiration(timerState);
+                        expirationTime = calcNextFixedRateExpiration(timerState);
                     }
 
                 } else {  // single-action timer
@@ -851,8 +851,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
         // timer cache to avoid some database access in PE/SE, or
         // even in EE with the appropriate consistency tradeoff.
 
-        Collection<TimerState> activeTimers =
-            timerLocal_.findActiveTimersByContainer(containerId);
+        Collection<TimerState> activeTimers = timerLocal_.findActiveTimersByContainer(containerId);
 
         Collection<TimerState> timersForTimedObject = activeTimers;
 
@@ -864,8 +863,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
             timersForTimedObject = new HashSet();
 
             for(TimerState timer : activeTimers) {
-                Object nextTimedObjectPrimaryKey =
-                    timer.getTimedObjectPrimaryKey();
+                Object nextTimedObjectPrimaryKey = timer.getTimedObjectPrimaryKey();
                 if( nextTimedObjectPrimaryKey.equals(timedObjectPrimaryKey) ) {
                     timersForTimedObject.add(timer);
                 }
@@ -896,22 +894,14 @@ public class PersistentEJBTimerService extends EJBTimerService {
         // timer cache to avoid some database access in PE/SE, or
         // even in EE with the appropriate consistency tradeoff.
 
-        Collection<TimerPrimaryKey> timerIdsForTimedObject =
-                new HashSet<TimerPrimaryKey>();
+        Collection<TimerPrimaryKey> timerIdsForTimedObject = new HashSet<TimerPrimaryKey>();
 
-        if( timedObjectPrimaryKey == null ) {
-
-            timerIdsForTimedObject =
-                timerLocal_.findActiveTimerIdsByContainer(containerId);
-
+        if (timedObjectPrimaryKey == null) {
+            timerIdsForTimedObject = timerLocal_.findActiveTimerIdsByContainer(containerId);
         } else {
-
             // Database query itself can't do equality check on primary
             // key of timed object so perform check ourselves.
-
-            Collection<TimerState> timersForTimedObject = getTimers(containerId,
-                                                        timedObjectPrimaryKey);
-
+            Collection<TimerState> timersForTimedObject = getTimers(containerId, timedObjectPrimaryKey);
             for(TimerState timer : timersForTimedObject) {
                 timerIdsForTimedObject.add(getPrimaryKey(timer));
             }
@@ -919,7 +909,6 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
         // Add active non-persistent timer ids
         timerIdsForTimedObject.addAll(super.getTimerIds(containerId, null));
-
         return timerIdsForTimedObject;
     }
 
@@ -1126,8 +1115,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
     @Override
     protected boolean redeliverTimeout(RuntimeTimerState timerState) {
-         return ( timerState.getNumFailedDeliveries() <
-                            getMaxRedeliveries() || redeliverOnFailedConnection());
+        return (timerState.getNumFailedDeliveries() < getMaxRedeliveries() || redeliverOnFailedConnection());
     }
 
     /**
@@ -1198,7 +1186,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
     private TimerState getValidTimerFromDB(TimerPrimaryKey timerId) {
 
-        boolean result       = true;
+        boolean result = true;
         TimerState timer = timerLocal_.findTimer(timerId);
 
         try {

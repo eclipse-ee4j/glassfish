@@ -111,7 +111,7 @@ public class EjbRelationshipRoleNode extends DeploymentDescriptorNode<RelationRo
                 descriptor.setIsMany(false);
             else
                 throw new IllegalArgumentException("Error in value of multiplicity element in EJB deployment descriptor XML: the value must be One or Many");
-        } else if (EjbTagNames.EJB_NAME.equals(element.getQName())) {
+        } else if (TagNames.EJB_NAME.equals(element.getQName())) {
             // let's get our bunlde descriptor...
                 EjbBundleDescriptor bundleDesc = getEjbBundleDescriptor();
                 EjbCMPEntityDescriptor desc = (EjbCMPEntityDescriptor)bundleDesc.getEjbByName(value);
@@ -162,22 +162,19 @@ public class EjbRelationshipRoleNode extends DeploymentDescriptorNode<RelationRo
 
         Node roleSourceNode = appendChild(roleNode, EjbTagNames.RELATIONSHIP_ROLE_SOURCE);
         appendTextChild(roleSourceNode, TagNames.DESCRIPTION, descriptor.getRoleSourceDescription());
-        appendTextChild(roleSourceNode, EjbTagNames.EJB_NAME, descriptor.getOwner().getName());
+        appendTextChild(roleSourceNode, TagNames.EJB_NAME, descriptor.getOwner().getName());
 
-    // cmr-field
-    if (descriptor.getCMRField() != null ) {
+        // cmr-field
+        if (descriptor.getCMRField() != null) {
             Node cmrFieldNode = appendChild(roleNode, EjbTagNames.CMR_FIELD);
 
-        // description
-            appendTextChild(cmrFieldNode, TagNames.DESCRIPTION,
-                                        descriptor.getCMRFieldDescription());
-        // cmr-field-name
-        appendTextChild(cmrFieldNode, EjbTagNames.CMR_FIELD_NAME,
-                                        descriptor.getCMRField());
-        // cmr-field-type
-            appendTextChild(cmrFieldNode, EjbTagNames.CMR_FIELD_TYPE,
-                                        descriptor.getCMRFieldType());
-    }
+            // description
+            appendTextChild(cmrFieldNode, TagNames.DESCRIPTION, descriptor.getCMRFieldDescription());
+            // cmr-field-name
+            appendTextChild(cmrFieldNode, EjbTagNames.CMR_FIELD_NAME, descriptor.getCMRField());
+            // cmr-field-type
+            appendTextChild(cmrFieldNode, EjbTagNames.CMR_FIELD_TYPE, descriptor.getCMRFieldType());
+        }
         return roleNode;
     }
 }

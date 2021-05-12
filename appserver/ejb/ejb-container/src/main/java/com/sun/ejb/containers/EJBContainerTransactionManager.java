@@ -77,8 +77,6 @@ public class EJBContainerTransactionManager {
         if(iased.getCmtTimeoutInSeconds() != 0){
             cmtTimeoutInSeconds = iased.getCmtTimeoutInSeconds();
         }
-
-
     }
 
     /**
@@ -322,9 +320,9 @@ public class EJBContainerTransactionManager {
             try {
                 transactionManager.setRollbackOnly();
             } catch ( Exception e ) {
-        //FIXME: Use LogStrings.properties
-        _logger.log(Level.FINEST, "", e);
-        }
+                //FIXME: Use LogStrings.properties
+                _logger.log(Level.FINEST, "", e);
+            }
             throw new TransactionRolledbackLocalException("", ex);
         }
 

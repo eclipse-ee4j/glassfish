@@ -269,19 +269,19 @@ public final class SessionContextImpl
     }
 
     void setTxCheckpointDelayed(boolean val) {
-    this.txCheckpointDelayed = val;
+        this.txCheckpointDelayed = val;
     }
 
     boolean isTxCheckpointDelayed() {
-    return this.txCheckpointDelayed;
+        return this.txCheckpointDelayed;
     }
 
     long getLastPersistedAt() {
-    return lastPersistedAt;
+        return lastPersistedAt;
     }
 
     void setLastPersistedAt(long val) {
-    this.lastPersistedAt = val;
+        this.lastPersistedAt = val;
     }
 
     public long getVersion() {

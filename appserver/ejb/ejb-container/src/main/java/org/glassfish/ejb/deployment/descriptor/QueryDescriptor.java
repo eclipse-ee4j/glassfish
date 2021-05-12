@@ -31,7 +31,6 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Sanjeev Krishnan
  */
-
 public final class QueryDescriptor extends Descriptor {
 
     // For EJB2.0: the query is either a string in EJB-QL or is empty.
@@ -88,26 +87,27 @@ public final class QueryDescriptor extends Descriptor {
     }
 **/
 
-    public void setQueryMethod(Method m)
-    {
-    this.method = m;
+    public void setQueryMethod(Method m) {
+        this.method = m;
     }
 
-    public Method getQueryMethod()
-    {
-    return method;
+
+    public Method getQueryMethod() {
+        return method;
     }
+
 
     public void setQueryMethodDescriptor(MethodDescriptor m) {
         methodDescriptor = m;
     }
 
+
     public MethodDescriptor getQueryMethodDescriptor() {
         return methodDescriptor;
     }
 
-    public boolean getIsEjbQl()
-    {
+
+    public boolean getIsEjbQl() {
         return (query != null);
     }
 
@@ -116,8 +116,7 @@ public final class QueryDescriptor extends Descriptor {
      * is null, or has no content, getIsEjbQl will return false.
      * Otherwise, getIsEjbQl will return true.
      */
-    public void setQuery(String query)
-    {
+    public void setQuery(String query) {
          _logger.log(Level.FINE,"input query = '" + query + "'");
 
         String newQuery = (query != null) ? query.trim() : null;
@@ -132,26 +131,27 @@ public final class QueryDescriptor extends Descriptor {
         this.query = newQuery;
     }
 
+
     /**
      * Get the EJB-QL query (ejb-ql XML element)
      */
-    public String getQuery()
-    {
-    return query;
+    public String getQuery() {
+        return query;
     }
+
 
     public boolean getHasSQL() {
         return (this.sql != null);
     }
 
-    public void setSQL(String sql)
-    {
-    this.sql = sql;
+
+    public void setSQL(String sql) {
+        this.sql = sql;
     }
 
-    public String getSQL()
-    {
-    return sql;
+
+    public String getSQL() {
+        return sql;
     }
 
 
@@ -186,10 +186,13 @@ public final class QueryDescriptor extends Descriptor {
         return returnTypeMapping;
     }
 
+
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("Query ");
-        if(getQueryMethodDescriptor()  != null)
+        if (getQueryMethodDescriptor() != null) {
             getQueryMethodDescriptor().print(toStringBuffer);
+        }
         toStringBuffer.append("\n");
         if (getHasSQL()) {
             toStringBuffer.append("SQL : ").append(getSQL());

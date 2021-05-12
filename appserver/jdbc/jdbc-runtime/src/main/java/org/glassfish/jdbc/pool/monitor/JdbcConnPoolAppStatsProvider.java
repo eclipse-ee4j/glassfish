@@ -76,7 +76,7 @@ public class JdbcConnPoolAppStatsProvider {
     public void decrementConnectionUsedEvent(
             @ProbeParam("poolName") String poolName,
             @ProbeParam("appName") String appName) {
-    // handle the num conn used decrement event
+        // handle the num conn used decrement event
         if((poolName != null) && (poolName.equals(this.poolName))) {
             if (appName != null && appName.equals(this.appName)) {
                 //Decrement numConnUsed counter
@@ -96,7 +96,7 @@ public class JdbcConnPoolAppStatsProvider {
     public void connectionUsedEvent(
             @ProbeParam("poolName") String poolName,
             @ProbeParam("appName") String appName) {
-    // handle the connection used event
+        // handle the connection used event
         if((poolName != null) && (poolName.equals(this.poolName))) {
             if (appName != null && appName.equals(this.appName)) {
                 //increment numConnUsed

@@ -1520,9 +1520,8 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <LI><B>TABLE_CAT</B> String => table catalog (may be <code>null</code>)
      * <LI><B>TABLE_SCHEM</B> String => table schema (may be <code>null</code>)
      * <LI><B>TABLE_NAME</B> String => table name
-     * <LI><B>TABLE_TYPE</B> String => table type.  Typical types are "TABLE",
-     * "VIEW",    "SYSTEM TABLE", "GLOBAL TEMPORARY",
-     * "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
+     * <LI><B>TABLE_TYPE</B> String => table type. Typical types are "TABLE",
+     * "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
      * <LI><B>REMARKS</B> String => explanatory comment on the table
      * <LI><B>TYPE_CAT</B> String => the types catalog (may be <code>null</code>)
      * <LI><B>TYPE_SCHEM</B> String => the types schema (may be <code>null</code>)
@@ -1599,7 +1598,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <P>The table type is:
      * <OL>
      * <LI><B>TABLE_TYPE</B> String => table type.  Typical types are "TABLE",
-     * "VIEW",    "SYSTEM TABLE", "GLOBAL TEMPORARY",
+     * "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY",
      * "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
      * </OL>
      *

@@ -30,7 +30,7 @@
     <name>JDBC Config Module</name>
 
     <dependencies>
-    <dependency>
+        <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>config-api</artifactId>
             <version>${project.version}</version>
@@ -53,6 +53,6 @@
             <groupId>org.glassfish.main.connectors</groupId>
             <artifactId>connectors-internal-api</artifactId>
             <version>${project.version}</version>
-    </dependency>
+        </dependency>
     </dependencies>
 </project>

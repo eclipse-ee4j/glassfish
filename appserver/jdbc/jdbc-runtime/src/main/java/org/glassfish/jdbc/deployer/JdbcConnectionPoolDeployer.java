@@ -469,10 +469,10 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
 
                 } else if ("STATEMENT-CACHE-TYPE".equals(name.toUpperCase(Locale.getDefault()))) {
 
-            if(adminPool.getStatementCacheType() != null) {
-                        propList.add(new ConnectorConfigProperty("StatementCacheType",
-                                rp.getValue(), "StatementCacheType", "java.lang.String"));
-            }
+                    if (adminPool.getStatementCacheType() != null) {
+                        propList.add(new ConnectorConfigProperty("StatementCacheType", rp.getValue(),
+                            "StatementCacheType", "java.lang.String"));
+                    }
 
                 } else if ("NUMBER-OF-TOP-QUERIES-TO-REPORT".equals(name.toUpperCase(Locale.getDefault()))) {
 

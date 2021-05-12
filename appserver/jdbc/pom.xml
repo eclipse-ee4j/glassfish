@@ -74,8 +74,8 @@
     <modules>
         <module>jdbc-ra</module>
         <module>admin</module>
-    <module>templates</module>
-    <module>jdbc-config</module>
-    <module>jdbc-runtime</module>
+        <module>templates</module>
+        <module>jdbc-config</module>
+        <module>jdbc-runtime</module>
     </modules>
 </project>

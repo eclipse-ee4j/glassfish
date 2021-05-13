@@ -43,23 +43,23 @@ public class GlassFishSecurityProvider implements WebConsoleSecurityProvider {
         ctx = context;
     }
 
-     private GlassFish getGlassFish() {
-         GlassFish gf = (GlassFish) ctx.getService(ctx.getServiceReference(GlassFish.class.getName()));
-         try {
-             assert(gf.getStatus() == GlassFish.Status.STARTED);
-         } catch (GlassFishException e) {
-             throw new RuntimeException(e);
-         }
-         return gf;
-     }
+    private GlassFish getGlassFish() {
+        GlassFish gf = (GlassFish) ctx.getService(ctx.getServiceReference(GlassFish.class.getName()));
+        try {
+            assert(gf.getStatus() == GlassFish.Status.STARTED);
+        } catch (GlassFishException e) {
+            throw new RuntimeException(e);
+        }
+        return gf;
+    }
 
     @Override
     public Object authenticate(String username, String password) {
         gf = getGlassFish();
         AuthenticationService authService = null;
-        try{
+        try {
             authService = getAuthService();
-        }catch(GlassFishException gfe){
+        } catch (GlassFishException gfe) {
             gfe.printStackTrace();
             return null;
         }

@@ -21,21 +21,18 @@ import org.jvnet.hk2.annotations.Service;
 import java.net.URL;
 
 /**
- *
  * @author Mohit
  */
-
 @Service
 public class OSGIConsoleProvider implements ConsoleProvider {
 
-/**
- *  <p> Returns the URL of the Integration Point configuration file
- *    console-config.xml </p>
- *
- *  @return URL of configration file.
- */
-    public URL getConfiguration(){
-            return null;
+    /**
+     * Returns the URL of the Integration Point configuration file console-config.xml
+     *
+     * @return URL of configration file.
+     */
+    @Override
+    public URL getConfiguration() {
+        return null;
     }
 }
-

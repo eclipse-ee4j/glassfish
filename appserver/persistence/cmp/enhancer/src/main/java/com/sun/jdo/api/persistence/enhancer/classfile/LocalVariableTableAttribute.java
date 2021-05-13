@@ -16,75 +16,78 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
-import java.util.Vector;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Enumeration;
+import java.util.Vector;
 
 /**
  * Represents the LocalVariableTable attribute within a
  * method in a class file.
  */
-
 public class LocalVariableTableAttribute extends ClassAttribute {
-  /* The expected attribute name */
+    /* The expected attribute name */
     public static final String expectedAttrName = "LocalVariableTable";//NOI18N
 
-  /* The list of local variables */
-  private Vector localTable;
+    /* The list of local variables */
+    private Vector localTable;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * Returns an enumeration of the local variables in the table
-   * Each element is a LocalVariable
-   */
-  Enumeration variables() {
-    return localTable.elements();
-  }
-
-  /**
-   * Constructor for a local variable table
-   */
-  public LocalVariableTableAttribute(
-    ConstUtf8 nameAttr, Vector lvarTable) {
-    super(nameAttr);
-    localTable = lvarTable;
-  }
-
-  /* package local methods */
-
-  static LocalVariableTableAttribute read(
-    ConstUtf8 attrName, DataInputStream data, CodeEnv env)
-    throws IOException {
-    int nVars = data.readUnsignedShort();
-    Vector lvarTable = new Vector();
-    while (nVars-- > 0) {
-      lvarTable.addElement(LocalVariable.read(data, env));
+    /**
+     * Returns an enumeration of the local variables in the table
+     * Each element is a LocalVariable
+     */
+    Enumeration variables() {
+        return localTable.elements();
     }
 
-    return new LocalVariableTableAttribute(attrName, lvarTable);
-  }
-
-  void write(DataOutputStream out) throws IOException {
-    out.writeShort(attrName().getIndex());
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataOutputStream tmp_out = new DataOutputStream(baos);
-    tmp_out.writeShort(localTable.size());
-    for (int i=0; i<localTable.size(); i++)
-      ((LocalVariable) localTable.elementAt(i)).write(tmp_out);
-
-    tmp_out.flush();
-    byte tmp_bytes[] = baos.toByteArray();
-    out.writeInt(tmp_bytes.length);
-    out.write(tmp_bytes, 0, tmp_bytes.length);
-  }
-
-  void print(PrintStream out, int indent) {
-    ClassPrint.spaces(out, indent);
-    out.println("LocalVariables: ");//NOI18N
-    for (int i=0; i<localTable.size(); i++) {
-      ((LocalVariable) localTable.elementAt(i)).print(out, indent+2);
+    /**
+     * Constructor for a local variable table
+     */
+    public LocalVariableTableAttribute(
+        ConstUtf8 nameAttr, Vector lvarTable) {
+        super(nameAttr);
+        localTable = lvarTable;
     }
-  }
+
+    /* package local methods */
+
+    static LocalVariableTableAttribute read(
+        ConstUtf8 attrName, DataInputStream data, CodeEnv env)
+            throws IOException {
+        int nVars = data.readUnsignedShort();
+        Vector lvarTable = new Vector();
+        while (nVars-- > 0) {
+            lvarTable.addElement(LocalVariable.read(data, env));
+        }
+
+        return new LocalVariableTableAttribute(attrName, lvarTable);
+    }
+
+    void write(DataOutputStream out) throws IOException {
+        out.writeShort(attrName().getIndex());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream tmp_out = new DataOutputStream(baos);
+        tmp_out.writeShort(localTable.size());
+        for (int i=0; i<localTable.size(); i++)
+            ((LocalVariable) localTable.elementAt(i)).write(tmp_out);
+
+        tmp_out.flush();
+        byte tmp_bytes[] = baos.toByteArray();
+        out.writeInt(tmp_bytes.length);
+        out.write(tmp_bytes, 0, tmp_bytes.length);
+    }
+
+    void print(PrintStream out, int indent) {
+        ClassPrint.spaces(out, indent);
+        out.println("LocalVariables: ");//NOI18N
+        for (int i=0; i<localTable.size(); i++) {
+            ((LocalVariable) localTable.elementAt(i)).print(out, indent+2);
+        }
+    }
 }
 

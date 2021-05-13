@@ -16,8 +16,10 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
-import java.util.Vector;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -29,131 +31,130 @@ import java.util.NoSuchElementException;
  *    - at field level
  *    - at attribute level
  */
-
 public class AttributeVector {
 
-  /* Vector of ClassAttribute */
-  private ClassAttribute attributes[] = null;
+    /* Vector of ClassAttribute */
+    private ClassAttribute attributes[] = null;
 
-  /**
-   * Returns the i'th attribute in the array
-   */
-  private ClassAttribute attrAt(int i) {
-    return attributes[i];
-  }
-
-  /**
-   * Construct an empty AttributeVector
-   */
-  public AttributeVector() { }
-
-  /**
-   * Add an element to the vector
-   */
-  public void addElement(ClassAttribute attr) {
-    if (attributes == null)
-      attributes = new ClassAttribute[1];
-    else {
-      ClassAttribute newAttributes[] = new ClassAttribute[attributes.length+1];
-      System.arraycopy(attributes, 0, newAttributes, 0, attributes.length);
-      attributes = newAttributes;
-    }
-    attributes[attributes.length-1] = attr;
-  }
-
-  public Enumeration elements() {
-    class AttributeVectorEnumeration implements Enumeration {
-      private ClassAttribute[] attributes;
-      private int current = 0;
-
-      AttributeVectorEnumeration(ClassAttribute attrs[]) {
-    attributes = attrs;
-      }
-
-      public boolean hasMoreElements() {
-    return attributes != null && current < attributes.length;
-      }
-      public Object nextElement() {
-    if (!hasMoreElements())
-      throw new NoSuchElementException();
-    return attributes[current++];
-      }
+    /**
+     * Returns the i'th attribute in the array
+     */
+    private ClassAttribute attrAt(int i) {
+        return attributes[i];
     }
 
-    return new AttributeVectorEnumeration(attributes);
-  }
+    /**
+     * Construct an empty AttributeVector
+     */
+    public AttributeVector() { }
 
-  /**
-   * Look for an attribute of a specific name
-   */
-  public ClassAttribute findAttribute(String attrName) {
-    Enumeration e = elements();
-    while (e.hasMoreElements()) {
-      ClassAttribute attr = (ClassAttribute) e.nextElement();
-      if (attr.attrName().asString().equals(attrName))
-    return attr;
+    /**
+     * Add an element to the vector
+     */
+    public void addElement(ClassAttribute attr) {
+        if (attributes == null)
+            attributes = new ClassAttribute[1];
+        else {
+            ClassAttribute newAttributes[] = new ClassAttribute[attributes.length+1];
+            System.arraycopy(attributes, 0, newAttributes, 0, attributes.length);
+            attributes = newAttributes;
+        }
+        attributes[attributes.length-1] = attr;
     }
-    return null;
-  }
 
-  /**
-   * General attribute reader
-   */
-  static AttributeVector readAttributes(
-    DataInputStream data, ConstantPool constantPool)
-    throws IOException {
-    AttributeVector attribs = new AttributeVector();
-    int n_attrs = data.readUnsignedShort();
-    while (n_attrs-- > 0) {
-      attribs.addElement(ClassAttribute.read(data, constantPool));
+    public Enumeration elements() {
+        class AttributeVectorEnumeration implements Enumeration {
+            private ClassAttribute[] attributes;
+            private int current = 0;
+
+            AttributeVectorEnumeration(ClassAttribute attrs[]) {
+                attributes = attrs;
+            }
+
+            public boolean hasMoreElements() {
+                return attributes != null && current < attributes.length;
+            }
+            public Object nextElement() {
+                if (!hasMoreElements())
+                    throw new NoSuchElementException();
+                return attributes[current++];
+            }
+        }
+
+        return new AttributeVectorEnumeration(attributes);
     }
-    return attribs;
-  }
 
-  /**
-   * ClassMethod attribute reader
-   */
-  static AttributeVector readAttributes(
-    DataInputStream data, CodeEnv codeEnv)
-    throws IOException {
-    AttributeVector attribs = new AttributeVector();
-    int n_attrs = data.readUnsignedShort();
-    while (n_attrs-- > 0) {
-      attribs.addElement(ClassAttribute.read(data, codeEnv));
+    /**
+     * Look for an attribute of a specific name
+     */
+    public ClassAttribute findAttribute(String attrName) {
+        Enumeration e = elements();
+        while (e.hasMoreElements()) {
+            ClassAttribute attr = (ClassAttribute) e.nextElement();
+            if (attr.attrName().asString().equals(attrName))
+                return attr;
+        }
+        return null;
     }
-    return attribs;
-  }
 
-  /**
-   * Write the attributes to the output stream
-   */
-  void write(DataOutputStream out) throws IOException {
-    if (attributes == null) {
-      out.writeShort(0);
-    } else {
-      out.writeShort(attributes.length);
-      for (int i=0; i<attributes.length; i++)
-    attributes[i].write(out);
+    /**
+     * General attribute reader
+     */
+    static AttributeVector readAttributes(
+        DataInputStream data, ConstantPool constantPool)
+            throws IOException {
+        AttributeVector attribs = new AttributeVector();
+        int n_attrs = data.readUnsignedShort();
+        while (n_attrs-- > 0) {
+            attribs.addElement(ClassAttribute.read(data, constantPool));
+        }
+        return attribs;
     }
-  }
 
-  /**
-   * Print a description of the attributes
-   */
-  void print(PrintStream out, int indent) {
-    if (attributes != null) {
-      for (int i=0; i<attributes.length; i++)
-    attributes[i].print(out, indent);
+    /**
+     * ClassMethod attribute reader
+     */
+    static AttributeVector readAttributes(
+        DataInputStream data, CodeEnv codeEnv)
+            throws IOException {
+        AttributeVector attribs = new AttributeVector();
+        int n_attrs = data.readUnsignedShort();
+        while (n_attrs-- > 0) {
+            attribs.addElement(ClassAttribute.read(data, codeEnv));
+        }
+        return attribs;
     }
-  }
 
-  /**
-   * Print a brief summary of the attributes
-   */
-  void summarize() {
-    System.out.println((attributes == null ? 0 : attributes.length) +
-               " attributes");//NOI18N
-  }
+    /**
+     * Write the attributes to the output stream
+     */
+    void write(DataOutputStream out) throws IOException {
+        if (attributes == null) {
+            out.writeShort(0);
+        } else {
+            out.writeShort(attributes.length);
+            for (int i=0; i<attributes.length; i++)
+                attributes[i].write(out);
+        }
+    }
+
+    /**
+     * Print a description of the attributes
+     */
+    void print(PrintStream out, int indent) {
+        if (attributes != null) {
+            for (int i=0; i<attributes.length; i++)
+                attributes[i].print(out, indent);
+        }
+    }
+
+    /**
+     * Print a brief summary of the attributes
+     */
+    void summarize() {
+        System.out.println((attributes == null ? 0 : attributes.length) +
+            " attributes");//NOI18N
+    }
 
 }
 

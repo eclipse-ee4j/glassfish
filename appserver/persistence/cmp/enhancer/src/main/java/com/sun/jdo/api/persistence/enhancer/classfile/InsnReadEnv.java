@@ -19,98 +19,97 @@ package com.sun.jdo.api.persistence.enhancer.classfile;
 /**
  * Environment for decoding byte codes into instructions
  */
-
 class InsnReadEnv {
 
-  /* The parent method environment */
-  private CodeEnv codeEnv;
+    /* The parent method environment */
+    private CodeEnv codeEnv;
 
-  /* The byte codes to be decoded */
-  private byte[] byteCodes;
+    /* The byte codes to be decoded */
+    private byte[] byteCodes;
 
-  /* The index into byteCodes for the next instruction to be decoded */
-  private int currPc;
+    /* The index into byteCodes for the next instruction to be decoded */
+    private int currPc;
 
-  /**
-   * Constructor
-   */
-  InsnReadEnv(byte[] bytes, CodeEnv codeEnv) {
-    this.byteCodes = bytes;
-    this.currPc = 0;
-    this.codeEnv = codeEnv;
-  }
+    /**
+     * Constructor
+     */
+    InsnReadEnv(byte[] bytes, CodeEnv codeEnv) {
+        this.byteCodes = bytes;
+        this.currPc = 0;
+        this.codeEnv = codeEnv;
+    }
 
-  /**
-   * Return the index of the next instruction to decode
-   */
-  int currentPC() {
-    return currPc;
-  }
+    /**
+     * Return the index of the next instruction to decode
+     */
+    int currentPC() {
+        return currPc;
+    }
 
-  /**
-   * Are there more byte codes to decode?
-   */
-  boolean more() {
-    return currPc < byteCodes.length;
-  }
+    /**
+     * Are there more byte codes to decode?
+     */
+    boolean more() {
+        return currPc < byteCodes.length;
+    }
 
-  /**
-   * Get a single byte from the byte code stream
-   */
-  byte getByte() {
-    if (!more())
-        throw new InsnError("out of byte codes");//NOI18N
+    /**
+     * Get a single byte from the byte code stream
+     */
+    byte getByte() {
+        if (!more())
+            throw new InsnError("out of byte codes");//NOI18N
 
-    return byteCodes[currPc++];
-  }
+        return byteCodes[currPc++];
+    }
 
-  /**
-   * Get a single unsigned byte from the byte code stream
-   */
-  int getUByte() {
-    return getByte() & 0xff;
-  }
+    /**
+     * Get a single unsigned byte from the byte code stream
+     */
+    int getUByte() {
+        return getByte() & 0xff;
+    }
 
-  /**
-   * Get a short from the byte code stream
-   */
-  int getShort() {
-    byte byte1 = byteCodes[currPc++];
-    byte byte2 = byteCodes[currPc++];
-    return (byte1 << 8) | (byte2 & 0xff);
-  }
+    /**
+     * Get a short from the byte code stream
+     */
+    int getShort() {
+        byte byte1 = byteCodes[currPc++];
+        byte byte2 = byteCodes[currPc++];
+        return (byte1 << 8) | (byte2 & 0xff);
+    }
 
-  /**
-   * Get an unsigned short from the byte code stream
-   */
-  int getUShort() {
-    return getShort() & 0xffff;
-  }
+    /**
+     * Get an unsigned short from the byte code stream
+     */
+    int getUShort() {
+        return getShort() & 0xffff;
+    }
 
-  /**
-   * Get an int from the byte code stream
-   */
-  int getInt() {
-    byte byte1 = byteCodes[currPc++];
-    byte byte2 = byteCodes[currPc++];
-    byte byte3 = byteCodes[currPc++];
-    byte byte4 = byteCodes[currPc++];
-    return (byte1 << 24) | ((byte2 & 0xff) << 16) |
-        ((byte3  & 0xff) << 8) | (byte4 & 0xff);
-  }
+    /**
+     * Get an int from the byte code stream
+     */
+    int getInt() {
+        byte byte1 = byteCodes[currPc++];
+        byte byte2 = byteCodes[currPc++];
+        byte byte3 = byteCodes[currPc++];
+        byte byte4 = byteCodes[currPc++];
+        return (byte1 << 24) | ((byte2 & 0xff) << 16) |
+            ((byte3  & 0xff) << 8) | (byte4 & 0xff);
+    }
 
-  /**
-   * Get the constant pool which applies to the method being decoded
-   */
-  ConstantPool pool() {
-    return codeEnv.pool();
-  }
+    /**
+     * Get the constant pool which applies to the method being decoded
+     */
+    ConstantPool pool() {
+        return codeEnv.pool();
+    }
 
-  /**
-   * Get the canonical InsnTarget instance for the specified
-   * pc within the method.
-   */
-  InsnTarget getTarget(int targ) {
-    return codeEnv.getTarget(targ);
-  }
+    /**
+     * Get the canonical InsnTarget instance for the specified
+     * pc within the method.
+     */
+    InsnTarget getTarget(int targ) {
+        return codeEnv.getTarget(targ);
+    }
 }

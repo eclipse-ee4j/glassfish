@@ -76,11 +76,16 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb.beans;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.AttrProp;
+import org.netbeans.modules.schema2beans.Common;
+import org.netbeans.modules.schema2beans.GraphManager;
+import org.netbeans.modules.schema2beans.Schema2BeansException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 // BEGIN_NOI18N
 

@@ -16,40 +16,42 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * ConstFieldRef represents a reference to a field of some class
  * in the constant pool of a class file.
  */
-
 public class ConstFieldRef extends ConstBasicMemberRef {
-  /* The tag associated with ConstFieldRef */
-  public static final int MyTag = CONSTANTFieldRef;
+    /* The tag associated with ConstFieldRef */
+    public static final int MyTag = CONSTANTFieldRef;
 
-  /* public accessors */
-  public int tag () { return MyTag; }
+    /* public accessors */
+    @Override
+    public int tag () { return MyTag; }
 
-  public String toString () {
-      return "CONSTANTFieldRef(" + indexAsString() + "): " + //NOI18N
-           super.toString();
-  }
+    @Override
+    public String toString () {
+        return "CONSTANTFieldRef(" + indexAsString() + "): " + //NOI18N
+            super.toString();
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  ConstFieldRef (ConstClass cname, ConstNameAndType NT) {
-    super(cname, NT);
-  }
+    ConstFieldRef (ConstClass cname, ConstNameAndType NT) {
+        super(cname, NT);
+    }
 
-  ConstFieldRef (int cnameIndex, int NT_index) {
-    super(cnameIndex, NT_index);
-  }
+    ConstFieldRef (int cnameIndex, int NT_index) {
+        super(cnameIndex, NT_index);
+    }
 
-  static ConstFieldRef read (DataInputStream input) throws IOException {
-    int cname = input.readUnsignedShort();
-    int NT = input.readUnsignedShort();
-    return new ConstFieldRef (cname, NT);
-  }
+    static ConstFieldRef read (DataInputStream input) throws IOException {
+        int cname = input.readUnsignedShort();
+        int NT = input.readUnsignedShort();
+        return new ConstFieldRef (cname, NT);
+    }
 
 }
 

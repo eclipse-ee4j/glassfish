@@ -22,9 +22,9 @@ package com.sun.jdo.api.persistence.enhancer.meta;
  * meta-data component is assured to remain in consistent state.
  */
 public class JDOMetaDataUserException
-    //^olsen: provisional, convert to a checked exception
-    extends RuntimeException
-{
+    // ^olsen: provisional, convert to a checked exception
+    extends RuntimeException {
+
     /**
      * An optional nested exception.
      */
@@ -34,37 +34,36 @@ public class JDOMetaDataUserException
      * Constructs an <code>JDOMetaDataUserException</code> with no detail
      * message.
      */
-    public JDOMetaDataUserException()
-    {
+    public JDOMetaDataUserException() {
         this.nested = null;
     }
+
 
     /**
      * Constructs an <code>JDOMetaDataUserException</code> with the specified
      * detail message.
      */
-    public JDOMetaDataUserException(String msg)
-    {
+    public JDOMetaDataUserException(String msg) {
         super(msg);
         this.nested = null;
     }
+
 
     /**
      * Constructs an <code>JDOMetaDataUserException</code> with an optional
      * nested exception.
      */
-    public JDOMetaDataUserException(Throwable nested)
-    {
-        super("nested exception: " + nested);//NOI18N
+    public JDOMetaDataUserException(Throwable nested) {
+        super("nested exception: " + nested);// NOI18N
         this.nested = nested;
     }
+
 
     /**
      * Constructs an <code>JDOMetaDataUserException</code> with the specified
      * detail message and an optional nested exception.
      */
-    public JDOMetaDataUserException(String msg, Throwable nested)
-    {
+    public JDOMetaDataUserException(String msg, Throwable nested) {
         super(msg);
         this.nested = nested;
     }

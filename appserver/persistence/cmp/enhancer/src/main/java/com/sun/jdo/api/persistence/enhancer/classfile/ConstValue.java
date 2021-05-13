@@ -16,21 +16,21 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
-
 /**
  * An abstract class serving as a common type for constants which
  * can be the target of ConstantValue attributes
  */
-
 public abstract class ConstValue extends ConstBasic {
-  /**
-   * The constructor
-   */
-  ConstValue() { }
 
-  /**
-   * Return the descriptor string for the constant type.
-   */
-  public abstract String descriptor();
+    /**
+     * The constructor
+     */
+    ConstValue() {
+    }
+
+
+    /**
+     * Return the descriptor string for the constant type.
+     */
+    public abstract String descriptor();
 }

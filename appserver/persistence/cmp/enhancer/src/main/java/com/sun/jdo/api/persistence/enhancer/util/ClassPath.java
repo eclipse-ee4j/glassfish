@@ -16,197 +16,194 @@
 
 package com.sun.jdo.api.persistence.enhancer.util;
 
-import java.util.StringTokenizer;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import java.io.File;
-import java.io.IOException;
-import java.io.FilenameFilter;
+import java.util.StringTokenizer;
 
 
 /**
  * ClassPath provides class file lookup according to a classpath
  * specification.
  */
-
 public class ClassPath {
-  /* The entire class path specification */
-  private String theClassPathSpec;
+    /* The entire class path specification */
+    private String theClassPathSpec;
 
-  /* Linked list of class path elements */
-  private ClassPathElement theClassPath;
+    /* Linked list of class path elements */
+    private ClassPathElement theClassPath;
 
-  /**
-   * Construct a class path from the input String argument.
-   * The path is expected to be in the form appropriate for the current
-   * execution environment.
-   */
-  public ClassPath(String path) {
-    theClassPathSpec = path;
-    parsePath();
-  }
-
-  /**
-   * locate a class file given a fully qualified class name
-   */
-  public ClassFileSource findClass(String className) {
-    return findClass(className, theClassPath);
-  }
-
-  /**
-   * locate a class file given a fully qualified class name
-   * starting at the specified class path element
-   */
-  static ClassFileSource findClass(String className, ClassPathElement path) {
-    for (ClassPathElement e = path; e != null; e = e.next()) {
-      ClassFileSource source = e.sourceOf(className);
-      if (source != null) {
-    source.setSourceElement(e);
-    return source;
-      }
+    /**
+     * Construct a class path from the input String argument.
+     * The path is expected to be in the form appropriate for the current
+     * execution environment.
+     */
+    public ClassPath(String path) {
+        theClassPathSpec = path;
+        parsePath();
     }
 
-    return null;
-  }
-
-  /**
-   * Return a file name which might reasonably identify a file containing
-   * the specified class.  The name is a "./" relative path.
-   */
-  public static String fileNameOf(String className, char separator) {
-    StringBuffer path = new StringBuffer();
-    StringTokenizer parser = new StringTokenizer(className, "./", false);//NOI18N
-    for (boolean first = true; parser.hasMoreElements(); first = false) {
-      if (!first)
-    path.append(separator);
-      path.append(parser.nextToken());
+    /**
+     * locate a class file given a fully qualified class name
+     */
+    public ClassFileSource findClass(String className) {
+        return findClass(className, theClassPath);
     }
-    path.append(".class");//NOI18N
-    return path.toString();
-  }
 
+    /**
+     * locate a class file given a fully qualified class name
+     * starting at the specified class path element
+     */
+    static ClassFileSource findClass(String className, ClassPathElement path) {
+        for (ClassPathElement e = path; e != null; e = e.next()) {
+            ClassFileSource source = e.sourceOf(className);
+            if (source != null) {
+                source.setSourceElement(e);
+                return source;
+            }
+        }
 
-  /**
-   * Return a file name which might reasonably identify a file containing
-   * the specified class.  The name is a "./" relative path.
-   */
-  public static String fileNameOf(String className) {
-    return fileNameOf(className, File.separatorChar);
-  }
-
-
-  /**
-   * Return a file name which might reasonably identify a file containing
-   * the specified class in a zip file.
-   */
-  public static String zipFileNameOf(String className) {
-    return fileNameOf(className, '/');
-  }
-
-
-  /**
-   * Return the vm class name which corresponds to the input file name.
-   * The file name is expected to be a "./" relative path.
-   * Returns null if the file name doesn't end in ".class"
-   */
-  public static String classNameOf(String fileName) {
-    int fnlen = fileName.length();
-    if (fnlen > 6 && fileName.regionMatches(true, fnlen - 6, ".class", 0, 6)) {//NOI18N
-      /* the file name ends with .class */
-      fileName = fileName.substring(0, fileName.length()-6);
-      StringBuffer className = new StringBuffer();
-      StringTokenizer parser = new StringTokenizer(fileName, "\\/", false);//NOI18N
-      for (boolean first = true; parser.hasMoreElements(); first = false) {
-    if (!first)
-      className.append('/');
-    className.append(parser.nextToken());
-      }
-      return className.toString();
+        return null;
     }
-    return null;
-  }
 
-  /**
-   * Remove any class path elements which match directory
-   */
-  public boolean remove(File directory) {
-    boolean matched = false;
-    ClassPathElement firstElement = theClassPath;
-    ClassPathElement prevElement = null;
-    for (ClassPathElement cpe = firstElement; cpe != null; cpe = cpe.next()) {
-      if (cpe.matches(directory)) {
-    matched = true;
-    if (prevElement == null)
-      firstElement = cpe.next();
-    else
-      prevElement.setNext(cpe.next());
-      } else {
-    prevElement = cpe;
-      }
+    /**
+     * Return a file name which might reasonably identify a file containing
+     * the specified class.  The name is a "./" relative path.
+     */
+    public static String fileNameOf(String className, char separator) {
+        StringBuffer path = new StringBuffer();
+        StringTokenizer parser = new StringTokenizer(className, "./", false);//NOI18N
+        for (boolean first = true; parser.hasMoreElements(); first = false) {
+            if (!first)
+                path.append(separator);
+            path.append(parser.nextToken());
+        }
+        path.append(".class");//NOI18N
+        return path.toString();
     }
-    theClassPath = firstElement;
-    return matched;
-  }
 
-  /**
-   * Append a directory to the classpath.
-   */
-  public void append(File directory) {
-    append(ClassPathElement.create(directory.getPath()));
-  }
 
-  /**
-   * Append a class path element to the classpath.
-   */
-  public void append(ClassPathElement anElement) {
-    if (theClassPath == null)
-      theClassPath = anElement;
-    else
-      theClassPath.append(anElement);
-  }
-
-  /**
-   * Return an enumeration of all of the class files in the specified
-   * package in this class path.
-   * @param packageName specifies the VM format package name
-   *    to which class files must belong.
-   * @return an Enumeration of the VM format class names which
-   *    can be found.  Note that the Enumeration value is of type String
-   *    and duplicate entries may be returned as the result of finding
-   *    a class through more than one class path element.  Note also
-   *    that the class name returned might not correspond the the
-   *    name of the class in the file.
-   */
-  public Enumeration classesInPackage(String packageName) {
-    return new ClassPackageEnumeration(this, packageName);
-  }
-
-  /* package local accessors */
-  ClassPathElement getPathElements() {
-    return theClassPath;
-  }
-
-  /* private accessors */
-
-  private void parsePath() {
-    StringTokenizer parser =
-      new StringTokenizer(theClassPathSpec,
-              java.io.File.pathSeparator,
-              false /* dont return delimiters */
-              );
-
-    ClassPathElement lastElement = null;
-    while (parser.hasMoreElements()) {
-      ClassPathElement anElement = ClassPathElement.create(parser.nextToken());
-
-      if (lastElement == null)
-    theClassPath = anElement;
-      else
-    lastElement.append(anElement);
-
-      lastElement = anElement;
+    /**
+     * Return a file name which might reasonably identify a file containing
+     * the specified class.  The name is a "./" relative path.
+     */
+    public static String fileNameOf(String className) {
+        return fileNameOf(className, File.separatorChar);
     }
-  }
+
+
+    /**
+     * Return a file name which might reasonably identify a file containing
+     * the specified class in a zip file.
+     */
+    public static String zipFileNameOf(String className) {
+        return fileNameOf(className, '/');
+    }
+
+
+    /**
+     * Return the vm class name which corresponds to the input file name.
+     * The file name is expected to be a "./" relative path.
+     * Returns null if the file name doesn't end in ".class"
+     */
+    public static String classNameOf(String fileName) {
+        int fnlen = fileName.length();
+        if (fnlen > 6 && fileName.regionMatches(true, fnlen - 6, ".class", 0, 6)) {//NOI18N
+            /* the file name ends with .class */
+            fileName = fileName.substring(0, fileName.length()-6);
+            StringBuffer className = new StringBuffer();
+            StringTokenizer parser = new StringTokenizer(fileName, "\\/", false);//NOI18N
+            for (boolean first = true; parser.hasMoreElements(); first = false) {
+                if (!first)
+                    className.append('/');
+                className.append(parser.nextToken());
+            }
+            return className.toString();
+        }
+        return null;
+    }
+
+    /**
+     * Remove any class path elements which match directory
+     */
+    public boolean remove(File directory) {
+        boolean matched = false;
+        ClassPathElement firstElement = theClassPath;
+        ClassPathElement prevElement = null;
+        for (ClassPathElement cpe = firstElement; cpe != null; cpe = cpe.next()) {
+            if (cpe.matches(directory)) {
+                matched = true;
+                if (prevElement == null)
+                    firstElement = cpe.next();
+                else
+                    prevElement.setNext(cpe.next());
+            } else {
+                prevElement = cpe;
+            }
+        }
+        theClassPath = firstElement;
+        return matched;
+    }
+
+    /**
+     * Append a directory to the classpath.
+     */
+    public void append(File directory) {
+        append(ClassPathElement.create(directory.getPath()));
+    }
+
+    /**
+     * Append a class path element to the classpath.
+     */
+    public void append(ClassPathElement anElement) {
+        if (theClassPath == null)
+            theClassPath = anElement;
+        else
+            theClassPath.append(anElement);
+    }
+
+    /**
+     * Return an enumeration of all of the class files in the specified
+     * package in this class path.
+     * @param packageName specifies the VM format package name
+     *    to which class files must belong.
+     * @return an Enumeration of the VM format class names which
+     *    can be found.  Note that the Enumeration value is of type String
+     *    and duplicate entries may be returned as the result of finding
+     *    a class through more than one class path element.  Note also
+     *    that the class name returned might not correspond the the
+     *    name of the class in the file.
+     */
+    public Enumeration classesInPackage(String packageName) {
+        return new ClassPackageEnumeration(this, packageName);
+    }
+
+    /* package local accessors */
+    ClassPathElement getPathElements() {
+        return theClassPath;
+    }
+
+    /* private accessors */
+
+    private void parsePath() {
+        StringTokenizer parser =
+            new StringTokenizer(theClassPathSpec,
+                java.io.File.pathSeparator,
+                false /* dont return delimiters */
+                );
+
+        ClassPathElement lastElement = null;
+        while (parser.hasMoreElements()) {
+            ClassPathElement anElement = ClassPathElement.create(parser.nextToken());
+
+            if (lastElement == null)
+                theClassPath = anElement;
+            else
+                lastElement.append(anElement);
+
+            lastElement = anElement;
+        }
+    }
 
 }
 
@@ -216,45 +213,45 @@ public class ClassPath {
  */
 
 class ClassPackageEnumeration implements Enumeration {
-  /* The next class path element to look for matches in once
+    /* The next class path element to look for matches in once
      the current enumeration is complete */
-  private ClassPathElement nextClassPathElement;
+    private ClassPathElement nextClassPathElement;
 
-  /* The package name */
-  private String thePackageName;
+    /* The package name */
+    private String thePackageName;
 
-  /* The enumeration of matching class names in the current class path
+    /* The enumeration of matching class names in the current class path
      element */
-  private Enumeration currentElementEnumeration;
+    private Enumeration currentElementEnumeration;
 
-  /**
-   * Construct a ClassPackageEnumeration.
-   * @param classPath The class path in which to search for classes.
-   * @param packageName The VM name of the package in which to search.
-   */
-  ClassPackageEnumeration(ClassPath classPath, String packageName) {
-    nextClassPathElement = classPath.getPathElements();
-    thePackageName = packageName;
-  }
-
-  public boolean hasMoreElements() {
-    while ((currentElementEnumeration == null ||
-        !currentElementEnumeration.hasMoreElements()) &&
-       nextClassPathElement != null) {
-      currentElementEnumeration =
-    nextClassPathElement.classesInPackage(thePackageName);
-      nextClassPathElement = nextClassPathElement.next();
+    /**
+     * Construct a ClassPackageEnumeration.
+     * @param classPath The class path in which to search for classes.
+     * @param packageName The VM name of the package in which to search.
+     */
+    ClassPackageEnumeration(ClassPath classPath, String packageName) {
+        nextClassPathElement = classPath.getPathElements();
+        thePackageName = packageName;
     }
 
-    return (currentElementEnumeration != null &&
-        currentElementEnumeration.hasMoreElements());
-  }
+    public boolean hasMoreElements() {
+        while ((currentElementEnumeration == null ||
+            !currentElementEnumeration.hasMoreElements()) &&
+            nextClassPathElement != null) {
+            currentElementEnumeration =
+                nextClassPathElement.classesInPackage(thePackageName);
+            nextClassPathElement = nextClassPathElement.next();
+        }
 
-  public Object nextElement() {
-    if (hasMoreElements())
-      return currentElementEnumeration.nextElement();
+        return (currentElementEnumeration != null &&
+            currentElementEnumeration.hasMoreElements());
+    }
 
-    throw new NoSuchElementException();
-  }
+    public Object nextElement() {
+        if (hasMoreElements())
+            return currentElementEnumeration.nextElement();
+
+        throw new NoSuchElementException();
+    }
 }
 

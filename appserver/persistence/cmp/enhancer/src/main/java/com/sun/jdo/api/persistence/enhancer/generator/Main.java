@@ -16,50 +16,35 @@
 
 package com.sun.jdo.api.persistence.enhancer.generator;
 
-import java.lang.reflect.Modifier;
-
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Properties;
-
-import java.io.Serializable;
-import java.io.File;
-import java.io.Writer;
-import java.io.PrintWriter;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-
-import com.sun.jdo.api.persistence.enhancer.util.Assertion;
-
+import com.sun.jdo.api.persistence.enhancer.LogHelperEnhancer;
 import com.sun.jdo.api.persistence.enhancer.meta.ExtendedJDOMetaData;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataPropertyImpl;
-
-import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
+import com.sun.jdo.api.persistence.enhancer.util.Assertion;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
-import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaFileWriter;
+import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
 import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaClassWriter;
+import com.sun.jdo.spi.persistence.utility.generator.io.IOJavaFileWriter;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import com.sun.jdo.api.persistence.enhancer.LogHelperEnhancer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Properties;
 import java.util.ResourceBundle;
+
 import org.glassfish.persistence.common.I18NHelper;
 
 
 /**
  *
  */
-public final class Main
-    extends Assertion
-{
+public final class Main extends Assertion {
     //
     // CAUTION: THE ENHANCER-GENERATOR DEALS WITH CLASS NAMES IN THE
     // JVM FORMAT, THAT IS, '/' INSTEAD OF '.' IS USED AS SEPARATOR.
@@ -108,21 +93,22 @@ public final class Main
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle("com.sun.jdo.api.persistence.enhancer.Bundle"); // NOI18N
-    public Main()
-    {}
 
-    public Main(ExtendedJDOMetaData meta, File destinationDir)
-             throws IOException {
+    public Main() {
+    }
+
+
+    public Main(ExtendedJDOMetaData meta, File destinationDir) throws IOException {
         this.meta = meta;
         this.destinationDir = destinationDir;
         createDestinationDir();
     }
 
+    
     /**
      *
      */
-    public static final void main(String[] argv)
-    {
+    public static final void main(String[] argv) {
         final Main gen = new Main();
         try {
             gen.opts.processArgs(argv);
@@ -134,13 +120,11 @@ public final class Main
     }
 
     /**
-     *  A class for holding the command line options.
+     * A class for holding the command line options.
      */
-    private class CmdLineOptions
-    {
+    private class CmdLineOptions {
         // final Collection inputFileNames = new ArrayList();
         String destinationDirectory = null;
-        String jdoXMLModelFileName = null;
         String jdoPropertiesFileName = null;
         boolean verbose = false;
 
@@ -160,20 +144,18 @@ public final class Main
             System.exit(1);
         }
 
+        
         /**
          * Process command line options
          */
-        protected int processArgs(String[] argv)
-        {
+        protected int processArgs(String[] argv) {
             for (int i = 0; i < argv.length; i++) {
                 final String arg = argv[i];
-                if (arg.equals("-v")
-                    || arg.equals("--verbose")) {
+                if (arg.equals("-v") || arg.equals("--verbose")) {
                     verbose = true;
                     continue;
                 }
-                if (arg.equals("-d")
-                    || arg.equals("--dest")) {
+                if (arg.equals("-d") || arg.equals("--dest")) {
                     if (argv.length - i < 2) {
                         printError("Missing argument to the -d/-dest option", null);
                         usage();
@@ -181,8 +163,7 @@ public final class Main
                     destinationDirectory = argv[++i];
                     continue;
                 }
-                if (arg.equals("-p") ||
-                    arg.equals("--properties")) {
+                if (arg.equals("-p") || arg.equals("--properties")) {
                     if (argv.length - i < 2) {
                         printError("Missing argument to the -p/--properties option", null);
                         usage();
@@ -218,9 +199,7 @@ public final class Main
         }
     }
 
-    private void init()
-        throws FileNotFoundException, IOException
-    {
+    private void init() throws FileNotFoundException, IOException {
         // load the properties
         affirm(opts.jdoPropertiesFileName != null);
         FileInputStream finput = null;
@@ -245,18 +224,16 @@ public final class Main
         createDestinationDir();
     }
 
-    private void createDestinationDir()
-        throws IOException
-    {
+
+    private void createDestinationDir() throws IOException {
         // create the destination directory
         if (!destinationDir.exists() && !destinationDir.mkdirs()) {
             throw new IOException(I18NHelper.getMessage(messages,"EXC_DestDirCreateFailure",destinationDir));  //NOI18N
         }
     }
 
-    private void generate()
-        throws IOException
-    {
+
+    private void generate() throws IOException {
         final String[] classes = meta.getKnownClasses();
         for (int i = 0; i < classes.length; i++) {
             final String className = classes[i];
@@ -264,20 +241,18 @@ public final class Main
         }
     }
 
+
     // entry point for EJB TP class generation
     // The argument is a fully qualified class name expected in the
     // JVM format, that is, with '/' for '.' as separator.  See comment
     // at the beginning of this class.
-    public File generate(final String className)
-        throws IOException
-    {
+    public File generate(final String className) throws IOException {
         affirm(className != null);
         printMessage("generating '" + className + "'...");
 
         //@olsen, 4653156: fixed file name
         final String filePath = className.replace('/', File.separatorChar);
-        final String classFileName
-            = filePath + JavaClassWriterHelper.javaExtension_;
+        final String classFileName = filePath + JavaClassWriterHelper.javaExtension_;
         final File file = new File(destinationDir, classFileName);
 
         //@olsen: not needed: IOJavaFileWriter takes care of creating file
@@ -300,9 +275,8 @@ public final class Main
         return file;
     }
 
-    private void generateClass(final String className)
-        throws IOException
-    {
+
+    private void generateClass(final String className) throws IOException {
         affirm(className != null);
 
         final String packageName = ImplHelper.getPackageName(className);
@@ -313,20 +287,15 @@ public final class Main
         if (oidClassName == null) {
             writeClassHeader(className);
         } else {
-            final String oidPackageName
-                = ImplHelper.getPackageName(oidClassName);
-            affirm(packageName.equals(oidPackageName),
-                   "PC class and key class must be in same package.");
+            final String oidPackageName = ImplHelper.getPackageName(oidClassName);
+            affirm(packageName.equals(oidPackageName), "PC class and key class must be in same package.");
 
-            final boolean enclosedOid
-                = oidClassName.startsWith(className + "$");
+            final boolean enclosedOid = oidClassName.startsWith(className + "$");
             if (enclosedOid) {
                 writeClassHeader(className);
-                writeOidClass(className, ImplHelper.getClassName(oidClassName),
-                    enclosedOid);
+                writeOidClass(className, ImplHelper.getClassName(oidClassName), enclosedOid);
             } else {
-                writeOidClass(className, ImplHelper.getClassName(oidClassName),
-                    enclosedOid);
+                writeOidClass(className, ImplHelper.getClassName(oidClassName), enclosedOid);
                 writeClassHeader(className);
             }
         }
@@ -336,8 +305,7 @@ public final class Main
         // write the augmentation
         final boolean isPC = meta.isPersistenceCapableClass(className);
         if (isPC) {
-            final boolean isPCRoot
-                = meta.isPersistenceCapableRootClass(className);
+            final boolean isPCRoot = meta.isPersistenceCapableRootClass(className);
             if (isPCRoot) {
                 writePCRootMembers(className);
             }
@@ -345,20 +313,17 @@ public final class Main
         }
     }
 
-    private void writeClassHeader(final String className)
-        throws IOException
-    {
+
+    private void writeClassHeader(final String className) throws IOException {
         final boolean isPCRoot = meta.isPersistenceCapableRootClass(className);
-        final String superclass =
-            ImplHelper.normalizeClassName(meta.getSuperClass(className));
+        final String superclass = ImplHelper.normalizeClassName(meta.getSuperClass(className));
 
         final String[] comments = null;
         final String[] interfaces
             = (isPCRoot
                ? new String[]{ ImplHelper.CLASSNAME_JDO_PERSISTENCE_CAPABLE, "Cloneable" }
                : null);
-        writer.setClassDeclaration(meta.getClassModifiers(className),
-                ImplHelper.getClassName(className), comments);
+        writer.setClassDeclaration(meta.getClassModifiers(className), ImplHelper.getClassName(className), comments);
         writer.setSuperclass(superclass);
         if (interfaces != null) {
             for (int i = 0; i < interfaces.length; i++) {
@@ -367,14 +332,9 @@ public final class Main
         }
     }
 
-    private void writeClassMembers(final String className)
-        throws IOException
-    {
-        final String[] comments = new String[]{
-            dotLine,
-            "Class Members:",
-            dotLine
-        };
+
+    private void writeClassMembers(final String className) throws IOException {
+        final String[] comments = new String[] {dotLine, "Class Members:", dotLine};
 
         // write default constructor
         writer.addConstructor(ImplHelper.getClassName(className),
@@ -412,13 +372,10 @@ public final class Main
         }
     }
 
-    private void writeFieldMember(final String className,
-                                  final String fieldName)
-        throws IOException
-    {
+
+    private void writeFieldMember(final String className, final String fieldName) throws IOException {
         final String fieldType = meta.getFieldType(className, fieldName);
-        final String normalizedFieldType =
-            ImplHelper.normalizeClassName(fieldType);
+        final String normalizedFieldType = ImplHelper.normalizeClassName(fieldType);
         final int fieldNumber = meta.getFieldNo(className, fieldName);
         final int flags = meta.getFieldFlags(className, fieldName);
 
@@ -438,21 +395,14 @@ public final class Main
 
         // accessor
         {
-            affirm(((flags & meta.CHECK_READ) == 0)
-                   | (flags & meta.MEDIATE_READ) == 0);
+            affirm(((flags & meta.CHECK_READ) == 0) | (flags & meta.MEDIATE_READ) == 0);
             final String[] impl;
             if ((flags & meta.CHECK_READ) != 0) {
-                impl = ImplHelper.getFieldCheckReadImpl(fieldName,
-                                                        fieldType,
-                                                        fieldNumber);
+                impl = ImplHelper.getFieldCheckReadImpl(fieldName, fieldType, fieldNumber);
             } else if ((flags & meta.MEDIATE_READ) != 0) {
-                impl = ImplHelper.getFieldMediateReadImpl(fieldName,
-                                                          fieldType,
-                                                          fieldNumber);
+                impl = ImplHelper.getFieldMediateReadImpl(fieldName, fieldType, fieldNumber);
             } else {
-                impl = ImplHelper.getFieldDirectReadImpl(fieldName,
-                                                         fieldType,
-                                                         fieldNumber);
+                impl = ImplHelper.getFieldDirectReadImpl(fieldName, fieldType, fieldNumber);
             }
             writer.addMethod(
                 createMethodName(JavaClassWriterHelper.get_, fieldName),
@@ -465,26 +415,14 @@ public final class Main
 
         // mutator
         {
-            affirm(((flags & meta.CHECK_WRITE) == 0)
-                   | (flags & meta.MEDIATE_WRITE) == 0);
+            affirm(((flags & meta.CHECK_WRITE) == 0) | (flags & meta.MEDIATE_WRITE) == 0);
             final String[] impl;
             if ((flags & meta.CHECK_WRITE) != 0) {
-                impl = ImplHelper.getFieldCheckWriteImpl(fieldName,
-                                                         fieldType,
-                                                         fieldNumber,
-                                                         fieldName);
-            } else if ((flags & meta.MEDIATE_WRITE) != 0
-                    && !meta.isKnownNonManagedField(className, fieldName,
-                    null)) {
-                impl = ImplHelper.getFieldMediateWriteImpl(fieldName,
-                                                           fieldType,
-                                                           fieldNumber,
-                                                           fieldName);
+                impl = ImplHelper.getFieldCheckWriteImpl(fieldName, fieldType, fieldNumber, fieldName);
+            } else if ((flags & meta.MEDIATE_WRITE) != 0 && !meta.isKnownNonManagedField(className, fieldName, null)) {
+                impl = ImplHelper.getFieldMediateWriteImpl(fieldName, fieldType, fieldNumber, fieldName);
             } else {
-                impl = ImplHelper.getFieldDirectWriteImpl(fieldName,
-                                                          fieldType,
-                                                          fieldNumber,
-                                                          fieldName);
+                impl = ImplHelper.getFieldDirectWriteImpl(fieldName, fieldType, fieldNumber, fieldName);
             }
             writer.addMethod(
                 createMethodName(JavaClassWriterHelper.set_, fieldName),
@@ -637,21 +575,17 @@ public final class Main
 
     }
 
-    private void writePCMembers(final String className)
-        throws IOException
-    {
-        final String[] comments = new String[]{
+
+    private void writePCMembers(final String className) throws IOException {
+        final String[] comments = new String[] {
             dotLine,
             "Augmentation for Persistence-Capable Classes (added by enhancer):",
             dotLine
         };
 
-        final String[] managedFieldNames
-            = meta.getManagedFields(className);
-        final String[] managedFieldTypes
-            = meta.getFieldType(className, managedFieldNames);
-        final boolean isPCRoot
-            = meta.isPersistenceCapableRootClass(className);
+        final String[] managedFieldNames = meta.getManagedFields(className);
+        final String[] managedFieldTypes = meta.getFieldType(className, managedFieldNames);
+        final boolean isPCRoot = meta.isPersistenceCapableRootClass(className);
 
         // jdoGetField
         writer.addMethod(
@@ -701,19 +635,16 @@ public final class Main
 
     }
 
-    private void writeOidClass(final String className,
-                               final String oidClassName,
-                               final boolean enclosedOid)
-        throws IOException
-    {
+
+    private void writeOidClass(final String className, final String oidClassName, final boolean enclosedOid)
+        throws IOException {
         final String[] comments = new String[]{
             dotLine,
             "Key Class:",
             dotLine
         };
 
-        final String superOidClassName
-            = ImplHelper.normalizeClassName(meta.getSuperKeyClass(className));
+        final String superOidClassName = ImplHelper.normalizeClassName(meta.getSuperKeyClass(className));
 
         JavaClassWriter oidWriter = new IOJavaClassWriter();
 
@@ -724,8 +655,7 @@ public final class Main
         oidWriter.setSuperclass(superOidClassName);
         oidWriter.addInterface(Serializable.class.getName());
 
-        final boolean isPCRoot
-            = meta.isPersistenceCapableRootClass(className);
+        final boolean isPCRoot = meta.isPersistenceCapableRootClass(className);
 
         final String[] pknames = meta.getKeyFields(className);
         final String[] pktypes = meta.getFieldType(className, pknames);
@@ -781,27 +711,25 @@ public final class Main
           }
     }
 
-    static private String createMethodName(final String prefix,
-                                           final String fieldName)
-    {
-        return (prefix + Character.toUpperCase(fieldName.charAt(0))
-                + fieldName.substring(1));
+
+    static private String createMethodName(final String prefix, final String fieldName) {
+        return (prefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1));
     }
 
-    //XXX use common logger later
-    private void printMessage(String msg)
-    {
-      logger.finest("TP PCClassGen: " + msg); // NOI18N
+
+    // XXX use common logger later
+    private void printMessage(String msg) {
+        logger.finest("TP PCClassGen: " + msg); // NOI18N
     }
 
-    private void printError(String msg, Throwable ex)
-    {
+
+    private void printError(String msg, Throwable ex) {
         if (msg != null) {
-            String errmsg=msg + (ex != null ? ": " + ex.getMessage() : ""); //NOI18N
-            logger.log(Logger.SEVERE,"CME.generic_exception",errmsg); //NOI18N
+            String errmsg = msg + (ex != null ? ": " + ex.getMessage() : ""); // NOI18N
+            logger.log(Logger.SEVERE, "CME.generic_exception", errmsg); // NOI18N
         }
         if (ex != null) {
-            logger.log(Logger.SEVERE,"CME.generic_exception_stack",ex); //NOI18N
+            logger.log(Logger.SEVERE, "CME.generic_exception_stack", ex); // NOI18N
         }
     }
 }

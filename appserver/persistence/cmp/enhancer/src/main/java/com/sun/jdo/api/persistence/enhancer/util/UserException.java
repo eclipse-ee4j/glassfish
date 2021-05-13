@@ -21,9 +21,8 @@ package com.sun.jdo.api.persistence.enhancer.util;
  * Thrown to indicate that the class-file enhancer failed to perform an
  * operation due to a serious error.
  */
-public class UserException
-    extends RuntimeException
-{
+public class UserException extends RuntimeException {
+
     /**
      * An optional nested exception.
      */
@@ -32,37 +31,36 @@ public class UserException
     /**
      * Constructs an <code>UserException</code> with no detail message.
      */
-    public UserException()
-    {
+    public UserException() {
         this.nested = null;
     }
+
 
     /**
      * Constructs an <code>UserException</code> with the specified
      * detail message.
      */
-    public UserException(String msg)
-    {
+    public UserException(String msg) {
         super(msg);
         this.nested = null;
     }
+
 
     /**
      * Constructs an <code>UserException</code> with an optional
      * nested exception.
      */
-    public UserException(Throwable nested)
-    {
+    public UserException(Throwable nested) {
         super(nested.toString());
         this.nested = nested;
     }
+
 
     /**
      * Constructs an <code>UserException</code> with the specified
      * detail message and an optional nested exception.
      */
-    public UserException(String msg, Throwable nested)
-    {
+    public UserException(String msg, Throwable nested) {
         super(msg);
         this.nested = nested;
     }

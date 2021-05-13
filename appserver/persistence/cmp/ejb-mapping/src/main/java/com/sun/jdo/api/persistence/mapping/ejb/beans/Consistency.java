@@ -16,10 +16,9 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb.beans;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.Common;
 
 // BEGIN_NOI18N
 
@@ -99,9 +98,10 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     //
     public boolean isNone() {
         Boolean ret = (Boolean)this.getValue(NONE);
-        if (ret == null)
+        if (ret == null) {
             ret = (Boolean)Common.defaultScalarValue(Common.TYPE_BOOLEAN);
-        return ((java.lang.Boolean)ret).booleanValue();
+        }
+        return ret.booleanValue();
     }
 
     // This attribute is mandatory
@@ -121,9 +121,10 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     //
     public boolean isCheckModifiedAtCommit() {
         Boolean ret = (Boolean)this.getValue(CHECK_MODIFIED_AT_COMMIT);
-        if (ret == null)
+        if (ret == null) {
             ret = (Boolean)Common.defaultScalarValue(Common.TYPE_BOOLEAN);
-        return ((java.lang.Boolean)ret).booleanValue();
+        }
+        return ret.booleanValue();
     }
 
     // This attribute is mandatory
@@ -143,9 +144,10 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     //
     public boolean isLockWhenLoaded() {
         Boolean ret = (Boolean)this.getValue(LOCK_WHEN_LOADED);
-        if (ret == null)
+        if (ret == null) {
             ret = (Boolean)Common.defaultScalarValue(Common.TYPE_BOOLEAN);
-        return ((java.lang.Boolean)ret).booleanValue();
+        }
+        return ret.booleanValue();
     }
 
     // This attribute is mandatory
@@ -165,9 +167,10 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     //
     public boolean isCheckAllAtCommit() {
         Boolean ret = (Boolean)this.getValue(CHECK_ALL_AT_COMMIT);
-        if (ret == null)
+        if (ret == null) {
             ret = (Boolean)Common.defaultScalarValue(Common.TYPE_BOOLEAN);
-        return ((java.lang.Boolean)ret).booleanValue();
+        }
+        return ret.booleanValue();
     }
 
     // This attribute is mandatory
@@ -186,9 +189,10 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     //
     public boolean isLockWhenModified() {
         Boolean ret = (Boolean)this.getValue(LOCK_WHEN_MODIFIED);
-        if (ret == null)
+        if (ret == null) {
             ret = (Boolean)Common.defaultScalarValue(Common.TYPE_BOOLEAN);
-        return ((java.lang.Boolean)ret).booleanValue();
+        }
+        return ret.booleanValue();
     }
 
     // This attribute is optional
@@ -207,9 +211,10 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     //
     public boolean isCheckAllAtCommit2() {
         Boolean ret = (Boolean)this.getValue(CHECK_ALL_AT_COMMIT2);
-        if (ret == null)
+        if (ret == null) {
             ret = (Boolean)Common.defaultScalarValue(Common.TYPE_BOOLEAN);
-        return ((java.lang.Boolean)ret).booleanValue();
+        }
+        return ret.booleanValue();
     }
 
     // This attribute is mandatory
@@ -407,6 +412,7 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
     }
 
     // Dump the content of this bean returning it as a String
+    @Override
     public void dump(StringBuffer str, String indent){
         String s;
         Object o;
@@ -449,14 +455,17 @@ public class Consistency extends org.netbeans.modules.schema2beans.BaseBean
 
         str.append(indent);
         str.append("CheckVersionOfAccessedInstances");    // NOI18N
-        n = (org.netbeans.modules.schema2beans.BaseBean) this.getCheckVersionOfAccessedInstances();
-        if (n != null)
+        n = this.getCheckVersionOfAccessedInstances();
+        if (n != null) {
             n.dump(str, indent + "\t");    // NOI18N
-        else
+        }
+        else {
             str.append(indent+"\tnull");    // NOI18N
+        }
         this.dumpAttributes(CHECK_VERSION_OF_ACCESSED_INSTANCES, 0, str, indent);
 
     }
+    @Override
     public String dumpBeanNode(){
         StringBuffer str = new StringBuffer();
         str.append("Consistency\n");    // NOI18N

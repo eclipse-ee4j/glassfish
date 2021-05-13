@@ -16,126 +16,134 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * ClassField models the static and non-static fields of a class within
  * a class file.
  */
-
 final public class ClassField extends ClassMember {
-  /* access flag bit mask - see VMConstants */
-  private int accessFlags;
 
-  /* The name of the field */
-  private ConstUtf8 fieldName;
+    /* access flag bit mask - see VMConstants */
+    private int accessFlags;
 
-  /* The type signature of the field */
-  private ConstUtf8 fieldSignature;
+    /* The name of the field */
+    private ConstUtf8 fieldName;
 
-  /* The attributes associated with the field */
-  private AttributeVector fieldAttributes;
+    /* The type signature of the field */
+    private ConstUtf8 fieldSignature;
+
+    /* The attributes associated with the field */
+    private AttributeVector fieldAttributes;
+
+    /* public accessors */
+
+    /**
+     * Is the field transient?
+     */
+    public boolean isTransient() {
+        return (accessFlags & ACCTransient) != 0;
+    }
 
 
-  /* public accessors */
+    /**
+     * Return the access flags for the field - see VMConstants
+     */
+    @Override
+    public int access() {
+        return accessFlags;
+    }
 
-  /**
-   * Is the field transient?
-   */
-  public boolean isTransient() {
-    return (accessFlags & ACCTransient) != 0;
-  }
+    /**
+     * Update the access flags for the field - see VMConstants
+     */
+    @Override
+    public void setAccess(int newFlags) {
+        accessFlags = newFlags;
+    }
 
-  /**
-   * Return the access flags for the field - see VMConstants
-   */
-  public int access() {
-    return accessFlags;
-  }
+    /**
+     * Return the name of the field
+     */
+    @Override
+    public ConstUtf8 name() {
+        return fieldName;
+    }
 
-  /**
-   * Update the access flags for the field - see VMConstants
-   */
-  public void setAccess(int newFlags) {
-    accessFlags = newFlags;
-  }
+    /**
+     * Change the name of the field
+     */
+    public void changeName(ConstUtf8 name) {
+        fieldName = name;
+    }
 
-  /**
-   * Return the name of the field
-   */
-  public ConstUtf8 name() {
-    return fieldName;
-  }
+    /**
+     * Return the type signature of the field
+     */
+    @Override
+    public ConstUtf8 signature() {
+        return fieldSignature;
+    }
 
-  /**
-   * Change the name of the field
-   */
-  public void changeName(ConstUtf8 name) {
-    fieldName = name;
-  }
+    /**
+     * Change the type signature of the field
+     */
+    public void changeSignature(ConstUtf8 newSig) {
+        fieldSignature = newSig;
+    }
 
-  /**
-   * Return the type signature of the field
-   */
-  public ConstUtf8 signature() {
-    return fieldSignature;
-  }
+    /**
+     * Return the attributes associated with the field
+     */
+    @Override
+    public AttributeVector attributes() {
+        return fieldAttributes;
+    }
 
-  /**
-   * Change the type signature of the field
-   */
-  public void changeSignature(ConstUtf8 newSig) {
-    fieldSignature = newSig;
-  }
+    /**
+     * Construct a class field object
+     */
+    public ClassField(int accFlags, ConstUtf8 name, ConstUtf8 sig,
+        AttributeVector field_attrs) {
+        accessFlags = accFlags;
+        fieldName = name;
+        fieldSignature = sig;
+        fieldAttributes = field_attrs;
+    }
 
-  /**
-   * Return the attributes associated with the field
-   */
-  public AttributeVector attributes() {
-    return fieldAttributes;
-  }
+    /* package local methods */
 
-  /**
-   * Construct a class field object
-   */
-  public ClassField(int accFlags, ConstUtf8 name, ConstUtf8 sig,
-                    AttributeVector field_attrs) {
-    accessFlags = accFlags;
-    fieldName = name;
-    fieldSignature = sig;
-    fieldAttributes = field_attrs;
-  }
+    static ClassField read(DataInputStream data, ConstantPool pool)
+        throws IOException {
+        ClassField f = null;
+        int accessFlags = data.readUnsignedShort();
+        int name_index = data.readUnsignedShort();
+        int sig_index = data.readUnsignedShort();
+        AttributeVector fieldAttribs = AttributeVector.readAttributes(data, pool);
+        f = new ClassField(accessFlags,
+            (ConstUtf8) pool.constantAt(name_index),
+            (ConstUtf8) pool.constantAt(sig_index),
+            fieldAttribs);
+        return f;
+    }
 
-  /* package local methods */
+    void write (DataOutputStream data) throws IOException {
+        data.writeShort(accessFlags);
+        data.writeShort(fieldName.getIndex());
+        data.writeShort(fieldSignature.getIndex());
+        fieldAttributes.write(data);
+    }
 
-  static ClassField read(DataInputStream data, ConstantPool pool)
-    throws IOException {
-    ClassField f = null;
-    int accessFlags = data.readUnsignedShort();
-    int name_index = data.readUnsignedShort();
-    int sig_index = data.readUnsignedShort();
-    AttributeVector fieldAttribs = AttributeVector.readAttributes(data, pool);
-    f = new ClassField(accessFlags,
-               (ConstUtf8) pool.constantAt(name_index),
-               (ConstUtf8) pool.constantAt(sig_index),
-               fieldAttribs);
-    return f;
-  }
-
-  void write (DataOutputStream data) throws IOException {
-    data.writeShort(accessFlags);
-    data.writeShort(fieldName.getIndex());
-    data.writeShort(fieldSignature.getIndex());
-    fieldAttributes.write(data);
-  }
-
-  void print(PrintStream out, int indent) {
-    ClassPrint.spaces(out, indent);
-    out.print("'" + fieldName.asString() + "'");//NOI18N
-    out.print(" sig = " + fieldSignature.asString());//NOI18N
-    out.print(" access_flags = " + Integer.toString(accessFlags));//NOI18N
-    out.println(" attributes:");//NOI18N
-    fieldAttributes.print(out, indent+2);
-  }
+    void print(PrintStream out, int indent) {
+        ClassPrint.spaces(out, indent);
+        out.print("'" + fieldName.asString() + "'");//NOI18N
+        out.print(" sig = " + fieldSignature.asString());//NOI18N
+        out.print(" access_flags = " + Integer.toString(accessFlags));//NOI18N
+        out.println(" attributes:");//NOI18N
+        fieldAttributes.print(out, indent+2);
+    }
 }
 

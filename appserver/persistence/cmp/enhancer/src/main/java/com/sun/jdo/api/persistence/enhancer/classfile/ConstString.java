@@ -16,7 +16,9 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Class representing a class specification in the constant pool
@@ -31,64 +33,62 @@ import java.io.*;
 */
 
 public class ConstString extends ConstValue {
-  /* The tag associated with ConstClass entries */
-  public static final int MyTag = CONSTANTString;
+    /* The tag associated with ConstClass entries */
+    public static final int MyTag = CONSTANTString;
 
-  /* The name of the class being referred to */
-  private ConstUtf8 stringValue;
+    /* The name of the class being referred to */
+    private ConstUtf8 stringValue;
 
-  /* The index of name of the class being referred to
-   *  - used while reading from a class file */
-  private int stringValueIndex;
+    /* The index of name of the class being referred to
+     *  - used while reading from a class file */
+    private int stringValueIndex;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * Return the tag for this constant
-   */
-  public int tag () { return MyTag; }
+    /**
+     * Return the tag for this constant
+     */
+    public int tag () { return MyTag; }
 
-  /**
-   * Return the utf8 string calue
-   */
-  public ConstUtf8 value() {
-    return stringValue;
-  }
+    /**
+     * Return the utf8 string calue
+     */
+    public ConstUtf8 value() {
+        return stringValue;
+    }
 
-  /**
-   * Return the descriptor string for the constant type.
-   */
-  public String descriptor() {
-      return "Ljava/lang/String;";//NOI18N
-  }
+    /**
+     * Return the descriptor string for the constant type.
+     */
+    public String descriptor() {
+        return "Ljava/lang/String;";//NOI18N
+    }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTString(" + indexAsString() + "): " + //NOI18N
-          "string(" + stringValue.asString() + ")";//NOI18N
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTString(" + indexAsString() + "): " + //NOI18N
+            "string(" + stringValue.asString() + ")";//NOI18N
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  ConstString (ConstUtf8 s) {
-    stringValue = s;
-  }
+    ConstString (ConstUtf8 s) {
+        stringValue = s;
+    }
 
-  ConstString (int sIndex) {
-    stringValueIndex = sIndex;
-  }
+    ConstString (int sIndex) {
+        stringValueIndex = sIndex;
+    }
 
-  void formatData (DataOutputStream b) throws IOException {
-    b.writeShort (stringValue.getIndex());
-  }
-  static ConstString read (DataInputStream input) throws IOException {
-    return new ConstString (input.readUnsignedShort());
-  }
-  void resolve (ConstantPool p) {
-    stringValue = (ConstUtf8) p.constantAt(stringValueIndex);
-  }
+    void formatData (DataOutputStream b) throws IOException {
+        b.writeShort (stringValue.getIndex());
+    }
+    static ConstString read (DataInputStream input) throws IOException {
+        return new ConstString (input.readUnsignedShort());
+    }
+    void resolve (ConstantPool p) {
+        stringValue = (ConstUtf8) p.constantAt(stringValueIndex);
+    }
 }
-
-

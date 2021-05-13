@@ -16,63 +16,64 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Class representing an integer constant in the constant pool of a class file
  */
-
 public class ConstInteger extends ConstValue {
-  /* The tag value associated with ConstInteger */
-  public static final int MyTag = CONSTANTInteger;
+    /* The tag value associated with ConstInteger */
+    public static final int MyTag = CONSTANTInteger;
 
-  /* The value */
-  private int intValue;
+    /* The value */
+    private int intValue;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * The tag of this constant entry
-   */
-  public int tag () { return MyTag; }
+    /**
+     * The tag of this constant entry
+     */
+    public int tag () { return MyTag; }
 
-  /**
-   * return the value associated with the entry
-   */
-  public int value() {
-    return intValue;
-  }
+    /**
+     * return the value associated with the entry
+     */
+    public int value() {
+        return intValue;
+    }
 
-  /**
-   * Return the descriptor string for the constant type.
-   */
-  public String descriptor() {
-      return "I";//NOI18N
-  }
+    /**
+     * Return the descriptor string for the constant type.
+     */
+    public String descriptor() {
+        return "I";//NOI18N
+    }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTInteger(" + indexAsString() + "): " + //NOI18N
-          "intValue(" + Integer.toString(intValue) + ")";//NOI18N
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTInteger(" + indexAsString() + "): " + //NOI18N
+            "intValue(" + Integer.toString(intValue) + ")";//NOI18N
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  ConstInteger (int i) {
-    intValue = i;
-  }
+    ConstInteger (int i) {
+        intValue = i;
+    }
 
-  void formatData (DataOutputStream b) throws IOException {
-    b.writeInt(intValue);
-  }
+    void formatData (DataOutputStream b) throws IOException {
+        b.writeInt(intValue);
+    }
 
-  static ConstInteger read (DataInputStream input) throws IOException {
-    return new ConstInteger (input.readInt());
-  }
+    static ConstInteger read (DataInputStream input) throws IOException {
+        return new ConstInteger (input.readInt());
+    }
 
-  void resolve (ConstantPool p) { }
+    void resolve (ConstantPool p) { }
 
 }
 

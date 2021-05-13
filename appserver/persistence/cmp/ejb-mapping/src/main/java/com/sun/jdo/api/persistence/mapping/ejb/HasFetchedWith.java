@@ -25,15 +25,13 @@ package com.sun.jdo.api.persistence.mapping.ejb;
 import com.sun.jdo.api.persistence.mapping.ejb.beans.FetchedWith;
 
 /**
- *
- * @author  vkraemer
+ * @author vkraemer
  * @version 1.0
  */
 public interface HasFetchedWith {
 
-    public FetchedWith getFetchedWith();
+    FetchedWith getFetchedWith();
 
-    public void setFetchedWith(FetchedWith fw);
+    void setFetchedWith(FetchedWith fw);
 
 }
-

@@ -67,39 +67,32 @@ public class CaptureSchema {
         LinkedList tableList = new LinkedList();
         LinkedList vList = new LinkedList();
         try {
-            for (int i=0; i<args.length; i++) {
-                if (args[i].equals(bundle.getString("CMD_FLAG_DRIVER"))) { //NOI18N
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals(bundle.getString("CMD_FLAG_DRIVER"))) { // NOI18N
                     driver = args[++i];
                     help++;
-                }
-                else if (args[i].equals(bundle.getString("CMD_FLAG_SCHEMA_NAME"))) { //NOI18N
+                } else if (args[i].equals(bundle.getString("CMD_FLAG_SCHEMA_NAME"))) { // NOI18N
                     dbschemaname = args[++i];
                     help++;
 
-                }
-                else if (args[i].equals(bundle.getString("CMD_FLAG_USERNAME"))) { //NOI18N
+                } else if (args[i].equals(bundle.getString("CMD_FLAG_USERNAME"))) { // NOI18N
                     username = args[++i];
                     help++;
 
-                }
-                else    if (args[i].equals(bundle.getString("CMD_FLAG_PASSWORD"))) { //NOI18N
+                } else if (args[i].equals(bundle.getString("CMD_FLAG_PASSWORD"))) { // NOI18N
                     password = args[++i];
                     help++;
-                }
-                else    if (args[i].equals(bundle.getString("CMD_FLAG_DBURL"))) { //NOI18N
+                } else if (args[i].equals(bundle.getString("CMD_FLAG_DBURL"))) { // NOI18N
                     dburl = args[++i];
                     help++;
-                }
-                else    if (args[i].equals(bundle.getString("CMD_FLAG_TABLE"))) { //NOI18N
+                } else if (args[i].equals(bundle.getString("CMD_FLAG_TABLE"))) { // NOI18N
                     tableList.add(args[++i]);
-                    //vList.add(args[i]);
+                    // vList.add(args[i]);
                     help++;
-                }
-                else    if (args[i].equals(bundle.getString("CMD_FLAG_OUTPUT"))) { //NOI18N
+                } else if (args[i].equals(bundle.getString("CMD_FLAG_OUTPUT"))) { // NOI18N
                     outfile = args[++i];
                     help++;
                 }
-
             }
         }
         catch(Exception e) {

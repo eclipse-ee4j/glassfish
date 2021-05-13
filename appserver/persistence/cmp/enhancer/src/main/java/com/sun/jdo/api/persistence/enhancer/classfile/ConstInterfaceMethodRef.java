@@ -16,47 +16,47 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * Class representing a reference to an interface method of some class
  * in the constant pool of a class file.
  */
-
 public class ConstInterfaceMethodRef extends ConstBasicMemberRef {
-  /* The tag value associated with ConstDouble */
-  public static final int MyTag = CONSTANTInterfaceMethodRef;
+    /* The tag value associated with ConstDouble */
+    public static final int MyTag = CONSTANTInterfaceMethodRef;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * The tag of this constant entry
-   */
-  public int tag () { return MyTag; }
+    /**
+     * The tag of this constant entry
+     */
+    public int tag () { return MyTag; }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTInterfaceMethodRef(" + indexAsString() + "): " + //NOI18N
-           super.toString();
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTInterfaceMethodRef(" + indexAsString() + "): " + //NOI18N
+            super.toString();
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  ConstInterfaceMethodRef (ConstClass cname, ConstNameAndType NT) {
-    super(cname, NT);
-  }
+    ConstInterfaceMethodRef (ConstClass cname, ConstNameAndType NT) {
+        super(cname, NT);
+    }
 
-  ConstInterfaceMethodRef (int cnameIndex, int NT_index) {
-    super(cnameIndex, NT_index);
-  }
+    ConstInterfaceMethodRef (int cnameIndex, int NT_index) {
+        super(cnameIndex, NT_index);
+    }
 
-  static ConstInterfaceMethodRef read (DataInputStream input)
-    throws IOException {
-    int cname = input.readUnsignedShort();
-    int NT = input.readUnsignedShort();
-    return new ConstInterfaceMethodRef (cname, NT);
-  }
+    static ConstInterfaceMethodRef read (DataInputStream input)
+        throws IOException {
+        int cname = input.readUnsignedShort();
+        int NT = input.readUnsignedShort();
+        return new ConstInterfaceMethodRef (cname, NT);
+    }
 }
 

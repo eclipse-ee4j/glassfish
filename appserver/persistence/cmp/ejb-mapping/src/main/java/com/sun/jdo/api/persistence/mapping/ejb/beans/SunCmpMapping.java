@@ -16,10 +16,9 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb.beans;
 
-import org.w3c.dom.*;
-import org.netbeans.modules.schema2beans.*;
-import java.beans.*;
-import java.util.*;
+import java.util.Vector;
+
+import org.netbeans.modules.schema2beans.Common;
 
 // BEGIN_NOI18N
 

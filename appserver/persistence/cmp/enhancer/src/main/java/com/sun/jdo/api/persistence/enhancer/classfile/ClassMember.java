@@ -19,83 +19,81 @@ package com.sun.jdo.api.persistence.enhancer.classfile;
 /**
  * ClassMember is a common base class for ClassMethod and ClassField
  */
-
 abstract public class ClassMember implements VMConstants {
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * Is the member static?
-   */
-  final public boolean isStatic() {
-    return (access() & ACCStatic) != 0;
-  }
+    /**
+     * Is the member static?
+     */
+    final public boolean isStatic() {
+        return (access() & ACCStatic) != 0;
+    }
 
-  /**
-   * Is the member final?
-   */
-  final public boolean isFinal() {
-    return (access() & ACCFinal) != 0;
-  }
+    /**
+     * Is the member final?
+     */
+    final public boolean isFinal() {
+        return (access() & ACCFinal) != 0;
+    }
 
-  /**
-   * Turn on or off the final qualifier for the member.
-   */
-  public void setIsFinal(boolean newFinal) {
-    if (newFinal)
-      setAccess(access() | ACCFinal);
-    else
-      setAccess(access() & ~ACCFinal);
-  }
+    /**
+     * Turn on or off the final qualifier for the member.
+     */
+    public void setIsFinal(boolean newFinal) {
+        if (newFinal) {
+            setAccess(access() | ACCFinal);
+        } else {
+            setAccess(access() & ~ACCFinal);
+        }
+    }
 
-  /**
-   * Is the member private?
-   */
-  final public boolean isPrivate() {
-    return (access() & ACCPrivate) != 0;
-  }
+    /**
+     * Is the member private?
+     */
+    final public boolean isPrivate() {
+        return (access() & ACCPrivate) != 0;
+    }
 
-  /**
-   * Is the member protected?
-   */
-  final public boolean isProtected() {
-    return (access() & ACCProtected) != 0;
-  }
+    /**
+     * Is the member protected?
+     */
+    final public boolean isProtected() {
+        return (access() & ACCProtected) != 0;
+    }
 
-  /**
-   * Is the member public?
-   */
-  final public boolean isPublic() {
-    return (access() & ACCPublic) != 0;
-  }
+    /**
+     * Is the member public?
+     */
+    final public boolean isPublic() {
+        return (access() & ACCPublic) != 0;
+    }
 
-  /* These are expected to be implemented by subtypes */
+    /* These are expected to be implemented by subtypes */
 
-  /**
-   * Return the access flags for the method - see VMConstants
-   */
-  abstract public int access();
+    /**
+     * Return the access flags for the method - see VMConstants
+     */
+    abstract public int access();
 
-  /**
-   * Set the access flags for the method - see VMConstants
-   */
-  abstract public void setAccess(int newAccess);
+    /**
+     * Set the access flags for the method - see VMConstants
+     */
+    abstract public void setAccess(int newAccess);
 
-  /**
-   * Return the name of the member
-   */
-  abstract public ConstUtf8 name();
+    /**
+     * Return the name of the member
+     */
+    abstract public ConstUtf8 name();
 
-  /**
-   * Return the type signature of the method
-   */
-  abstract public ConstUtf8 signature();
+    /**
+     * Return the type signature of the method
+     */
+    abstract public ConstUtf8 signature();
 
-  /**
-   * Return the attributes associated with the member
-   */
-  abstract public AttributeVector attributes();
+    /**
+     * Return the attributes associated with the member
+     */
+    abstract public AttributeVector attributes();
 
 }
-
-

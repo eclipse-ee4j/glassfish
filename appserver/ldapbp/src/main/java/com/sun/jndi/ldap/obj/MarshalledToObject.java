@@ -16,11 +16,15 @@
 
 package com.sun.jndi.ldap.obj;
 
-import javax.naming.spi.*;
-import javax.naming.*;
-import javax.naming.directory.*;
-import java.util.Hashtable;
+import java.io.IOException;
 import java.rmi.MarshalledObject;
+import java.util.Hashtable;
+
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.spi.DirObjectFactory;
 
 /**
   * An DirObjectFactory that returns the unmarshalled object from a
@@ -30,7 +34,6 @@ import java.rmi.MarshalledObject;
   *
   * @author Rosanna Lee
   */
-
 public class MarshalledToObject implements DirObjectFactory {
 
     public MarshalledToObject() {
@@ -49,19 +52,18 @@ public class MarshalledToObject implements DirObjectFactory {
      * @exception IOException If problem unmarshalling the object
      * @exception ClassNotFoundException If cannot find class required to unmarshal.
      */
-    public Object getObjectInstance(Object orig, Name name, Context ctx,
-    Hashtable env, Attributes attrs) throws Exception {
+    @Override
+    public Object getObjectInstance(Object orig, Name name, Context ctx, Hashtable env, Attributes attrs)
+        throws Exception {
         Attribute oc;
-
-        if (orig instanceof MarshalledObject &&
-        attrs != null &&
-        (oc = attrs.get("objectclass")) != null &&
-        (oc.contains("javaMarshalledObject")
-            || oc.contains("javamarshalledobject"))) {
-        return ((MarshalledObject)orig).get();
+        if (orig instanceof MarshalledObject && attrs != null
+            && (oc = attrs.get("objectclass")) != null
+            && (oc.contains("javaMarshalledObject") || oc.contains("javamarshalledobject"))) {
+            return ((MarshalledObject) orig).get();
         }
         return null;
     }
+
 
     /**
      * Unmarshals a MarshalledObject.
@@ -70,18 +72,15 @@ public class MarshalledToObject implements DirObjectFactory {
      * @param name Ignored
      * @param ctx Ignored
      * @param env Ignored
-     * @return The non-null unmarshalled object if <tt>orig</tt> is a
-     *     MarshalledObject; otherwise null
+     * @return The non-null unmarshalled object if <tt>orig</tt> is a MarshalledObject; otherwise null
      * @exception IOException If problem unmarshalling the object
      * @exception ClassNotFoundException If cannot find class required to unmarshal.
      */
-    public Object getObjectInstance(Object orig, Name name, Context ctx,
-    Hashtable env) throws Exception {
-
+    @Override
+    public Object getObjectInstance(Object orig, Name name, Context ctx, Hashtable env) throws Exception {
         if (orig instanceof MarshalledObject) {
-        return ((MarshalledObject)orig).get();
+            return ((MarshalledObject) orig).get();
         }
-
         return null;
     }
 }

@@ -16,11 +16,9 @@
 
 package com.sun.jndi.ldap.ext;
 
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
-
 import java.io.IOException;
+
+import javax.naming.ldap.ExtendedResponse;
 
 /**
  * This class implements the LDAPv3 Extended Response for WhoAmI.
@@ -99,13 +97,13 @@ public class WhoAmIResponse implements ExtendedResponse {
      * Constructs a WhoAmI extended response.
      */
     WhoAmIResponse(String id, byte[] value, int offset, int length)
-    throws IOException {
+        throws IOException {
 
-    this.value = value;
+        this.value = value;
 
-    // decode value
+        // decode value
         if ((value != null) && (value.length > 0)) {
-        authzId = new String(value, offset, length, "UTF8");
+            authzId = new String(value, offset, length, "UTF8");
         }
     }
 
@@ -114,6 +112,7 @@ public class WhoAmIResponse implements ExtendedResponse {
      *
      * @return The non-null object identifier string.
      */
+    @Override
     public String getID() {
         return OID;
     }
@@ -124,15 +123,16 @@ public class WhoAmIResponse implements ExtendedResponse {
      * @return A possibly null byte array representing the ASN.1 BER
      *            encoded value of the LDAP extended response.
      */
+    @Override
     public byte[] getEncodedValue() {
-    if (value == null) {
-        return null;
-    }
+        if (value == null) {
+            return null;
+        }
 
-    // return a copy of value
-    byte[] retval = new byte[value.length];
-    System.arraycopy(value, 0, retval, 0, value.length);
-    return retval;
+        // return a copy of value
+        byte[] retval = new byte[value.length];
+        System.arraycopy(value, 0, retval, 0, value.length);
+        return retval;
     }
 
     /**
@@ -142,9 +142,9 @@ public class WhoAmIResponse implements ExtendedResponse {
      * when anonymous authentication is used.
      */
     public String getAuthorizationID() {
-    if (authzId == null) {
-       return "";
-    }
-    return authzId;
+        if (authzId == null) {
+            return "";
+        }
+        return authzId;
     }
 }

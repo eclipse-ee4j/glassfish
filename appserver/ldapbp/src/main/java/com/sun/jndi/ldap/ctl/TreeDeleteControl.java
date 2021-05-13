@@ -16,7 +16,6 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
 import javax.naming.ldap.BasicControl;
 
 /**
@@ -41,7 +40,7 @@ final public class TreeDeleteControl extends BasicControl {
      * Constructs a tree delete critical control.
      */
     public TreeDeleteControl() {
-    super(OID, true, null);
+        super(OID, true, null);
     }
 
     /**
@@ -50,6 +49,6 @@ final public class TreeDeleteControl extends BasicControl {
      * @param    criticality The control's criticality setting.
      */
     public TreeDeleteControl(boolean criticality) {
-    super(OID, criticality, null);
+        super(OID, criticality, null);
     }
 }

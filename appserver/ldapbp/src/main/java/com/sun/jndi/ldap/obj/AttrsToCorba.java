@@ -16,14 +16,18 @@
 
 package com.sun.jndi.ldap.obj;
 
-import javax.naming.spi.DirObjectFactory;
-import javax.naming.*;
-import javax.naming.directory.*;
-
 import java.util.Hashtable;
-import org.omg.CORBA.ORB;
 
-import com.sun.jndi.toolkit.corba.CorbaUtils;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.spi.DirObjectFactory;
+
+import org.glassfish.jndi.toolkit.corba.CorbaUtils;
+import org.omg.CORBA.ORB;
 
 /**
   * A DirObjectFactory that returns a omg.org.CORBA.Object when given
@@ -75,13 +79,14 @@ public class AttrsToCorba implements DirObjectFactory {
       * @exception Exception If an error occurred while converting the IOR to
       *     a CORBA object or using the ORB.
       */
-    public Object getObjectInstance(Object orig, Name name, Context ctx,
-    Hashtable env, Attributes attrs) throws Exception {
+    @Override
+    public Object getObjectInstance(Object orig, Name name, Context ctx, Hashtable env, Attributes attrs)
+        throws Exception {
         Attribute oc;
-        if (attrs != null &&
-        (oc = attrs.get("objectclass")) != null &&
-        (oc.contains("corbaObject") || oc.contains("corbaobject")) &&
-        orig instanceof DirContext) {
+        if (attrs != null
+            && (oc = attrs.get("objectclass")) != null
+            && (oc.contains("corbaObject") || oc.contains("corbaobject"))
+            && orig instanceof DirContext) {
 
         // See if IOR already available
         Attribute iorAttr = attrs.get("corbaIor");
@@ -123,8 +128,8 @@ public class AttrsToCorba implements DirObjectFactory {
      * @return null
      * @exception Exception Never thrown
      */
-    public Object getObjectInstance(Object orig, Name name, Context ctx,
-    Hashtable env) throws Exception {
+    @Override
+    public Object getObjectInstance(Object orig, Name name, Context ctx, Hashtable env) throws Exception {
         // Too expensive if we must fetch attributes each time,
         // effectively doubling all calls
         return null;
@@ -143,6 +148,6 @@ public class AttrsToCorba implements DirObjectFactory {
      * @return A non-null ORB.
      */
     private static ORB getDefaultOrb(Hashtable env) {
-    return CorbaUtils.getOrb(null, -1, env);
+        return CorbaUtils.getOrb(null, -1, env);
     }
 }

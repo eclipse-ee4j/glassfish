@@ -72,9 +72,9 @@ final public class PagedResultsControl extends BasicControl {
      *
      */
     public PagedResultsControl(int pageSize) throws IOException {
-    super(OID, true, null);
-    this.pageSize = pageSize;
-    super.value = setEncodedValue();
+        super(OID, true, null);
+        this.pageSize = pageSize;
+        super.value = setEncodedValue();
     }
 
     /**
@@ -90,15 +90,15 @@ final public class PagedResultsControl extends BasicControl {
      * @exception IOException If a BER encoding error occurs.
      */
     public PagedResultsControl(int pageSize, byte[] cookie,
-    boolean criticality) throws IOException {
+        boolean criticality) throws IOException {
 
-    super(OID, criticality, null);
-    this.pageSize = pageSize;
-    this.cookie = cookie;
-    super.value = setEncodedValue();
+        super(OID, criticality, null);
+        this.pageSize = pageSize;
+        this.cookie = cookie;
+        super.value = setEncodedValue();
     }
 
-    /*
+    /**
      * Sets the ASN.1 BER encoded value of the paged-results control.
      * The result is the raw BER bytes including the tag and length of
      * the control's value. It does not include the controls OID or criticality.
@@ -109,14 +109,14 @@ final public class PagedResultsControl extends BasicControl {
      */
     private byte[] setEncodedValue() throws IOException {
 
-    // build the ASN.1 encoding
-    BerEncoder ber = new BerEncoder(32);
+        // build the ASN.1 encoding
+        BerEncoder ber = new BerEncoder(32);
 
-    ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
         ber.encodeInt(pageSize);
-            ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
-    ber.endSeq();
+        ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
+        ber.endSeq();
 
-    return ber.getTrimmedBuf();
+        return ber.getTrimmedBuf();
     }
 }

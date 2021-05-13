@@ -92,13 +92,11 @@ public class PasswordExpiringResponseControl extends BasicControl {
      * @exception               IOException if an error is encountered
      *                          while decoding the control's value.
      */
-    PasswordExpiringResponseControl(String id, boolean criticality,
-    byte[] value) throws IOException  {
-
-    super(id, criticality, value);
-    if ((value != null) && (value.length > 0)) {
-        timeLeft = Long.parseLong(new String(value));
-    }
+    PasswordExpiringResponseControl(String id, boolean criticality, byte[] value) throws IOException {
+        super(id, criticality, value);
+        if ((value != null) && (value.length > 0)) {
+            timeLeft = Long.parseLong(new String(value));
+        }
     }
 
     /**
@@ -107,7 +105,7 @@ public class PasswordExpiringResponseControl extends BasicControl {
      * @return The number of seconds until the password expires.
      */
     public long timeRemaining() {
-    return timeLeft;
+        return timeLeft;
     }
 
     /**
@@ -116,10 +114,11 @@ public class PasswordExpiringResponseControl extends BasicControl {
      *
      * @return The ASN.1 BER encoded value of the LDAP control.
      */
+    @Override
     public byte[] getEncodedValue() {
-    if (value == null) {
-        return null;
-    }
+        if (value == null) {
+            return null;
+        }
         // return a copy of value
         byte[] retval = new byte[value.length];
         System.arraycopy(value, 0, retval, 0, value.length);

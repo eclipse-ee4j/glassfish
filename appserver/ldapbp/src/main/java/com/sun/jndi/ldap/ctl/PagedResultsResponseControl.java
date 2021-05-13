@@ -85,7 +85,7 @@ final public class PagedResultsResponseControl extends BasicControl {
 
             ber.parseSeq(null);
             resultSize = ber.parseInt();
-        cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
+            cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
         }
     }
 
@@ -98,17 +98,17 @@ final public class PagedResultsResponseControl extends BasicControl {
         return resultSize;
     }
 
-    /*
+    /**
      * Retrieves the server-generated cookie. Null is returned when there are
      * no more entries for the server to return.
      *
      * @return A possibly null server-generated cookie.
      */
     public byte[] getCookie() {
-    if (cookie.length == 0) {
-        return null;
-    } else {
+        if (cookie.length == 0) {
+            return null;
+        } else {
             return cookie;
-    }
+        }
     }
 }

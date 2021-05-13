@@ -16,10 +16,7 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
 import javax.naming.ldap.BasicControl;
-import com.sun.jndi.ldap.Ber;
-import com.sun.jndi.ldap.BerEncoder;
 
 /**
  * This class implements a LDAP request control for notifying the server
@@ -62,7 +59,6 @@ import com.sun.jndi.ldap.BerEncoder;
  * @see RealAttributesOnlyControl
  * @author Jayalaxmi Hangal
  */
-
 public class VirtualAttributesOnlyControl extends BasicControl {
 
     /**
@@ -80,6 +76,6 @@ public class VirtualAttributesOnlyControl extends BasicControl {
      *
      */
     public VirtualAttributesOnlyControl() {
-    super(OID, true, null);
+        super(OID, true, null);
     }
 }

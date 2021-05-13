@@ -16,9 +16,10 @@
 
 package com.sun.jndi.ldap.ext;
 
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
+import javax.naming.ConfigurationException;
+import javax.naming.NamingException;
+import javax.naming.ldap.ExtendedRequest;
+import javax.naming.ldap.ExtendedResponse;
 
 /**
  * This class implements the LDAPv3 Extended Request for BulkImportFinished.
@@ -91,6 +92,7 @@ public class BulkImportFinishedRequest implements ExtendedRequest {
      *
      * @return The non-null object identifier string.
      */
+    @Override
     public String getID() {
         return OID;
     }
@@ -102,6 +104,7 @@ public class BulkImportFinishedRequest implements ExtendedRequest {
      *
      * @return The null value.
      */
+    @Override
     public byte[] getEncodedValue() {
         return null;
     }
@@ -110,9 +113,9 @@ public class BulkImportFinishedRequest implements ExtendedRequest {
      * Creates an extended response object that corresponds to the
      * LDAP BulkImportFinished extended request.
      */
-    public ExtendedResponse createExtendedResponse(String id, byte[] berValue,
-        int offset, int length) throws NamingException {
-
+    @Override
+    public ExtendedResponse createExtendedResponse(String id, byte[] berValue, int offset, int length)
+        throws NamingException {
         // Confirm that the object identifier is correct
         if ((id != null) && (!id.equals(OID))) {
             throw new ConfigurationException(

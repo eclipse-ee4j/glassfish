@@ -16,13 +16,14 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.BasicControl;
-import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.Ber;
+import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.LdapCtx;
+
+import java.io.IOException;
+
+import javax.naming.NamingException;
+import javax.naming.ldap.BasicControl;
 
 /**
  * This class implements the LDAPv3 Response Control for virtual-list-view
@@ -104,24 +105,22 @@ final public class VirtualListViewResponseControl extends BasicControl {
      * @exception               IOException if an error is encountered
      *                          while decoding the control's value.
      */
-    public VirtualListViewResponseControl(String id, boolean criticality,
-    byte[] value) throws IOException {
+    public VirtualListViewResponseControl(String id, boolean criticality, byte[] value) throws IOException {
+        super(id, criticality, value);
 
-    super(id, criticality, value);
+        // decode value
+        if ((value != null) && (value.length > 0)) {
+            BerDecoder ber = new BerDecoder(value, 0, value.length);
 
-    // decode value
-    if ((value != null) && (value.length > 0)) {
-        BerDecoder ber = new BerDecoder(value, 0, value.length);
+            ber.parseSeq(null);
+            targetOffset = ber.parseInt();
+            listSize = ber.parseInt();
+            resultCode = ber.parseEnumeration();
 
-        ber.parseSeq(null);
-        targetOffset = ber.parseInt();
-        listSize = ber.parseInt();
-        resultCode = ber.parseEnumeration();
-
-        if ((ber.bytesLeft() > 0) && (ber.peekByte() == Ber.ASN_OCTET_STR)){
-        cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
+            if ((ber.bytesLeft() > 0) && (ber.peekByte() == Ber.ASN_OCTET_STR)){
+                cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
+            }
         }
-    }
     }
 
     /**
@@ -130,7 +129,7 @@ final public class VirtualListViewResponseControl extends BasicControl {
      * @return    The result code. A zero value indicates success.
      */
     public int getResultCode() {
-    return resultCode;
+        return resultCode;
     }
 
     /**
@@ -141,7 +140,7 @@ final public class VirtualListViewResponseControl extends BasicControl {
      */
     public NamingException getException() {
 
-    return LdapCtx.mapErrorCode(resultCode, null);
+        return LdapCtx.mapErrorCode(resultCode, null);
     }
 
     /**
@@ -151,7 +150,7 @@ final public class VirtualListViewResponseControl extends BasicControl {
      * @return The position of the target entry in the list.
      */
     public int getTargetOffset() {
-    return targetOffset;
+        return targetOffset;
     }
 
     /**
@@ -161,7 +160,7 @@ final public class VirtualListViewResponseControl extends BasicControl {
      * @return The current number of entries in the list.
      */
     public int getListSize() {
-    return listSize;
+        return listSize;
     }
 
     /**

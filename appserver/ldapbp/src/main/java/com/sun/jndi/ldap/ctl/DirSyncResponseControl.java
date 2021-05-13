@@ -93,7 +93,7 @@ final public class DirSyncResponseControl extends BasicControl {
             ber.parseSeq(null);
             flag = ber.parseInt();
             maxReturnLength = ber.parseInt();
-        cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
+            cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
         }
     }
 
@@ -112,7 +112,7 @@ final public class DirSyncResponseControl extends BasicControl {
      * @return true if more data is available.
      */
     public boolean hasMoreData() {
-    return (flag != 0);
+        return flag != 0;
     }
 
     /**
@@ -124,17 +124,17 @@ final public class DirSyncResponseControl extends BasicControl {
         return maxReturnLength;
     }
 
-    /*
+    /**
      * Retrieves the server-generated cookie. It is used by the client in
      * subsequent searches.
      *
      * @return A possibly null server-generated cookie.
      */
     public byte[] getCookie() {
-    if (cookie.length == 0) {
-        return null;
-    } else {
+        if (cookie.length == 0) {
+            return null;
+        } else {
             return cookie;
-    }
+        }
     }
 }

@@ -16,12 +16,16 @@
 
 package com.sun.jndi.ldap.obj;
 
-import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
-import javax.naming.*;
-import javax.naming.directory.*;
+
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
 
 /**
  * A representation of the LDAP groupOfUniqueNames object class.
@@ -73,8 +77,8 @@ public class GroupOfUniqueNames extends GroupOfNames {
     private static final String MEMBER_FILTER_EXPR = "(uniquemember={0})";
     private static final Attribute OBJECT_CLASS_ATTR;
     static {
-    OBJECT_CLASS_ATTR = new BasicAttribute("objectClass", "top");
-    OBJECT_CLASS_ATTR.add(OBJECT_CLASS);
+        OBJECT_CLASS_ATTR = new BasicAttribute("objectClass", "top");
+        OBJECT_CLASS_ATTR.add(OBJECT_CLASS);
     }
 
     /**
@@ -86,7 +90,7 @@ public class GroupOfUniqueNames extends GroupOfNames {
      * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}.
      */
     public GroupOfUniqueNames() {
-    super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null);
+        super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null);
     }
 
     /**
@@ -102,16 +106,14 @@ public class GroupOfUniqueNames extends GroupOfNames {
      *                {@link java.security.Principal}
      */
     public GroupOfUniqueNames(Set members) {
-    super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, members);
+        super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, members);
     }
 
-    /*
+    /**
      * Create a group object from its entry in the directory.
      */
-    private GroupOfUniqueNames(String groupDN, DirContext ctx, Name name,
-        Hashtable env, Attributes attributes) {
-    super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null,
-        groupDN, ctx, name, env, attributes);
+    private GroupOfUniqueNames(String groupDN, DirContext ctx, Name name, Hashtable env, Attributes attributes) {
+        super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null, groupDN, ctx, name, env, attributes);
     }
 
     /**
@@ -128,10 +130,10 @@ public class GroupOfUniqueNames extends GroupOfNames {
     // package private (used by LdapGroupFactory)
     static Object getObjectInstance(String groupDN, DirContext ctx, Name name,
         Hashtable env, Attributes attributes) {
-    if (debug) {
-        System.out.println("[debug] creating a group named: " + name);
-    }
-    return new GroupOfUniqueNames(groupDN, ctx, name, env, attributes);
+        if (debug) {
+            System.out.println("[debug] creating a group named: " + name);
+        }
+        return new GroupOfUniqueNames(groupDN, ctx, name, env, attributes);
     }
 
     /**
@@ -144,20 +146,19 @@ public class GroupOfUniqueNames extends GroupOfNames {
      */
     // package private (used by LdapGroupFactory)
     static boolean matches(Attribute objectClass) {
-
-    try {
-        for (Enumeration values = objectClass.getAll();
-        values.hasMoreElements(); ) {
-        if (OBJECT_CLASS.equalsIgnoreCase(
-            (String)values.nextElement())) {
-            return true;
+        try {
+            for (Enumeration values = objectClass.getAll();
+                values.hasMoreElements(); ) {
+                if (OBJECT_CLASS.equalsIgnoreCase(
+                    (String)values.nextElement())) {
+                    return true;
+                }
+            }
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error matching objectClass: " + e);
+            }
         }
-        }
-    } catch (NamingException e) {
-        if (debug) {
-        System.out.println("[debug] error matching objectClass: " + e);
-        }
-    }
-    return false;
+        return false;
     }
 }

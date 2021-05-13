@@ -18,9 +18,6 @@ package com.sun.jndi.ldap.ctl;
 
 import javax.naming.ldap.BasicControl;
 
-import javax.naming.ldap.InitialLdapContext;
-import javax.naming.ldap.Control;
-
 /**
  * This class implements the LDAP response control for password expired
  * notification. The password expired control is received if password
@@ -100,8 +97,8 @@ public class PasswordExpiredResponseControl extends BasicControl {
      *                          while decoding the control's value.
      */
     PasswordExpiredResponseControl(String id, boolean criticality,
-    byte[] value) {
+        byte[] value) {
 
-    super(id, criticality, null);
+        super(id, criticality, null);
     }
 }

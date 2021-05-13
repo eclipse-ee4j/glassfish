@@ -20,7 +20,6 @@ import java.io.IOException;
 import javax.naming.ldap.BasicControl;
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerEncoder;
-import javax.naming.directory.DirContext;
 
 /**
  * This class implements the getEffectiveRights control to obtain the
@@ -87,7 +86,6 @@ import javax.naming.directory.DirContext;
  * </pre>
  * @author Vincent Ryan
  */
-
 public class GetEffectiveRightsControl extends BasicControl {
 
     /**
@@ -111,24 +109,24 @@ public class GetEffectiveRightsControl extends BasicControl {
     public GetEffectiveRightsControl(String authzId, String[] attributes,
         boolean criticality) throws IOException {
 
-    super(OID, criticality, null);
-    value = setEncodedValue(authzId, attributes);
+        super(OID, criticality, null);
+        value = setEncodedValue(authzId, attributes);
     }
 
 
     private static byte[] setEncodedValue(String authzId, String[] attrs)
         throws IOException {
 
-    // build the ASN.1 encoding
-    BerEncoder ber = new BerEncoder(256);
+        // build the ASN.1 encoding
+        BerEncoder ber = new BerEncoder(256);
 
-    ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
         ber.encodeString(authzId, true);
         ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
         ber.encodeStringArray(attrs, true);
         ber.endSeq();
-    ber.endSeq();
+        ber.endSeq();
 
-    return ber.getTrimmedBuf();
+        return ber.getTrimmedBuf();
     }
 }

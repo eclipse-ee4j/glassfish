@@ -25,17 +25,17 @@ package com.sun.jndi.ldap.ctl;
  */
 public class SortKey {
 
-    /*
+    /**
      * The ID of the attribute to sort by.
      */
     private String attrID;
 
-    /*
+    /**
      * The sort order. Ascending order, by default.
      */
     private boolean reverseOrder = false;
 
-    /*
+    /**
      * The ID of the matching rule to use for ordering attribute values.
      */
     private String matchingRuleID = null;
@@ -46,7 +46,7 @@ public class SortKey {
      * @param    attrID    The ID of the attribute to be used as a sort key.
      */
     public SortKey(String attrID) {
-    this.attrID = attrID;
+        this.attrID = attrID;
     }
 
     /**
@@ -62,12 +62,13 @@ public class SortKey {
      *                defined for the sort key attribute, is used.
      */
     public SortKey(String attrID, boolean ascendingOrder,
-    String matchingRuleID) {
+        String matchingRuleID) {
 
-    this.attrID = attrID;
-    reverseOrder = (! ascendingOrder);
-    if (matchingRuleID != null)
-        this.matchingRuleID = matchingRuleID;
+        this.attrID = attrID;
+        reverseOrder = (! ascendingOrder);
+        if (matchingRuleID != null) {
+            this.matchingRuleID = matchingRuleID;
+        }
     }
 
     /**
@@ -76,7 +77,7 @@ public class SortKey {
      * @return    Attribute ID of the sort key.
      */
     public String getAttributeID() {
-    return attrID;
+        return attrID;
     }
 
     /**
@@ -85,7 +86,7 @@ public class SortKey {
      * @return    true if the sort order is ascending, false if descending.
      */
     public boolean isAscending() {
-    return (! reverseOrder);
+        return (! reverseOrder);
     }
 
     /**
@@ -96,6 +97,6 @@ public class SortKey {
      *            is used.
      */
     public String getMatchingRuleID() {
-    return matchingRuleID;
+        return matchingRuleID;
     }
 }

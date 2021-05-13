@@ -57,10 +57,10 @@ final public class SortControl extends BasicControl {
      * @exception IOException If a BER encoding error occurs.
      */
     public SortControl(SortKey[] sortBy, boolean criticality)
-    throws IOException {
+        throws IOException {
 
-    super(OID, criticality, null);
-    super.value = setEncodedValue(sortBy);
+        super(OID, criticality, null);
+        super.value = setEncodedValue(sortBy);
     }
 
     /**
@@ -71,22 +71,22 @@ final public class SortControl extends BasicControl {
      * @exception IOException If a BER encoding error occurs.
      */
     public SortControl(String[] sortBy, boolean criticality)
-    throws IOException {
+        throws IOException {
 
-    super(OID, criticality, null);
+        super(OID, criticality, null);
 
-    if (sortBy == null || (sortBy.length == 0)) {
-        return;
+        if (sortBy == null || (sortBy.length == 0)) {
+            return;
+        }
+
+        SortKey[] sortKeys = new SortKey[sortBy.length];
+        for (int i = 0; i < sortBy.length; i++) {
+            sortKeys[i] = new SortKey(sortBy[i]);
+        }
+        super.value = setEncodedValue(sortKeys);
     }
 
-    SortKey[] sortKeys = new SortKey[sortBy.length];
-    for (int i = 0; i < sortBy.length; i++) {
-        sortKeys[i] = new SortKey(sortBy[i]);
-    }
-    super.value = setEncodedValue(sortKeys);
-    }
-
-    /*
+    /**
      * Sets the ASN.1 BER encoded value of the sort control.
      * The result is the raw BER bytes including the tag and length of
      * the control's value. It does not include the controls OID or criticality.
@@ -98,26 +98,26 @@ final public class SortControl extends BasicControl {
      */
     private byte[] setEncodedValue(SortKey[] sortKeys) throws IOException {
 
-    // build the ASN.1 encoding
-    BerEncoder ber = new BerEncoder(32);
-    String matchingRule;
+        // build the ASN.1 encoding
+        BerEncoder ber = new BerEncoder(32);
+        String matchingRule;
 
-    ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-
-    for (int i = 0; i < sortKeys.length; i++) {
         ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-        ber.encodeString(sortKeys[i].getAttributeID(), true); // v3
 
-        if ((matchingRule = sortKeys[i].getMatchingRuleID()) != null) {
-        ber.encodeString(matchingRule, (Ber.ASN_CONTEXT | 0), true);
-        }
-        if (! sortKeys[i].isAscending()) {
-        ber.encodeBoolean(true, (Ber.ASN_CONTEXT | 1));
+        for (int i = 0; i < sortKeys.length; i++) {
+            ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+            ber.encodeString(sortKeys[i].getAttributeID(), true); // v3
+
+            if ((matchingRule = sortKeys[i].getMatchingRuleID()) != null) {
+                ber.encodeString(matchingRule, (Ber.ASN_CONTEXT | 0), true);
+            }
+            if (! sortKeys[i].isAscending()) {
+                ber.encodeBoolean(true, (Ber.ASN_CONTEXT | 1));
+            }
+            ber.endSeq();
         }
         ber.endSeq();
-    }
-    ber.endSeq();
 
-    return ber.getTrimmedBuf();
+        return ber.getTrimmedBuf();
     }
 }

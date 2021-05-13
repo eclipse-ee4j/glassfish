@@ -16,17 +16,22 @@
 
 package com.sun.jndi.ldap.obj;
 
-import javax.naming.spi.DirStateFactory;
-import javax.naming.*;
-import javax.naming.directory.*;
-import java.util.Hashtable;
+import com.sun.jndi.ldap.LdapCtxFactory;
 
+import java.rmi.MarshalledObject;
 import java.rmi.Remote;
 import java.rmi.server.RemoteStub;
-import java.rmi.server.RemoteObject;
-import java.rmi.MarshalledObject;
+import java.util.Hashtable;
 
-import com.sun.jndi.ldap.LdapCtxFactory;
+import javax.naming.ConfigurationException;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.spi.DirStateFactory;
 
 /**
   * An DirStateFactory that returns the object and Attributes
@@ -63,60 +68,57 @@ public class RemoteToAttrs implements DirStateFactory {
     }
 
     /**
-      * Returns an object and attributes for storing into LDAP that represents
-      * the Remote object. If the input is not a Remote object, or if
-      * the Remote object cannot be transformed, return null.
-      *
-      * @param orig The object to store; if not Remote; return null.
-      * @param name Ignored
-      * @param ctx  Ignored
-      * @param env A possibly null environment. Used to get the ORB to use
-      *   when getting the CORBA object for the Remote object using RMI-IIOP.
-      * @param inAttrs The possibly null attributes included with the bind.
-      * @return {obj, attrs} where obj is either null or the RemoteStub of the
-      * Remote object. It is the stub if <tt>orig</tt> is already a stub, or if
-      * <tt>orig</tt> has a JRMP stub. <tt>attrs</tt> is a union of
-      * <tt>inAttrs</tt> and and some other attributes depending on how
-      * <tt>orig</tt> has been transformed.
-      * If <tt>orig</tt> is transformed into a CORBA object, then it will
-      * have CORBA-related attributes (see CorbaToAttrs).
-      * @exception ConfigurationException If problem calling RemoteObject.toStub()
-      *    or if problem transforming Remote object to CORBA object.
-      * @exception NamingException If some other problem occurred transforming
-      *    the object.
-      */
-    public DirStateFactory.Result
-    getStateToBind(Object orig, Name name, Context ctx,
-    Hashtable env, Attributes inAttrs) throws NamingException {
+     * Returns an object and attributes for storing into LDAP that represents
+     * the Remote object. If the input is not a Remote object, or if
+     * the Remote object cannot be transformed, return null.
+     *
+     * @param orig The object to store; if not Remote; return null.
+     * @param name Ignored
+     * @param ctx  Ignored
+     * @param env A possibly null environment. Used to get the ORB to use
+     *   when getting the CORBA object for the Remote object using RMI-IIOP.
+     * @param inAttrs The possibly null attributes included with the bind.
+     * @return {obj, attrs} where obj is either null or the RemoteStub of the
+     * Remote object. It is the stub if <tt>orig</tt> is already a stub, or if
+     * <tt>orig</tt> has a JRMP stub. <tt>attrs</tt> is a union of
+     * <tt>inAttrs</tt> and and some other attributes depending on how
+     * <tt>orig</tt> has been transformed.
+     * If <tt>orig</tt> is transformed into a CORBA object, then it will
+     * have CORBA-related attributes (see CorbaToAttrs).
+     * @exception ConfigurationException If problem calling RemoteObject.toStub()
+     *    or if problem transforming Remote object to CORBA object.
+     * @exception NamingException If some other problem occurred transforming
+     *    the object.
+     */
+    @Override
+    public DirStateFactory.Result getStateToBind(Object orig, Name name, Context ctx, Hashtable env, Attributes inAttrs)
+        throws NamingException {
 
         if (!(orig instanceof java.rmi.Remote)) {
-        return null; // Only handles Remote objects
-    }
+            return null; // Only handles Remote objects
+        }
 
-    // A JRMP stub, just bind
-    if (orig instanceof RemoteStub) {
+        // A JRMP stub, just bind
+        if (orig instanceof RemoteStub) {
+            return jrmpObject(orig, inAttrs);
+        } else {
+            // Try doing CORBA mapping
+            try {
+                DirStateFactory.Result answer = RemoteToCorbaToAttrs.remoteToCorbaToAttrs((Remote) orig, env, inAttrs);
+
+                if (answer != null) {
+                    return answer;
+                }
+
+            } catch (ClassNotFoundException e) {
+                // RMI-IIOP package not available.
+                // Ignore and continue because we don't want RMI/JRMP to
+                // have dependency on RMI-IIOP packages being available
+            }
+        }
+
+        // Otherwise, marshal object
         return jrmpObject(orig, inAttrs);
-
-    } else {
-        // Try doing CORBA mapping
-        try {
-        DirStateFactory.Result answer =
-            RemoteToCorbaToAttrs.remoteToCorbaToAttrs(
-            (Remote)orig, env, inAttrs);
-
-        if (answer != null) {
-            return answer;
-        }
-
-        } catch (ClassNotFoundException e) {
-        // RMI-IIOP package not available.
-        // Ignore and continue because we don't want RMI/JRMP to
-        // have dependency on RMI-IIOP packages being available
-        }
-    }
-
-    // Otherwise, marshal object
-    return jrmpObject(orig, inAttrs);
     }
 
     /**
@@ -127,10 +129,10 @@ public class RemoteToAttrs implements DirStateFactory {
      * @param env Ignored
      * @exception NamingException Not thrown
      */
-    public Object getStateToBind(Object orig, Name name, Context ctx,
-    Hashtable env) throws NamingException {
+    @Override
+    public Object getStateToBind(Object orig, Name name, Context ctx, Hashtable env) throws NamingException {
         // Cannot just return obj; need to return Attributes too
-    return null;
+        return null;
     }
 
     /**
@@ -141,68 +143,63 @@ public class RemoteToAttrs implements DirStateFactory {
       * @param inAttrs The possible null attributes to store with object.
       * @return A non-null Result consisting of the MarshalledObject and attributes.
       */
-    private static DirStateFactory.Result jrmpObject(
-    Object obj, Attributes inAttrs) throws NamingException {
+    private static DirStateFactory.Result jrmpObject(Object obj, Attributes inAttrs) throws NamingException {
         try {
-        Object mobj = new MarshalledObject(obj);
+            Object mobj = new MarshalledObject(obj);
 
-        Attributes outAttrs = null;
-        Attribute cname = null;
-        Attribute tnames = null;
-        Attribute objectClass = null;
+            Attributes outAttrs = null;
+            Attribute cname = null;
+            Attribute tnames = null;
+            Attribute objectClass = null;
 
-        if (inAttrs != null) {
-            // Get existing objectclass attribute
-            objectClass = (Attribute)inAttrs.get("objectClass");
-            if (objectClass == null && !inAttrs.isCaseIgnored()) {
-            // %%% workaround
-            objectClass = (Attribute)inAttrs.get("objectclass");
-            }
+            if (inAttrs != null) {
+                // Get existing objectclass attribute
+                objectClass = inAttrs.get("objectClass");
+                if (objectClass == null && !inAttrs.isCaseIgnored()) {
+                    // %%% workaround
+                    objectClass = inAttrs.get("objectclass");
+                }
 
-            // No objectclasses supplied, use "top" to start
-            if (objectClass == null) {
-            objectClass =  new BasicAttribute("objectClass", "top");
+                // No objectclasses supplied, use "top" to start
+                if (objectClass == null) {
+                    objectClass =  new BasicAttribute("objectClass", "top");
+                } else {
+                    objectClass = (Attribute)objectClass.clone();
+                }
+
+                cname = inAttrs.get(CLASSNAME_ATTRID);
+                tnames = inAttrs.get(CLASSNAMES_ATTRID);
+
+                outAttrs = (Attributes)inAttrs.clone();
             } else {
-            objectClass = (Attribute)objectClass.clone();
+                outAttrs = new BasicAttributes(true);
+                objectClass = new BasicAttribute("objectClass", "top");
             }
 
-            cname = inAttrs.get(CLASSNAME_ATTRID);
-            tnames = inAttrs.get(CLASSNAMES_ATTRID);
-
-            outAttrs = (Attributes)inAttrs.clone();
-        } else {
-            outAttrs = new BasicAttributes(true);
-            objectClass = new BasicAttribute("objectClass", "top");
-        }
-
-        if (cname == null) {
-            outAttrs.put(CLASSNAME_ATTRID, obj.getClass().getName());
-        }
-        if (tnames == null) {
-            Attribute tAttr =
-            LdapCtxFactory.createTypeNameAttr(obj.getClass());
-            if (tAttr != null) {
-            outAttrs.put(tAttr);
+            if (cname == null) {
+                outAttrs.put(CLASSNAME_ATTRID, obj.getClass().getName());
             }
-        }
+            if (tnames == null) {
+                Attribute tAttr = LdapCtxFactory.createTypeNameAttr(obj.getClass());
+                if (tAttr != null) {
+                    outAttrs.put(tAttr);
+                }
+            }
 
-        boolean structural =
-            (objectClass.size() == 0 ||
-            (objectClass.size() == 1 && objectClass.contains("top")));
+            boolean structural = objectClass.size() == 0 || (objectClass.size() == 1 && objectClass.contains("top"));
 
-        if (structural) {
-            objectClass.add(STRUCTURAL_OCID);
-        }
-        objectClass.add(MARSHALLED_OCID);
-        outAttrs.put(objectClass);
+            if (structural) {
+                objectClass.add(STRUCTURAL_OCID);
+            }
+            objectClass.add(MARSHALLED_OCID);
+            outAttrs.put(objectClass);
 
-        return new DirStateFactory.Result(mobj, outAttrs);
+            return new DirStateFactory.Result(mobj, outAttrs);
 
         } catch (java.io.IOException e) {
-        NamingException ne = new NamingException(
-            "Cannot create MarshallObject for " + obj);
-        ne.setRootCause(e);
-        throw ne;
+            NamingException ne = new NamingException("Cannot create MarshallObject for " + obj);
+            ne.setRootCause(e);
+            throw ne;
         }
     }
 }

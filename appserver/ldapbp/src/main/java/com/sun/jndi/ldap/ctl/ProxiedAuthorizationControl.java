@@ -18,7 +18,6 @@ package com.sun.jndi.ldap.ctl;
 
 import java.io.IOException;
 import javax.naming.ldap.BasicControl;
-import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerEncoder;
 
 /**
@@ -77,7 +76,6 @@ import com.sun.jndi.ldap.BerEncoder;
  * @see AuthorizationIDControl
  * @see com.sun.jndi.ldap.ext.WhoAmIRequest
  */
-
 public class ProxiedAuthorizationControl extends BasicControl {
 
     private static final long serialVersionUID = 552016610613918389L;
@@ -98,11 +96,11 @@ public class ProxiedAuthorizationControl extends BasicControl {
      * @exception IOException If a BER encoding error occurs.
      */
     public ProxiedAuthorizationControl(String authzId) throws IOException {
-    super(OID, true, null);
-    value = setEncodedValue(authzId);
+        super(OID, true, null);
+        value = setEncodedValue(authzId);
     }
 
-    /*
+    /**
      * Encodes the control's value using ASN.1 BER.
      * The result includes the BER tag and length for the control's value but
      * does not include the control's object identifer and criticality setting.

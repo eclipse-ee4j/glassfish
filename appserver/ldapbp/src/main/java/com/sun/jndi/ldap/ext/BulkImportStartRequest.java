@@ -16,14 +16,12 @@
 
 package com.sun.jndi.ldap.ext;
 
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
-
 import java.io.IOException;
 
-import com.sun.jndi.ldap.Ber;
-import com.sun.jndi.ldap.BerEncoder;
+import javax.naming.ConfigurationException;
+import javax.naming.NamingException;
+import javax.naming.ldap.ExtendedRequest;
+import javax.naming.ldap.ExtendedResponse;
 
 /**
  * This class implements the LDAPv3 Extended Request for BulkImportStart. The
@@ -102,8 +100,8 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * @exception IOException If a BER encoding error occurs.
      */
     public BulkImportStartRequest(String importName)
-    throws IOException {
-    value = importName.getBytes("UTF8");
+        throws IOException {
+        value = importName.getBytes("UTF8");
     }
 
     /**
@@ -111,6 +109,7 @@ public class BulkImportStartRequest implements ExtendedRequest {
      *
      * @return The non-null object identifier string.
      */
+    @Override
     public String getID() {
         return OID;
     }
@@ -120,8 +119,9 @@ public class BulkImportStartRequest implements ExtendedRequest {
      *
      * @return The ASN.1 BER encoded value of the LDAP extended request.
      */
+    @Override
     public byte[] getEncodedValue() {
-    return value;
+        return value;
     }
 
     /**
@@ -129,14 +129,14 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * LDAP BulkImportStart extended request.
      * <p>
      */
+    @Override
     public ExtendedResponse createExtendedResponse(String id, byte[] berValue,
         int offset, int length) throws NamingException {
 
         // Confirm that the object identifier is correct
         if ((id != null) && (!id.equals(OID))) {
             throw new ConfigurationException(
-                "BulkImportStart received the following response instead of " +
-                OID + ": " + id);
+                "BulkImportStart received the following response instead of " + OID + ": " + id);
         }
         return new EmptyExtendedResponse(id);
     }

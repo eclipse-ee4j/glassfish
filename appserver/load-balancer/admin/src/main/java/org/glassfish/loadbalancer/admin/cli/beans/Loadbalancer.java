@@ -15,12 +15,12 @@
  */
 
 /**
- *    This generated bean class Loadbalancer matches the schema element loadbalancer
+ * This generated bean class Loadbalancer matches the schema element loadbalancer
  *
- *    Generated on Wed Jul 13 18:07:29 IST 2005
+ * Generated on Wed Jul 13 18:07:29 IST 2005
  *
- *    This class matches the root element of the DTD,
- *    and is the root of the following bean graph:
+ * This class matches the root element of the DTD,
+ * and is the root of the following bean graph:
  *
  *    loadbalancer : Loadbalancer
  *        cluster : Cluster[0,n]

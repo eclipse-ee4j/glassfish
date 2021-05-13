@@ -15,9 +15,9 @@
  */
 
 /**
- *    This generated bean class WebModule matches the schema element web-module
+ * This generated bean class WebModule matches the schema element web-module
  *
- *    Generated on Thu May 06 00:44:23 PDT 2004
+ * Generated on Thu May 06 00:44:23 PDT 2004
  */
 package org.glassfish.loadbalancer.admin.cli.beans;
 

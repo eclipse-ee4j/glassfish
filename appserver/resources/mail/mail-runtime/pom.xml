@@ -53,8 +53,6 @@
                 <directory>src/main/resources</directory>
             </resource>
         </resources>
-        <plugins>
-        </plugins>
     </build>
     <dependencies>
         <dependency>

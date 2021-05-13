@@ -16,30 +16,26 @@
 
 package org.glassfish.resources.naming;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NamingException;
+
 import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
 
 /**
  * A naming RefAddr for proxying external JNDI context factories
  */
 public class ProxyRefAddr extends RefAddr {
-    /* Hashtable env that refers to the external JNDI context and
+    /**
+     * Hashtable env that refers to the external JNDI context and
      * associated environment needed to create the context factory.
      */
     Hashtable env;
 
     public ProxyRefAddr(String addrType, Hashtable env) {
         super(addrType);
-
         this.env = env;
     }
 
+    @Override
     public Object getContent() {
         return env;
     }

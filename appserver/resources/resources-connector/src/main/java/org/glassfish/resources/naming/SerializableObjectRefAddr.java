@@ -26,33 +26,37 @@ import javax.naming.RefAddr;
  * @see javax.naming.StringRefAddr
  * @since 1.3
  */
-
 public class SerializableObjectRefAddr extends RefAddr {
+
     /**
      * Contains the contents of this address.
      * Can be null.
+     *
      * @serial
      */
     private Object contents;
-    /**
-      * Constructs a new instance of SerializableObjectRefAddr
-      * using its address type and contents.
-      *
-      * @param addrType A non-null string describing the type of the address.
-      * @param contents The possibly null contents of the address in the
-      *                 form of a string.
-      */
-    public SerializableObjectRefAddr (String addrType, Object contents) {
-    super(addrType);
-    this.contents = contents;
-    }
 
     /**
-      * Retrieves the contents of this address. The result is a string.
-      *
-      * @return The possibly null address contents.
-      */
+     * Constructs a new instance of SerializableObjectRefAddr
+     * using its address type and contents.
+     *
+     * @param addrType A non-null string describing the type of the address.
+     * @param contents The possibly null contents of the address in the
+     *            form of a string.
+     */
+    public SerializableObjectRefAddr(String addrType, Object contents) {
+        super(addrType);
+        this.contents = contents;
+    }
+
+
+    /**
+     * Retrieves the contents of this address. The result is a string.
+     *
+     * @return The possibly null address contents.
+     */
+    @Override
     public Object getContent() {
-    return contents;
+        return contents;
     }
 }

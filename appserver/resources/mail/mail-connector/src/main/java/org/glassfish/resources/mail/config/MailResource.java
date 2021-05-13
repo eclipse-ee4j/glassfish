@@ -58,192 +58,174 @@ import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
  */
 public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
 
-
     /**
      * Gets the value of the storeProtocol property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="imap")
-    public String getStoreProtocol();
+    @Attribute(defaultValue = "imap")
+    String getStoreProtocol();
 
     /**
      * Sets the value of the storeProtocol property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setStoreProtocol(String value) throws PropertyVetoException;
+    void setStoreProtocol(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the storeProtocolClass property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="com.sun.mail.imap.IMAPStore")
+    @Attribute(defaultValue = "com.sun.mail.imap.IMAPStore")
     @JavaClassName
-    public String getStoreProtocolClass();
+    String getStoreProtocolClass();
 
     /**
      * Sets the value of the storeProtocolClass property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setStoreProtocolClass(String value) throws PropertyVetoException;
+    void setStoreProtocolClass(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the transportProtocol property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="smtp")
-    public String getTransportProtocol();
+    @Attribute(defaultValue = "smtp")
+    String getTransportProtocol();
 
     /**
      * Sets the value of the transportProtocol property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setTransportProtocol(String value) throws PropertyVetoException;
+    void setTransportProtocol(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the transportProtocolClass property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="com.sun.mail.smtp.SMTPTransport")
+    @Attribute(defaultValue = "com.sun.mail.smtp.SMTPTransport")
     @JavaClassName
-    public String getTransportProtocolClass();
+    String getTransportProtocolClass();
 
     /**
      * Sets the value of the transportProtocolClass property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setTransportProtocolClass(String value) throws PropertyVetoException;
+    void setTransportProtocolClass(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the host property.
-     *
      * ip V6 or V4 address or hostname
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
-    public String getHost();
+    String getHost();
 
     /**
      * Sets the value of the host property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setHost(String value) throws PropertyVetoException;
+    void setHost(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the user property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
-    public String getUser();
+    String getUser();
 
     /**
      * Sets the value of the user property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setUser(String value) throws PropertyVetoException;
+    void setUser(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the from property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
     @NotNull
-    public String getFrom();
+    String getFrom();
 
     /**
      * Sets the value of the from property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setFrom(String value) throws PropertyVetoException;
+    void setFrom(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the debug property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getDebug();
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getDebug();
 
     /**
      * Sets the value of the debug property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setDebug(String value) throws PropertyVetoException;
+    void setDebug(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute (defaultValue="true",dataType=Boolean.class)
-    public String getEnabled();
+    @Override
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
+    String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setEnabled(String value) throws PropertyVetoException;
+    @Override
+    void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the description property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
     @Attribute
-    public String getDescription();
+    String getDescription();
 
     /**
      * Sets the value of the description property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String value) throws PropertyVetoException;
 
     /**
-        Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
-    @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
-    @PropertiesDesc(props={})
+    @Override
+    @ToDo(priority = ToDo.Priority.IMPORTANT, details = "Provide PropertyDesc for legal props")
+    @PropertiesDesc(props = {})
     @Element
     List<Property> getProperty();
 
+    @Override
     @DuckTyped
     String getIdentity();
 

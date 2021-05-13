@@ -75,7 +75,7 @@ public class ActivationSuite {
         mkPair( "gb", "gd", "t2", "t3" ),
         mkPair( "gc", "gd", "t4" ),
         mkPair( "gd", "ge", "t5", "t6" ),
-        mkPair( "ge", "gc", "t7", "t8" ) 
+        mkPair( "ge", "gc", "t7", "t8" )
     );
 
     private List<String> t1_t8 = asList("t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8");
@@ -110,7 +110,7 @@ public class ActivationSuite {
     private List<String> evOut = asList(
         "t1<", "t1>",
         "t3<", "t1<", "t1>", "t3>",
-        "t1<", "t1<", "t1<", "t1>", "t1>", "t1>" 
+        "t1<", "t1<", "t1<", "t1>", "t1>", "t1>"
     );
     private String controllerName = "TestController" ;
 

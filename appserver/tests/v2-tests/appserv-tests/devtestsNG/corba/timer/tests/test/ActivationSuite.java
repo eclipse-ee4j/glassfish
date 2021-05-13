@@ -75,7 +75,7 @@ public class ActivationSuite {
         mkPair( "gb", "gd", "t2", "t3" ),
         mkPair( "gc", "gd", "t4" ),
         mkPair( "gd", "ge", "t5", "t6" ),
-        mkPair( "ge", "gc", "t7", "t8" ) 
+        mkPair( "ge", "gc", "t7", "t8" )
     );
 
     private List<String> t1_t8 = asList("t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8");
@@ -100,7 +100,7 @@ public class ActivationSuite {
     private List<String> evIn = asList(
         "t1<10", "t1>120",
         "t2<13", "t3<15", "t1<21", "t1>4", "t3>34", "t2>27",
-        "t1<12", "t1<23", "t1<31", "t1>24", "t1>8", "t1>91" 
+        "t1<12", "t1<23", "t1<31", "t1>24", "t1>8", "t1>91"
     );
 
     // Timings:

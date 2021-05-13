@@ -17,25 +17,19 @@
 package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.logging.LogDomains;
-import org.omg.IOP.Codec;
 
-
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
-                    implements org.omg.PortableInterceptor.IORInterceptor{
+import org.omg.CORBA.LocalObject;
+import org.omg.IOP.Codec;
+import org.omg.PortableInterceptor.IORInterceptor;
+
+public class IORAddrAnyInterceptor extends LocalObject implements IORInterceptor {
 
     public static final String baseMsg = IORAddrAnyInterceptor.class.getName();
-    private static final Logger _logger = LogDomains.getLogger(
-        IORAddrAnyInterceptor.class, LogDomains.CORBA_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(IORAddrAnyInterceptor.class, LogDomains.CORBA_LOGGER);
 
-    private Codec codec;
+    private final Codec codec;
 
 
     /** Creates a new instance of IORAddrAnyInterceptor
@@ -130,12 +124,12 @@ public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
         return baseMsg;
     }
 
-    protected short intToShort( int value )
-    {
-    if (value > 32767) {
+
+    protected short intToShort(int value) {
+        if (value > 32767) {
             return (short) (value - 65536);
         }
-    return (short)value ;
+        return (short) value;
     }
 
     /*

@@ -17,14 +17,12 @@
 package org.glassfish.enterprise.iiop.impl;
 
 import com.sun.corba.ee.spi.folb.ClusterInstanceInfo;
-import org.glassfish.orb.admin.config.IiopListener;
-import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.logging.LogDomains;
-import org.glassfish.enterprise.iiop.util.IIOPUtils;
 
 import java.util.List;
-import java.util.Collection;
 import java.util.logging.Logger;
+
+import org.glassfish.enterprise.iiop.util.IIOPUtils;
 
 /**
  * This class is responsible for reading the domain.xml via Config API
@@ -35,7 +33,6 @@ import java.util.logging.Logger;
  * @author Sheetal Vartak
  * @date 1/12/05
  */
-
 public class IIOPEndpointsInfo {
 
     private static final IIOPUtils iiopUtils = IIOPUtils.getInstance();
@@ -99,20 +96,17 @@ public class IIOPEndpointsInfo {
      * format. This is called by Java Web Start
      */
     public static String getIIOPEndpoints() {
-        //TODO FIXME
+        // TODO FIXME
         String endpoints = null;
-
         return endpoints;
-
     }
 
     /**
      * This method returns a ClusterInstanceInfo list.
      */
-    public static List<ClusterInstanceInfo> getClusterInstanceInfo()
-    {
-        //TODO FIXME
-    return null;
+    public static List<ClusterInstanceInfo> getClusterInstanceInfo() {
+        // TODO FIXME
+        return null;
     }
 
     /**

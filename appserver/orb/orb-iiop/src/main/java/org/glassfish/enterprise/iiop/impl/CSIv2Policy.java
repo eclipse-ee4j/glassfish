@@ -21,27 +21,33 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 
 //TODO: This class is in an Impl dir, we probably need to create a
 //Contract in the orb-connector module that can be used inside security/ejb.security
-public class CSIv2Policy extends org.omg.CORBA.LocalObject
-                    implements org.omg.CORBA.Policy {
+public class CSIv2Policy extends org.omg.CORBA.LocalObject implements org.omg.CORBA.Policy {
 
     private EjbDescriptor ejbDescriptor;
 
     public CSIv2Policy(EjbDescriptor ejbDescriptor) {
-    this.ejbDescriptor = ejbDescriptor;
+        this.ejbDescriptor = ejbDescriptor;
     }
 
+
+    @Override
     public int policy_type() {
-    return POARemoteReferenceFactory.CSIv2_POLICY_TYPE;
+        return POARemoteReferenceFactory.CSIv2_POLICY_TYPE;
     }
 
+
+    @Override
     public org.omg.CORBA.Policy copy() {
-    return new CSIv2Policy(ejbDescriptor);
+        return new CSIv2Policy(ejbDescriptor);
     }
 
+
+    @Override
     public void destroy() {
     }
 
+
     public EjbDescriptor getEjbDescriptor() {
-    return ejbDescriptor;
+        return ejbDescriptor;
     }
 }

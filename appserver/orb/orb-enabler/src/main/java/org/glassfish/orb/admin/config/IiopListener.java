@@ -16,29 +16,26 @@
 
 package org.glassfish.orb.admin.config;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
 import java.beans.PropertyVetoException;
 import java.util.List;
 
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
+import org.glassfish.grizzly.config.dom.Ssl;
+import org.glassfish.quality.ToDo;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.api.admin.RestRedirect;
-import org.glassfish.grizzly.config.dom.Ssl;
-import static org.glassfish.config.support.Constants.NAME_REGEX;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.quality.ToDo;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.Payload;
+
+import static org.glassfish.config.support.Constants.NAME_REGEX;
 
 /**
  *
@@ -56,7 +53,7 @@ import jakarta.validation.Payload;
 })
 public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
 
-    final static String PORT_PATTERN = "\\$\\{[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_./;#]*\\}"
+    String PORT_PATTERN = "\\$\\{[\\p{L}\\p{N}_][\\p{L}\\p{N}\\-_./;#]*\\}"
             + "|[1-9]|[1-9][0-9]|[1-9][0-9][0-9]|[1-9][0-9][0-9][0-9]"
             + "|[1-5][0-9][0-9][0-9][0-9]|6[0-4][0-9][0-9][0-9]"
             + "|65[0-4][0-9][0-9]|655[0-2][0-9]|6553[0-5]";
@@ -204,8 +201,9 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
     void String(boolean value);
 
     /**
-        Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})
     @Element

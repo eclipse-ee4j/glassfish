@@ -31,11 +31,9 @@ import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
  * This class is used to add IOR interceptors for supporting IN_ADDR_ANY
  * functionality in the ORB
  */
-public class IORAddrAnyInitializer extends org.omg.CORBA.LocalObject
-                                implements ORBInitializer{
+public class IORAddrAnyInitializer extends org.omg.CORBA.LocalObject implements ORBInitializer {
 
-    private static final Logger _logger = LogDomains.getLogger(
-        IORAddrAnyInitializer.class, LogDomains.CORBA_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(IORAddrAnyInitializer.class, LogDomains.CORBA_LOGGER);
 
     public static final String baseMsg = IORAddrAnyInitializer.class.getName();
 

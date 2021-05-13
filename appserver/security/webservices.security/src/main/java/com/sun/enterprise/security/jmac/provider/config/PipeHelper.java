@@ -81,11 +81,11 @@ import org.glassfish.api.invocation.InvocationManager;
 
 
 public class PipeHelper extends ConfigHelper {
-    private  AppServerAuditManager auditManager = null;
-            //AuditManagerFactory.getAuditManagerInstance();
 
-    protected static final LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(PipeConstants.class);
+    private AppServerAuditManager auditManager = null;
+    // AuditManagerFactory.getAuditManagerInstance();
+
+    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PipeConstants.class);
 
     private boolean isEjbEndpoint;
     private SEIModel seiModel;
@@ -96,52 +96,55 @@ public class PipeHelper extends ConfigHelper {
     public PipeHelper(String layer, Map map, CallbackHandler cbh) {
         init(layer, getAppCtxt(map), map, cbh);
 
-    this.isEjbEndpoint = processSunDeploymentDescriptor();
-    this.seiModel = (SEIModel) map.get(PipeConstants.SEI_MODEL);
-        WSBinding binding = (WSBinding)map.get(PipeConstants.BINDING);
+        this.isEjbEndpoint = processSunDeploymentDescriptor();
+        this.seiModel = (SEIModel) map.get(PipeConstants.SEI_MODEL);
+        WSBinding binding = (WSBinding) map.get(PipeConstants.BINDING);
         if (binding == null) {
-            WSEndpoint endPoint = (WSEndpoint)map.get(PipeConstants.ENDPOINT);
+            WSEndpoint endPoint = (WSEndpoint) map.get(PipeConstants.ENDPOINT);
             if (endPoint != null) {
                 binding = endPoint.getBinding();
             }
         }
         this.soapVersion = (binding != null) ? binding.getSOAPVersion() : SOAPVersion.SOAP_11;
         AuditManager am = (SecurityServicesUtil.getInstance() != null)
-                ? SecurityServicesUtil.getInstance().getAuditManager()
-                : null;
-        auditManager = (am != null && (am instanceof AppServerAuditManager)) ? (AppServerAuditManager) am : new AppServerAuditManager();//workaround for standalone clients where no habitat
+            ? SecurityServicesUtil.getInstance().getAuditManager()
+            : null;
+        auditManager = (am != null && (am instanceof AppServerAuditManager))
+            ? (AppServerAuditManager) am
+            : new AppServerAuditManager();// workaround for standalone clients where no habitat
         invManager = (SecurityServicesUtil.getInstance() != null)
-                ? SecurityServicesUtil.getInstance().getHabitat().<InvocationManager>getService(InvocationManager.class) : null;
+            ? SecurityServicesUtil.getInstance().getHabitat().<InvocationManager> getService(InvocationManager.class)
+            : null;
 
         this.ejbDelegate = new EJBPolicyContextDelegate();
-   }
-
-    @Override
-    public ClientAuthContext getClientAuthContext(MessageInfo info, Subject s)
-            throws AuthException {
-    ClientAuthConfig c = (ClientAuthConfig)getAuthConfig(false);
-    if (c != null) {
-            addModel(info, map);
-        return c.getAuthContext(c.getAuthContextID(info),s,map);
-    }
-    return null;
     }
 
+
     @Override
-    public ServerAuthContext getServerAuthContext(MessageInfo info, Subject s)
-    throws AuthException {
-    ServerAuthConfig c = (ServerAuthConfig)getAuthConfig(true);
-    if (c != null) {
+    public ClientAuthContext getClientAuthContext(MessageInfo info, Subject s) throws AuthException {
+        ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);
+        if (c != null) {
             addModel(info, map);
-            addPolicy(info,map);
-        return c.getAuthContext(c.getAuthContextID(info),s,map);
+            return c.getAuthContext(c.getAuthContextID(info), s, map);
+        }
+        return null;
     }
-    return null;
+
+
+    @Override
+    public ServerAuthContext getServerAuthContext(MessageInfo info, Subject s) throws AuthException {
+        ServerAuthConfig c = (ServerAuthConfig) getAuthConfig(true);
+        if (c != null) {
+            addModel(info, map);
+            addPolicy(info, map);
+            return c.getAuthContext(c.getAuthContextID(info), s, map);
+        }
+        return null;
     }
 
     public static Subject getClientSubject() {
 
-    Subject s = null;
+        Subject s = null;
 
         if ((SecurityServicesUtil.getInstance() == null) || SecurityServicesUtil.getInstance().isACC()) {
             ClientSecurityContext sc = ClientSecurityContext.getCurrent();
@@ -161,47 +164,47 @@ public class PipeHelper extends ConfigHelper {
             }
         }
 
-    if (s == null) {
-        s = new Subject();
-    }
+        if (s == null) {
+            s = new Subject();
+        }
 
-    return s;
+        return s;
     }
 
     public void getSessionToken(Map m,
-                MessageInfo info,
-                Subject s) throws AuthException {
-    ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);
-    if (c != null) {
-        m.putAll(map);
+        MessageInfo info,
+        Subject s) throws AuthException {
+        ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);
+        if (c != null) {
+            m.putAll(map);
             addModel(info, map);
-        c.getAuthContext(c.getAuthContextID(info),s,m);
-    }
+            c.getAuthContext(c.getAuthContextID(info),s,m);
+        }
     }
 
     public void authorize(Packet request) throws Exception {
 
-    // SecurityContext constructor should set initiator to
-    // unathenticated if Subject is null or empty
-    Subject s = (Subject) request.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
+        // SecurityContext constructor should set initiator to
+        // unathenticated if Subject is null or empty
+        Subject s = (Subject) request.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
 
         if (s == null || (s.getPrincipals().isEmpty() && s.getPublicCredentials().isEmpty())) {
             SecurityContext.setUnauthenticatedContext();
         } else {
-        SecurityContext sC = new SecurityContext(s);
+            SecurityContext sC = new SecurityContext(s);
             SecurityContext.setCurrent(sC);
         }
 
-    // we should try to replace this endpoint specific
-    // authorization check with a generic web service message check
-    // and move the endpoint specific check down stream
+        // we should try to replace this endpoint specific
+        // authorization check with a generic web service message check
+        // and move the endpoint specific check down stream
 
-    if (isEjbEndpoint) {
+        if (isEjbEndpoint) {
             if (invManager == null){
                 throw new RuntimeException(localStrings.getLocalString("enterprise.webservice.noEjbInvocationManager",
-                        "Cannot validate request : invocation manager null for EJB WebService"));
+                    "Cannot validate request : invocation manager null for EJB WebService"));
             }
-            ComponentInvocation inv = (ComponentInvocation) invManager.getCurrentInvocation();
+            ComponentInvocation inv = invManager.getCurrentInvocation();
             // one need to copy message here, otherwise the message may be
             // consumed
             if (ejbDelegate != null) {
@@ -225,11 +228,11 @@ public class PipeHelper extends ConfigHelper {
                                 @Override
                                 public Object run() throws Exception {
                                     ClassLoader loader =
-                                            Thread.currentThread().getContextClassLoader();
+                                        Thread.currentThread().getContextClassLoader();
                                     Class clazz =
-                                            Class.forName(ejbImplClassName, true, loader);
+                                        Class.forName(ejbImplClassName, true, loader);
                                     return clazz.getMethod("invoke",
-                                            new Class[]{Object.class                                            });
+                                        new Class[]{Object.class                                            });
                                 }
                             });
                         } catch (PrivilegedActionException pae) {
@@ -244,20 +247,20 @@ public class PipeHelper extends ConfigHelper {
                     try {
                         if (!ejbDelegate.authorize(inv, m)) {
                             throw new Exception(localStrings.getLocalString("enterprise.webservice.methodNotAuth",
-                                    "Client not authorized for invocation of {0}",
-                                    new Object[]{m}));
+                                "Client not authorized for invocation of {0}",
+                                new Object[]{m}));
                         }
                     } catch (UnmarshalException e) {
                         String errorMsg = localStrings.getLocalString("enterprise.webservice.errorUnMarshalMethod",
-                                "Error unmarshalling method for ejb {0}",
-                                new Object[]{ejbName()});
+                            "Error unmarshalling method for ejb {0}",
+                            new Object[]{ejbName()});
                         ie = new UnmarshalException(errorMsg);
                         ie.initCause(e);
                         throw ie;
                     } catch (Exception e) {
                         ie = new Exception(localStrings.getLocalString("enterprise.webservice.methodNotAuth",
-                                "Client not authorized for invocation of {0}",
-                                new Object[]{m}));
+                            "Client not authorized for invocation of {0}",
+                            new Object[]{m}));
                         ie.initCause(e);
                         throw ie;
                     }
@@ -269,19 +272,19 @@ public class PipeHelper extends ConfigHelper {
 
     public void auditInvocation(Packet request, AuthStatus status) {
 
-    if (auditManager.isAuditOn()) {
-        String uri = null;
-        if (!isEjbEndpoint && request != null &&
-                    request.supports(MessageContext.SERVLET_REQUEST)) {
+        if (auditManager.isAuditOn()) {
+            String uri = null;
+            if (!isEjbEndpoint && request != null &&
+                request.supports(MessageContext.SERVLET_REQUEST)) {
                 HttpServletRequest httpServletRequest =
                     (HttpServletRequest)request.get(
-                    MessageContext.SERVLET_REQUEST);
+                        MessageContext.SERVLET_REQUEST);
                 uri = httpServletRequest.getRequestURI();
-        }
+            }
             String endpointName = null;
             if (map != null) {
                 WebServiceEndpoint endpoint = (WebServiceEndpoint)
-                       map.get(PipeConstants.SERVICE_ENDPOINT);
+                    map.get(PipeConstants.SERVICE_ENDPOINT);
                 if (endpoint != null) {
                     endpointName = endpoint.getEndpointName();
                 }
@@ -298,12 +301,12 @@ public class PipeHelper extends ConfigHelper {
                     ((uri==null) ? "(no uri)" : uri),
                     endpointName, AuthStatus.SUCCESS.equals(status));
             }
-    }
+        }
     }
 
     public Object getModelName() {
-     WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
-     return (wsdlModel == null ? "unknown" : wsdlModel.getName());
+        WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
+        return (wsdlModel == null ? "unknown" : wsdlModel.getName());
     }
 
     @Deprecated // should be unused, but left for compilation
@@ -313,62 +316,61 @@ public class PipeHelper extends ConfigHelper {
     // always returns response with embedded fault
     //public static Packet makeFaultResponse(Packet response, Throwable t) {
     public Packet makeFaultResponse(Packet response, Throwable t) {
-    // wrap throwable in WebServiceException, if necessary
-    if (!(t instanceof WebServiceException)) {
-        t = (Throwable) new WebServiceException(t);
-    }
-     if (response == null) {
-         response = new Packet();
-      }
-    // try to create fault in provided response packet, if an exception
-    // is thrown, create new packet, and create fault in it.
-    try {
+        // wrap throwable in WebServiceException, if necessary
+        if (!(t instanceof WebServiceException)) {
+            t = new WebServiceException(t);
+        }
+        if (response == null) {
+            response = new Packet();
+        }
+        // try to create fault in provided response packet, if an exception
+        // is thrown, create new packet, and create fault in it.
+        try {
+            return response.createResponse(Messages.create(t, this.soapVersion));
+        } catch (Exception e) {
+            response = new Packet();
+        }
         return response.createResponse(Messages.create(t, this.soapVersion));
-    } catch (Exception e) {
-        response = new Packet();
-    }
-     return response.createResponse(Messages.create(t, this.soapVersion));
     }
 
     public boolean isTwoWay(boolean twoWayIsDefault, Packet request) {
-     boolean twoWay = twoWayIsDefault;
-     Message m = request.getMessage();
-     if (m != null) {
-        WSDLPort wsdlModel =
-        (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
-        if (wsdlModel != null) {
-        twoWay = (m.isOneWay(wsdlModel) ? false : true);
+        boolean twoWay = twoWayIsDefault;
+        Message m = request.getMessage();
+        if (m != null) {
+            WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
+            if (wsdlModel != null) {
+                twoWay = (m.isOneWay(wsdlModel) ? false : true);
+            }
         }
-    }
-     return twoWay;
+        return twoWay;
     }
 
     // returns empty response if request is determined to be one-way
-    public Packet getFaultResponse(Packet request, Packet response,
-    Throwable t) {
-    boolean twoWay = true;
-    try {
-        twoWay = isTwoWay(true,request);
-    } catch (Exception e) {
-        // exception is consumed, and twoWay is assumed
-     }
-    if (twoWay) {
-        return makeFaultResponse(response,t);
-     } else {
-        return new Packet();
+    public Packet getFaultResponse(Packet request, Packet response, Throwable t) {
+        boolean twoWay = true;
+        try {
+            twoWay = isTwoWay(true, request);
+        } catch (Exception e) {
+            // exception is consumed, and twoWay is assumed
+        }
+        if (twoWay) {
+            return makeFaultResponse(response, t);
+        } else {
+            return new Packet();
+        }
     }
-    }
+
 
     @Override
     public void disable() {
-    listenerWrapper.disableWithRefCount();
+        listenerWrapper.disableWithRefCount();
     }
+
 
     @Override
     protected HandlerContext getHandlerContext(Map map) {
         String realmName = null;
-        WebServiceEndpoint wSE = (WebServiceEndpoint)
-                map.get(PipeConstants.SERVICE_ENDPOINT);
+        WebServiceEndpoint wSE = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
         if (wSE != null) {
             Application app = wSE.getBundleDescriptor().getApplication();
             if (app != null) {
@@ -381,6 +383,7 @@ public class PipeHelper extends ConfigHelper {
 
         final String fRealmName = realmName;
         return new HandlerContext() {
+
             @Override
             public String getRealmName() {
                 return fRealmName;
@@ -390,44 +393,38 @@ public class PipeHelper extends ConfigHelper {
 
     private boolean processSunDeploymentDescriptor() {
 
-    if (factory == null) {
-        return false;
-    }
+        if (factory == null) {
+            return false;
+        }
 
-    MessageSecurityBindingDescriptor binding =
-        AuthMessagePolicy.getMessageSecurityBinding
-        (PipeConstants.SOAP_LAYER,map);
+        MessageSecurityBindingDescriptor binding
+            = AuthMessagePolicy.getMessageSecurityBinding(PipeConstants.SOAP_LAYER,map);
 
-    if (binding != null) {
-        if (!hasExactMatchAuthProvider()) {
-        String jmacProviderRegisID = factory.registerConfigProvider(
+        if (binding != null) {
+            if (!hasExactMatchAuthProvider()) {
+                String jmacProviderRegisID = factory.registerConfigProvider(
                     new GFServerConfigProvider(null, null),
                     layer, appCtxt,
                     "GF AuthConfigProvider bound by Sun Specific Descriptor");
                 this.setJmacProviderRegisID(jmacProviderRegisID);
+            }
         }
-    }
 
-    WebServiceEndpoint e = (WebServiceEndpoint)
-        map.get(PipeConstants.SERVICE_ENDPOINT);
-
-    return (e == null ? false : e.implementedByEjbComponent());
+        WebServiceEndpoint e = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
+        return (e == null ? false : e.implementedByEjbComponent());
     }
 
     private static String getAppCtxt(Map map) {
-
         String rvalue;
-        WebServiceEndpoint wse =
-            (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
+        WebServiceEndpoint wse = (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
         // endpoint
         if (wse != null) {
             rvalue = getServerName(wse) + " " + getEndpointURI(wse);
-        // client reference
+            // client reference
         } else {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor)
-                map.get(PipeConstants.SERVICE_REF);
+            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor) map.get(PipeConstants.SERVICE_REF);
 
-            rvalue = getClientModuleID(srd) + " " + getRefName(srd,map);
+            rvalue = getClientModuleID(srd) + " " + getRefName(srd, map);
         }
         return rvalue;
     }
@@ -439,14 +436,12 @@ public class PipeHelper extends ConfigHelper {
     }
 
     private static String getRefName(ServiceReferenceDescriptor srd, Map map) {
-
         String name = null;
         if (srd != null) {
             name = srd.getName();
         }
         if (name == null) {
-            EndpointAddress ea =
-                (EndpointAddress) map.get(PipeConstants.ENDPOINT_ADDRESS);
+            EndpointAddress ea = (EndpointAddress) map.get(PipeConstants.ENDPOINT_ADDRESS);
             if (ea != null) {
                 URL url = ea.getURL();
                 if (url != null) {
@@ -471,8 +466,7 @@ public class PipeHelper extends ConfigHelper {
             }
 
             if (wse.implementedByWebComponent()) {
-                WebBundleDescriptor wbd = (WebBundleDescriptor)
-                    wse.getBundleDescriptor();
+                WebBundleDescriptor wbd = (WebBundleDescriptor) wse.getBundleDescriptor();
                 if (wbd != null) {
                     String contextRoot = wbd.getContextRoot();
                     if (contextRoot != null) {
@@ -493,7 +487,7 @@ public class PipeHelper extends ConfigHelper {
 
         if (srd != null) {
             ModuleDescriptor md = null;
-            BundleDescriptor bd = (BundleDescriptor) srd.getBundleDescriptor();
+            BundleDescriptor bd = srd.getBundleDescriptor();
 
             if (bd != null) {
                 md = bd.getModuleDescriptor();
@@ -528,9 +522,9 @@ public class PipeHelper extends ConfigHelper {
         }
     }
 
+
     private String ejbName() {
-    WebServiceEndpoint wSE = (WebServiceEndpoint)
-        getProperty(PipeConstants.SERVICE_ENDPOINT);
-    return (wSE == null ? "unknown" : wSE.getEjbComponentImpl().getName());
+        WebServiceEndpoint wSE = (WebServiceEndpoint) getProperty(PipeConstants.SERVICE_ENDPOINT);
+        return (wSE == null ? "unknown" : wSE.getEjbComponentImpl().getName());
     }
 }

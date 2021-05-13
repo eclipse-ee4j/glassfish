@@ -33,71 +33,65 @@ import com.sun.enterprise.deployment.runtime.common.MessageSecurityBindingDescri
 public class ServerAuthConfig extends BaseAuthConfig {
 
     private ServerAuthConfig(ServerAuthContext defaultContext) {
-    super(defaultContext);
+        super(defaultContext);
     }
 
     private ServerAuthConfig (ArrayList descriptors, ArrayList authContexts) {
-    super(descriptors,authContexts);
+        super(descriptors,authContexts);
     }
 
-    public static ServerAuthConfig getConfig
-    (String authLayer, MessageSecurityBindingDescriptor binding,
-     CallbackHandler cbh) throws AuthException {
-    ServerAuthConfig rvalue = null;
-    String provider = null;
-    ArrayList descriptors = null;
-    ServerAuthContext defaultContext = null;
-    if (binding != null) {
-        String layer = binding.getAttributeValue
-        (MessageSecurityBindingDescriptor.AUTH_LAYER);
-        if (authLayer != null && layer.equals(authLayer)) {
-        provider = binding.getAttributeValue
-            (MessageSecurityBindingDescriptor.PROVIDER_ID);
-        descriptors = binding.getMessageSecurityDescriptors();
+
+    public static ServerAuthConfig getConfig(
+        String authLayer,
+        MessageSecurityBindingDescriptor binding,
+        CallbackHandler cbh) throws AuthException {
+
+        ServerAuthConfig rvalue = null;
+        String provider = null;
+        ArrayList descriptors = null;
+        ServerAuthContext defaultContext = null;
+        if (binding != null) {
+            String layer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
+            if (authLayer != null && layer.equals(authLayer)) {
+                provider = binding.getAttributeValue(MessageSecurityBindingDescriptor.PROVIDER_ID);
+                descriptors = binding.getMessageSecurityDescriptors();
+            }
         }
-    }
-    if (descriptors == null || descriptors.size() == 0) {
-        defaultContext = getAuthContext(authLayer,provider,null,null,cbh);
-        if (defaultContext != null) {
-        rvalue = new ServerAuthConfig(defaultContext);
-        }
-    } else {
-        boolean hasPolicy = false;
-        ArrayList authContexts = new ArrayList();
-        for (int i = 0; i < descriptors.size(); i++) {
-        MessageSecurityDescriptor msd =
-            (MessageSecurityDescriptor) descriptors.get(i);
-        AuthPolicy requestPolicy =
-            getAuthPolicy(msd.getRequestProtectionDescriptor());
-        AuthPolicy responsePolicy =
-            getAuthPolicy(msd.getResponseProtectionDescriptor());
-         if (requestPolicy.authRequired()||responsePolicy.authRequired()) {
-            authContexts.add
-            (getAuthContext
-             (authLayer,provider,requestPolicy,responsePolicy,cbh));
-            hasPolicy = true;
+        if (descriptors == null || descriptors.size() == 0) {
+            defaultContext = getAuthContext(authLayer,provider,null,null,cbh);
+            if (defaultContext != null) {
+                rvalue = new ServerAuthConfig(defaultContext);
+            }
         } else {
-            authContexts.add(null);
+            boolean hasPolicy = false;
+            ArrayList authContexts = new ArrayList();
+            for (int i = 0; i < descriptors.size(); i++) {
+                MessageSecurityDescriptor msd = (MessageSecurityDescriptor) descriptors.get(i);
+                AuthPolicy requestPolicy = getAuthPolicy(msd.getRequestProtectionDescriptor());
+                AuthPolicy responsePolicy = getAuthPolicy(msd.getResponseProtectionDescriptor());
+                if (requestPolicy.authRequired() || responsePolicy.authRequired()) {
+                    authContexts.add(getAuthContext(authLayer, provider, requestPolicy, responsePolicy, cbh));
+                    hasPolicy = true;
+                } else {
+                    authContexts.add(null);
+                }
+            }
+            if (hasPolicy) {
+                rvalue = new ServerAuthConfig(descriptors,authContexts);
+            }
         }
-        }
-        if (hasPolicy) {
-        rvalue = new ServerAuthConfig(descriptors,authContexts);
-        }
-    }
-    return rvalue;
+        return rvalue;
     }
 
-    private static ServerAuthContext getAuthContext
-    (String layer, String provider, AuthPolicy requestPolicy,
-     AuthPolicy responsePolicy,CallbackHandler cbh) throws AuthException {
-    AuthConfig authConfig = AuthConfig.getAuthConfig();
-    return authConfig.getServerAuthContext
-        (layer,provider,requestPolicy,responsePolicy,cbh);
+
+    private static ServerAuthContext getAuthContext(String layer, String provider, AuthPolicy requestPolicy,
+        AuthPolicy responsePolicy, CallbackHandler cbh) throws AuthException {
+        AuthConfig authConfig = AuthConfig.getAuthConfig();
+        return authConfig.getServerAuthContext(layer, provider, requestPolicy, responsePolicy, cbh);
     }
 
-    public ServerAuthContext getAuthContext
-    (jakarta.xml.ws.handler.soap.SOAPMessageContext context) {
-    return (ServerAuthContext) getContext(context);
-    }
 
+    public ServerAuthContext getAuthContext(jakarta.xml.ws.handler.soap.SOAPMessageContext context) {
+        return (ServerAuthContext) getContext(context);
+    }
 }

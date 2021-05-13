@@ -76,187 +76,187 @@ public class BaseAuthConfig {
 
     protected BaseAuthConfig(Object context) {
 
-    defaultContext_ = context;
-    superMSD_ = null;
-    superIndex_ = -1;
+        defaultContext_ = context;
+        superMSD_ = null;
+        superIndex_ = -1;
 
-    messageSecurityDescriptors_ = null;
-    contexts_ = null;
-    contextsForOpcodes_ = null;
-    contextsForOpNames_ = null;
+        messageSecurityDescriptors_ = null;
+        contexts_ = null;
+        contextsForOpcodes_ = null;
+        contextsForOpNames_ = null;
 
-    onePolicy_ = true;
+        onePolicy_ = true;
 
-    if(logger.isLoggable(Level.FINE)){
-        logger.log(Level.FINE, "WSS: New BAC defaultContext: {0}", defaultContext_);
-    }
+        if(logger.isLoggable(Level.FINE)){
+            logger.log(Level.FINE, "WSS: New BAC defaultContext: {0}", defaultContext_);
+        }
     }
 
     protected BaseAuthConfig (ArrayList descriptors, ArrayList authContexts) {
 
-    defaultContext_ = null;
-    superMSD_ = null;
-    superIndex_ = -1;
+        defaultContext_ = null;
+        superMSD_ = null;
+        superIndex_ = -1;
 
-    messageSecurityDescriptors_ = descriptors;
-    contexts_ = authContexts;
-    contextsForOpcodes_ = null;
-    contextsForOpNames_ = null;
+        messageSecurityDescriptors_ = descriptors;
+        contexts_ = authContexts;
+        contextsForOpcodes_ = null;
+        contextsForOpNames_ = null;
 
-    onePolicy_ = true;
+        onePolicy_ = true;
 
-    for (int i = 0; i < descriptors.size(); i++) {
+        for (int i = 0; i < descriptors.size(); i++) {
 
-        MessageSecurityDescriptor msd =
-        (MessageSecurityDescriptor) descriptors.get(i);
+            MessageSecurityDescriptor msd =
+                (MessageSecurityDescriptor) descriptors.get(i);
 
-        // determine if all the different messageSecurityDesriptors have the
-        // same policy which will help us interpret the effective policy if
-        // we cannot determine the opcode of a request at runtime.
+            // determine if all the different messageSecurityDesriptors have the
+            // same policy which will help us interpret the effective policy if
+            // we cannot determine the opcode of a request at runtime.
 
-        for (int j = 0; j < descriptors.size(); j++) {
-        if (j != i && !policiesAreEqual
-            (msd,((MessageSecurityDescriptor) descriptors.get(j)))) {
-            onePolicy_ = false;
-        }
-        }
-    }
-
-    for (int i = 0; defaultContext_ == null && i < descriptors.size(); i++) {
-
-        MessageSecurityDescriptor msd = (MessageSecurityDescriptor) descriptors.get(i);
-
-        AuthPolicy requestPolicy =
-        getAuthPolicy(msd.getRequestProtectionDescriptor());
-
-        AuthPolicy responsePolicy =
-        getAuthPolicy(msd.getResponseProtectionDescriptor());
-
-        boolean noProtection = (!requestPolicy.authRequired() &&
-                    !responsePolicy.authRequired());
-
-        // if there is one policy, and it is null set the associated context as the
-        // defaultContext used for all messages.
-        if (i==0 && onePolicy_ && noProtection) {
-        defaultContext_ = explicitNull;
-        break;
+            for (int j = 0; j < descriptors.size(); j++) {
+                if (j != i && !policiesAreEqual
+                    (msd,((MessageSecurityDescriptor) descriptors.get(j)))) {
+                    onePolicy_ = false;
+                }
+            }
         }
 
-        ArrayList mDs = msd.getMessageDescriptors();
+        for (int i = 0; defaultContext_ == null && i < descriptors.size(); i++) {
 
-        for (int j=0; mDs != null && j < mDs.size(); j++) {
+            MessageSecurityDescriptor msd = (MessageSecurityDescriptor) descriptors.get(i);
 
-        MessageDescriptor mD = (MessageDescriptor) mDs.get(j);
-        MethodDescriptor methD = mD.getMethodDescriptor();
+            AuthPolicy requestPolicy =
+                getAuthPolicy(msd.getRequestProtectionDescriptor());
 
-        // if any msd covers all methods and operations.
-        if ((mD.getOperationName() == null && methD == null) ||
-                        (methD != null && methD.getStyle() == 1)) {
+            AuthPolicy responsePolicy =
+                getAuthPolicy(msd.getResponseProtectionDescriptor());
 
-            if (onePolicy_) {
-            // if there is only one policy make it the default.
-            defaultContext_ = contexts_.get(i);
-            if (defaultContext_ == null) {
+            boolean noProtection = (!requestPolicy.authRequired() &&
+                !responsePolicy.authRequired());
+
+            // if there is one policy, and it is null set the associated context as the
+            // defaultContext used for all messages.
+            if (i==0 && onePolicy_ && noProtection) {
                 defaultContext_ = explicitNull;
+                break;
             }
-            break;
-            } else if (superIndex_ == -1) {
-            // if it has a noProtection policy make it the default.
-            if (noProtection) {
-                defaultContext_ = explicitNull;
-            } else {
-                superIndex_ = i;
-            }
-            } else if (!policiesAreEqual(msd,((MessageSecurityDescriptor)
-                              descriptors.get(superIndex_)))) {
-            // if there are conflicting policies that cover all methods
-            // set the default policy to noProtection
-            defaultContext_ = explicitNull;
-            superIndex_ = -1;
-            break;
-            }
-        }
-        }
-    }
-    // if there is protected policy that applies to all methods remember the descriptor.
-    // Note that the corresponding policy is not null, and thus it is not the default.
-    // wherever there is a conflicting policy the effective policy will be noProtection.
-    if (superIndex_ >=0) {
-        superMSD_ = (MessageSecurityDescriptor) descriptors.get(superIndex_);
-    }
 
-    if(logger.isLoggable(Level.FINE)){
-        logger.log(Level.FINE, "WSS: new BAC defaultContext_: {0} superMSD index: {1} onePolicy_: {2}", new Object[]{defaultContext_, superIndex_, onePolicy_});
-    }
+            ArrayList mDs = msd.getMessageDescriptors();
+
+            for (int j=0; mDs != null && j < mDs.size(); j++) {
+
+                MessageDescriptor mD = (MessageDescriptor) mDs.get(j);
+                MethodDescriptor methD = mD.getMethodDescriptor();
+
+                // if any msd covers all methods and operations.
+                if ((mD.getOperationName() == null && methD == null) ||
+                    (methD != null && methD.getStyle() == 1)) {
+
+                    if (onePolicy_) {
+                        // if there is only one policy make it the default.
+                        defaultContext_ = contexts_.get(i);
+                        if (defaultContext_ == null) {
+                            defaultContext_ = explicitNull;
+                        }
+                        break;
+                    } else if (superIndex_ == -1) {
+                        // if it has a noProtection policy make it the default.
+                        if (noProtection) {
+                            defaultContext_ = explicitNull;
+                        } else {
+                            superIndex_ = i;
+                        }
+                    } else if (!policiesAreEqual(msd,((MessageSecurityDescriptor)
+                        descriptors.get(superIndex_)))) {
+                        // if there are conflicting policies that cover all methods
+                        // set the default policy to noProtection
+                        defaultContext_ = explicitNull;
+                        superIndex_ = -1;
+                        break;
+                    }
+                }
+            }
+        }
+        // if there is protected policy that applies to all methods remember the descriptor.
+        // Note that the corresponding policy is not null, and thus it is not the default.
+        // wherever there is a conflicting policy the effective policy will be noProtection.
+        if (superIndex_ >=0) {
+            superMSD_ = (MessageSecurityDescriptor) descriptors.get(superIndex_);
+        }
+
+        if(logger.isLoggable(Level.FINE)){
+            logger.log(Level.FINE, "WSS: new BAC defaultContext_: {0} superMSD index: {1} onePolicy_: {2}", new Object[]{defaultContext_, superIndex_, onePolicy_});
+        }
     }
 
     protected static AuthPolicy getAuthPolicy(ProtectionDescriptor pd) {
-    int sourceAuthType = AuthPolicy.SOURCE_AUTH_NONE;
-    boolean recipientAuth = false;
-    boolean beforeContent = false;
-    if (pd != null) {
-        String source = pd.getAttributeValue
-        (ProtectionDescriptor.AUTH_SOURCE);
-        if (source != null) {
-        if (source.equals(AuthPolicy.SENDER)) {
-            sourceAuthType = AuthPolicy.SOURCE_AUTH_SENDER;
-        } else if (source.equals(AuthPolicy.CONTENT)) {
-            sourceAuthType = AuthPolicy.SOURCE_AUTH_CONTENT;
+        int sourceAuthType = AuthPolicy.SOURCE_AUTH_NONE;
+        boolean recipientAuth = false;
+        boolean beforeContent = false;
+        if (pd != null) {
+            String source = pd.getAttributeValue
+                (ProtectionDescriptor.AUTH_SOURCE);
+            if (source != null) {
+                if (source.equals(AuthPolicy.SENDER)) {
+                    sourceAuthType = AuthPolicy.SOURCE_AUTH_SENDER;
+                } else if (source.equals(AuthPolicy.CONTENT)) {
+                    sourceAuthType = AuthPolicy.SOURCE_AUTH_CONTENT;
+                }
+            }
+            String recipient = pd.getAttributeValue
+                (ProtectionDescriptor.AUTH_RECIPIENT);
+            if (recipient != null) {
+                recipientAuth = true;
+                if (recipient.equals(AuthPolicy.BEFORE_CONTENT)) {
+                    beforeContent = true;
+                } else if (recipient.equals(AuthPolicy.AFTER_CONTENT)) {
+                    beforeContent = false;
+                }
+            }
         }
-        }
-        String recipient = pd.getAttributeValue
-        (ProtectionDescriptor.AUTH_RECIPIENT);
-        if (recipient != null) {
-        recipientAuth = true;
-        if (recipient.equals(AuthPolicy.BEFORE_CONTENT)) {
-            beforeContent = true;
-        } else if (recipient.equals(AuthPolicy.AFTER_CONTENT)) {
-            beforeContent = false;
-        }
-        }
-    }
-    return new AuthPolicy(sourceAuthType,recipientAuth,beforeContent);
+        return new AuthPolicy(sourceAuthType,recipientAuth,beforeContent);
     }
 
     private static boolean
     isMatchingMSD(MethodDescriptor targetMD, MessageSecurityDescriptor mSD) {
-    ArrayList messageDescriptors = mSD.getMessageDescriptors();
-    if (messageDescriptors.isEmpty()) {
-        // If this happens the dd is invalid.
-        // Unfortunately the deployment system does not catch such problems.
-        // This case will be treated the same as if there was an empty message
-        // element, and the deployment will be allowed to succeed.
-        return true;
-    }
-
-    for (int i=0; i<messageDescriptors.size(); i++) {
-        MessageDescriptor nextMD =
-        (MessageDescriptor) messageDescriptors.get(i);
-        MethodDescriptor mD = nextMD.getMethodDescriptor();
-        String opName = nextMD.getOperationName();
-
-        if (opName == null && (mD == null || mD.implies(targetMD))){
-        return true;
+        ArrayList messageDescriptors = mSD.getMessageDescriptors();
+        if (messageDescriptors.isEmpty()) {
+            // If this happens the dd is invalid.
+            // Unfortunately the deployment system does not catch such problems.
+            // This case will be treated the same as if there was an empty message
+            // element, and the deployment will be allowed to succeed.
+            return true;
         }
-    }
 
-    return false;
+        for (int i=0; i<messageDescriptors.size(); i++) {
+            MessageDescriptor nextMD =
+                (MessageDescriptor) messageDescriptors.get(i);
+            MethodDescriptor mD = nextMD.getMethodDescriptor();
+            String opName = nextMD.getOperationName();
+
+            if (opName == null && (mD == null || mD.implies(targetMD))){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static boolean
     policiesAreEqual(MessageSecurityDescriptor reference,
-             MessageSecurityDescriptor other) {
-    if (!getAuthPolicy
-        (reference.getRequestProtectionDescriptor()).equals
-        (getAuthPolicy(other.getRequestProtectionDescriptor())) ||
+        MessageSecurityDescriptor other) {
+        if (!getAuthPolicy
+            (reference.getRequestProtectionDescriptor()).equals
+            (getAuthPolicy(other.getRequestProtectionDescriptor())) ||
 
-        !getAuthPolicy
-        (reference.getResponseProtectionDescriptor()).equals
-        (getAuthPolicy(other.getResponseProtectionDescriptor()))) {
+            !getAuthPolicy
+            (reference.getResponseProtectionDescriptor()).equals
+            (getAuthPolicy(other.getResponseProtectionDescriptor()))) {
 
-        return false;
-    }
-    return true;
+            return false;
+        }
+        return true;
     }
 
     /* When method argument is null, returns the default AC
@@ -266,184 +266,184 @@ public class BaseAuthConfig {
      * cannot be determined (e.g. when the message is encrypted)
      */
     private Object getContextForMethod(Method m) {
-    Object rvalue = null;
-    synchronized(contextLock) {
-        if (defaultContext_ != null) {
-        rvalue = defaultContext_;
-        if(logger.isLoggable(Level.FINE)){
-            logger.log(Level.FINE, "WSS: ForMethod returning default_context: {0}", rvalue);
+        Object rvalue = null;
+        synchronized(contextLock) {
+            if (defaultContext_ != null) {
+                rvalue = defaultContext_;
+                if(logger.isLoggable(Level.FINE)){
+                    logger.log(Level.FINE, "WSS: ForMethod returning default_context: {0}", rvalue);
+                }
+                return rvalue;
+            }
+        }
+        if (m != null) {
+            int match = -1;
+            MethodDescriptor targetMD = new MethodDescriptor(m);
+            for (int i = 0; i < messageSecurityDescriptors_.size(); i++) {
+                if (isMatchingMSD(targetMD,(MessageSecurityDescriptor)
+                    messageSecurityDescriptors_.get(i))) {
+                    if (match < 0) {
+                        match = i;
+                    } else if (!policiesAreEqual
+                        ((MessageSecurityDescriptor)
+                            messageSecurityDescriptors_.get(match),
+                            (MessageSecurityDescriptor)
+                            messageSecurityDescriptors_.get(i))) {
+
+                        // set to unprotected because of conflicting policies
+
+                        rvalue = explicitNull;
+                        match = -1;
+                        if(logger.isLoggable(Level.FINE)){
+                            logger.log(Level.FINE, "WSS: ForMethod detected conflicting policies: {0}.{1}", new Object[]{match, i});
+                        }
+                        break;
+                    }
+                }
+            }
+            if (match >= 0) {
+                rvalue = contexts_.get(match);
+                if (rvalue == null) {
+                    rvalue = explicitNull;
+                }
+                if(logger.isLoggable(Level.FINE)){
+                    logger.log(Level.FINE, "WSS: ForMethod returning matched context: {0}", rvalue);
+                }
+            }
+        } else if (onePolicy_ && contexts_.size() > 0) {
+            // ISSUE: since the method is undefined we will not be
+            // able to tell if the defined policy covers this method.
+            // We will be optimistic and try the policy, because
+            // the server will reject the call if the method is not
+            // covered by the policy.
+            // If the policy is not null, there remains a problem at the
+            // client on the response side, as it is possible that the
+            // client will enforce the wrong policy on the response.
+            // For this reason, messages in sun-application-client.xml
+            // should be keyed by operation-name.
+
+            rvalue = contexts_.get(0);
+            if(logger.isLoggable(Level.FINE)){
+                logger.log(Level.FINE, "WSS: ForMethod resorting to first context: {0}", rvalue);
+            }
+
+        } else {
+            if(logger.isLoggable(Level.FINE)){
+                logger.fine("WSS: Unable to select policy for SOAP Message");
+            }
+            throw new RuntimeException("Unable to select policy for Message");
         }
         return rvalue;
-        }
-    }
-    if (m != null) {
-        int match = -1;
-        MethodDescriptor targetMD = new MethodDescriptor(m);
-        for (int i = 0; i < messageSecurityDescriptors_.size(); i++) {
-        if (isMatchingMSD(targetMD,(MessageSecurityDescriptor)
-                  messageSecurityDescriptors_.get(i))) {
-            if (match < 0) {
-            match = i;
-            } else if (!policiesAreEqual
-                   ((MessageSecurityDescriptor)
-                messageSecurityDescriptors_.get(match),
-                (MessageSecurityDescriptor)
-                messageSecurityDescriptors_.get(i))) {
-
-            // set to unprotected because of conflicting policies
-
-            rvalue = explicitNull;
-            match = -1;
-            if(logger.isLoggable(Level.FINE)){
-                logger.log(Level.FINE, "WSS: ForMethod detected conflicting policies: {0}.{1}", new Object[]{match, i});
-            }
-            break;
-            }
-        }
-        }
-        if (match >= 0) {
-        rvalue = contexts_.get(match);
-        if (rvalue == null) {
-            rvalue = explicitNull;
-        }
-        if(logger.isLoggable(Level.FINE)){
-            logger.log(Level.FINE, "WSS: ForMethod returning matched context: {0}", rvalue);
-        }
-        }
-    } else if (onePolicy_ && contexts_.size() > 0) {
-         // ISSUE: since the method is undefined we will not be
-        // able to tell if the defined policy covers this method.
-         // We will be optimistic and try the policy, because
-         // the server will reject the call if the method is not
-         // covered by the policy.
-         // If the policy is not null, there remains a problem at the
-        // client on the response side, as it is possible that the
-        // client will enforce the wrong policy on the response.
-         // For this reason, messages in sun-application-client.xml
-        // should be keyed by operation-name.
-
-        rvalue = contexts_.get(0);
-        if(logger.isLoggable(Level.FINE)){
-        logger.log(Level.FINE, "WSS: ForMethod resorting to first context: {0}", rvalue);
-        }
-
-    } else {
-        if(logger.isLoggable(Level.FINE)){
-            logger.fine("WSS: Unable to select policy for SOAP Message");
-            }
-        throw new RuntimeException("Unable to select policy for Message");
-    }
-    return rvalue;
     }
 
     private static String getOpName(SOAPMessage message) {
 
-    String rvalue = null;
+        String rvalue = null;
 
-    // first look for a SOAPAction header.
-    // this is what .net uses to identify the operation
+        // first look for a SOAPAction header.
+        // this is what .net uses to identify the operation
 
-    MimeHeaders headers = message.getMimeHeaders();
-    if (headers != null) {
-        String[] actions = headers.getHeader("SOAPAction");
-        if (actions != null && actions.length > 0) {
-        rvalue = actions[0];
-        if (rvalue != null && rvalue.equals("\"\"")) {
-            rvalue = null;
+        MimeHeaders headers = message.getMimeHeaders();
+        if (headers != null) {
+            String[] actions = headers.getHeader("SOAPAction");
+            if (actions != null && actions.length > 0) {
+                rvalue = actions[0];
+                if (rvalue != null && rvalue.equals("\"\"")) {
+                    rvalue = null;
+                }
+            }
         }
+
+        // if that doesn't work then we default to trying the name
+        // of the first child element of the SOAP envelope.
+
+        if (rvalue == null) {
+            Name name = getName(message);
+            if (name != null) {
+                rvalue = name.getLocalName();
+            }
         }
-    }
 
-    // if that doesn't work then we default to trying the name
-    // of the first child element of the SOAP envelope.
-
-    if (rvalue == null) {
-        Name name = getName(message);
-        if (name != null) {
-        rvalue = name.getLocalName();
-        }
-    }
-
-    return rvalue;
+        return rvalue;
     }
 
     private static String getOpName(SOAPMessageContext soapMC) {
 
-    String rvalue;
+        String rvalue;
 
-    // first look for a the property value in the context
-    QName qName = (QName) soapMC.get(MessageContext.WSDL_OPERATION);
-    if (qName != null) {
-        rvalue = qName.getLocalPart();
-    } else {
-        rvalue = getOpName(soapMC.getMessage());
-    }
+        // first look for a the property value in the context
+        QName qName = (QName) soapMC.get(MessageContext.WSDL_OPERATION);
+        if (qName != null) {
+            rvalue = qName.getLocalPart();
+        } else {
+            rvalue = getOpName(soapMC.getMessage());
+        }
 
-    return rvalue;
+        return rvalue;
     }
 
     private Object getContextForOpName(String operation) {
 
-    synchronized(contextLock) {
-        if (contextsForOpNames_ == null) {
+        synchronized(contextLock) {
+            if (contextsForOpNames_ == null) {
 
-        // one time initialization of the opName to authContext array.
+                // one time initialization of the opName to authContext array.
 
-        contextsForOpNames_ = new HashMap();
-        for (int i=0; messageSecurityDescriptors_ != null &&
-             i < messageSecurityDescriptors_.size(); i++) {
+                contextsForOpNames_ = new HashMap();
+                for (int i=0; messageSecurityDescriptors_ != null &&
+                    i < messageSecurityDescriptors_.size(); i++) {
 
-            MessageSecurityDescriptor mSD = (MessageSecurityDescriptor)
-            messageSecurityDescriptors_.get(i);
+                    MessageSecurityDescriptor mSD = (MessageSecurityDescriptor)
+                        messageSecurityDescriptors_.get(i);
 
-            ArrayList mDs = mSD.getMessageDescriptors();
+                    ArrayList mDs = mSD.getMessageDescriptors();
 
-            for (int j=0; mDs != null && j < mDs.size(); j++) {
+                    for (int j=0; mDs != null && j < mDs.size(); j++) {
 
-            MessageDescriptor mD = (MessageDescriptor) mDs.get(j);
-            String opName = mD.getOperationName();
+                        MessageDescriptor mD = (MessageDescriptor) mDs.get(j);
+                        String opName = mD.getOperationName();
 
-            if (opName != null) {
+                        if (opName != null) {
 
-                if (contextsForOpNames_.containsKey(opName)) {
+                            if (contextsForOpNames_.containsKey(opName)) {
 
-                Integer k = (Integer) contextsForOpNames_.get(opName);
-                if (k != null) {
+                                Integer k = (Integer) contextsForOpNames_.get(opName);
+                                if (k != null) {
 
-                    MessageSecurityDescriptor other =
-                    (MessageSecurityDescriptor)
-                    messageSecurityDescriptors_.get(k.intValue());
+                                    MessageSecurityDescriptor other =
+                                        (MessageSecurityDescriptor)
+                                        messageSecurityDescriptors_.get(k.intValue());
 
-                    // set to null if different policies on operation
+                                    // set to null if different policies on operation
 
-                    if (!policiesAreEqual(mSD,other)) {
-                    contextsForOpNames_.put(opName,null);
+                                    if (!policiesAreEqual(mSD,other)) {
+                                        contextsForOpNames_.put(opName,null);
+                                    }
+                                }
+                            } else if (superMSD_!=null && !policiesAreEqual(mSD,superMSD_)){
+                                // set to null if operation policy differs from superPolicy
+                                contextsForOpNames_.put(opName,null);
+                            } else {
+                                contextsForOpNames_.put(opName,Integer.valueOf(i));
+                            }
+                        }
                     }
                 }
-                } else if (superMSD_!=null && !policiesAreEqual(mSD,superMSD_)){
-                // set to null if operation policy differs from superPolicy
-                contextsForOpNames_.put(opName,null);
-                } else {
-                contextsForOpNames_.put(opName,Integer.valueOf(i));
-                }
-            }
             }
         }
-        }
-    }
 
-    Object rvalue = null;
-    if (operation != null) {
-        if (contextsForOpNames_.containsKey(operation)) {
-        Integer k = (Integer) contextsForOpNames_.get(operation);
-        if (k != null) {
-            rvalue = contexts_.get(k.intValue());
-        }
-        } else if (superIndex_ >= 0) {
+        Object rvalue = null;
+        if (operation != null) {
+            if (contextsForOpNames_.containsKey(operation)) {
+                Integer k = (Integer) contextsForOpNames_.get(operation);
+                if (k != null) {
+                    rvalue = contexts_.get(k.intValue());
+                }
+            } else if (superIndex_ >= 0) {
                 // if there is a msb that matches all methods, use the
                 // associatedContext
                 rvalue = contexts_.get(superIndex_);
-        }
+            }
 
             if (rvalue == null) {
                 // else return explicitNull under the assumption
@@ -453,8 +453,8 @@ public class BaseAuthConfig {
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "WSS: ForOpName={0} context: {1}", new Object[]{operation, rvalue});
             }
-    }
-    return rvalue;
+        }
+        return rvalue;
     }
 
     // DO NOT CALL THIS ON THE SERVER SIDE, as it will return a null
@@ -473,99 +473,99 @@ public class BaseAuthConfig {
 
     private Object getContextForMessage(SOAPMessage message) {
 
-    String opName = getOpName(message);
+        String opName = getOpName(message);
 
-    Object rvalue = getContextForOpName(opName);
-    if (rvalue == null) {
+        Object rvalue = getContextForOpName(opName);
+        if (rvalue == null) {
 
-        // opName is not mapped or msg body is encrypted, and the best
-        // we can do is try to return a policy that applies to all
-        // operations, if there is one.
+            // opName is not mapped or msg body is encrypted, and the best
+            // we can do is try to return a policy that applies to all
+            // operations, if there is one.
 
-        rvalue = getContextForMethod(null);
+            rvalue = getContextForMethod(null);
 
-    }
-    return rvalue;
+        }
+        return rvalue;
     }
 
 
     // used by jaxws system handler delegates and handlers
     protected Object getContext(SOAPMessageContext soapMC) {
 
-    Object rvalue = null;
+        Object rvalue = null;
 
-    synchronized(contextLock) {
-        if (defaultContext_ != null) {
-        rvalue = defaultContext_;
-        }
-    }
-
-    if (rvalue == null) {
-
-        Method m = getMethod(soapMC);
-        String opName = null;
-
-        if (m != null) {
-        rvalue = getContextForMethod(m);
+        synchronized(contextLock) {
+            if (defaultContext_ != null) {
+                rvalue = defaultContext_;
+            }
         }
 
         if (rvalue == null) {
-        opName = getOpName(soapMC);
-        if (opName != null) {
-            rvalue = getContextForOpName(opName);
+
+            Method m = getMethod(soapMC);
+            String opName = null;
+
+            if (m != null) {
+                rvalue = getContextForMethod(m);
+            }
+
+            if (rvalue == null) {
+                opName = getOpName(soapMC);
+                if (opName != null) {
+                    rvalue = getContextForOpName(opName);
+                }
+            }
+
+            if (rvalue == null && (m == null || opName == null)) {
+
+                //we were unable to determine either method or
+                // opName, so lets see if one policy applies to all
+
+                rvalue = getContextForMethod(null);
+            }
         }
+
+        if (rvalue != null && rvalue instanceof ExplicitNull) {
+            rvalue = null;
         }
 
-        if (rvalue == null && (m == null || opName == null)) {
-
-        //we were unable to determine either method or
-        // opName, so lets see if one policy applies to all
-
-        rvalue = getContextForMethod(null);
-        }
-    }
-
-    if (rvalue != null && rvalue instanceof ExplicitNull) {
-        rvalue = null;
-    }
-
-    return rvalue;
+        return rvalue;
     }
 
     private static Name getName(SOAPMessage message) {
-    Name rvalue = null;
-    SOAPPart soap = message.getSOAPPart();
-    if (soap != null) {
-        try {
-        SOAPEnvelope envelope = soap.getEnvelope();
-        if (envelope != null) {
-            SOAPBody body = envelope.getBody();
-            if (body != null) {
-            Iterator it = body.getChildElements();
-            while (it.hasNext()) {
-                Object o = it.next();
-                if (o instanceof SOAPElement) {
-                rvalue = ((SOAPElement) o).getElementName();
-                break;
+        Name rvalue = null;
+        SOAPPart soap = message.getSOAPPart();
+        if (soap != null) {
+            try {
+                SOAPEnvelope envelope = soap.getEnvelope();
+                if (envelope != null) {
+                    SOAPBody body = envelope.getBody();
+                    if (body != null) {
+                        Iterator it = body.getChildElements();
+                        while (it.hasNext()) {
+                            Object o = it.next();
+                            if (o instanceof SOAPElement) {
+                                rvalue = ((SOAPElement) o).getElementName();
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (SOAPException se) {
+                if(logger.isLoggable(Level.FINE)){
+                    logger.log(Level.FINE,"WSS: Unable to get SOAP envelope",
+                        se);
                 }
             }
-            }
         }
-        } catch (SOAPException se) {
-        if(logger.isLoggable(Level.FINE)){
-            logger.log(Level.FINE,"WSS: Unable to get SOAP envelope",
-                   se);
-        }
-        }
-    }
 
-    return rvalue;
+        return rvalue;
     }
 
     public static Method getMethod(SOAPMessageContext soapMC) {
 
         // It should never come here
-    return null;
+        return null;
     }
 
     // each instance of AuthConfig maps to one provider
@@ -576,33 +576,34 @@ public class BaseAuthConfig {
     // returns the list of supported mechanisms is added to
     // jauth.ServerAuthContext and jauth.ClientAuthContext.
     public QName[] getMechanisms() {
-    return mechanisms;
+        return mechanisms;
     }
 
     // WSS security header QName
     private static QName mechanisms[] = new QName[] {
-    new QName( "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security", "wsse") };
+        new QName( "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "Security", "wsse") };
 
     // internal class used to differentiate not protected from policy undefined or
     // not determined.
 
     static class ExplicitNull {
 
-    ExplicitNull() {
-    }
+        ExplicitNull() {
+        }
 
         @Override
-    public boolean equals(Object other) {
-        return (other != null && other instanceof ExplicitNull ? true : false);
-    }
+        public boolean equals(Object other) {
+            return (other != null && other instanceof ExplicitNull ? true : false);
+        }
 
         @Override
         public int hashCode() {
             return super.hashCode();
         }
+
         @Override
-    public String toString() {
-        return "ExplicitNull";
-    }
+        public String toString() {
+            return "ExplicitNull";
+        }
     }
 }

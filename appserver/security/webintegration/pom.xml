@@ -111,12 +111,12 @@
             <artifactId>jakarta.authentication-api</artifactId>
         </dependency>
         <dependency>
-  <groupId>org.glassfish.external</groupId>
-  <artifactId>management-api</artifactId>
-    </dependency>
-    <dependency>
-  <groupId>org.glassfish.gmbal</groupId>
-  <artifactId>gmbal</artifactId>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>management-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal</artifactId>
         </dependency>
     </dependencies>
 

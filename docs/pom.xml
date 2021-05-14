@@ -91,20 +91,19 @@
                 </executions>
             </plugin>
         </plugins>
-
-    <pluginManagement>
-        <plugins>
-        <plugin>
+        <pluginManagement>
+            <plugins>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
                     <version>3.0.0</version>
-        </plugin>
-        <plugin>
-            <groupId>org.glassfish.doc</groupId>
-            <artifactId>glassfish-doc-maven-plugin</artifactId>
-            <version>1.2</version>
-        </plugin>
-        </plugins>
-    </pluginManagement>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.doc</groupId>
+                    <artifactId>glassfish-doc-maven-plugin</artifactId>
+                    <version>1.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>

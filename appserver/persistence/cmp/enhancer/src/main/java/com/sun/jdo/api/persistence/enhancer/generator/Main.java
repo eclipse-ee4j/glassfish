@@ -104,7 +104,7 @@ public final class Main extends Assertion {
         createDestinationDir();
     }
 
-    
+
     /**
      *
      */
@@ -144,7 +144,7 @@ public final class Main extends Assertion {
             System.exit(1);
         }
 
-        
+
         /**
          * Process command line options
          */

@@ -40,8 +40,8 @@ import static org.glassfish.external.amx.AMX.*;
  * @deprecated Extends MBeanProxyHandler by also supporting the functionality required of an AMX.
  */
 @Deprecated
-@Taxonomy(stability = Stability.PRIVATE) 
-public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy, Extra { 
+@Taxonomy(stability = Stability.PRIVATE)
+public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy, Extra {
 
     private static void sdebug(final String s)
     {

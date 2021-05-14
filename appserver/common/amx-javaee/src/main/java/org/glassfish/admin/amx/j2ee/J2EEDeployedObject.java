@@ -42,7 +42,7 @@ public interface J2EEDeployedObject extends J2EEManagedObject, StateManageable {
      * <p>
      * Note that the Attribute name is case-sensitive
      * "server" as defined by JSR 77.
-     * 
+     *
      * @return the ObjectName of the server, as a String
      */
     @ManagedAttribute

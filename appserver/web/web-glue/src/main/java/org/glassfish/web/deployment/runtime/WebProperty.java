@@ -19,14 +19,14 @@ package org.glassfish.web.deployment.runtime;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 
 /**
-* Interface for all web property containers
-*
-* @author Jerome Dochez
-*/
-public class WebProperty extends RuntimeDescriptor
-{
-    static public final String NAME = "name";    // NOI18N
-    static public final String VALUE = "value";    // NOI18N
+ * Interface for all web property containers
+ *
+ * @author Jerome Dochez
+ */
+public class WebProperty extends RuntimeDescriptor {
+
+    static public final String NAME = "name"; // NOI18N
+    static public final String VALUE = "value"; // NOI18N
 
     // description handled at Descriptor
 }

@@ -25,39 +25,37 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 *
 * @author Jerome Dochez
 */
-public class Servlet extends RuntimeDescriptor
-{
+public class Servlet extends RuntimeDescriptor {
 
-    static public final String SERVLET_NAME = "ServletName";    // NOI18N
-    static public final String PRINCIPAL_NAME = "PrincipalName";    // NOI18N
-
-    // This attribute is mandatory
-    public void setServletName(String value)
-    {
-    this.setValue(SERVLET_NAME, value);
-    }
-
-    //
-    public String getServletName()
-    {
-    return (String)this.getValue(SERVLET_NAME);
-    }
+    static public final String SERVLET_NAME = "ServletName"; // NOI18N
+    static public final String PRINCIPAL_NAME = "PrincipalName"; // NOI18N
 
     // This attribute is mandatory
-    public void setPrincipalName(String value)
-    {
-    this.setValue(PRINCIPAL_NAME, value);
+    public void setServletName(String value) {
+        this.setValue(SERVLET_NAME, value);
     }
 
+
     //
-    public String getPrincipalName()
-    {
-    return (String)this.getValue(PRINCIPAL_NAME);
+    public String getServletName() {
+        return (String) this.getValue(SERVLET_NAME);
     }
+
+
+    // This attribute is mandatory
+    public void setPrincipalName(String value) {
+        this.setValue(PRINCIPAL_NAME, value);
+    }
+
+
+    //
+    public String getPrincipalName() {
+        return (String) this.getValue(PRINCIPAL_NAME);
+    }
+
 
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 }

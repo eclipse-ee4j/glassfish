@@ -23,20 +23,19 @@ package org.glassfish.web.deployment.runtime;
 *
 * @author Jerome Dochez
 */
-public class CacheHelper extends WebPropertyContainer
-{
+public class CacheHelper extends WebPropertyContainer {
+
     static public final String CLASS_NAME = "ClassName";
 
     // copy constructor
-    public CacheHelper(CacheHelper other)
-    {
-    super(other);
+    public CacheHelper(CacheHelper other) {
+        super(other);
     }
 
+
     // constructor
-    public CacheHelper()
-    {
-    super();
+    public CacheHelper() {
+        super();
     }
 
 }

@@ -1047,13 +1047,12 @@ public final class ApplicationContextFacade
             log.log(Level.FINE, "ApplicationContextFacade." + methodName, ex);
         }
 
-    if (ex instanceof PrivilegedActionException) {
+        if (ex instanceof PrivilegedActionException) {
             ex = ((PrivilegedActionException) ex).getException();
-    }
+        }
 
         if (ex instanceof InvocationTargetException) {
-            realException =
-        ((InvocationTargetException) ex).getTargetException();
+            realException = ((InvocationTargetException) ex).getTargetException();
         } else {
             realException = ex;
         }

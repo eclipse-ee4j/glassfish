@@ -62,10 +62,10 @@ public class SessionManagerNode extends RuntimeDescriptorNode<SessionManager> {
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-    RuntimeDescriptor descriptor = getDescriptor();
-    if (element.getQName().equals(RuntimeTagNames.PERSISTENCE_TYPE)) {
-        descriptor.setAttributeValue(SessionManager.PERSISTENCE_TYPE, value);
-    }
+        RuntimeDescriptor descriptor = getDescriptor();
+        if (element.getQName().equals(RuntimeTagNames.PERSISTENCE_TYPE)) {
+            descriptor.setAttributeValue(SessionManager.PERSISTENCE_TYPE, value);
+        }
     }
 
     /**
@@ -78,27 +78,27 @@ public class SessionManagerNode extends RuntimeDescriptorNode<SessionManager> {
      */
     @Override
     public Node writeDescriptor(Node parent, String nodeName, SessionManager descriptor) {
+        Element sessionMgr = (Element) super.writeDescriptor(parent, nodeName, descriptor);
 
-    Element sessionMgr = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+        // manager-properties?
+        if (descriptor.getManagerProperties() != null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node mgrProps = appendChild(sessionMgr, RuntimeTagNames.MANAGER_PROPERTIES);
+            wpn.writeDescriptor(mgrProps, RuntimeTagNames.PROPERTY, descriptor.getManagerProperties().getWebProperty());
+        }
 
-    // manager-properties?
-    if (descriptor.getManagerProperties()!=null) {
-        WebPropertyNode wpn = new WebPropertyNode();
-        Node mgrProps = appendChild(sessionMgr, RuntimeTagNames.MANAGER_PROPERTIES);
-        wpn.writeDescriptor(mgrProps, RuntimeTagNames.PROPERTY, descriptor.getManagerProperties().getWebProperty());
-    }
+        // store-properties?
+        if (descriptor.getStoreProperties() != null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node storeProps = appendChild(sessionMgr, RuntimeTagNames.STORE_PROPERTIES);
+            wpn.writeDescriptor(storeProps, RuntimeTagNames.PROPERTY, descriptor.getStoreProperties().getWebProperty());
+        }
 
-    // store-properties?
-    if (descriptor.getStoreProperties()!=null) {
-        WebPropertyNode wpn = new WebPropertyNode();
-        Node storeProps = appendChild(sessionMgr, RuntimeTagNames.STORE_PROPERTIES);
-        wpn.writeDescriptor(storeProps, RuntimeTagNames.PROPERTY, descriptor.getStoreProperties().getWebProperty());
-    }
+        // persistence-type?
+        setAttribute(sessionMgr, RuntimeTagNames.PERSISTENCE_TYPE,
+            descriptor.getAttributeValue(SessionManager.PERSISTENCE_TYPE));
 
-    // persistence-type?
-    setAttribute(sessionMgr, RuntimeTagNames.PERSISTENCE_TYPE, (String) descriptor.getAttributeValue(SessionManager.PERSISTENCE_TYPE));
-
-    return sessionMgr;
+        return sessionMgr;
     }
 
 }

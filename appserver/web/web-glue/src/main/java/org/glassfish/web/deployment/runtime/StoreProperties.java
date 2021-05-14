@@ -23,7 +23,6 @@ package org.glassfish.web.deployment.runtime;
 *
 * @author Jerome Dochez
 */
-public class StoreProperties extends WebPropertyContainer
-{
+public class StoreProperties extends WebPropertyContainer {
     // tag class...
 }

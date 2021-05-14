@@ -237,11 +237,12 @@ public class NamingContext implements Context {
         throws NamingException {
         checkWritable();
 
-    while ((!name.isEmpty()) && (name.get(0).length() == 0))
-        name = name.getSuffix(1);
-        if (name.isEmpty())
-            throw new NamingException(
-                    rb.getString(LogFacade.INVALID_NAME));
+        while ((!name.isEmpty()) && (name.get(0).length() == 0)) {
+            name = name.getSuffix(1);
+        }
+        if (name.isEmpty()) {
+            throw new NamingException(rb.getString(LogFacade.INVALID_NAME));
+        }
 
         NamingEntry entry = bindings.get(name.get(0));
 
@@ -443,36 +444,33 @@ public class NamingContext implements Context {
      */
     public void destroySubcontext(Name name)
         throws NamingException {
-
         checkWritable();
 
-    while ((!name.isEmpty()) && (name.get(0).length() == 0))
-        name = name.getSuffix(1);
-        if (name.isEmpty())
-            throw new NamingException(
-                    rb.getString(LogFacade.INVALID_NAME));
+        while ((!name.isEmpty()) && (name.get(0).length() == 0)) {
+            name = name.getSuffix(1);
+        }
+        if (name.isEmpty()) {
+            throw new NamingException(rb.getString(LogFacade.INVALID_NAME));
+        }
 
         NamingEntry entry = bindings.get(name.get(0));
 
         if (entry == null) {
-            throw new NameNotFoundException(
-                    MessageFormat.format(rb.getString(LogFacade.NAME_NOT_BOUND), name.get(0)));
+            throw new NameNotFoundException(MessageFormat.format(rb.getString(LogFacade.NAME_NOT_BOUND), name.get(0)));
         }
 
         if (name.size() > 1) {
             if (entry.type == NamingEntry.CONTEXT) {
                 ((Context) entry.value).destroySubcontext(name.getSuffix(1));
             } else {
-                throw new NamingException(
-                        rb.getString(LogFacade.CONTEXT_EXPECTED));
+                throw new NamingException(rb.getString(LogFacade.CONTEXT_EXPECTED));
             }
         } else {
             if (entry.type == NamingEntry.CONTEXT) {
                 ((Context) entry.value).close();
                 bindings.remove(name.get(0));
             } else {
-                throw new NotContextException(
-                        rb.getString(LogFacade.CONTEXT_EXPECTED));
+                throw new NotContextException(rb.getString(LogFacade.CONTEXT_EXPECTED));
             }
         }
 
@@ -582,18 +580,19 @@ public class NamingContext implements Context {
     public NameParser getNameParser(Name name)
         throws NamingException {
 
-    while ((!name.isEmpty()) && (name.get(0).length() == 0))
-        name = name.getSuffix(1);
-        if (name.isEmpty())
+        while ((!name.isEmpty()) && (name.get(0).length() == 0)) {
+            name = name.getSuffix(1);
+        }
+        if (name.isEmpty()) {
             return nameParser;
+        }
 
         if (name.size() > 1) {
             Object obj = bindings.get(name.get(0));
             if (obj instanceof Context) {
                 return ((Context) obj).getNameParser(name.getSuffix(1));
             } else {
-                throw new NotContextException(
-                        rb.getString(LogFacade.CONTEXT_EXPECTED));
+                throw new NotContextException(rb.getString(LogFacade.CONTEXT_EXPECTED));
             }
         }
 
@@ -633,8 +632,8 @@ public class NamingContext implements Context {
      */
     public Name composeName(Name name, Name prefix)
         throws NamingException {
-    prefix = (Name) prefix.clone();
-    return prefix.addAll(name);
+        prefix = (Name) prefix.clone();
+        return prefix.addAll(name);
     }
 
 
@@ -752,57 +751,52 @@ public class NamingContext implements Context {
         throws NamingException {
 
         // Removing empty parts
-        while ((!name.isEmpty()) && (name.get(0).length() == 0))
+        while ((!name.isEmpty()) && (name.get(0).length() == 0)) {
             name = name.getSuffix(1);
+        }
         if (name.isEmpty()) {
             // If name is empty, a newly allocated naming context is returned
             return new NamingContext(env, this.name, bindings);
         }
 
-        NamingEntry entry = (NamingEntry) bindings.get(name.get(0));
+        NamingEntry entry = bindings.get(name.get(0));
 
         if (entry == null) {
-            throw new NameNotFoundException(
-                    MessageFormat.format(rb.getString(LogFacade.NAME_NOT_BOUND), name.get(0)));
+            throw new NameNotFoundException(MessageFormat.format(rb.getString(LogFacade.NAME_NOT_BOUND), name.get(0)));
         }
 
         if (name.size() > 1) {
             // If the size of the name is greater that 1, then we go through a
             // number of subcontexts.
             if (entry.type != NamingEntry.CONTEXT) {
-                throw new NamingException(
-                        rb.getString(LogFacade.CONTEXT_EXPECTED));
+                throw new NamingException(rb.getString(LogFacade.CONTEXT_EXPECTED));
             }
             return ((Context) entry.value).lookup(name.getSuffix(1));
-        } else {
-            if ((resolveLinks) && (entry.type == NamingEntry.LINK_REF)) {
-                String link = ((LinkRef) entry.value).getLinkName();
-                if (link.startsWith(".")) {
-                    // Link relative to this context
-                    return lookup(link.substring(1));
-                } else {
-                    return (new InitialContext(env)).lookup(link);
-                }
-            } else if (entry.type == NamingEntry.REFERENCE) {
-                try {
-                    Object obj = NamingManager.getObjectInstance
-                        (entry.value, name, this, env);
-                    if (obj != null) {
-                        entry.value = obj;
-                        entry.type = NamingEntry.ENTRY;
-                    }
-                    return obj;
-                } catch (NamingException e) {
-                    throw e;
-                } catch (Exception e) {
-                    logger.log(Level.WARNING,
-                            LogFacade.FAIL_RESOLVING_REFERENCE,
-                            e);
-                    throw new NamingException(e.getMessage());
-                }
-            } else {
-                return entry.value;
+        }
+        if ((resolveLinks) && (entry.type == NamingEntry.LINK_REF)) {
+            String link = ((LinkRef) entry.value).getLinkName();
+            if (link.startsWith(".")) {
+                // Link relative to this context
+                return lookup(link.substring(1));
             }
+            return new InitialContext(env).lookup(link);
+        } else if (entry.type == NamingEntry.REFERENCE) {
+            try {
+                Object obj = NamingManager.getObjectInstance
+                    (entry.value, name, this, env);
+                if (obj != null) {
+                    entry.value = obj;
+                    entry.type = NamingEntry.ENTRY;
+                }
+                return obj;
+            } catch (NamingException e) {
+                throw e;
+            } catch (Exception e) {
+                logger.log(Level.WARNING, LogFacade.FAIL_RESOLVING_REFERENCE, e);
+                throw new NamingException(e.getMessage());
+            }
+        } else {
+            return entry.value;
         }
 
     }
@@ -826,18 +820,18 @@ public class NamingContext implements Context {
 
         checkWritable();
 
-    while ((!name.isEmpty()) && (name.get(0).length() == 0))
-        name = name.getSuffix(1);
-        if (name.isEmpty())
-            throw new NamingException(
-                    rb.getString(LogFacade.INVALID_NAME));
+        while ((!name.isEmpty()) && (name.get(0).length() == 0)) {
+            name = name.getSuffix(1);
+        }
+        if (name.isEmpty()) {
+            throw new NamingException(rb.getString(LogFacade.INVALID_NAME));
+        }
 
-        NamingEntry entry = (NamingEntry) bindings.get(name.get(0));
+        NamingEntry entry = bindings.get(name.get(0));
 
         if (name.size() > 1) {
             if (entry == null) {
-                throw new NameNotFoundException(
-                        MessageFormat.format(rb.getString(LogFacade.NAME_NOT_BOUND), name.get(0)));
+                throw new NameNotFoundException(MessageFormat.format(rb.getString(LogFacade.NAME_NOT_BOUND), name.get(0)));
             }
             if (entry.type == NamingEntry.CONTEXT) {
                 if (rebind) {
@@ -846,37 +840,28 @@ public class NamingContext implements Context {
                     ((Context) entry.value).bind(name.getSuffix(1), obj);
                 }
             } else {
-                throw new NamingException(
-                        rb.getString(LogFacade.CONTEXT_EXPECTED));
+                throw new NamingException(rb.getString(LogFacade.CONTEXT_EXPECTED));
             }
         } else {
             if ((!rebind) && (entry != null)) {
-                throw new NamingException(
-                        MessageFormat.format(rb.getString(LogFacade.ALREADY_BOUND), name.get(0)));
-            } else {
-                // Getting the type of the object and wrapping it within a new
-                // NamingEntry
-                Object toBind =
-                    NamingManager.getStateToBind(obj, name, this, env);
-                if (toBind instanceof Context) {
-                    entry = new NamingEntry(name.get(0), toBind,
-                                            NamingEntry.CONTEXT);
-                } else if (toBind instanceof LinkRef) {
-                    entry = new NamingEntry(name.get(0), toBind,
-                                            NamingEntry.LINK_REF);
-                } else if (toBind instanceof Reference) {
-                    entry = new NamingEntry(name.get(0), toBind,
-                                            NamingEntry.REFERENCE);
-                } else if (toBind instanceof Referenceable) {
-                    toBind = ((Referenceable) toBind).getReference();
-                    entry = new NamingEntry(name.get(0), toBind,
-                                            NamingEntry.REFERENCE);
-                } else {
-                    entry = new NamingEntry(name.get(0), toBind,
-                                            NamingEntry.ENTRY);
-                }
-                bindings.put(name.get(0), entry);
+                throw new NamingException(MessageFormat.format(rb.getString(LogFacade.ALREADY_BOUND), name.get(0)));
             }
+            // Getting the type of the object and wrapping it within a new
+            // NamingEntry
+            Object toBind = NamingManager.getStateToBind(obj, name, this, env);
+            if (toBind instanceof Context) {
+                entry = new NamingEntry(name.get(0), toBind, NamingEntry.CONTEXT);
+            } else if (toBind instanceof LinkRef) {
+                entry = new NamingEntry(name.get(0), toBind, NamingEntry.LINK_REF);
+            } else if (toBind instanceof Reference) {
+                entry = new NamingEntry(name.get(0), toBind, NamingEntry.REFERENCE);
+            } else if (toBind instanceof Referenceable) {
+                toBind = ((Referenceable) toBind).getReference();
+                entry = new NamingEntry(name.get(0), toBind, NamingEntry.REFERENCE);
+            } else {
+                entry = new NamingEntry(name.get(0), toBind, NamingEntry.ENTRY);
+            }
+            bindings.put(name.get(0), entry);
         }
 
     }

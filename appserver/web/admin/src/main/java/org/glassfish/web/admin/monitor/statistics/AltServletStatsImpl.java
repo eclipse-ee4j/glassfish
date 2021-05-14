@@ -44,10 +44,12 @@ public class AltServletStatsImpl implements MonitorContract {
 
     private final static String displayFormat = "%1$-10s %2$-10s %3$-10s";
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public ActionReport process(final ActionReport report, final String filter) {
 
         if (mrdr == null) {
@@ -63,11 +65,11 @@ public class AltServletStatsImpl implements MonitorContract {
             return report;
         }
 
-        String [] patternArr = new String [] {"server.web.servlet.*"};
+        String[] patternArr = new String [] {"server.web.servlet.*"};
 
-    long activeServletsLoadedCount = 0;
-    long maxServletsLoadedCount = 0;
-    long totalServletsLoadedCount = 0;
+        long activeServletsLoadedCount = 0;
+        long maxServletsLoadedCount = 0;
+        long totalServletsLoadedCount = 0;
 
         for (String pattern : patternArr) {
             List<TreeNode> tnL = serverNode.getNodes(pattern);
@@ -85,9 +87,8 @@ public class AltServletStatsImpl implements MonitorContract {
             }
         }
 
-        report.setMessage(String.format(displayFormat,
-                activeServletsLoadedCount, maxServletsLoadedCount,
-                totalServletsLoadedCount));
+        report.setMessage(
+            String.format(displayFormat, activeServletsLoadedCount, maxServletsLoadedCount, totalServletsLoadedCount));
 
         report.setActionExitCode(ExitCode.SUCCESS);
         return report;
@@ -95,7 +96,9 @@ public class AltServletStatsImpl implements MonitorContract {
 
     private long getCountStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof CountStatistic) {
             return ((CountStatistic)obj).getCount();
         }
@@ -104,7 +107,9 @@ public class AltServletStatsImpl implements MonitorContract {
 
     private long getRangeStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof RangeStatistic) {
             return ((RangeStatistic)obj).getCurrent();
         }

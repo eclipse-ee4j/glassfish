@@ -20,8 +20,10 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import org.glassfish.web.deployment.runtime.CacheHelper;
 import org.glassfish.web.deployment.runtime.WebProperty;
+import org.glassfish.web.deployment.runtime.WebPropertyContainer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -33,9 +35,7 @@ import org.w3c.dom.Node;
 public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
 
     public CacheHelperNode() {
-
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
-                               WebPropertyNode.class, "addWebProperty");
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), WebPropertyNode.class, "addWebProperty");
     }
 
     protected CacheHelper descriptor = null;
@@ -61,16 +61,16 @@ public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
      */
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
-    RuntimeDescriptor descriptor = getDescriptor();
-    if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
-        descriptor.setAttributeValue(CacheHelper.NAME, value);
-        return true;
-    } else
-    if (attributeName.getQName().equals(RuntimeTagNames.CLASS_NAME)) {
-        descriptor.setAttributeValue(CacheHelper.CLASS_NAME, value);
-        return true;
-    }
-    return false;
+        RuntimeDescriptor descriptor = getDescriptor();
+        if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
+            descriptor.setAttributeValue(WebPropertyContainer.NAME, value);
+            return true;
+        } else
+            if (attributeName.getQName().equals(RuntimeTagNames.CLASS_NAME)) {
+                descriptor.setAttributeValue(CacheHelper.CLASS_NAME, value);
+                return true;
+            }
+        return false;
     }
 
     /**
@@ -84,19 +84,19 @@ public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
     @Override
     public Node writeDescriptor(Node parent, String nodeName, CacheHelper descriptor) {
 
-    Element cacheHelper = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+        Element cacheHelper = (Element) super.writeDescriptor(parent, nodeName, descriptor);
 
-    // property*
-    WebProperty[] properties = descriptor.getWebProperty();
-    if (properties.length>0) {
-        WebPropertyNode wpn = new WebPropertyNode();
-        wpn.writeDescriptor(cacheHelper, RuntimeTagNames.PROPERTY, properties);
-    }
+        // property*
+        WebProperty[] properties = descriptor.getWebProperty();
+        if (properties.length>0) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            wpn.writeDescriptor(cacheHelper, RuntimeTagNames.PROPERTY, properties);
+        }
 
-    // name, class-name attribute
-    setAttribute(cacheHelper, RuntimeTagNames.NAME, (String) descriptor.getAttributeValue(CacheHelper.NAME));
-    setAttribute(cacheHelper, RuntimeTagNames.CLASS_NAME, (String) descriptor.getAttributeValue(CacheHelper.CLASS_NAME));
+        // name, class-name attribute
+        setAttribute(cacheHelper, RuntimeTagNames.NAME, descriptor.getAttributeValue(WebPropertyContainer.NAME));
+        setAttribute(cacheHelper, RuntimeTagNames.CLASS_NAME, descriptor.getAttributeValue(CacheHelper.CLASS_NAME));
 
-    return cacheHelper;
+        return cacheHelper;
     }
 }

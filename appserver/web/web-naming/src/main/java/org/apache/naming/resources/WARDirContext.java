@@ -117,34 +117,31 @@ public class WARDirContext extends BaseDirContext {
      *  malformed URL
      */
     public void setDocBase(String docBase) {
+        // Validate the format of the proposed document root
+        if (docBase == null) {
+            throw new IllegalArgumentException(rb.getString(LogFacade.RESOURCES_NULL));
+        }
+        if (!(docBase.endsWith(".war"))) {
+            throw new IllegalArgumentException(rb.getString(LogFacade.NOT_WAR));
+        }
 
-    // Validate the format of the proposed document root
-    if (docBase == null)
-        throw new IllegalArgumentException
-                (rb.getString(LogFacade.RESOURCES_NULL));
-    if (!(docBase.endsWith(".war")))
-        throw new IllegalArgumentException
-                (rb.getString(LogFacade.NOT_WAR));
+        // Calculate a File object referencing this document base directory
+        File base = new File(docBase);
 
-    // Calculate a File object referencing this document base directory
-    File base = new File(docBase);
-
-    // Validate that the document base is an existing directory
-    if (!base.exists() || !base.canRead() || base.isDirectory())
-        throw new IllegalArgumentException
-                (rb.getString(LogFacade.NOT_WAR));
+        // Validate that the document base is an existing directory
+        if (!base.exists() || !base.canRead() || base.isDirectory())
+            throw new IllegalArgumentException(rb.getString(LogFacade.NOT_WAR));
         try {
             this.base = new ZipFile(base);
         } catch (Exception e) {
-        throw new IllegalArgumentException
-                (MessageFormat.format(rb.getString(LogFacade.INVALID_WAR), e.getMessage()));
+            throw new IllegalArgumentException(
+                MessageFormat.format(rb.getString(LogFacade.INVALID_WAR), e.getMessage()));
         }
         super.setDocBase(docBase);
 
         loadEntries();
 
     }
-
 
     // --------------------------------------------------------- Public Methods
 
@@ -195,19 +192,20 @@ public class WARDirContext extends BaseDirContext {
      * @return the object bound to name
      * @exception NamingException if a naming exception is encountered
      */
-    public Object lookup(Name name)
-        throws NamingException {
-        if (name.isEmpty())
+    public Object lookup(Name name) throws NamingException {
+        if (name.isEmpty()) {
             return this;
+        }
         Entry entry = treeLookup(name);
-        if (entry == null)
-            throw new NamingException
-                    (MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        if (entry == null) {
+            throw new NamingException(MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        }
         ZipEntry zipEntry = entry.getEntry();
-        if (zipEntry.isDirectory())
+        if (zipEntry.isDirectory()) {
             return new WARDirContext(base, entry);
-        else
+        } else {
             return new WARResource(entry.getEntry());
+        }
     }
 
 
@@ -282,12 +280,13 @@ public class WARDirContext extends BaseDirContext {
      */
     public NamingEnumeration<NameClassPair> list(Name name)
         throws NamingException {
-        if (name.isEmpty())
+        if (name.isEmpty()) {
             return new NamingContextEnumeration(list(entries).iterator());
+        }
         Entry entry = treeLookup(name);
-        if (entry == null)
-            throw new NamingException
-                    (MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        if (entry == null) {
+            throw new NamingException(MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        }
         return new NamingContextEnumeration(list(entry).iterator());
     }
 
@@ -326,12 +325,13 @@ public class WARDirContext extends BaseDirContext {
      */
     public NamingEnumeration<Binding> listBindings(Name name)
         throws NamingException {
-        if (name.isEmpty())
+        if (name.isEmpty()) {
             return new NamingContextBindingsEnumeration(list(entries).iterator(), this);
+        }
         Entry entry = treeLookup(name);
-        if (entry == null)
-            throw new NamingException
-                    (MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        if (entry == null) {
+            throw new NamingException(MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        }
         return new NamingContextBindingsEnumeration(list(entry).iterator(), this);
     }
 
@@ -440,21 +440,23 @@ public class WARDirContext extends BaseDirContext {
         throws NamingException {
 
         Entry entry = null;
-        if (name.isEmpty())
+        if (name.isEmpty()) {
             entry = entries;
-        else
+        } else {
             entry = treeLookup(name);
-        if (entry == null)
-            throw new NamingException
-                    (MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        }
+        if (entry == null) {
+            throw new NamingException(MessageFormat.format(rb.getString(LogFacade.RESOURCES_NOT_FOUND), name));
+        }
 
         ZipEntry zipEntry = entry.getEntry();
 
         ResourceAttributes attrs = new ResourceAttributes();
         attrs.setCreationDate(new Date(zipEntry.getTime()));
         attrs.setName(entry.getName());
-        if (!zipEntry.isDirectory())
+        if (!zipEntry.isDirectory()) {
             attrs.setResourceType("");
+        }
         attrs.setContentLength(zipEntry.getSize());
         attrs.setLastModified(new Date(zipEntry.getTime()));
 
@@ -786,15 +788,18 @@ public class WARDirContext extends BaseDirContext {
      * Entry tree lookup.
      */
     protected Entry treeLookup(Name name) {
-        if (name.isEmpty() || entries == null)
+        if (name.isEmpty() || entries == null) {
             return entries;
+        }
         Entry currentEntry = entries;
         for (int i = 0; i < name.size(); i++) {
-            if (name.get(i).length() == 0)
+            if (name.get(i).length() == 0) {
                 continue;
+            }
             currentEntry = currentEntry.getChild(name.get(i));
-            if (currentEntry == null)
+            if (currentEntry == null) {
                 return null;
+            }
         }
         return currentEntry;
     }
@@ -818,8 +823,7 @@ public class WARDirContext extends BaseDirContext {
             } else {
                 object = new WARResource(current);
             }
-            namingEntry = new NamingEntry
-                (children[i].getName(), object, NamingEntry.ENTRY);
+            namingEntry = new NamingEntry(children[i].getName(), object, NamingEntry.ENTRY);
             entries.add(namingEntry);
         }
 
@@ -862,8 +866,9 @@ public class WARDirContext extends BaseDirContext {
 
         @Override
         public int compareTo(Object o) {
-            if (!(o instanceof Entry))
+            if (!(o instanceof Entry)) {
                 return (+1);
+            }
             return (name.compareTo(((Entry) o).getName()));
         }
 
@@ -892,8 +897,9 @@ public class WARDirContext extends BaseDirContext {
 
         public void addChild(Entry entry) {
             Entry[] newChildren = new Entry[children.length + 1];
-            for (int i = 0; i < children.length; i++)
+            for (int i = 0; i < children.length; i++) {
                 newChildren[i] = children[i];
+            }
             newChildren[children.length] = entry;
             children = newChildren;
         }
@@ -962,10 +968,6 @@ public class WARDirContext extends BaseDirContext {
             }
             return super.streamContent();
         }
-
-
     }
-
-
 }
 

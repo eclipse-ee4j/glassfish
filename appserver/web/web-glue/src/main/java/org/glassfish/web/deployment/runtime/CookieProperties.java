@@ -23,7 +23,6 @@ package org.glassfish.web.deployment.runtime;
 *
 * @author Jerome Dochez
 */
-public class CookieProperties extends WebPropertyContainer
-{
+public class CookieProperties extends WebPropertyContainer {
     // Tag class
 }

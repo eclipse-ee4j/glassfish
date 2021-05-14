@@ -68,21 +68,21 @@ public class CacheNode extends RuntimeDescriptorNode<Cache> {
      */
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
-    RuntimeDescriptor descriptor = getDescriptor();
-    if (attributeName.getQName().equals(RuntimeTagNames.MAX_ENTRIES)) {
-        descriptor.setAttributeValue(Cache.MAX_ENTRIES, value);
-        return true;
-    } else
-    if (attributeName.getQName().equals(RuntimeTagNames.TIMEOUT_IN_SECONDS)) {
-        descriptor.setAttributeValue(Cache.TIMEOUT_IN_SECONDS, value);
-        return true;
-    } else
-    if (attributeName.getQName().equals(RuntimeTagNames.ENABLED)) {
-        descriptor.setAttributeValue(Cache.ENABLED, value);
-        return true;
-    } else
-    return false;
+        RuntimeDescriptor descriptor = getDescriptor();
+        if (attributeName.getQName().equals(RuntimeTagNames.MAX_ENTRIES)) {
+            descriptor.setAttributeValue(Cache.MAX_ENTRIES, value);
+            return true;
+        } else if (attributeName.getQName().equals(RuntimeTagNames.TIMEOUT_IN_SECONDS)) {
+            descriptor.setAttributeValue(Cache.TIMEOUT_IN_SECONDS, value);
+            return true;
+        } else if (attributeName.getQName().equals(RuntimeTagNames.ENABLED)) {
+            descriptor.setAttributeValue(Cache.ENABLED, value);
+            return true;
+        } else {
+            return false;
+        }
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -95,43 +95,43 @@ public class CacheNode extends RuntimeDescriptorNode<Cache> {
     @Override
     public Node writeDescriptor(Node parent, String nodeName, Cache descriptor) {
 
-    Element cache = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+        Element cache = (Element) super.writeDescriptor(parent, nodeName, descriptor);
 
-    // cache-helpers*
-    CacheHelper[] cacheHelpers = descriptor.getCacheHelper();
-    if (cacheHelpers!=null && cacheHelpers.length>0) {
-        CacheHelperNode chn = new CacheHelperNode();
-        for (int i=0;i<cacheHelpers.length;i++) {
-        chn.writeDescriptor(cache, RuntimeTagNames.CACHE_HELPER, cacheHelpers    [i]);
+        // cache-helpers*
+        CacheHelper[] cacheHelpers = descriptor.getCacheHelper();
+        if (cacheHelpers!=null && cacheHelpers.length>0) {
+            CacheHelperNode chn = new CacheHelperNode();
+            for (int i=0;i<cacheHelpers.length;i++) {
+                chn.writeDescriptor(cache, RuntimeTagNames.CACHE_HELPER, cacheHelpers    [i]);
+            }
         }
-    }
 
-    WebPropertyNode wpn = new WebPropertyNode();
+        WebPropertyNode wpn = new WebPropertyNode();
 
-    // default-helper?
-    DefaultHelper dh = descriptor.getDefaultHelper();
-    if (dh!=null && dh.getWebProperty()!=null) {
-        Node dhn = appendChild(cache, RuntimeTagNames.DEFAULT_HELPER);
-        wpn.writeDescriptor(dhn, RuntimeTagNames.PROPERTY, dh.getWebProperty());
-    }
-
-    // property*
-    wpn.writeDescriptor(cache, RuntimeTagNames.PROPERTY, descriptor.getWebProperty());
-
-    // cache-mapping
-    CacheMapping[] mappings = descriptor.getCacheMapping();
-    if (mappings!=null && mappings.length>0) {
-        CacheMappingNode cmn = new CacheMappingNode();
-        for (int i=0;i<mappings.length;i++) {
-        cmn.writeDescriptor(cache, RuntimeTagNames.CACHE_MAPPING, mappings[i]);
+        // default-helper?
+        DefaultHelper dh = descriptor.getDefaultHelper();
+        if (dh!=null && dh.getWebProperty()!=null) {
+            Node dhn = appendChild(cache, RuntimeTagNames.DEFAULT_HELPER);
+            wpn.writeDescriptor(dhn, RuntimeTagNames.PROPERTY, dh.getWebProperty());
         }
-    }
 
-    // max-entries, timeout-in-seconds, enabled
-    setAttribute(cache, RuntimeTagNames.MAX_ENTRIES, (String) descriptor.getAttributeValue(Cache.MAX_ENTRIES));
-    setAttribute(cache, RuntimeTagNames.TIMEOUT_IN_SECONDS, (String) descriptor.getAttributeValue(Cache.TIMEOUT_IN_SECONDS));
-    setAttribute(cache, RuntimeTagNames.ENABLED, (String) descriptor.getAttributeValue(Cache.ENABLED));
+        // property*
+        wpn.writeDescriptor(cache, RuntimeTagNames.PROPERTY, descriptor.getWebProperty());
 
-    return cache;
+        // cache-mapping
+        CacheMapping[] mappings = descriptor.getCacheMapping();
+        if (mappings!=null && mappings.length>0) {
+            CacheMappingNode cmn = new CacheMappingNode();
+            for (int i=0;i<mappings.length;i++) {
+                cmn.writeDescriptor(cache, RuntimeTagNames.CACHE_MAPPING, mappings[i]);
+            }
+        }
+
+        // max-entries, timeout-in-seconds, enabled
+        setAttribute(cache, RuntimeTagNames.MAX_ENTRIES, (String) descriptor.getAttributeValue(Cache.MAX_ENTRIES));
+        setAttribute(cache, RuntimeTagNames.TIMEOUT_IN_SECONDS, (String) descriptor.getAttributeValue(Cache.TIMEOUT_IN_SECONDS));
+        setAttribute(cache, RuntimeTagNames.ENABLED, (String) descriptor.getAttributeValue(Cache.ENABLED));
+
+        return cache;
     }
 }

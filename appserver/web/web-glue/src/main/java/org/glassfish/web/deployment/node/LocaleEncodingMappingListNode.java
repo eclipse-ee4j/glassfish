@@ -29,8 +29,12 @@ import java.util.Enumeration;
  */
 public class LocaleEncodingMappingListNode extends DeploymentDescriptorNode {
     public LocaleEncodingMappingListNode() {
-    super();
-    registerElementHandler(new XMLElement(WebTagNames.LOCALE_ENCODING_MAPPING), LocaleEncodingMappingNode.class, "addLocaleEncodingMapping");
+        super();
+        registerElementHandler(
+            new XMLElement(WebTagNames.LOCALE_ENCODING_MAPPING),
+            LocaleEncodingMappingNode.class,
+            "addLocaleEncodingMapping"
+        );
     }
 
     protected LocaleEncodingMappingListDescriptor descriptor = null;
@@ -55,12 +59,12 @@ public class LocaleEncodingMappingListNode extends DeploymentDescriptorNode {
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, LocaleEncodingMappingListDescriptor descriptor) {
-    Node myNode = appendChild(parent, nodeName);
-    LocaleEncodingMappingNode lNode = new LocaleEncodingMappingNode();
-    for(Enumeration en = descriptor.getLocaleEncodingMappings();
-        en.hasMoreElements();) {
-        lNode.writeDescriptor(myNode, WebTagNames.LOCALE_ENCODING_MAPPING, (LocaleEncodingMappingDescriptor) en.nextElement());
-    }
+        Node myNode = appendChild(parent, nodeName);
+        LocaleEncodingMappingNode lNode = new LocaleEncodingMappingNode();
+        for (Enumeration en = descriptor.getLocaleEncodingMappings(); en.hasMoreElements();) {
+            lNode.writeDescriptor(
+                myNode, WebTagNames.LOCALE_ENCODING_MAPPING, (LocaleEncodingMappingDescriptor) en.nextElement());
+        }
 
         return myNode;
     }

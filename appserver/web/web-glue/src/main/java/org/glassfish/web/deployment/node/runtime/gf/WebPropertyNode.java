@@ -20,6 +20,8 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
+
 import org.glassfish.web.deployment.runtime.WebProperty;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -55,8 +57,7 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
      */
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
-        RuntimeDescriptor descriptor =
-            (RuntimeDescriptor) getDescriptor();
+        RuntimeDescriptor descriptor = getDescriptor();
         if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
             descriptor.setAttributeValue(WebProperty.NAME, value);
             return true;
@@ -78,16 +79,16 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
     @Override
     public Node writeDescriptor(Node parent, String nodeName,
         WebProperty property) {
-        Element propertyElement =
-            (Element) super.writeDescriptor(parent, nodeName, property);
+        Element propertyElement = (Element) super.writeDescriptor(parent, nodeName, property);
 
         // description?
-        appendTextChild(propertyElement, RuntimeTagNames.DESCRIPTION, property.getDescription());
+        appendTextChild(propertyElement, TagNames.DESCRIPTION, property.getDescription());
 
-    setAttribute(propertyElement, RuntimeTagNames.NAME, (String) property.getAttributeValue(WebProperty.NAME));
-    setAttribute(propertyElement, RuntimeTagNames.VALUE, (String) property.getAttributeValue(WebProperty.VALUE));
+        setAttribute(propertyElement, RuntimeTagNames.NAME, property.getAttributeValue(WebProperty.NAME));
+        setAttribute(propertyElement, RuntimeTagNames.VALUE, property.getAttributeValue(WebProperty.VALUE));
         return propertyElement;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -97,11 +98,11 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
      * @param the array of descriptors to write
      */
     public void writeDescriptor(Node parent, String nodeName, WebProperty[] properties) {
-    if (properties==null)
-        return;
-    for (int i=0;i<properties.length;i++) {
-        writeDescriptor(parent, nodeName, properties[i]);
-    }
+        if (properties == null) {
+            return;
+        }
+        for (int i = 0; i < properties.length; i++) {
+            writeDescriptor(parent, nodeName, properties[i]);
+        }
     }
 }
-

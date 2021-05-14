@@ -19,12 +19,13 @@ package org.glassfish.web.deployment.node.runtime.gf;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.runtime.ConstraintField;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
-
-import java.util.Map;
 
 /**
 * node for cache-mapping tag
@@ -54,11 +55,11 @@ public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> 
      */
     @Override
     protected Map<String, String> getDispatchTable() {
-    Map<String, String> dispatchTable = super.getDispatchTable();
+        Map<String, String> dispatchTable = super.getDispatchTable();
         // for backward compatibility with S1AS 7 dtd
-    dispatchTable.put(RuntimeTagNames.VALUE, "addValue");
+        dispatchTable.put(RuntimeTagNames.VALUE, "addValue");
         dispatchTable.put(RuntimeTagNames.CONSTRAINT_FIELD_VALUE, "addValue");
-    return dispatchTable;
+        return dispatchTable;
     }
 
     @Override
@@ -67,54 +68,37 @@ public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> 
             ConstraintField descriptor = getDescriptor();
             for (int i=0; i<attributes.getLength();i++) {
                 if (RuntimeTagNames.NAME.equals(attributes.getQName(i))) {
-                    descriptor.setAttributeValue(ConstraintField.NAME,
-                        attributes.getValue(i));
-                } else
-                if (RuntimeTagNames.SCOPE.equals(attributes.getQName(i))) {
-                    descriptor.setAttributeValue(ConstraintField.SCOPE,
-                        attributes.getValue(i));
-                } else
-                if (RuntimeTagNames.CACHE_ON_MATCH.equals(
-                    attributes.getQName(i))) {
-                    descriptor.setAttributeValue(
-                        ConstraintField.CACHE_ON_MATCH,
-                        attributes.getValue(i));
-                } else
-                if (RuntimeTagNames.CACHE_ON_MATCH_FAILURE.equals(
-                    attributes.getQName(i))) {
-                    descriptor.setAttributeValue(
-                        ConstraintField.CACHE_ON_MATCH_FAILURE,
-                        attributes.getValue(i));
+                    descriptor.setAttributeValue(ConstraintField.NAME, attributes.getValue(i));
+                } else if (RuntimeTagNames.SCOPE.equals(attributes.getQName(i))) {
+                    descriptor.setAttributeValue(ConstraintField.SCOPE, attributes.getValue(i));
+                } else if (RuntimeTagNames.CACHE_ON_MATCH.equals(attributes.getQName(i))) {
+                    descriptor.setAttributeValue(ConstraintField.CACHE_ON_MATCH, attributes.getValue(i));
+                } else if (RuntimeTagNames.CACHE_ON_MATCH_FAILURE.equals(attributes.getQName(i))) {
+                    descriptor.setAttributeValue(ConstraintField.CACHE_ON_MATCH_FAILURE, attributes.getValue(i));
                 }
             }
-        // From sun-web-app_2_3-0.dtd to sun-web-app_2_4-0.dtd,
-        // the element name "value" is changed to "constraint-field-value",
-        // need to make sure both will work
-        } else if (element.getQName().equals(RuntimeTagNames.VALUE) ||
-            element.getQName().equals(RuntimeTagNames.CONSTRAINT_FIELD_VALUE)) {
+            // From sun-web-app_2_3-0.dtd to sun-web-app_2_4-0.dtd,
+            // the element name "value" is changed to "constraint-field-value",
+            // need to make sure both will work
+        } else if (element.getQName().equals(RuntimeTagNames.VALUE)
+            || element.getQName().equals(RuntimeTagNames.CONSTRAINT_FIELD_VALUE)) {
             ConstraintField descriptor = getDescriptor();
             int index = descriptor.sizeValue();
-            for (int i=0; i<attributes.getLength();i++) {
-                if (RuntimeTagNames.MATCH_EXPR.equals(
-                    attributes.getQName(i))) {
-                    descriptor.setAttributeValue(ConstraintField.VALUE,
-                        index, ConstraintField.MATCH_EXPR,
+            for (int i = 0; i < attributes.getLength(); i++) {
+                if (RuntimeTagNames.MATCH_EXPR.equals(attributes.getQName(i))) {
+                    descriptor.setAttributeValue(ConstraintField.VALUE, index, ConstraintField.MATCH_EXPR,
                         attributes.getValue(i));
-                } else
-                if (RuntimeTagNames.CACHE_ON_MATCH.equals(
-                    attributes.getQName(i))) {
-                    descriptor.setAttributeValue(ConstraintField.VALUE,
-                        index, ConstraintField.CACHE_ON_MATCH,
+                } else if (RuntimeTagNames.CACHE_ON_MATCH.equals(attributes.getQName(i))) {
+                    descriptor.setAttributeValue(ConstraintField.VALUE, index, ConstraintField.CACHE_ON_MATCH,
                         attributes.getValue(i));
-                } else
-                if (RuntimeTagNames.CACHE_ON_MATCH_FAILURE.equals(
-                    attributes.getQName(i))) {
-                    descriptor.setAttributeValue(ConstraintField.VALUE,
-                        index, ConstraintField.CACHE_ON_MATCH_FAILURE,
+                } else if (RuntimeTagNames.CACHE_ON_MATCH_FAILURE.equals(attributes.getQName(i))) {
+                    descriptor.setAttributeValue(ConstraintField.VALUE, index, ConstraintField.CACHE_ON_MATCH_FAILURE,
                         attributes.getValue(i));
                 }
             }
-        } else super.startElement(element, attributes);
+        } else {
+            super.startElement(element, attributes);
+        }
     }
 
     /**
@@ -126,9 +110,9 @@ public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> 
      * @return the DOM tree top node
      */
     public void writeDescriptor(Node parent, String nodeName, ConstraintField[] descriptors) {
-    for (int i=0;i<descriptors.length;i++) {
-        writeDescriptor(parent, nodeName, descriptors[i]);
-    }
+        for (int i=0;i<descriptors.length;i++) {
+            writeDescriptor(parent, nodeName, descriptors[i]);
+        }
     }
 
     /**
@@ -142,23 +126,23 @@ public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, ConstraintField descriptor) {
 
-    Element constraintField = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+        Element constraintField = (Element) super.writeDescriptor(parent, nodeName, descriptor);
 
-    // value*
-    String[] values = descriptor.getValue();
-    for (int i=0;i<values.length;i++) {
-        Element value = (Element) appendTextChild(constraintField, RuntimeTagNames.CONSTRAINT_FIELD_VALUE, values[i]);
-        setAttribute(value, RuntimeTagNames.MATCH_EXPR, (String) descriptor.getAttributeValue(ConstraintField.VALUE, i, ConstraintField.MATCH_EXPR));
-        setAttribute(value, RuntimeTagNames.CACHE_ON_MATCH, (String) descriptor.getAttributeValue(ConstraintField.VALUE, i, ConstraintField.CACHE_ON_MATCH));
-        setAttribute(value, RuntimeTagNames.CACHE_ON_MATCH_FAILURE, (String) descriptor.getAttributeValue(ConstraintField.VALUE, i, ConstraintField.CACHE_ON_MATCH_FAILURE));
+        // value*
+        String[] values = descriptor.getValue();
+        for (int i=0;i<values.length;i++) {
+            Element value = (Element) appendTextChild(constraintField, RuntimeTagNames.CONSTRAINT_FIELD_VALUE, values[i]);
+            setAttribute(value, RuntimeTagNames.MATCH_EXPR, descriptor.getAttributeValue(ConstraintField.VALUE, i, ConstraintField.MATCH_EXPR));
+            setAttribute(value, RuntimeTagNames.CACHE_ON_MATCH, descriptor.getAttributeValue(ConstraintField.VALUE, i, ConstraintField.CACHE_ON_MATCH));
+            setAttribute(value, RuntimeTagNames.CACHE_ON_MATCH_FAILURE, descriptor.getAttributeValue(ConstraintField.VALUE, i, ConstraintField.CACHE_ON_MATCH_FAILURE));
 
-    }
-    // name, scope, cache-on-match, cache-on-match-failure attributes
-    setAttribute(constraintField, RuntimeTagNames.NAME, (String) descriptor.getAttributeValue(ConstraintField.NAME));
-    setAttribute(constraintField, RuntimeTagNames.SCOPE, (String) descriptor.getAttributeValue(ConstraintField.SCOPE));
-    setAttribute(constraintField, RuntimeTagNames.CACHE_ON_MATCH, (String) descriptor.getAttributeValue(ConstraintField.CACHE_ON_MATCH));
-    setAttribute(constraintField, RuntimeTagNames.CACHE_ON_MATCH_FAILURE, (String) descriptor.getAttributeValue(ConstraintField.CACHE_ON_MATCH_FAILURE));
+        }
+        // name, scope, cache-on-match, cache-on-match-failure attributes
+        setAttribute(constraintField, RuntimeTagNames.NAME, descriptor.getAttributeValue(ConstraintField.NAME));
+        setAttribute(constraintField, RuntimeTagNames.SCOPE, descriptor.getAttributeValue(ConstraintField.SCOPE));
+        setAttribute(constraintField, RuntimeTagNames.CACHE_ON_MATCH, descriptor.getAttributeValue(ConstraintField.CACHE_ON_MATCH));
+        setAttribute(constraintField, RuntimeTagNames.CACHE_ON_MATCH_FAILURE, descriptor.getAttributeValue(ConstraintField.CACHE_ON_MATCH_FAILURE));
 
-    return constraintField;
+        return constraintField;
     }
 }

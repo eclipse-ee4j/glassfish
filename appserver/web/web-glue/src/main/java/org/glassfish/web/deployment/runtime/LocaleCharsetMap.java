@@ -25,8 +25,8 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 *
 * @author Jerome Dochez
 */
-public class LocaleCharsetMap extends RuntimeDescriptor
-{
+public class LocaleCharsetMap extends RuntimeDescriptor {
+
     // attributes names
     public final static String LOCALE = "Locale";
     public final static String AGENT = "Agent";

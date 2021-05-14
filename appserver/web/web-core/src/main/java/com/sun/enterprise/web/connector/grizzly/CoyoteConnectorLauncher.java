@@ -19,7 +19,6 @@ package com.sun.enterprise.web.connector.grizzly;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.management.ObjectName;
 
 import org.apache.catalina.connector.ProtocolHandler;
 import org.glassfish.grizzly.config.ssl.ServerSocketFactory;
@@ -138,7 +137,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     protected boolean secure;
 
     // socket factory attributes ( XXX replace with normal setters )
-    protected Map<String, Object> attributes = new HashMap<String, Object>();
+    protected Map<String, Object> attributes = new HashMap<>();
     protected String socketFactoryName=null;
     protected String sslImplementationName=null;
 
@@ -320,7 +319,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     /** Set the maximum number of Keep-Alive requests that we will honor.
      */
     public void setMaxKeepAliveRequests(int mkar) {
-    maxKeepAliveRequests = mkar;
+        maxKeepAliveRequests = mkar;
         setAttribute("maxKeepAliveRequests", "" + mkar);
     }
 
@@ -333,20 +332,18 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
         setAttribute("socketCloseDelay", "" + d);
     }
 
-    protected static ServerSocketFactory string2SocketFactory( String val)
-    throws ClassNotFoundException, IllegalAccessException,
-    InstantiationException
-    {
-    Class chC=Class.forName( val );
-    return (ServerSocketFactory)chC.newInstance();
+    protected static ServerSocketFactory string2SocketFactory(String val)
+        throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        Class chC = Class.forName(val);
+        return (ServerSocketFactory) chC.newInstance();
     }
 
     public int getTimeout() {
         return timeout;
     }
 
-    public void setTimeout( int timeouts ) {
-    timeout = timeouts * 1000;
+    public void setTimeout(int timeouts) {
+        timeout = timeouts * 1000;
         setAttribute("timeout", "" + timeouts);
     }
 
@@ -354,15 +351,15 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
         return reportedname;
     }
 
-    public void setReportedname( String reportedName) {
-    reportedname = reportedName;
+    public void setReportedname(String reportedName) {
+        reportedname = reportedName;
     }
 
     // START OF SJSAS PE 8.1 6172948
     /**
      * Set the request input buffer size
      */
-    public void setBufferSize(int requestBufferSize){
+    public void setBufferSize(int requestBufferSize) {
         this.requestBufferSize = requestBufferSize;
     }
 

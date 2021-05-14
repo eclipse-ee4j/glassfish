@@ -26,7 +26,6 @@ import org.jvnet.hk2.annotations.Contract;
  * extend the Web Container.
  *
  * @author Jeremy_Lv
- *
  */
 @Contract
 public interface ServletContainerInterceptor {
@@ -37,7 +36,7 @@ public interface ServletContainerInterceptor {
      * @param req
      * @param res
      */
-    public void preInvoke(Request req, Response res);
+    void preInvoke(Request req, Response res);
 
     /**
      * User can remove some useful informations after
@@ -45,5 +44,5 @@ public interface ServletContainerInterceptor {
      * @param req
      * @param res
      */
-    public void postInvoke(Request req, Response res);
+    void postInvoke(Request req, Response res);
 }

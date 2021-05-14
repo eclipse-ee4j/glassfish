@@ -664,22 +664,20 @@ public class StandardPipeline
 
 
     private Request getRequest(Request request) {
-    Request r = (Request)
-        request.getNote(Globals.WRAPPED_REQUEST);
-    if (r == null) {
-        r = request;
-    }
-    return r;
+        Request r = (Request) request.getNote(Globals.WRAPPED_REQUEST);
+        if (r == null) {
+            r = request;
+        }
+        return r;
     }
 
 
     private Response getResponse(Request request, Response response) {
-    Response r = (Response)
-        request.getNote(Globals.WRAPPED_RESPONSE);
-    if (r == null) {
-        r = response;
-    }
-    return r;
+        Response r = (Response) request.getNote(Globals.WRAPPED_RESPONSE);
+        if (r == null) {
+            r = response;
+        }
+        return r;
     }
 
 

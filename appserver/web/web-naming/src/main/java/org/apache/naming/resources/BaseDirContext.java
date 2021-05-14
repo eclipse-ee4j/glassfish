@@ -109,12 +109,11 @@ public abstract class BaseDirContext implements DirContext {
 
     // ------------------------------------------------------------- Properties
 
-
     /**
      * Return the debugging detail level for this component.
      */
     public int getDebug() {
-    return (this.debug);
+        return (this.debug);
     }
 
 
@@ -124,7 +123,7 @@ public abstract class BaseDirContext implements DirContext {
      * @param debug The new debugging detail level
      */
     public void setDebug(int debug) {
-    this.debug = debug;
+        this.debug = debug;
     }
 
 
@@ -132,7 +131,7 @@ public abstract class BaseDirContext implements DirContext {
      * Return the document root for this component.
      */
     public String getDocBase() {
-    return (this.docBase);
+        return (this.docBase);
     }
 
 
@@ -140,22 +139,19 @@ public abstract class BaseDirContext implements DirContext {
      * Set the document root for this component.
      *
      * @param docBase The new document root
-     *
      * @exception IllegalArgumentException if the specified value is not
-     *  supported by this implementation
+     *                supported by this implementation
      * @exception IllegalArgumentException if this would create a
-     *  malformed URL
+     *                malformed URL
      */
     public void setDocBase(String docBase) {
+        // Validate the format of the proposed document root
+        if (docBase == null) {
+            throw new IllegalArgumentException(rb.getString(LogFacade.RESOURCES_NULL));
+        }
 
-    // Validate the format of the proposed document root
-    if (docBase == null)
-        throw new IllegalArgumentException
-                (rb.getString(LogFacade.RESOURCES_NULL));
-
-    // Change the document root property
-    this.docBase = docBase;
-
+        // Change the document root property
+        this.docBase = docBase;
     }
 
 
@@ -617,8 +613,8 @@ public abstract class BaseDirContext implements DirContext {
      */
     public Name composeName(Name name, Name prefix)
         throws NamingException {
-    prefix = (Name) prefix.clone();
-    return prefix.addAll(name);
+        prefix = (Name) prefix.clone();
+        return prefix.addAll(name);
     }
 
 
@@ -1232,7 +1228,5 @@ public abstract class BaseDirContext implements DirContext {
 
 
     // ------------------------------------------------------ Protected Methods
-
-
 }
 

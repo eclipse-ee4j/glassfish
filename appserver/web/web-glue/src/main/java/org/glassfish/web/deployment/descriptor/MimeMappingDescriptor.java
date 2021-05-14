@@ -20,59 +20,74 @@ import com.sun.enterprise.deployment.web.MimeMapping;
 
 import java.io.Serializable;
 
-    /*** I represent a mapping between a mime type and a file extension for specifiying how
-    * to handle mime types in a J2EE WAR.
-    *@author Danny Coward
-    */
-
+/***
+ * I represent a mapping between a mime type and a file extension for specifiying how
+ * to handle mime types in a J2EE WAR.
+ *
+ * @author Danny Coward
+ */
 public class MimeMappingDescriptor implements MimeMapping, Serializable {
+
     private String extension;
     private String mimeType;
 
     /** copy constructor */
     public MimeMappingDescriptor(MimeMappingDescriptor other) {
-    // super(other);
-    extension = other.extension;
-    mimeType = other.mimeType;
+        // super(other);
+        extension = other.extension;
+        mimeType = other.mimeType;
     }
+
 
     /** Construct the mapping for the given extension to the given mime type. */
     public MimeMappingDescriptor(String extension, String mimeType) {
-    this.extension = extension;
-    this.mimeType = mimeType;
+        this.extension = extension;
+        this.mimeType = mimeType;
     }
+
 
     /* Default constructor. */
     public MimeMappingDescriptor() {
     }
 
+
     /** Return the filename extension for this mapping. */
+    @Override
     public String getExtension() {
-    if (this.extension == null) {
-        this.extension = "";
+        if (this.extension == null) {
+            this.extension = "";
+        }
+        return this.extension;
     }
-    return this.extension;
-    }
+
 
     /** Set the filename extension for this mapping. */
+    @Override
     public void setExtension(String extension) {
-    this.extension = extension;
+        this.extension = extension;
     }
 
+
     /** Get the mime type for this mapping. */
+    @Override
     public String getMimeType() {
-    if (this.mimeType == null) {
-        this.mimeType = "";
+        if (this.mimeType == null) {
+            this.mimeType = "";
+        }
+        return this.mimeType;
     }
-    return this.mimeType;
-    }
+
+
     /** Set the mime type for this mapping. */
+    @Override
     public void setMimeType(String mimeType) {
-    this.mimeType = mimeType;
+        this.mimeType = mimeType;
     }
+
+
     /** My pretty format. */
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("MimeMapping: ").append(this.getExtension()).append("@").append(this.getMimeType());
+        toStringBuffer.append("MimeMapping: ").append(this.getExtension()).append("@").append(this.getMimeType());
     }
 
 }

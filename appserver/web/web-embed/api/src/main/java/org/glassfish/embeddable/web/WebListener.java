@@ -27,7 +27,6 @@ import org.glassfish.embeddable.web.config.WebListenerConfig;
  * @author Rajiv Mordani
  * @author Amy Roh
  */
-
 public interface WebListener  {
 
     /**
@@ -35,42 +34,42 @@ public interface WebListener  {
      *
      * @param id for this <tt>WebListener</tt>
      */
-    public void setId(String id);
+    void setId(String id);
 
     /**
      * Gets the id of this <tt>WebListener</tt>.
      *
      * @return id of this <tt>WebListener</tt>
      */
-    public String getId();
+    String getId();
 
     /**
      * Sets the port number for this <tt>WebListener</tt>.
      *
      * @param port the port number for this <tt>WebListener</tt>
      */
-    public void setPort(int port);
+    void setPort(int port);
 
     /**
      * Gets the port number of this <tt>WebListener</tt>.
      *
      * @return the port number of this <tt>WebListener</tt>
      */
-    public int getPort();
+    int getPort();
 
     /**
      * Sets the protocol for this <tt>WebListener</tt>.
      *
      * @param protocol the protocol for this <tt>WebListener</tt>
      */
-    public void setProtocol(String protocol);
+    void setProtocol(String protocol);
 
     /**
      * Gets the protocol of this <tt>WebListener</tt>.
      *
      * @return the protocol of this <tt>WebListener</tt>
      */
-    public String getProtocol();
+    String getProtocol();
 
     /**
      * Reconfigures this <tt>WebListener</tt> with the given
@@ -86,8 +85,7 @@ public interface WebListener  {
      * @throws GlassFishException if an error occurs,
      * and this <tt>WebListener</tt> fails to be restarted
      */
-    public void setConfig(WebListenerConfig config)
-            throws ConfigException, GlassFishException;
+    void setConfig(WebListenerConfig config) throws ConfigException, GlassFishException;
 
     /**
      * Gets the current configuration of this <tt>WebListener</tt>.
@@ -96,16 +94,16 @@ public interface WebListener  {
      * or <tt>null</tt> if no special configuration was ever applied to this
      * <tt>WebListener</tt>
      */
-    public WebListenerConfig getConfig();
+    WebListenerConfig getConfig();
 
     /**
      * Sets the <tt>WebContainer</tt> which will be used by this <tt>WebListener</tt>.
      */
-    public void setWebContainer(WebContainer webContainer);
+    void setWebContainer(WebContainer webContainer);
 
     /**
      * Gets the <tt>WebContainer</tt> used by this <tt>WebListener</tt>.
      */
-    public WebContainer getWebContainer();
+    WebContainer getWebContainer();
 
 }

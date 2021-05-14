@@ -1978,17 +1978,14 @@ public class StandardWrapper
         }
 
         if ((parentMethods != null) && (parentMethods.length > 0)) {
-            Method[] allMethods =
-                new Method[parentMethods.length + thisMethods.length];
-        System.arraycopy(parentMethods, 0, allMethods, 0,
-                             parentMethods.length);
-        System.arraycopy(thisMethods, 0, allMethods, parentMethods.length,
-                             thisMethods.length);
+            Method[] allMethods = new Method[parentMethods.length + thisMethods.length];
+            System.arraycopy(parentMethods, 0, allMethods, 0, parentMethods.length);
+            System.arraycopy(thisMethods, 0, allMethods, parentMethods.length, thisMethods.length);
 
-        thisMethods = allMethods;
-    }
+            thisMethods = allMethods;
+        }
 
-    return thisMethods;
+        return thisMethods;
     }
 
 

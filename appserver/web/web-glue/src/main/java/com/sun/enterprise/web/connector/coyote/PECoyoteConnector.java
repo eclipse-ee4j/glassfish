@@ -1348,7 +1348,7 @@ public class PECoyoteConnector extends Connector {
         }*/
 
         /*
-     * Truststore
+         * Truststore
          */
         prop = System.getProperty("javax.net.ssl.trustStore");
         if (prop != null) {

@@ -25,15 +25,13 @@ import org.glassfish.deployment.common.Descriptor;
  * Servlet 2.3 spec.
  * @author Vivek Nagar
  */
+public class AppListenerDescriptorImpl extends Descriptor implements AppListenerDescriptor {
 
-public class AppListenerDescriptorImpl extends Descriptor
-        implements AppListenerDescriptor
-{
     private String listenerClass;
     private String displayName;
 
     /** The default constructor.
-    */
+     */
     public AppListenerDescriptorImpl() {
     }
 
@@ -42,52 +40,57 @@ public class AppListenerDescriptorImpl extends Descriptor
      * @param the listener class name.
      */
     public AppListenerDescriptorImpl(String clz) {
-    this.listenerClass = clz;
+        this.listenerClass = clz;
     }
 
     /**
      * Return the listener class.
      * @return the listener class name or empty string if none.
      */
+    @Override
     public String getListener() {
-    if (this.listenerClass == null) {
-        this.listenerClass = "";
-    }
-    return this.listenerClass;
+        if (this.listenerClass == null) {
+            this.listenerClass = "";
+        }
+        return this.listenerClass;
     }
 
     /**
      * Sets the listener class.
      * @param the listener class name.
      */
+    @Override
     public void setListener(String clz) {
-    this.listenerClass = clz;
+        this.listenerClass = clz;
     }
 
     /** set display name */
+    @Override
     public void setDisplayName(String name) {
-    this.displayName = (name != null)? name : "";
+        this.displayName = (name != null)? name : "";
     }
 
     /** get display name */
+    @Override
     public String getDisplayName() {
-    String n = this.displayName;
-    if ((n == null) || n.equals("")) {
-        n = this.getName();
-    }
-    return n;
+        String n = this.displayName;
+        if ((n == null) || n.equals("")) {
+            n = this.getName();
+        }
+        return n;
     }
 
     /**
      * Test for equals
      */
+    @Override
     public boolean equals(Object obj) {
-    return (obj instanceof AppListenerDescriptorImpl)?
-        this.getListener().equals(
-        ((AppListenerDescriptorImpl)obj).getListener()) :
-        super.equals(obj);
+        return (obj instanceof AppListenerDescriptorImpl)
+            ? this.getListener().equals(((AppListenerDescriptorImpl) obj).getListener())
+            : super.equals(obj);
     }
 
+    @Override
     public int hashCode() {
         int result = 17;
         result = 37*result + getListener().hashCode();
@@ -98,6 +101,7 @@ public class AppListenerDescriptorImpl extends Descriptor
     /**
      * A formatted version of the state as a String.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("Listener Class ").append(this.getListener());
     }

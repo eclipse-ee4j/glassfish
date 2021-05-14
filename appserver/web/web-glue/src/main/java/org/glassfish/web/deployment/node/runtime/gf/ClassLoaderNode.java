@@ -59,20 +59,20 @@ public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
     @Override
     protected boolean setAttributeValue(XMLElement elementName,
         XMLElement attributeName, String value) {
-    RuntimeDescriptor descriptor = getDescriptor();
-    if (attributeName.getQName().equals(RuntimeTagNames.EXTRA_CLASS_PATH)) {
-        descriptor.setAttributeValue(ClassLoader.EXTRA_CLASS_PATH, value);
-        return true;
-    } else if (attributeName.getQName().equals(RuntimeTagNames.DELEGATE)) {
-        descriptor.setAttributeValue(ClassLoader.DELEGATE, value);
-        return true;
-    } else if (attributeName.getQName().equals(
+        RuntimeDescriptor descriptor = getDescriptor();
+        if (attributeName.getQName().equals(RuntimeTagNames.EXTRA_CLASS_PATH)) {
+            descriptor.setAttributeValue(ClassLoader.EXTRA_CLASS_PATH, value);
+            return true;
+        } else if (attributeName.getQName().equals(RuntimeTagNames.DELEGATE)) {
+            descriptor.setAttributeValue(ClassLoader.DELEGATE, value);
+            return true;
+        } else if (attributeName.getQName().equals(
             RuntimeTagNames.DYNAMIC_RELOAD_INTERVAL)) {
-        descriptor.setAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL,
+            descriptor.setAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL,
                 value);
-        return true;
-    }
-    return false;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -87,7 +87,7 @@ public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
     public Node writeDescriptor(Node parent, String nodeName,
         ClassLoader descriptor) {
 
-    Element classLoader = (Element) super.writeDescriptor(parent,
+        Element classLoader = (Element) super.writeDescriptor(parent,
             nodeName, descriptor);
 
         // property*
@@ -98,11 +98,11 @@ public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
                 properties);
         }
 
-    // extra-class-path, delegate, dynamic-reload-interval
-    setAttribute(classLoader, RuntimeTagNames.EXTRA_CLASS_PATH, (String) descriptor.getAttributeValue(ClassLoader.EXTRA_CLASS_PATH));
-    setAttribute(classLoader, RuntimeTagNames.DELEGATE, (String) descriptor.getAttributeValue(ClassLoader.DELEGATE));
-    setAttribute(classLoader, RuntimeTagNames.DYNAMIC_RELOAD_INTERVAL, (String) descriptor.getAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL));
+        // extra-class-path, delegate, dynamic-reload-interval
+        setAttribute(classLoader, RuntimeTagNames.EXTRA_CLASS_PATH, descriptor.getAttributeValue(ClassLoader.EXTRA_CLASS_PATH));
+        setAttribute(classLoader, RuntimeTagNames.DELEGATE, descriptor.getAttributeValue(ClassLoader.DELEGATE));
+        setAttribute(classLoader, RuntimeTagNames.DYNAMIC_RELOAD_INTERVAL, descriptor.getAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL));
 
-    return classLoader;
+        return classLoader;
     }
 }

@@ -25,79 +25,77 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 *
 * @author Jerome Dochez
 */
-public class LocaleCharsetInfo extends RuntimeDescriptor
-{
+public class LocaleCharsetInfo extends RuntimeDescriptor {
 
-    static public final String LOCALE_CHARSET_MAP = "LocaleCharsetMap";    // NOI18N
-    static public final String PARAMETER_ENCODING = "ParameterEncoding";    // NOI18N
+    static public final String LOCALE_CHARSET_MAP = "LocaleCharsetMap"; // NOI18N
+    static public final String PARAMETER_ENCODING = "ParameterEncoding"; // NOI18N
     static public final String FORM_HINT_FIELD = "FormHintField"; // NOI18N
-    static public final String DEFAULT_LOCALE = "DefaultLocale";  // NOI18N
+    static public final String DEFAULT_LOCALE = "DefaultLocale"; // NOI18N
     static public final String DEFAULT_CHARSET = "DefaultCharset";
 
     // This attribute is an array containing at least one element
-    public void setLocaleCharsetMap(int index, LocaleCharsetMap value)
-    {
-    this.setValue(LOCALE_CHARSET_MAP, index, value);
+    public void setLocaleCharsetMap(int index, LocaleCharsetMap value) {
+        this.setValue(LOCALE_CHARSET_MAP, index, value);
     }
 
+
     //
-    public LocaleCharsetMap getLocaleCharsetMap(int index)
-    {
-    return (LocaleCharsetMap)this.getValue(LOCALE_CHARSET_MAP, index);
+    public LocaleCharsetMap getLocaleCharsetMap(int index) {
+        return (LocaleCharsetMap) this.getValue(LOCALE_CHARSET_MAP, index);
     }
+
 
     // This attribute is an array containing at least one element
-    public void setLocaleCharsetMap(LocaleCharsetMap[] value)
-    {
-    this.setValue(LOCALE_CHARSET_MAP, value);
+    public void setLocaleCharsetMap(LocaleCharsetMap[] value) {
+        this.setValue(LOCALE_CHARSET_MAP, value);
     }
+
 
     //
-    public LocaleCharsetMap[] getLocaleCharsetMap()
-    {
-    return (LocaleCharsetMap[])this.getValues(LOCALE_CHARSET_MAP);
+    public LocaleCharsetMap[] getLocaleCharsetMap() {
+        return (LocaleCharsetMap[]) this.getValues(LOCALE_CHARSET_MAP);
     }
+
 
     // Return the number of properties
-    public int sizeLocaleCharsetMap()
-    {
-    return this.size(LOCALE_CHARSET_MAP);
+    public int sizeLocaleCharsetMap() {
+        return this.size(LOCALE_CHARSET_MAP);
     }
 
+
     // Add a new element returning its index in the list
-    public int addLocaleCharsetMap(LocaleCharsetMap value)
-    {
-    return this.addValue(LOCALE_CHARSET_MAP, value);
+    public int addLocaleCharsetMap(LocaleCharsetMap value) {
+        return this.addValue(LOCALE_CHARSET_MAP, value);
     }
+
 
     //
     // Remove an element using its reference
     // Returns the index the element had in the list
     //
-    public int removeLocaleCharsetMap(LocaleCharsetMap value)
-    {
-    return this.removeValue(LOCALE_CHARSET_MAP, value);
+    public int removeLocaleCharsetMap(LocaleCharsetMap value) {
+        return this.removeValue(LOCALE_CHARSET_MAP, value);
     }
+
 
     // This attribute is optional
-    public void setParameterEncoding(boolean value)
-    {
-    this.setValue(PARAMETER_ENCODING, Boolean.valueOf(value));
+    public void setParameterEncoding(boolean value) {
+        this.setValue(PARAMETER_ENCODING, Boolean.valueOf(value));
     }
+
 
     //
-    public boolean isParameterEncoding()
-    {
-    Boolean ret = (Boolean)this.getValue(PARAMETER_ENCODING);
-    if (ret == null) {
-        return false;
-    }
-    return ret.booleanValue();
+    public boolean isParameterEncoding() {
+        Boolean ret = (Boolean) this.getValue(PARAMETER_ENCODING);
+        if (ret == null) {
+            return false;
+        }
+        return ret.booleanValue();
     }
 
+
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 }

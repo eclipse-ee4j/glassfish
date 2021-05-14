@@ -23,7 +23,6 @@ package org.glassfish.web.deployment.runtime;
 *
 * @author Jerome Dochez
 */
-public class DefaultHelper extends WebPropertyContainer
-{
+public class DefaultHelper extends WebPropertyContainer {
     // Tag class...
 }

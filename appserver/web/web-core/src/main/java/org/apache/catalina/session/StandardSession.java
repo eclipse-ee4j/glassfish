@@ -2117,30 +2117,31 @@ public class StandardSession
             //following is replacement code from Hercules
             try {
                 stream.writeObject(saveValues.get(i));
-                if (debug >= 2)
-                    log("  storing attribute '" + saveNames.get(i) +
-                        "' with value '" + saveValues.get(i) + "'");
+                if (debug >= 2) {
+                    log("  storing attribute '" + saveNames.get(i) + "' with value '" + saveValues.get(i) + "'");
+                }
             } catch (NotSerializableException e) {
                 String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_SERIALIZE_SESSION_EXCEPTION),
-                                                  new Object[] {saveNames.get(i), id});
+                    new Object[] {saveNames.get(i), id});
                 log(msg, e);
                 stream.writeObject(NOT_SERIALIZED);
-                if (debug >= 2)
-                    log("  storing attribute '" + saveNames.get(i) +
-                        "' with value NOT_SERIALIZED");
+                if (debug >= 2) {
+                    log("  storing attribute '" + saveNames.get(i) + "' with value NOT_SERIALIZED");
+                }
             } catch (IOException ioe) {
-        if ( ioe.getCause() instanceof NotSerializableException ) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_SERIALIZE_SESSION_EXCEPTION),
-                                                  new Object[] {saveNames.get(i), id});
+                if (ioe.getCause() instanceof NotSerializableException) {
+                    String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_SERIALIZE_SESSION_EXCEPTION),
+                        new Object[] {saveNames.get(i), id});
                     log(msg, ioe);
                     stream.writeObject(NOT_SERIALIZED);
-                    if (debug >= 2)
-                            log("  storing attribute '" + saveNames.get(i) +
-                            "' with value NOT_SERIALIZED");
-        } else
-            throw ioe;
-        }
-            //end HERCULES:mod
+                    if (debug >= 2) {
+                        log("  storing attribute '" + saveNames.get(i) + "' with value NOT_SERIALIZED");
+                    }
+                } else {
+                    throw ioe;
+                }
+            }
+            // end HERCULES:mod
         }
 
         stream.writeObject(sipAppSessionId);
@@ -2167,9 +2168,9 @@ public class StandardSession
 
     protected void evaluateIfValid() {
         /*
-     * If this session has expired or is in the process of expiring or
-     * will never expire, return
-     */
+         * If this session has expired or is in the process of expiring or
+         * will never expire, return
+         */
         if (!this.isValid || expiring || maxInactiveInterval < 0)
             return;
 

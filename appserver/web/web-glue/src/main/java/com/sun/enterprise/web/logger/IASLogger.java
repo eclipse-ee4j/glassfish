@@ -114,14 +114,14 @@ public final class IASLogger extends LoggerBase {
         StackTraceElement stack[] = (new Throwable()).getStackTrace();
         _classname = "";
         _methodname = "";
-        for (int ix=0; ix < stack.length; ix++) {
-        StackTraceElement frame = stack[ix];
-        _classname = frame.getClassName();
-        if (!_classname.startsWith("com.sun.enterprise.web.logger")) {
-        // We've found the relevant frame. Get Method Name.
-        _methodname = frame.getMethodName();
-        return;
-        }
+        for (int ix = 0; ix < stack.length; ix++) {
+            StackTraceElement frame = stack[ix];
+            _classname = frame.getClassName();
+            if (!_classname.startsWith("com.sun.enterprise.web.logger")) {
+                // We've found the relevant frame. Get Method Name.
+                _methodname = frame.getMethodName();
+                return;
+            }
         }
     }
 }

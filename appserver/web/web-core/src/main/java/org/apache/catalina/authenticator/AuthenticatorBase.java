@@ -389,8 +389,7 @@ public abstract class AuthenticatorBase
      *            authentication, <code>false</code> to do not perform the
      *            change.
      */
-    public void setChangeSessionIdOnAuthentication(
-            boolean changeSessionIdOnAuthentication) {
+    public void setChangeSessionIdOnAuthentication(boolean changeSessionIdOnAuthentication) {
         this.changeSessionIdOnAuthentication = changeSessionIdOnAuthentication;
     }
 
@@ -865,10 +864,8 @@ public abstract class AuthenticatorBase
         // Construct a cookie to be returned to the client
         if (sso == null)
             return;
-        HttpServletRequest hreq =
-                (HttpServletRequest) request.getRequest();
-        HttpServletResponse hres =
-                (HttpServletResponse) response.getResponse();
+        HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
+        HttpServletResponse hres = (HttpServletResponse) response.getResponse();
 
         // Use the connector's random number generator (if any) for
         // generating the session ID. If none, then fall back to the default
@@ -971,7 +968,7 @@ public abstract class AuthenticatorBase
                 return END_PIPELINE;
             }
         }
-    return INVOKE_NEXT;
+        return INVOKE_NEXT;
     }
 
     // ------------------------------------------------------ Lifecycle Methods

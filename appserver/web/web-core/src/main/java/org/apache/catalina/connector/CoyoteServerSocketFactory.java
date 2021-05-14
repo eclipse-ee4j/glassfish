@@ -295,7 +295,7 @@ public class CoyoteServerSocketFactory
      * enabled
      */
     public String getCiphers() {
-    return this.cipherSuites;
+        return this.cipherSuites;
     }
 
     /**
@@ -307,7 +307,7 @@ public class CoyoteServerSocketFactory
      * @param ciphers Comma-separated list of SSL cipher suites
      */
     public void setCiphers(String ciphers) {
-    this.cipherSuites = ciphers;
+        this.cipherSuites = ciphers;
     }
 
 

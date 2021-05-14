@@ -67,13 +67,15 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
 
     private final static String name = "webmodule";
 
-    private final static String displayFormat =
-    "%1$-5s %2$-5s %3$-5s %4$-5s %5$-5s %6$-5s %7$-5s %8$-8s %9$-10s %10$-5s";
+    private final static String displayFormat
+        = "%1$-5s %2$-5s %3$-5s %4$-5s %5$-5s %6$-5s %7$-5s %8$-8s %9$-10s %10$-5s";
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public ActionReport process(final ActionReport report, final String filter) {
 
         if (mrdr == null) {
@@ -99,18 +101,18 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
                     "server.web.servlet.*", "server.web.jsp.*"};
         }
 
-    long activeSessionsCount = 0;
-    long sessionsTotal = 0;
-    long rejectedSessionsTotal = 0;
-    long activatedSessionsTotal = 0;
+        long activeSessionsCount = 0;
+        long sessionsTotal = 0;
+        long rejectedSessionsTotal = 0;
+        long activatedSessionsTotal = 0;
 
-    long activeJspsLoadedCount = 0;
-    long maxJspsLoadedCount = 0;
-    long totalJspsLoadedCount = 0;
+        long activeJspsLoadedCount = 0;
+        long maxJspsLoadedCount = 0;
+        long totalJspsLoadedCount = 0;
 
-    long activeServletsLoadedCount = 0;
-    long maxServletsLoadedCount = 0;
-    long totalServletsLoadedCount = 0;
+        long activeServletsLoadedCount = 0;
+        long maxServletsLoadedCount = 0;
+        long totalServletsLoadedCount = 0;
 
         long lval = 0;
 
@@ -160,7 +162,9 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
 
     private long getCountStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof CountStatistic) {
             return ((CountStatistic)obj).getCount();
         }
@@ -169,7 +173,9 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
 
     private long getRangeStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof RangeStatistic) {
             return ((RangeStatistic)obj).getCurrent();
         }

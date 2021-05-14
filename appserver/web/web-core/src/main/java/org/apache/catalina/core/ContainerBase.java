@@ -383,7 +383,7 @@ public abstract class ContainerBase
         Loader oldLoader;
 
         try {
-        writeLock.lock();
+            writeLock.lock();
 
             // Change components if necessary
             oldLoader = this.loader;
@@ -413,7 +413,7 @@ public abstract class ContainerBase
                 }
             }
         } finally {
-        writeLock.unlock();
+            writeLock.unlock();
         }
 
         // Report this property change to interested listeners

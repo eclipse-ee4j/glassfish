@@ -611,9 +611,7 @@ public class SelectorContext implements Context {
     /**
      * Get the bound context.
      */
-    protected Context getBoundContext()
-        throws NamingException {
-
+    protected Context getBoundContext() throws NamingException {
         if (initialContext) {
             String ICName = IC_PREFIX;
             if (ContextBindings.isThreadBound()) {
@@ -647,20 +645,16 @@ public class SelectorContext implements Context {
      * @exception NamingException if there is no "java:" header or if no
      * naming context has been bound to this thread
      */
-    protected String parseName(String name)
-        throws NamingException {
-
-    if ((!initialContext) && (name.startsWith(prefix))) {
+    protected String parseName(String name) throws NamingException {
+        if ((!initialContext) && (name.startsWith(prefix))) {
             return (name.substring(prefixLength));
         } else {
             if (initialContext) {
                 return (name);
             } else {
-                throw new NamingException
-                    (rb.getString(LogFacade.NO_JAVA_URL));
+                throw new NamingException(rb.getString(LogFacade.NO_JAVA_URL));
             }
         }
-
     }
 
 
@@ -671,23 +665,17 @@ public class SelectorContext implements Context {
      * @exception NamingException if there is no "java:" header or if no
      * naming context has been bound to this thread
      */
-    protected Name parseName(Name name)
-        throws NamingException {
-
-    if ((!initialContext) && (!name.isEmpty())
-            && (name.get(0).equals(prefix))) {
+    protected Name parseName(Name name) throws NamingException {
+        if ((!initialContext) && (!name.isEmpty()) && (name.get(0).equals(prefix))) {
             return (name.getSuffix(1));
         } else {
             if (initialContext) {
                 return (name);
             } else {
-                throw new NamingException
-                        (rb.getString(LogFacade.NO_JAVA_URL));
+                throw new NamingException(rb.getString(LogFacade.NO_JAVA_URL));
             }
         }
 
     }
-
-
 }
 

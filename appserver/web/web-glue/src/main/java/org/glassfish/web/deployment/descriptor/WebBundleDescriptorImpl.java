@@ -22,8 +22,34 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.web.*;
+import com.sun.enterprise.deployment.web.AppListenerDescriptor;
+import com.sun.enterprise.deployment.web.ContextParameter;
+import com.sun.enterprise.deployment.web.EnvironmentEntry;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.deployment.web.MimeMapping;
+import com.sun.enterprise.deployment.web.ResourceReference;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.web.SecurityRole;
+import com.sun.enterprise.deployment.web.SecurityRoleReference;
+import com.sun.enterprise.deployment.web.ServletFilter;
+import com.sun.enterprise.deployment.web.ServletFilterMapping;
+import com.sun.enterprise.deployment.web.SessionConfig;
+import com.sun.enterprise.deployment.web.WebResourceCollection;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
@@ -36,21 +62,18 @@ import org.glassfish.web.deployment.util.WebBundleTracerVisitor;
 import org.glassfish.web.deployment.util.WebBundleValidator;
 import org.glassfish.web.deployment.util.WebBundleVisitor;
 
-import java.util.*;
-
  /**
- *
- * The concrete implementation of abstract super class com.sun.enterprise.deployment.WebBundleDescriptor.
- * TODO WebBundleDescriptor could be changed from abstract class to an interface in the future, with this
- * class as its implementation.
- */
-
-public class WebBundleDescriptorImpl extends WebBundleDescriptor {
+  * The concrete implementation of abstract super class
+  * com.sun.enterprise.deployment.WebBundleDescriptor.
+  * TODO WebBundleDescriptor could be changed from abstract class to an interface in the future,
+  * with this
+  * class as its implementation.
+  */
+ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
     private final static String DEPLOYMENT_DESCRIPTOR_DIR = "WEB-INF";
 
-    private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(WebBundleDescriptor.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WebBundleDescriptor.class);
 
     private Set<WebComponentDescriptor> webComponentDescriptors;
     private SessionConfig sessionConfig;
@@ -65,18 +88,12 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     private Set<MessageDestinationReferenceDescriptor> messageDestReferences;
     private Set<ServiceReferenceDescriptor> serviceReferences;
 
-    private Set<LifecycleCallbackDescriptor> postConstructDescs =
-            new HashSet<LifecycleCallbackDescriptor>();
-    private Set<LifecycleCallbackDescriptor> preDestroyDescs =
-            new HashSet<LifecycleCallbackDescriptor>();
+    private Set<LifecycleCallbackDescriptor> postConstructDescs = new HashSet<>();
+    private Set<LifecycleCallbackDescriptor> preDestroyDescs = new HashSet<>();
 
-    private Set<EntityManagerFactoryReferenceDescriptor>
-            entityManagerFactoryReferences =
-            new HashSet<EntityManagerFactoryReferenceDescriptor>();
+    private Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
 
-    private Set<EntityManagerReferenceDescriptor>
-            entityManagerReferences =
-            new HashSet<EntityManagerReferenceDescriptor>();
+    private Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
     private boolean distributable = false;
     private boolean denyUncoveredHttpMethods = false;
@@ -102,7 +119,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     //
     private Map<String, String> extensionProperty = null;
 
-    private Map<String, String> jarName2WebFragNameMap  = null;
+    private Map<String, String> jarName2WebFragNameMap = null;
 
     // this is for checking whether there are more than one servlets for a given url-pattern
     private Map<String, String> urlPattern2ServletName = null;
@@ -134,6 +151,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         addCommonWebBundleDescriptor(webBundleDescriptor, false);
     }
 
+
     public void addDefaultWebBundleDescriptor(WebBundleDescriptor webBundleDescriptor) {
         if (getWelcomeFilesSet().size() == 0) {
             getWelcomeFilesSet().addAll(webBundleDescriptor.getWelcomeFilesSet());
@@ -150,8 +168,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     /**
      * This method combines all except welcome file set for two webBundleDescriptors.
      */
-    private void addCommonWebBundleDescriptor(WebBundleDescriptor wbd,
-            boolean defaultDescriptor) {
+    private void addCommonWebBundleDescriptor(WebBundleDescriptor wbd, boolean defaultDescriptor) {
         super.addBundleDescriptor(wbd);
 
         WebBundleDescriptorImpl webBundleDescriptor = (WebBundleDescriptorImpl) wbd;
@@ -172,7 +189,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
                     servletName = urlPattern2ServletName.get(urlPattern);
                 }
                 if (servletName != null &&
-                        (!servletName.equals(webComponentDescriptor.getCanonicalName()))) {
+                    (!servletName.equals(webComponentDescriptor.getCanonicalName()))) {
                     // url pattern already exists in current bundle
                     // need to remove the url pattern in current bundle servlet
                     if (removeUrlPatterns == null) {
@@ -2239,55 +2256,56 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         }
     }
 
-    protected void combineResourceDescriptors(JndiNameEnvironment env, JavaEEResourceType javaEEResourceType) {
-     for (ResourceDescriptor desc : env.getResourceDescriptors(javaEEResourceType)) {
-         ResourceDescriptor descriptor = getResourceDescriptor(javaEEResourceType, desc.getName());
-         if (descriptor == null) {
-         if (env instanceof WebBundleDescriptor) {
-             WebBundleDescriptor wbDesc = (WebBundleDescriptor)env;
 
-             if (javaEEResourceType.equals(JavaEEResourceType.AODD) &&
-                 wbDesc.isConflictAdminObjectDefinition()) {
-             throw new IllegalArgumentException(localStrings.getLocalString(
-                 "web.deployment.exceptionconflictadministeredobjectdefinition",
-                 "There are more than one administered object definitions defined in web fragments with the same name, but not overrided in web.xml"));
-             } else if (javaEEResourceType.equals(JavaEEResourceType.MSD) &&
-                 wbDesc.isConflictMailSessionDefinition()) {
-             throw new IllegalArgumentException(localStrings.getLocalString(
-                 "web.deployment.exceptionconflictmailsessiondefinition",
-                 "There are more than one mail-session definitions defined in web fragments with the same name, but not overrided in web.xml"));
-             } else if (javaEEResourceType.equals(JavaEEResourceType.DSD) &&
-                 wbDesc.isConflictDataSourceDefinition()) {
-             throw new IllegalArgumentException(localStrings.getLocalString(
-                 "web.deployment.exceptionconflictdatasourcedefinition",
-                 "There are more than one datasource definitions defined in web fragments with the same name, but not overrided in web.xml"));
-             } else if (javaEEResourceType.equals(JavaEEResourceType.CFD) &&
-                 wbDesc.isConflictConnectionFactoryDefinition()) {
-             throw new IllegalArgumentException(localStrings.getLocalString(
-                 "web.deployment.exceptionconflictconnectionfactorydefinition",
-                 "There are more than one connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
-             } else if (javaEEResourceType.equals(JavaEEResourceType.JMSCFDD) &&
-                 wbDesc.isConflictJMSConnectionFactoryDefinition()) {
-             throw new IllegalArgumentException(localStrings.getLocalString(
-                 "web.deployment.exceptionconflictjmsconnectionfactorydefinition",
-                 "There are more than one jms connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
-             } else if (javaEEResourceType.equals(JavaEEResourceType.JMSDD) &&
-                 wbDesc.isConflictJMSDestinationDefinition()) {
-             throw new IllegalArgumentException(localStrings.getLocalString(
-                 "web.deployment.exceptionconflictjmsdestinationdefinition",
-                 "There are more than one jms destination definitions defined in web fragments with the same name, but not overrided in web.xml"));
-             }
-         }
-         if (desc.getResourceType().equals(JavaEEResourceType.DSD) ||
-             desc.getResourceType().equals(JavaEEResourceType.MSD) ||
-             desc.getResourceType().equals(JavaEEResourceType.CFD) ||
-             desc.getResourceType().equals(JavaEEResourceType.AODD) ||
-             desc.getResourceType().equals(JavaEEResourceType.JMSCFDD) ||
-             desc.getResourceType().equals(JavaEEResourceType.JMSDD)) {
-             getResourceDescriptors(javaEEResourceType).add(desc);
-         }
-         }
-         }
+    protected void combineResourceDescriptors(JndiNameEnvironment env, JavaEEResourceType javaEEResourceType) {
+        for (ResourceDescriptor desc : env.getResourceDescriptors(javaEEResourceType)) {
+            ResourceDescriptor descriptor = getResourceDescriptor(javaEEResourceType, desc.getName());
+            if (descriptor == null) {
+                if (env instanceof WebBundleDescriptor) {
+                    WebBundleDescriptor wbDesc = (WebBundleDescriptor) env;
+
+                    if (javaEEResourceType.equals(JavaEEResourceType.AODD)
+                        && wbDesc.isConflictAdminObjectDefinition()) {
+                        throw new IllegalArgumentException(localStrings.getLocalString(
+                            "web.deployment.exceptionconflictadministeredobjectdefinition",
+                            "There are more than one administered object definitions defined in web fragments with the same name, but not overrided in web.xml"));
+                    } else if (javaEEResourceType.equals(JavaEEResourceType.MSD)
+                        && wbDesc.isConflictMailSessionDefinition()) {
+                        throw new IllegalArgumentException(localStrings.getLocalString(
+                            "web.deployment.exceptionconflictmailsessiondefinition",
+                            "There are more than one mail-session definitions defined in web fragments with the same name, but not overrided in web.xml"));
+                    } else if (javaEEResourceType.equals(JavaEEResourceType.DSD)
+                        && wbDesc.isConflictDataSourceDefinition()) {
+                        throw new IllegalArgumentException(localStrings.getLocalString(
+                            "web.deployment.exceptionconflictdatasourcedefinition",
+                            "There are more than one datasource definitions defined in web fragments with the same name, but not overrided in web.xml"));
+                    } else if (javaEEResourceType.equals(JavaEEResourceType.CFD)
+                        && wbDesc.isConflictConnectionFactoryDefinition()) {
+                        throw new IllegalArgumentException(localStrings.getLocalString(
+                            "web.deployment.exceptionconflictconnectionfactorydefinition",
+                            "There are more than one connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
+                    } else if (javaEEResourceType.equals(JavaEEResourceType.JMSCFDD)
+                        && wbDesc.isConflictJMSConnectionFactoryDefinition()) {
+                        throw new IllegalArgumentException(localStrings.getLocalString(
+                            "web.deployment.exceptionconflictjmsconnectionfactorydefinition",
+                            "There are more than one jms connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
+                    } else if (javaEEResourceType.equals(JavaEEResourceType.JMSDD)
+                        && wbDesc.isConflictJMSDestinationDefinition()) {
+                        throw new IllegalArgumentException(localStrings.getLocalString(
+                            "web.deployment.exceptionconflictjmsdestinationdefinition",
+                            "There are more than one jms destination definitions defined in web fragments with the same name, but not overrided in web.xml"));
+                    }
+                }
+                if (desc.getResourceType().equals(JavaEEResourceType.DSD)
+                    || desc.getResourceType().equals(JavaEEResourceType.MSD)
+                    || desc.getResourceType().equals(JavaEEResourceType.CFD)
+                    || desc.getResourceType().equals(JavaEEResourceType.AODD)
+                    || desc.getResourceType().equals(JavaEEResourceType.JMSCFDD)
+                    || desc.getResourceType().equals(JavaEEResourceType.JMSDD)) {
+                    getResourceDescriptors(javaEEResourceType).add(desc);
+                }
+            }
+        }
     }
 
     /*******************************************************************************************

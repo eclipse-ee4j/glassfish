@@ -101,11 +101,8 @@ import java.util.logging.Logger;
  * @author Craig R. McClanahan
  * @version $Revision: 1.1.2.1 $ $Date: 2007/08/17 15:46:27 $
  */
-public class WebappClassLoader
-    extends URLClassLoader
-    implements Reloader, InstrumentableClassLoader, PreDestroy,
-        DDPermissionsLoader, JarFileResourcesProvider
-{
+public class WebappClassLoader extends URLClassLoader
+    implements Reloader, InstrumentableClassLoader, PreDestroy, DDPermissionsLoader, JarFileResourcesProvider {
     // ------------------------------------------------------- Static Variables
 
     private static final Logger logger = LogFacade.getLogger();
@@ -1368,7 +1365,7 @@ public class WebappClassLoader
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
 
-    final Enumeration[] enums = new Enumeration[2];
+        final Enumeration[] enums = new Enumeration[2];
 
         Enumeration<URL> localResources = findResources(name);
         Enumeration<URL> parentResources = null;
@@ -3284,22 +3281,22 @@ public class WebappClassLoader
 
      private String getJavaVersion() {
 
-        String version = null;
+         String version = null;
 
-    SecurityManager sm = System.getSecurityManager();
-    if (sm != null) {
-            version = AccessController.doPrivileged(
-                new PrivilegedAction<String>() {
-                    public String run() {
-                        return System.getProperty("java.version");
-                    }
-            });
-        } else {
-            version = System.getProperty("java.version");
-        }
+         SecurityManager sm = System.getSecurityManager();
+         if (sm != null) {
+             version = AccessController.doPrivileged(
+                 new PrivilegedAction<String>() {
+                     public String run() {
+                         return System.getProperty("java.version");
+                     }
+                 });
+         } else {
+             version = System.getProperty("java.version");
+         }
 
-        return version;
-    }
+         return version;
+     }
 
     private void setAccessible(final Field field) {
 

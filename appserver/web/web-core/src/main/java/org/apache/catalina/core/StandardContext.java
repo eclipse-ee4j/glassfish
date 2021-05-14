@@ -7204,7 +7204,7 @@ public class StandardContext
                         // START SJAS 6318494
                         ("jndi", "", 0, getJNDIUri(hostName, fullPath),
                         // END SJSAS 6318494
-                 new DirContextURLStreamHandler(resources));
+                        new DirContextURLStreamHandler(resources));
                 } catch (Exception e) {
                     // do nothing
                 }

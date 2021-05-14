@@ -23,7 +23,6 @@ package org.glassfish.web.deployment.runtime;
 *
 * @author Jerome Dochez
 */
-public class JspConfig extends WebPropertyContainer
-{
-    //tag class
+public class JspConfig extends WebPropertyContainer {
+    // tag class
 }

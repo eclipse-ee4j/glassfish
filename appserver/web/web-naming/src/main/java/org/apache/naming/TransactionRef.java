@@ -17,10 +17,8 @@
 
 package org.apache.naming;
 
-import java.util.Hashtable;
-import javax.naming.Reference;
 import javax.naming.Context;
-import javax.naming.StringRefAddr;
+import javax.naming.Reference;
 
 /**
  * Represents a reference address to a transaction.
@@ -29,9 +27,7 @@ import javax.naming.StringRefAddr;
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:05 $
  */
 
-public class TransactionRef
-    extends Reference {
-
+public class TransactionRef extends Reference {
 
     // -------------------------------------------------------------- Constants
 
@@ -75,6 +71,7 @@ public class TransactionRef
      * Retrieves the class name of the factory of the object to which this
      * reference refers.
      */
+    @Override
     public String getFactoryClassName() {
         String factory = super.getFactoryClassName();
         if (factory != null) {

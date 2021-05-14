@@ -25,45 +25,43 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 *
 * @author Jerome Dochez
 */
-public class SessionManager extends RuntimeDescriptor
-{
+public class SessionManager extends RuntimeDescriptor {
 
-    static public final String MANAGER_PROPERTIES = "ManagerProperties";    // NOI18N
-    static public final String STORE_PROPERTIES = "StoreProperties";    // NOI18N
+    static public final String MANAGER_PROPERTIES = "ManagerProperties"; // NOI18N
+    static public final String STORE_PROPERTIES = "StoreProperties"; // NOI18N
     static public final String PERSISTENCE_TYPE = "PersistenceType";
 
-    public SessionManager()
-    {
-    setAttributeValue(PERSISTENCE_TYPE, "memory");
+    public SessionManager() {
+        setAttributeValue(PERSISTENCE_TYPE, "memory");
     }
+
 
     // This attribute is optional
-    public void setManagerProperties(ManagerProperties value)
-    {
-    this.setValue(MANAGER_PROPERTIES, value);
+    public void setManagerProperties(ManagerProperties value) {
+        this.setValue(MANAGER_PROPERTIES, value);
     }
 
+
     //
-    public ManagerProperties getManagerProperties()
-    {
-    return (ManagerProperties)this.getValue(MANAGER_PROPERTIES);
+    public ManagerProperties getManagerProperties() {
+        return (ManagerProperties) this.getValue(MANAGER_PROPERTIES);
     }
+
 
     // This attribute is optional
-    public void setStoreProperties(StoreProperties value)
-    {
-    this.setValue(STORE_PROPERTIES, value);
+    public void setStoreProperties(StoreProperties value) {
+        this.setValue(STORE_PROPERTIES, value);
     }
 
+
     //
-    public StoreProperties getStoreProperties()
-    {
-    return (StoreProperties)this.getValue(STORE_PROPERTIES);
+    public StoreProperties getStoreProperties() {
+        return (StoreProperties) this.getValue(STORE_PROPERTIES);
     }
+
 
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-    return true;
+    public boolean verify() {
+        return true;
     }
 }

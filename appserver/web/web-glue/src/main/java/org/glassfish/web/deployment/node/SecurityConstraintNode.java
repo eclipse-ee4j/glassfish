@@ -25,12 +25,16 @@ package org.glassfish.web.deployment.node;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
-import org.glassfish.web.deployment.descriptor.*;
+import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
+import org.glassfish.web.deployment.descriptor.AuthorizationConstraintImpl;
+import org.glassfish.web.deployment.descriptor.SecurityConstraintImpl;
+import org.glassfish.web.deployment.descriptor.UserDataConstraintImpl;
+import org.glassfish.web.deployment.descriptor.WebResourceCollectionImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
-
-import java.util.Enumeration;
-import java.util.Map;
 
 /**
  * This node handles the security-contraint xml tag
@@ -42,12 +46,12 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
 
     public SecurityConstraintNode() {
         super();
-        registerElementHandler(new XMLElement(WebTagNames.USERDATA_CONSTRAINT),
-                    UserDataConstraintNode.class, "setUserDataConstraint");
-        registerElementHandler(new XMLElement(WebTagNames.AUTH_CONSTRAINT),
-                    AuthConstraintNode.class, "setAuthorizationConstraint");
-        registerElementHandler(new XMLElement(WebTagNames.WEB_RESOURCE_COLLECTION),
-                    WebResourceCollectionNode.class, "addWebResourceCollection");
+        registerElementHandler(new XMLElement(WebTagNames.USERDATA_CONSTRAINT), UserDataConstraintNode.class,
+            "setUserDataConstraint");
+        registerElementHandler(new XMLElement(WebTagNames.AUTH_CONSTRAINT), AuthConstraintNode.class,
+            "setAuthorizationConstraint");
+        registerElementHandler(new XMLElement(WebTagNames.WEB_RESOURCE_COLLECTION), WebResourceCollectionNode.class,
+            "addWebResourceCollection");
     }
 
     protected SecurityConstraintImpl descriptor = null;
@@ -74,8 +78,8 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
-        table.put(WebTagNames.NAME, "setName");
-    return table;
+        table.put(TagNames.NAME, "setName");
+        return table;
     }
 
     /**
@@ -89,7 +93,7 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
     @Override
     public Node writeDescriptor(Node parent, String nodeName, SecurityConstraintImpl descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        appendTextChild(myNode, WebTagNames.NAME, descriptor.getName());
+        appendTextChild(myNode, TagNames.NAME, descriptor.getName());
 
         // web-resource-collection+
         WebResourceCollectionNode wrcNode = new WebResourceCollectionNode();

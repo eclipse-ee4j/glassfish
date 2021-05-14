@@ -31,6 +31,6 @@ import org.apache.catalina.Session;
  */
 public interface SessionFactory {
 
-    public Session createSession(Manager mgr);
+    Session createSession(Manager mgr);
 
 }

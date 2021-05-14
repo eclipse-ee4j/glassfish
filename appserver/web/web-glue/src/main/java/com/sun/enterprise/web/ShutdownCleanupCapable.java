@@ -30,10 +30,10 @@ import java.sql.Connection;
  */
 public interface ShutdownCleanupCapable {
 
-    public int doShutdownCleanup();
+    int doShutdownCleanup();
 
-    public void doCloseCachedConnection();
+    void doCloseCachedConnection();
 
-    public void putConnection(Connection conn);
+    void putConnection(Connection conn);
 
 }

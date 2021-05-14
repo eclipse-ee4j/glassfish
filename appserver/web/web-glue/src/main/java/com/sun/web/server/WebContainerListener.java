@@ -126,10 +126,10 @@ public final class WebContainerListener
 
     public void containerEvent(ContainerEvent event) {
         if(_logger.isLoggable(Level.FINEST)) {
-        _logger.log(Level.FINEST, LogFacade.CONTAINER_EVENT,
-                        event.getType() + "," +
-                        event.getContainer() + "," +
-                        event.getData());
+            _logger.log(Level.FINEST, LogFacade.CONTAINER_EVENT,
+                    event.getType() + "," +
+                    event.getContainer() + "," +
+                    event.getData());
         }
 
         String type = event.getType();

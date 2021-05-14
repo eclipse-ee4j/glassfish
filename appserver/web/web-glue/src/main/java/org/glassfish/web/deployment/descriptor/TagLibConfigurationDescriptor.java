@@ -25,9 +25,7 @@ import jakarta.servlet.descriptor.TaglibDescriptor;
  *
  * @author Danny Coward
  */
-
-public class TagLibConfigurationDescriptor
-        implements Serializable, TaglibDescriptor {
+public class TagLibConfigurationDescriptor implements Serializable, TaglibDescriptor {
 
     private String uri;
     private String location;
@@ -44,8 +42,8 @@ public class TagLibConfigurationDescriptor
      * @param the location.
      */
     public TagLibConfigurationDescriptor(String uri, String location) {
-    this.uri = uri;
-    this.location = location;
+        this.uri = uri;
+        this.location = location;
     }
 
     /**
@@ -61,10 +59,10 @@ public class TagLibConfigurationDescriptor
      * @return the URI of the tag library.
      */
     public String getTagLibURI() {
-    if (this.uri == null) {
-        this.uri = "";
-    }
-    return this.uri;
+        if (this.uri == null) {
+            this.uri = "";
+        }
+        return this.uri;
     }
 
     public String getTaglibURI() {
@@ -84,10 +82,10 @@ public class TagLibConfigurationDescriptor
      * @return the location of the tag library.
      */
     public String getTagLibLocation() {
-    if (this.location == null) {
-        this.location = "";
-    }
-    return this.location;
+        if (this.location == null) {
+            this.location = "";
+        }
+        return this.location;
     }
 
     public String getTaglibLocation() {
@@ -98,7 +96,7 @@ public class TagLibConfigurationDescriptor
      * Return a formatted String representing my state.
      */
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("TGLIB: ").append(uri).append(", ").append(location);
+        toStringBuffer.append("TGLIB: ").append(uri).append(", ").append(location);
     }
 
 }

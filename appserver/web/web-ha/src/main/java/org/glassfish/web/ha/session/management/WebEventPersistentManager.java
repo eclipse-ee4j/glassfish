@@ -31,6 +31,6 @@ import org.apache.catalina.Session;
  */
 public interface WebEventPersistentManager {
 
-    public void doValveSave(Session session);
+    void doValveSave(Session session);
 
 }

@@ -17,19 +17,24 @@
 
 package org.apache.catalina.connector;
 
+import com.sun.appserv.ProxyHandler;
+
 import java.lang.reflect.Constructor;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.cert.X509Certificate;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import jakarta.servlet.http.HttpServletRequest;
 
-import com.sun.appserv.ProxyHandler;
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
@@ -43,8 +48,10 @@ import org.apache.catalina.core.StandardEngine;
 import org.apache.catalina.net.ServerSocketFactory;
 import org.apache.catalina.util.LifecycleSupport;
 import org.glassfish.grizzly.http.server.HttpHandler;
-import org.glassfish.web.util.IntrospectionUtils;
 import org.glassfish.grizzly.http.server.util.Mapper;
+import org.glassfish.web.util.IntrospectionUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Implementation of a Coyote connector for Tomcat 5.x.
@@ -1442,24 +1449,24 @@ public class Connector
      * internal protocol names.
      */
     private String translateAttributeName(String name) {
-    if ("clientAuth".equals(name)) {
-        return "clientauth";
-    } else if ("keystoreFile".equals(name)) {
-        return "keystore";
-    } else if ("randomFile".equals(name)) {
-        return "randomfile";
-    } else if ("rootFile".equals(name)) {
-        return "rootfile";
-    } else if ("keystorePass".equals(name)) {
-        return "keypass";
-    } else if ("keystoreType".equals(name)) {
-        return "keytype";
-    } else if ("sslProtocol".equals(name)) {
-        return "protocol";
-    } else if ("sslProtocols".equals(name)) {
-        return "protocols";
-    }
-    return name;
+        if ("clientAuth".equals(name)) {
+            return "clientauth";
+        } else if ("keystoreFile".equals(name)) {
+            return "keystore";
+        } else if ("randomFile".equals(name)) {
+            return "randomfile";
+        } else if ("rootFile".equals(name)) {
+            return "rootfile";
+        } else if ("keystorePass".equals(name)) {
+            return "keypass";
+        } else if ("keystoreType".equals(name)) {
+            return "keytype";
+        } else if ("sslProtocol".equals(name)) {
+            return "protocol";
+        } else if ("sslProtocols".equals(name)) {
+            return "protocols";
+        }
+        return name;
     }
 
     /**

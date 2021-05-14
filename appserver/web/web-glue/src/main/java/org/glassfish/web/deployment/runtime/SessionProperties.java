@@ -23,7 +23,6 @@ package org.glassfish.web.deployment.runtime;
 *
 * @author Jerome Dochez
 */
-public class SessionProperties extends WebPropertyContainer
-{
+public class SessionProperties extends WebPropertyContainer {
     // Tag class
 }

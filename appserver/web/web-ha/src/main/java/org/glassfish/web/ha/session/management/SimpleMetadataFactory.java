@@ -21,22 +21,19 @@ import org.glassfish.ha.store.util.SimpleMetadata;
 /**
  * @author Mahesh Kannan
  * @author Rajiv Mordani
- *
  */
-public class
-        SimpleMetadataFactory {
+public class SimpleMetadataFactory {
 
-    //Full save
-    public static SimpleMetadata createSimpleMetadata(long version, long lastAccessTime,
-                                                      long maxInactiveInterval, byte[] state) {
+    // Full save
+    public static SimpleMetadata createSimpleMetadata(long version, long lastAccessTime, long maxInactiveInterval, byte[] state) {
         return new SimpleMetadata(version, lastAccessTime, maxInactiveInterval, state);
     }
 
-    //Full save
-    //updateTimeStamp
+
+    // Full save
+    // updateTimeStamp
     public static SimpleMetadata createSimpleMetadata(long version, long lastAccessTime) {
         return new SimpleMetadata(version, lastAccessTime, 0, null);
     }
-
 
 }

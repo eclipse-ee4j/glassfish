@@ -35,16 +35,7 @@ package org.glassfish.web.jsp;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.web.InitializationParameter;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import org.apache.jasper.JspC;
-import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.deployment.runtime.JspConfig;
-import org.glassfish.web.deployment.runtime.SunWebAppImpl;
-import org.glassfish.web.deployment.runtime.WebProperty;
 
 import java.io.File;
 import java.util.Enumeration;
@@ -54,11 +45,19 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.jasper.JspC;
+import org.glassfish.deployment.common.DeploymentException;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.deployment.runtime.JspConfig;
+import org.glassfish.web.deployment.runtime.SunWebAppImpl;
+import org.glassfish.web.deployment.runtime.WebProperty;
+
 public final class JSPCompiler {
 
-    public static void compile(File inWebDir, File outWebDir,
-                               WebBundleDescriptor wbd, ServerContext serverContext)
-            throws DeploymentException {
+    public static void compile(File inWebDir, File outWebDir, WebBundleDescriptor wbd, ServerContext serverContext)
+        throws DeploymentException {
             //to resolve ambiguity
         final String amb = null;
         compile(inWebDir, outWebDir, wbd, amb, serverContext);
@@ -108,11 +107,9 @@ public final class JSPCompiler {
 
         try {
             jspc.execute();
-        }
-        catch (Exception je) {
+        } catch (Exception je) {
             throw new DeploymentException("JSP Compilation Error: " + je, je);
-        }
-        finally {
+        } finally {
             // bnevins 9-9-03 -- There may be no jsp files in this web-module
             // in such a case the code above will create a useless, and possibly
             // problematic empty directory.     If the directory is empty -- delete
@@ -153,8 +150,9 @@ public final class JSPCompiler {
     ////////////////////////////////////////////////////////////////////////////
 
     private static String getClasspath(List paths) {
-        if(paths == null)
+        if (paths == null) {
             return null;
+        }
 
         String classpath = null;
 
@@ -163,24 +161,25 @@ public final class JSPCompiler {
 
         for (Iterator it = paths.iterator(); it.hasNext(); ) {
             String path = (String)it.next();
-
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 sb.append(File.pathSeparatorChar);
+            }
 
             sb.append(path);
         }
 
-        if (sb.length() > 0)
+        if (sb.length() > 0) {
             classpath = sb.toString();
+        }
 
         return classpath;
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    /*
+    /**
      * Configures the given JspC instance with the jsp-config properties
      * specified in the sun-web.xml of the web module represented by the
      * given WebBundleDescriptor.
@@ -189,115 +188,105 @@ public final class JSPCompiler {
      * @param wbd WebBundleDescriptor of the web module whose sun-web.xml
      * is used to configure the given JspC instance
      */
-        private static void configureJspc(JspC jspc, WebBundleDescriptor wbd) {
+    private static void configureJspc(JspC jspc, WebBundleDescriptor wbd) {
 
-            SunWebAppImpl sunWebApp = (SunWebAppImpl) wbd.getSunDescriptor();
-            if (sunWebApp == null) {
-                 return;
-            }
-
-            // START SJSAS 6384538
-            if (sunWebApp.sizeWebProperty() > 0) {
-                WebProperty[] props = sunWebApp.getWebProperty();
-                for (int i = 0; i < props.length; i++) {
-                    String pName = props[i].getAttributeValue("name");
-                    String pValue = props[i].getAttributeValue("value");
-                    if (pName == null || pValue == null) {
-                        throw new IllegalArgumentException(
-                            "Missing sun-web-app property name or value");
-                    }
-                    if ("enableTldValidation".equals(pName)) {
-                        jspc.setIsValidationEnabled(
-                            Boolean.valueOf(pValue).booleanValue());
-                    }
-                }
-            }
-            // END SJSAS 6384538
-
-            // START SJSAS 6170435
-            /*
-             * Configure JspC with the init params of the JspServlet
-             */
-            Set<WebComponentDescriptor> set = wbd.getWebComponentDescriptors();
-            if (!set.isEmpty()) {
-                Iterator<WebComponentDescriptor> iterator = set.iterator();
-                while (iterator.hasNext()) {
-                    WebComponentDescriptor webComponentDesc = iterator.next();
-                    if ("jsp".equals(webComponentDesc.getCanonicalName())) {
-                        Enumeration<InitializationParameter> en
-                            = webComponentDesc.getInitializationParameters();
-                        if (en != null) {
-                            while (en.hasMoreElements()) {
-                                InitializationParameter initP = en.nextElement();
-                                configureJspc(jspc,
-                                              initP.getName(),
-                                              initP.getValue());
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-            // END SJSAS 6170435
-
-            /*
-             * Configure JspC with jsp-config properties from sun-web.xml,
-             * which override JspServlet init params of the same name.
-             */
-            JspConfig jspConfig = sunWebApp.getJspConfig();
-            if (jspConfig == null) {
-                return;
-            }
-            WebProperty[] props = jspConfig.getWebProperty();
-            for (int i=0; props!=null && i<props.length; i++) {
-                configureJspc(jspc,
-                              props[i].getAttributeValue("name"),
-                              props[i].getAttributeValue("value"));
-            }
+        SunWebAppImpl sunWebApp = (SunWebAppImpl) wbd.getSunDescriptor();
+        if (sunWebApp == null) {
+            return;
         }
 
+        // START SJSAS 6384538
+        if (sunWebApp.sizeWebProperty() > 0) {
+            WebProperty[] props = sunWebApp.getWebProperty();
+            for (int i = 0; i < props.length; i++) {
+                String pName = props[i].getAttributeValue("name");
+                String pValue = props[i].getAttributeValue("value");
+                if (pName == null || pValue == null) {
+                    throw new IllegalArgumentException(
+                        "Missing sun-web-app property name or value");
+                }
+                if ("enableTldValidation".equals(pName)) {
+                    jspc.setIsValidationEnabled(
+                        Boolean.valueOf(pValue).booleanValue());
+                }
+            }
+        }
+        // END SJSAS 6384538
+
+        // START SJSAS 6170435
+        /*
+         * Configure JspC with the init params of the JspServlet
+         */
+        Set<WebComponentDescriptor> set = wbd.getWebComponentDescriptors();
+        if (!set.isEmpty()) {
+            Iterator<WebComponentDescriptor> iterator = set.iterator();
+            while (iterator.hasNext()) {
+                WebComponentDescriptor webComponentDesc = iterator.next();
+                if ("jsp".equals(webComponentDesc.getCanonicalName())) {
+                    Enumeration<InitializationParameter> en
+                    = webComponentDesc.getInitializationParameters();
+                    if (en != null) {
+                        while (en.hasMoreElements()) {
+                            InitializationParameter initP = en.nextElement();
+                            configureJspc(jspc, initP.getName(), initP.getValue());
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        // END SJSAS 6170435
 
         /*
-         * Configures the given JspC instance with the given property name
-         * and value.
-         *
-         * @jspc The JspC instance to configure
-         * @pName The property name
-         * @pValue The property value
+         * Configure JspC with jsp-config properties from sun-web.xml,
+         * which override JspServlet init params of the same name.
          */
-        private static void configureJspc(JspC jspc, String pName,
-                                          String pValue) {
-
-            if (pName == null || pValue == null) {
-                throw new IllegalArgumentException(
-                    "Null property name or value");
-            }
-
-            if ("xpoweredBy".equals(pName)) {
-                jspc.setXpoweredBy(Boolean.valueOf(pValue).booleanValue());
-            } else if ("classdebuginfo".equals(pName)) {
-                jspc.setClassDebugInfo(Boolean.valueOf(pValue).booleanValue());
-            } else if ("enablePooling".equals(pName)) {
-                jspc.setPoolingEnabled(Boolean.valueOf(pValue).booleanValue());
-            } else if ("ieClassId".equals(pName)) {
-                jspc.setIeClassId(pValue);
-            } else if ("trimSpaces".equals(pName)) {
-                jspc.setTrimSpaces(Boolean.valueOf(pValue).booleanValue());
-            } else if ("genStrAsCharArray".equals(pName)) {
-                jspc.setGenStringAsCharArray(
-                    Boolean.valueOf(pValue).booleanValue());
-            } else if ("errorOnUseBeanInvalidClassAttribute".equals(pName)) {
-                jspc.setErrorOnUseBeanInvalidClassAttribute(
-                    Boolean.valueOf(pValue).booleanValue());
-            } else if ("ignoreJspFragmentErrors".equals(pName)) {
-                jspc.setIgnoreJspFragmentErrors(
-                    Boolean.valueOf(pValue).booleanValue());
-            } else if ("compilerSourceVM".equals(pName)) {
-                jspc.setCompilerSourceVM(pValue);
-            } else if ("compilerTargetVM".equals(pName)) {
-                jspc.setCompilerTargetVM(pValue);
-            }
+        JspConfig jspConfig = sunWebApp.getJspConfig();
+        if (jspConfig == null) {
+            return;
         }
+        WebProperty[] props = jspConfig.getWebProperty();
+        for (int i=0; props!=null && i<props.length; i++) {
+            configureJspc(jspc, props[i].getAttributeValue("name"), props[i].getAttributeValue("value"));
+        }
+    }
+
+
+    /**
+     * Configures the given JspC instance with the given property name
+     * and value.
+     *
+     * @jspc The JspC instance to configure
+     * @pName The property name
+     * @pValue The property value
+     */
+    private static void configureJspc(JspC jspc, String pName, String pValue) {
+        if (pName == null || pValue == null) {
+            throw new IllegalArgumentException("Null property name or value");
+        }
+
+        if ("xpoweredBy".equals(pName)) {
+            jspc.setXpoweredBy(Boolean.valueOf(pValue).booleanValue());
+        } else if ("classdebuginfo".equals(pName)) {
+            jspc.setClassDebugInfo(Boolean.valueOf(pValue).booleanValue());
+        } else if ("enablePooling".equals(pName)) {
+            jspc.setPoolingEnabled(Boolean.valueOf(pValue).booleanValue());
+        } else if ("ieClassId".equals(pName)) {
+            jspc.setIeClassId(pValue);
+        } else if ("trimSpaces".equals(pName)) {
+            jspc.setTrimSpaces(Boolean.valueOf(pValue).booleanValue());
+        } else if ("genStrAsCharArray".equals(pName)) {
+            jspc.setGenStringAsCharArray(Boolean.valueOf(pValue).booleanValue());
+        } else if ("errorOnUseBeanInvalidClassAttribute".equals(pName)) {
+            jspc.setErrorOnUseBeanInvalidClassAttribute(Boolean.valueOf(pValue).booleanValue());
+        } else if ("ignoreJspFragmentErrors".equals(pName)) {
+            jspc.setIgnoreJspFragmentErrors(Boolean.valueOf(pValue).booleanValue());
+        } else if ("compilerSourceVM".equals(pName)) {
+            jspc.setCompilerSourceVM(pValue);
+        } else if ("compilerTargetVM".equals(pName)) {
+            jspc.setCompilerTargetVM(pValue);
+        }
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////

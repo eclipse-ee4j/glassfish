@@ -63,29 +63,30 @@ public class SessionConfigNode extends RuntimeDescriptorNode<SessionConfig> {
      * @param the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, SessionConfig descriptor) {
-    Node sessionConfig = super.writeDescriptor(parent, nodeName, descriptor);
+        Node sessionConfig = super.writeDescriptor(parent, nodeName, descriptor);
 
-    // session-manager?
-    if (descriptor.getSessionManager()!=null) {
-        SessionManagerNode smn = new SessionManagerNode();
-        smn.writeDescriptor(sessionConfig, RuntimeTagNames.SESSION_MANAGER, descriptor.getSessionManager());
-    }
+        // session-manager?
+        if (descriptor.getSessionManager()!=null) {
+            SessionManagerNode smn = new SessionManagerNode();
+            smn.writeDescriptor(sessionConfig, RuntimeTagNames.SESSION_MANAGER, descriptor.getSessionManager());
+        }
 
-    // session-properties?
-    if (descriptor.getSessionProperties()!=null) {
-        WebPropertyNode wpn = new WebPropertyNode();
-        Node sessionProps = appendChild(sessionConfig, RuntimeTagNames.SESSION_PROPERTIES);
-        wpn.writeDescriptor(sessionProps, RuntimeTagNames.PROPERTY, descriptor.getSessionProperties().getWebProperty());
-    }
+        // session-properties?
+        if (descriptor.getSessionProperties()!=null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node sessionProps = appendChild(sessionConfig, RuntimeTagNames.SESSION_PROPERTIES);
+            wpn.writeDescriptor(sessionProps, RuntimeTagNames.PROPERTY, descriptor.getSessionProperties().getWebProperty());
+        }
 
-    // cookie-properties?
-    if (descriptor.getCookieProperties()!=null) {
-        WebPropertyNode wpn = new WebPropertyNode();
-        Node cookieProps = appendChild(sessionConfig, RuntimeTagNames.COOKIE_PROPERTIES);
-        wpn.writeDescriptor(cookieProps, RuntimeTagNames.PROPERTY, descriptor.getCookieProperties().getWebProperty());
-    }
+        // cookie-properties?
+        if (descriptor.getCookieProperties()!=null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node cookieProps = appendChild(sessionConfig, RuntimeTagNames.COOKIE_PROPERTIES);
+            wpn.writeDescriptor(cookieProps, RuntimeTagNames.PROPERTY, descriptor.getCookieProperties().getWebProperty());
+        }
 
-    return sessionConfig;
+        return sessionConfig;
     }
 }

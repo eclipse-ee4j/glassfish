@@ -34,14 +34,15 @@ public class ServletImplInvocationHandler implements InvocationHandler {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    private Object servletImplDelegate;
-    private Class servletImplClass;
+    private final Object servletImplDelegate;
+    private final Class servletImplClass;
 
     public ServletImplInvocationHandler(Object delegate) {
         servletImplDelegate = delegate;
         servletImplClass    = delegate.getClass();
     }
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
@@ -58,8 +59,7 @@ public class ServletImplInvocationHandler implements InvocationHandler {
         try {
             // Since impl class isn't subtype of SEI, we need to do a
             // method lookup to get method object to use for invocation.
-            Method implMethod = servletImplClass.getMethod
-                (method.getName(), method.getParameterTypes());
+            Method implMethod = servletImplClass.getMethod(method.getName(), method.getParameterTypes());
             returnValue = implMethod.invoke(servletImplDelegate, args);
         } catch(InvocationTargetException ite) {
             if (logger.isLoggable(Level.FINE)) {
@@ -71,13 +71,11 @@ public class ServletImplInvocationHandler implements InvocationHandler {
             throw t;
         }
 
-    return returnValue;
+        return returnValue;
     }
 
-    private Object invokeJavaObjectMethod(InvocationHandler handler,
-                                          Method method, Object[] args)
-        throws Throwable {
 
+    private Object invokeJavaObjectMethod(InvocationHandler handler, Method method, Object[] args) throws Throwable {
         Object returnValue = null;
 
         // Can only be one of :
@@ -100,8 +98,7 @@ public class ServletImplInvocationHandler implements InvocationHandler {
                 returnValue = handler.toString();
                 break;
             default :
-                throw new Throwable("Object method " + method.getName() +
-                                    "not found");
+                throw new Throwable("Object method " + method.getName() + "not found");
         }
 
         return returnValue;

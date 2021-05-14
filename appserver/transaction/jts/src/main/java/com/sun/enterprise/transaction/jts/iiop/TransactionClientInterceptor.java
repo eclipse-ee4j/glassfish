@@ -38,20 +38,20 @@ public class TransactionClientInterceptor extends LocalObject
      * @param the order in which the interceptor should be invoked.
      */
     public TransactionClientInterceptor(String name, int order, ServiceLocator habitat) {
-    this.name = name;
-    this.order = order;
+        this.name = name;
+        this.order = order;
         tm = habitat.getService(JavaEETransactionManager.class);
     }
 
     public int compareTo(TransactionClientInterceptor o) {
-    int otherOrder = o.order;
+        int otherOrder = o.order;
 
-    if (order < otherOrder) {
-        return -1;
-    } else if (order == otherOrder) {
-        return 0;
-    }
-    return 1;
+        if (order < otherOrder) {
+            return -1;
+        } else if (order == otherOrder) {
+            return 0;
+        }
+        return 1;
     }
 
     /**
@@ -59,16 +59,16 @@ public class TransactionClientInterceptor extends LocalObject
      * @return the name of the interceptor.
      */
     public String name() {
-    return name;
+        return name;
     }
 
 
     public void send_request(ClientRequestInfo cri) {
-    // Check if there is an exportable transaction on current thread
-    Object target = cri.effective_target();
-    if ( tm != null )
-        tm.checkTransactionExport(StubAdapter.isLocal(target));
-
+        // Check if there is an exportable transaction on current thread
+        Object target = cri.effective_target();
+        if (tm != null) {
+            tm.checkTransactionExport(StubAdapter.isLocal(target));
+        }
     }
 
     public void destroy() {

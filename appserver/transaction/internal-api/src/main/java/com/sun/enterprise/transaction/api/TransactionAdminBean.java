@@ -20,20 +20,20 @@ import java.util.ArrayList;
 
 public class TransactionAdminBean implements java.io.Serializable {
     private Object m_identifier;
-        private String m_id;
+    private String m_id;
     private String m_status;
     private long m_elapsedTime;
-        private String m_componentName;
-        private ArrayList<String> m_resourceNames;
+    private String m_componentName;
+    private ArrayList<String> m_resourceNames;
 
     public TransactionAdminBean(Object identifier, String id, String status, long elapsedTime,
-                                    String componentName, ArrayList<String> resourceNames) {
+        String componentName, ArrayList<String> resourceNames) {
         m_identifier = identifier;
-                m_id=id;
+        m_id=id;
         m_status = status;
         m_elapsedTime = elapsedTime;
-                m_componentName = componentName;
-                m_resourceNames = resourceNames;
+        m_componentName = componentName;
+        m_resourceNames = resourceNames;
     }
 
     // getter functions ...
@@ -42,9 +42,9 @@ public class TransactionAdminBean implements java.io.Serializable {
         return m_identifier;
     }
 
-        public String getId(){
-            return m_id;
-        }
+    public String getId(){
+        return m_id;
+    }
 
     public String getStatus(){
         return m_status;
@@ -54,23 +54,23 @@ public class TransactionAdminBean implements java.io.Serializable {
         return m_elapsedTime;
     }
 
-        public String getComponentName() {
-            return m_componentName;
-        }
+    public String getComponentName() {
+        return m_componentName;
+    }
 
-        public ArrayList<String> getResourceNames() {
-            return m_resourceNames;
-        }
+    public ArrayList<String> getResourceNames() {
+        return m_resourceNames;
+    }
 
     // setter functions ...
 
     public void setIdentifier(Object id){
         m_identifier = id;
-        }
+    }
 
-        public void setId(String id){
-            m_id=id;
-        }
+    public void setId(String id){
+        m_id=id;
+    }
 
     public void setStatus(String sts){
         m_status = sts;
@@ -80,15 +80,12 @@ public class TransactionAdminBean implements java.io.Serializable {
         m_elapsedTime = time;
     }
 
-        public void setComponentName(String componentName) {
-            m_componentName = componentName;
-        }
+    public void setComponentName(String componentName) {
+        m_componentName = componentName;
+    }
 
-        public void setResourceNames(ArrayList<String> resourceNames) {
-            m_resourceNames = resourceNames;
-        }
+    public void setResourceNames(ArrayList<String> resourceNames) {
+        m_resourceNames = resourceNames;
+    }
 
 }
-
-
-

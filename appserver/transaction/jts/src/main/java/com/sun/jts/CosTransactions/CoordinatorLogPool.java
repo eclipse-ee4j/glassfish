@@ -46,9 +46,6 @@ import java.util.*;
  *
  * @see
 */
-
-
-
 class CoordinatorLogPool {
 
     private Stack pool;
@@ -63,7 +60,7 @@ class CoordinatorLogPool {
      *
      */
     public CoordinatorLogPool() {
-    pool = new Stack();
+        pool = new Stack();
     }
 
     /**
@@ -73,15 +70,16 @@ class CoordinatorLogPool {
      */
     public static synchronized CoordinatorLog getCoordinatorLog() {
         if (Configuration.isDBLoggingEnabled() ||
-            Configuration.isFileLoggingDisabled())
+            Configuration.isFileLoggingDisabled()) {
             return null;
-    if (CLPool.pool.empty()) {
-        return new CoordinatorLog();
-    }
-    else {
-        CoordinatorLog cl = (CoordinatorLog) CLPool.pool.pop();
-        return cl;
-    }
+        }
+        if (CLPool.pool.empty()) {
+            return new CoordinatorLog();
+        }
+        else {
+            CoordinatorLog cl = (CoordinatorLog) CLPool.pool.pop();
+            return cl;
+        }
     }
 
     /**
@@ -92,9 +90,9 @@ class CoordinatorLogPool {
      *
      */
     public static void putCoordinatorLog(CoordinatorLog cl) {
-    if (CLPool.pool.size() <= MAXSTACKSIZE) {
-        CLPool.pool.push(cl);
-    }
+        if (CLPool.pool.size() <= MAXSTACKSIZE) {
+            CLPool.pool.push(cl);
+        }
     }
 
     // Added to support delegated recovery: multiple logs should coexist

@@ -30,20 +30,34 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
-import com.sun.jts.trace.*;
+import com.sun.jts.codegen.otsidl.ResourceStatus;
 import com.sun.jts.jtsxa.OTSResourceImpl;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
 
-import javax.transaction.xa.*;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+
+import org.omg.CORBA.COMM_FAILURE;
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INV_OBJREF;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CORBA.TRANSIENT;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.HeuristicCommit;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.HeuristicRollback;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.Resource;
+import org.omg.CosTransactions.ResourceHelper;
+import org.omg.CosTransactions.SubtransactionAwareResource;
+import org.omg.CosTransactions.Vote;
 /**
  * The RegisteredResources class provides operations that manage a list
  * of Resource objects involved in a transaction, and their states relative
@@ -72,9 +86,10 @@ import javax.transaction.xa.*;
 //----------------------------------------------------------------------------
 
 class RegisteredResources {
-    private ArrayList           resourceObjects = null;
-    private ArrayList           resourceStates = null;
-    private CoordinatorLog   logRecord = null;
+
+    private ArrayList resourceObjects = null;
+    private ArrayList resourceStates = null;
+    private CoordinatorLog logRecord = null;
     private java.lang.Object logSection = null;
     private java.lang.Object heuristicLogSection = null;
     private Resource laoResource = null;
@@ -95,10 +110,11 @@ class RegisteredResources {
     private final static String LOG_SECTION_NAME = "RR"/*#Frozen*/;
     private final static String HEURISTIC_LOG_SECTION_NAME = "RRH"/*#Frozen*/;
 
-    /*
-        Logger to log transaction messages
-    */
-        static Logger _logger = LogDomains.getLogger(RegisteredResources.class, LogDomains.TRANSACTION_LOGGER);
+    /**
+     * Logger to log transaction messages
+     */
+    static Logger _logger = LogDomains.getLogger(RegisteredResources.class, LogDomains.TRANSACTION_LOGGER);
+
     /**
      * Defines the CoordinatorLog which is to be used for recovery.
      * <p>
@@ -182,10 +198,11 @@ class RegisteredResources {
 
             infiniteRetry = false;
         }
-        **/
+         **/
         int commitRetries = Configuration.getRetries();
-        if (commitRetries >= 0)
+        if (commitRetries >= 0) {
             infiniteRetry = false;
+        }
 
         // Reconstruct our state from CoordinatorLog object.
 
@@ -200,54 +217,53 @@ class RegisteredResources {
             int commitRetriesLeft = commitRetries;
             while(exceptionThrown){
                 try {
-                    Resource res =
-                        ResourceHelper.narrow((org.omg.CORBA.Object)resources[i]);
+                    Resource res = ResourceHelper.narrow((org.omg.CORBA.Object) resources[i]);
                     if (res != null) {
                         resourceObjects.add(res);
-            nRes++;
+                        nRes++;
                         resourceStates.add(ResourceStatus.Heuristic);
                     }
-            exceptionThrown=false;
+                    exceptionThrown=false;
                 } catch (Throwable exc) {
-                     if(exc instanceof TRANSIENT || exc instanceof COMM_FAILURE) {
-                         // If the exception is either TRANSIENT or
-                         // COMM_FAILURE, keep retrying
+                    if(exc instanceof TRANSIENT || exc instanceof COMM_FAILURE) {
+                        // If the exception is either TRANSIENT or
+                        // COMM_FAILURE, keep retrying
 
-                         //$ CHECK WITH DSOM FOLKS FOR OTHER EXCEPTIONS
-                         _logger.log(Level.WARNING,"jts.exception_on_resource_operation",
-                                       new java.lang.Object[]{exc.toString(),
-                                       "reconstruct"});
-                         if (commitRetriesLeft > 0 || infiniteRetry) {
+                        //$ CHECK WITH DSOM FOLKS FOR OTHER EXCEPTIONS
+                        _logger.log(Level.WARNING,"jts.exception_on_resource_operation",
+                            new java.lang.Object[]{exc.toString(),
+                            "reconstruct"});
+                        if (commitRetriesLeft > 0 || infiniteRetry) {
 
-                             // For TRANSIENT or COMM_FAILURE, wait
-                             // for a while, then retry the commit.
-                             if (!infiniteRetry) {
-                                 commitRetriesLeft--;
-                             }
+                            // For TRANSIENT or COMM_FAILURE, wait
+                            // for a while, then retry the commit.
+                            if (!infiniteRetry) {
+                                commitRetriesLeft--;
+                            }
 
-                             try {
-                                 Thread.sleep(Configuration.COMMIT_RETRY_WAIT);
-                             } catch( Throwable e ) {}
+                            try {
+                                Thread.sleep(Configuration.COMMIT_RETRY_WAIT);
+                            } catch( Throwable e ) {}
 
-                         } else {
+                        } else {
 
-                             // If the retry limit has been exceeded,
-                             // end the process with a fatal error.
-                             _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
-                                     new java.lang.Object[] {commitRetries, "commit"});
-                             String msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.retry_limit_exceeded",
-                             new java.lang.Object[] {commitRetries, "commit"});
-                throw  new org.omg.CORBA.INTERNAL(msg);
+                            // If the retry limit has been exceeded,
+                            // end the process with a fatal error.
+                            _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "commit"});
+                            String msg = LogFormatter.getLocalizedMessage(_logger,
+                                "jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "commit"});
+                            throw  new org.omg.CORBA.INTERNAL(msg);
                             //exceptionThrown=false;
-                                //Commented out code as this statement is not
-                                //reachable
+                            //Commented out code as this statement is not
+                            //reachable
                         }
                     }
                     else{
                         exceptionThrown=false;
-                   }
-               }
+                    }
+                }
             }
         }
 
@@ -265,52 +281,52 @@ class RegisteredResources {
                         ResourceHelper.narrow((org.omg.CORBA.Object)resources[i]);
                     if (res != null) {
                         resourceObjects.add(res);
-            nRes++;
+                        nRes++;
                         resourceStates.add(ResourceStatus.Registered);
                     }
-            exceptionThrown=false;
+                    exceptionThrown=false;
                 } catch (Throwable exc) {
-                     if(exc instanceof TRANSIENT || exc instanceof COMM_FAILURE) {
-                         // If the exception is either TRANSIENT or
-                         // COMM_FAILURE, keep retrying
+                    if(exc instanceof TRANSIENT || exc instanceof COMM_FAILURE) {
+                        // If the exception is either TRANSIENT or
+                        // COMM_FAILURE, keep retrying
 
-                         //$ CHECK WITH DSOM FOLKS FOR OTHER EXCEPTIONS
+                        //$ CHECK WITH DSOM FOLKS FOR OTHER EXCEPTIONS
                         _logger.log(Level.WARNING,"jts.exception_on_resource_operation",
-                                new java.lang.Object[] {exc.toString(),"reconstruct"});
-                         if (commitRetriesLeft > 0 || infiniteRetry) {
+                            new java.lang.Object[] {exc.toString(),"reconstruct"});
+                        if (commitRetriesLeft > 0 || infiniteRetry) {
 
-                             // For TRANSIENT or COMM_FAILURE, wait
-                             // for a while, then retry the commit.
-                             if (!infiniteRetry) {
-                                 commitRetriesLeft--;
-                             }
+                            // For TRANSIENT or COMM_FAILURE, wait
+                            // for a while, then retry the commit.
+                            if (!infiniteRetry) {
+                                commitRetriesLeft--;
+                            }
 
-                             try {
-                                 Thread.sleep(Configuration.COMMIT_RETRY_WAIT);
-                             } catch( Throwable e ) {}
+                            try {
+                                Thread.sleep(Configuration.COMMIT_RETRY_WAIT);
+                            } catch( Throwable e ) {}
 
-                         } else {
+                        } else {
 
-                             // If the retry limit has been exceeded,
-                             // end the process with a fatal error.
-                 _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
-                                     new java.lang.Object[] {commitRetries, "commit"});
-                 String msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.retry_limit_exceeded",
-                             new java.lang.Object[] {commitRetries, "commit"});
+                            // If the retry limit has been exceeded,
+                            // end the process with a fatal error.
+                            _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "commit"});
+                            String msg = LogFormatter.getLocalizedMessage(_logger,
+                                "jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "commit"});
 
-                throw  new org.omg.CORBA.INTERNAL(msg);
-                           // exceptionThrown=false;
-                           //Commented out as this will not be executed
+                            throw  new org.omg.CORBA.INTERNAL(msg);
+                            // exceptionThrown=false;
+                            //Commented out as this will not be executed
                         }
                     }
                     else{
                         exceptionThrown=false;
-                   }
-               }
+                    }
+                }
 
-           }
-       }
+            }
+        }
 
         logRecord = log;
     }
@@ -332,7 +348,7 @@ class RegisteredResources {
         // was created), with the "registered" status.
 
         resourceObjects.add(obj);
-    nRes++;
+        nRes++;
         resourceStates.add(ResourceStatus.Registered);
         //result =nRes;
 
@@ -360,7 +376,7 @@ class RegisteredResources {
     nRes=0;
         resourceStates.clear();
     }
-    */
+     */
 
     /**
      * Checks whether there are any Resource objects registered.
@@ -428,33 +444,26 @@ class RegisteredResources {
         // If there are no Resource references, return the a read-only vote.
 
         for (int i = 0;
-                i < nRes && result != Vote.VoteRollback;
-                i++) {
+            i < nRes && result != Vote.VoteRollback;
+            i++) {
             boolean isProxy = false;
             Resource currResource = (Resource) resourceObjects.get(i);
 
 
-            if ((i == nRes - 1) && lastXAResCommit && (laoResource == null) &&
-                result == Vote.VoteCommit) {
+            if ((i == nRes - 1) && lastXAResCommit && (laoResource == null) && result == Vote.VoteCommit) {
                 try {
-                    if(_logger.isLoggable(Level.FINER))
-                    {
-                        _logger.logp(Level.FINER,"RegisteredResources",
-                            "distributePrepare()",
-                            "Before invoking commit on LA resource = " +
-                            currResource);
+                    if (_logger.isLoggable(Level.FINER)) {
+                        _logger.logp(Level.FINER, "RegisteredResources", "distributePrepare()",
+                            "Before invoking commit on LA resource = " + currResource);
                     }
                     currResource.commit_one_phase();
                     resourceStates.set(i, ResourceStatus.Completed);
-                    if(_logger.isLoggable(Level.FINER))
-                    {
-                        _logger.logp(Level.FINER,"RegisteredResources",
-                            "distributePrepare()",
-                            "After invoking commit on LA resource = "+
-                            currResource);
+                    if (_logger.isLoggable(Level.FINER)) {
+                        _logger.logp(Level.FINER, "RegisteredResources", "distributePrepare()",
+                            "After invoking commit on LA resource = " + currResource);
                     }
                 } catch (Throwable exc) {
-                    result =  Vote.VoteRollback;
+                    result = Vote.VoteRollback;
                     resourceStates.set(i,ResourceStatus.Completed);
                 }
                 return result;
@@ -470,38 +479,32 @@ class RegisteredResources {
             // by a is_local() call, once the local object contract is
             // implemented.
             if(!(currResource instanceof OTSResourceImpl)) {
-              ProxyChecker checkProxy = Configuration.getProxyChecker();
-              isProxy = checkProxy.isProxy(currResource);
+                ProxyChecker checkProxy = Configuration.getProxyChecker();
+                isProxy = checkProxy.isProxy(currResource);
             }
 
             Vote currResult = Vote.VoteRollback;
 
             try {
-                 if(_logger.isLoggable(Level.FINER))
-                {
-                    _logger.logp(Level.FINER,"RegisteredResources","prepare()",
-                            "Before invoking prepare() on resource:" +
-                            currResource);
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.logp(Level.FINER, "RegisteredResources", "prepare()",
+                        "Before invoking prepare() on resource:" + currResource);
                 }
                 currResult = currResource.prepare();
-                //Mark this resource as LA if vote is null
-                if(currResult == null) {
-                    if(_logger.isLoggable(Level.FINER))
-                    {
-                _logger.logp(Level.FINER,"RegisteredResources","prepare()",
-                    "Marking the current resource as LAO:" +
-                     currResource);
+                // Mark this resource as LA if vote is null
+                if (currResult == null) {
+                    if (_logger.isLoggable(Level.FINER)) {
+                        _logger.logp(Level.FINER, "RegisteredResources", "prepare()",
+                            "Marking the current resource as LAO:" + currResource);
                     }
-                    laoResource =  currResource;
+                    laoResource = currResource;
                     laoIndex = i;
                     continue;
                 }
-        if(_logger.isLoggable(Level.FINER))
-                {
-            _logger.logp(Level.FINER,"RegisteredResources","prepare()",
-                    "After invoking prepare() on resource:" +
-                 currResource + ";This resource voted : "+
-                 currResult);
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.logp(Level.FINER, "RegisteredResources", "prepare()",
+                        "After invoking prepare() on resource:" + currResource + ";This resource voted : "
+                            + currResult);
                 }
             } catch (Throwable exc) {
 
@@ -547,17 +550,17 @@ class RegisteredResources {
                     } else if (exc instanceof HeuristicMixed) {
                         throw (HeuristicMixed) exc;
                     } else {
-                         throw new HeuristicMixed();
+                        throw new HeuristicMixed();
                     }
                 } else if (exc instanceof RuntimeException) {
-                        rmErr = true;
+                    rmErr = true;
                 }
 
                 // If any other exception is raised, assume the vote
                 // is rollback.
                 //$Check for specific exceptions ?
                 _logger.log(Level.WARNING,"jts.exception_on_resource_operation",
-                        new java.lang.Object[] {exc.toString(),"prepare"});
+                    new java.lang.Object[] {exc.toString(),"prepare"});
             }
 
             // Record the outcome from the participant
@@ -567,8 +570,9 @@ class RegisteredResources {
             if (currResult == Vote.VoteCommit) {
                 if (logRecord != null) {
                     if (!(currResource instanceof OTSResourceImpl)) {
-                        if (logSection == null)
+                        if (logSection == null) {
                             logSection = logRecord.createSection(LOG_SECTION_NAME);
+                        }
                         logRecord.addObject(logSection, currResource);
                     }
                 }
@@ -588,8 +592,9 @@ class RegisteredResources {
                 // that votes read-only to completed as it
                 // replies.  The consolidated vote does not change.
 
-                if (!rmErr)
+                if (!rmErr) {
                     resourceStates.set(i,ResourceStatus.Completed);
+                }
                 if (isProxy) {
                     currResource._release();
                 }
@@ -602,25 +607,19 @@ class RegisteredResources {
 
         if (result == Vote.VoteCommit && laoResource != null) {
             try {
-        if(_logger.isLoggable(Level.FINER))
-                   {
-            _logger.logp(Level.FINER,"RegisteredResources",
-                     "distributePrepare()",
-                     "Before invoking commit on LA resource = " +
-                     laoResource);
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.logp(Level.FINER, "RegisteredResources", "distributePrepare()",
+                        "Before invoking commit on LA resource = " + laoResource);
                 }
                 // laoResource.commit();
                 resourceStates.set(laoIndex, ResourceStatus.Completed);
-        if(_logger.isLoggable(Level.FINER))
-                {
-            _logger.logp(Level.FINER,"RegisteredResources",
-                     "distributePrepare()",
-                     "After invoking commit on LA resource = "+
-                     laoResource);
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.logp(Level.FINER, "RegisteredResources", "distributePrepare()",
+                        "After invoking commit on LA resource = " + laoResource);
                 }
             } catch (Throwable exc) {
-                result =  Vote.VoteRollback;
-                resourceStates.set(laoIndex,ResourceStatus.Completed);
+                result = Vote.VoteRollback;
+                resourceStates.set(laoIndex, ResourceStatus.Completed);
             }
         }
         return result;
@@ -646,8 +645,6 @@ class RegisteredResources {
      * is forced to the physical log.
      *
      * @param
-     *
-     * @return
      *
      * @exception HeuristicMixed  Indicates that heuristic decisions have been
      *   taken which have resulted in part of the transaction
@@ -677,10 +674,11 @@ class RegisteredResources {
 
             infiniteRetry = false;
         }
-        **/
+         **/
         int commitRetries = Configuration.getRetries();
-        if (commitRetries >= 0)
+        if (commitRetries >= 0) {
             infiniteRetry = false;
+        }
 
 
         // Browse through the participants, committing them. The following is
@@ -695,8 +693,7 @@ class RegisteredResources {
             // If the current Resource in the browse is not in the registered
             // state, skip over it.
 
-            if ((ResourceStatus) resourceStates.get(i) ==
-                    ResourceStatus.Registered) {
+            if ((ResourceStatus) resourceStates.get(i) == ResourceStatus.Registered) {
 
                 boolean heuristicRaised = false;
 
@@ -723,20 +720,14 @@ class RegisteredResources {
                 boolean exceptionThrown = true;
                 while (exceptionThrown) {
                     try {
-                        if(_logger.isLoggable(Level.FINER))
-                        {
-                            _logger.logp(Level.FINER,"RegisteredResources",
-                                    "distributeCommit()",
-                                    "Before invoking commit on resource = " +
-                                    currResource);
+                        if (_logger.isLoggable(Level.FINER)) {
+                            _logger.logp(Level.FINER, "RegisteredResources", "distributeCommit()",
+                                "Before invoking commit on resource = " + currResource);
                         }
                         currResource.commit();
-                        if(_logger.isLoggable(Level.FINER))
-                        {
-                            _logger.logp(Level.FINER,"RegisteredResources",
-                                    "distributeCommit()",
-                                    "After invoking commit on resource = "+
-                                    currResource);
+                        if (_logger.isLoggable(Level.FINER)) {
+                            _logger.logp(Level.FINER, "RegisteredResources", "distributeCommit()",
+                                "After invoking commit on resource = " + currResource);
                         }
                         exceptionThrown = false;
                     } catch (Throwable exc) {
@@ -756,8 +747,8 @@ class RegisteredResources {
                             heuristicCommit++;
 
                         } else if (exc instanceof HeuristicRollback ||
-                                   exc instanceof HeuristicHazard ||
-                                   exc instanceof HeuristicMixed) {
+                            exc instanceof HeuristicHazard ||
+                            exc instanceof HeuristicMixed) {
                             // If the exception is Heuristic Rollback,
                             // Mixed or Hazard, remember that a heuristic
                             // exception has been raised, and also that
@@ -772,7 +763,7 @@ class RegisteredResources {
                             exceptionThrown = false;
 
                         } else if (exc instanceof INV_OBJREF ||
-                                   exc instanceof OBJECT_NOT_EXIST) {
+                            exc instanceof OBJECT_NOT_EXIST) {
 
                             // If the exception is INV_OBJREF, then the target
                             // Resource object must have already committed.
@@ -788,11 +779,11 @@ class RegisteredResources {
                             // action is to end the process with a fatal error
                             // message.
                             _logger.log(Level.SEVERE,
-                                    "jts.exception_on_resource_operation",
-                                     new java.lang.Object[] {exc.toString(),"commit"});
+                                "jts.exception_on_resource_operation",
+                                new java.lang.Object[] {exc.toString(),"commit"});
 
-                             throw (NotPrepared)exc;
-                             /**
+                            throw (NotPrepared)exc;
+                            /**
                              msg = LogFormatter.getLocalizedMessage(_logger,
                                                  "jts.exception_on_resource_operation",
                                                  new java.lang.Object[] {exc.toString(),
@@ -800,22 +791,19 @@ class RegisteredResources {
                              throw  new org.omg.CORBA.INTERNAL(msg);
                              **/
                         } else if (!(exc instanceof TRANSIENT) &&
-                                   !(exc instanceof COMM_FAILURE)) {
+                            !(exc instanceof COMM_FAILURE)) {
                             // If the exception is neither TRANSIENT or
                             // COMM_FAILURE, it is unexpected, so display a
                             // message and give up with this Resource.
 
                             //$ CHECK WITH DSOM FOLKS FOR OTHER EXCEPTIONS
-                            _logger.log(Level.SEVERE,
-                                    "jts.exception_on_resource_operation",
-                                     new java.lang.Object[] {exc.toString(),"commit"});
+                            _logger.log(Level.SEVERE, "jts.exception_on_resource_operation",
+                                new java.lang.Object[] {exc.toString(), "commit"});
 
-                             exceptionThrown = false;
-                             transactionCompleted = false;
-                             msg = LogFormatter.getLocalizedMessage(_logger,
-                                                 "jts.exception_on_resource_operation",
-                                                   new java.lang.Object[] {exc.toString(),
-                                                "commit"});
+                            exceptionThrown = false;
+                            transactionCompleted = false;
+                            msg = LogFormatter.getLocalizedMessage(_logger, "jts.exception_on_resource_operation",
+                                new java.lang.Object[] {exc.toString(), "commit"});
 
                         } else if (commitRetriesLeft > 0 || infiniteRetry) {
 
@@ -833,14 +821,14 @@ class RegisteredResources {
 
                             // If the retry limit has been exceeded,
                             // end the process with a fatal error.
-                _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
-                                   new java.lang.Object[] {commitRetries, "commit"});
+                            _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "commit"});
 
-                             exceptionThrown = false;
-                             transactionCompleted = false;
-                 msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.retry_limit_exceeded",
-                                   new java.lang.Object[] {commitRetries, "commit"});
+                            exceptionThrown = false;
+                            transactionCompleted = false;
+                            msg = LogFormatter.getLocalizedMessage(_logger,
+                                "jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "commit"});
                         }
                     }
                 }
@@ -857,7 +845,7 @@ class RegisteredResources {
                         if (!(currResource instanceof OTSResourceImpl)) {
                             if (heuristicLogSection == null)
                                 heuristicLogSection =
-                                        logRecord.createSection(HEURISTIC_LOG_SECTION_NAME);
+                                logRecord.createSection(HEURISTIC_LOG_SECTION_NAME);
                             logRecord.addObject(heuristicLogSection, currResource);
                         }
                     }
@@ -882,23 +870,25 @@ class RegisteredResources {
         // by the caller
 
         if (heuristicException) {
-          boolean heuristicHazard = true;
-          if ((heuristicCommit + success) == nRes) {
-              heuristicMixed = false;
-              heuristicHazard = false;
-          } else if (heuristicRollback == nRes) {
-              heuristicMixed = false;
-          }
-          distributeForget(commitRetries, infiniteRetry, heuristicHazard, heuristicMixed);
+            boolean heuristicHazard = true;
+            if ((heuristicCommit + success) == nRes) {
+                heuristicMixed = false;
+                heuristicHazard = false;
+            } else if (heuristicRollback == nRes) {
+                heuristicMixed = false;
+            }
+            distributeForget(commitRetries, infiniteRetry, heuristicHazard, heuristicMixed);
         }
 
         if (!transactionCompleted) {
-            if (coord != null)
+            if (coord != null) {
                 RecoveryManager.addToIncompleTx(coord, true);
-            if (msg !=  null)
+            }
+            if (msg !=  null) {
                 throw  new org.omg.CORBA.INTERNAL(msg);
-            else
+            } else {
                 throw  new org.omg.CORBA.INTERNAL();
+            }
         }
 
         // Otherwise just return normally.
@@ -932,7 +922,7 @@ class RegisteredResources {
      * @see
      */
     void distributeRollback(boolean heuristicException)
-            throws HeuristicMixed, HeuristicHazard {
+        throws HeuristicMixed, HeuristicHazard {
 
         boolean infiniteRetry = true;
         boolean heuristicMixed = false;
@@ -951,10 +941,11 @@ class RegisteredResources {
 
             infiniteRetry = false;
         }
-        **/
+         **/
         int commitRetries = Configuration.getRetries();
-        if (commitRetries >= 0)
+        if (commitRetries >= 0) {
             infiniteRetry = false;
+        }
 
 
 
@@ -971,7 +962,7 @@ class RegisteredResources {
             // state, skip over it.
 
             if (resourceStates.get(i).equals(
-                    ResourceStatus.Registered)) {
+                ResourceStatus.Registered)) {
                 processed++;
                 boolean heuristicRaised = false;
 
@@ -998,20 +989,14 @@ class RegisteredResources {
                 boolean exceptionThrown = true;
                 while (exceptionThrown) {
                     try {
-                        if(_logger.isLoggable(Level.FINER))
-                        {
-                            _logger.logp(Level.FINER,"RegisteredResources",
-                                    "distributeRollback()",
-                                    "Before invoking rollback on resource = "+
-                                    currResource);
+                        if (_logger.isLoggable(Level.FINER)) {
+                            _logger.logp(Level.FINER, "RegisteredResources", "distributeRollback()",
+                                "Before invoking rollback on resource = " + currResource);
                         }
                         currResource.rollback();
-                        if(_logger.isLoggable(Level.FINER))
-                        {
-                            _logger.logp(Level.FINER,"RegisteredResources",
-                                    "distributeRollback()",
-                                    "After invoking rollback on resource = "+
-                                    currResource);
+                        if (_logger.isLoggable(Level.FINER)) {
+                            _logger.logp(Level.FINER, "RegisteredResources", "distributeRollback()",
+                                "After invoking rollback on resource = " + currResource);
                         }
                         exceptionThrown = false;
                     } catch (Throwable exc) {
@@ -1033,8 +1018,8 @@ class RegisteredResources {
                             heuristicRollback++;
 
                         } else if (exc instanceof HeuristicCommit ||
-                                   exc instanceof HeuristicHazard ||
-                                   exc instanceof HeuristicMixed) {
+                            exc instanceof HeuristicHazard ||
+                            exc instanceof HeuristicMixed) {
 
                             // If the exception is Heuristic Rollback, Mixed
                             // or Hazard, remember that a heuristic exception
@@ -1048,12 +1033,12 @@ class RegisteredResources {
                             // Work around the fact that org.omg.CosTransactions.ResourceOperations#rollback
                             // does not declare HeuristicRollback exception
                             if (exc instanceof HeuristicHazard && exc.getCause() instanceof XAException &&
-                                    ((XAException)exc.getCause()).errorCode == XAException.XA_HEURRB) {
+                                ((XAException)exc.getCause()).errorCode == XAException.XA_HEURRB) {
                                 heuristicRollback++;
                             }
 
                         } else if (exc instanceof INV_OBJREF ||
-                                   exc instanceof OBJECT_NOT_EXIST){
+                            exc instanceof OBJECT_NOT_EXIST){
 
                             //GDH added NOT_EXIST
                             // If the exception is INV_OBJREF, then the target
@@ -1061,22 +1046,18 @@ class RegisteredResources {
                             exceptionThrown = false;
 
                         } else if (!(exc instanceof TRANSIENT) &&
-                                   !(exc instanceof COMM_FAILURE)) {
+                            !(exc instanceof COMM_FAILURE)) {
 
                             // If the exception is neither TRANSIENT or
                             // COMM_FAILURE, it is unexpected, so display
                             // a message and give up with this Resource.
-                            _logger.log(Level.SEVERE,
-                                    "jts.exception_on_resource_operation",
-                                     new java.lang.Object[]
-                                          { exc.toString(), "rollback"});
+                            _logger.log(Level.SEVERE, "jts.exception_on_resource_operation",
+                                new java.lang.Object[] {exc.toString(), "rollback"});
 
-                              msg = LogFormatter.getLocalizedMessage(_logger,
-                                             "jts.exception_on_resource_operation",
-                                           new java.lang.Object[] { exc.toString(),
-                                                "rollback"});
-                              exceptionThrown = false;
-                              transactionCompleted = false;
+                            msg = LogFormatter.getLocalizedMessage(_logger, "jts.exception_on_resource_operation",
+                                new java.lang.Object[] {exc.toString(), "rollback"});
+                            exceptionThrown = false;
+                            transactionCompleted = false;
 
                         } else if (rollbackRetriesLeft > 0 || infiniteRetry) {
 
@@ -1095,12 +1076,11 @@ class RegisteredResources {
 
                             // If the retry limit has been exceeded, end the
                             // process with a fatal error.
-                _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
-                                    new java.lang.Object[] {commitRetries, "rollback"});
+                            _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "rollback"});
 
-                msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.retry_limit_exceeded",
-                                   new java.lang.Object[] {commitRetries, "rollback"});
+                            msg = LogFormatter.getLocalizedMessage(_logger, "jts.retry_limit_exceeded",
+                                new java.lang.Object[] {commitRetries, "rollback"});
 
                             exceptionThrown = false;
                             transactionCompleted = false;
@@ -1116,9 +1096,9 @@ class RegisteredResources {
                     resourceStates.set(i,ResourceStatus.Heuristic);
                     if (logRecord != null) {
                         if (!(currResource instanceof OTSResourceImpl)) {
-                            if (heuristicLogSection == null)
-                                heuristicLogSection =
-                                        logRecord.createSection(HEURISTIC_LOG_SECTION_NAME);
+                            if (heuristicLogSection == null) {
+                                heuristicLogSection = logRecord.createSection(HEURISTIC_LOG_SECTION_NAME);
+                            }
 
                             logRecord.addObject(heuristicLogSection,currResource);
                         }
@@ -1146,15 +1126,17 @@ class RegisteredResources {
 
         if (heuristicException)
             distributeForget(commitRetries, infiniteRetry,
-                    (((heuristicRollback + success) == processed)? false : true), heuristicMixed);
+                (((heuristicRollback + success) == processed)? false : true), heuristicMixed);
 
         if (!transactionCompleted) {
-            if (coord != null)
+            if (coord != null) {
                 RecoveryManager.addToIncompleTx(coord, false);
-            if (msg !=  null)
+            }
+            if (msg !=  null) {
                 throw  new org.omg.CORBA.INTERNAL(msg);
-            else
+            } else {
                 throw  new org.omg.CORBA.INTERNAL();
+            }
         }
 
         // Otherwise just return normally.
@@ -1183,7 +1165,7 @@ class RegisteredResources {
      * @see
      */
     private void distributeForget(int retries, boolean infinite,
-            boolean heuristicHazard, boolean heuristicMixed) throws HeuristicMixed, HeuristicHazard {
+        boolean heuristicHazard, boolean heuristicMixed) throws HeuristicMixed, HeuristicHazard {
 
         // Force the log record to ensure that all
         // heuristic Resources are logged.
@@ -1201,7 +1183,7 @@ class RegisteredResources {
             // state, skip over it.
 
             if ((ResourceStatus)resourceStates.get(i) ==
-                    ResourceStatus.Heuristic) {
+                ResourceStatus.Heuristic) {
 
                 Resource currResource = (Resource)resourceObjects.get(i);
 
@@ -1227,20 +1209,20 @@ class RegisteredResources {
                     } catch (Throwable exc) {
 
                         if (exc instanceof INV_OBJREF ||
-                                exc instanceof OBJECT_NOT_EXIST) {
+                            exc instanceof OBJECT_NOT_EXIST) {
 
                             // If the exception is INV_OBJREF, then the target
                             // Resource object must have already forgotten.
                             exceptionThrown = false;
 
                         } else if (!(exc instanceof COMM_FAILURE) &&
-                                   !(exc instanceof TRANSIENT)) {
+                            !(exc instanceof TRANSIENT)) {
 
                             // If the exception is neither TRANSIENT or
                             // COMM_FAILURE, it is unexpected, so display
                             // a message and give up with this Resource.
                             //$ CHECK WITH DSOM FOLKS FOR OTHER EXCEPTIONS
-                              exceptionThrown = false;
+                            exceptionThrown = false;
 
                         } else if (retriesLeft > 0 || infinite) {
 
@@ -1258,12 +1240,12 @@ class RegisteredResources {
 
                             // If the retry limit has been exceeded,
                             // end the process with a fatal error.
-                _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
-                                    new java.lang.Object[] { retries, "forget"});
-                String msg = LogFormatter.getLocalizedMessage(_logger,
-                    "jts.retry_limit_exceeded",
-                                   new java.lang.Object[] {retries, "forget"});
-                throw  new org.omg.CORBA.INTERNAL(msg);
+                            _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
+                                new java.lang.Object[] { retries, "forget"});
+                            String msg = LogFormatter.getLocalizedMessage(_logger,
+                                "jts.retry_limit_exceeded",
+                                new java.lang.Object[] {retries, "forget"});
+                            throw  new org.omg.CORBA.INTERNAL(msg);
                         }
                     }
                 }
@@ -1305,8 +1287,7 @@ class RegisteredResources {
      *
      * @see
      */
-    void distributeSubcommit(Coordinator parent)
-            throws TRANSACTION_ROLLEDBACK {
+    void distributeSubcommit(Coordinator parent) throws TRANSACTION_ROLLEDBACK {
 
         boolean exceptionRaised = false;
 
@@ -1326,7 +1307,7 @@ class RegisteredResources {
                 isProxy = checkProxy.isProxy(currResource);
             }
 
-           // Tell the object to commit.
+            // Tell the object to commit.
 
             try {
                 currResource.commit_subtransaction(parent);
@@ -1376,8 +1357,7 @@ class RegisteredResources {
 
         for (int i = 0; i < nRes; i++) {
             boolean isProxy = false;
-            SubtransactionAwareResource currResource =
-                (SubtransactionAwareResource) resourceObjects.get(i);
+            SubtransactionAwareResource currResource = (SubtransactionAwareResource) resourceObjects.get(i);
 
             // COMMENT(Ram J) the instanceof operation should be replaced
             // by a is_local() call, once the local object contract is
@@ -1424,7 +1404,7 @@ class RegisteredResources {
         resourceObjects.copyInto(resources.value);
         resourceStates.copyInto(states.value);
     }
-    */
+     */
 
     /**
      * Distributes the one phase commit.
@@ -1469,22 +1449,21 @@ class RegisteredResources {
             }
             infiniteRetry = false;
         }
-        **/
+         **/
         int commitRetries = Configuration.getRetries();
-        if (commitRetries >= 0)
+        if (commitRetries >= 0) {
             infiniteRetry = false;
+        }
 
 
         // Check we only have one resource!
         // If not return
         if (nRes > 1) {
-            _logger.log(Level.SEVERE,"jts.exception_on_resource_operation",
-                    new java.lang.Object[] { "commitOnePhase", ">1 Resource"});
-             String msg = LogFormatter.getLocalizedMessage(_logger,
-                                         "jts.exception_on_resource_operation",
-                                        new java.lang.Object[]
-                                        { "commitOnePhase", ">1 Resource"});
-             throw  new org.omg.CORBA.INTERNAL(msg);
+            _logger.log(Level.SEVERE, "jts.exception_on_resource_operation",
+                new java.lang.Object[] {"commitOnePhase", ">1 Resource"});
+            String msg = LogFormatter.getLocalizedMessage(_logger, "jts.exception_on_resource_operation",
+                new java.lang.Object[] {"commitOnePhase", ">1 Resource"});
+            throw new org.omg.CORBA.INTERNAL(msg);
         }
 
         // Now we know we have one resource we can use similar
@@ -1497,7 +1476,7 @@ class RegisteredResources {
         // (Ram Jeyaraman) Should this condition check be !=  and then return ?
         // Previously the IF block had  '==' operator and empty block
         if ((ResourceStatus) resourceStates.get(0) !=
-                ResourceStatus.Registered) {
+            ResourceStatus.Registered) {
             return;
         }
 
@@ -1525,22 +1504,18 @@ class RegisteredResources {
 
         while (exceptionThrownTryAgain) {
             try {
-                if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"RegisteredResources","commitOnePhase()",
-                              "Before invoking commit_one_phase() on resource:" +
-                            currResource );
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.logp(Level.FINEST, "RegisteredResources", "commitOnePhase()",
+                        "Before invoking commit_one_phase() on resource:" + currResource);
                 }
 
                 currResource.commit_one_phase();
 
-                if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"RegisteredResources","commitOnePhase()",
-                             "After invoking commit_one_phase() on resource:" +
-                            currResource );
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.logp(Level.FINEST, "RegisteredResources", "commitOnePhase()",
+                        "After invoking commit_one_phase() on resource:" + currResource);
                 }
-                resourceStates.set(0,ResourceStatus.Completed);
+                resourceStates.set(0, ResourceStatus.Completed);
                 exceptionThrownTryAgain = false;
             } catch (Throwable exc) {
 
@@ -1559,36 +1534,37 @@ class RegisteredResources {
                     // has been raised, and also that damage has occurred.
 
 
-                        //IASRI START 4722883
-                        /**
+                    //IASRI START 4722883
+                    /**
                         heuristicExceptionFlowForget = true;
                         heuristicRaisedSetStatus = true;
                         exceptionThrownTryAgain = false;
                         heuristicMixed = false;
-                        **/
-               XAException e = (XAException) ((Throwable)exc).getCause();
-                   if ((e!= null) && (e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND)) {
-                            rollback_occurred = true;
-                            resourceStates.set(0,ResourceStatus.Completed);
-                            exceptionThrownTryAgain = false;
-            } else {
-                            heuristicExceptionFlowForget = true;
-                            heuristicRaisedSetStatus = true;
-                            exceptionThrownTryAgain = false;
-                        if ((e!= null) && (e.errorCode == XAException.XA_HEURCOM))
-                                heuristicHazard = false;
-                                else
-                                heuristicHazard = true;
-                        if ((e!= null) && (e.errorCode == XAException.XA_HEURMIX))
-                                heuristicMixed = true;
-                                else
-                                heuristicMixed = false;
-            }
-                        //IASRI END 4722883
+                     **/
+                    XAException e = (XAException) ((Throwable)exc).getCause();
+                    if ((e!= null) && (e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND)) {
+                        rollback_occurred = true;
+                        resourceStates.set(0,ResourceStatus.Completed);
+                        exceptionThrownTryAgain = false;
+                    } else {
+                        heuristicExceptionFlowForget = true;
+                        heuristicRaisedSetStatus = true;
+                        exceptionThrownTryAgain = false;
+                        if ((e!= null) && (e.errorCode == XAException.XA_HEURCOM)) {
+                            heuristicHazard = false;
+                        } else {
+                            heuristicHazard = true;
+                        }
+                        if (e!= null && e.errorCode == XAException.XA_HEURMIX) {
+                            heuristicMixed = true;
+                        } else {
+                            heuristicMixed = false;
+                        }
+                    }
+                    //IASRI END 4722883
 
 
-                } else if (exc instanceof INV_OBJREF ||
-                        exc instanceof OBJECT_NOT_EXIST) {
+                } else if (exc instanceof INV_OBJREF || exc instanceof OBJECT_NOT_EXIST) {
 
                     // If the exception is INV_OBJREF, then the target Resource
                     // object must have already committed.  (Probably contacted
@@ -1607,34 +1583,33 @@ class RegisteredResources {
                     // part of our specification then something is fishy
                     // if it is not supported: Throw an error.
                     _logger.log(Level.SEVERE,"jts.exception_on_resource_operation",
-                            new java.lang.Object[] { exc.toString(),
-                            "commit one phase"});
-                     String msg = LogFormatter.getLocalizedMessage(_logger,
-                                                 "jts.exception_on_resource_operation",
-                                                new java.lang.Object[] { exc.toString(),
-                                                "commit one phase"});
-                     throw  new org.omg.CORBA.INTERNAL(msg);
+                        new java.lang.Object[] { exc.toString(),
+                    "commit one phase"});
+                    String msg = LogFormatter.getLocalizedMessage(_logger,
+                        "jts.exception_on_resource_operation",
+                        new java.lang.Object[] { exc.toString(),
+                    "commit one phase"});
+                    throw  new org.omg.CORBA.INTERNAL(msg);
 
-                } else if (!(exc instanceof TRANSIENT) &&
-                        !(exc instanceof COMM_FAILURE)) {
+                } else if (!(exc instanceof TRANSIENT) && !(exc instanceof COMM_FAILURE)) {
 
                     // If the exception has not been mentione yet and is
                     // neither of the two below, it is unexpected,
                     // so display a message and give up with this Resource.
                     _logger.log(Level.SEVERE,"jts.exception_on_resource_operation",
-                            new java.lang.Object[] { exc.toString(),
-                            "commit one phase"});
-                     String msg = LogFormatter.getLocalizedMessage(_logger,
-                                                 "jts.exception_on_resource_operation",
-                                                new java.lang.Object[] { exc.toString(),
-                                                "commit one phase"});
-                     throw  new org.omg.CORBA.INTERNAL(msg);
+                        new java.lang.Object[] { exc.toString(),
+                    "commit one phase"});
+                    String msg = LogFormatter.getLocalizedMessage(_logger,
+                        "jts.exception_on_resource_operation",
+                        new java.lang.Object[] { exc.toString(),
+                    "commit one phase"});
+                    throw  new org.omg.CORBA.INTERNAL(msg);
 
                 } else if (commitRetriesLeft > 0 || infiniteRetry) {
 
-                     // For TRANSIENT or COMM_FAILURE, wait for a while,
-                     // then retry the commit.
-                     if (!infiniteRetry) {
+                    // For TRANSIENT or COMM_FAILURE, wait for a while,
+                    // then retry the commit.
+                    if (!infiniteRetry) {
                         commitRetriesLeft--;
                     }
 
@@ -1658,12 +1633,12 @@ class RegisteredResources {
                     // toolkit for standalone apps) then we would replace
                     // all the FATAL_ERROR actions such as the one below
                     // with the actino required by the application server.
-            _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
-                            new java.lang.Object[] { commitRetries, "commitOnePhase"});
-            String msg = LogFormatter.getLocalizedMessage(_logger,
-                "jts.retry_limit_exceeded",
-                 new java.lang.Object[] {commitRetries,"commitOnePhase"});
-            throw  new org.omg.CORBA.INTERNAL(msg);
+                    _logger.log(Level.SEVERE,"jts.retry_limit_exceeded",
+                        new java.lang.Object[] { commitRetries, "commitOnePhase"});
+                    String msg = LogFormatter.getLocalizedMessage(_logger,
+                        "jts.retry_limit_exceeded",
+                        new java.lang.Object[] {commitRetries,"commitOnePhase"});
+                    throw  new org.omg.CORBA.INTERNAL(msg);
                 }
             } // end of catch block for exceptions
         } // end while exception being raised (GDH)
@@ -1676,9 +1651,10 @@ class RegisteredResources {
             if (logRecord != null) {
                 // (The distributeForget method forces the log)
                 if (!(currResource instanceof OTSResourceImpl)) {
-                    if (heuristicLogSection == null)
+                    if (heuristicLogSection == null) {
                         heuristicLogSection =
-                            logRecord.createSection(HEURISTIC_LOG_SECTION_NAME);
+                        logRecord.createSection(HEURISTIC_LOG_SECTION_NAME);
+                    }
                     logRecord.addObject(heuristicLogSection,currResource);
                 }
             }
@@ -1697,13 +1673,12 @@ class RegisteredResources {
         // to the caller.
 
         if (heuristicExceptionFlowForget) {
-          distributeForget(commitRetries, infiniteRetry, heuristicHazard, heuristicMixed);
-          // throw is done in method above
+            distributeForget(commitRetries, infiniteRetry, heuristicHazard, heuristicMixed);
+            // throw is done in method above
         }
 
         if (rollback_occurred) {
-            throw new TRANSACTION_ROLLEDBACK(0,
-                                             CompletionStatus.COMPLETED_YES);
+            throw new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_YES);
         }
 
         // Otherwise just return normally.
@@ -1719,7 +1694,7 @@ class RegisteredResources {
             } catch (Exception e) {}
         }
     }
-    **/
+     **/
     // END IASRI 4662745
 }
 

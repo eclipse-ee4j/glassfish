@@ -16,12 +16,13 @@
 
 package com.sun.jts.trace;
 
-import java.io.*;
-import java.util.logging.*;
-import javax.transaction.xa.XAException;
+import com.sun.jts.CosTransactions.Configuration;
 
-import com.sun.jts.CosTransactions.*;
-import org.omg.CosTransactions.*;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
 
 /**
  * This class is used to set trace properties and print trace statements. The print method does the printing.
@@ -34,8 +35,8 @@ import org.omg.CosTransactions.*;
  * @author <a href="mailto:kannan.srinivasan@sun.com">Kannan Srinivasan</a>
  * @version 1.0
  */
-public class TraceUtil
-{
+public class TraceUtil {
+
     private static int m_currentTraceLevel = TraceLevel.IAS_JTS_TRACE_TRIVIAL ;
     private static char m_fieldDelimiter = ':';
     private static String m_traceRecordTag = "iAS_JTS_Trace> ";
@@ -46,73 +47,70 @@ public class TraceUtil
         m_traceWriter = new PrintWriter(System.out);
     }
 
- /**
-   * Initialises the trace class with given output writer.
-   *
-   * @param traceWriter an <code>PrintWriter</code> value
-   */
-    public static void init(PrintWriter traceWriter)
-    {
+    /**
+     * Initialises the trace class with given output writer.
+     *
+     * @param traceWriter an <code>PrintWriter</code> value
+     */
+    public static void init(PrintWriter traceWriter) {
         setTraceWriter(traceWriter);
     }
 
-  /**
-   * Sets the output writer. By default the output writer is set to Stdout.
-   *
-   * @param traceWriter an <code>PrintWriter</code> value
-   */
-    public static void setTraceWriter(PrintWriter traceWriter)
-    {
-    m_traceWriter = traceWriter;
+
+    /**
+     * Sets the output writer. By default the output writer is set to Stdout.
+     *
+     * @param traceWriter an <code>PrintWriter</code> value
+     */
+    public static void setTraceWriter(PrintWriter traceWriter) {
+        m_traceWriter = traceWriter;
     }
 
-  /**
-   * Gets the current output writer.
-   *
-   * @return an <code>PrintWriter</code> value
-   */
-    public static PrintWriter getTraceWriter()
-    {
+
+    /**
+     * Gets the current output writer.
+     *
+     * @return an <code>PrintWriter</code> value
+     */
+    public static PrintWriter getTraceWriter() {
         return m_traceWriter;
     }
 
-  /**
-   * Gets the current trace level. Returns an integer as per the TraceLevel constants.
-   *
-   * @return an <code>int</code> value
-   */
-    public static int getCurrentTraceLevel()
-    {
+
+    /**
+     * Gets the current trace level. Returns an integer as per the TraceLevel constants.
+     *
+     * @return an <code>int</code> value
+     */
+    public static int getCurrentTraceLevel() {
         return m_currentTraceLevel;
     }
 
-  /**
-   * Sets the current trace level. The argument is tested for its validity and trace level is set.
-   * Else an exception is raised.
-   *
-   * @param traceLevel an <code>int</code> value
-   * @exception InvalidTraceLevelException if an error occurs
-   */
-    public static void setCurrentTraceLevel(int traceLevel) throws InvalidTraceLevelException
-    {
-        if(Configuration.isTraceEnabled())
-        {
+
+    /**
+     * Sets the current trace level. The argument is tested for its validity and trace level is set.
+     * Else an exception is raised.
+     *
+     * @param traceLevel an <code>int</code> value
+     * @exception InvalidTraceLevelException if an error occurs
+     */
+    public static void setCurrentTraceLevel(int traceLevel) throws InvalidTraceLevelException {
+        if (Configuration.isTraceEnabled()) {
             int i;
             boolean traceLevelSet = false;
-            for(i = 0; i <= TraceLevel.IAS_JTS_MAX_TRACE_LEVEL; i++)
-            {
-                if(traceLevel == i)
-                {
+            for (i = 0; i <= TraceLevel.IAS_JTS_MAX_TRACE_LEVEL; i++) {
+                if (traceLevel == i) {
                     m_currentTraceLevel = traceLevel;
                     traceLevelSet = true;
                     break;
                 }
             }
-            if(!traceLevelSet)
+            if (!traceLevelSet) {
                 throw new InvalidTraceLevelException();
-
+            }
         }
     }
+
 
   /**
    * This method formats and writes the trace record to output writer. The method is called
@@ -126,14 +124,12 @@ public class TraceUtil
    * @param origin an <code>Object</code> value
    * @param msg a <code>String</code> value
    */
-    public static void print(int traceLevel, PrintWriter outWriter, Object tid, Object origin, String msg)
-    {
-            if( traceLevel <= m_currentTraceLevel )
-            {
-                String traceRecord = TraceRecordFormatter.createTraceRecord(tid, origin, msg);
-        outWriter.println(traceRecord);
-            }
-    }
+  public static void print(int traceLevel, PrintWriter outWriter, Object tid, Object origin, String msg) {
+      if (traceLevel <= m_currentTraceLevel) {
+          String traceRecord = TraceRecordFormatter.createTraceRecord(tid, origin, msg);
+          outWriter.println(traceRecord);
+      }
+  }
 
   /**
    * This method formats and writes the trace record to current output writer. The method is
@@ -144,19 +140,18 @@ public class TraceUtil
    * @param origin an <code>Object</code> value
    * @param msg a <code>String</code> value
    */
-    public static void print(int traceLevel, Object origin, String msg)
-    {
-    try{
-         print(traceLevel,
+  public static void print(int traceLevel, Object origin, String msg) {
+      try{
+          print(traceLevel,
               ((com.sun.jts.CosTransactions.TopCoordinator)
-          com.sun.jts.CosTransactions.CurrentTransaction.getCurrent().get_localCoordinator()).get_transaction_name(),
-          origin,
-          msg
+                  com.sun.jts.CosTransactions.CurrentTransaction.getCurrent().get_localCoordinator()).get_transaction_name(),
+              origin,
+              msg
           );
-    }catch(Exception e){
-            print(traceLevel,null,origin,msg);
-    }
-    }
+      } catch (Exception e) {
+              print(traceLevel,null,origin,msg);
+      }
+  }
 
   /**
    * This method formats and writes the trace record to current output writer. The method is called
@@ -167,30 +162,30 @@ public class TraceUtil
    * @param origin an <code>Object</code> value
    * @param msg a <code>String</code> value
    */
-    public static void print(int traceLevel, Object tid, Object origin, String msg)
-    {
-        print(traceLevel,m_traceWriter,tid,origin,msg);
-    }
+  public static void print(int traceLevel, Object tid, Object origin, String msg) {
+      print(traceLevel, m_traceWriter, tid, origin, msg);
+  }
+
 
   /**
    * Gets the current field delimiter used in formatting trace record. The default is ':'.
    *
    * @return a <code>char</code> value
    */
-    public static char getFieldDelimiter()
-    {
-        return m_fieldDelimiter;
-     }
+  public static char getFieldDelimiter() {
+      return m_fieldDelimiter;
+  }
+
 
   /**
    * Sets the current field delimiter.
    *
    * @param delimiter a <code>char</code> value
    */
-    public static void setFieldDelimiter(char delimiter)
-    {
-        m_fieldDelimiter = delimiter;
-    }
+  public static void setFieldDelimiter(char delimiter) {
+      m_fieldDelimiter = delimiter;
+  }
+
 
   /**
    * Gets the current trace record tag used in formatting of trace record. The default is
@@ -198,29 +193,29 @@ public class TraceUtil
    *
    * @return a <code>String</code> value
    */
-    public static String getTraceRecordTag()
-    {
-        return m_traceRecordTag;
-     }
+  public static String getTraceRecordTag() {
+      return m_traceRecordTag;
+  }
+
 
   /**
    * Sets the trace record tag.
    *
    * @param traceRecordTag a <code>String</code> value
    */
-    public static void setTraceRecordTag(String traceRecordTag)
-    {
-        m_traceRecordTag = traceRecordTag;
-    }
+  public static void setTraceRecordTag(String traceRecordTag) {
+      m_traceRecordTag = traceRecordTag;
+  }
 
-   /**
-    * Returns details about Oracle XAException if available.
-    * Returns an default message if it is not Oracle XAException
-    *
-    * @param exception an <code>XAException</code> to get info from
-    * @param logger the <code>Logger</code> to use to report errors extracting the data
-    * @return a <code>String</code> value
-    */
+
+  /**
+   * Returns details about Oracle XAException if available.
+   * Returns an default message if it is not Oracle XAException
+   *
+   * @param exception an <code>XAException</code> to get info from
+   * @param logger the <code>Logger</code> to use to report errors extracting the data
+   * @return a <code>String</code> value
+   */
     public static String getXAExceptionInfo(XAException exception, Logger logger) {
         Class<? extends XAException> aClass = exception.getClass();
         if (aClass.getName().indexOf("OracleXAException") < 0) {
@@ -229,13 +224,13 @@ public class TraceUtil
 
         StringBuffer msg = new StringBuffer();
         try {
-                String oracleError = "" + invokeMethod(exception, aClass, "getOracleError", logger);
-                String oracleSQLError = "" + invokeMethod(exception, aClass, "getOracleSQLError", logger);
-                String xaError = "" + invokeMethod(exception, aClass, "getXAError", logger);
-                msg.append("\n XAException = ").append(exception.getMessage()).
-                        append("\n OracleError = ").append(oracleError).
-                        append("\n OracleSQLError = ").append(oracleSQLError).
-                        append("\n XAError = ").append(xaError);
+            String oracleError = "" + invokeMethod(exception, aClass, "getOracleError", logger);
+            String oracleSQLError = "" + invokeMethod(exception, aClass, "getOracleSQLError", logger);
+            String xaError = "" + invokeMethod(exception, aClass, "getXAError", logger);
+            msg.append("\n XAException = ").append(exception.getMessage()).
+                    append("\n OracleError = ").append(oracleError).
+                    append("\n OracleSQLError = ").append(oracleSQLError).
+                    append("\n XAError = ").append(xaError);
         } catch (Exception e) {
             logger.log(Level.WARNING, "getXAExceptionInfo failed with exception:", e);
         }

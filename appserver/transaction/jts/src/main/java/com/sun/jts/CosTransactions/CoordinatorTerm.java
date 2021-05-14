@@ -30,15 +30,25 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-import com.sun.jts.trace.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+// Import required classes.
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.NotPrepared;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.Vote;
 
 /**The CoordinatorTerm interface provides operations that allow an
  * Terminator to direct completion of a transaction without any dependency
@@ -67,7 +77,7 @@ class CoordinatorTerm implements CompletionHandler {
 
     /*
         Logger to log transaction messages
-    */
+     */
 
     static Logger _logger = LogDomains.getLogger(CoordinatorTerm.class, LogDomains.TRANSACTION_LOGGER);
 
@@ -99,7 +109,7 @@ class CoordinatorTerm implements CompletionHandler {
      * @see
      */
     CoordinatorTerm( CoordinatorImpl coord,
-                     boolean         subtran ) {
+        boolean         subtran ) {
 
         // Set up the instance variables from the values passed.
 
@@ -163,7 +173,7 @@ class CoordinatorTerm implements CompletionHandler {
 
         if( coordinator == null ) {
             String msg = LogFormatter.getLocalizedMessage(_logger,
-                                      "jts.no_coordinator_available");
+                "jts.no_coordinator_available");
             LogicErrorException exc = new LogicErrorException(msg);
             throw exc;
         }
@@ -184,9 +194,9 @@ class CoordinatorTerm implements CompletionHandler {
         if( current != null )
             try {
                 if (Configuration.isLocalFactory()) {
-                  currentCoord = current.get_localCoordinator();
+                    currentCoord = current.get_localCoordinator();
                 } else {
-                  currentCoord = current.get_coordinator();
+                    currentCoord = current.get_coordinator();
                 }
 
                 sameCoordinator = coordinator.is_same_transaction(currentCoord);
@@ -204,8 +214,8 @@ class CoordinatorTerm implements CompletionHandler {
                 if( current == null ||
                     !sameCoordinator ) {
                     establishedControl = new ControlImpl(null,coordinator,
-                                                         new GlobalTID(coordinator.getGlobalTID()),
-                                                         coordinator.getLocalTID());
+                        new GlobalTID(coordinator.getGlobalTID()),
+                        coordinator.getLocalTID());
                     CurrentTransaction.setCurrent(establishedControl,true);
                 }
             } catch( Throwable exc ) {
@@ -261,7 +271,7 @@ class CoordinatorTerm implements CompletionHandler {
             } catch( Throwable exc ) {
 
                 if( exc instanceof HeuristicHazard ||
-                        exc instanceof HeuristicMixed ) {
+                    exc instanceof HeuristicMixed ) {
                     heuristicExc = exc;
                 } else if( exc instanceof TRANSACTION_ROLLEDBACK ) {
                     status = Status.StatusRolledBack;
@@ -312,13 +322,13 @@ class CoordinatorTerm implements CompletionHandler {
                 if( prepareResult == Vote.VoteCommit )
                     try {
 
-            if(_logger.isLoggable(Level.FINE))
-            {
-                _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
-                        "Before invoking coordinator.commit() :"+"GTID is: "+
-                        ((TopCoordinator)coordinator).superInfo.globalTID.toString());
+                        if(_logger.isLoggable(Level.FINE))
+                        {
+                            _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
+                                "Before invoking coordinator.commit() :"+"GTID is: "+
+                                    ((TopCoordinator)coordinator).superInfo.globalTID.toString());
 
-            }
+                        }
                         coordinator.commit();
                     } catch( NotPrepared exc ) {
                         prepareResult = Vote.VoteRollback;
@@ -327,8 +337,8 @@ class CoordinatorTerm implements CompletionHandler {
                 if( prepareResult == Vote.VoteRollback ) {
                     if(_logger.isLoggable(Level.FINE))
                     {
-                         _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
-                                 "Before invoking coordinator.rollback :"+
+                        _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
+                            "Before invoking coordinator.rollback :"+
                                 "GTID is : "+
                                 ((TopCoordinator)coordinator).superInfo.globalTID.toString());
                     }
@@ -449,8 +459,8 @@ class CoordinatorTerm implements CompletionHandler {
         // If there is no Coordinator reference, raise an exception.
 
         if( coordinator == null ) {
-             String msg = LogFormatter.getLocalizedMessage(_logger,
-                                         "jts.no_coordinator_available");
+            String msg = LogFormatter.getLocalizedMessage(_logger,
+                "jts.no_coordinator_available");
 
             LogicErrorException exc = new LogicErrorException(msg);
             throw exc;
@@ -474,9 +484,9 @@ class CoordinatorTerm implements CompletionHandler {
         if( current != null )
             try {
                 if (Configuration.isLocalFactory()) {
-                  currentCoord = current.get_localCoordinator();
+                    currentCoord = current.get_localCoordinator();
                 } else {
-                  currentCoord = current.get_coordinator();
+                    currentCoord = current.get_coordinator();
                 }
 
                 if( coordinator.is_same_transaction(currentCoord) )
@@ -500,7 +510,7 @@ class CoordinatorTerm implements CompletionHandler {
         catch (Throwable exc) {
             if (exc instanceof HeuristicHazard ||
                 exc instanceof HeuristicMixed) {
-                   heuristicExc = exc;
+                heuristicExc = exc;
             }
 
             // ADDED (Ram J) percolate any system exception to the caller
@@ -552,7 +562,7 @@ class CoordinatorTerm implements CompletionHandler {
      */
 
     public void setCompleted( boolean aborted,
-                              boolean heuristicDamage ) {
+        boolean heuristicDamage ) {
 
         // If the transaction that this object represents has already been rolled
         // back, or is being rolled back by this object, just return.

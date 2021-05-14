@@ -249,9 +249,9 @@ public class TransactionState {
         }
         factories.add(res);
 
-        byte [] branchid = parseSize(size);
-        byte [] sname    = Configuration.getServerNameByteArray();
-        byte [] branch = new byte[sname.length+1+branchid.length];
+        byte[] branchid = parseSize(size);
+        byte[] sname = Configuration.getServerNameByteArray();
+        byte[] branch = new byte[sname.length + 1 + branchid.length];
 
         System.arraycopy(sname, 0, branch, 0, sname.length);
         branch[sname.length] = (byte) ',';

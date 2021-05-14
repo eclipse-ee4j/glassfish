@@ -30,18 +30,31 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import org.omg.CORBA.*;
-import org.omg.PortableServer.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
-import com.sun.jts.trace.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import com.sun.jts.codegen.otsidl.JControl;
+import com.sun.jts.codegen.otsidl.JControlHelper;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+// Import required classes.
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.NO_PERMISSION;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.HeuristicHazard;
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.InvalidControl;
+import org.omg.CosTransactions.NoTransaction;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.StatusHolder;
+import org.omg.CosTransactions.SubtransactionsUnavailable;
+import org.omg.CosTransactions.Terminator;
+import org.omg.CosTransactions.TransactionFactory;
+import org.omg.CosTransactions.Unavailable;
 
 /**The CurrentImpl class is our implementation of the standard Current
  * interface. It provides operations that enable the demarcation of a
@@ -65,13 +78,13 @@ import com.sun.jts.utils.LogFormatter;
 //-----------------------------------------------------------------------------
 
 public class CurrentImpl extends org.omg.CORBA.LocalObject
-    implements org.omg.CosTransactions.Current {
+implements org.omg.CosTransactions.Current {
     private int timeOut = 0;
     private static boolean active = true;
     private TransactionFactory factory = null;
     /*
         Logger to log transaction messages
-    */
+     */
     static Logger _logger = LogDomains.getLogger(CurrentImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     /**Default CurrentImpl constructor.
@@ -205,35 +218,35 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                     if(_logger.isLoggable(Level.FINEST))
                     {
                         _logger.logp(Level.FINEST,"CurrentImpl","begin()",
-                                "Before invoking create() on TxFactory");
+                            "Before invoking create() on TxFactory");
                     }
 
                     if (Configuration.isLocalFactory()) {
-                      controlImpl = ((TransactionFactoryImpl) factory).localCreate(timeOut);
+                        controlImpl = ((TransactionFactoryImpl) factory).localCreate(timeOut);
                     } else {
-                      Control control = factory.create(timeOut);
+                        Control control = factory.create(timeOut);
 
-                      // This control object is remote.
-                      // In this case we need to deal with it in the same was as we do in the
-                      // resume method.  Any exception which is thrown during this process will
-                      // result in SubtransactionsUnavailable thrown to the caller.
+                        // This control object is remote.
+                        // In this case we need to deal with it in the same was as we do in the
+                        // resume method.  Any exception which is thrown during this process will
+                        // result in SubtransactionsUnavailable thrown to the caller.
 
-                      JControl jcontrol = JControlHelper.narrow(control);
-                      if (jcontrol != null) {
-                          controlImpl = ControlImpl.servant(jcontrol);
-                      }
+                        JControl jcontrol = JControlHelper.narrow(control);
+                        if (jcontrol != null) {
+                            controlImpl = ControlImpl.servant(jcontrol);
+                        }
 
-                      // If there is no local ControlImpl object for the transaction, we create one
-                      // now.
+                        // If there is no local ControlImpl object for the transaction, we create one
+                        // now.
 
-                      if (controlImpl == null) {
-                          controlImpl = new ControlImpl(control);
-                      }
+                        if (controlImpl == null) {
+                            controlImpl = new ControlImpl(control);
+                        }
                     }
                 }
             } catch( Throwable exc ) {
                 _logger.log(Level.WARNING,
-                        "jts.unexpected_error_in_begin",exc);
+                    "jts.unexpected_error_in_begin",exc);
 
             }
         }
@@ -242,7 +255,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
         if( controlImpl == null ){
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.FactoryFailed,
-                                                              CompletionStatus.COMPLETED_NO);
+                CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -252,10 +265,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
         else
             try {
                 if(_logger.isLoggable(Level.FINEST))
-                    {
-                        _logger.logp(Level.FINEST,"CurrentImpl","begin()",
-                                "Before invoking CurrentTransaction.setCurrent(control,true)");
-                    }
+                {
+                    _logger.logp(Level.FINEST,"CurrentImpl","begin()",
+                        "Before invoking CurrentTransaction.setCurrent(control,true)");
+                }
                 CurrentTransaction.setCurrent(controlImpl,true);
             }
 
@@ -389,35 +402,35 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                     if(_logger.isLoggable(Level.FINEST))
                     {
                         _logger.logp(Level.FINEST,"CurrentImpl","begin()",
-                                "Before invoking create() on TxFactory");
+                            "Before invoking create() on TxFactory");
                     }
 
                     if (Configuration.isLocalFactory()) {
-                      controlImpl = ((TransactionFactoryImpl) factory).localCreate(time_out);
+                        controlImpl = ((TransactionFactoryImpl) factory).localCreate(time_out);
                     } else {
-                      Control control = factory.create(time_out);
+                        Control control = factory.create(time_out);
 
-                      // This control object is remote.
-                      // In this case we need to deal with it in the same was as we do in the
-                      // resume method.  Any exception which is thrown during this process will
-                      // result in SubtransactionsUnavailable thrown to the caller.
+                        // This control object is remote.
+                        // In this case we need to deal with it in the same was as we do in the
+                        // resume method.  Any exception which is thrown during this process will
+                        // result in SubtransactionsUnavailable thrown to the caller.
 
-                      JControl jcontrol = JControlHelper.narrow(control);
-                      if (jcontrol != null) {
-                          controlImpl = ControlImpl.servant(jcontrol);
-                      }
+                        JControl jcontrol = JControlHelper.narrow(control);
+                        if (jcontrol != null) {
+                            controlImpl = ControlImpl.servant(jcontrol);
+                        }
 
-                      // If there is no local ControlImpl object for the transaction, we create one
-                      // now.
+                        // If there is no local ControlImpl object for the transaction, we create one
+                        // now.
 
-                      if (controlImpl == null) {
-                          controlImpl = new ControlImpl(control);
-                      }
+                        if (controlImpl == null) {
+                            controlImpl = new ControlImpl(control);
+                        }
                     }
                 }
             } catch( Throwable exc ) {
                 _logger.log(Level.WARNING,
-                        "jts.unexpected_error_in_begin",exc);
+                    "jts.unexpected_error_in_begin",exc);
 
             }
         }
@@ -426,7 +439,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
         if( controlImpl == null ){
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.FactoryFailed,
-                                                              CompletionStatus.COMPLETED_NO);
+                CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -436,10 +449,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
         else
             try {
                 if(_logger.isLoggable(Level.FINEST))
-                    {
-                        _logger.logp(Level.FINEST,"CurrentImpl","begin()",
-                                "Before invoking CurrentTransaction.setCurrent(control,true)");
-                    }
+                {
+                    _logger.logp(Level.FINEST,"CurrentImpl","begin()",
+                        "Before invoking CurrentTransaction.setCurrent(control,true)");
+                }
                 CurrentTransaction.setCurrent(controlImpl,true);
             }
 
@@ -520,7 +533,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                 }
 
                 INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed,
-                                                                  CompletionStatus.COMPLETED_NO);
+                    CompletionStatus.COMPLETED_NO);
                 throw exc;
             }
 
@@ -540,10 +553,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
             if( controlImpl.isOutgoing() ) {
             }
-            **/
+             **/
 
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.DeferredActivities,
-                                                              CompletionStatus.COMPLETED_NO);
+                CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -554,39 +567,39 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
             Terminator term = null;
 
             if (Configuration.isLocalFactory()) {
-              try {
-                term = controlImpl.get_localTerminator();
-              } catch (Throwable exc) {
-                NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
-                throw ex2;
-              }
+                try {
+                    term = controlImpl.get_localTerminator();
+                } catch (Throwable exc) {
+                    NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
+                    throw ex2;
+                }
             } else {
-              try {
-                  term = controlImpl.get_terminator();
-              } catch( Throwable exc ) {
-                NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
-                throw ex2;
-              }
+                try {
+                    term = controlImpl.get_terminator();
+                } catch( Throwable exc ) {
+                    NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
+                    throw ex2;
+                }
 
-              // Tell the Terminator to commit the transaction.
-              // This will end the current association of the transaction, if the
-              // Terminator is local.  If the Terminator is remote, we end the association
-              // ourselves, and do not request unstacking as there will be no stacked
-              // Control.
+                // Tell the Terminator to commit the transaction.
+                // This will end the current association of the transaction, if the
+                // Terminator is local.  If the Terminator is remote, we end the association
+                // ourselves, and do not request unstacking as there will be no stacked
+                // Control.
 
-              // End the association if the Terminator is remote.  This is done under a
-              // local environment to ignore any exception.  This must be done before
-              // the Terminator is called otherwise the ControlImpl object will get
-              // confused.
+                // End the association if the Terminator is remote.  This is done under a
+                // local environment to ignore any exception.  This must be done before
+                // the Terminator is called otherwise the ControlImpl object will get
+                // confused.
 
-              try {
-                if( Configuration.getProxyChecker().isProxy(term) )
-                    CurrentTransaction.endCurrent(true);
-              } catch( Throwable exc ) {}
+                try {
+                    if( Configuration.getProxyChecker().isProxy(term) )
+                        CurrentTransaction.endCurrent(true);
+                } catch( Throwable exc ) {}
             }
             // Commit the transaction.
 
-        try{
+            try{
                 term.commit(reportHeuristics);
             } catch (TRANSACTION_ROLLEDBACK e) {
                 // ADDED (Ram J) (10/15/01) To handle asynchronous aborts. End
@@ -660,12 +673,12 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                     /* TN - do not throw rollback exception
                     TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
                     throw exc;
-                    */
+                     */
                     return;
                 }
 
                 INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed,
-                                                                  CompletionStatus.COMPLETED_NO);
+                    CompletionStatus.COMPLETED_NO);
                 throw exc;
             }
 
@@ -685,10 +698,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
             if( controlImpl.isOutgoing() ) {
             }
-            **/
+             **/
 
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.DeferredActivities,
-                                                              CompletionStatus.COMPLETED_NO);
+                CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -699,35 +712,35 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
             Terminator term = null;
 
             if (Configuration.isLocalFactory()) {
-              try {
-                  term = controlImpl.get_localTerminator();
-              } catch( Unavailable exc ) {
-                NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
-                throw ex2;
-              }
+                try {
+                    term = controlImpl.get_localTerminator();
+                } catch( Unavailable exc ) {
+                    NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
+                    throw ex2;
+                }
             } else {
-              try {
-                term = controlImpl.get_terminator();
-              } catch( Unavailable exc ) {
-                NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
-                throw ex2;
-              }
+                try {
+                    term = controlImpl.get_terminator();
+                } catch( Unavailable exc ) {
+                    NO_PERMISSION ex2 = new NO_PERMISSION(0,CompletionStatus.COMPLETED_NO);
+                    throw ex2;
+                }
 
-              // Tell the Terminator to roll the transaction back.
-              // This will end the current association of the transaction, if the
-              // Terminator is local.  If the Terminator is remote, we end the association
-              // ourselves, and do not request unstacking as there will be no stacked
-              // Control.
+                // Tell the Terminator to roll the transaction back.
+                // This will end the current association of the transaction, if the
+                // Terminator is local.  If the Terminator is remote, we end the association
+                // ourselves, and do not request unstacking as there will be no stacked
+                // Control.
 
-              // End the association if the Terminator is remote.  This is done under a
-              // local environment to ignore any exception.  This must be done before
-              // the Terminator is called otherwise the ControlImpl object will get
-              // confused.
+                // End the association if the Terminator is remote.  This is done under a
+                // local environment to ignore any exception.  This must be done before
+                // the Terminator is called otherwise the ControlImpl object will get
+                // confused.
 
-              try {
-                if( Configuration.getProxyChecker().isProxy(term) )
-                    CurrentTransaction.endCurrent(true);
-              } catch( Throwable exc ) {}
+                try {
+                    if( Configuration.getProxyChecker().isProxy(term) )
+                        CurrentTransaction.endCurrent(true);
+                } catch( Throwable exc ) {}
             }
             // Roll the transaction back.
 
@@ -856,7 +869,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
     }
 
     public int get_timeout() {
-    return timeOut;
+        return timeOut;
     }
 
     /**Returns the current ControlImpl object.
@@ -883,11 +896,11 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
         ControlImpl control = CurrentTransaction.getCurrent();
         if (control != null) {
-          if (Configuration.isLocalFactory()) {
-            result = (Control) control;
-          } else {
-            result = control.object();
-          }
+            if (Configuration.isLocalFactory()) {
+                result = (Control) control;
+            } else {
+                result = control.object();
+            }
         }
 
         return result;
@@ -908,16 +921,16 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
         if(_logger.isLoggable(Level.FINEST))
         {
             _logger.logp(Level.FINEST,"CurrentImpl","suspend()",
-                    "Current thread has been disassociated from control :"
+                "Current thread has been disassociated from control :"
                     +cImpl);
         }
 
         if (Configuration.isLocalFactory()) {
             result = (Control) cImpl;
         } else {
-          if (cImpl != null) {
-            result = cImpl.object();
-          }
+            if (cImpl != null) {
+                result = cImpl.object();
+            }
         }
 
         return result;
@@ -954,26 +967,26 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
             if (Configuration.isLocalFactory()) {
                 contImpl = (ControlImpl) control;
             } else {
-              // Check the ControlImpl object is valid.
-              JControl jcontrol = JControlHelper.narrow(control);
+                // Check the ControlImpl object is valid.
+                JControl jcontrol = JControlHelper.narrow(control);
 
-              // Try to locate the local ControlImpl object for the transaction.
+                // Try to locate the local ControlImpl object for the transaction.
 
-              if( jcontrol != null )
-                contImpl = ControlImpl.servant(jcontrol);
+                if( jcontrol != null )
+                    contImpl = ControlImpl.servant(jcontrol);
 
-              // If there is no local ControlImpl object for the transaction, we create one
-              // now.
+                // If there is no local ControlImpl object for the transaction, we create one
+                // now.
 
-              if( contImpl == null )
-                try {
-                    contImpl = new ControlImpl(control);
-                } catch( Exception exc ) {
+                if( contImpl == null )
+                    try {
+                        contImpl = new ControlImpl(control);
+                    } catch( Exception exc ) {
 
-                    InvalidControl ex2 = new InvalidControl();
-                    throw ex2;
-                }
-             }
+                        InvalidControl ex2 = new InvalidControl();
+                        throw ex2;
+                    }
+            }
 
             // End the current association regardless of whether there is one.
             // Attempt to make the given ControlImpl object the current one.
@@ -984,7 +997,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                 if(_logger.isLoggable(Level.FINEST))
                 {
                     _logger.logp(Level.FINEST,"CurrentImpl","resume(control)",
-                            "Current thread has been associated with control :"
+                        "Current thread has been associated with control :"
                             +contImpl);
                 }
             }

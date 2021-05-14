@@ -16,17 +16,20 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.sql.*;
-import javax.sql.*;
-import javax.naming.*;
-import java.lang.reflect.Method;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /** The LogDBHelper class takes care of writing the transaction logs
   *  into database.
@@ -175,8 +178,8 @@ class LogDBHelper {
             Connection conn = null;
             PreparedStatement prepStmt1 = null;
             try {
-         // To avoid compile time dependency to get NonTxConnection
-        conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
+                // To avoid compile time dependency to get NonTxConnection
+                conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
                 prepStmt1 = conn.prepareStatement(deleteStatement);
                 prepStmt1.setString(1,Long.toString(localTID));
                 prepStmt1.setString(2,serverName0); //Configuration.getServerName());
@@ -199,9 +202,11 @@ class LogDBHelper {
         return false;
     }
 
+
     Map getGlobalTIDMap() {
         return getGlobalTIDMap(serverName);
     }
+
 
     Map getGlobalTIDMap(String serverName0) {
         Map gtidMap = new HashMap();
@@ -214,7 +219,7 @@ class LogDBHelper {
             ResultSet rs = null;
             try {
                 //conn = ds.getConnection();
-        conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
+                conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
                 prepStmt1 = conn.prepareStatement(selectStatement);
                 prepStmt1.setString(1,serverName0); //Configuration.getServerName());
                 rs = prepStmt1.executeQuery();
@@ -256,6 +261,7 @@ class LogDBHelper {
         return gtidMap;
     }
 
+
     String getServerNameForInstanceName(String instanceName0) {
         String serverName0 = null;
         if (ds != null) {
@@ -267,7 +273,7 @@ class LogDBHelper {
             ResultSet rs = null;
             try {
                 //conn = ds.getConnection();
-        conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
+                conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
                 prepStmt1 = conn.prepareStatement(selectServerNameStatement);
                 prepStmt1.setString(1,instanceName0);
                 rs = prepStmt1.executeQuery();

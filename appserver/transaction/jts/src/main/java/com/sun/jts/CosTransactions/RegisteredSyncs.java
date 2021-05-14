@@ -30,16 +30,16 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.trace.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
+
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.COMM_FAILURE;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.Synchronization;
 
 /**
  * The RegisteredSyncs class provides operations that manage a set of
@@ -100,18 +100,16 @@ class RegisteredSyncs {
         for (int i = 0; i < registered.size() && result == true; i++) {
             Synchronization sync = (Synchronization) registered.elementAt(i);
             try {
-                 if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeBefore()",
-                            "Before invoking before_completion() on synchronization object " + sync);
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.logp(Level.FINEST, "RegisterdSyncs", "distributeBefore()",
+                        "Before invoking before_completion() on synchronization object " + sync);
                 }
 
                 sync.before_completion();
 
-                 if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeBefore()",
-                              "After invoking before_completion() on synchronization object " + sync);
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.logp(Level.FINEST, "RegisterdSyncs", "distributeBefore()",
+                        "After invoking before_completion() on synchronization object " + sync);
                 }
             } catch (RuntimeException rex) {
                 // Exception was logged in SynchronizationImpl
@@ -150,19 +148,16 @@ class RegisteredSyncs {
             }
 
             try {
-                 if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeAfter()",
-                            "Before invoking after_completion() on synchronization object " + sync);
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.logp(Level.FINEST, "RegisterdSyncs", "distributeAfter()",
+                        "Before invoking after_completion() on synchronization object " + sync);
                 }
 
                 sync.after_completion(status);
 
-                 if(_logger.isLoggable(Level.FINEST))
-                {
-                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeAfter()",
-                            "After invoking after_completion() on"+
-                            "synchronization object"+ sync);
+                if (_logger.isLoggable(Level.FINEST)) {
+                    _logger.logp(Level.FINEST, "RegisterdSyncs", "distributeAfter()",
+                        "After invoking after_completion() on" + "synchronization object" + sync);
                 }
             } catch (Throwable exc) {
                 // Discard any exceptions at this point.

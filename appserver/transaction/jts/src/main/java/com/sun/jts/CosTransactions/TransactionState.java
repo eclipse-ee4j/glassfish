@@ -30,17 +30,13 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.io.*;
-import java.util.*;
-import com.sun.jts.trace.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.utils.RecoveryHooks.FailureInducer;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.jts.utils.RecoveryHooks.FailureInducer;
+import com.sun.logging.LogDomains;
+
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * The TransactionState interface provides operations that maintain the
  * relative commitment state of a Coordinator object, and is responsible for
@@ -260,8 +256,7 @@ class TransactionState {
 
         // Create a global identifier.
 
-        globalTID = new GlobalTID(XID_FORMAT_ID, 0,
-                                  generateTID(localTID.longValue()));
+        globalTID = new GlobalTID(XID_FORMAT_ID, 0, generateTID(localTID.longValue()));
 
         // Store the values in instance variables.
         // This is a top-level transaction.
@@ -351,8 +346,7 @@ class TransactionState {
 
         // Create a global identifier.
 
-        globalTID = new GlobalTID(XID_FORMAT_ID, 0,
-                                  generateTID(localTID.longValue()));
+        globalTID = new GlobalTID(XID_FORMAT_ID, 0, generateTID(localTID.longValue()));
 
         // Store the values in instance variables. This is a subtransaction.
 
@@ -391,11 +385,10 @@ class TransactionState {
         for (int i = 0; i < logData.length; i++) {
             if (logData[i].length > 1) {
                 logState |= (((logData[i][0] & 255) << 8) +
-                             (logData[i][1] & 255));
+                              (logData[i][1] & 255));
             } else {
                 // If the log record data is invalid, then exit immediately.
-                _logger.log(Level.SEVERE,"jts.invalid_log_record_data",
-                        LOG_SECTION_NAME);
+                _logger.log(Level.SEVERE, "jts.invalid_log_record_data", LOG_SECTION_NAME);
                 String msg = LogFormatter.getLocalizedMessage(_logger,
                             "jts.invalid_log_record_data",
                             new java.lang.Object[] { LOG_SECTION_NAME });
@@ -405,33 +398,31 @@ class TransactionState {
 
         // Set the state value returned from the reconstruct method
 
-        if ((logState & (1 << STATE_ROLLED_BACK)) != 0)
+        if ((logState & (1 << STATE_ROLLED_BACK)) != 0) {
             result = STATE_ROLLED_BACK;
-        else if ((logState & (1 << STATE_COMMITTED)) != 0)
+        } else if ((logState & (1 << STATE_COMMITTED)) != 0) {
             result = STATE_COMMITTED;
-        else if ((logState & (1 << STATE_COMMITTING)) != 0)
+        } else if ((logState & (1 << STATE_COMMITTING)) != 0) {
             result = STATE_COMMITTING;
-        else if ((logState & (1 << STATE_ROLLING_BACK)) != 0)
+        } else if ((logState & (1 << STATE_ROLLING_BACK)) != 0) {
             result = STATE_ROLLING_BACK;
-        else if ((logState & (1 << STATE_PREPARED_READONLY)) != 0)
+        } else if ((logState & (1 << STATE_PREPARED_READONLY)) != 0) {
             result = STATE_PREPARED_READONLY;
-        else if ((logState & (1 << STATE_PREPARED_FAIL)) != 0)
+        } else if ((logState & (1 << STATE_PREPARED_FAIL)) != 0) {
             result = STATE_PREPARED_FAIL;
-        else if ((logState & (1 << STATE_PREPARED_SUCCESS)) != 0)
+        } else if ((logState & (1 << STATE_PREPARED_SUCCESS)) != 0) {
             result = STATE_PREPARED_SUCCESS;
-        // GDH new states-->
-        else if ((logState & (1 << STATE_COMMITTING_ONE_PHASE)) != 0)
+        } else if ((logState & (1 << STATE_COMMITTING_ONE_PHASE)) != 0) {
             result = STATE_COMMITTING_ONE_PHASE;
-        else if ((logState & (1 << STATE_COMMITTED_ONE_PHASE_OK)) != 0)
+        } else if ((logState & (1 << STATE_COMMITTED_ONE_PHASE_OK)) != 0) {
             result = STATE_COMMITTED_ONE_PHASE_OK;
-        else if ((logState & (1 << STATE_COMMIT_ONE_PHASE_ROLLED_BACK)) != 0)
+        } else if ((logState & (1 << STATE_COMMIT_ONE_PHASE_ROLLED_BACK)) != 0) {
             result = STATE_COMMIT_ONE_PHASE_ROLLED_BACK;
-        else if ((logState &
-                 (1 << STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD)) != 0)
+        } else if ((logState & (1 << STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD)) != 0) {
             result = STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD;
-        else if ((logState &
-                 (1 << STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED)) != 0)
+        } else if ((logState & (1 << STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED)) != 0) {
             result = STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED;
+        }
 
         state = result;
         subordinate = false;
@@ -467,18 +458,16 @@ class TransactionState {
 
         if (validStateChange[state][newState]) {
 
-            //Added code for counting and blocking.
-            if(AdminUtil.bSampling)
-            {
-                switch ( newState )
-                {
-                    case STATE_PREPARED_SUCCESS :
+            // Added code for counting and blocking.
+            if (AdminUtil.bSampling) {
+                switch (newState) {
+                    case STATE_PREPARED_SUCCESS:
                         AdminUtil.incrementPendingTransactionCount();
-                        break ;
-                    case STATE_PREPARED_READONLY :
+                        break;
+                    case STATE_PREPARED_READONLY:
                         AdminUtil.incrementPendingTransactionCount();
-                        break ;
-                    case STATE_COMMITTED :
+                        break;
+                    case STATE_COMMITTED:
                         AdminUtil.incrementCommitedTransactionCount();
                         break ;
                     case STATE_ROLLED_BACK :
@@ -506,126 +495,131 @@ class TransactionState {
             {
                 case STATE_PREPARING :
                 case STATE_COMMITTING :
-
                 case STATE_COMMITTING_ONE_PHASE :
                     if(_logger.isLoggable(Level.FINEST)){
-                        String statestr=null;
-                        switch(newState ) {
-                        case STATE_PREPARING :
-                            statestr="PREPARING";
-                            break;
-                        case STATE_COMMITTING :
-                            statestr="COMMITTING";
-                            break;
-                        case STATE_COMMITTING_ONE_PHASE :
-                            statestr="COMMITTING_ONE_PHASE";
-                            break;
-                        default :
-                            statestr="Illegal state ";
-                            break;
+                        String statestr = null;
+                        switch (newState) {
+                            case STATE_PREPARING:
+                                statestr = "PREPARING";
+                                break;
+                            case STATE_COMMITTING:
+                                statestr = "COMMITTING";
+                                break;
+                            case STATE_COMMITTING_ONE_PHASE:
+                                statestr = "COMMITTING_ONE_PHASE";
+                                break;
+                            default:
+                                statestr = "Illegal state ";
+                                break;
                         }
-                        _logger.logp(Level.FINEST,"TransactionState","setState()",
-                                "Releasing read lock on freeze : state "+statestr);
+                        _logger.logp(Level.FINEST, "TransactionState", "setState()",
+                            "Releasing read lock on freeze : state " + statestr);
                     }
                     freezeLock.releaseReadLock();
-                    if(_logger.isLoggable(Level.FINEST)){
-                        String statestr=null;
-                        _logger.logp(Level.FINEST,"TransactionState","setState()",
-                                 "Released read lock on freeze");
-                    switch(newState ) {
-                        case STATE_PREPARING :
-                            statestr="PREPARING";
-                            break;
-                        case STATE_COMMITTING :
-                            statestr="COMMITTING";
-                            break;
-                        case STATE_COMMITTING_ONE_PHASE :
-                            statestr="COMMITTING_ONE_PHASE";
-                            break;
-                        default :
-                            statestr="Illegal state ";
-                            break;
+                    if (_logger.isLoggable(Level.FINEST)) {
+                        String statestr = null;
+                        _logger.logp(Level.FINEST, "TransactionState", "setState()", "Released read lock on freeze");
+                        switch (newState) {
+                            case STATE_PREPARING:
+                                statestr = "PREPARING";
+                                break;
+                            case STATE_COMMITTING:
+                                statestr = "COMMITTING";
+                                break;
+                            case STATE_COMMITTING_ONE_PHASE:
+                                statestr = "COMMITTING_ONE_PHASE";
+                                break;
+                            default:
+                                statestr = "Illegal state ";
+                                break;
                         }
-                        _logger.logp(Level.FINEST,"TransactionState","setState()",
-                                "Released read lock on freeze : state "+statestr);
+                        _logger.logp(Level.FINEST, "TransactionState", "setState()",
+                            "Released read lock on freeze : state " + statestr);
                     }
                     break;
             }
 
             //acquire read locks
-            switch ( newState )
-            {
-                case STATE_PREPARING :
+            switch (newState) {
+                case STATE_PREPARING:
                 case STATE_COMMITTING :
-                //case STATE_ROLLING_BACK :
-                case STATE_COMMITTING_ONE_PHASE :
+                    //case STATE_ROLLING_BACK :
+                case STATE_COMMITTING_ONE_PHASE:
                     if(_logger.isLoggable(Level.FINEST)){
                         String statestr=null;
                         switch(newState ) {
-                        case STATE_PREPARING :
-                            statestr="PREPARING";
-                            break;
-                        case STATE_COMMITTING :
-                            statestr="COMMITTING";
-                            break;
-                        case STATE_COMMITTING_ONE_PHASE :
-                            statestr="COMMITTING_ONE_PHASE";
-                            break;
-                        default :
-                            statestr="Illegal state ";
-                            break;
+                            case STATE_PREPARING :
+                                statestr="PREPARING";
+                                break;
+                            case STATE_COMMITTING :
+                                statestr="COMMITTING";
+                                break;
+                            case STATE_COMMITTING_ONE_PHASE :
+                                statestr="COMMITTING_ONE_PHASE";
+                                break;
+                            default :
+                                statestr="Illegal state ";
+                                break;
                         }
                         _logger.logp(Level.FINEST,"TransactionState","setState()",
-                                "Acquiring read lock on freeze : state "+statestr);
+                            "Acquiring read lock on freeze : state "+statestr);
                     }
                     freezeLock.acquireReadLock();
-                    if(_logger.isLoggable(Level.FINEST)){
+                    if (_logger.isLoggable(Level.FINEST)) {
                         String statestr=null;
                         switch(newState ) {
-                        case STATE_PREPARING :
-                            statestr="PREPARING";
-                            break;
-                        case STATE_COMMITTING :
-                            statestr="COMMITTING";
-                            break;
-                        case STATE_COMMITTING_ONE_PHASE :
-                            statestr="COMMITTING_ONE_PHASE";
-                            break;
-                        default :
-                            statestr="Illegal state ";
-                            break;
+                            case STATE_PREPARING :
+                                statestr="PREPARING";
+                                break;
+                            case STATE_COMMITTING :
+                                statestr="COMMITTING";
+                                break;
+                            case STATE_COMMITTING_ONE_PHASE :
+                                statestr="COMMITTING_ONE_PHASE";
+                                break;
+                            default :
+                                statestr="Illegal state ";
+                                break;
                         }
                         _logger.logp(Level.FINEST,"TransactionState","setState()",
-                                "Acquired read lock on freeze : state "+statestr);
+                            "Acquired read lock on freeze : state "+statestr);
                     }
                     break;
             }
 
             // RecoveryHook (for induced crashes and waits)  (Ram Jeyaraman)
-            if (FailureInducer.isFailureInducerActive() &&
-                    (!(Thread.currentThread().getName().
-                        equals("JTS Resync Thread"/*#Frozen*/)))) {
+            if (FailureInducer.isFailureInducerActive()
+                && (!(Thread.currentThread().getName().equals("JTS Resync Thread"/* #Frozen */)))) {
                 Integer failurePoint = null;
                 switch (newState) {
-                    case STATE_PREPARING :
-                        failurePoint = FailureInducer.ACTIVE; break;
-                    case STATE_PREPARED_SUCCESS :
-                        failurePoint = FailureInducer.PREPARING; break;
-                    case STATE_PREPARED_FAIL :
-                        failurePoint = FailureInducer.PREPARING; break;
-                    case STATE_PREPARED_READONLY :
-                        failurePoint = FailureInducer.PREPARING; break;
-                    case STATE_COMMITTING_ONE_PHASE :
-                        failurePoint = FailureInducer.ACTIVE; break;
-                    case STATE_COMMITTED_ONE_PHASE_OK :
-                        failurePoint = FailureInducer.COMPLETING; break;
-                    case STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
-                        failurePoint = FailureInducer.COMPLETING; break;
-                    case STATE_COMMITTING :
-                        failurePoint = FailureInducer.PREPARED; break;
-                    case STATE_COMMITTED :
-                        failurePoint = FailureInducer.COMPLETING; break;
-                    case STATE_ROLLING_BACK :
+                    case STATE_PREPARING:
+                        failurePoint = FailureInducer.ACTIVE;
+                        break;
+                    case STATE_PREPARED_SUCCESS:
+                        failurePoint = FailureInducer.PREPARING;
+                        break;
+                    case STATE_PREPARED_FAIL:
+                        failurePoint = FailureInducer.PREPARING;
+                        break;
+                    case STATE_PREPARED_READONLY:
+                        failurePoint = FailureInducer.PREPARING;
+                        break;
+                    case STATE_COMMITTING_ONE_PHASE:
+                        failurePoint = FailureInducer.ACTIVE;
+                        break;
+                    case STATE_COMMITTED_ONE_PHASE_OK:
+                        failurePoint = FailureInducer.COMPLETING;
+                        break;
+                    case STATE_COMMIT_ONE_PHASE_ROLLED_BACK:
+                        failurePoint = FailureInducer.COMPLETING;
+                        break;
+                    case STATE_COMMITTING:
+                        failurePoint = FailureInducer.PREPARED;
+                        break;
+                    case STATE_COMMITTED:
+                        failurePoint = FailureInducer.COMPLETING;
+                        break;
+                    case STATE_ROLLING_BACK:
                         if (state == STATE_PREPARED_SUCCESS) {
                             failurePoint = FailureInducer.PREPARED;
                         } else if (state == STATE_PREPARED_FAIL) {
@@ -636,7 +630,7 @@ class TransactionState {
                             failurePoint = FailureInducer.ACTIVE;
                         }
                         break;
-                    case STATE_ROLLED_BACK :
+                    case STATE_ROLLED_BACK:
                         failurePoint = FailureInducer.COMPLETING;
                     default:
                         break;
@@ -653,20 +647,20 @@ class TransactionState {
             // Add state information to CoordinatorLog for various states.
 
             if (logRecord != null &&
-                    (newState == STATE_PREPARED_SUCCESS ||
-                     newState == STATE_PREPARED_FAIL ||
-                     (newState == STATE_COMMITTING && subordinate) ||
-                     (newState == STATE_ROLLING_BACK && subordinate) ||
-                     newState == STATE_COMMITTED ||
-                     newState == STATE_ROLLED_BACK ||
-                     // GDH
-                     // newState == STATE_COMMITTING_ONE_PHASE   ||
-                     // newState == STATE_COMMITTED_ONE_PHASE_OK   ||
-                     // newState == STATE_COMMIT_ONE_PHASE_ROLLED_BACK ||
-                     newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD ||
-                     newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED
-                     // GDH
-                    )) {
+                (newState == STATE_PREPARED_SUCCESS ||
+                newState == STATE_PREPARED_FAIL ||
+                (newState == STATE_COMMITTING && subordinate) ||
+                (newState == STATE_ROLLING_BACK && subordinate) ||
+                newState == STATE_COMMITTED ||
+                newState == STATE_ROLLED_BACK ||
+                // GDH
+                // newState == STATE_COMMITTING_ONE_PHASE   ||
+                // newState == STATE_COMMITTED_ONE_PHASE_OK   ||
+                // newState == STATE_COMMIT_ONE_PHASE_ROLLED_BACK ||
+                newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD ||
+                newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED
+                // GDH
+            )) {
                 byte[] byteData = new byte[2];
                 byteData[0] = (byte)(((1 << state) & 0xff00) >> 8);
                 byteData[1] = (byte)( (1 << state) & 0x00ff);
@@ -680,17 +674,18 @@ class TransactionState {
             // sure that the log information is permanent.
 
             if (logRecord != null &&
-                    (newState == STATE_PREPARED_SUCCESS ||
-                     // GDH:  All the new states should be flushed to the log
-                     //        cop as it represents begining of commit and
-                     //        the others as they represent end of phase one
-                     // (at least)
+                (newState == STATE_PREPARED_SUCCESS ||
+                // GDH:  All the new states should be flushed to the log
+                //        cop as it represents begining of commit and
+                //        the others as they represent end of phase one
+                // (at least)
 
-                     newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD ||
-                     newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED ||
-                     // \GDH
-                     (newState == STATE_COMMITTING && subordinate) ||
-                     (newState == STATE_ROLLING_BACK && subordinate))) {
+                newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD ||
+                newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED ||
+                // \GDH
+                (newState == STATE_COMMITTING && subordinate) ||
+                (newState == STATE_ROLLING_BACK && subordinate))
+            ) {
 
                 // If this is the first time a transaction has
                 // gone in-doubt in this process, then ensure
@@ -706,7 +701,7 @@ class TransactionState {
                 if (!result) {
                     // empty
                 }
-                **/
+                 **/
             } else {
                 if (newState == STATE_PREPARED_SUCCESS ||
                      newState == STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD ||
@@ -716,7 +711,7 @@ class TransactionState {
                      setInDoubt(true);
                      // LogDBHelper.getInstance().addRecord(localTID.longValue(), globalTID.toTidBytes());
                 }
-        }
+            }
 
 
             // If the new state represents completion of a
@@ -724,10 +719,10 @@ class TransactionState {
             // then write an unforced record to the log.
 
             if (logRecord != null && (newState == STATE_COMMITTED ||
-                                      // newState == STATE_COMMITTING_ONE_PHASE   ||
-                                      // newState == STATE_COMMITTED_ONE_PHASE_OK   ||
-                                      // newState == STATE_COMMIT_ONE_PHASE_ROLLED_BACK ||
-                                      newState == STATE_ROLLED_BACK)) {
+                // newState == STATE_COMMITTING_ONE_PHASE   ||
+                // newState == STATE_COMMITTED_ONE_PHASE_OK   ||
+                // newState == STATE_COMMIT_ONE_PHASE_ROLLED_BACK ||
+                newState == STATE_ROLLED_BACK)) {
 
                 // Write the log record for the transaction (unforced).
 
@@ -736,13 +731,12 @@ class TransactionState {
                 if (!result) {
                     // empty
                 }
-                **/
+                 **/
             }
 
             // RecoveryHook (for induced crashes and waits)  (Ram Jeyaraman)
-            if (FailureInducer.isFailureInducerActive() &&
-                    (!(Thread.currentThread().getName().
-                        equals("JTS Resync Thread"/*#Frozen*/)))) {
+            if (FailureInducer.isFailureInducerActive()
+                && (!(Thread.currentThread().getName().equals("JTS Resync Thread"/* #Frozen */)))) {
                 Integer failurePoint = null;
                 switch (newState) {
                     case STATE_COMMITTED_ONE_PHASE_OK :
@@ -827,12 +821,12 @@ class TransactionState {
      * @see
      */
     private static final byte[] generateTID(long localTID) {
-        if(TIDTemplate==null){
-        synchronized(TransactionState.class){
-                if(TIDTemplate==null){
+        if (TIDTemplate == null) {
+            synchronized (TransactionState.class) {
+                if (TIDTemplate == null) {
                     String serverName = Configuration.getServerName();
                     int nameLength = (serverName == null ? 0 : serverName.length());
-                TIDTemplate = new byte[nameLength+8];
+                    TIDTemplate = new byte[nameLength+8];
 
                     long epochNumber    = new Date().getTime();
                     TIDTemplate[4] = (byte) epochNumber;
@@ -840,13 +834,14 @@ class TransactionState {
                     TIDTemplate[6] = (byte)(epochNumber >> 16);
                     TIDTemplate[7] = (byte)(epochNumber >> 24);
 
-                    for( int i = 0; i < nameLength; i++ )
-                        TIDTemplate[i+8] = (byte) serverName.charAt(i);
+                    for (int i = 0; i < nameLength; i++) {
+                        TIDTemplate[i + 8] = (byte) serverName.charAt(i);
+                    }
+                }
+            }
         }
-        }
-    }
         byte[] result = new byte[TIDTemplate.length];
-    System.arraycopy(TIDTemplate, 4, result, 4, TIDTemplate.length-4);
+        System.arraycopy(TIDTemplate, 4, result, 4, TIDTemplate.length-4);
 
         result[0] = (byte) localTID;
         result[1] = (byte)(localTID >> 8);

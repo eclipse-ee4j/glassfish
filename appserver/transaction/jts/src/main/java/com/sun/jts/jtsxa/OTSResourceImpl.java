@@ -116,13 +116,14 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
                 throw hh;
             }
             if ((e.errorCode == XAException.XA_RETRY) ||
-        (e.errorCode == XAException.XA_RBTRANSIENT) ||
-        (e.errorCode == XAException.XA_RBCOMMFAIL))
-        throw new TRANSIENT();
+                (e.errorCode == XAException.XA_RBTRANSIENT) ||
+                (e.errorCode == XAException.XA_RBCOMMFAIL)) {
+                throw new TRANSIENT();
+            }
             if (e.errorCode >= XAException.XA_RBBASE &&
                 e.errorCode <= XAException.XA_RBEND) {
                 throw new HeuristicRollback(ex.getMessage());
-        }
+            }
             INTERNAL internal =  new INTERNAL(0,CompletionStatus.COMPLETED_MAYBE);
             internal.initCause(ex);
             _logger.log(Level.WARNING, "jts.unexpected_error_occurred_twopc_commit", ex);
@@ -327,13 +328,14 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
             if (e.errorCode == XAException.XA_HEURMIX)
                 throw new HeuristicMixed(ex.getMessage());
             if ((e.errorCode == XAException.XA_RETRY) ||
-        (e.errorCode == XAException.XA_RBTRANSIENT) ||
-        (e.errorCode == XAException.XA_RBCOMMFAIL))
-        throw new TRANSIENT();
+                (e.errorCode == XAException.XA_RBTRANSIENT) ||
+                (e.errorCode == XAException.XA_RBCOMMFAIL)) {
+                throw new TRANSIENT();
+            }
             if (e.errorCode == XAException.XAER_RMERR ||
-                    e.errorCode == XAException.XA_RBROLLBACK ||
-                    e.errorCode == XAException.XAER_NOTA ||
-                    e.errorCode == XAException.XAER_RMFAIL) {
+                e.errorCode == XAException.XA_RBROLLBACK ||
+                e.errorCode == XAException.XAER_NOTA ||
+                e.errorCode == XAException.XAER_RMFAIL) {
                 _logger.log(Level.WARNING, "jts.unexpected_error_occurred_twopc_rollback", ex);
                 throw new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_MAYBE);
             }

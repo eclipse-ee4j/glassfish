@@ -39,8 +39,7 @@ public class TransactionServerInterceptor extends LocalObject
      * @param the order in which the interceptor should run.
      */
     public TransactionServerInterceptor(int order, ServiceLocator habitat) {
-    this.order = order;
-
+        this.order = order;
         gfORBHelper = habitat.getService(GlassFishORBHelper.class);
         tm = habitat.getService(JavaEETransactionManager.class);
     }
@@ -51,12 +50,12 @@ public class TransactionServerInterceptor extends LocalObject
 
     public void receive_request_service_contexts(ServerRequestInfo sri) { }
 
-    public int compareTo(Object o)
-    {
-    int otherOrder = -1;
-    if( o instanceof TransactionServerInterceptor) {
-            otherOrder = ((TransactionServerInterceptor)o).order;
-    }
+
+    public int compareTo(Object o) {
+        int otherOrder = -1;
+        if (o instanceof TransactionServerInterceptor) {
+            otherOrder = ((TransactionServerInterceptor) o).order;
+        }
         if (order < otherOrder) {
             return -1;
         } else if (order == otherOrder) {
@@ -64,6 +63,7 @@ public class TransactionServerInterceptor extends LocalObject
         }
         return 1;
     }
+
 
     public void destroy() {
     }
@@ -85,12 +85,12 @@ public class TransactionServerInterceptor extends LocalObject
 
     private void checkTransaction(ServerRequestInfo sri) {
         try {
-        if ( tm != null )
-            tm.checkTransactionImport();
+            if (tm != null)
+                tm.checkTransactionImport();
         } finally {
             if (gfORBHelper.isEjbCall(sri)) {
                 tm.cleanTxnTimeout();
             }
-    }
+        }
     }
 }

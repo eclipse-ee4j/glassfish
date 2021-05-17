@@ -215,13 +215,6 @@ public class Client {
                 }
             }
 
-        try {
-        Future<Object> future = hello.unprotectedAsyncRemote();
-        Object obj = future.get();
-        pass = true;
-        } catch(ExecutionException ee) {
-        pass = false;
-        }
 
             System.out.println("pass = " + pass);
 
@@ -235,12 +228,6 @@ public class Client {
             }
 
 
-        try {
-        hello.testProtectedSyncLocal();
-        pass = havePermission;
-        }  catch(EJBAccessException e) {
-        pass = !havePermission;
-        }
 
             System.out.println("pass = " + pass);
 
@@ -253,16 +240,9 @@ public class Client {
             }
 
 
-        try {
-        hello.testUnprotectedSyncLocal();
-        pass = true;
-        }  catch(Exception e) {
-        pass = false;
-        }
 
             System.out.println("pass = " + pass);
 
-        System.out.println("pass = " + pass);
 
             try {
                 hello.testUnprotectedSyncLocal();
@@ -271,12 +251,6 @@ public class Client {
                 pass = false;
             }
 
-        try {
-        hello.testProtectedAsyncLocal();
-        pass = havePermission;
-        }  catch(EJBAccessException e) {
-        pass = !havePermission;
-        }
 
             System.out.println("pass = " + pass);
 

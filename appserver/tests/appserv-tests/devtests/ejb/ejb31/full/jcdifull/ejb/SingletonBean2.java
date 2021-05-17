@@ -121,15 +121,10 @@ public class SingletonBean2 {
             System.out.println("destroy managed object method = " + destroyManagedMethod);
             destroyManagedMethod.invoke(injectionMgr, f2);
 
-             FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
-             System.out.println("FooNonManagedBean = " + nonF);
-             nonF.hello();
-             destroyManagedMethod.invoke(injectionMgr, nonF);
-
-         FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
-         System.out.println("FooNonManagedBean = " + nonF);
-         nonF.hello();
-         destroyManagedMethod.invoke(injectionMgr, nonF);
+            FooNonManagedBean nonF = (FooNonManagedBean) createManagedMethod.invoke(injectionMgr, FooNonManagedBean.class);
+            System.out.println("FooNonManagedBean = " + nonF);
+            nonF.hello();
+            destroyManagedMethod.invoke(injectionMgr, nonF);
 
         } catch(Exception e) {
             throw new EJBException(e);

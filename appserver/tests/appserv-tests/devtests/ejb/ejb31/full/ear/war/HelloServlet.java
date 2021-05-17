@@ -116,29 +116,12 @@ public class HelloServlet extends HttpServlet {
                 System.out.println("binding : " + bindings.next().getName());
             }
 
-        // lookup via intermediate context
-        Context appCtx = (Context) ic.lookup("java:app");
-        Context appCtxEnv = (Context) appCtx.lookup("env");
-        stateless2 = (HelloRemote) appCtxEnv.lookup("AS2");
-        NamingEnumeration<Binding> bindings = appCtxEnv.listBindings("");
-        System.out.println("java:app/env/ bindings ");
-        while(bindings.hasMore()) {
-        System.out.println("binding : " + bindings.next().getName());
-        }
-
             foo4 = (Foo2ManagedBean) ic.lookup("java:module/somemanagedbean");
             foo5 = (Foo2ManagedBean) ic.lookup("java:app/" + moduleName +
                                                   "/somemanagedbean");
             foo6 = (Foo) ic.lookup("java:app/ejb-ejb31-full-ear-ejb/somemanagedbean");
             foo7 = (Foo2ManagedBean) ic.lookup("java:comp/env/foo2ref");
             foo8 = (Foo) ic.lookup("java:comp/env/foo3ref");
-
-        foo4 = (Foo2ManagedBean) ic.lookup("java:module/somemanagedbean");
-        foo5 = (Foo2ManagedBean) ic.lookup("java:app/" + moduleName +
-                          "/somemanagedbean");
-        foo6 = (Foo) ic.lookup("java:app/ejb-ejb31-full-ear-ejb/somemanagedbean");
-        foo7 = (Foo2ManagedBean) ic.lookup("java:comp/env/foo2ref");
-        foo8 = (Foo) ic.lookup("java:comp/env/foo3ref");
 
             singleton1 = (Hello) ic.lookup("java:module/m1");
 
@@ -153,9 +136,6 @@ public class HelloServlet extends HttpServlet {
             // global dependency
             singleton5 = (Hello) ic.lookup("java:global/GS1");
 
-        // global dependency
-        singleton5 = (Hello) ic.lookup("java:global/GS1");
-
             stateless1 = (HelloRemote) ic.lookup("java:app/env/AS2");
 
             System.out.println("My AppName = " +
@@ -163,10 +143,6 @@ public class HelloServlet extends HttpServlet {
 
             System.out.println("My ModuleName = " +
                                ic.lookup("java:module/ModuleName"));
-
-        System.out.println("My ModuleName = " +
-                   ic.lookup("java:module/ModuleName"));
-
 
             try {
                 org.omg.CORBA.ORB orb = (org.omg.CORBA.ORB) ic.lookup("java:module/MORB1");

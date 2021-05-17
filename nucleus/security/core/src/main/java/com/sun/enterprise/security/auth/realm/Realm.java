@@ -107,9 +107,6 @@ public abstract class Realm implements Comparable {
         }
         myName = name;
     }
-    myName = name;
-    }
-
 
 
     /**

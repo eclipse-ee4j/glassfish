@@ -129,8 +129,6 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
             }
         }
     }
-    }
-
 
     /**
      * Sets the jndi name of the bean type which I am referring.

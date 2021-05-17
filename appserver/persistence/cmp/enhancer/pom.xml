@@ -27,7 +27,7 @@
     </parent>
     <artifactId>cmp-enhancer</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>enhancer module for cmp</name>
 
     <developers>
@@ -41,7 +41,7 @@
             </roles>
         </developer>
     </developers>
-    
+
     <build>
         <resources>
             <resource>
@@ -52,7 +52,7 @@
             </resource>
         </resources>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.persistence.cmp</groupId>
@@ -60,7 +60,7 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-    
+
     <!--
         Findbugs needs org.netbeans.external:ddl,
         we isolate it in a profile as it requires a separate repository definition.
@@ -88,5 +88,5 @@
                 </dependency>
             </dependencies>
         </profile>
-    </profiles>    
+    </profiles>
 </project>

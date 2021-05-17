@@ -48,7 +48,7 @@ public class SubjectUtil {
                 if ((p != null) && (
                   p.getClass().isAssignableFrom(PrincipalImpl.class)  ||
                   "weblogic.security.principal.WLSUserImpl".equals(p.getClass().getCanonicalName())
-                		)) {
+                        )) {
                     String uName = p.getName();
                     userList.add(uName);
                 }

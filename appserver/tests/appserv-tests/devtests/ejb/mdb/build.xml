@@ -30,9 +30,9 @@
 
     <target name="all">
 
-        <antcall target="cmt"/> 
-       <antcall target="msgbean"/> 
-       <antcall target="singleton"/> 
+        <antcall target="cmt"/>
+       <antcall target="msgbean"/>
+       <antcall target="singleton"/>
 
     </target>
 
@@ -55,12 +55,12 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant cmt (Executes the ejb-mdb cmt test)
-			ant msgbean (Executes the ejb-mdb msgbean test)
-			ant singleton (Executes the ejb-mdb singleton test)
-			ant all (Executes all the ejb-mdb tests)
-	</echo>
+    <echo>
+        Usage:
+            ant cmt (Executes the ejb-mdb cmt test)
+            ant msgbean (Executes the ejb-mdb msgbean test)
+            ant singleton (Executes the ejb-mdb singleton test)
+            ant all (Executes all the ejb-mdb tests)
+    </echo>
     </target>
 </project>

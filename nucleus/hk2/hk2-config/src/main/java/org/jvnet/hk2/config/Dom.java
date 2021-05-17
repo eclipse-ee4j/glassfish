@@ -66,7 +66,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     private final Dom parent;
 
     private ActiveDescriptor<Dom> domDescriptor;
-    
+
     private ServiceHandle<Dom> serviceHandle;
     /**
      * This flag indicates whether a Dom object should be
@@ -116,7 +116,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
          * as well as for all the descendants.
          */
         protected abstract boolean isEmpty();
-        
+
         @Override
         public String toString() {
             return "Dom.Child(" + name + "," + System.identityHashCode(this) + ")";
@@ -145,7 +145,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         protected boolean isEmpty() {
             return dom.isEmpty();
         }
-        
+
         @Override
         public String toString() {
             return "Dom.NodeChild(" + dom.getImplementation() + "," + super.toString() + ")";
@@ -186,22 +186,22 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     /* package */ @SuppressWarnings({ "unchecked" })
     void register() {
         ServiceLocator locator = getServiceLocator();
-        
+
         ActiveDescriptor<?> myselfReified = locator.reifyDescriptor(this);
-        
+
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration dc = dcs.createDynamicConfiguration();
 
         //        habitat.add(this);
         HK2Loader loader = this.model.classLoaderHolder;
-        
+
         Set<Type> ctrs = new HashSet<Type>();
         ctrs.add(myselfReified.getImplementationClass());
-        
+
         if (ConfigBean.class.isAssignableFrom(this.getClass())) {
             ctrs.add(ConfigBean.class);
         }
-        
+
         DomDescriptor<Dom> domDesc = new DomDescriptor<Dom>(this, ctrs, Singleton.class,
                 getImplementation(), new HashSet<Annotation>());
         domDesc.setLoader(loader);
@@ -218,14 +218,14 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         }
 
         dc.commit();
-        
+
         serviceHandle = getHabitat().getServiceHandle(domDescriptor);
     }
 
     /**
      * When a new Dom object is created, ensures that all @NotNull annotated
      * elements have a value.
-     * 
+     *
      */
     public void addDefaultChildren() {
         List<Dom.Child> children = new ArrayList<Dom.Child>();
@@ -286,7 +286,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * Owner of the DOM tree.
      */
     public final DomDocument document;
-    
+
     private final ServiceLocator habitat;
 
     /**
@@ -297,9 +297,9 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public Dom(ServiceLocator habitat, DomDocument document, Dom parent, ConfigModel model, XMLStreamReader in) {
         super(createDescriptor(
                 model.targetTypeName, model.injector.getLoader(), model.injector.getMetadata()));
-        
+
         this.habitat = habitat;
-        
+
         if (in!=null) {
             this.location =  new LocationImpl(in.getLocation());
         } else {
@@ -308,7 +308,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         this.model = model;
         this.document = document;
         this.parent = parent;
-        
+
         // TODO: This code is disabled as it does fail from time to time when assertions are enabled
         // assert (parent==null || parent.document==document); // all the nodes in the tree must belong to the same document
     }
@@ -346,7 +346,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     protected <T extends Dom> T copy(T parent) {
         return (T) new Dom(this, parent);
     }
-    
+
     /**
      * Unwraps the proxy and returns the underlying {@link Dom} object.
      *
@@ -433,7 +433,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             names.add(child.name);
         }
         return names;
-    }    
+    }
 
     /**
      * Performs translation with null pass-through.
@@ -509,7 +509,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * @return child element
      */
     public synchronized Dom element(String name) {
-        
+
         List<Child> children = this.children; // fix the snapshot that we'll work with
 
         for (Child child : children) {
@@ -526,22 +526,22 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public String leafElement(String name) {
         return t(rawLeafElement(name));
     }
-    
+
     private ActiveDescriptor<Dom> addWithAlias(ServiceLocator locator, AbstractActiveDescriptor<?> descriptor, Class<?> contract, String name) {
         ActiveDescriptor<Dom> added = ServiceLocatorUtilities.findOneDescriptor(locator, descriptor);
-        
+
         if (added == null) {
             if (ConfigBean.class.isAssignableFrom(this.getClass())) {
                 if (!descriptor.getAdvertisedContracts().contains(ConfigBean.class.getName())) {
                     descriptor.addContractType(ConfigBean.class);
                 }
             }
-            
+
             added = ServiceLocatorUtilities.addOneDescriptor(locator, descriptor);
         }
-        
+
         AliasDescriptor<Dom> alias = new AliasDescriptor<Dom>(locator, added, contract.getName(), name);
-        
+
         ServiceLocatorUtilities.addOneDescriptor(locator, alias);
 
         return added;
@@ -578,7 +578,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
                 if(nc.dom==reference) {
                     itr.add(newChild);
                     newNode.domDescriptor = addWithAlias(getHabitat(), newNode, newNode.getProxyType(), newNode.getKey());
-                    
+
                     return;
                 }
             }
@@ -594,13 +594,13 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public synchronized void replaceChild(Dom reference, String name, Dom newNode) {
         ListIterator<Child> itr = children.listIterator();
         while(itr.hasNext()) {
-            Child child = itr.next();   
+            Child child = itr.next();
             if (child instanceof NodeChild) {
                 NodeChild nc = (NodeChild) child;
                 if(nc.dom==reference) {
                     reference.release();
                     newNode.domDescriptor = addWithAlias(getHabitat(), newNode,newNode.getProxyType(), newNode.getKey());
-                    
+
                     itr.set(new NodeChild(name,newNode));
                     return;
                 }
@@ -635,7 +635,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             children = new ArrayList<Child>();
         }
         return children.add(new LeafChild(xmlName, value));
-        
+
     }
 
     public synchronized boolean removeLeafElement(String xmlName, String element) {
@@ -720,7 +720,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
                     itr.remove();   // remove
                     removed.add(child);
                 }
-                
+
             }
         }
 
@@ -950,7 +950,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
 
         return null;
     }
-    
+
     private final WeakCARCache<Class<?>, ConfigBeanProxy> proxyCache =
             CacheUtilities.createWeakCARCache(new DomProxyComputable(this), 200, false);
 
@@ -978,17 +978,17 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public <T extends ConfigBeanProxy> Class<T> getProxyType() {
         return model.getProxyType();
     }
-    
+
     /**
      * This ensures no-one tried to reify this descriptor, which has an impl class
      * the interface
-     * 
+     *
      * @return always true
      */
     public boolean isReified() {
         return true;
     }
-    
+
     public Class<?> getImplementationClass() {
         Class<?> retVal = (Class<?>) model.getProxyType();
         return retVal;
@@ -1001,36 +1001,36 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public void setImplementationType(Type t) {
         throw new AssertionError("Can not set type of Dom descriptor");
     }
-    
+
     public Set<Type> getContractTypes() {
         HashSet<Type> retVal = new HashSet<Type>();
-        
+
         retVal.add(model.getProxyType());
-        
+
         return retVal;
     }
-    
+
     public Class<? extends Annotation> getScopeAnnotation() {
         String scope = getScope();
         if (scope != null && scope.equals(Singleton.class.getName())) {
             return Singleton.class;
         }
-        
+
         return PerLookup.class;
     }
-    
+
     public Set<Annotation> getQualifierAnnotations() {
         return Collections.emptySet();
     }
-    
+
     public List<Injectee> getInjectees() {
         return Collections.emptyList();
     }
-    
+
     public Long getFactoryServiceId() {
         return null;
     }
-    
+
     public Long getFactoryLocatorId() {
         return null;
     }
@@ -1053,7 +1053,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
                 throw e.getTargetException();
             }
         }
-        
+
         if(method.getAnnotation(DuckTyped.class)!=null) {
             return invokeDuckMethod(method,proxy,args);
         }
@@ -1131,7 +1131,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     protected void setter(ConfigModel.Property target, Object value) throws Exception {
         target.set(this, value);
     }
-    
+
     public static String convertName(String name) {
         // first, trim off the prefix
         for (String p : PROPERTY_PREFIX) {
@@ -1147,7 +1147,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             if(buf.length()>0)  buf.append('-');
             buf.append(t.toLowerCase(Locale.ENGLISH));
         }
-        return buf.toString();        
+        return buf.toString();
     }
 
     /**
@@ -1189,7 +1189,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     @SuppressWarnings("unchecked")
     protected Creator createCreator(Class c) {
         Creator creator = new CreatorImpl(c, getServiceLocator());
-        
+
         return (ConfigBeanProxy.class.isAssignableFrom(c) ?
                 new DomProxyCreator(c, this) :
                 new ConfiguredCreator(creator,this));
@@ -1286,7 +1286,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             return;
         }
         w.writeStartElement(tagName);
-        
+
         for (Map.Entry<String, String> attributeToWrite : attributesToWrite().entrySet()) {
             w.writeAttribute(attributeToWrite.getKey(), attributeToWrite.getValue());
         }
@@ -1324,7 +1324,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     Collection<ConfigListener> getListeners() {
         return listeners;
     }
-    
+
     private boolean isCacheSet = false;
     private Object cache;
 
@@ -1351,7 +1351,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public void setCache(Object cacheMe) {
         cache = cacheMe;
         isCacheSet = true;
-        
+
     }
 
     /* (non-Javadoc)
@@ -1370,46 +1370,46 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
     public Object create(ServiceHandle root) {
         return createProxy();
     }
-    
+
     public Object get() {
         if (serviceHandle == null) {
             return null;
         }
-        
+
         Object result = serviceHandle.getService();
-        
+
         return result;
     }
-    
+
     public ServiceLocator getServiceLocator() {
         return habitat;
     }
-    
+
     private static DescriptorImpl createDescriptor(
             String typeName,
             HK2Loader cl,
             Map<String, List<String>> metadata) {
         DescriptorImpl retVal = new DescriptorImpl();
-        
+
         retVal.setImplementation(typeName);
         retVal.addAdvertisedContract(typeName);
         retVal.setLoader(cl);
         retVal.setMetadata(metadata);
-        
+
         return retVal;
     }
-    
+
     public int hashCode() {
         return System.identityHashCode(this);
     }
-    
+
     public boolean equals(Object o) {
         return this == o;
     }
-    
+
     private static class DomProxyComputable implements Computable<Class<?>, ConfigBeanProxy> {
         private final Dom dom;
-        
+
         private DomProxyComputable(Dom dom) {
             this.dom = dom;
         }
@@ -1417,7 +1417,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         @Override
         public ConfigBeanProxy compute(final Class<?> proxyType)
                 throws ComputationErrorException {
-            
+
             ClassLoader cl;
             if (System.getSecurityManager()!=null) {
                 cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
@@ -1429,12 +1429,12 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
             } else {
                 cl = proxyType.getClassLoader();
             }
-            
+
             ConfigBeanProxy retVal = (ConfigBeanProxy) Proxy.newProxyInstance(cl,new Class[]{proxyType}, dom);
-            
+
             return retVal;
         }
-        
-        
+
+
     }
 }

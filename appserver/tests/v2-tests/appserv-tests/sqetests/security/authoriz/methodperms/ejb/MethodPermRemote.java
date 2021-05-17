@@ -28,5 +28,5 @@ public interface MethodPermRemote extends EJBObject {
     public String authorizedMethod(int j) throws RemoteException;
     public void unauthorizedMethod() throws RemoteException;
     public String sayGoodbye() throws RemoteException;
-    
+
 }

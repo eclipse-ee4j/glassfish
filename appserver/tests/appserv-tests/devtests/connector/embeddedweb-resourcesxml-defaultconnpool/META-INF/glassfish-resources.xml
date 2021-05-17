@@ -34,12 +34,12 @@
           <property name="URL" value="jdbc:derby://localhost:1527/testdb;create=true;"/>
         </connector-connection-pool>
 
-   
+
 <connector-resource jndi-name="jdbc/ejb-subclassing" pool-name="web-subclassingApp#jdbcra#javax.sql.DataSource"/>
 
 <admin-object-resource jndi-name="eis/jdbcAdmin" res-type="com.sun.jdbcra.spi.JdbcSetupAdmin" res-adapter="web-subclassingApp#jdbcra">
    <property name="TableName" value="customer2"/>
-   <property name="JndiName" value="java:app/jdbc/ejb-subclassing"/> 
+   <property name="JndiName" value="java:app/jdbc/ejb-subclassing"/>
    <property name="SchemaName" value="DBUSER"/>
    <property name="NoOfRows" value="1"/>
 </admin-object-resource>

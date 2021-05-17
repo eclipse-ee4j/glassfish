@@ -29,7 +29,7 @@
     <packaging>jar</packaging>
     <name>amx-tests</name>
     <description>AMX end to end tests</description>
-    
+
     <developers>
         <developer>
             <id>llc</id>
@@ -42,64 +42,64 @@
             </roles>
         </developer>
     </developers>
-    
+
    <build>
-  	<sourceDirectory>src</sourceDirectory>
-    
-	   <plugins>
-	   
-	     <plugin>
-	       <groupId>org.apache.maven.plugins</groupId>
-	       <artifactId>maven-compiler-plugin</artifactId>
-	       <configuration>
-	         <source>1.5</source>
-	         <target>1.5</target>
-	         <compilerArgument>-Xlint:all</compilerArgument>
-	       </configuration>
-	     </plugin>
-	     
-		<plugin>
-			<artifactId>maven-assembly-plugin</artifactId>
-			<configuration>
-				<descriptorRefs>
-					<descriptorRef>jar-with-dependencies</descriptorRef>
-				</descriptorRefs>
-			</configuration>
-		</plugin>
-		
-		
-	   </plugins>
+      <sourceDirectory>src</sourceDirectory>
+
+       <plugins>
+
+         <plugin>
+           <groupId>org.apache.maven.plugins</groupId>
+           <artifactId>maven-compiler-plugin</artifactId>
+           <configuration>
+             <source>1.5</source>
+             <target>1.5</target>
+             <compilerArgument>-Xlint:all</compilerArgument>
+           </configuration>
+         </plugin>
+
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <configuration>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+        </plugin>
+
+
+       </plugins>
     </build>
 
 
     <dependencies>
-       
+
         <dependency>
             <groupId>javax.management.j2ee</groupId>
             <artifactId>management-api</artifactId>
             <version>${management-api.version}</version>
             <scope>compile</scope>
         </dependency>
-		
+
         <dependency>
             <groupId>org.glassfish.common</groupId>
             <artifactId>amx-core</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.glassfish.common</groupId>
             <artifactId>amx-javaee</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-          
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>compile</scope>
-		</dependency>
-        
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>

@@ -29,5 +29,5 @@ public class EarContainer implements Container {
 
     public String getName() {
         return "application";
-    }                                                                     
+    }
 }

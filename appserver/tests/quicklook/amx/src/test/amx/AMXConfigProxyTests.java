@@ -47,7 +47,7 @@ import org.glassfish.admin.amx.logging.Logging;
 import org.glassfish.admin.amx.annotation.*;
 
 
-/** 
+/**
     Miscellaneous tests should go into this file, or another one like it.
  */
 @Test(
@@ -63,33 +63,33 @@ public final class AMXConfigProxyTests extends AMXTestBase
     public AMXConfigProxyTests()
     {
     }
-    
+
      /** test all MBeans generically */
     @Test
     public void testForBogusConfigAnnotations()
     {
         final List<Class<? extends AMXProxy>> interfaces = getInterfaces().all();
-        
+
         // AMXConfigProxy sub-interfaces should not use @ManagedAttribute or @ManagedOperation;
         // all such info is derived only from the ConfigBean.
         for( final Class<? extends AMXProxy>  intf : interfaces )
         {
             if ( ! AMXConfigProxy.class.isAssignableFrom(intf) ) continue;
-            
+
             final Method[] methods = intf.getDeclaredMethods(); // declared methods only
             for( final Method m : methods )
             {
                 final ManagedAttribute ma = m.getAnnotation(ManagedAttribute.class);
                 final ManagedOperation mo = m.getAnnotation(ManagedOperation.class);
                 final String desc = intf.getName() + "." + m.getName() + "()";
-                
+
                 assert ma == null :  "Config MBeans do not support @ManagedAttribute: " + desc;
                 assert mo == null :  "Config MBeans do not support @ManagedOperation: " + desc;
             }
         }
     }
-    
-    
+
+
     private void _checkDefaultValues(final AMXConfigProxy amxConfig)
     {
         final String objectName = amxConfig.objectName().toString();
@@ -144,19 +144,19 @@ public final class AMXConfigProxyTests extends AMXTestBase
             }
         }
     }
-    
-    
+
+
     private Map<String,Object> newPropertyMap(final String name)
     {
         final Map<String,Object>    m = MapUtil.newMap();
-        
+
         m.put( "Name", name );
         m.put( "Value", name + "-value" );
         m.put( "Description", "desc.for." + name );
-        
+
         return m;
     }
-    
+
     private Map<String,Object>[] newPropertyMaps(final String baseName, final int count)
     {
         final Map<String,Object>[] maps = TypeCast.asArray( new Map[count] );
@@ -166,10 +166,10 @@ public final class AMXConfigProxyTests extends AMXTestBase
         }
         return maps;
     }
-    
+
 
     private void removeChildSilently( final AMXConfigProxy amx, final String type, final String name )
-    {   
+    {
         if ( name == null )
         {
             if ( amx.child(type) != null )

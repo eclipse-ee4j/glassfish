@@ -88,7 +88,7 @@ public interface SecureAdmin extends ConfigBeanProxy {
     /**
      * Returns the SecureAdminPrincipal corresponding to the Principal the instances use to authenticate themselves using
      * SSL/TLS
-     * 
+     *
      * @return the SecureAdminPrincipal for the instances
      */
     @DuckTyped
@@ -124,7 +124,7 @@ public interface SecureAdmin extends ConfigBeanProxy {
 
         /**
          * Reports whether secure admin is enabled.
-         * 
+         *
          * @param secureAdmin the SecureAdmin, typically returned from domain.getSecureAdmin()
          * @return true if secure admin is enabled; false otherwise
          */
@@ -134,7 +134,7 @@ public interface SecureAdmin extends ConfigBeanProxy {
 
         /**
          * Returns the configured (which could be the default) value for the special admin indicator.
-         * 
+         *
          * @param secureAdmin the SecureAdmin, typically returned from domain.getSecureAdmin()
          * @return the current value for the admin indicator
          */

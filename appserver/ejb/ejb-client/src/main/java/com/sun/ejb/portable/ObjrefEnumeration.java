@@ -25,7 +25,7 @@ import java.io.Serializable;
  *
  */
 public final class ObjrefEnumeration implements Enumeration, Serializable {
-    
+
     private int count;
     private List<Object> objrefs;
 
@@ -34,7 +34,7 @@ public final class ObjrefEnumeration implements Enumeration, Serializable {
         if (objrefs == null) {
             objrefs = new ArrayList<>();
         }
-        
+
         objrefs.add(obj);
     }
 
@@ -43,7 +43,7 @@ public final class ObjrefEnumeration implements Enumeration, Serializable {
         if (objrefs == null) {
             return false;
         }
-        
+
         return count < objrefs.size();
     }
 
@@ -56,7 +56,7 @@ public final class ObjrefEnumeration implements Enumeration, Serializable {
                 }
             }
         }
-        
+
         throw new NoSuchElementException("ObjrefEnumeration");
     }
 }

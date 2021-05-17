@@ -89,7 +89,7 @@ public class DeploymentTracing {
         final long inception = System.currentTimeMillis();
 
         long elapsedInMs() {
-            return inception - DeploymentTracing.this.inception; 
+            return inception - DeploymentTracing.this.inception;
         }
         abstract void print(PrintStream ps);
     }
@@ -198,5 +198,5 @@ public class DeploymentTracing {
         sb.append("there were " + counter + " modules in INSTALLED state");
         sb.append("HK2Module Status Report Ends");
         logger.log(level, sb.toString());
-    }    
+    }
 }

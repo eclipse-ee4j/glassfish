@@ -63,7 +63,7 @@ import org.glassfish.internal.api.ServerContext;
 
 /**
  * Implementation of {@link AdminAccessController} that delegates to LoginContextDriver.
- * 
+ *
  * @author Kedar Mhaswade (km@dev.java.net) This is still being developed. This particular implementation both
  * authenticates and authorizes the users directly or indirectly.
  * <p>
@@ -181,7 +181,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     /**
      * Attempts to authenticate the user submitting the request as an administrator.
-     * 
+     *
      * @param request the admin request
      * @param hostname the host from which the connection originated (if non-null, this hostname overrides the host in the
      * request)
@@ -270,7 +270,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
 
     private void rejectRemoteAdminIfDisabled(final String host) throws RemoteAdminAccessException {
         /*
-         * Accept the request if secure admin is enabled or if the 
+         * Accept the request if secure admin is enabled or if the
          * request is local.
          */
         if (SecureAdmin.Util.isEnabled(secureAdmin) || NetUtils.isThisHostLocal(host)) {

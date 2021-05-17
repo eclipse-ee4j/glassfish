@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class SimpleMessageClient {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {

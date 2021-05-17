@@ -31,13 +31,13 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
  * use-cases for this. Typical usages follow. To obtain the current
  * {@link WorkContextMap} for update:
  * <p> <pre>
- * WorkContextMap interceptor 
+ * WorkContextMap interceptor
  *   = WorkContextHelper.getWorkContextHelper().getWorkContextMap();
  *</pre>
  *
  * To obtain a {@link org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor}:
  * <p> <pre>
- * WorkContextMapInterceptor interceptor 
+ * WorkContextMapInterceptor interceptor
  *   = WorkContextHelper.getWorkContextHelper().getInterceptor();
  *</pre>
  *
@@ -46,30 +46,30 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
  * @see org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor
  *
  */
-public class WorkContextHelper 
+public class WorkContextHelper
 {
   private static final String WORK_CONTEXT_BINDING = "WorkContextMap";
   private static final WorkContextMapImpl map = new WorkContextMapImpl();
-  
+
   private static WorkContextHelper singleton = new WorkContextHelper();
 
   // Prevent outsiders creating one.
   protected WorkContextHelper() { }
-  
+
   /**
    * Get the WorkContextHelper singleton.
-   * 
+   *
    * @return A suitable WorkContextHelper implementation for client or
    * server.
    */
   public static WorkContextHelper getWorkContextHelper() {
     return singleton;
   }
-  
+
   /**
    * Set the WorkContextHelper singleton. This should be set at startup
    * and not synchronized.
-   * 
+   *
    * @param wam - a suitable WorkContextHelper implementation for client
    * or server.
    */
@@ -77,34 +77,34 @@ public class WorkContextHelper
     throw new IllegalArgumentException
       ("WorkContextHelper does not currently support replacement");
   }
-  
+
   public WorkContextMap getWorkContextMap() {
     return map;
   }
 
   //This is F&F API introduced for Oracle DMS for faster WorkContext reads
-  //PriviledgedWorkContextMap does a read as KernelId for the given two 
+  //PriviledgedWorkContextMap does a read as KernelId for the given two
   //DMS specific WorkContext keys
   public WorkContextMap getPriviledgedWorkContextMap() {
     return WorkContextAccessController.getPriviledgedWorkContextMap(map);
   }
-    
+
   /**
    * Get the singleton instance of the current
    * {@link org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor}..
-   * 
+   *
    * @return A suitable WorkContextMapInterceptor implementation for
    * client or server.
    */
   public WorkContextMapInterceptor getInterceptor() {
     return map;
   }
-  
+
   /**
    * Get the singleton thread-local instance of the current
    * {@link org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor}, or null if there is no
    * {@link WorkContextMap} for the current thread.
-   * 
+   *
    * @return A suitable WorkContextMapInterceptor implementation for
    * client or server.
    */
@@ -117,7 +117,7 @@ public class WorkContextHelper
    * org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor} for the purposes
    * of serialization. Thread infection can be achieved via {@link
    * #setLocalInterceptor}.
-   * 
+   *
    * @return A suitable WorkContextMapInterceptor implementation for
    * client or server.
    */

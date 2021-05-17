@@ -39,7 +39,7 @@ import test.beans.BeanToTestMultipleQualifiers;
         @WebInitParam(name = "n1", value = "v1"),
         @WebInitParam(name = "n2", value = "v2") })
 public class QualifierServlet extends HttpServlet {
-    
+
     @Inject
     BeanToTestInitializerMethodInjection tb;
 
@@ -48,7 +48,7 @@ public class QualifierServlet extends HttpServlet {
 
     @Inject
     BeanToTestAny tb3;
-    
+
     @Inject
     BeanToTestMultipleQualifiers tb4;
 
@@ -78,7 +78,7 @@ public class QualifierServlet extends HttpServlet {
             msg += "Qualifier based injection into BeanToTestConstructorMethodInjection (constructor method injection) Failed";
         if (!tb3.testInjection())
             msg += "Qualifier based @Any injection into BeanToTestAny Failed";
-        if (!tb4.testInjection()) 
+        if (!tb4.testInjection())
             msg += "Multiple qualifiers test failed";
 
         writer.write("initParams: " + msg + "\n");

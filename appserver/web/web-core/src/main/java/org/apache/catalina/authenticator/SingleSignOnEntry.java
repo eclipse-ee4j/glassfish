@@ -66,7 +66,7 @@ public class SingleSignOnEntry {
     /**
      * Adds the given session to this SingleSignOnEntry if it does not
      * already exist.
-     * 
+     *
      * @return true if the session was added, false otherwise
      */
     public synchronized boolean addSession(SingleSignOn sso, Session session) {
@@ -105,7 +105,7 @@ public class SingleSignOnEntry {
 
                 log.log(Level.FINE, " Invalidating session " + session);
             }
-        
+
             //6406580 START
             /*
             // Invalidate this session

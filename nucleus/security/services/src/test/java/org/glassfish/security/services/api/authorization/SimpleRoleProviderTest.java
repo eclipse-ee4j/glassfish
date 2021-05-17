@@ -33,57 +33,57 @@ import org.glassfish.security.services.spi.authorization.RoleMappingProvider;
 
 public class SimpleRoleProviderTest extends HK2Runner {
 
-	private AuthorizationService authorizationService = new AuthorizationServiceImpl();
-	private RoleMappingProvider simpleRoleProvider = null;
+    private AuthorizationService authorizationService = new AuthorizationServiceImpl();
+    private RoleMappingProvider simpleRoleProvider = null;
 
-	@Before
-	public void before() {
-		super.before();
+    @Before
+    public void before() {
+        super.before();
 
-		simpleRoleProvider = testLocator.getService(RoleMappingProvider.class, "simpleRoleMapping");
-	}
+        simpleRoleProvider = testLocator.getService(RoleMappingProvider.class, "simpleRoleMapping");
+    }
 
-	@Test
-	public void testProviderAdmin() throws Exception {
-		Assert.assertNotNull(simpleRoleProvider);
-		boolean result = simpleRoleProvider.isUserInRole(null,
-				authorizationService.makeAzSubject(adminSubject()),
-				authorizationService.makeAzResource(URI.create("admin://my/respath")),
-				"Admin", null, null);
-		Assert.assertEquals(true, result);
-	}
+    @Test
+    public void testProviderAdmin() throws Exception {
+        Assert.assertNotNull(simpleRoleProvider);
+        boolean result = simpleRoleProvider.isUserInRole(null,
+                authorizationService.makeAzSubject(adminSubject()),
+                authorizationService.makeAzResource(URI.create("admin://my/respath")),
+                "Admin", null, null);
+        Assert.assertEquals(true, result);
+    }
 
-	private Subject adminSubject() {
-		Subject result = new Subject();
-		result.getPrincipals().add(new PrincipalImpl("admin"));
-		result.getPrincipals().add(new Group("asadmin"));
-		return result;
-	}
+    private Subject adminSubject() {
+        Subject result = new Subject();
+        result.getPrincipals().add(new PrincipalImpl("admin"));
+        result.getPrincipals().add(new Group("asadmin"));
+        return result;
+    }
 
-	@Test
-	public void testProviderNonAdmin() throws Exception {
-		Assert.assertNotNull(simpleRoleProvider);
-		boolean result = simpleRoleProvider.isUserInRole(null,
-				authorizationService.makeAzSubject(nonAdminSubject()),
-				authorizationService.makeAzResource(URI.create("admin://negative")),
-				"Admin", null, null);
-		Assert.assertEquals(false, result);
-	}
+    @Test
+    public void testProviderNonAdmin() throws Exception {
+        Assert.assertNotNull(simpleRoleProvider);
+        boolean result = simpleRoleProvider.isUserInRole(null,
+                authorizationService.makeAzSubject(nonAdminSubject()),
+                authorizationService.makeAzResource(URI.create("admin://negative")),
+                "Admin", null, null);
+        Assert.assertEquals(false, result);
+    }
 
-	private Subject nonAdminSubject() {
-		Subject result = new Subject();
-		result.getPrincipals().add(new PrincipalImpl("joe"));
-		result.getPrincipals().add(new Group("myGroup"));
-		return result;
-	}
+    private Subject nonAdminSubject() {
+        Subject result = new Subject();
+        result.getPrincipals().add(new PrincipalImpl("joe"));
+        result.getPrincipals().add(new Group("myGroup"));
+        return result;
+    }
 
-	@Test
-	public void testProviderNonAdminRole() throws Exception {
-		Assert.assertNotNull(simpleRoleProvider);
-		boolean result = simpleRoleProvider.isUserInRole(null,
-				authorizationService.makeAzSubject(adminSubject()),
-				authorizationService.makeAzResource(URI.create("foo://other")), // Warning Message
-				"otherRole", null, null);
-		Assert.assertEquals(false, result);
-	}
+    @Test
+    public void testProviderNonAdminRole() throws Exception {
+        Assert.assertNotNull(simpleRoleProvider);
+        boolean result = simpleRoleProvider.isUserInRole(null,
+                authorizationService.makeAzSubject(adminSubject()),
+                authorizationService.makeAzResource(URI.create("foo://other")), // Warning Message
+                "otherRole", null, null);
+        Assert.assertEquals(false, result);
+    }
 }

@@ -63,7 +63,7 @@ public class SessionBeanInjection implements SessionBeanInjectionRemote {
             System.out.println("TThe context variables used in the call are NOT in requestScope scope.");
             return false;
         }
-    		
+
         try {
             JMSConsumer consumer = jmsContext.createConsumer(queue);
             Message msg = consumer.receive(30000L);

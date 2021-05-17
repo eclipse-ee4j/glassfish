@@ -50,6 +50,6 @@
             <response-protection auth-source="content"/>
           </message-security>
         </message-security-binding>
-      </port-info>      
+      </port-info>
     </service-ref>
 </sun-application-client>

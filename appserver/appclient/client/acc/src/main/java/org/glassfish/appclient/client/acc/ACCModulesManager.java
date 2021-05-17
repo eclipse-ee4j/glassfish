@@ -64,7 +64,7 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
     public synchronized static void initialize(final ClassLoader loader) throws URISyntaxException {
         /*
          * The habitat might have been initialized earlier.  Currently
-         * we use a single habitat for the JVM.  
+         * we use a single habitat for the JVM.
          */
         if (habitat == null) {
             habitat = prepareHabitat(
@@ -75,18 +75,18 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
              * which habitat we'll use.
              */
             Globals.setDefaultHabitat(habitat);
-            
+
             ServiceLocator locator = habitat;
-            
+
             DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
             DynamicConfiguration config = dcs.createDynamicConfiguration();
-            
+
             /*
              * Remove any already-loaded startup context so we can replace it
              * with the ACC one.
              */
             config.addUnbindFilter(BuilderHelper.createContractFilter(StartupContext.class.getName()));
-            
+
             /*
              * Following the example from AppServerStartup, remove any
              * pre-loaded lazy inhabitant for ProcessEnvironment that exists
@@ -94,19 +94,19 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
              * an ACC ProcessEnvironment.
              */
             config.addUnbindFilter(BuilderHelper.createContractFilter(ProcessEnvironment.class.getName()));
-            
+
             config.commit();
-            
+
             config = dcs.createDynamicConfiguration();
-            
+
             StartupContext startupContext = new ACCStartupContext();
             AbstractActiveDescriptor<?> startupContextDescriptor = BuilderHelper.createConstantDescriptor(startupContext);
             startupContextDescriptor.addContractType(StartupContext.class);
             config.addActiveDescriptor(startupContextDescriptor);
-            
+
             ModulesRegistry modulesRegistry = new StaticModulesRegistry(ACCModulesManager.class.getClassLoader());
             config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(modulesRegistry));
-            
+
             config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(
                     new ProcessEnvironment(ProcessEnvironment.ProcessType.ACC)));
 
@@ -115,12 +115,12 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
              */
             ClientNamingConfigurator cnc = new ClientNamingConfiguratorImpl();
             config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(cnc));
-            
+
             Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
             AbstractActiveDescriptor<Logger> di = BuilderHelper.createConstantDescriptor(logger);
             di.addContractType(Logger.class);
             config.addActiveDescriptor(di);
-            
+
             config.commit();
        }
     }
@@ -149,17 +149,17 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
         ServiceLocator serviceLocator = ServiceLocatorFactory.getInstance().create("default");
 
         habitat = serviceLocator;
-        
+
         ContextDuplicatePostProcessor duplicateProcessor = new ContextDuplicatePostProcessor();
         List<PopulatorPostProcessor> postProcessors = new LinkedList<PopulatorPostProcessor>();
         postProcessors.add(duplicateProcessor);
-        
+
         try {
-        	HK2Populator.populate(serviceLocator, new ClasspathDescriptorFileFinder(loader), postProcessors);
+            HK2Populator.populate(serviceLocator, new ClasspathDescriptorFileFinder(loader), postProcessors);
         } catch (IOException e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
-  
+
         return habitat;
     }
 }

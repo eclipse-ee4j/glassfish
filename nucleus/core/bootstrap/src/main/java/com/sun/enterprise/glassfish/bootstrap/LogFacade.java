@@ -25,16 +25,16 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 
 public class LogFacade {
-    
+
     @LoggerInfo(subsystem = "BOOTSTRAP", description="Main bootstrap logger.")
     public static final String BOOTSTRAP_LOGGER_NAME = "jakarta.enterprise.bootstrap";
 
     @LogMessagesResourceBundle()
     public static final String RB_NAME = "com.sun.enterprise.glassfish.bootstrap.LogMessages";
-    
-    public static final Logger BOOTSTRAP_LOGGER = 
+
+    public static final Logger BOOTSTRAP_LOGGER =
         Logger.getLogger(BOOTSTRAP_LOGGER_NAME, RB_NAME);
-    
+
     /**
      * This helper method is duplicated from org.glassfish.api.logging.LogHelper to avoid adding
      * dependency on the glassfish-api bundle.
@@ -55,149 +55,149 @@ public class LogFacade {
         rec.setThrown(thrown);
         logger.log(rec);
     }
-    
+
     @LogMessageInfo(
             message = "GlassFish requires JDK {0}, you are using JDK version {1}.",
             level = "SEVERE",
             cause="Incorrect JDK version is used.",
             action="Please use correct JDK version.")
     public static final String BOOTSTRAP_INCORRECT_JDKVERSION = "NCLS-BOOTSTRAP-00001";
-    
+
     @LogMessageInfo(
             message = "Using {0} as the framework configuration file.",
             level = "INFO")
     public static final String BOOTSTRAP_FMWCONF = "NCLS-BOOTSTRAP-00002";
-    
+
     @LogMessageInfo(
             message = "Could not extract archive {0}.",
             level = "WARNING")
     public static final String BOOTSTRAP_CANT_EXTRACT_ARCHIVE = "NCLS-BOOTSTRAP-00003";
-    
+
     @LogMessageInfo(
             message = "Could not find RAR [{0}] location [{1}] after extraction.",
             level = "INFO")
     public static final String BOOTSTRAP_CANT_FIND_RAR = "NCLS-BOOTSTRAP-00004";
-    
+
     @LogMessageInfo(
             message = "Can not start bundle {0} because it is not contained in the list of installed bundles.",
             level = "WARNING")
     public static final String CANT_START_BUNDLE = "NCLS-BOOTSTRAP-00005";
-    
+
     @LogMessageInfo(
             message = "Failed to start {0}.",
             level = "WARNING")
     public static final String BUNDLE_START_FAILED = "NCLS-BOOTSTRAP-00006";
-    
+
     @LogMessageInfo(
             message = "Can't uninstall bundle = {0} as it's already uninstalled.",
             level = "WARNING")
     public static final String BUNDLE_ALREADY_UNINSTALED = "NCLS-BOOTSTRAP-00007";
-    
+
     @LogMessageInfo(
             message = "Uninstalled bundle {0} installed from {1}.",
             level = "INFO")
     public static final String UNINSTALLED_BUNDLE = "NCLS-BOOTSTRAP-00008";
-    
+
     @LogMessageInfo(
             message = "Can't update bundle = {0} as it's already uninstalled.",
             level = "WARNING")
     public static final String CANT_UPDATE_ALREADY_INSTALLED = "NCLS-BOOTSTRAP-00009";
-    
+
     @LogMessageInfo(
             message = "Updated bundle {0} from {1}.",
             level = "INFO")
     public static final String BUNDLE_UPDATED = "NCLS-BOOTSTRAP-00010";
-    
+
     @LogMessageInfo(
             message = "Failed to uninstall bundle {0}.",
             level = "WARNING")
     public static final String BUNDLE_UNINSTALL_FAILED = "NCLS-BOOTSTRAP-00011";
-    
+
     @LogMessageInfo(
             message = "Failed to update {0}.",
             level = "WARNING")
     public static final String UPDATE_FAILED = "NCLS-BOOTSTRAP-00012";
-    
+
     @LogMessageInfo(
             message = "Failed to install {0}.",
             level = "WARNING")
     public static final String INSTALL_FAILED = "NCLS-BOOTSTRAP-00013";
-    
+
     @LogMessageInfo(
             message = "Can not set the start level for {0} to {2} as it is already set to {1}.",
             level = "WARNING")
     public static final String CANT_SET_START_LEVEL = "NCLS-BOOTSTRAP-00014";
-    
+
     @LogMessageInfo(
             message = "Skipping entry {0} because it is not an absolute URI.",
             level = "WARNING")
     public static final String ENTRY_SKIPPED = "NCLS-BOOTSTRAP-00015";
-    
+
     @LogMessageInfo(
             message = "Skipping entry {0} due to exception: ",
             level = "WARNING")
     public static final String ENTRY_SKIPPED_DUE_TO = "NCLS-BOOTSTRAP-00016";
-    
+
     @LogMessageInfo(
             message = "Starting BundleProvisioner.",
             level = "INFO")
     public static final String STARTING_BUNDLEPROVISIONER = "NCLS-BOOTSTRAP-00017";
-    
+
     @LogMessageInfo(
             message = "Time taken to locate OSGi framework = {0} ms.",
             level = "INFO")
     public static final String OSGI_LOCATE_TIME = "NCLS-BOOTSTRAP-00018";
-    
+
     @LogMessageInfo(
             message = "Time taken to initialize OSGi framework = {0} ms.",
             level = "INFO")
     public static final String OSGI_INIT_TIME = "NCLS-BOOTSTRAP-00020";
-    
+
     @LogMessageInfo(
             message = "Time taken to finish installation of bundles = {0} ms.",
             level = "INFO")
     public static final String BUNDLE_INSTALLATION_TIME = "NCLS-BOOTSTRAP-00021";
-    
+
     @LogMessageInfo(
             message = "Time taken to finish starting bundles = {0} ms.",
             level = "INFO")
     public static final String BUNDLE_STARTING_TIME = "NCLS-BOOTSTRAP-00022";
-    
+
     @LogMessageInfo(
             message = "Total time taken to start = {0} ms.",
             level = "INFO")
     public static final String TOTAL_START_TIME = "NCLS-BOOTSTRAP-00023";
-    
+
     @LogMessageInfo(
             message = "Time taken to stop = {0} ms.",
             level = "INFO")
     public static final String BUNDLE_STOP_TIME = "NCLS-BOOTSTRAP-00024";
-    
+
     @LogMessageInfo(
             message = "Total time taken = {0}.",
             level = "INFO")
     public static final String TOTAL_TIME = "NCLS-BOOTSTRAP-00025";
-    
+
     @LogMessageInfo(
             message = "Create bundle provisioner class = {0}.",
             level = "INFO")
     public static final String CREATE_BUNDLE_PROVISIONER = "NCLS-BOOTSTRAP-00026";
-       
+
     @LogMessageInfo(
             message = "Registered {0} as OSGi service registration: {1}.",
             level = "INFO")
     public static final String SERVICE_REGISTERED = "NCLS-BOOTSTRAP-00027";
-    
+
     @LogMessageInfo(
             message = "Unregistered {0} from service registry.",
             level = "INFO")
     public static final String SERVICE_UNREGISTERED = "NCLS-BOOTSTRAP-00028";
-    
+
     @LogMessageInfo(
             message = "Exception while unregistering: ",
             level = "WARNING")
     public static final String SERVICE_UNREGISTRATION_EXCEPTION = "NCLS-BOOTSTRAP-00029";
-    
+
     @LogMessageInfo(
             message = "installLocations = {0}.",
             level = "INFO")
@@ -207,7 +207,7 @@ public class LogFacade {
             message = "Unable to determine if {0} is a fragment or not due to ",
             level = "INFO")
     public static final String CANT_TELL_IF_FRAGMENT = "NCLS-BOOTSTRAP-00031";
-    
+
     @LogMessageInfo(
             message = "Skipping starting of bundles bundles have been provisioned already.",
             level = "INFO")
@@ -222,7 +222,7 @@ public class LogFacade {
             message = "Updating system bundle.",
             level = "INFO")
     public static final String UPDATING_SYSTEM_BUNDLE = "NCLS-BOOTSTRAP-00034";
-    
+
     @LogMessageInfo(
             message = "Provisioning options have changed, recreating the framework with a clean OSGi storage(aka cache).",
             level = "INFO")
@@ -232,12 +232,12 @@ public class LogFacade {
             message = "Unable to locate bundle {0}.",
             level = "WARNING")
     public static final String CANT_LOCATE_BUNDLE = "NCLS-BOOTSTRAP-00036";
-    
+
     @LogMessageInfo(
             message = "Storage support not available in framework bundle, so can't store bundle ids. This may lead to slower start up time.",
             level = "WARNING")
     public static final String CANT_STORE_BUNDLEIDS = "NCLS-BOOTSTRAP-00037";
-    
+
     @LogMessageInfo(
             message = "Storage support not available in framework bundle, so can't store provisioning options. This may lead to slower start up time.",
             level = "WARNING")

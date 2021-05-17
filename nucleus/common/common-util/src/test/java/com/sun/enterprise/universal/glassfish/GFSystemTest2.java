@@ -36,7 +36,7 @@ import static org.junit.Assert.*;
  * To use the rest -- temporarily rename it to GFSystemTest
  * note also that this unit test will not run as is from maven -- because
  * the name does not match any class in the normal build area...
- * 
+ *
  */
 public class GFSystemTest2 {
 

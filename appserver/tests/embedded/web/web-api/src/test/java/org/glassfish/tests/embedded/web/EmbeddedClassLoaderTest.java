@@ -67,7 +67,7 @@ public class EmbeddedClassLoaderTest {
             throw new IllegalStateException();
         }
     }
-    
+
     @Test
     public void test() throws Exception {
         URL[] urls = new URL[1];
@@ -102,7 +102,7 @@ public class EmbeddedClassLoaderTest {
         in.close();
 
         wc.removeContext(context);
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -113,5 +113,5 @@ public class EmbeddedClassLoaderTest {
             glassfish = null;
         }
     }
-    
+
 }

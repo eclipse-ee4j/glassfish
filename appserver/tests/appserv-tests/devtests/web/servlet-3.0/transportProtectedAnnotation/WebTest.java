@@ -27,7 +27,7 @@ public class WebTest{
     static SimpleReporterAdapter stat=
            new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME = "servlet-3.0-transportProtectedAnnotation";
-    
+
     public static void main(String args[]) throws Exception{
         String host = args[0];
         String httpPort = args[1];
@@ -48,7 +48,7 @@ public class WebTest{
                     null, true, "mfr:Hello:javaee:false");
             ok = ok && testURL("GET", "https://" + host + ":" + httpsPort + "/" + contextRoot + "/myurl3",
                     ssf, true, "g:Hello:javaee:true");
-            
+
             ok = ok && testURL("TRACE", "http://" + host + ":" + httpPort + "/" + contextRoot + "/myurl3",
                     null, true, "t:Hello:javaee:false");
             stat.addStatus(TEST_NAME, ((ok)? stat.PASS : stat.FAIL));
@@ -96,7 +96,7 @@ public class WebTest{
                         return true;
                     }
             });
-            
+
             connection = conn;
         } else {
             connection = (HttpURLConnection) url.openConnection();
@@ -113,7 +113,7 @@ public class WebTest{
             throws Exception{
 
         int responseCode =  connection.getResponseCode();
-        System.out.println("Response code: " + responseCode + " Expected code: 200"); 
+        System.out.println("Response code: " + responseCode + " Expected code: 200");
         return (connection.getResponseCode() == 200);
     }
 
@@ -125,7 +125,7 @@ public class WebTest{
         try {
             in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
-            
+
             String line = "";
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
@@ -138,7 +138,7 @@ public class WebTest{
             try {
                 if (in != null) {
                     in.close();
-                } 
+                }
             } catch(IOException ioe) {
                 // ignore
             }

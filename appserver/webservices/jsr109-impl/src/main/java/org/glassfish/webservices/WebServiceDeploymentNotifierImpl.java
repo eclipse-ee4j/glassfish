@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * {@link WebServiceDeploymentNotifier} notifier implementation.
- * 
+ *
  * @author Alexey Stashok
  */
 public final class WebServiceDeploymentNotifierImpl implements WebServiceDeploymentNotifier {

@@ -19,7 +19,7 @@
  * @author     $Author: tcfujii $
  * @version    $Revision: 1.3 $ $Date: 2005/12/25 04:13:35 $
  */
- 
+
 package com.sun.ejb.containers.util.pool;
 
 import java.util.Properties;
@@ -28,16 +28,16 @@ import java.util.Properties;
  * An object factory that 'knows' how to create / destroy objects
  */
 public interface ObjectFactory {
-    
+
     /**
      * Create an object. Called from Pool.getObject(param)
      */
     public Object create(Object param)
-    	throws PoolException;
-    
+        throws PoolException;
+
     /**
      * Destroy an object. Called from Pool.destroyObject.
      */
     public void destroy(Object object);
-    
+
 }

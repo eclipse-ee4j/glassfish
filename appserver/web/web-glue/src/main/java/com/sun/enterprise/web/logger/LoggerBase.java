@@ -28,7 +28,7 @@ import java.io.PrintWriter;
 
 /**
  * Convenience base class for <b>Logger</b> implementations.  The only
- * method that must be implemented is 
+ * method that must be implemented is
  * <code>write(String msg, int verbosity)</code>, plus any property
  * setting and lifecycle methods required for configuration.
  *
@@ -115,7 +115,7 @@ abstract class LoggerBase implements Logger {
     /**
      * Writes the specified message to a servlet log file, usually an event
      * log.  The name and type of the servlet log is specific to the
-     * servlet container. 
+     * servlet container.
      *
      * @param msg A <code>String</code> specifying the message to be
      *  written to the log file

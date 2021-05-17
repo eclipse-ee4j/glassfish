@@ -71,7 +71,7 @@ public class LoggerBase
      */
     protected int debug = 0;
 
-    
+
     /**
      * The descriptive information about this implementation.
      */
@@ -211,7 +211,7 @@ public class LoggerBase
      * @param verbosityLevel The new verbosity level, as a string
      */
     public void setLevel(String logLevel) {
-            
+
         if ("SEVERE".equalsIgnoreCase(logLevel)) {
             log.setLevel(Level.SEVERE);
         } else if ("WARNING".equalsIgnoreCase(logLevel)) {
@@ -229,7 +229,7 @@ public class LoggerBase
         } else {
             log.setLevel(Level.INFO);
         }
-        
+
     }
 
 
@@ -378,23 +378,23 @@ public class LoggerBase
     }
 
     public void init() {
-        
+
     }
-    
+
     public void destroy() {
-        
+
     }
-    
+
     public ObjectName createObjectName() {
         if(log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "createObjectName with " + container);
         }
         // register
         try {
-            StandardEngine engine=null;            
+            StandardEngine engine=null;
             String suffix="";
             if( container instanceof StandardEngine ) {
-                engine=(StandardEngine)container;                
+                engine=(StandardEngine)container;
             } else if( container instanceof StandardHost ) {
                 engine=(StandardEngine)container.getParent();
                 suffix=",host=" + container.getName();
@@ -405,7 +405,7 @@ public class LoggerBase
                     path = "/";
                 }
                 engine=(StandardEngine)container.getParent().getParent();
-                suffix= ",path=" + path + ",host=" + 
+                suffix= ",path=" + path + ",host=" +
                         container.getParent().getName();
             } else {
                 log.log(Level.SEVERE, LogFacade.UNKNOWN_CONTAINER_EXCEPTION);
@@ -423,7 +423,7 @@ public class LoggerBase
 
 
    // ------------------------------------------------------ Lifecycle Methods
-    
+
     /**
      * Add a lifecycle event listener to this component.
      *
@@ -456,16 +456,16 @@ public class LoggerBase
     /**
      * Prepare for the beginning of active use of the public methods of this
      * component.  This method should be called after <code>configure()</code>,
-     * and before any of the public methods of the component are utilized.     
+     * and before any of the public methods of the component are utilized.
      *
      * @exception LifecycleException if this component detects a fatal error
      *  that prevents this component from being used
      */
     public void start() throws LifecycleException {
-                                                                
+
         // register this logger
-        if ( getObjectName()==null ) {   
-            ObjectName oname = createObjectName();   
+        if ( getObjectName()==null ) {
+            ObjectName oname = createObjectName();
             try {
                 if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, neutralizeForLog("Registering logger " + oname));
@@ -474,25 +474,25 @@ public class LoggerBase
                 String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_REGISTER_LOGGER_EXCEPTION),
                                                   oname);
                 log.log(Level.SEVERE, neutralizeForLog(msg), ex);
-            }      
-        }     
+            }
+        }
 
-    }                         
-                              
-                              
-    /**                       
+    }
+
+
+    /**
      * Gracefully terminate the active use of the public methods of this
      * component.  This method should be the last one called on a given
      * instance of this component.
-     *                        
+     *
      * @exception LifecycleException if this component detects a fatal error
      *  that needs to be reported
      */
     public void stop() throws LifecycleException {
 
         // unregister this logger
-        if ( getObjectName()!=null ) {   
-            ObjectName oname = createObjectName();   
+        if ( getObjectName()!=null ) {
+            ObjectName oname = createObjectName();
             try {
                 if (log.isLoggable(Level.FINE)) {
                     log.log(Level.FINE, neutralizeForLog("Unregistering logger " + oname));
@@ -501,8 +501,8 @@ public class LoggerBase
                 String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_REGISTER_LOGGER_EXCEPTION),
                         oname);
                 log.log(Level.SEVERE, neutralizeForLog(msg), ex);
-            }      
-        }  
+            }
+        }
     }
-  
+
 }

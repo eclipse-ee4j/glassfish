@@ -40,7 +40,7 @@ public class HelloSingleton implements Hello {
     @PersistenceUnit(unitName = "pu1")
     @TestDatabase
     private EntityManagerFactory emf;
-    
+
 
     @PostConstruct
     private void init() {

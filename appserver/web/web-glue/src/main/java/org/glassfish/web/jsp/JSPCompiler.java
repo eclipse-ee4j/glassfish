@@ -26,7 +26,7 @@
  *             3. Tools->Options->Indentation Engines->Java Indentation Engine->Number of Spaces per Tab = 4.
  */
 
-/* 
+/*
  * @author byron.nevins@sun.com
  */
 
@@ -56,13 +56,13 @@ import java.util.logging.Logger;
 
 public final class JSPCompiler {
 
-	public static void compile(File inWebDir, File outWebDir,
+    public static void compile(File inWebDir, File outWebDir,
                                WebBundleDescriptor wbd, ServerContext serverContext)
             throws DeploymentException {
             //to resolve ambiguity
         final String amb = null;
-		compile(inWebDir, outWebDir, wbd, amb, serverContext);
-	}
+        compile(inWebDir, outWebDir, wbd, amb, serverContext);
+    }
 
     public static void compile(File inWebDir, File outWebDir,
                                WebBundleDescriptor wbd, List classpathList,
@@ -70,24 +70,24 @@ public final class JSPCompiler {
         throws DeploymentException {
         String classpath = null;
         if (classpathList != null) {
-			classpath = getClasspath(classpathList);
-		}
+            classpath = getClasspath(classpathList);
+        }
         compile(inWebDir, outWebDir, wbd, classpath, serverContext);
     }
-    
 
-	////////////////////////////////////////////////////////////////////////////
-	
-	public static void compile(File inWebDir, File outWebDir,
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    public static void compile(File inWebDir, File outWebDir,
                                WebBundleDescriptor wbd, String classpath,
                                ServerContext serverContext)
             throws DeploymentException {
-		JspC jspc = new JspC();
+        JspC jspc = new JspC();
 
         if (classpath != null && classpath.length() >0) {
-		    jspc.setClassPath(classpath);
+            jspc.setClassPath(classpath);
         }
-        
+
         // START SJSAS 6311155
         String appName = wbd.getApplication().getName();
 
@@ -98,28 +98,28 @@ public final class JSPCompiler {
         jspc.setSystemClassPath(sysClassPath);
         // END SJSAS 6311155
 
-		verify(inWebDir, outWebDir);
+        verify(inWebDir, outWebDir);
 
-		configureJspc(jspc, wbd);
-		jspc.setOutputDir(outWebDir.getAbsolutePath());
-		jspc.setUriroot(inWebDir.getAbsolutePath());
-		jspc.setCompile(true);
-		logger.log(Level.INFO, LogFacade.START_MESSAGE);
+        configureJspc(jspc, wbd);
+        jspc.setOutputDir(outWebDir.getAbsolutePath());
+        jspc.setUriroot(inWebDir.getAbsolutePath());
+        jspc.setCompile(true);
+        logger.log(Level.INFO, LogFacade.START_MESSAGE);
 
-		try {
-			jspc.execute();
-		} 
-		catch (Exception je) {
-			throw new DeploymentException("JSP Compilation Error: " + je, je);
-		}
-		finally {
-			// bnevins 9-9-03 -- There may be no jsp files in this web-module
-			// in such a case the code above will create a useless, and possibly
-			// problematic empty directory.	 If the directory is empty -- delete
-			// the directory.
-			
-			String[] files = outWebDir.list();
-			
+        try {
+            jspc.execute();
+        }
+        catch (Exception je) {
+            throw new DeploymentException("JSP Compilation Error: " + je, je);
+        }
+        finally {
+            // bnevins 9-9-03 -- There may be no jsp files in this web-module
+            // in such a case the code above will create a useless, and possibly
+            // problematic empty directory.     If the directory is empty -- delete
+            // the directory.
+
+            String[] files = outWebDir.list();
+
 
             if(files == null || files.length <= 0) {
                 if (!outWebDir.delete()) {
@@ -128,72 +128,72 @@ public final class JSPCompiler {
             }
 
             logger.log(Level.INFO, LogFacade.FINISH_MESSAGE);
-		}
-	}
+        }
+    }
 
-	////////////////////////////////////////////////////////////////////////////
-	
-	private static void verify(File inWebDir, File outWebDir) throws DeploymentException {
-		// inWebDir must exist, outWebDir must either exist or be creatable
-		if (!FileUtils.safeIsDirectory(inWebDir)) {
-			throw new DeploymentException("inWebDir is not a directory: " + inWebDir);
-		}
-	 
+    ////////////////////////////////////////////////////////////////////////////
+
+    private static void verify(File inWebDir, File outWebDir) throws DeploymentException {
+        // inWebDir must exist, outWebDir must either exist or be creatable
+        if (!FileUtils.safeIsDirectory(inWebDir)) {
+            throw new DeploymentException("inWebDir is not a directory: " + inWebDir);
+        }
+
         if (!FileUtils.safeIsDirectory(outWebDir)) {
             if (!outWebDir.mkdirs()) {
                 logger.log(Level.FINE, LogFacade.CANNOT_DELETE_FILE, outWebDir);
             }
-		
-			if (!FileUtils.safeIsDirectory(outWebDir)) {
-				throw new DeploymentException("outWebDir is not a directory, and it can't be created: " + outWebDir);
-			}
-		}
-	}
 
-	////////////////////////////////////////////////////////////////////////////
-	
-	private static String getClasspath(List paths) {
-		if(paths == null)
-			return null;
-		
-		String classpath = null;
+            if (!FileUtils.safeIsDirectory(outWebDir)) {
+                throw new DeploymentException("outWebDir is not a directory, and it can't be created: " + outWebDir);
+            }
+        }
+    }
 
-		StringBuilder sb = new StringBuilder();
-		boolean first = true;
+    ////////////////////////////////////////////////////////////////////////////
 
-		for (Iterator it = paths.iterator(); it.hasNext(); ) {
-			String path = (String)it.next();
+    private static String getClasspath(List paths) {
+        if(paths == null)
+            return null;
 
-			if (first) 
-				first = false;
-			else 
-				sb.append(File.pathSeparatorChar);
+        String classpath = null;
 
-			sb.append(path);
-		}
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
 
-		if (sb.length() > 0) 
-			classpath = sb.toString();
+        for (Iterator it = paths.iterator(); it.hasNext(); ) {
+            String path = (String)it.next();
 
-		return classpath;	
-	}	
+            if (first)
+                first = false;
+            else
+                sb.append(File.pathSeparatorChar);
 
-	////////////////////////////////////////////////////////////////////////////
+            sb.append(path);
+        }
+
+        if (sb.length() > 0)
+            classpath = sb.toString();
+
+        return classpath;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
 
     /*
      * Configures the given JspC instance with the jsp-config properties
-	 * specified in the sun-web.xml of the web module represented by the
-	 * given WebBundleDescriptor.
-	 *
-	 * @param jspc JspC instance to be configured
-	 * @param wbd WebBundleDescriptor of the web module whose sun-web.xml
+     * specified in the sun-web.xml of the web module represented by the
+     * given WebBundleDescriptor.
+     *
+     * @param jspc JspC instance to be configured
+     * @param wbd WebBundleDescriptor of the web module whose sun-web.xml
      * is used to configure the given JspC instance
-	 */
+     */
         private static void configureJspc(JspC jspc, WebBundleDescriptor wbd) {
 
-	        SunWebAppImpl sunWebApp = (SunWebAppImpl) wbd.getSunDescriptor();
-	        if (sunWebApp == null) {
-         	    return;
+            SunWebAppImpl sunWebApp = (SunWebAppImpl) wbd.getSunDescriptor();
+            if (sunWebApp == null) {
+                 return;
             }
 
             // START SJSAS 6384538
@@ -300,10 +300,10 @@ public final class JSPCompiler {
         }
 
 
-	////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     private static final Logger logger = LogFacade.getLogger();
 
-	////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
 }

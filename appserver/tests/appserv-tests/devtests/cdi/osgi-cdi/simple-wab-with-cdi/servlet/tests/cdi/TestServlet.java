@@ -51,7 +51,7 @@ public class TestServlet extends HttpServlet {
             msg += "BeanManager Injection via component environment lookup failed";
         }
         if (bm1 == null) msg += "BeanManager Injection via component environment lookup failed";
-        
+
         System.out.println("BeanManager is " + bm);
         System.out.println("BeanManager via lookup is " + bm1);
         writer.write(msg + "\n");

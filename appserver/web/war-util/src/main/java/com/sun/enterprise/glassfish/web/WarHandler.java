@@ -145,13 +145,13 @@ public class WarHandler extends AbstractArchiveHandler {
             WebXmlParser webXmlParser = getWebXmlParser(context.getSource());
             configureLoaderAttributes(cloader, webXmlParser, base);
             configureLoaderProperties(cloader, webXmlParser, base);
-            
+
             configureContextXmlAttribute(cloader, base, context);
-            
+
             try {
                 final DeploymentContext dc = context;
                 final ClassLoader cl = cloader;
-                
+
                 AccessController.doPrivileged(
                         new PermsArchiveDelegate.SetPermissionsAction(
                                 SMGlobalPolicyUtil.CommponentType.war, dc, cl));
@@ -369,7 +369,7 @@ public class WarHandler extends AbstractArchiveHandler {
             logger.log(Level.WARNING, LogFacade.INCONSISTENT_CLEAR_REFERENCE_STATIC);
         }
     }
-    
+
     // ---- inner class ----
     protected abstract class BaseXmlParser {
         protected XMLStreamReader parser = null;
@@ -383,7 +383,7 @@ public class WarHandler extends AbstractArchiveHandler {
          */
         protected abstract void read(InputStream input) throws XMLStreamException;
 
-        protected void init(InputStream input)     
+        protected void init(InputStream input)
                 throws XMLStreamException {
 
             try {
@@ -406,7 +406,7 @@ public class WarHandler extends AbstractArchiveHandler {
                     String localName = parser.getLocalName();
                     if (!name.equals(localName)) {
                         String msg = rb.getString(LogFacade.UNEXPECTED_XML_ELEMENT);
-                        msg = MessageFormat.format(msg, new Object[] { name, localName }); 
+                        msg = MessageFormat.format(msg, new Object[] { name, localName });
                         throw new XMLStreamException(msg);
                     }
                     return;
@@ -436,7 +436,7 @@ public class WarHandler extends AbstractArchiveHandler {
 
         protected String versionIdentifier = null;
 
-        WebXmlParser(ReadableArchive archive) 
+        WebXmlParser(ReadableArchive archive)
                 throws XMLStreamException, IOException {
 
             if (archive.exists(getXmlFileName())) {

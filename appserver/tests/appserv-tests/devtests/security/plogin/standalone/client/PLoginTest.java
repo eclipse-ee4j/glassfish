@@ -39,7 +39,7 @@ abstract class MyThreadBase extends Thread {
 
     protected MySession1Remote my1r = null;
 
-    public MyThreadBase(String username, String password, 
+    public MyThreadBase(String username, String password,
         String ejbLookupName, String threadName) {
 
         super(threadName);
@@ -88,7 +88,7 @@ abstract class MyThreadBase extends Thread {
           MySession1RemoteHome my1rh = (MySession1RemoteHome)
               PortableRemoteObject.narrow(o, MySession1RemoteHome.class);
 
-          my1r = my1rh.create(); 
+          my1r = my1rh.create();
           String retval = doBusiness();
 
           System.out.println(Thread.currentThread().getName() + " - " + retval);
@@ -97,11 +97,11 @@ abstract class MyThreadBase extends Thread {
           doLogout();
 
           try {
-              // Give time for other thread to 
+              // Give time for other thread to
               Thread.sleep(random.nextInt(100));
           } catch(Exception e) {
           }
-        } 
+        }
     }
 
     public abstract String doBusiness() throws Exception ;
@@ -114,7 +114,7 @@ abstract class LoginBusinessCallerBase extends MyThreadBase {
 
     ProgrammaticLogin login = null;
 
-    public LoginBusinessCallerBase(String username, String password, 
+    public LoginBusinessCallerBase(String username, String password,
                                    String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -131,7 +131,7 @@ abstract class LoginBusinessCallerBase extends MyThreadBase {
 
 abstract class NoLoginBusinessCallerBase extends MyThreadBase {
 
-    public NoLoginBusinessCallerBase(String username, String password, 
+    public NoLoginBusinessCallerBase(String username, String password,
                                      String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -147,7 +147,7 @@ abstract class NoLoginBusinessCallerBase extends MyThreadBase {
 
 class LoginBusinessCaller extends LoginBusinessCallerBase {
 
-    public LoginBusinessCaller(String username, String password, 
+    public LoginBusinessCaller(String username, String password,
         String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -159,7 +159,7 @@ class LoginBusinessCaller extends LoginBusinessCallerBase {
 
 class LoginBusinessCaller2 extends LoginBusinessCallerBase {
 
-    public LoginBusinessCaller2(String username, String password, 
+    public LoginBusinessCaller2(String username, String password,
         String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -171,7 +171,7 @@ class LoginBusinessCaller2 extends LoginBusinessCallerBase {
 
 class LoginBusinessCaller3 extends LoginBusinessCallerBase {
 
-    public LoginBusinessCaller3(String username, String password, 
+    public LoginBusinessCaller3(String username, String password,
         String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -183,7 +183,7 @@ class LoginBusinessCaller3 extends LoginBusinessCallerBase {
 
 class NoLoginBusinessCaller extends NoLoginBusinessCallerBase {
 
-    public NoLoginBusinessCaller(String username, String password, 
+    public NoLoginBusinessCaller(String username, String password,
         String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -195,7 +195,7 @@ class NoLoginBusinessCaller extends NoLoginBusinessCallerBase {
 
 class NoLoginBusinessCaller2 extends NoLoginBusinessCallerBase {
 
-    public NoLoginBusinessCaller2(String username, String password, 
+    public NoLoginBusinessCaller2(String username, String password,
         String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -207,7 +207,7 @@ class NoLoginBusinessCaller2 extends NoLoginBusinessCallerBase {
 
 class NoLoginBusinessCaller3 extends NoLoginBusinessCallerBase {
 
-    public NoLoginBusinessCaller3(String username, String password, 
+    public NoLoginBusinessCaller3(String username, String password,
         String ejbLookupName, String threadName) {
         super(username, password, ejbLookupName, threadName);
     }
@@ -218,8 +218,8 @@ class NoLoginBusinessCaller3 extends NoLoginBusinessCallerBase {
 }
 
 public class PLoginTest {
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) throws Exception {
@@ -230,32 +230,32 @@ public class PLoginTest {
 
         if( b )
             perThreadTest(numThreads);
-        else 
+        else
             perProcessTest(numThreads);
     }
 
     private static void perThreadTest(int numThreads) throws Exception {
-        
+
         Set<MyThreadBase> threadSet = new HashSet<MyThreadBase>();
 
         for(int i=0; i<numThreads; i++) {
 
-            LoginBusinessCaller t1 = 
-                new LoginBusinessCaller("testy", "testy", "ejb/MySession1Bean", 
+            LoginBusinessCaller t1 =
+                new LoginBusinessCaller("testy", "testy", "ejb/MySession1Bean",
                       "THREAD-"+"1-"+i);
             LoginBusinessCaller2 t2 =
-                new LoginBusinessCaller2("testy2", "testy2", "ejb/MySession1Bean", 
+                new LoginBusinessCaller2("testy2", "testy2", "ejb/MySession1Bean",
                       "THREAD-"+"2-"+i);
-            LoginBusinessCaller3 t3 = 
-                new LoginBusinessCaller3("testy3", "testy3", "ejb/MySession1Bean", 
+            LoginBusinessCaller3 t3 =
+                new LoginBusinessCaller3("testy3", "testy3", "ejb/MySession1Bean",
                       "THREAD-"+"3-"+i);
 
             threadSet.add(t1);
             threadSet.add(t2);
             threadSet.add(t3);
 
-            t2.start();   
-            t1.start();   
+            t2.start();
+            t1.start();
             t3.start();
 
         }
@@ -285,7 +285,7 @@ public class PLoginTest {
     }
 
     private static void perProcessTest(int numThreads) throws Exception {
-        
+
         Set<MyThreadBase> threadSet = new HashSet<MyThreadBase>();
 
         ProgrammaticLogin login = new ProgrammaticLogin();
@@ -293,22 +293,22 @@ public class PLoginTest {
 
         for(int i=0; i<numThreads; i++) {
 
-            NoLoginBusinessCaller t1 = 
-                new NoLoginBusinessCaller("testy", "testy", "ejb/MySession1Bean", 
+            NoLoginBusinessCaller t1 =
+                new NoLoginBusinessCaller("testy", "testy", "ejb/MySession1Bean",
                       "THREAD-"+"1-"+i);
             NoLoginBusinessCaller2 t2 =
-                new NoLoginBusinessCaller2("testy2", "testy2", "ejb/MySession1Bean", 
+                new NoLoginBusinessCaller2("testy2", "testy2", "ejb/MySession1Bean",
                       "THREAD-"+"2-"+i);
-            NoLoginBusinessCaller3 t3 = 
-                new NoLoginBusinessCaller3("testy3", "testy3", "ejb/MySession1Bean", 
+            NoLoginBusinessCaller3 t3 =
+                new NoLoginBusinessCaller3("testy3", "testy3", "ejb/MySession1Bean",
                       "THREAD-"+"3-"+i);
 
             threadSet.add(t1);
             threadSet.add(t2);
             threadSet.add(t3);
 
-            t2.start();   
-            t1.start();   
+            t2.start();
+            t1.start();
             t3.start();
 
         }

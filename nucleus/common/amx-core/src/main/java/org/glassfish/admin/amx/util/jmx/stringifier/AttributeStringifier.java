@@ -19,7 +19,7 @@
  * $Revision: 1.2 $
  * $Date: 2007/05/05 05:31:04 $
  */
- 
+
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
 import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
@@ -31,21 +31,21 @@ import javax.management.Attribute;
 
 public final class AttributeStringifier implements Stringifier
 {
-	public final static AttributeStringifier	DEFAULT	= new AttributeStringifier();
-	
-		public
-	AttributeStringifier()
-	{
-	}
-		public String
-	stringify( Object o )
-	{
-		final Attribute	attr	= (Attribute)o;
-		
-		final String	prefix	= attr.getName() + "=";
-		
-		final String	stringValue	= SmartStringifier.toString( attr.getValue() );
-		
-		return( prefix + stringValue );
-	}
+    public final static AttributeStringifier    DEFAULT    = new AttributeStringifier();
+
+        public
+    AttributeStringifier()
+    {
+    }
+        public String
+    stringify( Object o )
+    {
+        final Attribute    attr    = (Attribute)o;
+
+        final String    prefix    = attr.getName() + "=";
+
+        final String    stringValue    = SmartStringifier.toString( attr.getValue() );
+
+        return( prefix + stringValue );
+    }
 }

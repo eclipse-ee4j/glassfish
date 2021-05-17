@@ -78,55 +78,55 @@
         <findbugs.exclude />
         <findbugs.version>3.0.5</findbugs.version>
         <findbugs.glassfish.logging.validLoggerPrefixes>jakarta.enterprise</findbugs.glassfish.logging.validLoggerPrefixes>
-        
+
         <!-- Jakarta API Versions -->
-        
+
         <!-- Jakarta EL -->
         <jakarta.el-api.version>4.0.0</jakarta.el-api.version>
         <jakarta.el.version>4.0.1</jakarta.el.version>
 
         <!-- Jakarta Servlet -->
-        <servlet-api.version>5.0.0</servlet-api.version>        
+        <servlet-api.version>5.0.0</servlet-api.version>
 
         <!-- Jakarta Validation -->
-        <jakarta.validation.version>3.0.0</jakarta.validation.version>        
+        <jakarta.validation.version>3.0.0</jakarta.validation.version>
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
         <webservices.version>3.0.1</webservices.version>
-        
+
         <!-- Jakarta Inject -->
-        <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version> 
-              
+        <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version>
+
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.1</jakarta.jaxb-api.version>
         <jakarta.jaxb-impl.version>3.0.1</jakarta.jaxb-impl.version>
-        
+
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0</jax-rs-api.impl.version>
         <jersey.version>3.0.1</jersey.version>
-        
+
         <!-- Jakarta Mail -->
         <mail.version>2.0.1</mail.version>
-        
+
         <!-- Jakarta Activation -->
         <activation.version>2.0.1</activation.version>
-        
+
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
 
-        <!-- GlassFish Components -->                                   
+        <!-- GlassFish Components -->
         <glassfish-corba.version>4.2.4</glassfish-corba.version>
         <grizzly.version>3.0.0</grizzly.version>
         <grizzly.npn.version>2.0.0</grizzly.npn.version>
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <hk2.version>3.0.2</hk2.version>
         <hk2.plugin.version>3.0.2</hk2.plugin.version>
-		<hk2.config-generator.version>2.5.0-b53</hk2.config-generator.version>
+        <hk2.config-generator.version>2.5.0-b53</hk2.config-generator.version>
         <pfl.version>4.1.2</pfl.version>
 
-        <gmbal.version>4.0.3</gmbal.version>   
+        <gmbal.version>4.0.3</gmbal.version>
         <shoal.version>2.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
@@ -280,7 +280,7 @@
                 <artifactId>org.apache.felix.eventadmin</artifactId>
                 <version>1.6.2</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
@@ -518,7 +518,7 @@
                <artifactId>org.apache.felix.configadmin</artifactId>
                <version>1.9.20</version>
             </dependency>
-            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that.  
+            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that.
                  Since Felix Core doesn't export these packages, we have to deploy them
                  together with Felix SCR.
             -->
@@ -537,7 +537,7 @@
                 <artifactId>org.osgi.util.function</artifactId>
                 <version>1.1.0</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.bundlerepository</artifactId>
@@ -616,11 +616,11 @@
         <pluginManagement>
             <plugins>
 
-				<plugin>
-					<groupId>org.glassfish.hk2</groupId>
-					<artifactId>config-generator</artifactId>
-					<version>${hk2.config-generator.version}</version>
-				</plugin>
+                <plugin>
+                    <groupId>org.glassfish.hk2</groupId>
+                    <artifactId>config-generator</artifactId>
+                    <version>${hk2.config-generator.version}</version>
+                </plugin>
 
                 <plugin>
                     <groupId>org.glassfish.hk2</groupId>
@@ -790,7 +790,7 @@
                             <pattern>/readme</pattern>
                             <pattern>cluster/cli/src/test/resources/fake_gf_install_dir/junk</pattern>
                         </exclude>
-			            <ignoreYear>true</ignoreYear>
+                        <ignoreYear>true</ignoreYear>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -845,7 +845,7 @@
                     </execution>
                 </executions>
             </plugin>
-        
+
             <!-- force cleaning of the local repository
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -873,7 +873,7 @@
                     </execution>
                 </executions>
             </plugin>
-	    -->
+        -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -945,7 +945,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-inhabitant-generator</artifactId>
@@ -953,7 +953,7 @@
                     <supportedProjectTypes>jar,ejb,war,glassfish-jar</supportedProjectTypes>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -961,7 +961,7 @@
                     <forkCount>1</forkCount>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -979,7 +979,7 @@
                     <niceManifest>true</niceManifest>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -1004,7 +1004,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -1015,7 +1015,7 @@
                             <classpathLayoutType>custom</classpathLayoutType>
                             <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                         </manifest>
-                        
+
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                     <excludes>
@@ -1023,7 +1023,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -1034,7 +1034,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -1044,7 +1044,7 @@
                     <skip>${javadoc.skip}</skip>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgiversion-maven-plugin</artifactId>
@@ -1058,7 +1058,7 @@
                     <versionPropertyName>project.osgi.version</versionPropertyName>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>

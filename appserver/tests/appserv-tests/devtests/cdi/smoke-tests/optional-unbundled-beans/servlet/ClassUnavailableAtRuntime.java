@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-//A Test parent Bean class that is available 
+//A Test parent Bean class that is available
 //during compilation but is not packaged at runtime
 public class ClassUnavailableAtRuntime extends TestService {
 }

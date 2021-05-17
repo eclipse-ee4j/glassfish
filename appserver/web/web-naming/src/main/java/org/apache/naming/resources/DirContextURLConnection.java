@@ -46,21 +46,21 @@ import org.apache.naming.resources.ResourceAttributes;
 /**
  * Connection to a JNDI directory context.
  * <p/>
- * Note: All the object attribute names are the WebDAV names, not the HTTP 
+ * Note: All the object attribute names are the WebDAV names, not the HTTP
  * names, so this class overrides some methods from URLConnection to do the
- * queries using the right names. Content handler is also not used; the 
+ * queries using the right names. Content handler is also not used; the
  * content is directly returned.
- * 
+ *
  * @author <a href="mailto:remm@apache.org">Remy Maucherat</a>
  * @version $Revision: 1.3 $
  */
-public class DirContextURLConnection 
+public class DirContextURLConnection
     extends URLConnection {
-    
-    
+
+
     // ----------------------------------------------------------- Constructors
-    
-    
+
+
     public DirContextURLConnection(DirContext context, URL url) {
         super(url);
         if (context == null)
@@ -68,50 +68,50 @@ public class DirContextURLConnection
                 ("Directory context can't be null");
         if (IS_SECURITY_ENABLED) {
             this.permission = new JndiPermission(url.toString());
-	}
+    }
         this.context = context;
     }
-    
-    
+
+
     // ----------------------------------------------------- Instance Variables
-    
-    
+
+
     /**
      * Directory context.
      */
     protected DirContext context;
-    
-    
+
+
     /**
      * Associated resource.
      */
     protected Resource resource;
-    
-    
+
+
     /**
      * Associated DirContext.
      */
     protected DirContext collection;
-    
-    
+
+
     /**
      * Other unknown object.
      */
     protected Object object;
-    
-    
+
+
     /**
      * Attributes.
      */
     protected Attributes attributes;
-    
-    
+
+
     /**
      * Date.
      */
     protected long date;
-    
-    
+
+
     /**
      * Permission
      */
@@ -126,25 +126,25 @@ public class DirContextURLConnection
 
 
     // ------------------------------------------------------------- Properties
-    
-    
+
+
     /**
      * Connect to the DirContext, and retrive the bound object, as well as
      * its attributes. If no object is bound with the name specified in the
      * URL, then an IOException is thrown.
-     * 
+     *
      * @throws IOException Object not found
      */
     public void connect()
         throws IOException {
-        
+
         if (!connected) {
-            
+
             try {
                 date = System.currentTimeMillis();
                 String path = getURL().getFile();
                 if (context instanceof ProxyDirContext) {
-                    ProxyDirContext proxyDirContext = 
+                    ProxyDirContext proxyDirContext =
                         (ProxyDirContext) context;
                     String hostName = proxyDirContext.getHostName();
                     String contextName = proxyDirContext.getContextName();
@@ -171,38 +171,38 @@ public class DirContextURLConnection
             } catch (NamingException e) {
                 // Object not found
             }
-            
+
             connected = true;
-            
+
         }
-        
+
     }
-    
-    
+
+
     /**
      * Return the content length value.
      */
     public int getContentLength() {
         return getHeaderFieldInt(ResourceAttributes.CONTENT_LENGTH, -1);
     }
-    
-    
+
+
     /**
      * Return the content type value.
      */
     public String getContentType() {
         return getHeaderField(ResourceAttributes.CONTENT_TYPE);
     }
-    
-    
+
+
     /**
      * Return the last modified date.
      */
     public long getDate() {
         return date;
     }
-    
-    
+
+
     /**
      * Return the last modified date.
      */
@@ -219,7 +219,7 @@ public class DirContextURLConnection
         if (attributes == null)
             return 0;
 
-        Attribute lastModified = 
+        Attribute lastModified =
             attributes.get(ResourceAttributes.LAST_MODIFIED);
         if (lastModified != null) {
             try {
@@ -231,8 +231,8 @@ public class DirContextURLConnection
 
         return 0;
     }
-    
-    
+
+
     /**
      * Returns an unmodifiable Map of the header fields.
      */
@@ -287,7 +287,7 @@ public class DirContextURLConnection
             } catch (IOException e) {
             }
         }
-        
+
         if (attributes == null)
             return (null);
 
@@ -306,58 +306,58 @@ public class DirContextURLConnection
         }
 
         return (null);
-        
+
     }
-    
-    
+
+
     /**
      * Get object content.
      */
     public Object getContent()
         throws IOException {
-        
+
         if (!connected)
             connect();
-        
+
         if (resource != null)
             return getInputStream();
         if (collection != null)
             return collection;
         if (object != null)
             return object;
-        
+
         throw new FileNotFoundException();
-        
+
     }
-    
-    
+
+
     /**
      * Get object content.
      */
     public Object getContent(Class[] classes)
         throws IOException {
-        
+
         Object object = getContent();
-        
+
         for (int i = 0; i < classes.length; i++) {
             if (classes[i].isInstance(object))
                 return object;
         }
-        
+
         return null;
-        
+
     }
-    
-    
+
+
     /**
      * Get input stream.
      */
-    public InputStream getInputStream() 
+    public InputStream getInputStream()
         throws IOException {
-        
+
         if (!connected)
             connect();
-        
+
         if (resource == null) {
             throw new FileNotFoundException();
         } else {
@@ -368,12 +368,12 @@ public class DirContextURLConnection
             } catch (NamingException e) {
             }
         }
-        
+
         return (resource.streamContent());
-        
+
     }
-    
-    
+
+
     /**
      * Get the Permission for this URL
      */
@@ -384,26 +384,26 @@ public class DirContextURLConnection
 
 
     // --------------------------------------------------------- Public Methods
-    
-    
+
+
     /**
      * List children of this collection. The names given are relative to this
      * URI's path. The full uri of the children is then : path + "/" + name.
      */
     public Enumeration<String> list()
         throws IOException {
-        
+
         if (!connected) {
             connect();
         }
-        
+
         if ((resource == null) && (collection == null)) {
             throw new FileNotFoundException(
                     (getURL() == null)? "null" : getURL().toString());
         }
-        
+
         Vector<String> result = new Vector<String>();
-        
+
         if (collection != null) {
             try {
                 NamingEnumeration<NameClassPair> enumeration =
@@ -419,10 +419,10 @@ public class DirContextURLConnection
                         (getURL() == null)? "null" : getURL().toString());
             }
         }
-        
+
         return result.elements();
-        
+
     }
-    
-    
+
+
 }

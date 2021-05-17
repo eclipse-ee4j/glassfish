@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  *
  * This unit test has been reworked in light of the fix for CR 6633257:
  * Rather than issuing a redirect over https to the login.jsp login page
- * (which is protected by a transport-guarantee of CONFIDENTIAL), the 
+ * (which is protected by a transport-guarantee of CONFIDENTIAL), the
  * redirect over https will be applied to the original request (that is,
  * to protected.jsp), followed by a FORWARD dispatch to login.jsp.
  *
@@ -51,7 +51,7 @@ public class WebTest {
         httpsPort = args[2];
         contextRoot = args[3];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 3374");
@@ -80,11 +80,11 @@ public class WebTest {
         }
         String redirectLocation = conn.getHeaderField("Location");
         System.out.println("Location: " + redirectLocation);
-        
+
         String expectedRedirectLocation = "https://" + host + ":" + httpsPort
             + contextRoot + "/protected.jsp";
         if (!expectedRedirectLocation.equals(redirectLocation)) {
             throw new Exception("Unexpected redirect location");
-        }   
+        }
     }
 }

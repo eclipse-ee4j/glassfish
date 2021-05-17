@@ -53,7 +53,7 @@ public final class Extension {
      * The name of the optional package being made available, or required.
      */
     private String extensionName = null;
-    
+
 
     public String getExtensionName() {
         return (this.extensionName);
@@ -67,7 +67,7 @@ public final class Extension {
 
     /**
      * UniqueId created by combining the extension name and implementation
-     * version. 
+     * version.
      */
     public String getUniqueId() {
         return this.extensionName + this.implementationVersion;
@@ -174,7 +174,7 @@ public final class Extension {
     public void setFulfilled(boolean fulfilled) {
         this.fulfilled = fulfilled;
     }
-    
+
     public boolean isFulfilled() {
         return fulfilled;
     }

@@ -37,23 +37,23 @@
     <delete dir="${assemble.dir}"/>
 </target>
 
-<target name="compile" depends="clean">    
+<target name="compile" depends="clean">
 <antcall target="compile-common">
         <param name="src" value="util"/>
     </antcall>
     <antcall target="compile-common">
         <param name="src" value="ejb/stateful"/>
     </antcall>
-    
-    
+
+
     <antcall target="compile-common">
         <param name="src" value="client"/>
     </antcall>
-</target>    
+</target>
 
-<target name="build" depends="compile">    
-<antcall target="build-ear-common"/>    
-</target> 
+<target name="build" depends="compile">
+<antcall target="build-ear-common"/>
+</target>
 
 <target name="deploy" depends="init-common">
     <antcall target="deploy-common"/>
@@ -62,11 +62,11 @@
 
 <target name="setup" depends="init-common">
 
-    
+
 </target>
 
 <target name="run" depends="init-common">
-    <antcall target="runclient-common">             
+    <antcall target="runclient-common">
         <param name="appclient.application.args" value="${testsuite.id} 1 all "/>
     </antcall>
 </target>
@@ -80,19 +80,19 @@
     <antcall target="usage-common"/>
 </target>
 
-<target name="unsetup" depends="init-common">    
+<target name="unsetup" depends="init-common">
 
-</target>    
-  
+</target>
+
   <target name="standalone-client" depends="init-common">
   <delete dir="${build.classes.dir}/ejb/stateful/passivate/standalone" failonerror="false"/>
   <echo message="assemble.dir is ${assemble.dir}"/>
   <antcall target="compile-common">
         <param name="src" value="standalone"/>
    </antcall>
-    <java classname="ejb.stateful.passivate.standalone.StandaloneClient" fork="yes">        
-    <arg line="${admin.host} ${orb.port} beforerestart"/> 
-         <classpath>           
+    <java classname="ejb.stateful.passivate.standalone.StandaloneClient" fork="yes">
+    <arg line="${admin.host} ${orb.port} beforerestart"/>
+         <classpath>
          <pathelement location="${assemble.dir}/ejb-sfsblifecycleAppClient.jar"/>
                 <fileset dir="${env.S1AS_HOME}/lib">
                 <include name="**/*.jar"/>
@@ -100,21 +100,21 @@
                 <fileset dir="${assemble.dir}">
                 <include name="**/*.jar"/>
                 </fileset>
-           <pathelement location="${env.SPS_HOME}/pe/lib/reporter.jar"/>           
-           <pathelement location="${build.classes.dir}"/>           
+           <pathelement location="${env.SPS_HOME}/pe/lib/reporter.jar"/>
+           <pathelement location="${build.classes.dir}"/>
          </classpath>
-         <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/> 
+         <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
          <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
        </java>
-  
+
   </target>
-  
+
   <target name="STOP" depends="init-common">
   <antcall target="stop-domain"/>
   </target>
-  
+
   <target name="START" depends="init-common">
   <antcall target="start-domain"/>
   </target>
-  
+
 </project>

@@ -250,7 +250,7 @@ public class DBStatement extends Object {
             }
         }
     }
-    
+
     /**
      * Binds the specified value to the column corresponding with
      * the specified index reference.

@@ -35,8 +35,8 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @WebServlet(name="HelloServlet", urlPatterns={"/HelloServlet"})
 public class HelloServlet extends HttpServlet {
-   
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -53,10 +53,10 @@ public class HelloServlet extends HttpServlet {
         // the servlet returns 200 if PrintWriter is closed
         //    out.close();
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -67,9 +67,9 @@ public class HelloServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -82,7 +82,7 @@ public class HelloServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

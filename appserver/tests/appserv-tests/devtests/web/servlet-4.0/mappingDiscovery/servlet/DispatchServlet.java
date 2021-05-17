@@ -27,18 +27,18 @@ import jakarta.servlet.http.HttpServletResponse;
 public class DispatchServlet extends HttpServlet {
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-          request.getServletContext().log(this.getClass().getSimpleName() + " " 
+          request.getServletContext().log(this.getClass().getSimpleName() + " "
                                           + request.getHttpServletMapping());
           HttpServletMapping forwardMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.FORWARD_MAPPING);
-          request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: " 
+          request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: "
                                           + forwardMapping);
           HttpServletMapping includeMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.INCLUDE_MAPPING);
-          request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: " 
+          request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: "
                                           + includeMapping);
           HttpServletMapping asyncMapping = (HttpServletMapping) request.getAttribute(AsyncContext.ASYNC_MAPPING);
-          request.getServletContext().log(this.getClass().getSimpleName() + " ASYNC_MAPPING attribute: " 
+          request.getServletContext().log(this.getClass().getSimpleName() + " ASYNC_MAPPING attribute: "
                                           + asyncMapping);
-          
+
     AsyncContext asyncContext = request.startAsync();
     asyncContext.setTimeout(0);
     asyncContext.dispatch("/ServletC");

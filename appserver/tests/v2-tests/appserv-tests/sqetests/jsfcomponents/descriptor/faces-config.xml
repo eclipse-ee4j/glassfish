@@ -34,8 +34,8 @@
 
   <managed-bean>
     <description>
-      Causes the default VariableResolver implementation to instantiate the 
-      managed bean, NA of the class, components.model.ImageArea in application 
+      Causes the default VariableResolver implementation to instantiate the
+      managed bean, NA of the class, components.model.ImageArea in application
       scope if the bean does not already exist in any scope and initialize the
       shape, alt, and coords properties with the values specified by the
       managed-property elements.
@@ -45,7 +45,7 @@
     <managed-bean-scope> application </managed-bean-scope>
     <managed-property>
       <description>
-        Initializes the shape property of the managed bean, NA with the value, 
+        Initializes the shape property of the managed bean, NA with the value,
         poly.
       </description>
       <property-name>shape</property-name>
@@ -53,7 +53,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the alt property of the managed bean, NA with the value, 
+        Initializes the alt property of the managed bean, NA with the value,
         NAmerica.
       </description>
       <property-name>alt</property-name>
@@ -61,7 +61,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the coords property of the managed bean, NA with the value 
+        Initializes the coords property of the managed bean, NA with the value
         specified by the value element.
       </description>
       <property-name>coords</property-name>
@@ -73,8 +73,8 @@
 
   <managed-bean>
      <description>
-      Causes the default VariableResolver implementation to instantiate the 
-      managed bean, SA of the class, components.model.ImageArea in application 
+      Causes the default VariableResolver implementation to instantiate the
+      managed bean, SA of the class, components.model.ImageArea in application
       scope if the bean does not already exist in any scope and initialize the
       shape, alt, and coords properties with the values specified by the
       managed-property elements.
@@ -84,7 +84,7 @@
     <managed-bean-scope>application</managed-bean-scope>
     <managed-property>
       <description>
-        Initializes the shape property of the managed bean, SA with the value 
+        Initializes the shape property of the managed bean, SA with the value
         poly.
       </description>
       <property-name>shape</property-name>
@@ -92,7 +92,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the alt property of the managed bean, SA with the value 
+        Initializes the alt property of the managed bean, SA with the value
         SAmerica.
       </description>
       <property-name>alt</property-name>
@@ -100,7 +100,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the coords property of the managed bean, SA with the value 
+        Initializes the coords property of the managed bean, SA with the value
         specified by the value element.
       </description>
       <property-name>coords</property-name>
@@ -112,8 +112,8 @@
 
   <managed-bean>
      <description>
-      Causes the default VariableResolver implementation to instantiate the 
-      managed bean, finA of the class, components.model.ImageArea in application 
+      Causes the default VariableResolver implementation to instantiate the
+      managed bean, finA of the class, components.model.ImageArea in application
       scope if the bean does not already exist in any scope and initialize the
       shape, alt, and coords properties with the values specified by the
       managed-property elements.
@@ -123,7 +123,7 @@
     <managed-bean-scope>application</managed-bean-scope>
     <managed-property>
       <description>
-        Initializes the shape property of the managed bean, finA with the value 
+        Initializes the shape property of the managed bean, finA with the value
         poly.
       </description>
       <property-name>shape</property-name>
@@ -131,7 +131,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the alt property of the managed bean, finA with the value 
+        Initializes the alt property of the managed bean, finA with the value
         Finland.
       </description>
       <property-name>alt</property-name>
@@ -139,7 +139,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the coords property of the managed bean, finA with the value 
+        Initializes the coords property of the managed bean, finA with the value
         specified by the value element.
       </description>
       <property-name>coords</property-name>
@@ -151,8 +151,8 @@
 
   <managed-bean>
      <description>
-      Causes the default VariableResolver implementation to instantiate the 
-      managed bean, gerA of the class, components.model.ImageArea in application 
+      Causes the default VariableResolver implementation to instantiate the
+      managed bean, gerA of the class, components.model.ImageArea in application
       scope if the bean does not already exist in any scope and initialize the
       shape, alt, and coords properties with the values specified by the
       managed-property elements.
@@ -162,7 +162,7 @@
     <managed-bean-scope> application </managed-bean-scope>
     <managed-property>
       <description>
-        Initializes the shape property of the managed bean, gerA with the value 
+        Initializes the shape property of the managed bean, gerA with the value
         poly.
       </description>
       <property-name>shape</property-name>
@@ -170,7 +170,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the alt property of the managed bean, gerA with the value 
+        Initializes the alt property of the managed bean, gerA with the value
         Germany.
       </description>
       <property-name>alt</property-name>
@@ -178,7 +178,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the coords property of the managed bean, gerA with the value 
+        Initializes the coords property of the managed bean, gerA with the value
         specified by the value element.
       </description>
       <property-name>coords</property-name>
@@ -190,8 +190,8 @@
 
   <managed-bean>
      <description>
-      Causes the default VariableResolver implementation to instantiate the 
-      managed bean, fraA of the class, components.model.ImageArea in application 
+      Causes the default VariableResolver implementation to instantiate the
+      managed bean, fraA of the class, components.model.ImageArea in application
       scope if the bean does not already exist in any scope and initialize the
       shape, alt, and coords properties with the values specified by the
       managed-property elements.
@@ -201,7 +201,7 @@
     <managed-bean-scope> application </managed-bean-scope>
     <managed-property>
       <description>
-        Initializes the shape property of the managed bean, fraA with the value 
+        Initializes the shape property of the managed bean, fraA with the value
         poly.
       </description>
       <property-name>shape</property-name>
@@ -209,7 +209,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the alt property of the managed bean, fraA with the value 
+        Initializes the alt property of the managed bean, fraA with the value
         France.
       </description>
       <property-name>alt</property-name>
@@ -217,7 +217,7 @@
     </managed-property>
     <managed-property>
       <description>
-        Initializes the coords property of the managed bean, fraA with the value 
+        Initializes the coords property of the managed bean, fraA with the value
         specified by the value element.
       </description>
       <property-name>coords</property-name>
@@ -226,7 +226,7 @@
       </value>
     </managed-property>
   </managed-bean>
-  
+
   <managed-bean>
     <managed-bean-name>RepeaterBean</managed-bean-name>
     <managed-bean-class>demo.model.RepeaterBean</managed-bean-class>
@@ -238,12 +238,12 @@
     <managed-bean-class>demo.model.ResultSetBean</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
   </managed-bean>
-  
+
   <managed-bean>
     <managed-bean-name>GraphBean</managed-bean-name>
     <managed-bean-class>demo.model.GraphBean</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
-  </managed-bean>  
+  </managed-bean>
 
   <managed-bean>
     <managed-bean-name>ChartBean</managed-bean-name>

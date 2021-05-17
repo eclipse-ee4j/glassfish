@@ -124,7 +124,7 @@ public class ASURLClassLoader
 
     //holder for declared and ee permissions
     private PermsHolder permissionsHolder;
-    
+
     /**
      * Constructor.
      */
@@ -132,7 +132,7 @@ public class ASURLClassLoader
         super(new URL[0]);
 
         permissionsHolder = new PermsHolder();
-        
+
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE,
                         "ClassLoader: " + this + " is getting created.");
@@ -661,10 +661,10 @@ public class ASURLClassLoader
         });
         return (byte[]) result;
     }
-    
+
     @Override
-    public void addEEPermissions(PermissionCollection eePc) 
-        throws SecurityException {        
+    public void addEEPermissions(PermissionCollection eePc)
+        throws SecurityException {
         // sm on
         if (System.getSecurityManager() != null) {
             System.getSecurityManager().checkSecurityAccess(
@@ -674,34 +674,34 @@ public class ASURLClassLoader
         }
     }
 
-    @Override    
-    public void addDeclaredPermissions(PermissionCollection declaredPc 
+    @Override
+    public void addDeclaredPermissions(PermissionCollection declaredPc
             ) throws SecurityException {
-        
+
         if (System.getSecurityManager() != null) {
             System.getSecurityManager().checkSecurityAccess(
                     DDPermissionsLoader.SET_EE_POLICY);
-        
+
             permissionsHolder.setDeclaredPermissions(declaredPc);
         }
-        
+
     }
 
-    
-    
+
+
     @Override
     protected PermissionCollection getPermissions(CodeSource codeSource) {
-        
-        PermissionCollection cachedPc = 
+
+        PermissionCollection cachedPc =
             permissionsHolder.getCachedPerms(codeSource);
         if (cachedPc != null)
             return cachedPc;
-        
+
         return permissionsHolder.getPermissions(
                 codeSource, super.getPermissions(codeSource));
     }
-    
-    
+
+
 
     /** THREAD SAFETY: what happens when more than one thread requests the same class
         and thus works on the same classData?  Or defines the same package?  Maybe
@@ -772,9 +772,9 @@ public class ASURLClassLoader
             clazz = defineClass(name, bytes, 0, bytes.length, classData.pd);
             return clazz;
         } catch (UnsupportedClassVersionError ucve) {
- 	    throw new UnsupportedClassVersionError(
- 	        sm.getString("ejbClassLoader.unsupportedVersion", name,
- 	                     System.getProperty("java.version")));
+         throw new UnsupportedClassVersionError(
+             sm.getString("ejbClassLoader.unsupportedVersion", name,
+                          System.getProperty("java.version")));
         }
     }
 
@@ -820,7 +820,7 @@ public class ASURLClassLoader
                     //recreate the pd to include the declared permissions
                     CodeSource cs = u.pd.getCodeSource();
                     PermissionCollection pc = this.getPermissions(cs);
-                    ProtectionDomain pdWithPemissions = 
+                    ProtectionDomain pdWithPemissions =
                         new ProtectionDomain(u.pd.getCodeSource(), pc, u.pd.getClassLoader(), u.pd.getPrincipals());
                     return new ClassData(result, pdWithPemissions);
                 }
@@ -1167,11 +1167,11 @@ public class ASURLClassLoader
             if (obj instanceof URLEntry) {
                 URLEntry e = (URLEntry) obj;
                 try {
- 	 	            //try comparing URIs
- 	 	            if (source.toURI().equals(e.source.toURI())) {
- 	 	                tf = true;
- 	 	            }
- 	 	        } catch (URISyntaxException e1) {
+                      //try comparing URIs
+                      if (source.toURI().equals(e.source.toURI())) {
+                          tf = true;
+                      }
+                  } catch (URISyntaxException e1) {
                     // We should never get here, because we call init() in the constructor and
                     // init() would have thrown an exception if the URL could not be converted to a valid URI.
                     assert(false);
@@ -1187,8 +1187,8 @@ public class ASURLClassLoader
          */
         public int hashCode() {
             try {
- 	 	        return source.toURI().hashCode();
- 	 	    } catch (URISyntaxException e) {
+                  return source.toURI().hashCode();
+              } catch (URISyntaxException e) {
                 // We should never get here, because we call init() in the constructor and
                 // init() would have thrown an exception if the URL could not be converted to a valid URI.
                 assert(false);
@@ -1525,9 +1525,9 @@ public class ASURLClassLoader
                 clazz = defineClass(name, bytes, 0, bytes.length, classData.pd);
                 return clazz;
             } catch (UnsupportedClassVersionError ucve) {
- 	        throw new UnsupportedClassVersionError(
- 	            sm.getString("ejbClassLoader.unsupportedVersion", name,
- 	                         System.getProperty("java.version")));
+             throw new UnsupportedClassVersionError(
+                 sm.getString("ejbClassLoader.unsupportedVersion", name,
+                              System.getProperty("java.version")));
             }
         }
 

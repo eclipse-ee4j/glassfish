@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 
 
 /**
- * Concrete InvocationContext implementation passed to callback methods 
+ * Concrete InvocationContext implementation passed to callback methods
  * defined in interceptor classes.
  */
 public class AroundInvokeInvocationContext extends CallbackInvocationContext
@@ -102,7 +102,7 @@ public class AroundInvokeInvocationContext extends CallbackInvocationContext
         } catch(InvocationTargetException ite) {
             throw ite.getCause();
         }
-        
+
     }
 
 

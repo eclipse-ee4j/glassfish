@@ -73,7 +73,7 @@
         <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup> 1 </load-on-startup>
     </servlet>
-    
+
     <!-- Chart Servlet -->
     <servlet>
         <servlet-name>ChartServlet</servlet-name>
@@ -91,14 +91,14 @@
         <servlet-name>Faces Servlet</servlet-name>
         <url-pattern>/faces/*</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>ChartServlet</servlet-name>
         <url-pattern>/ChartServlet</url-pattern>
     </servlet-mapping>
 
 
-    
+
 
     <!-- Welcome File List -->
     <welcome-file-list>

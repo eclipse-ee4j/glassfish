@@ -20,7 +20,7 @@
 
 <ejb-jar>
   <enterprise-beans>
-    <session>      
+    <session>
       <display-name>SessionTest</display-name>
       <ejb-name>SessionTest</ejb-name>
       <home>sqetests.ejb.stateful.passivate.ejb.stateful.SessionRemoteHome</home>
@@ -28,7 +28,7 @@
       <local-home>sqetests.ejb.stateful.passivate.ejb.stateful.SessionLocalHome</local-home>
       <local>sqetests.ejb.stateful.passivate.ejb.stateful.SessionLocal</local>
       <ejb-class>sqetests.ejb.stateful.passivate.ejb.stateful.SessionBean</ejb-class>
-      <session-type>Stateful</session-type>      
+      <session-type>Stateful</session-type>
       <transaction-type>Bean</transaction-type>
       <resource-ref>
          <description> This is a textual description of the resource.</description>
@@ -36,8 +36,8 @@
          <res-type>java.net.URL</res-type>
          <res-auth>Container</res-auth>
          <res-sharing-scope>Sharable</res-sharing-scope>
-      </resource-ref>      
-     
-    </session>     
+      </resource-ref>
+
+    </session>
   </enterprise-beans>
 </ejb-jar>

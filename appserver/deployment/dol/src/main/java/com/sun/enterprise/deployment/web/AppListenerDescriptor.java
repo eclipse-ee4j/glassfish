@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.deployment.web;
 
-/** 
+/**
  * Objects exhibiting this interface represent a lifecycle listener.
  * This represents the <listener-class> XML element in the servlet spec.
  * @author Vivek Nagar
@@ -24,8 +24,8 @@ package com.sun.enterprise.deployment.web;
 
 public interface AppListenerDescriptor {
 
-    /** 
-     * Return the listener class. 
+    /**
+     * Return the listener class.
      * @return the listener class name.
      */
     public String getListener();

@@ -38,7 +38,7 @@ public class TestStringSubstitutionParser {
 
     @BeforeClass
     public void init() {
-        _configStream = TestStringSubstitutionParser.class.getClassLoader().getResourceAsStream(_stringSubsPath);  
+        _configStream = TestStringSubstitutionParser.class.getClassLoader().getResourceAsStream(_stringSubsPath);
     }
 
     @Test

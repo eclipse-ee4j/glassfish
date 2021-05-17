@@ -30,7 +30,7 @@ import java.util.Properties;
 
 /**
  * Object factory for EJBs.
- * 
+ *
  * @author Jacek Laskowski
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:07 $
@@ -41,7 +41,7 @@ public class OpenEjbFactory implements ObjectFactory {
     // -------------------------------------------------------------- Constants
 
 
-    protected static final String DEFAULT_OPENEJB_FACTORY = 
+    protected static final String DEFAULT_OPENEJB_FACTORY =
         "org.openejb.client.LocalInitialContextFactory";
 
 
@@ -50,7 +50,7 @@ public class OpenEjbFactory implements ObjectFactory {
 
     /**
      * Crete a new EJB instance using OpenEJB.
-     * 
+     *
      * @param obj The reference object describing the DataSource
      */
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,

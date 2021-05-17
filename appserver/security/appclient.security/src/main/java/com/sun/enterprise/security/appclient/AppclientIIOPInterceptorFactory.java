@@ -57,7 +57,7 @@ public class AppclientIIOPInterceptorFactory implements IIOPInterceptorFactory {
     private ProcessEnvironment penv;
 
     private AlternateSecurityInterceptorFactory altSecFactory;
-    
+
     // are we supposed to add the interceptor and then return or just return an instance ?.
     public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (penv.getProcessType().isServer()) {
@@ -103,5 +103,5 @@ public class AppclientIIOPInterceptorFactory implements IIOPInterceptorFactory {
         }
         return creq;
     }
-    
+
 }

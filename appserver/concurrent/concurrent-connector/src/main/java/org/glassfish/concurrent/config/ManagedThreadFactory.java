@@ -68,7 +68,7 @@ public interface ManagedThreadFactory extends ConfigBeanProxy, Resource,
      *              {@link String }
      */
     void setThreadPriority(String value) throws PropertyVetoException;
-    
+
     @DuckTyped
     String getIdentity();
 

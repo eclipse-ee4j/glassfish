@@ -74,7 +74,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * Add a child descriptor to the parent descriptor as an extension.
      *
-     * @param dde the child descriptor  
+     * @param dde the child descriptor
      *
      */
     public <T extends Descriptor> void addDescriptorExtension(final T dde) {
@@ -90,7 +90,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * Get all child descriptor extensions for a given type.
      *
-     * @param c the child descriptor type  
+     * @param c the child descriptor type
      * @return the list of descriptor extension for a given type
      *
      */
@@ -102,15 +102,15 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * Get child descriptor extension for a given type.
      *
-     * It is a convenience API to get the single child extension descriptor 
+     * It is a convenience API to get the single child extension descriptor
      * if the XML element it represents can only occur once.
-     * 
-     * Returns that single descriptor if the XML element that the given type 
+     *
+     * Returns that single descriptor if the XML element that the given type
      * represents can only occur once.
-     * Returns the first element of the list of descriptors if the XML element 
+     * Returns the first element of the list of descriptors if the XML element
      * that the given type represents can occur multiple times.
      *
-     * @param c the child descriptor type  
+     * @param c the child descriptor type
      * @return the single or the first descriptor extension for a given type
      *
      */
@@ -226,7 +226,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
         }
 
         // so far, no luck, it is possible that this
-        // environment property was transfered through jndi 
+        // environment property was transfered through jndi
         // between machines with different locales, if I have
         // at least one value, and no language was specified,
         // let's return it.

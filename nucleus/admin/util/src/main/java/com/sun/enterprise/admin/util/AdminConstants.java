@@ -67,7 +67,7 @@ public interface AdminConstants {
     /* Some additional values for 8.0 PE */
 
     public static final String DOMAIN_ADMIN_GROUP_NAME = "asadmin";
-    /* This should the same as the value of <group-name> in 
+    /* This should the same as the value of <group-name> in
     com/sun/enterprise/admin/server/core/servlet/sun-web.xml */
 
 }

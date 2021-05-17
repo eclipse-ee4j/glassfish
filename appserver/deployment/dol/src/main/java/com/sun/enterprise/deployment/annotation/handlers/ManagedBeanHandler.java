@@ -126,7 +126,7 @@ public class ManagedBeanHandler extends AbstractHandler {
         }
 
         if( aeHandler instanceof ResourceContainerContext ) {
-            ((ResourceContainerContext) aeHandler).addManagedBean(managedBeanDesc);            
+            ((ResourceContainerContext) aeHandler).addManagedBean(managedBeanDesc);
 
 
             // process managed bean class annotations
@@ -153,7 +153,7 @@ public class ManagedBeanHandler extends AbstractHandler {
                     interceptorDescs.put(i.getName(), nextInterceptor);
 
                 }
-                
+
                 managedBeanDesc.setClassInterceptorChain(classInterceptorChain);
 
             }
@@ -187,15 +187,15 @@ public class ManagedBeanHandler extends AbstractHandler {
                     managedBeanDesc.setMethodLevelInterceptorChain(mDesc, methodInterceptorChain);
                 }
             }
-           
+
         }
 
         return getDefaultProcessedResult();
     }
 
-    private void processForAnnotations(AnnotationInfo element, AccessibleObject o, 
-                 Map<AccessibleObject, Class[]> methodLevelInterceptors, 
-                 ManagedBeanDescriptor managedBeanDesc, Class managedBeanClass) 
+    private void processForAnnotations(AnnotationInfo element, AccessibleObject o,
+                 Map<AccessibleObject, Class[]> methodLevelInterceptors,
+                 ManagedBeanDescriptor managedBeanDesc, Class managedBeanClass)
                  throws AnnotationProcessorException {
 
         Annotation ann = getMethodAnnotation(o, "jakarta.interceptor.Interceptors");
@@ -231,7 +231,7 @@ public class ManagedBeanHandler extends AbstractHandler {
             Class[] ctorParamTypes = ((Constructor)o).getParameterTypes();
             String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
             // MethodDescriptor.EJB_BEAN is just a tag, not to add a new one
-            mDesc = new MethodDescriptor(managedBeanClass.getSimpleName(), null, 
+            mDesc = new MethodDescriptor(managedBeanClass.getSimpleName(), null,
                     parameterClassNames, MethodDescriptor.EJB_BEAN);
         }
 

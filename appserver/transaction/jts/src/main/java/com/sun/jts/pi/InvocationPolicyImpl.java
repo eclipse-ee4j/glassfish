@@ -51,18 +51,18 @@ public class InvocationPolicyImpl
     // org.omg.CORBA.PolicyOperations implementation
 
     public int policy_type() {
-	return INVOCATION_POLICY_TYPE.value;
+    return INVOCATION_POLICY_TYPE.value;
     }
 
     public Policy copy() {
-	return new InvocationPolicyImpl(this.value);
+    return new InvocationPolicyImpl(this.value);
     }
 
     public void destroy() {
-	value = EITHER.value;
+    value = EITHER.value;
     }
 
     public String toString() {
-	return "InvocationPolicy[" + this.value + "]";
+    return "InvocationPolicy[" + this.value + "]";
     }
 }

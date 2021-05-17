@@ -36,16 +36,16 @@ public class Common {
 
     static void aroundTimeoutCalled(InvocationContext ctx, String id) {
 
-        List<String> aroundtimeout = (List<String>) 
+        List<String> aroundtimeout = (List<String>)
             ctx.getContextData().get(INTERCEPTORS_PROP);
-        
+
         if( aroundtimeout == null ) {
             aroundtimeout = new LinkedList<String>();
             ctx.getContextData().put(INTERCEPTORS_PROP, aroundtimeout);
         }
 
         aroundtimeout.add(id);
-        
+
     }
 
     static void checkResults(InvocationContext ctx) {
@@ -82,9 +82,9 @@ public class Common {
             for( char nextChar : methodNameUpper.toCharArray() ) {
                 expected.add(nextChar + "");
             }
-        } 
+        }
 
-        List<String> actual = (List<String>) 
+        List<String> actual = (List<String>)
             ctx.getContextData().get(INTERCEPTORS_PROP);
 
         String msg = "Expected " + expected + " for method " +
@@ -101,7 +101,7 @@ public class Common {
         }
         calls.add(info);
     }
-   
+
     static void checkResults(String s0, int expected) {
         List<String> results = new ArrayList<String>();
         for (String s : calls) {

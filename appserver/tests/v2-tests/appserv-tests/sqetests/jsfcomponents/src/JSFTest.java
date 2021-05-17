@@ -31,11 +31,11 @@ public class JSFTest {
     private int fail = 0;
     private int total = 3;
     private final int DEBUG = 0;
-    private String[][] summary = 
+    private String[][] summary =
     {{"Index Page Test   : ", ""},
      {"Menu Page Test    : ", ""},
      {"Repeater Page Test: ", ""}};
-    
+
     public static void main( String args[] ) {
 
         try {
@@ -45,7 +45,7 @@ public class JSFTest {
             ex.printStackTrace();
         }
     }
-    
+
     public JSFTest(String[] args) throws Exception {
         serverhost = args[0];
         serverport = args[1];
@@ -60,27 +60,27 @@ public class JSFTest {
         sr = new WebConversation( );
         status = new SimpleReporterAdapter("appserv-tests");
         status.addDescription("Testing JSF...");
-        
+
     }
-    
+
     private void runTest() {
         HttpUnitOptions.setScriptingEnabled(false);
         testIndexPage();
         testManuPage();
         testRepeaterPage();
         printSummary();
-        
+
     }
 
     private void testIndexPage()  {
         String page = "";
         String testName = "JSF-indexPage";
-        
+
         try {
             WebResponse client = sr.getResponse(URL+page);
             // client = sr.getResponse(URL+page);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("Component Content") >= 0) && (s.indexOf("execute.gif") >= 0)) {
                     status.addStatus(testName, status.PASS);
@@ -102,18 +102,18 @@ public class JSFTest {
             fail++;
             ex.printStackTrace();
         }
-        
+
     }
 
     private void testManuPage()  {
         String page = "menu.faces";
         String testName = "JSF-menuPage";
-        
+
         try {
             WebResponse client = sr.getResponse(URL+page);
             // client = sr.getResponse(URL+page);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("menu2") >= 0) && (s.indexOf("Close 2") >= 0)) {
                     status.addStatus(testName, status.PASS);
@@ -135,17 +135,17 @@ public class JSFTest {
             fail++;
             ex.printStackTrace();
         }
-        
+
     }
-    
+
     private void testRepeaterPage()  {
         String page = "repeater.faces";
         String testName = "JSF-repeaterPage";
-        
+
         try {
             WebResponse client = sr.getResponse(URL+page);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("update") >= 0) && (s.indexOf("Save Changes") >= 0)) {
                     status.addStatus(testName, status.PASS);
@@ -167,7 +167,7 @@ public class JSFTest {
             fail++;
             ex.printStackTrace();
         }
-        
+
     }
 
     private void printSummary() {
@@ -183,5 +183,5 @@ public class JSFTest {
         }
         status.printSummary("JSFTestID");
     }
-    
+
 }

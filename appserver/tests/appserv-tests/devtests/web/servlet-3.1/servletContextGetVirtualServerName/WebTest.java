@@ -24,9 +24,9 @@ import com.sun.ejte.ccl.reporter.*;
  * Test HttpServletResponse#reset and #setCharacterEncoding.
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "servlet-3.1-servlet-context-get-virtual-server-name";
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -53,7 +53,7 @@ public class WebTest {
 
     private static boolean goGet(String host, int port, String contextPath,
             String expectedResult) throws Exception {
-        
+
         boolean result = false;
 
         try (Socket sock = new Socket(host, port);
@@ -76,8 +76,8 @@ public class WebTest {
                     break;
                 }
             }
-            
-        } 
+
+        }
 
         return result;
     }

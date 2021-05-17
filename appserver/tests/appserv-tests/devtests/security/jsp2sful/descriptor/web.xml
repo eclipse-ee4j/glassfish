@@ -49,7 +49,7 @@
         <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
-  
+
   <login-config>
     <auth-method>FORM</auth-method>
     <realm-name>default</realm-name>
@@ -58,11 +58,11 @@
       <form-error-page>/error.html</form-error-page>
     </form-login-config>
   </login-config>
-  
+
   <security-role>
     <role-name>employee</role-name>
   </security-role>
-  
+
   <ejb-ref>
     <ejb-ref-name>jsp2sful</ejb-ref-name>
     <ejb-ref-type>Session</ejb-ref-type>

@@ -42,7 +42,7 @@ public class VerifyServlet extends HttpServlet {
         String type = req.getQueryString();
 
         PrintWriter out = resp.getWriter();
-    	resp.setContentType("text/html");
+        resp.setContentType("text/html");
 
         out.println("<html>");
             out.println("<head>");

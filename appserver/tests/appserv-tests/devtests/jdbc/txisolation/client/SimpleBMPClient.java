@@ -38,7 +38,7 @@ public class SimpleBMPClient {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP simpleBMP = simpleBMPHome.create();
-	stat.addDescription("JDBC TX Isolation tests");
+    stat.addDescription("JDBC TX Isolation tests");
             boolean result = false;
             String testName = null;
 

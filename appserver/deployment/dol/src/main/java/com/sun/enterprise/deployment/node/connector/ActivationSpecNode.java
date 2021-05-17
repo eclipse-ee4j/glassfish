@@ -31,44 +31,44 @@ import java.util.Map;
  * This node is responsible for handling the Connector DTD related activationspec XML tag
  *
  * @author  Sheetal Vartak
- * @version 
+ * @version
  */
 public class ActivationSpecNode extends DeploymentDescriptorNode {
-    
+
     private MessageListener msgListener = null;
-    
+
     public ActivationSpecNode() {
-	    registerElementHandler(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP),
-			       RequiredConfigNode.class);
+        registerElementHandler(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP),
+                   RequiredConfigNode.class);
         registerElementHandler(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY),
-                       ConfigPropertyNode.class); 
+                       ConfigPropertyNode.class);
     }
 
    /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
+     */
 
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-	table.put(ConnectorTagNames.ACTIVATION_SPEC_CLASS, "setActivationSpecClass");
+    table.put(ConnectorTagNames.ACTIVATION_SPEC_CLASS, "setActivationSpecClass");
         return table;
-    }  
+    }
 
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         if (msgListener == null) {
             msgListener = (MessageListener) getParentNode().getDescriptor();
-        } 
+        }
         return msgListener;
-    } 
+    }
 
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param descriptor the new descriptor
@@ -87,23 +87,23 @@ public class ActivationSpecNode extends DeploymentDescriptorNode {
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
 
         if (! (descriptor instanceof MessageListener)) {
             throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
 
-	MessageListener msgListener = (MessageListener)descriptor;
-	Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
-	appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
+    MessageListener msgListener = (MessageListener)descriptor;
+    Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
+    appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
 
-	//required-config-property
-	RequiredConfigNode reqNode = new RequiredConfigNode();
-	actSpecNode = reqNode.writeDescriptor(actSpecNode, msgListener);
+    //required-config-property
+    RequiredConfigNode reqNode = new RequiredConfigNode();
+    actSpecNode = reqNode.writeDescriptor(actSpecNode, msgListener);
 
     ConfigPropertyNode configPropertyNode = new ConfigPropertyNode();
     configPropertyNode.writeDescriptor(actSpecNode, msgListener);
-	return parent;
+    return parent;
     }
 }

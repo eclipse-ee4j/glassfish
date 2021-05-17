@@ -62,7 +62,7 @@ public class MySecurityContext  extends SecurityContext {
         CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new PrincipalImpl(principalName));
         debug("setting caller principal callback with principal : " + principalName);
         callbacks.add(cpc);
-        
+
 /*
         GroupPrincipalCallback gpc = new GroupPrincipalCallback(execSubject, null);
         callbacks.add(gpc);

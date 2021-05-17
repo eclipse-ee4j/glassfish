@@ -39,7 +39,7 @@ import com.sun.enterprise.config.serverbeans.Domain;
 @Singleton
 @Secure(accessPermissionName = "security/service/authentication")
 public class AuthenticationServiceFactory extends ServiceFactory implements Factory<AuthenticationService> {
-    
+
     @Inject
     private StateManager manager;
 
@@ -51,7 +51,7 @@ public class AuthenticationServiceFactory extends ServiceFactory implements Fact
         String currentState = manager.getCurrent();
 
         // Get Service Instance
-        AuthenticationService atnService = AccessController.doPrivileged( 
+        AuthenticationService atnService = AccessController.doPrivileged(
                 new PrivilegedLookup<AuthenticationService>(
                         serviceLocator, AuthenticationService.class));
 
@@ -73,9 +73,9 @@ public class AuthenticationServiceFactory extends ServiceFactory implements Fact
      * Helper function to obtain the Authentication Service configuration from the Domain.
      */
     public static org.glassfish.security.services.config.AuthenticationService getAuthenticationServiceConfiguration(Domain domain) {
-		org.glassfish.security.services.config.AuthenticationService atnConfiguration =
-        	ServiceFactory.getSecurityServiceConfiguration(
-        			domain, org.glassfish.security.services.config.AuthenticationService.class);
+        org.glassfish.security.services.config.AuthenticationService atnConfiguration =
+            ServiceFactory.getSecurityServiceConfiguration(
+                    domain, org.glassfish.security.services.config.AuthenticationService.class);
         return atnConfiguration;
-	}
+    }
 }

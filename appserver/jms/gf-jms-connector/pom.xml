@@ -28,7 +28,7 @@
     <artifactId>gf-jms-connector</artifactId>
     <packaging>glassfish-jar</packaging>
     <name>JMS Connector Module for Runtime</name>
-    
+
     <version>6.1.1-SNAPSHOT</version>
     <developers>
         <developer>

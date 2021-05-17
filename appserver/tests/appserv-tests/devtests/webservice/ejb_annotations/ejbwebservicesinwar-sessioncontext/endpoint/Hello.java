@@ -32,11 +32,11 @@ public class Hello {
 @Resource
    private SessionContext sc;
 
-	public Hello() {}
+    public Hello() {}
 
-	@WebMethod(operationName="sayHello", action="urn:SayHello")
-	public String sayHello(String who) {
-		return "Hello " + who  ;
+    @WebMethod(operationName="sayHello", action="urn:SayHello")
+    public String sayHello(String who) {
+        return "Hello " + who  ;
 
-	}
+    }
 }

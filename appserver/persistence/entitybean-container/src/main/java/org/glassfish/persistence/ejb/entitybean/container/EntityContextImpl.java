@@ -44,15 +44,15 @@ public class EntityContextImpl
     private boolean inUnsetEntityContext = false;
     private boolean inEjbLoad = false;
     private boolean inEjbStore = false;
-    
+
     private boolean cascadeDeleteBeforeEJBRemove = false;
     private boolean cascadeDeleteAfterSuperEJBRemove = false;
 
     //The following member variables are used to directly cache
-    //	the EntityContext instead of enclosing it within a wrapper class.
-    private Object		    _primaryKey;
-    private int			    _pkHashCode;
-    private EntityContextImpl	    _next;
+    //    the EntityContext instead of enclosing it within a wrapper class.
+    private Object            _primaryKey;
+    private int                _pkHashCode;
+    private EntityContextImpl        _next;
 
     transient private EntityContainer _container = null;
 
@@ -60,70 +60,70 @@ public class EntityContextImpl
         super(ejb, container);
         _container = (EntityContainer) container;
     }
-    
+
     int getLastTransactionStatus() {
         return lastTxStatus;
     }
-    
+
     void setLastTransactionStatus(int status) {
         lastTxStatus = status;
     }
-    
+
     void setInUnsetEntityContext(boolean flag) {
         inUnsetEntityContext = flag;
     }
-    
+
     void setInEjbLoad(boolean flag) {
         inEjbLoad = flag;
     }
-    
+
     void setInEjbStore(boolean flag) {
         inEjbStore = flag;
     }
-    
+
     boolean isDirty() {
         return dirty;
     }
-    
+
     void setDirty(boolean b) {
         dirty = b;
     }
-    
+
     // overrides EJBContextImpl.setState
     void setState(BeanState s) {
         state = s;
-        if ( state == BeanState.POOLED || 
+        if ( state == BeanState.POOLED ||
             state == BeanState.DESTROYED )
         {
             dirty = false;
         }
     }
-    
-    
+
+
     boolean isNewlyActivated() {
         return newlyActivated;
     }
-    
+
     void setNewlyActivated(boolean b) {
         newlyActivated = b;
     }
-    
+
     boolean hasReentrantCall() {
         return (nCallsInProgress > 1);
     }
-    
+
     synchronized void decrementCalls() {
         nCallsInProgress--;
     }
-    
+
     synchronized void incrementCalls() {
         nCallsInProgress++;
     }
-    
+
     boolean hasIdentity() {
         return( (ejbObjectImpl != null) || (ejbLocalObjectImpl != null) );
     }
-    
+
     /**
      * Implementation of EntityContext method.
      */
@@ -133,10 +133,10 @@ public class EntityContextImpl
             // setEntityCtx etc
             throw new IllegalStateException("Primary key not available");
         }
-        
+
         return getKey();
     }
-    
+
     /**
      * Implementation of EntityContext method, overrides EJBContextImpl method.
      */
@@ -159,11 +159,11 @@ public class EntityContextImpl
         if( state == BeanState.CREATED || inUnsetEntityContext || inFinder() ) {
             throw new IllegalStateException("Operation not allowed");
         }
-     
+
         EJBTimerService timerService = EJBTimerService.getValidEJBTimerService();
         return new EJBTimerServiceWrapper(timerService, (EntityContext) this);
     }
-    
+
     protected void checkAccessToCallerSecurity()
         throws IllegalStateException
     {
@@ -171,7 +171,7 @@ public class EntityContextImpl
             throw new IllegalStateException("Operation not allowed");
         }
         checkActivatePassivate();
-        
+
         if (inEjbLoad || inEjbStore) {
             // Security access is allowed from these two methods.  In the
             // case that they are invoked as part of an ejbTimeout call,
@@ -180,11 +180,11 @@ public class EntityContextImpl
             return;
         }
     }
-    
+
     public void checkTimerServiceMethodAccess()
         throws IllegalStateException
     {
-        
+
         // Prohibit access from constructor, setEntityContext, ejbCreate,
         // ejbActivate, ejbPassivate, unsetEntityContext, ejbFind
         if( (state == BeanState.CREATED) ||
@@ -194,9 +194,9 @@ public class EntityContextImpl
         !hasIdentity() ) {
             throw new IllegalStateException("Operation not allowed");
         }
-        
+
     }
-    
+
     public final boolean isCascadeDeleteAfterSuperEJBRemove() {
         return cascadeDeleteAfterSuperEJBRemove;
     }
@@ -227,38 +227,38 @@ public class EntityContextImpl
 
     //Called from EntityContainer after an ejb is obtained from the pool.
     final void cachePrimaryKey() {
-	Object pk = getPrimaryKey();
-	this._primaryKey = pk;
-	this._pkHashCode = pk.hashCode();
+    Object pk = getPrimaryKey();
+    this._primaryKey = pk;
+    this._pkHashCode = pk.hashCode();
     }
 
     final void clearCachedPrimaryKey() {
-	this._primaryKey = null;
+    this._primaryKey = null;
     }
 
     //Called from IncompleteTxCache to get an already cached context
     final boolean doesMatch(BaseContainer baseContainer, int pkHashCode, Object pk) {
-	return (
-	    (container == baseContainer)
-	    && (_pkHashCode == pkHashCode)
-	    && (_primaryKey.equals(pk))
-	);
+    return (
+        (container == baseContainer)
+        && (_pkHashCode == pkHashCode)
+        && (_primaryKey.equals(pk))
+    );
     }
 
     final void _setNext(EntityContextImpl val) {
-	this._next = val;
+    this._next = val;
     }
 
     final EntityContextImpl _getNext() {
-	return _next;
+    return _next;
     }
 
     final int _getPKHashCode() {
-	return this._pkHashCode;
+    return this._pkHashCode;
     }
 
     final boolean isInState(BeanState value) {
-	return getState() == value;
+    return getState() == value;
     }
 
 }

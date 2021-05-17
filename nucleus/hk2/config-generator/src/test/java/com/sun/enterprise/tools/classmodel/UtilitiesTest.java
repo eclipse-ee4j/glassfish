@@ -46,13 +46,13 @@ public class UtilitiesTest {
     String output = Utilities.sortInhabitantsDescriptor(testCase(), true);
     assertEquals(expected, output);
   }
-  
+
   @Test
   public void testEmptySort() {
     String output = Utilities.sortInhabitantsDescriptor("", true);
     assertEquals("", output);
   }
-  
+
   private String testCase() {
     StringBuilder sb = new StringBuilder();
     sb.append("# comment\n");

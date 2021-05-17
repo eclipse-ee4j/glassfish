@@ -23,12 +23,12 @@ public class SimpleItemProcessor
 
 //    @Inject
 //    IdGenerator idGen;
-    
+
     @Override
     public String processItem(Object obj) throws Exception {
-	String t = (String) obj;
+    String t = (String) obj;
         String[] record = t.split(", ");
-        
+
     //EMP-ID, MONTH-YEAR, SALARY, TAX%, MEDICARE%, OTHER
         int salary = Integer.valueOf(record[2]);
         double tax = Double.valueOf(record[3]);
@@ -39,5 +39,5 @@ public class SimpleItemProcessor
         sb.append(", ").append(salary - (salary * tax / 100) - (salary * mediCare / 100));
         return  sb.toString();
     }
-    
+
 }

@@ -40,18 +40,18 @@ import java.util.ArrayList;
 public class ArrayListStack {
     private int curIndex;
     private ArrayList list;
-    
+
     /** Creates a stack with the given initial size */
     public ArrayListStack(int size) {
         curIndex = 0;
         list = new ArrayList(size);
     }
-    
+
     /** Creates a stack with a default size */
     public ArrayListStack() {
         this(20);
     }
-    
+
     /**
      * Provides the current size of the stack.
      * @return int return the current size.
@@ -59,7 +59,7 @@ public class ArrayListStack {
     public int size() {
         return curIndex;
     }
-    
+
     /**
      * Pushes an item onto the top of this stack. This method will internally
      * add elements to the <tt>ArrayList</tt> if the stack is full.
@@ -70,7 +70,7 @@ public class ArrayListStack {
         list.add(curIndex, obj);
         curIndex += 1;
     }
-    
+
     /**
      * Removes the object at the top of this stack and returns that
      * object as the value of this function.
@@ -84,7 +84,7 @@ public class ArrayListStack {
         }
         return null;
     }
-    
+
     /**
      * Tests if this stack is empty.
      * @return  <code>true</code> if and only if this stack contains
@@ -93,7 +93,7 @@ public class ArrayListStack {
     public boolean empty() {
         return curIndex == 0;
     }
-    
+
     /**
      * Looks at the object at the top of this stack without removing it
      * from the stack.

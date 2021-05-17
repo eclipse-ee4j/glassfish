@@ -58,7 +58,7 @@
         <available file="${glassfish-zip-file}" type="file" />
         <antversion atleast="1.8"/>
       </and>
-    </condition> 
+    </condition>
     <fail message="Please make sure ant version is 1.8 or higher, emma.enabled property is set, and environment variable GLASSFISH_ZIP_FILE is exported.">
       <condition>
         <not>
@@ -74,7 +74,7 @@
     <mkdir dir="${coverage.dir}"/>
     <copy file="${emma.lib.dir}/${emma.jar.name}" todir="${glassfish.server.dir}/domains/domain1/lib/ext/" overwrite="true" />
   </target>
- 
+
   <target name="emma.instrument" depends="emma.init" if="emma.prerequsite.met" description="Instrument Classes With EMMA">
     <property name="original.jar.dir" value="${glassfish.server.dir}/modules" />
     <echo>[EMMA] : Start to instrument the JAR files under ${original.jar.dir}/.</echo>
@@ -143,7 +143,7 @@
           <include name="**/*.em" />
           <include name="**/*.ec" />
         </fileset>
-        <html outfile="${coverage.dir}/coverage.html" 
+        <html outfile="${coverage.dir}/coverage.html"
               columns="name,class,method,block,line"
               depth="method"
         />

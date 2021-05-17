@@ -51,7 +51,7 @@ test_init(){
   java -version
   ant -version
   mkdir -p ${WORKSPACE}/results/junitreports
-  printf "\n\n" 
+  printf "\n\n"
 }
 
 zip_test_results(){

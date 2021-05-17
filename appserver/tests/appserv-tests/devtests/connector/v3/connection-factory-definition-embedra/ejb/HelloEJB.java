@@ -36,39 +36,39 @@ import jakarta.annotation.Resource;
                 properties = {"testName=foo"}
           ),
           @ConnectionFactoryDefinition(
-               description = "global-scope resource defined by @ConnectionFactoryDefinition", 
-               name = "java:global/env/HelloEJB_Annotation_ConnectionFactory", 
-               interfaceName = "jakarta.resource.cci.ConnectionFactory", 
+               description = "global-scope resource defined by @ConnectionFactoryDefinition",
+               name = "java:global/env/HelloEJB_Annotation_ConnectionFactory",
+               interfaceName = "jakarta.resource.cci.ConnectionFactory",
                resourceAdapter = "#cfd-ra",
                transactionSupport = TransactionSupportLevel.LocalTransaction,
                maxPoolSize = 16,
                minPoolSize = 4,
                properties = {"testName=foo"}
           ),
-          
+
           @ConnectionFactoryDefinition(
-               description = "application-scope resource defined by @ConnectionFactoryDefinition", 
-               name = "java:app/env/HelloEJB_Annotation_ConnectionFactory", 
-               interfaceName = "jakarta.resource.cci.ConnectionFactory", 
+               description = "application-scope resource defined by @ConnectionFactoryDefinition",
+               name = "java:app/env/HelloEJB_Annotation_ConnectionFactory",
+               interfaceName = "jakarta.resource.cci.ConnectionFactory",
                transactionSupport = TransactionSupportLevel.XATransaction,
                maxPoolSize = 16,
                minPoolSize = 4,
                resourceAdapter = "#cfd-ra",
                properties = {"testName=foo"}
           ),
-          
+
           @ConnectionFactoryDefinition(
-               description = "module-scope resource defined by @ConnectionFactoryDefinition", 
-               name = "java:module/env/HelloEJB_Annotation_ConnectionFactory", 
-               interfaceName = "jakarta.resource.cci.ConnectionFactory", 
+               description = "module-scope resource defined by @ConnectionFactoryDefinition",
+               name = "java:module/env/HelloEJB_Annotation_ConnectionFactory",
+               interfaceName = "jakarta.resource.cci.ConnectionFactory",
                resourceAdapter = "#cfd-ra",
                properties = {"testName=foo"}
           ),
-          
+
           @ConnectionFactoryDefinition(
-               description = "component-scope resource defined by @ConnectionFactoryDefinition", 
-               name = "java:comp/env/HelloEJB_Annotation_ConnectionFactory", 
-               interfaceName = "jakarta.resource.cci.ConnectionFactory", 
+               description = "component-scope resource defined by @ConnectionFactoryDefinition",
+               name = "java:comp/env/HelloEJB_Annotation_ConnectionFactory",
+               interfaceName = "jakarta.resource.cci.ConnectionFactory",
                resourceAdapter = "#cfd-ra",
                properties = {"testName=foo"}
           )
@@ -80,7 +80,7 @@ public class HelloEJB implements Hello {
 
     @jakarta.annotation.Resource(name="java:comp/env/HelloEJB_Annotation_ConnectionFactory")
     ConnectionFactory cf;
-    
+
     public void hello() {
         try {
             Connection c = cf.getConnection();
@@ -123,7 +123,7 @@ public class HelloEJB implements Hello {
         lookupConnectionFactory("java:app/env/HelloEJB_DD_ConnectionFactory", true);
         lookupConnectionFactory("java:module/env/HelloEJB_DD_ConnectionFactory", true);
         lookupConnectionFactory("java:comp/env/HelloEJB_DD_ConnectionFactory", true);
-        
+
         System.out.println("In HelloEJB::hello()");
     }
 
@@ -150,6 +150,6 @@ public class HelloEJB implements Hello {
             }
         }
     }
-    
+
 
 }

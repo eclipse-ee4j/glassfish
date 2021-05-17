@@ -28,9 +28,9 @@ import java.util.logging.Level;
 
 public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<ConnectionFactoryDefinitionDescriptor> {
     public final static XMLElement tag = new XMLElement(TagNames.CONNECTION_FACTORY);
-    
+
     private ConnectionFactoryDefinitionDescriptor descriptor = null;
-    
+
     public ConnectionFactoryDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.RESOURCE_PROPERTY), ResourcePropertyNode.class,
                 "addConnectionFactoryPropertyDescriptor");
@@ -48,7 +48,7 @@ public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<Co
 
         return table;
     }
-    
+
     @LogMessageInfo(
             message = "For connection-factory resource: {0}, there is no application part in its resource adapter name: {1}.",
             level="WARNING",
@@ -69,7 +69,7 @@ public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<Co
         if(poundIndex > 0){
             // the internal format of resource adapter name is "appName#raName", remove the appName part
             resourceAdapterName =  resourceAdapterName.substring(poundIndex);
-            
+
         }else if(poundIndex == 0){
             // the resource adapter name should not be the standard format "#raName" here
             DOLUtils.getDefaultLogger().log(Level.WARNING, RESOURCE_ADAPTER_NAME_INVALID,
@@ -78,17 +78,17 @@ public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<Co
             // the resource adapter name represent the standalone RA in this case.
         }
         appendTextChild(node, TagNames.CONNECTION_FACTORY_ADAPTER, resourceAdapterName);
-        
+
         appendTextChild(node, TagNames.CONNECTION_FACTORY_MAX_POOL_SIZE, desc.getMaxPoolSize());
         appendTextChild(node, TagNames.CONNECTION_FACTORY_MIN_POOL_SIZE, desc.getMinPoolSize());
         appendTextChild(node, TagNames.CONNECTION_FACTORY_TRANSACTION_SUPPORT, desc.getTransactionSupport());
-        
+
         ResourcePropertyNode propertyNode = new ResourcePropertyNode();
         propertyNode.writeDescriptor(node, desc);
 
         return node;
     }
-    
+
     public ConnectionFactoryDefinitionDescriptor getDescriptor() {
         if(descriptor == null){
             descriptor = new ConnectionFactoryDefinitionDescriptor();

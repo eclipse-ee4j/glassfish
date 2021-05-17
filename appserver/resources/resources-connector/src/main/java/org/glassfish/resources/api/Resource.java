@@ -53,7 +53,7 @@ public class Resource {
             Arrays.asList(
                 JDBC_CONNECTION_POOL,
                 CONNECTOR_CONNECTION_POOL
-            )); 
+            ));
 
     private String resType;
     private HashMap attrList = new HashMap();
@@ -105,46 +105,46 @@ public class Resource {
 
 //Commented from 9.1 as it is not used
  /*   public void setProperty(String name, String value, String desc) {
-        // TO DO: 
+        // TO DO:
     }*/
 
     public Properties getProperties() {
         return props;
     }
-    
+
     //Used to figure out duplicates in a List<Resource>
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if ( !(obj instanceof Resource) ) return false;
         Resource r = (Resource)obj;
-        return r.getType().equals(this.getType()) && 
+        return r.getType().equals(this.getType()) &&
                 //No need to compare description for equality
                 //r.getDescription().equals(this.getDescription()) &&
                 r.getProperties().equals(this.getProperties()) &&
                 r.getAttributes().equals(this.getAttributes());
     }
-    
-    //when a class overrides equals, override hashCode as well. 
+
+    //when a class overrides equals, override hashCode as well.
     @Override
     public int hashCode() {
-        return this.getAttributes().hashCode() + 
-        this.getProperties().hashCode() + 
+        return this.getAttributes().hashCode() +
+        this.getProperties().hashCode() +
         this.getType().hashCode();
         //description is not used to generate hashcode
         //this.getDescription().hashCode();
     }
-    
+
     //Used to figure out conflicts in a List<Resource>
-    //A Resource is said to be in conflict with another Resource if the two 
+    //A Resource is said to be in conflict with another Resource if the two
     //Resources have the same Identity [attributes that uniquely identify a Resource]
     //but different properties
     public boolean isAConflict(Resource r) {
-        //If the two resource have the same identity 
+        //If the two resource have the same identity
         if (hasSameIdentity(r)) {
             //If the two resources are not equal, then there is
             //conflict
-            if (!r.equals(this)) 
+            if (!r.equals(this))
                 return true;
         }
         return false;
@@ -171,19 +171,19 @@ public class Resource {
         }
 
         String rType = r.getType();
-        
+
         //For all resources, their identity is their jndi-name
         if (rType.equals(CUSTOM_RESOURCE)|| rType.equals(EXTERNAL_JNDI_RESOURCE)
              || rType.equals(JDBC_RESOURCE)|| rType.equals(PERSISTENCE_MANAGER_FACTORY_RESOURCE)
              || rType.equals(CONNECTOR_RESOURCE)|| rType.equals(ADMIN_OBJECT_RESOURCE) || rType.equals(MAIL_RESOURCE)) {
             return isEqualAttribute(r, JNDI_NAME);
         }
-        
+
         //For pools the identity is limited to pool name
         if (rType.equals(JDBC_CONNECTION_POOL) || rType.equals(CONNECTOR_CONNECTION_POOL)) {
             return isEqualAttribute(r, CONNECTION_POOL_NAME);
         }
-        
+
         if (rType.equals(RESOURCE_ADAPTER_CONFIG)) {
             return isEqualAttribute(r, RES_ADAPTER_NAME);
         }
@@ -191,10 +191,10 @@ public class Resource {
         if(rType.equals(CONNECTOR_WORK_SECURITY_MAP)){
             return isEqualAttribute(r,WORK_SECURITY_MAP_NAME) && isEqualAttribute(r, WORK_SECURITY_MAP_RA_NAME);
         }
-        
+
         return false;
     }
-    
+
     /**
      * Compares the attribute with the specified name
      * in this resource with the passed in resource and checks
@@ -203,7 +203,7 @@ public class Resource {
     private boolean isEqualAttribute(Resource r, String name) {
         return (getAttribute(r, name).equals(getAttribute(this, name)));
     }
-    
+
     /**
      * Utility method to get an <code>Attribute</code> of the given name
      * in the specified resource
@@ -211,10 +211,10 @@ public class Resource {
     private String getAttribute(Resource r, String name) {
         return (String) r.getAttributes().get(name);
     }
-    
+
     @Override
     public String toString(){
-        
+
         String rType = getType();
         String identity = "";
         if (rType.equals(CUSTOM_RESOURCE)|| rType.equals(EXTERNAL_JNDI_RESOURCE)
@@ -228,8 +228,8 @@ public class Resource {
         }else if(rType.equals(CONNECTOR_WORK_SECURITY_MAP)){
             identity = getAttribute(this, WORK_SECURITY_MAP_NAME);
         }
-        
+
         return identity + " of type " + resType;
     }
-    
+
 }

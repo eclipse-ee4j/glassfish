@@ -39,10 +39,10 @@ public class LogParserTest {
     @Test
     public void testUniformLogFormatParser() throws Exception {
         System.out.println("Starting test testUniformLogFormatParser");
-        InputStream in = LogParserTest.class.getResourceAsStream(UNIFORM_SERVER_LOG_FILE);        
+        InputStream in = LogParserTest.class.getResourceAsStream(UNIFORM_SERVER_LOG_FILE);
         LogParser parser = new UniformLogParser(UNIFORM_SERVER_LOG_FILE);
         LogParserListenerImpl listener = new LogParserListenerImpl();
-        parser.parseLog(new BufferedReader(new InputStreamReader(in)), listener); 
+        parser.parseLog(new BufferedReader(new InputStreamReader(in)), listener);
         System.out.println("Found " + listener.count + " records in log file.");
         assertEquals(ULF_EXPECTED_REC_COUNT,listener.count);
         System.out.println("Test passed, found " + listener.count + " records as expected.");
@@ -51,10 +51,10 @@ public class LogParserTest {
     @Test
     public void testODLLogFormatParser() throws Exception {
         System.out.println("Starting test testODLLogFormatParser");
-        InputStream in = LogParserTest.class.getResourceAsStream(ODL_SERVER_LOG_FILE);        
+        InputStream in = LogParserTest.class.getResourceAsStream(ODL_SERVER_LOG_FILE);
         LogParser parser = new ODLLogParser(ODL_SERVER_LOG_FILE);
         LogParserListenerImpl listener = new LogParserListenerImpl();
-        parser.parseLog(new BufferedReader(new InputStreamReader(in)), listener); 
+        parser.parseLog(new BufferedReader(new InputStreamReader(in)), listener);
         System.out.println("Found " + listener.count + " records in log file.");
         assertEquals(ODL_EXPECTED_REC_COUNT,listener.count);
         System.out.println("Test passed, found " + listener.count + " records as expected.");
@@ -63,20 +63,20 @@ public class LogParserTest {
     private static final class LogParserListenerImpl implements LogParserListener {
 
         int count = 0;
-        
+
         @Override
         public void foundLogRecord(long pos, ParsedLogRecord object) {
-            count++;    
+            count++;
         }
 
         @Override
         public void outputSummary(BufferedWriter writer, Object... objects)
-                throws IOException {            
+                throws IOException {
         }
-        
+
         @Override
-        public void close() throws IOException {            
+        public void close() throws IOException {
         }
-        
+
     }
 }

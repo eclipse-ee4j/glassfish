@@ -53,7 +53,7 @@ public class Client {
     private static String queryString = "num1=30&num2=20";
 
     public static void main (String[] args) throws Exception {
-	stat.addDescription("webservices-simple-restful-svc");
+    stat.addDescription("webservices-simple-restful-svc");
         Client client = new Client();
         Service service = client.createService();
         URI endpointURI = new URI(endpointAddress);
@@ -72,7 +72,7 @@ public class Client {
         System.out.println ("Invoking Restful GET Request with query string " + queryString);
         Source result = d.invoke(null);
         printSource(result);
-	stat.printSummary("webservices-simple-restful-svc");
+    stat.printSummary("webservices-simple-restful-svc");
     }
 
     private Service createService() {

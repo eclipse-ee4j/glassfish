@@ -40,10 +40,10 @@ public class SlessEJB implements SessionBean
         sc_ = sc;
     }
 
-    public void ejbRemove() 
+    public void ejbRemove()
     {}
 
-    public void ejbActivate() 
+    public void ejbActivate()
     {}
 
     public void ejbPassivate()
@@ -70,7 +70,7 @@ public class SlessEJB implements SessionBean
     }
 
     public void testPassByRef1(int a) {
-        
+
     }
 
     public void testPassByRef2(Helper1 helper1) {

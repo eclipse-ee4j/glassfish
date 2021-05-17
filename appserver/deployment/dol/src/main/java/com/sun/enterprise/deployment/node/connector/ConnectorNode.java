@@ -35,13 +35,13 @@ import java.util.*;
 /**
  * The top connector node class
  * @author Sheetal Vartak
- * @version 
+ * @version
  */
 @Service
 public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
 
-    // Descriptor class we are using   
-    private ConnectorDescriptor descriptor; 
+    // Descriptor class we are using
+    private ConnectorDescriptor descriptor;
     public static final String VERSION_10 = "1.0";
     public static final String VERSION_15 = "1.5";
     public static final String VERSION_16 = "1.6";
@@ -67,7 +67,7 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
     public final static String PUBLIC_DTD_ID = PUBLIC_DTD_ID_16;
     public final static String SYSTEM_ID = SYSTEM_ID_16;
     public final static String SCHEMA_ID_17 = "connector_1_7.xsd";
-    
+
     //connector2.0
     public final static String SCHEMA_ID_20 = "connector_2_0.xsd";
 
@@ -83,11 +83,11 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
         systemIDs.add(SCHEMA_ID);
         return Collections.unmodifiableList(systemIDs);
     }
-    
+
     /**
      * register this node as a root node capable of loading entire DD files
-     * 
-     * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
     public String registerBundle(Map<String,String> publicIDToDTD) {
@@ -95,7 +95,7 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
         publicIDToDTD.put(PUBLIC_DTD_ID_10, SYSTEM_ID_10);
         return tag.getQName();
    }
-    
+
     @Override
     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, final Map<String, List<Class>> versionUpgrades) {
         final Map<String,Class> result = new HashMap<String,Class>();
@@ -103,10 +103,10 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
                 com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode.class);
         return result;
     }
-    
+
     public ConnectorNode()  {
         super();
-        registerElementHandler(new XMLElement(ConnectorTagNames.LICENSE), 
+        registerElementHandler(new XMLElement(ConnectorTagNames.LICENSE),
             LicenseNode.class, "setLicenseDescriptor");
         SaxParserHandler.registerBundleNode(this, ConnectorTagNames.CONNECTOR);
     }
@@ -114,13 +114,13 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
 
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public ConnectorDescriptor getDescriptor() {
         if (descriptor == null) {
             descriptor = (ConnectorDescriptor) DescriptorFactory.getDescriptor(getXMLPath());
-        } 
+        }
         return descriptor;
-    } 
+    }
 
     /**
      * parsed an attribute of an element
@@ -130,7 +130,7 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
      * @param the attribute value
      * @return true if the attribute was processed
      */
-    protected boolean setAttributeValue(XMLElement elementName, 
+    protected boolean setAttributeValue(XMLElement elementName,
         XMLElement attributeName, String value) {
         getDescriptor();
         if (descriptor==null) {
@@ -140,7 +140,7 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
         // the version attribute value is the spec version we use
         // and it's only available from schema based xml
         if (attributeName.getQName().equals(ConnectorTagNames.VERSION)) {
-	    descriptor.setSpecVersion(value);
+        descriptor.setSpecVersion(value);
             specVersion = value;
             return true;
         } else if (attributeName.getQName().equals(TagNames.ID)) {
@@ -153,7 +153,7 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
 
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -185,83 +185,83 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
      * current XMLNode
      */
     public boolean handlesElement(XMLElement element) {
-	if (ConnectorTagNames.RESOURCE_ADAPTER.equals(element.getQName())) {
+    if (ConnectorTagNames.RESOURCE_ADAPTER.equals(element.getQName())) {
             return false;
-	} 
-	return super.handlesElement(element);
+    }
+    return super.handlesElement(element);
     }
 
     /**
      * @return the handler registered for the subtag element of the curent  XMLNode
      */
     public  XMLNode getHandlerFor(XMLElement element) {
-	if (ConnectorTagNames.RESOURCE_ADAPTER.equals(element.getQName())) {
-	    /** For resourceadapter tag, we need to find out what version of DTD we are handling 
-	    * in order to correctly read/write the XML file
-	    */
-	    if (VERSION_10.equals(specVersion)) {
-		OutBoundRANode outboundRANode = new OutBoundRANode(element);
-		outboundRANode.setParentNode(this);
-		outboundRANode.createConDefDescriptorFor10();
-		return outboundRANode;
-	    } else  {
-		RANode raNode = new RANode(element);
-		raNode.setParentNode(this);
-		return raNode;
-	    } 
-	} else {
-	    return super.getHandlerFor(element);
-	}
-    }  
-    
+    if (ConnectorTagNames.RESOURCE_ADAPTER.equals(element.getQName())) {
+        /** For resourceadapter tag, we need to find out what version of DTD we are handling
+        * in order to correctly read/write the XML file
+        */
+        if (VERSION_10.equals(specVersion)) {
+        OutBoundRANode outboundRANode = new OutBoundRANode(element);
+        outboundRANode.setParentNode(this);
+        outboundRANode.createConDefDescriptorFor10();
+        return outboundRANode;
+        } else  {
+        RANode raNode = new RANode(element);
+        raNode.setParentNode(this);
+        return raNode;
+        }
+    } else {
+        return super.getHandlerFor(element);
+    }
+    }
+
     /**
      * @return the XML tag associated with this XMLNode
      */
     protected XMLElement getXMLRootTag() {
         return tag;
     }
-    
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param descriptor the new descriptor
      */
     public void addDescriptor(Object newDescriptor) {
     }
-        
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
+     */
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.VENDOR_NAME, "setVendorName");
-	table.put(ConnectorTagNames.EIS_TYPE, "setEisType");
+    table.put(ConnectorTagNames.EIS_TYPE, "setEisType");
 
-	// support for 1.0 DTD and 1.5 schema and not 1.5 DTD
-	table.put(ConnectorTagNames.RESOURCEADAPTER_VERSION, "setResourceAdapterVersion");
+    // support for 1.0 DTD and 1.5 schema and not 1.5 DTD
+    table.put(ConnectorTagNames.RESOURCEADAPTER_VERSION, "setResourceAdapterVersion");
     table.put(ConnectorTagNames.REQUIRED_WORK_CONTEXT, "addRequiredWorkContext");
 
         return table;
-    } 
+    }
 
     /**
      * @return the DOCTYPE of the XML file
      */
     public String getDocType() {
-	return null;
+    return null;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */
     public String getSystemID() {
-	    return SCHEMA_ID;
-    } 
+        return SCHEMA_ID;
+    }
 
     /**
      * @return the list of SystemID of the XML schema supported
@@ -276,13 +276,13 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, ConnectorDescriptor conDesc) {
-	conDesc.setSpecVersion(VERSION_17);
-        Node connectorNode = super.writeDescriptor(parent, conDesc);      
-	appendTextChild(connectorNode, ConnectorTagNames.VENDOR_NAME, conDesc.getVendorName());  
-	appendTextChild(connectorNode, ConnectorTagNames.EIS_TYPE, conDesc.getEisType()); 
-	appendTextChild(connectorNode, ConnectorTagNames.RESOURCEADAPTER_VERSION, conDesc.getResourceAdapterVersion());   
+    conDesc.setSpecVersion(VERSION_17);
+        Node connectorNode = super.writeDescriptor(parent, conDesc);
+    appendTextChild(connectorNode, ConnectorTagNames.VENDOR_NAME, conDesc.getVendorName());
+    appendTextChild(connectorNode, ConnectorTagNames.EIS_TYPE, conDesc.getEisType());
+    appendTextChild(connectorNode, ConnectorTagNames.RESOURCEADAPTER_VERSION, conDesc.getResourceAdapterVersion());
 
         Iterator requiredInflowContexts = conDesc.getRequiredWorkContexts().iterator();
 
@@ -291,16 +291,16 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
             appendTextChild(connectorNode, ConnectorTagNames.REQUIRED_WORK_CONTEXT, className);
         }
 
-	//license info
+    //license info
         LicenseNode licenseNode = new LicenseNode();
         connectorNode = licenseNode.writeDescriptor(connectorNode, conDesc);
 
-	// resource adapter node
-	RANode raNode = new RANode();
-	connectorNode = raNode.writeDescriptor(connectorNode, conDesc);  
-	return connectorNode;
-    }   
-    
+    // resource adapter node
+    RANode raNode = new RANode();
+    connectorNode = raNode.writeDescriptor(connectorNode, conDesc);
+    return connectorNode;
+    }
+
     /**
      * @return the default spec version level this node complies to
      */

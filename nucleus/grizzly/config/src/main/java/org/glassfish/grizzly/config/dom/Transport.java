@@ -49,7 +49,7 @@ public interface Transport extends ConfigBeanProxy, PropertyBag {
     String BYTE_BUFFER_TYPE = "heap";
     String CLASSNAME = "org.glassfish.grizzly.nio.transport.TCPNIOTransport";
     boolean DEDICATED_ACCEPTOR_ENABLED = false;
-    
+
     /**
      * The number of acceptor threads listening for the transport's events
      */
@@ -109,7 +109,7 @@ public interface Transport extends ConfigBeanProxy, PropertyBag {
     String getIoStrategy();
 
     void setIoStrategy(String ioStrategy);
-    
+
     /**
      * Flush Grizzly's internal configuration to the server logs (like number of threads created, how many polled
      * objects, etc.)
@@ -204,7 +204,7 @@ public interface Transport extends ConfigBeanProxy, PropertyBag {
     String getDedicatedAcceptorEnabled();
 
     void setDedicatedAcceptorEnabled(String isEnabled);
-    
+
     @DuckTyped
     List<NetworkListener> findNetworkListeners();
 

@@ -27,13 +27,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * This handler is responsible for handling jakarta.annotation.PreDestroy 
+ * This handler is responsible for handling jakarta.annotation.PreDestroy
  *
  */
 @Service
 @AnnotationHandlerFor(PreDestroy.class)
 public class PreDestroyHandler extends AbstractResourceHandler {
-    
+
     public PreDestroyHandler() {
     }
 

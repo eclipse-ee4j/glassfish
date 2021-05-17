@@ -41,7 +41,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -53,16 +53,16 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/**.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class, **/*SFSB*.class" />
         </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
 
-	<!-- All the modules deployments must be done after test case deployment-->
+    <!-- All the modules deployments must be done after test case deployment-->
         <antcall target="deploy-to-das">
             <param name="deployed.app" value="${env.S1AS_HOME}/samples/connectors/apps/mailconnector/mailconnector.rar"/>
          </antcall>
@@ -90,7 +90,7 @@
         </antcall>
     -->
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
     <!--
         <antcall target="asadmin-batch-common">
@@ -124,7 +124,7 @@
     <target name="run" depends="init-common">
         <antcall target="runtest"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common">
             <param name="deployedapp.name" value="timersession"/>
@@ -135,10 +135,10 @@
         <antcall target="undeploy-common">
             <param name="appserver.instance.name" value="${cluster.name}"/>
         </antcall>
-    </target>   
+    </target>
 
     <!-- This should be a common target FIX IT -->
-    <target name="deploy-to-cluster" depends="init-common">      
+    <target name="deploy-to-cluster" depends="init-common">
         <echo message="So you are using Enterprise Version eh ?"/>
     <property name="deployed.app" value="${assemble.dir}/${appname}App.ear"/>
 
@@ -154,14 +154,14 @@
     <!-- deployed.app defaults to ${assemble.dir}/${appname}App.ear defined in properties.xml-->
         <arg line="${deployed.app}"/>
       </exec>
-      <echo message="Deployment on target server ${appserver.instance.name} 
+      <echo message="Deployment on target server ${appserver.instance.name}
     successful"/>
      <antcall target="stop-default-cluster-common"/>
      <antcall target="start-default-cluster-common"/>
 
     </target>
 
-    <target name="deploy-to-das" depends="init-common">      
+    <target name="deploy-to-das" depends="init-common">
       <exec executable="${ASADMIN}" failonerror="false">
         <arg line="deploy"/>
         <arg line="--user ${admin.user}"/>
@@ -173,7 +173,7 @@
         <arg line="--retrieve ${assemble.dir}"/>
         <arg line="${deployed.app}"/>
       </exec>
-      <echo message="Deployment on target server ${appserver.instance.name} 
+      <echo message="Deployment on target server ${appserver.instance.name}
     successful"/>
     </target>
 
@@ -183,20 +183,20 @@
     <target name="run-standalone-client" depends="init-common">
         <property name="jndi.name" value="ejb/apiDeployment"/>
         <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
-        <property name="ctxfactory" 
+        <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-	<property name="ctxfactory" 
-            	value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
+    <property name="ctxfactory"
+                value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-	<echo message="provider.url used is ${provider.url}"/>
+    <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-	<jvmarg value="-Dj2eelogin.name=${test.user}"/>
-	<jvmarg value="-Dj2eelogin.password=${test.passwd}"/>
+    <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+    <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+    <jvmarg value="-Dj2eelogin.name=${test.user}"/>
+    <jvmarg value="-Dj2eelogin.password=${test.passwd}"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
@@ -212,7 +212,7 @@
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant create-resources Create all destinations and connection factories
           ant delete-resources Delete all destinations and connection factories
         </echo>

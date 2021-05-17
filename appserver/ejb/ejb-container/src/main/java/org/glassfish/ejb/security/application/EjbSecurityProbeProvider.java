@@ -26,7 +26,7 @@ import org.glassfish.external.probe.provider.annotations.ProbeProvider;
  */
 @ProbeProvider(moduleProviderName="glassfish",moduleName="security", probeProviderName="ejb")
 public class EjbSecurityProbeProvider {
-    
+
     @Probe(name="securityManagerCreationEvent")
     public void securityManagerCreationEvent(
             @ProbeParam("appName") String appName){}
@@ -38,7 +38,7 @@ public class EjbSecurityProbeProvider {
     @Probe(name="securityManagerCreationEndedEvent")
     public void securityManagerCreationEndedEvent(
             @ProbeParam("appName") String appName){}
-    
+
     @Probe(name="securityManagerDestructionEvent")
     public void securityManagerDestructionEvent(
             @ProbeParam("appName") String appName
@@ -53,8 +53,8 @@ public class EjbSecurityProbeProvider {
     public void securityManagerDestructionEndedEvent(
             @ProbeParam("appName") String appName
             ) {}
-   
-    
+
+
     @Probe(name="policyDestructionEvent")
     public void policyDestructionEvent(
             @ProbeParam("contextId") String contextId
@@ -69,5 +69,5 @@ public class EjbSecurityProbeProvider {
     public void policyDestructionEndedEvent(
             @ProbeParam("appName") String appName
             ) {}
-    
+
 }

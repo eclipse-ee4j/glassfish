@@ -45,8 +45,8 @@ import org.glassfish.ha.store.spi.BackingStoreFactoryRegistry;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-persistence-types", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-persistence-types",
         description="list-persistence-types")
 })
 public class ListPersistenceTypesCommand implements AdminCommand {
@@ -77,7 +77,7 @@ public class ListPersistenceTypesCommand implements AdminCommand {
         if (containerType.equals("ejb") ) {
             allPersistenceTypes.remove("memory");  // ejb did not have "memory" in glassfish v2.x.
         }
-        
+
         StringBuilder sb = new StringBuilder("");
         boolean removeTrailingSeparator = false;
         for (String type : allPersistenceTypes) {
@@ -90,8 +90,8 @@ public class ListPersistenceTypesCommand implements AdminCommand {
         }
         Properties extraProperties = new Properties();
         extraProperties.put("types", new ArrayList<String>(allPersistenceTypes));
-        
-        report.setExtraProperties(extraProperties);        
+
+        report.setExtraProperties(extraProperties);
         report.setMessage(output);
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }

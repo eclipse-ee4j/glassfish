@@ -71,7 +71,7 @@ public class DeleteCustomResource implements AdminCommand {
 
     @Inject
     private ResourceUtil resourceUtil;
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values

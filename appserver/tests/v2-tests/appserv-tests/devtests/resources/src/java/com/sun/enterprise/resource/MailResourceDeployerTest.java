@@ -46,10 +46,10 @@ public class MailResourceDeployerTest extends TestCase {
     public MailResourceDeployerTest(String name) {
          super(name);
     }
-    
-    //TODO: Should ther be a unit test for null resources passed to the 
+
+    //TODO: Should ther be a unit test for null resources passed to the
     //deploy method???
-    
+
     /**
      * Tests the deployResource method.
      *
@@ -74,7 +74,7 @@ public class MailResourceDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the deployResource method.
      */
@@ -88,7 +88,7 @@ public class MailResourceDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the deployResource method.
      */
@@ -104,7 +104,7 @@ public class MailResourceDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the method for installing a mail resource.
      */
@@ -115,7 +115,7 @@ public class MailResourceDeployerTest extends TestCase {
             e.printStackTrace();
             fail("Exception caught -> " + e.getMessage());
         }
-        
+
     }
 
     protected void setUp() {
@@ -133,7 +133,7 @@ public class MailResourceDeployerTest extends TestCase {
                     public ResourceInstaller getResourceInstaller() {
                         return new ResourceInstaller() {
                             public void installMailResource(
-                                com.sun.enterprise.repository.MailResource 
+                                com.sun.enterprise.repository.MailResource
                                         mailRes) {
                                 System.out.println("Installed into Runtime...");
                             }
@@ -142,7 +142,7 @@ public class MailResourceDeployerTest extends TestCase {
                 };
             }
         };
-        
+
         //initialize the dummy resource object
         resource = new MailResource();
         resource.setJndiName("javamail/Tester");
@@ -156,7 +156,7 @@ public class MailResourceDeployerTest extends TestCase {
         TestSuite suite = new TestSuite(MailResourceDeployerTest.class);
         return suite;
     }
-    
+
      public static void main(String args[]) throws Exception {
         final TestRunner runner= new TestRunner();
         final TestResult result =

@@ -25,8 +25,8 @@ import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 import org.glassfish.web.LogFacade;
 
 
-/** ConstraintField class represents a single Field and constraints on its 
- *  values; Field name and its scope are inherited from the Field class. 
+/** ConstraintField class represents a single Field and constraints on its
+ *  values; Field name and its scope are inherited from the Field class.
  */
 public class ConstraintField extends Field {
 
@@ -43,7 +43,7 @@ public class ConstraintField extends Field {
     // whether to cache if there was a failure to match
     boolean cacheOnMatchFailure = false;
 
-    // field value constraints 
+    // field value constraints
     ValueConstraint constraints[] = new ValueConstraint[0];
 
     /**
@@ -51,7 +51,7 @@ public class ConstraintField extends Field {
      * @param name name of this field
      * @param scope scope of this field
      */
-    public ConstraintField(String name, String scope) 
+    public ConstraintField(String name, String scope)
             throws IllegalArgumentException {
         super(name, scope);
     }
@@ -93,7 +93,7 @@ public class ConstraintField extends Field {
         if (constraint == null)
             return;
 
-        ValueConstraint results[] = 
+        ValueConstraint results[] =
             new ValueConstraint[constraints.length + 1];
         for (int i = 0; i < constraints.length; i++)
             results[i] = constraints[i];
@@ -114,10 +114,10 @@ public class ConstraintField extends Field {
     }
 
     /** apply the constraints on the value of the field in the given request.
-     *  return a true if all the constraints pass; false when the 
-     *  field is not found or the field value doesn't pass the caching 
-     *  constraints. 
-     */ 
+     *  return a true if all the constraints pass; false when the
+     *  field is not found or the field value doesn't pass the caching
+     *  constraints.
+     */
     public boolean applyConstraints(ServletContext context,
                                     HttpServletRequest request) {
 

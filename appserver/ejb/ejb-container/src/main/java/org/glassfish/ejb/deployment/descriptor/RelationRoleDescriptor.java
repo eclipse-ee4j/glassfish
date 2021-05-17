@@ -19,8 +19,8 @@ package org.glassfish.ejb.deployment.descriptor;
 import org.glassfish.deployment.common.Descriptor;
 
 
-/** 
- * This class contains information about one of the partners in 
+/**
+ * This class contains information about one of the partners in
  * a relationship between EJB2.0 CMP EntityBeans.
  * It represents information in the <ejb-relation-role> XML element.
  *
@@ -29,7 +29,7 @@ import org.glassfish.deployment.common.Descriptor;
 
 public final class RelationRoleDescriptor extends Descriptor {
 
-    // Bean for owner (role-source) of this side of 
+    // Bean for owner (role-source) of this side of
     // the relationship
     private EjbCMPEntityDescriptor owner;
     private PersistenceDescriptor pers;
@@ -39,7 +39,7 @@ public final class RelationRoleDescriptor extends Descriptor {
     private String cmrField; // CMR field name in owner's class
     private String cmrFieldDescription;
     private String cmrFieldType; // Java type of cmr-field
-    private boolean isMany; 
+    private boolean isMany;
     private RelationRoleDescriptor partner;
     private boolean cascadeDelete;
     private CMRFieldInfo cmrFieldInfo;
@@ -82,23 +82,23 @@ public final class RelationRoleDescriptor extends Descriptor {
 
     public RelationshipDescriptor getRelationshipDescriptor()
     {
-	return relnDesc;
+    return relnDesc;
     }
 
     public void setRelationshipDescriptor(RelationshipDescriptor relnDesc)
     {
-	this.relnDesc = relnDesc;
+    this.relnDesc = relnDesc;
     }
 
     public void setOwner(EjbCMPEntityDescriptor owner)
     {
-	this.owner = owner;
+    this.owner = owner;
         invalidateCMRFieldStuff();
     }
 
     public EjbCMPEntityDescriptor getOwner()
     {
-	return owner;
+    return owner;
     }
 
     /**
@@ -128,8 +128,8 @@ public final class RelationRoleDescriptor extends Descriptor {
     }
     public String getRoleSourceDescription()
     {
-	if ( roleSourceDescription == null )
-	    roleSourceDescription = "";
+    if ( roleSourceDescription == null )
+        roleSourceDescription = "";
         return roleSourceDescription;
     }
 
@@ -138,7 +138,7 @@ public final class RelationRoleDescriptor extends Descriptor {
      */
     public void setCMRField(String cmrField)
     {
-	this.cmrField =  cmrField;
+    this.cmrField =  cmrField;
         invalidateCMRFieldStuff();
     }
     public String getCMRField()
@@ -152,8 +152,8 @@ public final class RelationRoleDescriptor extends Descriptor {
     }
     public String getCMRFieldDescription()
     {
-	if ( cmrFieldDescription == null )
-	    cmrFieldDescription = "";
+    if ( cmrFieldDescription == null )
+        cmrFieldDescription = "";
         return cmrFieldDescription;
     }
 
@@ -164,17 +164,17 @@ public final class RelationRoleDescriptor extends Descriptor {
     public void setCMRFieldType(String newCmrFieldType)
     {
         if( newCmrFieldType == null ) {
-            this.cmrFieldType = null; 
+            this.cmrFieldType = null;
             invalidateCMRFieldStuff();
-        } else if ( newCmrFieldType.equals("java.util.Collection") 
+        } else if ( newCmrFieldType.equals("java.util.Collection")
                     || newCmrFieldType.equals("java.util.Set") ) {
-	    this.cmrFieldType =  newCmrFieldType;
+        this.cmrFieldType =  newCmrFieldType;
             invalidateCMRFieldStuff();
-	} else {
-	    throw new IllegalArgumentException
-                ("cmr-field-type is " + newCmrFieldType + 
+    } else {
+        throw new IllegalArgumentException
+                ("cmr-field-type is " + newCmrFieldType +
                  ", must be java.util.Collection or java.util.Set");
-	}
+    }
     }
     public String getCMRFieldType()
     {
@@ -184,7 +184,7 @@ public final class RelationRoleDescriptor extends Descriptor {
     public void setIsMany(boolean isMany)
     {
         this.isMany =  isMany;
-        invalidateCMRFieldStuff();        
+        invalidateCMRFieldStuff();
     }
     public boolean getIsMany()
     {
@@ -202,13 +202,13 @@ public final class RelationRoleDescriptor extends Descriptor {
 
     public void setCMRFieldInfo(CMRFieldInfo cmrFieldInfo)
     {
-	this.cmrFieldInfo = cmrFieldInfo;
+    this.cmrFieldInfo = cmrFieldInfo;
     }
     public CMRFieldInfo getCMRFieldInfo()
     {
-	if ( cmrFieldInfo == null && pers != null ) 
-	    pers.getCMRFieldInfo(); // tell pers to initialize its CMRFieldInfos
-	return cmrFieldInfo;
+    if ( cmrFieldInfo == null && pers != null )
+        pers.getCMRFieldInfo(); // tell pers to initialize its CMRFieldInfos
+    return cmrFieldInfo;
     }
 
     public String composeReverseCmrFieldName() {

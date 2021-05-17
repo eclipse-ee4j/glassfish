@@ -111,7 +111,7 @@
             </plugin>
         </plugins>
     </build>
-	<profiles>
+    <profiles>
         <profile>
             <id>run-with-uber-jar</id>
             <activation>
@@ -122,7 +122,7 @@
                     <groupId>org.glassfish.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
                     <version>6.1.1-SNAPSHOT</version>
-                </dependency>                
+                </dependency>
             </dependencies>
         </profile>
         <profile>
@@ -145,13 +145,13 @@
             </dependencies>
         </profile>
     </profiles>
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
         </dependency>
-    </dependencies>    
+    </dependencies>
     <licenses>
         <license>
             <name>EPL 2.0</name>

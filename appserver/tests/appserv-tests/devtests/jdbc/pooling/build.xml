@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -48,15 +48,15 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
-      
+
         <antcall target="deploy-jdbc-common">
             <param name="jdbc.conpool.name" value="jdbc-derby-pool"/>
             <param name="jdbc.resource.name" value="jdbc/nonxaresource"/>
@@ -92,17 +92,17 @@
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-	<param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool.pooling=false"/>
+    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool.pooling=false"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-	<param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool-container.pooling=false"/>
+    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-pool-container.pooling=false"/>
       </antcall>
 
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-	<param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-xa-pool.pooling=false"/>
+    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-derby-xa-pool.pooling=false"/>
       </antcall>
 
       <antcall target="deploy-common"/>
@@ -110,19 +110,19 @@
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
     </target>
-    
+
     <target name="run" depends="init-common">
       <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
       </antcall>
 
-      
+
       <antcall target="undeploy-common"/>
-	 <antcall target="delete-jdbc-resource-common">
+     <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/nonxaresource"/>
         </antcall>
 
@@ -130,7 +130,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-pool"/>
         </antcall>
 
-	 <antcall target="delete-jdbc-resource-common">
+     <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/nonxaresource-container"/>
         </antcall>
 
@@ -138,7 +138,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-pool-container"/>
         </antcall>
 
-	 <antcall target="delete-jdbc-resource-common">
+     <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/xaresource"/>
         </antcall>
 
@@ -146,7 +146,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-xa-pool"/>
         </antcall>
 
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

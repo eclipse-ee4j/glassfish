@@ -34,7 +34,7 @@ import org.jvnet.hk2.annotations.Service;
  * Create data structures that describe the command.
  *
  * @author Jerome Dochez
- * 
+ *
  */
 @Service(name="_list-descriptors")
 @PerLookup
@@ -48,7 +48,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
     public void execute(AdminCommandContext context) {
         setAdminCommands();
         sort();
-        
+
         for (AdminCommand cmd : adminCmds) {
             cliCmds.add(reflect(cmd));
         }
@@ -61,7 +61,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
         report.setMessage(sb.toString());
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
-    
+
     private CLICommand reflect(AdminCommand cmd) {
         CLICommand cliCmd = new CLICommand(cmd);
 
@@ -69,13 +69,13 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
             final Param param = f.getAnnotation(Param.class);
             if (param==null)
                 continue;
-            
+
             Option option = new Option(param, f);
             cliCmd.options.add(option);
         }
         return cliCmd;
     }
- 
+
     private void setAdminCommands() {
         adminCmds = new ArrayList<AdminCommand>();
         for (AdminCommand command : habitat.<AdminCommand>getAllServices(AdminCommand.class)) {
@@ -89,24 +89,24 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
             public int compare(AdminCommand c1, AdminCommand c2) {
                 Service service1 = c1.getClass().getAnnotation(Service.class);
                 Service service2 = c2.getClass().getAnnotation(Service.class);
-                
+
                 String name1 = (service1 != null) ? service1.name() : "";
                 String name2 = (service2 != null) ? service2.name() : "";
-                
+
                 return name1.compareTo(name2);
             }
         }
         );
     }
-    
+
     private static boolean ok(String s) {
         return s != null && s.length() > 0 && !s.equals("null");
     }
-    
+
     private List<AdminCommand> adminCmds;
     private List<CLICommand> cliCmds = new LinkedList<CLICommand>();
     private final static String EOL = ManifestUtils.EOL_TOKEN;
-    
+
     private static class CLICommand {
         CLICommand(AdminCommand adminCommand) {
             this.adminCommand = adminCommand;
@@ -119,7 +119,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
             StringBuilder sb = new StringBuilder();
             sb.append("CLI Command: name=").append(name);
             sb.append(" class=").append(adminCommand.getClass().getName()).append(EOL);
-            
+
             for(Option opt : options) {
                 sb.append(opt.toString()).append(EOL);
             }
@@ -134,7 +134,7 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
         Option(Param p, Field f) {
             final Class<?> ftype = f.getType();
             name = p.name();
-            
+
             if(!ok(name)) {
                 name = f.getName();
             }
@@ -146,8 +146,8 @@ public class ListCommandDescriptorsCommand implements AdminCommand {
         }
         @Override
         public String toString() {
-            String s = "   Option:" + 
-                    " name=" + name + 
+            String s = "   Option:" +
+                    " name=" + name +
                     " required=" + required +
                     " operand=" + operand +
                     " defaultValue=" + defaultValue +

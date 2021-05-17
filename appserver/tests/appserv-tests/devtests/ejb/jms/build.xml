@@ -45,11 +45,11 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant jmsejb (Executes the ejb-jms jmsejb test)
-			ant jmsejb2 (Executes the ejb-jms jmsejb2 test)
-			ant all (Executes all the ejb-jms tests)
-	</echo>
+    <echo>
+        Usage:
+            ant jmsejb (Executes the ejb-jms jmsejb test)
+            ant jmsejb2 (Executes the ejb-jms jmsejb2 test)
+            ant all (Executes all the ejb-jms tests)
+    </echo>
     </target>
 </project>

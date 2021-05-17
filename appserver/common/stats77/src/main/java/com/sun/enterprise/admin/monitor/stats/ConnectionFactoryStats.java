@@ -24,5 +24,5 @@ import com.sun.enterprise.admin.monitor.stats.ConnectionPoolStats;
  */
 
 public interface ConnectionFactoryStats extends ConnectionPoolStats {
-    
+
 }

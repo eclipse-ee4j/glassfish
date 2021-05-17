@@ -29,14 +29,14 @@ import com.sun.enterprise.security.integration.PermissionCreator;
 public class PermissionsDescriptor extends RootDeploymentDescriptor {
 
     private RootDeploymentDescriptor parent;
-    
+
     private PermissionCollection declaredPerms;
-    
-    
+
+
     public PermissionsDescriptor() {
-        
+
     }
-    
+
     public RootDeploymentDescriptor getParent() {
         return parent;
     }
@@ -45,7 +45,7 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
         this.parent = parent;
     }
 
-    
+
     @Override
     public String getModuleID() {
         throw new RuntimeException();
@@ -53,7 +53,7 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
 
     @Override
     public String getDefaultSpecVersion() {
-        
+
         return "7";
     }
 
@@ -81,27 +81,27 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
         return false;
     }
 
-    
+
     public void addPermissionItemdescriptor(PermissionItemDescriptor permItem) {
         permItem.setParent(this);
         addPermission(permItem);
     }
-    
+
     public PermissionCollection getDeclaredPermissions() {
         return declaredPerms;
     }
-    
+
     private void addPermission(PermissionItemDescriptor permItem)  {
         if (permItem == null)
             return;
-        
+
         String classname = permItem.getPermissionClassName();
         String target = permItem.getTargetName();
         String actions = permItem.getActions();
-        
+
         try {
             Permission pm = PermissionCreator.getInstance(classname, target, actions);
-            
+
             if (pm != null) {
                 if(declaredPerms == null)
                     declaredPerms = new Permissions();

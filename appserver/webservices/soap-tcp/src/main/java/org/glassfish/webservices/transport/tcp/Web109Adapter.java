@@ -27,7 +27,7 @@ import org.glassfish.api.invocation.InvocationManager;
  */
 public class Web109Adapter extends TCP109Adapter {
     private final ComponentInvocation invocation;
-    
+
     public Web109Adapter(String name, String urlPattern, WSEndpoint endpoint,
             ServletFakeArtifactSet servletFakeArtifactSet,
             ComponentInvocation invocation) {

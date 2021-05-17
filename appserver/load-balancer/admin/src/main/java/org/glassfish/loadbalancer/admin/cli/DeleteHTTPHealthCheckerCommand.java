@@ -60,15 +60,15 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="delete-http-health-checker", 
+        opType=RestEndpoint.OpType.POST,
+        path="delete-http-health-checker",
         description="delete-http-health-checker",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="delete-http-health-checker", 
+        opType=RestEndpoint.OpType.POST,
+        path="delete-http-health-checker",
         description="delete-http-health-checker",
         params={
             @RestParam(name="target", value="$parent")
@@ -111,7 +111,7 @@ public final class DeleteHTTPHealthCheckerCommand implements AdminCommand {
             report.setMessage(msg);
             return;
         }
-         
+
         if (config != null) {
             LbConfig lbConfig = lbconfigs.getLbConfig(config);
             deleteHealthCheckerInternal(lbConfig, target, false);
@@ -128,7 +128,7 @@ public final class DeleteHTTPHealthCheckerCommand implements AdminCommand {
             for (LbConfig lc:lbConfigs) {
                 deleteHealthCheckerInternal(lc, target, true);
             }
-        }   
+        }
     }
 
     /**
@@ -244,7 +244,7 @@ public final class DeleteHTTPHealthCheckerCommand implements AdminCommand {
         try {
             ConfigSupport.apply(new SingleConfigCode<ClusterRef>() {
             @Override
-                public Object run(ClusterRef param) throws PropertyVetoException, TransactionFailure {                    
+                public Object run(ClusterRef param) throws PropertyVetoException, TransactionFailure {
                     param.setHealthChecker(null);
                     return Boolean.TRUE;
                 }

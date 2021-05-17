@@ -35,7 +35,7 @@
     </target>
 
     <target name="clean-classes-dir">
-        <delete dir="${build.classes.dir}"/>    
+        <delete dir="${build.classes.dir}"/>
     </target>
 
     <target name="compile-ejb" depends="init-common">
@@ -51,7 +51,7 @@
             <param name="src" value="servlet"/>
         </antcall>
     </target>
-        
+
     <target name="compile-client" depends="init-common">
         <antcall target="compile-ejb"/>
         <antcall target="compile-common">
@@ -64,7 +64,7 @@
     </target>
 
     <target name="build-web" depends="compile-web">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common"/>
     </target>
 
@@ -72,42 +72,42 @@
         <delete file="${appclient.jar}"/>
         <mkdir dir="${build.classes.dir}/META-INF"/>
         <copy file="${application-client.xml}"
-              tofile="${build.classes.dir}/META-INF/application-client.xml" 
+              tofile="${build.classes.dir}/META-INF/application-client.xml"
               failonerror="false"/>
         <copy file="${glassfish-application-client.xml}" tofile="${build.classes.dir}/META-INF/glassfish-application-client.xml"
               failonerror="false"/>
         <copy file="${sun-application-client.xml}" tofile="${build.classes.dir}/META-INF/sun-application-client.xml"
              failonerror="false"/>
-        <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}" 
-             update="true" includes ="**/*.class" 
-             manifest="./client/MANIFEST.MF">         
+        <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}"
+             update="true" includes ="**/*.class"
+             manifest="./client/MANIFEST.MF">
              <metainf dir="${build.classes.dir}/META-INF">
                <include name="application-client.xml"/>
                <include name="glassfish-application-client.xml"/>
                <include name="sun-application-client.xml"/>
              </metainf>
-        </jar>   
+        </jar>
     </target>
 
     <target name="build-ear">
         <delete file="${assemble.dir}/${appname}.ear"/>
           <mkdir dir="${assemble.dir}"/>
-          <mkdir dir="${build.classes.dir}/META-INF"/>   
-          <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"  	failonerror="false"/> 
-          <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"  	failonerror="false"/> 
+          <mkdir dir="${build.classes.dir}/META-INF"/>
+          <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml"      failonerror="false"/>
+          <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml"      failonerror="false"/>
           <copy file="${glassfish-resources-ear.xml}" tofile="${build.classes.dir}/META-INF/glassfish-resources.xml" failonerror="false"  filtering="true"/>
-          <jar jarfile="${assemble.dir}/${appname}App.ear"> 
+          <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
               <include name="*.jar"/>
               <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-        	<include name="META-INF/sun-application.xml"/>
-        	<include name="META-INF/application.xml"/>
+            <include name="META-INF/sun-application.xml"/>
+            <include name="META-INF/application.xml"/>
                 <include name="META-INF/glassfish-resources.xml"/>
             </fileset>
             <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
-          </jar>        
+          </jar>
     </target>
 
     <target name="build" depends="build-ejb, build-web, build-client, build-ear"/>
@@ -117,7 +117,7 @@
           <param name="asadmin.file" value="create_resources.asadmin"/>
         </antcall>
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="delete_resources.asadmin"/>
@@ -129,7 +129,7 @@
     </target>
 
     <target name="run" depends="init-common">
-         <java fork="on" 
+         <java fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${assemble.dir}/${appname}-client.jar:${env.APS_HOME}/lib/reporter.jar:${env.APS_HOME}/lib/reportbuilder.jar"
               classname="WebTest">
@@ -139,10 +139,10 @@
             <arg value="${contextroot}"/>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

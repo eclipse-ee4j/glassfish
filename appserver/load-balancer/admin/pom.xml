@@ -24,10 +24,10 @@
         <artifactId>load-balancer</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-    </parent>    
+    </parent>
     <artifactId>load-balancer-admin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Load-Balancer admin</name>
 
     <developers>
@@ -50,7 +50,7 @@
         </developer>
     </developers>
     <build>
-	<resources>
+    <resources>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -69,7 +69,7 @@
             </resource>
         </resources>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

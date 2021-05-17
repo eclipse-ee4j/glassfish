@@ -47,7 +47,7 @@ public class WebTest {
             webTest.test("/equals.jsp");
         } catch (Exception ex) {
             ex.printStackTrace();
-            stat.addStatus(testName, stat.FAIL);                
+            stat.addStatus(testName, stat.FAIL);
         }
 
         stat.printSummary();

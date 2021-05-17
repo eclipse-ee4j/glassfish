@@ -25,11 +25,11 @@ import jakarta.ejb.*;
  */
 
 public interface DHome extends jakarta.ejb.EJBHome {
-    
+
     public cascadeDelete.D findByPrimaryKey(java.lang.Integer aKey) throws jakarta.ejb.FinderException, java.rmi.RemoteException;
-    
+
     public java.util.Collection findAll() throws java.rmi.RemoteException, jakarta.ejb.FinderException;
-    
+
     public D create(java.lang.Integer id, java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

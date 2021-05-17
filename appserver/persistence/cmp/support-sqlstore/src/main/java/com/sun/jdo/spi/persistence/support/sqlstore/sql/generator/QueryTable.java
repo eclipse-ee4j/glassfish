@@ -46,19 +46,19 @@ public class QueryTable extends Object {
 
     private TableIndex tableIndex;
 
-	public QueryTable(TableDesc tableDesc) {
-		this.tableDesc = tableDesc;
-	}
-	
-	public TableDesc getTableDesc() {
-		return tableDesc;
-	}
+    public QueryTable(TableDesc tableDesc) {
+        this.tableDesc = tableDesc;
+    }
 
-	public TableIndex getTableIndex() {
-		return tableIndex;
-	}
+    public TableDesc getTableDesc() {
+        return tableDesc;
+    }
 
-	public void setTableIndex(TableIndex index) {
-		this.tableIndex = index;
-	}
+    public TableIndex getTableIndex() {
+        return tableIndex;
+    }
+
+    public void setTableIndex(TableIndex index) {
+        this.tableIndex = index;
+    }
 }

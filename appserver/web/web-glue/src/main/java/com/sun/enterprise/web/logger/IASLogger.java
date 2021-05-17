@@ -48,7 +48,7 @@ public final class IASLogger extends LoggerBase {
      * Name of the method invoking the log method.
      */
     private String _methodname;
-    
+
     /**
      * The descriptive information about this implementation.
      */
@@ -82,7 +82,7 @@ public final class IASLogger extends LoggerBase {
      * messages for the iPlanet Application Server.
      */
     protected void write(String msg, int verbosity) {
-        
+
         if (_logger == null)
             return;
 
@@ -115,13 +115,13 @@ public final class IASLogger extends LoggerBase {
         _classname = "";
         _methodname = "";
         for (int ix=0; ix < stack.length; ix++) {
-	    StackTraceElement frame = stack[ix];
-	    _classname = frame.getClassName();
-	    if (!_classname.startsWith("com.sun.enterprise.web.logger")) {
-		// We've found the relevant frame. Get Method Name.
-		_methodname = frame.getMethodName();
-		return;
-	    }
+        StackTraceElement frame = stack[ix];
+        _classname = frame.getClassName();
+        if (!_classname.startsWith("com.sun.enterprise.web.logger")) {
+        // We've found the relevant frame. Get Method Name.
+        _methodname = frame.getMethodName();
+        return;
+        }
         }
     }
 }

@@ -15,7 +15,7 @@
  */
 
  package com.sun.jts.jta;
- 
+
  import javax.transaction.xa.*;
 
  /**

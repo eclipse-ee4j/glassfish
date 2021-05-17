@@ -36,7 +36,7 @@ import com.sun.ejb.EJBUtils;
 public abstract class AbstractSessionContextImpl
         extends EJBContextImpl
         implements SessionContext {
-    
+
     protected Object instanceKey;
 
     protected String ejbName;

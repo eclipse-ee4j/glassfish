@@ -47,14 +47,14 @@ public abstract class ConfigPersistence extends ConfigApiTest {
 
     @After
     public void tearDown() {
-    	Utils.instance.shutdownServiceLocator(this);
+        Utils.instance.shutdownServiceLocator(this);
     }
-    
+
     @Test
     public void test() throws TransactionFailure {
 
         final DomDocument document = getDocument(getHabitat());
-        
+
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.reset();
 
@@ -83,7 +83,7 @@ public abstract class ConfigPersistence extends ConfigApiTest {
             }
         };
         Transactions transactions = getHabitat().getService(Transactions.class);
-        
+
         try {
             transactions.addTransactionsListener(testListener);
 
@@ -100,12 +100,12 @@ public abstract class ConfigPersistence extends ConfigApiTest {
         // now check if we persisted correctly...
 
         final String resultingXml = baos.toString();
-        
+
         logger.fine(resultingXml);
         assertTrue("assertResult from " + getClass().getName() + " was false from " + resultingXml, assertResult(resultingXml));
     }
 
     public abstract void doTest() throws TransactionFailure;
 
-    public abstract boolean assertResult(String resultingXml);    
+    public abstract boolean assertResult(String resultingXml);
 }

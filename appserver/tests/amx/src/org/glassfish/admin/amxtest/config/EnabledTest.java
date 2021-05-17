@@ -34,7 +34,7 @@ public final class EnabledTest
 
         for (final Enabled e : all) {
             final String value = e.getEnabled();
-            
+
             e.setEnabled( value );
         }
     }

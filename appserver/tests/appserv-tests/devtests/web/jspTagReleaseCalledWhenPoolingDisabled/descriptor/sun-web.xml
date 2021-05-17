@@ -22,5 +22,5 @@
 <sun-web-app>
   <jsp-config>
     <property name="enablePooling" value="false" />
-  </jsp-config> 
+  </jsp-config>
 </sun-web-app>

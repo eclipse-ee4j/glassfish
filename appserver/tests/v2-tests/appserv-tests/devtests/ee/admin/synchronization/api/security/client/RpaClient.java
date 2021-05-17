@@ -32,8 +32,8 @@ public class RpaClient {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    //private static SimpleReporterAdapter stat = 
+
+    //private static SimpleReporterAdapter stat =
      //   new SimpleReporterAdapter("appserv-tests");
 
 
@@ -46,18 +46,18 @@ public class RpaClient {
             //stat.addStatus("client initSFSB-- wrong number of arguments", stat.FAIL);
             System.out.println("Usage: SyncClientTest provider-url ctxFactory jndi-name");
              return;
-        } 
+        }
 
         RpaClient client = new RpaClient(args);
         System.out.println("[apiClient] doTest()...");
         client.doTest(args);
         System.out.println("[apiClient] DONE doTest()...");
         //stat.printSummary("synchronization");
-    }  
-    
+    }
+
     public RpaClient (String[] args) {
     }
-    
+
     public void doTest(String[] args) {
 
         initSFSB(args);
@@ -70,7 +70,7 @@ public class RpaClient {
         try {
             Context ic = null;
             Object objref = null;
-            if ((args[0] == null) || (args[1] == null)) { 
+            if ((args[0] == null) || (args[1] == null)) {
                 ic = new InitialContext();
                 System.out.println("[apiClient] Lookingup Bean apiClient ");
                 objref = ic.lookup("java:comp/env/ejb/apiSecurity");
@@ -98,11 +98,11 @@ public class RpaClient {
     }
 
     public void testSynch(String[] args) {
-    		// invoke 3 overloaded methods on the EJB
+            // invoke 3 overloaded methods on the EJB
         try{
-		System.out.println ("Calling authorized method - addItem");
-		hr.addItem("lipstick", 30);
-		hr.addItem("mascara", 40);
+        System.out.println ("Calling authorized method - addItem");
+        hr.addItem("lipstick", 30);
+        hr.addItem("mascara", 40);
                 hr.addItem("lipstick2", 50);
                 hr.addItem("sandals",  200);
                 System.out.println(hr.getTotalCost());
@@ -118,9 +118,9 @@ public class RpaClient {
 
         } catch(Exception re){
                 re.printStackTrace();
-		System.out.println("RealmPerApp:RpaLoginBean Test Failed");
+        System.out.println("RealmPerApp:RpaLoginBean Test Failed");
                 System.exit(-1);
-	}
+    }
             System.out.println("RealmPerApp:RpaLoginBean Test Passed");
 
     }

@@ -45,7 +45,7 @@ public class ValveNode extends RuntimeDescriptorNode<Valve> {
         }
         return descriptor;
     }
-    
+
     @Override
     protected boolean setAttributeValue(XMLElement elementName,
                                         XMLElement attributeName,

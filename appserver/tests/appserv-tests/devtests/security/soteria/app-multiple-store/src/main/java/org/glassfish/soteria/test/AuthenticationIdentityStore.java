@@ -68,10 +68,10 @@ public class AuthenticationIdentityStore implements IdentityStore {
 
         return result;
     }
-    
+
     @Override
     public Set<ValidationType> validationTypes() {
         return new HashSet<>(asList(VALIDATE));
     }
-   
+
 }

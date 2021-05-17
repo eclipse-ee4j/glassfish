@@ -36,5 +36,5 @@
   <module>
       <java>libdirtest-client.jar</java>
   </module>
-  <library-directory/> <!-- suppress library directory handling -->  
+  <library-directory/> <!-- suppress library directory handling -->
 </application>

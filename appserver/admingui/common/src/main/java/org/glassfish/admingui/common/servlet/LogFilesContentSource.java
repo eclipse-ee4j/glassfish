@@ -36,7 +36,7 @@ import org.glassfish.admingui.common.util.RestUtil;
  * @author andriy.zhdanov
  */
 public class LogFilesContentSource  implements DownloadServlet.ContentSource {
-    
+
      /**
      *  <p> This method returns a unique string used to identify this
      *      {@link DownloadServlet#ContentSource}.  This string must be
@@ -63,7 +63,7 @@ public class LogFilesContentSource  implements DownloadServlet.ContentSource {
         HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
         String target = request.getParameter("target");
         String restUrl = request.getParameter("restUrl");
-        
+
         // Create the tmpFile
         InputStream tmpFile = null;
         try {
@@ -76,8 +76,8 @@ public class LogFilesContentSource  implements DownloadServlet.ContentSource {
             File file = new File(tempDir, fileName);
             // retrieveFilePath
             attrsMap.put("id", file.getAbsolutePath()); // CAUTION: file instead of dir
-            attrsMap.put("retrieve", "true"); 
-            attrsMap.put("target", target); 
+            attrsMap.put("retrieve", "true");
+            attrsMap.put("target", target);
             RestUtil.postRestRequestFromServlet(request, endpoint, attrsMap, true, true);
             tmpFile = new FileInputStream(file);
             file.delete();

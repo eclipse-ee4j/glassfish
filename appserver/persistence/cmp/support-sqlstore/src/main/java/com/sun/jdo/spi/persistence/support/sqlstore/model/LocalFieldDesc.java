@@ -78,7 +78,7 @@ public class LocalFieldDesc extends FieldDesc {
      * Determines if this field is mapped to a LOB column type. It is assumed that
      * lob fields are mapped to only one columns and UI and model verifications enforce it.
      * @return <code>true</code> if field is mapped to LOB column type. <code>false</code>
-     * 			otherwise.
+     *             otherwise.
      */
     public boolean isMappedToLob() {
         return
@@ -88,7 +88,7 @@ public class LocalFieldDesc extends FieldDesc {
             //primaryColumnType == Types.VARBINARY        ||
             //primaryColumnType == Types.LONGVARBINARY    ||
 
-            isCharLobType(primaryColumnType)		||
+            isCharLobType(primaryColumnType)        ||
             // If none of above, check if the field is mapped to byte[].
             // We should treat any field mapped to byte[] as mapped to a LOB.
             getEnumType() == FieldTypeEnumeration.ARRAY_BYTE_PRIMITIVE;
@@ -98,7 +98,7 @@ public class LocalFieldDesc extends FieldDesc {
      * Determines if <code>sqltype</code> passed to this method is to be considered a character
      * LOB type.
      * @return <code>true</code> if field is mapped to character LOB column type. <code>false</code>
-     * 			otherwise.
+     *             otherwise.
      */
     public static boolean isCharLobType(int sqlType) {
         //Resolve : Need to check for all supported datbases all possible LOB types

@@ -19,7 +19,7 @@
  * @author     $Author: cf126330 $
  * @version    $Revision: 1.4 $ $Date: 2007/03/30 19:10:26 $
  */
- 
+
 
 package com.sun.ejb.containers.util.pool;
 
@@ -32,19 +32,19 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 
 /**
- * <p>NonBlockingPool pool provides the basic implementation of an object 
- * pool. The implementation uses a linked list to maintain a list of 
+ * <p>NonBlockingPool pool provides the basic implementation of an object
+ * pool. The implementation uses a linked list to maintain a list of
  * (available) objects. If the pool is empty it simply creates one using the
  * ObjectFactory instance. Subclasses can change this behaviour by overriding
- * getObject(...) and returnObject(....) methods. This class provides basic 
+ * getObject(...) and returnObject(....) methods. This class provides basic
  * support for synchronization, event notification, pool shutdown
  * and pool object recycling. It also does some very basic bookkeeping like the
  * number of objects created, number of threads waiting for object.
- * <p> Subclasses can make use of these book-keeping data to provide complex 
- * pooling mechanism like LRU / MRU / Random. Also, note that AbstractPool 
- * does not have a notion of  pool limit. It is upto to the derived classes 
+ * <p> Subclasses can make use of these book-keeping data to provide complex
+ * pooling mechanism like LRU / MRU / Random. Also, note that AbstractPool
+ * does not have a notion of  pool limit. It is upto to the derived classes
  * to implement these features.
- *	
+ *
  */
 
 
@@ -52,12 +52,12 @@ public class NonBlockingPool
     extends AbstractPool
 {
 
-    private String	  poolName;
-    private TimerTask	  poolTimerTask;
-    protected boolean	  addedResizeTask = false;
-    volatile protected boolean	  addedIdleBeanWork = false;
-    protected boolean	  inResizing = false;
-    private boolean	  maintainSteadySize = false;
+    private String      poolName;
+    private TimerTask      poolTimerTask;
+    protected boolean      addedResizeTask = false;
+    volatile protected boolean      addedIdleBeanWork = false;
+    protected boolean      inResizing = false;
+    private boolean      maintainSteadySize = false;
 
     /**
      * If glassfish-ejb-jar.xml <enterprise-beans><property>singleton-bean-pool is
@@ -70,15 +70,15 @@ public class NonBlockingPool
     // Set to true after close().  Prevents race condition
     // of async resize task kicking in after close().
     private boolean poolClosed = false;
-    
-    private int		  resizeTaskCount;
+
+    private int          resizeTaskCount;
 
     protected NonBlockingPool() {
     }
 
-    public NonBlockingPool(long beanId, String poolName, ObjectFactory factory, 
+    public NonBlockingPool(long beanId, String poolName, ObjectFactory factory,
         int steadyPoolSize, int resizeQuantity,
-        int maxPoolSize, int idleTimeoutInSeconds, 
+        int maxPoolSize, int idleTimeoutInSeconds,
         ClassLoader loader)
     {
         this(beanId, poolName, factory,
@@ -96,16 +96,16 @@ public class NonBlockingPool
         this.beanId = beanId;
         this.singletonBeanPool = singletonBeanPool && (steadyPoolSize == 1) &&
                 (maxPoolSize == 1);
-    	initializePool(factory, steadyPoolSize, resizeQuantity, maxPoolSize,
+        initializePool(factory, steadyPoolSize, resizeQuantity, maxPoolSize,
                        idleTimeoutInSeconds, loader);
     }
 
-    protected void initializePool(ObjectFactory factory, int steadyPoolSize, 
+    protected void initializePool(ObjectFactory factory, int steadyPoolSize,
         int resizeQuantity, int maxPoolSize, int idleTimeoutInSeconds,
         ClassLoader loader)
     {
         list = new ArrayList();
-        
+
         this.factory = factory;
         this.steadyPoolSize = (steadyPoolSize <= 0) ? 0 : steadyPoolSize;
         this.resizeQuantity = (resizeQuantity <= 0) ? 0 : resizeQuantity;
@@ -113,42 +113,42 @@ public class NonBlockingPool
             ? Integer.MAX_VALUE : maxPoolSize;
         this.steadyPoolSize = (this.steadyPoolSize > this.maxPoolSize)
             ? this.maxPoolSize : this.steadyPoolSize;
-        this.idleTimeoutInSeconds = 
+        this.idleTimeoutInSeconds =
             (idleTimeoutInSeconds <= 0 || this.singletonBeanPool) ? 0 : idleTimeoutInSeconds;
-        
+
         this.containerClassLoader = loader;
-        
+
         this.maintainSteadySize = this.singletonBeanPool ? false : (this.steadyPoolSize > 0);
         if ((this.idleTimeoutInSeconds > 0) && (this.resizeQuantity > 0)) {
             try {
                 this.poolTimerTask =  new PoolResizeTimerTask();
                 EjbContainerUtilImpl.getInstance().getTimer().scheduleAtFixedRate
-                    (poolTimerTask, idleTimeoutInSeconds*1000L, 
+                    (poolTimerTask, idleTimeoutInSeconds*1000L,
                      idleTimeoutInSeconds*1000L);
                 if(_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE,
                       "[Pool-" + poolName + "]: Added PoolResizeTimerTask...");
                 }
             } catch (Throwable th) {
-                _logger.log(Level.WARNING,"[Pool-" + 
+                _logger.log(Level.WARNING,"[Pool-" +
                             poolName + "]: Could not add"
                             + " PoolTimerTask. Continuing anyway...", th);
             }
         }
     }
-    
+
 
     public void setContainerClassLoader(ClassLoader loader) {
         this.containerClassLoader = loader;
     }
-    
+
     /**
      * Get an object. Application can use pool.getObject() to get an object
-     *	instead of using new XXX().
-     * @param canWait Must be true if the calling thread is willing to 
-     *  wait for infinite time to get an object, false if the calling 
+     *    instead of using new XXX().
+     * @param canWait Must be true if the calling thread is willing to
+     *  wait for infinite time to get an object, false if the calling
      *  thread does not want to wait at all.
-     *	
+     *
      */
     public Object getObject(boolean canWait, Object param)
         throws PoolException
@@ -184,14 +184,14 @@ public class NonBlockingPool
                     toAddResizeTask = addedResizeTask = true;
                 }
                 poolProbeNotifier.ejbObjectAddedEvent(beanId, appName, modName, ejbName);
-                createdCount++;	//hope that everything will be OK.
+                createdCount++;    //hope that everything will be OK.
             }
         }
-        
+
         if (toAddResizeTask) {
             addResizeTaskForImmediateExecution();
         }
-        
+
         if (obj != null) {
             return obj;
         }
@@ -229,7 +229,7 @@ public class NonBlockingPool
             }
         }
     }
-    
+
     private void addResizeTaskForImmediateExecution() {
         try {
             ReSizeWork work = new ReSizeWork();
@@ -244,7 +244,7 @@ public class NonBlockingPool
                 addedResizeTask = false;
             }
             if(_logger.isLoggable(Level.WARNING)) {
-            	_logger.log(Level.WARNING, 
+                _logger.log(Level.WARNING,
                             "[Pool-"+poolName+"]: Cannot perform "
                             + " pool resize task", ex);
             }
@@ -253,11 +253,11 @@ public class NonBlockingPool
 
     /**
      * Return an object back to the pool. An object that is obtained through
-     *	getObject() must always be returned back to the pool using either 
-     *	returnObject(obj) or through destroyObject(obj).
+     *    getObject() must always be returned back to the pool using either
+     *    returnObject(obj) or through destroyObject(obj).
      */
     public void returnObject(Object object) {
-    	synchronized (list) {
+        synchronized (list) {
             if (list.size() < maxPoolSize) {
                 list.add(object);
                 if(this.singletonBeanPool) {
@@ -269,20 +269,20 @@ public class NonBlockingPool
                 destroyedCount++;
             }
         }
-        
+
         try {
             factory.destroy(object);
         } catch (Exception ex) {
-            _logger.log(Level.FINE, "exception in returnObj", ex);             
+            _logger.log(Level.FINE, "exception in returnObj", ex);
         }
     }
 
     /**
-     * Destroys an Object. Note that applications should not ignore 
-     * the reference to the object that they got from getObject(). An object 
-     * that is obtained through getObject() must always be returned back to 
-     * the pool using either returnObject(obj) or through destroyObject(obj). 
-     * This method tells that the object should be destroyed and cannot 
+     * Destroys an Object. Note that applications should not ignore
+     * the reference to the object that they got from getObject(). An object
+     * that is obtained through getObject() must always be returned back to
+     * the pool using either returnObject(obj) or through destroyObject(obj).
+     * This method tells that the object should be destroyed and cannot
      * be reused.
      */
     public void destroyObject(Object object) {
@@ -300,27 +300,27 @@ public class NonBlockingPool
             _logger.log(Level.FINE, "exception in destroyObject", ex);
         }
     }
-    
+
     /**
     * Preload the pool with objects.
     * @param count the number of objects to be added.
     */
     protected void preload(int count) {
-    	
+
         ArrayList instances = new ArrayList(count);
         try {
             for (int i=0; i<count; i++) {
                 instances.add(factory.create(null));
             }
-    	} catch (Exception ex) {
+        } catch (Exception ex) {
             //Need not throw this exception up since we are pre-populating
-    	}
+        }
 
         int sz = instances.size();
         if (sz == 0) {
             return;
         }
-    	synchronized (list) {
+        synchronized (list) {
             // check current pool size & adjust add size
             int currsize = list.size();
             int addsz = sz;
@@ -348,13 +348,13 @@ public class NonBlockingPool
         this.steadyPoolSize = (count <= 0) ? 0 : count;
         this.steadyPoolSize = (this.steadyPoolSize > this.maxPoolSize)
             ? this.maxPoolSize : this.steadyPoolSize;
-	
+
         if (this.steadyPoolSize > 0) {
             preload(this.steadyPoolSize);
         }
-            
+
     }
- 
+
     /**
     * Close the pool
     */
@@ -362,7 +362,7 @@ public class NonBlockingPool
         synchronized (list) {
             if (poolTimerTask != null) {
                 try {
-                    poolTimerTask.cancel();	
+                    poolTimerTask.cancel();
                     if(_logger.isLoggable(Level.FINE)) {
                         _logger.log(Level.FINE,
                             "[Pool-"+poolName+"]: Cancelled pool timer task "
@@ -372,15 +372,15 @@ public class NonBlockingPool
                     //Can safely ignore this!!
                 }
             }
-	
+
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,"[Pool-"+poolName+"]: Destroying "
                             + list.size() + " beans from the pool...");
             }
-	
+
             // since we're calling into ejb code, we need to set context
             // class loader
-            ClassLoader origLoader = 
+            ClassLoader origLoader =
                 Utility.setContextClassLoader(containerClassLoader);
 
             Object[] array = list.toArray();
@@ -401,7 +401,7 @@ public class NonBlockingPool
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,"Pool-"+poolName+"]: Pool closed....");
             }
-            list.clear(); 
+            list.clear();
             unregisterProbeProvider();
 
             Utility.setContextClassLoader(origLoader);
@@ -413,7 +413,7 @@ public class NonBlockingPool
             this.poolTimerTask         = null;
             this.containerClassLoader  = null;
         }
-        
+
     }
 
     protected void remove(int count) {
@@ -426,7 +426,7 @@ public class NonBlockingPool
                 destroyedCount++;
             }
         }
-        
+
         int sz = removeList.size();
         for (int i=0; i<sz; i++) {
             try {
@@ -439,19 +439,19 @@ public class NonBlockingPool
 
     protected void removeIdleObjects() {
     }
-    
+
     protected void doResize() {
 
         if( poolClosed ) {
             return;
         }
-        
+
         //We need to set the context class loader for this (deamon) thread!!
         final Thread currentThread = Thread.currentThread();
-        final ClassLoader previousClassLoader = 
+        final ClassLoader previousClassLoader =
             currentThread.getContextClassLoader();
         final ClassLoader ctxClassLoader = containerClassLoader;
-	
+
         long startTime = 0;
         boolean enteredResizeBlock = false;
         try {
@@ -468,7 +468,7 @@ public class NonBlockingPool
             }
 
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, 
+                _logger.log(Level.FINE,
                     "[Pool-"+poolName+"]: Resize started at: "
                   + (new java.util.Date())+" steadyPoolSize ::"+steadyPoolSize
                   + " resizeQuantity ::"+resizeQuantity+" maxPoolSize ::" +
@@ -485,29 +485,29 @@ public class NonBlockingPool
 
                 enteredResizeBlock = true;
                 inResizing = true;
-                
+
                 int curSize = list.size();
 
                 if (curSize > steadyPoolSize) {
 
                     //possible to reduce pool size....
-                    if ((idleTimeoutInSeconds <= 0)  || 
+                    if ((idleTimeoutInSeconds <= 0)  ||
                         (resizeQuantity <= 0)) {
                         return;
                     }
-                    int victimCount = 
+                    int victimCount =
                         (curSize > (steadyPoolSize + resizeQuantity) )
                         ? resizeQuantity : (curSize - steadyPoolSize);
                     long allowedIdleTime = System.currentTimeMillis() -
                         idleTimeoutInSeconds*1000L;
                     if(_logger.isLoggable(Level.FINE)) {
-                        _logger.log(Level.FINE, 
+                        _logger.log(Level.FINE,
                                     "[Pool-"+poolName+"]: Resize:: reducing "
                                     + " pool size by: " + victimCount);
                     }
                     for (int i=0; i<victimCount; i++) {
                         //removeList.add(list.remove(--curSize));
-               		//destroyedCount++;
+                       //destroyedCount++;
                         EJBContextImpl ctx = (EJBContextImpl) list.get(0);
                         if (ctx.getLastTimeUsed() <= allowedIdleTime) {
                             removeList.add(list.remove(0));
@@ -525,7 +525,7 @@ public class NonBlockingPool
                     }
 
                     if (resizeQuantity <= 0) {
-                        populateCount = steadyPoolSize - curSize; 
+                        populateCount = steadyPoolSize - curSize;
                     } else {
                         while ((curSize + populateCount) < steadyPoolSize) {
                             populateCount += resizeQuantity;
@@ -536,7 +536,7 @@ public class NonBlockingPool
                     }
                 }
             }
-            
+
             if (removeList.size() > 0) {
                 int sz = removeList.size();
                 for (int i=0; i<sz; i++) {
@@ -552,7 +552,7 @@ public class NonBlockingPool
                 //preload adds items inside a sync block....
 
                 if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, 
+                    _logger.log(Level.FINE,
                             "[Pool-"+poolName+"]: Attempting to preload "
                             + populateCount + " beans. CurSize/MaxPoolSize: "
                             + list.size() + "/" + maxPoolSize);
@@ -561,20 +561,20 @@ public class NonBlockingPool
                 preload((int)populateCount);
 
                 if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, 
+                    _logger.log(Level.FINE,
                             "[Pool-"+poolName+"]: After preload "
                             + "CurSize/MaxPoolSize: "
                             + list.size() + "/" + maxPoolSize);
                 }
             }
-            
-            
+
+
         } catch (Throwable th) {
             _logger.log(Level.WARNING,
                         "[Pool-"+poolName+"]: Exception during reSize", th);
 
         } finally {
-            
+
             if (enteredResizeBlock) {
                 synchronized (list) {
                     inResizing = false;
@@ -595,9 +595,9 @@ public class NonBlockingPool
 
         long endTime = System.currentTimeMillis();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, 
+            _logger.log(Level.FINE,
                 "[Pool-"+poolName+"]: Resize completed at: "
-                + (new java.util.Date()) + "; after reSize: " + 
+                + (new java.util.Date()) + "; after reSize: " +
                 getAllAttrValues());
             _logger.log(Level.FINE, "[Pool-"+poolName+"]: Resize took: "
                         + ((endTime-startTime)/1000.0) + " seconds.");
@@ -619,12 +619,12 @@ public class NonBlockingPool
     {
         public void prolog() {
         }
-        
-    	public void service() {
+
+        public void service() {
             run();
         }
-        
-    	public void epilog() {
+
+        public void epilog() {
         }
 
         public void run() {
@@ -646,14 +646,14 @@ public class NonBlockingPool
     {
         public void prolog() {
         }
-        
-    	public void service() {
+
+        public void service() {
             run();
         }
-        
-    	public void epilog() {
+
+        public void epilog() {
         }
-        
+
         public void run() {
             try {
                 doResize();
@@ -668,9 +668,9 @@ public class NonBlockingPool
         extends java.util.TimerTask
     {
         PoolResizeTimerTask() {}
-        
+
         public void run() {
-            
+
             try {
                 if (addedIdleBeanWork == true) {
                     return;
@@ -680,11 +680,11 @@ public class NonBlockingPool
                 EjbContainerUtilImpl.getInstance().addWork(work);
             } catch (Exception ex) {
                 addedIdleBeanWork = false;
-                _logger.log(Level.WARNING, 
+                _logger.log(Level.WARNING,
                             "[Pool-"+poolName+"]: Cannot perform "
                             + " pool idle bean cleanup", ex);
             }
-	
+
         }
     } // End of class PoolResizeTimerTask
 

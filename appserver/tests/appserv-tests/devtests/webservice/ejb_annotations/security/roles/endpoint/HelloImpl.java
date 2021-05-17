@@ -30,7 +30,7 @@ public class HelloImpl {
     public String roleBased(String who) {
         return "WebSvcTest-Hello " + who;
     }
-    
+
     @DenyAll
     public String denyAll(String who) {
         return "WebSvcTest-Hello " + who;
@@ -39,5 +39,5 @@ public class HelloImpl {
    @PermitAll
     public String permitAll(String who) {
         return "WebSvcTest-Hello " + who;
-    }    
+    }
 }

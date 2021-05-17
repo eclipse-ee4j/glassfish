@@ -68,8 +68,8 @@ public final class CoverageInfoTest
         assert impl.getOperationsInvoked().size() == 0;
         */
     }
-    
-    
+
+
 /*
 
 
@@ -80,7 +80,7 @@ public final class CoverageInfoTest
     }
 
 
-	    public void
+        public void
     testAttributes()
     {
         final MBeanInfo mbeanInfo    = getTestMBeanInfo();

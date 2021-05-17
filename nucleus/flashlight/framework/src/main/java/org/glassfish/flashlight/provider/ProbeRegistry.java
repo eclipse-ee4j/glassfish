@@ -52,11 +52,11 @@ public class ProbeRegistry {
 
     @Deprecated
     public static ProbeRegistry createInstance() {
-    	if (_me == null) {
-    		_me = new ProbeRegistry();
-    	}
+        if (_me == null) {
+            _me = new ProbeRegistry();
+        }
 
-    	return _me;
+        return _me;
     }
 
     public static void cleanup() {
@@ -105,10 +105,10 @@ public class ProbeRegistry {
     }
 
    public static void invokeProbe(int id, Object[] args) {
-    	FlashlightProbe probe = probeMap.get(id);
-    	if (probe != null) {
-    		probe.fireProbe(args);
-    	}
+        FlashlightProbe probe = probeMap.get(id);
+        if (probe != null) {
+            probe.fireProbe(args);
+        }
     }
 
    public static Object invokeProbeBefore(int id, Object[] args) {

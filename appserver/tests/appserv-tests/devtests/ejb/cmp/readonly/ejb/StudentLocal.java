@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import jakarta.ejb.EJBLocalObject;
 
 public interface StudentLocal extends EJBLocalObject {
- 
+
   /**
    * Returns the Name of a student.
    */

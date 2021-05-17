@@ -48,9 +48,9 @@ public class GFWebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      */
     @Override
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.GF_WEB_JAR_ENTRY;        
+        return DescriptorConstants.GF_WEB_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -59,7 +59,7 @@ public class GFWebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      */
     @Override
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-   
+
         if (descriptor instanceof WebBundleDescriptorImpl) {
             return new GFWebBundleRuntimeNode((WebBundleDescriptorImpl) descriptor);
         }

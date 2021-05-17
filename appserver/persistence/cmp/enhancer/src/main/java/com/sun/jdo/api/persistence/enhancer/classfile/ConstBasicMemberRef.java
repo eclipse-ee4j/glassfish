@@ -20,7 +20,7 @@ import java.io.*;
 
 /**
  * The abstract base class used to represent the various type of
- * references to members (fields/methods) within the constant pool. 
+ * references to members (fields/methods) within the constant pool.
  */
 
 public abstract class ConstBasicMemberRef extends ConstBasic {
@@ -41,14 +41,14 @@ public abstract class ConstBasicMemberRef extends ConstBasic {
   /* public accessors */
 
   /**
-   * Return the name of the class defining the member 
+   * Return the name of the class defining the member
    */
   public ConstClass className() {
     return theClassName;
   }
 
   /**
-   * Return the name and type of the member 
+   * Return the name and type of the member
    */
   public ConstNameAndType nameAndType() {
     return theNameAndType;

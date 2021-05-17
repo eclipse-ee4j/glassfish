@@ -30,7 +30,7 @@ public class RepositoryException extends java.lang.Exception {
 
     /**
      * Constructs a new InstanceException object.
-     * 
+     *
      * @param message
      */
     public RepositoryException(String message) {
@@ -39,7 +39,7 @@ public class RepositoryException extends java.lang.Exception {
 
     /**
      * Constructs a new InstanceException object.
-     * 
+     *
      * @param cause
      */
     public RepositoryException(Throwable cause) {
@@ -49,7 +49,7 @@ public class RepositoryException extends java.lang.Exception {
 
     /**
      * Constructs a new InstanceException object.
-     * 
+     *
      * @param message
      * @param cause
      */

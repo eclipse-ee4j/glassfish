@@ -58,4 +58,4 @@
  <resource-adapter-config resource-adapter-name="web-subclassingApp#jdbcra">
       <property name="RAProperty" value="VALID"></property>
     </resource-adapter-config>
-</resources> 
+</resources>

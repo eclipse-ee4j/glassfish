@@ -25,23 +25,23 @@ import java.io.OutputStream;
  * This class contains utility methods that handles the archives.
  *
  * @author  Deployment Dev Team
- * @version 
+ * @version
  */
 public class ArchivistUtils {
 
-    /** 
-     * Utility method that eads the input stream fully and writes the bytes to 
-     * the current entry in the output stream. 
+    /**
+     * Utility method that eads the input stream fully and writes the bytes to
+     * the current entry in the output stream.
      */
     public static void copy(InputStream is, OutputStream os) throws IOException {
         copyWithoutClose(is, os);
         is.close();
         os.close();
-    }     
+    }
 
-    /** 
-     * Utility method that eads the input stream fully and writes the bytes to 
-     * the current entry in the output stream. 
+    /**
+     * Utility method that eads the input stream fully and writes the bytes to
+     * the current entry in the output stream.
      */
     public static void copyWithoutClose(InputStream is, OutputStream os) throws IOException {
         byte[] buf = new byte[4096];

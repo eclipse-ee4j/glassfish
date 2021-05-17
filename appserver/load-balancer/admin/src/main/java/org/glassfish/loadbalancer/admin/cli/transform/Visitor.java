@@ -26,7 +26,7 @@ import org.glassfish.loadbalancer.admin.cli.reader.api.BaseReader;
 public interface Visitor {
 
     /**
-     * Visit reader class 
+     * Visit reader class
      */
     void visit(BaseReader br) throws Exception;
 }

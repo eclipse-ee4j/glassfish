@@ -24,14 +24,14 @@ import org.glassfish.gmbal.ManagedObject;
 
 /**
  * Server wide File cache statistics
- * 
+ *
  * @author Amy Roh
  */
 @AMXMetadata(type="file-cache-mon", group="monitoring")
 @ManagedObject
 @Description("File Cache Statistics")
 public class FileCacheStatsProviderGlobal extends FileCacheStatsProvider {
-    
+
     public FileCacheStatsProviderGlobal(String name) {
         super(name);
     }
@@ -120,5 +120,5 @@ public class FileCacheStatsProviderGlobal extends FileCacheStatsProvider {
             @ProbeParam("fileCacheName") String fileCacheName,
             @ProbeParam("size") long size) {
         mappedMemorySize.addAndGet(-size);
-    }    
+    }
 }

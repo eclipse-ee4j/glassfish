@@ -58,8 +58,8 @@
       <mkdir dir="${build.classes.dir}/client"/>
 <replace file="client/Client.java" value="${http.host}" token="HTTP_HOST"/>
       <replace file="client/Client.java" value="${http.port}" token="HTTP_PORT"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="client/**"/>
 
 
@@ -74,7 +74,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
     </target>
-    
+
     <target name="runclient">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>
@@ -82,7 +82,7 @@
       </antcall>
 
 
-<!--restore the tokens back in file--> 
+<!--restore the tokens back in file-->
          <replace file="client/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="client/Client.java" token="${http.port}" value="HTTP_PORT"/>
     </target>

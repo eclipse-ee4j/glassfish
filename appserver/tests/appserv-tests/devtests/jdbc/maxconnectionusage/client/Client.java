@@ -67,7 +67,7 @@ public class Client {
 
         //Commented as this test is not valid.
         //physical connection (ds.getConnection(conn)) will be different each time.
-        
+
         /*useXA = true;
         status = connectionSharingTest(simpleBMP, useXA, 12221);
 

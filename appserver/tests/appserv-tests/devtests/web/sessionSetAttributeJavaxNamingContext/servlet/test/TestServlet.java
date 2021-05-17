@@ -33,7 +33,7 @@ public class TestServlet extends HttpServlet {
             throw new ServletException(e);
         }
 
-	HttpSession httpSession = req.getSession();
+    HttpSession httpSession = req.getSession();
         httpSession.setAttribute("JNDIInitialContext", ic);
 
     }

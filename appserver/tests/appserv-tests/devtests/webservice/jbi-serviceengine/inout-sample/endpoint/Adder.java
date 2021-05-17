@@ -26,17 +26,17 @@ import jakarta.jws.Oneway;
     targetNamespace="http://example.web.service/Adder"
 )
 public class Adder {
-	public Adder() {}
+    public Adder() {}
 
-	@WebMethod(operationName="add", action="urn:Add")
-	public int add(int i, int j) {
+    @WebMethod(operationName="add", action="urn:Add")
+    public int add(int i, int j) {
                 int k = i -j ;
                 System.err.println(i + "-" + j +" = " + k);
-				return k;
+                return k;
 
-				/*
-		if(i == 101)
-			throw new RuntimeException("This is my exception in add ...");
-			*/
-	}
+                /*
+        if(i == 101)
+            throw new RuntimeException("This is my exception in add ...");
+            */
+    }
 }

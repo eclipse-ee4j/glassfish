@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6264656");
         WebTest webTest = new WebTest(args);
@@ -50,8 +50,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");

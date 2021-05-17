@@ -35,7 +35,7 @@ import java.lang.reflect.Constructor;
  *        SUN_OPTION_CLASS = Class.forName("com.sun.webui.jsf.model.Option");
  * for the time being, we have to ensure that this class stays in the 'core' which is part of the war file so any plugin
  * modul can access it.
- * 
+ *
  */
 public class SunOptionUtil {
 
@@ -103,7 +103,7 @@ public class SunOptionUtil {
 
     private static Class SUN_OPTION_CLASS = null;
     private static Constructor SUN_OPTION_CONSTRUCTOR = null;
-    
+
 
     static {
         try {

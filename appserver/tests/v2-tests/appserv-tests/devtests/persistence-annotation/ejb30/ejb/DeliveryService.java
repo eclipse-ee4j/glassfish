@@ -30,29 +30,29 @@ import static jakarta.persistence.AccessType.*;
  *
  * @author ss141213
  */
-@Entity 
-public class DeliveryService { 
-    private String serviceName; 
-    private int priceCategory; 
-    private Collection customers; 
-    @Id public String getServiceName() { 
-        return serviceName; 
-    } 
-    public void setServiceName(String serviceName) { 
-        this.serviceName = serviceName; 
-    } 
-    @Basic public int getPriceCategory() { 
-        return priceCategory; 
-    } 
-    public void setPriceCategory(int priceCategory) { 
-        this.priceCategory = priceCategory; 
-    } 
-    @ManyToMany(targetEntity="com.acme.Customer") 
+@Entity
+public class DeliveryService {
+    private String serviceName;
+    private int priceCategory;
+    private Collection customers;
+    @Id public String getServiceName() {
+        return serviceName;
+    }
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+    @Basic public int getPriceCategory() {
+        return priceCategory;
+    }
+    public void setPriceCategory(int priceCategory) {
+        this.priceCategory = priceCategory;
+    }
+    @ManyToMany(targetEntity="com.acme.Customer")
     @AssociationTable(table=@Table(schema="TEST1"))
-    public Collection getCustomers() { 
-        return customers; 
-    } 
-    public void setCustomers(Collection customers) { 
-        this.customers = customers; 
-    } 
+    public Collection getCustomers() {
+        return customers;
+    }
+    public void setCustomers(Collection customers) {
+        this.customers = customers;
+    }
 }

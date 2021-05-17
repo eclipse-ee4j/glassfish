@@ -27,7 +27,7 @@
 
     <property name="testName" value="deployment-ejb30-ear-security"/>
     <property name="archivedir" value="${build}/archives"/>
-    
+
     <target name="prepare" depends="init">
         <mkdir dir="${build}"/>
         <mkdir dir="${archivedir}"/>
@@ -48,7 +48,7 @@
          <classpath refid="gfv3.classpath"/>
          </javac>
     </target>
- 
+
     <target name="create.user" depends="setAsadminArgsWithoutPassword">
         <antcall target="common.createuser.asadmin">
             <param name="arg.list"
@@ -78,7 +78,7 @@
                 excludes="**/Client.class,**/ClientSuper.class,**/Servlet.class, **/MyFilter.class"/>
 
         <war destfile="${web.war}" webxml="descriptor/web.xml">
-            <classes dir="${build}" 
+            <classes dir="${build}"
                 excludes="**/Client.class, **/*EJB.class, **/*.jar"/>
         </war>
 
@@ -92,8 +92,8 @@
                 <include name="sun-application.xml"/>
             </metainf>
         </ear>
-    </target> 
-    
+    </target>
+
     <target name="deploy.asadmin" depends="prepare">
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="--retrieve ${archivedir} --name ${testName} ${all.ear}"/>
@@ -113,7 +113,7 @@
             <param name="arg.list" value="${testName}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="runclient" depends="prepare,setOrbPort2,setHttpPort2">
         <exec executable="${APPCLIENT}" resultproperty="result" failonerror="false" output="${build}/${log.id}.output.log">
@@ -129,9 +129,9 @@
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
-        </antcall>  
+        </antcall>
     </target>
- 
+
     <target name="private-all">
         <antcall target="create.user"/>
         <antcall target="assemble"/>

@@ -297,7 +297,7 @@ public class FileLogger
                 (rb.getString(LogFacade.FILE_LOGGER_STARTED));
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
-        
+
         super.start();
 
     }
@@ -321,7 +321,7 @@ public class FileLogger
         started = false;
 
         close();
-        
+
         super.stop();
 
     }

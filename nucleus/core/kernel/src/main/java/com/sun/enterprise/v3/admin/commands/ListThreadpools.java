@@ -56,8 +56,8 @@ import org.glassfish.api.admin.*;
     CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=ThreadPools.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-threadpools", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-threadpools",
         description="list-threadpools")
 })
 public class ListThreadpools implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -78,14 +78,14 @@ public class ListThreadpools implements AdminCommand, AdminCommandSecurity.Preau
 
     @AccessRequired.To("read")
     private ThreadPools threadPools;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         config = CLIUtil.updateConfigIfNeeded(config, target, habitat);
         threadPools  = config.getThreadPools();
         return true;
     }
-    
+
     /**
      * Executes the command
      *

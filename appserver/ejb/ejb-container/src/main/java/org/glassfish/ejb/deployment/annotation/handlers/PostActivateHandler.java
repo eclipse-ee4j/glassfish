@@ -32,13 +32,13 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling jakarta.ejb.PostActivate 
+ * This handler is responsible for handling jakarta.ejb.PostActivate
  *
  */
 @Service
 @AnnotationHandlerFor(PostActivate.class)
 public class PostActivateHandler extends AbstractAttributeHandler {
-    
+
     public PostActivateHandler() {
     }
 
@@ -46,16 +46,16 @@ public class PostActivateHandler extends AbstractAttributeHandler {
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         for(EjbContext next : ejbContexts) {
-            
-            EjbSessionDescriptor ejbSessionDescriptor = 
+
+            EjbSessionDescriptor ejbSessionDescriptor =
                 (EjbSessionDescriptor) next.getDescriptor();
 
             ejbSessionDescriptor.addPostActivateDescriptor(
                 getPostActivateDescriptor(ainfo));
-            
+
         }
 
-        return getDefaultProcessedResult();        
+        return getDefaultProcessedResult();
     }
 
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
@@ -65,13 +65,13 @@ public class PostActivateHandler extends AbstractAttributeHandler {
         EjbInterceptor ejbInterceptor =  ejbInterceptorContext.getDescriptor();
         ejbInterceptor.addPostActivateDescriptor(
             getPostActivateDescriptor(ainfo));
-        return getDefaultProcessedResult();        
+        return getDefaultProcessedResult();
     }
 
     private LifecycleCallbackDescriptor getPostActivateDescriptor(
             AnnotationInfo ainfo) {
         Method annotatedMethod = (Method) ainfo.getAnnotatedElement();
-        LifecycleCallbackDescriptor postActivate = 
+        LifecycleCallbackDescriptor postActivate =
                 new LifecycleCallbackDescriptor();
         postActivate.setLifecycleCallbackClass(annotatedMethod.getDeclaringClass().getName());
         postActivate.setLifecycleCallbackMethod(annotatedMethod.getName());
@@ -79,8 +79,8 @@ public class PostActivateHandler extends AbstractAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

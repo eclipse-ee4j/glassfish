@@ -78,7 +78,7 @@ public class ProxyServicesImpl implements ProxyServices {
         // Bean classes, such as UserTransaction, this would be a non-application
         // classloader
         ClassLoader proxyClassLoader = proxiedBeanType.getClassLoader();
-        
+
         //Check if this is an application classloader
         boolean isAppCL = isApplicationClassLoader(proxyClassLoader);
         if (!isAppCL) {
@@ -88,7 +88,7 @@ public class ProxyServicesImpl implements ProxyServices {
             //Beans, as Weld Proxies requires other Weld support classes (such as
             //JBoss Reflection API) that is exported through the weld-osgi-bundle.
         }
-        
+
         return proxyClassLoader;
     }
 
@@ -118,7 +118,7 @@ public class ProxyServicesImpl implements ProxyServices {
             if (getSecurityManager() == null) {
                 return Class.forName(className, true, _getClassLoader());
             }
-            
+
             return (Class<?>) doPrivileged(new PrivilegedExceptionAction<>() {
                 @Override
                 public Object run() throws Exception {

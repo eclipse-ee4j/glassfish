@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -42,20 +42,20 @@
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-	<antcall target="compile-common">
+    <antcall target="compile-common">
             <param name="src" value="servlet"/>
-	</antcall>
+    </antcall>
 
-	 </target>
+     </target>
 
     <target name="build" depends="compile">
 
         <antcall target="build-ear-common">
-	    <param name="war.classes"
-	      value="**/Servlet.class" />
-            <param name="ejbjar.classes" 
+        <param name="war.classes"
+          value="**/Servlet.class" />
+            <param name="ejbjar.classes"
               value="**/**.class,SP.dbschema" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/LocalPartsHome.class,**/LocalParts.class,**/LocalSuppliersHome.class,**/LocalSuppliers.class,**/SPSessionHome.class,**/SPSession.class,**/SuppliersKey.class,**/*Client*.class" />
         </antcall>
 
@@ -63,16 +63,16 @@
 
         <echo message="Preparing ear file with proper xml files" />
         <unjar src="${assemble.dir}/${appname}App.ear" dest="${TEMPDIR}" overwrite="true" />
-    	<echo message="Copying xml file to the ear" />
-	<copy file="${partsupplier.xml}" todir="${TEMPDIR}" failonerror="false"/>
-	<copy file="${ps.xml}" todir="${TEMPDIR}" failonerror="false"/>
+        <echo message="Copying xml file to the ear" />
+    <copy file="${partsupplier.xml}" todir="${TEMPDIR}" failonerror="false"/>
+    <copy file="${ps.xml}" todir="${TEMPDIR}" failonerror="false"/>
        <jar jarfile="${assemble.dir}/${appname}App.ear">
           <fileset dir="${TEMPDIR}" />
        </jar>
 
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/partSupplier_derby.sql"/>
@@ -91,22 +91,22 @@
           <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
         </antcall>
     </target>
- 
+
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
            <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_partSupplier_derby.sql"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant all
         </echo>
     </target>

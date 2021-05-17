@@ -47,7 +47,7 @@ public class MethodExecutor implements java.io.Serializable {
     }
 
     private boolean debug = false;
-    
+
     private final static String newline = System.getProperty("line.separator");
 
     private static StringManager sm = StringManager.getManager(
@@ -205,7 +205,7 @@ public class MethodExecutor implements java.io.Serializable {
             if (typeName.equals("boolean") || typeName.equals("java.lang.Boolean")) {
                 return Boolean.valueOf(parameter);
             }
-            
+
             if (typeName.equals("java.util.Properties")) {
                 Properties p = stringToProperties(parameter);
                 if (p!= null) return p;
@@ -219,7 +219,7 @@ public class MethodExecutor implements java.io.Serializable {
         }
     }
 
-    public Object invokeMethod(Object object, String methodName, 
+    public Object invokeMethod(Object object, String methodName,
             Class<?>[] valueTypes, Object... values) throws ResourceException {
         Object returnValue = null;
         Method actualMethod ;

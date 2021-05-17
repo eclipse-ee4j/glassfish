@@ -56,8 +56,8 @@
      <delete file="${assemble.ear}/${ejbjar.file}" />
      <delete dir="${assemble.ear}/META-INF" />
      <copy todir="${assemble.ear}">
-         <fileset dir="${build}/" 
-                  includes="**/*.class" 
+         <fileset dir="${build}/"
+                  includes="**/*.class"
                   excludes="**/*Client.class, **/*.wsdl, **/*mapping.xml"/>
      </copy>
      <copy file="${build}/MyHelloService.wsdl" todir="${assemble.ear}/META-INF/wsdl" />
@@ -65,7 +65,7 @@
      <copy file="webservices.xml" todir="${assemble.ear}/META-INF" />
      <copy file="ejb-jar.xml" todir="${assemble.ear}/META-INF" />
      <copy file="sun-ejb-jar.xml" todir="${assemble.ear}/META-INF" />
-     <jar destfile="${assemble.ear}/${ejbjar.file}" 
+     <jar destfile="${assemble.ear}/${ejbjar.file}"
            >
        <fileset dir="${assemble.ear}" includes="META-INF/**, build/**,helloservice/**" />
      </jar>
@@ -78,7 +78,7 @@
 
   <target name="create-ear" depends="create-ejb-jar"
      description="Executes the targets needed to create the ejb jar.">
-     <jar destfile="${assemble.ear}/${ear.file}" 
+     <jar destfile="${assemble.ear}/${ear.file}"
            >
        <fileset dir="${assemble.ear}" includes="${ejbjar.file}" />
      </jar>
@@ -120,7 +120,7 @@
 
 
 
-         
+
           <copy file="client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
          <mkdir dir="${assemble.dir}"/>
           <jar destfile="${assemble.dir}/wsclient.war" basedir="${build.classes.dir}/webclient" includes="**"/>
@@ -183,6 +183,6 @@
          <replace file="webclient/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="webclient/Client.java" token="${http.port}" value="HTTP_PORT"/>
        </target>
-    
+
 
 </project>

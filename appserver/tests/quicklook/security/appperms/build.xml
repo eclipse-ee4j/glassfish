@@ -20,22 +20,22 @@
 <project name="appperms" default="default" basedir=".">
     <property file="build.properties"/>
     <property file="${ws.root}/gfproject/${deploy.platform}-config.properties"/>
-    
+
     <description>Builds, tests, and runs the project Application packaged permissions</description>
-    <import file="${ws.root}/gfproject/build-impl.xml"/>   
+    <import file="${ws.root}/gfproject/build-impl.xml"/>
     <import file="${ws.root}/gfproject/${deploy.platform}-targets.xml"/>
-    
-    <target name="all" depends="build,deploy,redeploy,runtest,undeploy" />    
+
+    <target name="all" depends="build,deploy,redeploy,runtest,undeploy" />
     <target name="build-deploy" depends="build,deploy,redeploy" />
 
-   
+
     <target name="build" depends="compile-tests">
         <antcall target="build-impl">
           <param name="war.classes" value="**/*Servlet.class,**/*Interface.class"/>
-	</antcall>
+    </antcall>
         <antcall target="updateear"/>
     </target>
-    
+
     <target name="deploy">
         <antcall target="deploy-${deploy.platform}-impl"/>
     </target>
@@ -43,29 +43,29 @@
     <target name="redeploy">
         <antcall target="re-deploy-${deploy.platform}">
           <param name="redeploy" value="--force=true"/>
-	</antcall>
+    </antcall>
     </target>
-    
-    <target  name="runtest"> 
+
+    <target  name="runtest">
         <antcall target="runtest-impl">
         <param name="contextroot" value="${testng.test.name}"/>
         <param name="testng.test.name" value="${testng.test.name}"/>
         <param name="testng.testclient" value="ApppermsTestNG"/>
      </antcall>
-        
+
     </target>
-    
+
     <target name="undeploy">
         <antcall target="undeploy-${deploy.platform}-impl"/>
 
     </target>
-    
-    <target name="updateear"> 
+
+    <target name="updateear">
        <echo message="update file ${dist.dir}/${app.file.ext} with permissions.xml" />
 
         <jar jarfile="${dist.dir}/${app.file.ext}"  update="true" >
-            <metainf  dir="metadata"  includes="permissions.xml" /> 
-        </jar>   
+            <metainf  dir="metadata"  includes="permissions.xml" />
+        </jar>
     </target>
 
 

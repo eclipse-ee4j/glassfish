@@ -90,9 +90,9 @@ public final class BasicDBInitSqlServlet extends HttpServlet {
                 writer.println("<tr>");
                 writer.println("  <th align=\"left\" colspan=\"2\">" + "Data retrieved from table \"customer\"" + "</th>");
                 writer.println("</tr>");
-		writer.println("<tr>");
-		writer.println("<td>" + "Customer ID" + "</td>");
-		writer.println("<td>" + "Customer Name" + "</td>");
+        writer.println("<tr>");
+        writer.println("<td>" + "Customer ID" + "</td>");
+        writer.println("<td>" + "Customer Name" + "</td>");
                 writer.println("</tr>");
                 while (rs.next()) {
                     writer.println("<tr>");

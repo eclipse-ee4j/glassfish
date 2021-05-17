@@ -69,8 +69,8 @@
             <param name="wsimport.args"
                value="-keep -wsdllocation ${env.APS_HOME}/devtests/webservice/annotations/multiport/HttpTestService.wsdl -b customclient.xml -d ${build.classes.dir}/client HttpTestService.wsdl"/>
         </antcall>
-        <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+        <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="client/**"/>
     </target>
 
@@ -83,7 +83,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
     </target>
-    
+
     <target name="runtest">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>

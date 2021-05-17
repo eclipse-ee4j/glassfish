@@ -28,7 +28,7 @@
 
     <artifactId>ejb-container</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>GlassFish Core EJB container implementation</name>
 
     <developers>
@@ -91,7 +91,7 @@
             <artifactId>ejb-client</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <!-- this dependencies are for compilation only  -->
         <dependency>
             <groupId>org.glassfish.metro</groupId>
@@ -204,7 +204,7 @@
         <dependency>
             <groupId>org.glassfish.pfl</groupId>
             <artifactId>pfl-dynamic</artifactId>
-	    <optional>true</optional> 
+        <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.orb</groupId>

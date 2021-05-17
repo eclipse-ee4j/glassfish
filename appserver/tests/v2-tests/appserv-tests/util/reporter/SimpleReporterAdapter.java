@@ -38,7 +38,7 @@ public class SimpleReporterAdapter implements Serializable {
     private String resultFile="test_results";
     private boolean isFileSet=false;
 
-    
+
     public SimpleReporterAdapter()  {
         testSuiteName = "undefined";
         testSuiteID = null;
@@ -50,8 +50,8 @@ public class SimpleReporterAdapter implements Serializable {
         }
         catch(Exception ex) { }
     }
-   
-    
+
+
     public SimpleReporterAdapter(String ws_root)     {
         testSuiteName = "undefined";
         testSuiteID = null;
@@ -64,7 +64,7 @@ public class SimpleReporterAdapter implements Serializable {
         }
         catch(Exception ex) { }
     }
-    
+
     //used by webrunner
     public SimpleReporterAdapter(String resultFilePath,boolean isResultFileSet){
         try{
@@ -72,8 +72,8 @@ public class SimpleReporterAdapter implements Serializable {
             this.resultFile=resultFilePath;
         }catch( Exception ex ){ }
     }
-    
-    
+
+
 
     public synchronized void addStatus(String s, String status)    {
         if( testSuiteName.compareTo("undefined") == 0 ) {
@@ -90,11 +90,11 @@ public class SimpleReporterAdapter implements Serializable {
             testCaseStatus = new HashMap(5);
         }
 
-        int blankIndex = s.indexOf(" ");        
+        int blankIndex = s.indexOf(" ");
         String key = s;
         if (blankIndex!=-1){
             key = s.substring(s.indexOf( " " ));
-        } 
+        }
         if(debug)
             System.out.println("Value of key is:"+key);
 
@@ -121,14 +121,14 @@ public class SimpleReporterAdapter implements Serializable {
             outputDir = ejte_home + ws_home;
             reporter = Reporter.getInstance(ws_home);
             if(debug)
-                System.out.println("Generating report at \t" + outputDir + 
+                System.out.println("Generating report at \t" + outputDir +
                         File.separatorChar + "test_results.xml");
             reporter.setTestSuite(testSuiteID, testSuiteName, testSuiteDescription);
             reporter.addTest(testSuiteID, testSuiteID, testSuiteName);
             keySets = testCaseStatus.keySet();
             keySetsIT = keySets.iterator();
             String tcName;
-            
+
             int pass= 0;
             int fail = 0;
             int d_n_r = 0;
@@ -137,7 +137,7 @@ public class SimpleReporterAdapter implements Serializable {
             while( keySetsIT.hasNext() ){
                 tcName = keySetsIT.next().toString();
                 status =  testCaseStatus.get( tcName ).toString();
-                
+
                 if (status.equalsIgnoreCase(PASS)){
                     pass++;
                 } else if(status.equalsIgnoreCase(DID_NOT_RUN)){
@@ -145,7 +145,7 @@ public class SimpleReporterAdapter implements Serializable {
                 } else {
                     fail++;
                 }
-                
+
                 System.out.println("-\t " + tcName + ": " + status.toUpperCase() + "\t-");
                 reporter.addTestCase( testSuiteID, testSuiteID, tcName + "ID", tcName );
                 reporter.setTestCaseStatus( testSuiteID, testSuiteID, tcName + "ID", status );
@@ -202,12 +202,12 @@ public class SimpleReporterAdapter implements Serializable {
         testCaseStatus.clear();
         testSuiteName = "undefined";
     }
-    
+
     /**
      *A dead function.
      * J2EE server security contraints don't allow use of exec
      */
-    
+
     public Properties getEnvVars() throws Throwable {
         Process p = null;
         Properties envVars = new Properties();
@@ -220,10 +220,10 @@ public class SimpleReporterAdapter implements Serializable {
         else if ( (OS.indexOf("nt") > -1) || (OS.indexOf("windows 2000") > -1) ) {
             p = r.exec( "cmd.exe /c set" );
         }
-        else {  
+        else {
             p = r.exec( "env" );
         }
-        BufferedReader br = 
+        BufferedReader br =
             new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line;
         while( (line = br.readLine()) != null ) {

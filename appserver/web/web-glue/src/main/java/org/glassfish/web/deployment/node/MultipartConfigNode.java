@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 
 /**
  * This class is responsible for handling multipart-config xml node.
- * 
+ *
  * @author Shing Wai Chan
  */
 public class MultipartConfigNode extends DeploymentDescriptorNode<MultipartConfigDescriptor> {
@@ -49,8 +49,8 @@ public class MultipartConfigNode extends DeploymentDescriptorNode<MultipartConfi
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -62,7 +62,7 @@ public class MultipartConfigNode extends DeploymentDescriptorNode<MultipartConfi
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -82,13 +82,13 @@ public class MultipartConfigNode extends DeploymentDescriptorNode<MultipartConfi
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, MultipartConfigDescriptor descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName, MultipartConfigDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         appendTextChild(myNode, WebTagNames.LOCATION, descriptor.getLocation());
         if (descriptor.getMaxFileSize() != null) {
@@ -100,7 +100,7 @@ public class MultipartConfigNode extends DeploymentDescriptorNode<MultipartConfi
         if (descriptor.getFileSizeThreshold() != null) {
             appendTextChild(myNode, WebTagNames.FILE_SIZE_THRESHOLD, descriptor.getFileSizeThreshold().toString());
         }
-        
+
         return myNode;
-    }   
+    }
 }

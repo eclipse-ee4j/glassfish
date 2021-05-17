@@ -21,11 +21,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import jakarta.servlet.http.Cookie;
 
-/** HttpCacheEntry 
+/** HttpCacheEntry
  *  Each entry holds cached (HTTP) response:
- *  a) response bytes b) response headers c) expiryTime 
- *  d) parameterEncoding used e) entryKey this entry represents, 
- *  to match the entry within the hash bucket. 
+ *  a) response bytes b) response headers c) expiryTime
+ *  d) parameterEncoding used e) entryKey this entry represents,
+ *  to match the entry within the hash bucket.
  *
  *  XXX: should implement methods to enable serialization of cached response?
  */
@@ -43,8 +43,8 @@ public class HttpCacheEntry {
 
     int contentLength;
 
-    // XXX: other cacheable response info 
-    byte[] bytes; 
+    // XXX: other cacheable response info
+    byte[] bytes;
 
     volatile long expireTime = 0;
 
@@ -57,7 +57,7 @@ public class HttpCacheEntry {
     }
 
     /**
-     * compute when this entry to be expired based on timeout relative to 
+     * compute when this entry to be expired based on timeout relative to
      * current time.
      * @param timeout in seconds
      */
@@ -75,7 +75,7 @@ public class HttpCacheEntry {
         return (expireTime > System.currentTimeMillis() || expireTime == -1);
     }
 
-    /** 
+    /**
      * clear the contents
      */
     public void clear() {
@@ -85,7 +85,7 @@ public class HttpCacheEntry {
     }
 
     /**
-     * get the size 
+     * get the size
      * @return size of this entry in bytes
      * Note: this is only approximate
      */

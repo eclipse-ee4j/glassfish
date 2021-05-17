@@ -24,7 +24,7 @@
       <ejb-name>MessageBean</ejb-name>
     </ejb>
   </enterprise-beans>
-  
+
   <security-role-mapping>
     <role-name>ejbrole</role-name>
     <principal-name>bobby</principal-name>

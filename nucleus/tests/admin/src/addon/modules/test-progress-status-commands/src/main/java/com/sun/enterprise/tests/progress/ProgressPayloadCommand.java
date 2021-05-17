@@ -46,13 +46,13 @@ import org.jvnet.hk2.annotations.Service;
 @Progress(totalStepCount=5)
 @ManagedJob
 public class ProgressPayloadCommand implements AdminCommand {
-    
+
     private final static Logger logger =
             LogDomains.getLogger(ProgressPayloadCommand.class, LogDomains.ADMIN_LOGGER);
-    
+
     @Param(name = "down", multiple = false, primary = true, optional = true)
     String down;
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
@@ -96,12 +96,12 @@ public class ProgressPayloadCommand implements AdminCommand {
         ps.progress(1);
         ps.complete("Finished");
     }
-    
+
     private void doSomeLogic() {
         try {
             Thread.sleep(250L);
         } catch (Exception ex) {
         }
     }
-    
+
 }

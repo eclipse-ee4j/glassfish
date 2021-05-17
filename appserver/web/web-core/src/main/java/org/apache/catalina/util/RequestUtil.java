@@ -405,8 +405,8 @@ public final class RequestUtil {
                         ox = 0;
                     } else {
                         data[ox++] = c;
-                    }                   
-                    break;  
+                    }
+                    break;
                 case '+':
                     data[ox++] = (byte)' ';
                     break;

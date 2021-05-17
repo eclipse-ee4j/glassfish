@@ -24,8 +24,8 @@ import java.util.List;
 /**
  * <p><code>AbstractRuleImpl</code> provides basic services for <code>Rules</code> implementations.
  * Extending this class should make it easier to create a <code>Rules</code> implementation.</p>
- * 
- * <p><code>AbstractRuleImpl</code> manages the <code>Digester</code> 
+ *
+ * <p><code>AbstractRuleImpl</code> manages the <code>Digester</code>
  * and <code>namespaceUri</code> properties.
  * If the subclass overrides {@link #registerRule} (rather than {@link #add}),
  * then the <code>Digester</code> and <code>namespaceURI</code> of the <code>Rule</code>
@@ -38,12 +38,12 @@ import java.util.List;
 abstract public class AbstractRulesImpl implements Rules {
 
     // ------------------------------------------------------------- Fields
-    
+
     /** Digester using this <code>Rules</code> implementation */
     private Digester digester;
     /** Namespace uri to assoicate with subsequent <code>Rule</code>'s */
     private String namespaceURI;
-    
+
     // ------------------------------------------------------------- Properties
 
     /**
@@ -98,23 +98,23 @@ abstract public class AbstractRulesImpl implements Rules {
         if (this.digester != null) {
             rule.setDigester(this.digester);
         }
-        
+
         if (this.namespaceURI != null) {
             rule.setNamespaceURI(this.namespaceURI);
         }
-        
+
         registerRule(pattern, rule);
-        
+
     }
-    
-    /** 
+
+    /**
      * Register rule at given pattern.
      * The the Digester and namespaceURI properties of the given <code>Rule</code>
      * can be assumed to have been set properly before this method is called.
      *
      * @param pattern Nesting pattern to be matched for this Rule
      * @param rule Rule instance to be registered
-     */ 
+     */
     abstract protected void registerRule(String pattern, Rule rule);
 
     /**

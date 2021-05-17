@@ -16,7 +16,7 @@
 
 package org.glassfish.persistence.common;
 
-/** 
+/**
  * @author Marina Vatkina
  * This interface defines string constants used by the database generation.
  */

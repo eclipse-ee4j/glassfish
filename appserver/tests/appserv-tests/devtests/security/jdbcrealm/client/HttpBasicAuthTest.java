@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class HttpBasicAuthTest implements Runnable {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
 
     private boolean result = true;
@@ -66,7 +66,7 @@ public class HttpBasicAuthTest implements Runnable {
 
         Thread tarray[] = new Thread[threadCount];
 
-        for(int i=0; i<threadCount; i++) 
+        for(int i=0; i<threadCount; i++)
             tarray[i] = new Thread(this, "Http-request-thread-" + i);
 
         for(int i=0; i<threadCount; i++)
@@ -91,11 +91,11 @@ public class HttpBasicAuthTest implements Runnable {
 
         stdDev = Math.pow(stdDev, 0.5);
 
-        System.out.println("Total requests: " + (suxesCount+failureCount) + 
-                           ", success count: " + suxesCount + 
+        System.out.println("Total requests: " + (suxesCount+failureCount) +
+                           ", success count: " + suxesCount +
                            ", failure count: " + failureCount);
-        System.out.println("Min/Max/Avg/StdDev: (milliseconds) " + 
-                           minTime + "/" + 
+        System.out.println("Min/Max/Avg/StdDev: (milliseconds) " +
+                           minTime + "/" +
                            maxTime + "/" + avgTime + "/" + stdDev);
 
         stat.addDescription("JDBCRealm test for URL " + url);
@@ -106,7 +106,7 @@ public class HttpBasicAuthTest implements Runnable {
             } else {
                 stat.addStatus(testId, stat.FAIL);
             }
-        } else { // negative test 
+        } else { // negative test
             if( result ) {
                 stat.addStatus(testId, stat.FAIL);
             } else {
@@ -143,7 +143,7 @@ public class HttpBasicAuthTest implements Runnable {
                 synchronized(this) {
                     failureCount++;
                 }
-        
+
                 // test failed(well failed if its a postive test, this
                 // is expected if its a negative test)
 
@@ -156,7 +156,7 @@ public class HttpBasicAuthTest implements Runnable {
 
     protected void run0() throws Exception {
 
-        System.out.println(Thread.currentThread().getName() + 
+        System.out.println(Thread.currentThread().getName() +
                            " - running ...");
         URL u = new URL(url);
         URLConnection uconn = u.openConnection();
@@ -220,7 +220,7 @@ public class HttpBasicAuthTest implements Runnable {
             System.exit(1);
         }
 
-        HttpBasicAuthTest test = 
+        HttpBasicAuthTest test =
             new HttpBasicAuthTest(url, user, pass, tc, lc, positiveTest);
         test.doTest();
     }

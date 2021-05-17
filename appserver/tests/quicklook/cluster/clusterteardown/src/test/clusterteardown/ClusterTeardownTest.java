@@ -30,7 +30,7 @@ public class ClusterTeardownTest extends AdminBaseDevTest {
         final String cname = "eec1";
         final String i1name = "eein1-with-a-very-very-very-long-name";
         final String i2name = "eein2";
-        
+
         public boolean retStatus;
 
         // Byron Nevins Nov 4,2010 -- Add plenty of output if there are problems.
@@ -52,7 +52,7 @@ public class ClusterTeardownTest extends AdminBaseDevTest {
         Assert.assertTrue(ar3.returnValue, "Error deleting instance " + i1name + ": " + ar3.outAndErr);
         Assert.assertTrue(ar4.returnValue, "Error deleting instance " + i2name + ": " + ar4.outAndErr);
     }
-        
+
     @Test(dependsOnMethods = { "deleteInstanceTest" })
     public void deleteClusterTest() throws Exception{
         AsadminReturn ar1 = asadminWithOutput("delete-cluster", cname);

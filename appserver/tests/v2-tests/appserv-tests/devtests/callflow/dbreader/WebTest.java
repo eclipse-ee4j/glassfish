@@ -33,7 +33,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         WebTest webTest = new WebTest(args);
         try {
@@ -59,8 +59,8 @@ public class WebTest {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = input.readLine();
-	    System.out.println ("Callflow Data : "+line);
-	    System.out.println (input.readLine());
-        }    
+        System.out.println ("Callflow Data : "+line);
+        System.out.println (input.readLine());
+        }
     }
 }

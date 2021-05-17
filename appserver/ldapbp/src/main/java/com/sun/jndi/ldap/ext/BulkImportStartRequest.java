@@ -49,7 +49,7 @@ import com.sun.jndi.ldap.BerEncoder;
  * <p>
  * The object identifier for BulkImportStart is 2.16.840.1.113730.3.5.7
  * and the extended request value is the naming context to import to.
- * 
+ *
  * <p>
  * The following code sample shows how the extended operation may be used:
  * <pre>
@@ -61,14 +61,14 @@ import com.sun.jndi.ldap.BerEncoder;
  *
  *     // Bulk import starts
  *     ctx.extendedOperation(new BulkImportStartRequest(
- *					 namingContext));
+ *                     namingContext));
  *     System.out.println("Bulk import operation begins");
  *
- *     // Add entries 
+ *     // Add entries
  *     ctx.createSubcontext(entryName, entryAttrs);
  *           :
- *	     :
- *     // Bulk import done 
+ *         :
+ *     // Bulk import done
  *     ctx.extendedOperation(new BulkImportFinishedRequest());
  *     System.out.println("Bulk import operation finished");
  * </pre>
@@ -81,7 +81,7 @@ public class BulkImportStartRequest implements ExtendedRequest {
 
     /**
      * The BulkImportStart extended operation's assigned object identifier
-     * is  2.16.840.1.113730.3.5.7 
+     * is  2.16.840.1.113730.3.5.7
      */
     public static final String OID = "2.16.840.1.113730.3.5.7";
 
@@ -89,7 +89,7 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * ASN1 Ber encoded value of the extended request
      * @serial
      */
-    private byte[] value; 
+    private byte[] value;
 
     private static final long serialVersionUID = 8280455967681862705L;
 
@@ -101,9 +101,9 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * attribute contained in the servers' rootDSE entry.
      * @exception IOException If a BER encoding error occurs.
      */
-    public BulkImportStartRequest(String importName) 
-	throws IOException {
-	value = importName.getBytes("UTF8");
+    public BulkImportStartRequest(String importName)
+    throws IOException {
+    value = importName.getBytes("UTF8");
     }
 
     /**
@@ -121,11 +121,11 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * @return The ASN.1 BER encoded value of the LDAP extended request.
      */
     public byte[] getEncodedValue() {
-	return value;
+    return value;
     }
 
     /**
-     * Creates an extended response object that corresponds to the 
+     * Creates an extended response object that corresponds to the
      * LDAP BulkImportStart extended request.
      * <p>
      */

@@ -25,13 +25,13 @@ import org.jvnet.libpam.impl.CLibrary.Passwd;
  * FreeeBSD
  *
  * struct passwd {
- * 	char	*pw_name;
- * 	char	*pw_passwd;
- * 	uid_t	pw_uid;
- * 	gid_t	pw_gid;
- * 	char	*pw_gecos;
- * 	char	*pw_dir;
- * 	char	*pw_shell;
+ *     char    *pw_name;
+ *     char    *pw_passwd;
+ *     uid_t    pw_uid;
+ *     gid_t    pw_gid;
+ *     char    *pw_gecos;
+ *     char    *pw_dir;
+ *     char    *pw_shell;
  * };
  *
  * @author R. Tyler Croy

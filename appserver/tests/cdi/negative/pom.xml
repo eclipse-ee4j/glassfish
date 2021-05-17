@@ -32,7 +32,7 @@
     <packaging>pom</packaging>
     <version>6.1.1-SNAPSHOT</version>
 
-    <name>GlassFish CDI Negative Tests</name>  
+    <name>GlassFish CDI Negative Tests</name>
     <modules>
         <module>normalScopeWithFinal</module>
         <module>runner</module>

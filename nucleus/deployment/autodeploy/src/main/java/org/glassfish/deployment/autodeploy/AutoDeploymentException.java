@@ -56,8 +56,8 @@ public class AutoDeploymentException extends DeploymentException {
      */
     public AutoDeploymentException(String s, Throwable t) {
         super(s + " -- " + t.getMessage(), t);
-        
+
     }
-    
-    
+
+
 }

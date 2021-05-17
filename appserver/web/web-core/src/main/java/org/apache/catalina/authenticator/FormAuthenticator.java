@@ -115,8 +115,8 @@ public class FormAuthenticator
         // Have we already authenticated someone?
         Principal principal = hreq.getUserPrincipal();
         // Treat the first and any subsequent j_security_check requests the
-        // same, by letting them fall through to the j_security_check 
-        // processing section of this method. 
+        // same, by letting them fall through to the j_security_check
+        // processing section of this method.
         if (principal != null && !loginAction) {
             if (log.isLoggable(Level.FINE))
                 log.log(Level.FINE, neutralizeForLog("Already authenticated '" + principal.getName() + "'"));
@@ -129,8 +129,8 @@ public class FormAuthenticator
 
         // Have we authenticated this user before but have caching disabled?
         // Treat the first and any subsequent j_security_check requests the
-        // same, by letting them fall through to the j_security_check 
-        // processing section of this method. 
+        // same, by letting them fall through to the j_security_check
+        // processing section of this method.
         if (!cache && !loginAction) {
             session = getSession(request, true);
             /* Do not log session
@@ -479,8 +479,8 @@ public class FormAuthenticator
                     t);
         }
     }
-    
-    
+
+
     /**
      * Called to forward to the error page. may redirect current request to HTTPS
      *
@@ -520,7 +520,7 @@ public class FormAuthenticator
                     t);
         }
     }
-    
+
     /**
      * Save the original request information into our session.
      *

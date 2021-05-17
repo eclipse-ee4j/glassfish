@@ -181,7 +181,7 @@ public class FactoryTest {
         new FactoryTest().beforeTest();
         new FactoryTest().testOverrideForDefaultEntries();
         new FactoryTest().afterTest();
-        
+
         new FactoryTest().beforeTest();
         new FactoryTest().testRemoveRegistration();
         new FactoryTest().afterTest();
@@ -198,14 +198,14 @@ public class FactoryTest {
 
         new FactoryTest().beforeTest();
         new FactoryTest().testRegistrationWithNonStringProperty();
-        new FactoryTest().afterTest();        
+        new FactoryTest().afterTest();
 
         new FactoryTest().beforeTest();
         new FactoryTest().testRegistrationWithNonStringPropertyAndPreviousRegistration();
-        new FactoryTest().afterTest();        
+        new FactoryTest().afterTest();
     }
 
-	@Before
+    @Before
     public void beforeTest() {
         try {
             defaultFactoryClassName = Security.getProperty(DEFAULT_FACTORY_SECURITY_PROPERTY);
@@ -262,12 +262,12 @@ public class FactoryTest {
         String description = null;
         String regId = null;
         try {
-        	regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
+            regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
         } catch (IllegalArgumentException iae) {
             assertNull("Failed Registration Should Have Resulted in a NULL RegistrationID returned but did not.", regId);
         }
         AuthConfigProvider acp = null;
-    	acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
+        acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
         assertNull("Registration Should Have Failed and Therefore No ACP Should Have been Found.", acp);
     }
 
@@ -275,7 +275,7 @@ public class FactoryTest {
     public void testRegistrationWithNonStringPropertyAndPreviousRegistration() {
         logger.info("BEGIN Registration with NonString Property and Previous Registration FACTORY TEST");
         Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, testFactoryClassName);
-        
+
         // first register a valid acp configuration
         String className = _AuthConfigProvider.class.getName();
         HashMap properties = null;
@@ -283,12 +283,12 @@ public class FactoryTest {
         String appContext = "context";
         String description = null;
         String regId = null;
-    	regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
-    	assertNotNull("Registration Should Have Succeeded returning a nonNULL RegistrationID but did not.", regId);
+        regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
+        assertNotNull("Registration Should Have Succeeded returning a nonNULL RegistrationID but did not.", regId);
         AuthConfigProvider previousAcp = null;
         previousAcp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
-    	assertNotNull("Registration Should Have Succeeded returning a nonNULL ACP but did not.", previousAcp);
-    	String previousRegId = regId;
+        assertNotNull("Registration Should Have Succeeded returning a nonNULL ACP but did not.", previousAcp);
+        String previousRegId = regId;
 
         // now for an invalid configuration
         properties = new HashMap();
@@ -300,14 +300,14 @@ public class FactoryTest {
         description = null;
         regId = null;
         try {
-        	regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
+            regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
         } catch (IllegalArgumentException iae) {
             assertNull("Failed Registration Should Have Resulted in a NULL RegistrationID returned but did not.", regId);
         }
         AuthConfigProvider acp = null;
-    	acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
+        acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
         assertTrue("Registration Should Have Failed for Invalid Config and Therefore returned the Previously Registered ACP", previousAcp == acp);
-        
+
         assertTrue("Failed to remove the previously registered provider.", AuthConfigFactory.getFactory().removeRegistration(previousRegId));
     }
 
@@ -419,7 +419,7 @@ public class FactoryTest {
             }
         }
     }
-    
+
     @Test
     public void testRemoveRegistration() {
         logger.info("BEGIN Remove Registration TEST");
@@ -662,23 +662,23 @@ public class FactoryTest {
             activeConsumers = threadCount;
             consumerCount = threadCount;
         }
-        
+
         ArrayList<Callable<_ResultCarrier>> tasks = new ArrayList<Callable<_ResultCarrier>>();
-        
+
         for (int i = 0; i < threadCount; i++) {
             _ResultCarrier carrier = new _ResultCarrier();
-            Callable<_ResultCarrier> task = 
+            Callable<_ResultCarrier> task =
                     Executors.callable(new _Thread(threadCount,carrier),carrier);
             tasks.add(task);
         }
-        
+
         logger.log(Level.INFO, "STARTING {0} THREADS", threadCount);
         try {
             List<Future<_ResultCarrier>> futures = threadPool.invokeAll(tasks,maxJoinSeconds,TimeUnit.SECONDS);
             for (Future<_ResultCarrier> future : futures) {
                 if (future.isCancelled()) {
-                    logger.log(Level.WARNING, 
-                        "try increasing maxJoinSeconds in {0}: test aborted because it did not terminate in {1} seconds", 
+                    logger.log(Level.WARNING,
+                        "try increasing maxJoinSeconds in {0}: test aborted because it did not terminate in {1} seconds",
                         new Object[]{this.getClass().getName(),maxJoinSeconds});
                     fail("test did not terminate in: " + maxJoinSeconds + " seconds");
                 } else if (future.isDone()) {
@@ -687,7 +687,7 @@ public class FactoryTest {
                         logger.log(Level.SEVERE, errorMessage);
                         fail(errorMessage);
                     }
-                } 
+                }
             }
         } catch (Throwable t) {
             String exceptionMessage = "exception from invoking tasks or from invoked task";
@@ -708,8 +708,8 @@ public class FactoryTest {
         logger.info("ALL REGISTRATIONS REMOVED");
 
         f.refresh();
-    } 
-     
+    }
+
     static class _ResultCarrier {
         String result;
         synchronized String getResult() {
@@ -719,7 +719,7 @@ public class FactoryTest {
             this.result = result;
         }
     }
-    
+
     static class _Thread extends Thread implements RegistrationListener {
 
         _ResultCarrier resultCarrier;
@@ -747,7 +747,7 @@ public class FactoryTest {
         private void setResult(String result) {
             resultCarrier.setResult(result);
         }
-        
+
         @Override
         public void run() {
             AuthConfigFactory f = AuthConfigFactory.getFactory();
@@ -755,19 +755,19 @@ public class FactoryTest {
                 String msg = "new thread: " + getId() + " found null factory";
                 logger.log(Level.SEVERE,msg);
                 setResult(msg);
-            }                    
+            }
             else if (runAsConsumer) {
-                doConsumer(f, layers[random.nextInt(layers.length)], 
+                doConsumer(f, layers[random.nextInt(layers.length)],
                             contexts[random.nextInt(contexts.length)]);
             } else while (true) {
-                
+
                 synchronized (_Thread.class) {
                     if (activeConsumers == 0) {
                         setResult(null);
                         return;
                     }
                 }
-                
+
                 switch (random.nextInt(5)) {
                     case 0:
                         if (random.nextInt(25) == 1) {
@@ -862,12 +862,12 @@ public class FactoryTest {
         public void doConsumer(AuthConfigFactory f, String layer, String context) {
 
             String msg = null;
-            
+
             synchronized (_Thread.class) {
                 logger.log(Level.FINE, "creating consumer");
                 this.stop = false;
             }
-            
+
             try {
                 f.getConfigProvider(layer, context, this);
                 while (true) {
@@ -891,7 +891,7 @@ public class FactoryTest {
                 }
             }
         }
-                
+
         public void notify(String layer, String context) {
             if (random.nextInt(100) == 1) {
                 synchronized (_Thread.class) {
@@ -911,7 +911,7 @@ public class FactoryTest {
             }
         }
     }
-    
+
 
     public static class _AuthConfigProvider implements AuthConfigProvider {
 
@@ -988,6 +988,6 @@ public class FactoryTest {
         }
     }
 
-    
+
 
 }

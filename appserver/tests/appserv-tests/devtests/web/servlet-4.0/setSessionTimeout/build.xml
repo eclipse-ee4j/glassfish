@@ -45,10 +45,10 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="**/*.class"/> 
+            <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
         <javac srcdir="." includes="WebTest.java">
@@ -58,10 +58,10 @@
             </classpath>
         </javac>
 
-    </target> 
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="re-deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
@@ -69,7 +69,7 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest" fork="true">
           <sysproperty key="S1AS_HOME" value="${env.S1AS_HOME}"/>
@@ -85,10 +85,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

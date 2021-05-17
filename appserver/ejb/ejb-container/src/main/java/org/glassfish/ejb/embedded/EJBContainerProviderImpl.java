@@ -70,15 +70,15 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
     private static final String WEAVING = "org.glassfish.persistence.embedded.weaving.enabled";
 
     private static final Attributes.Name ATTRIBUTE_NAME_SKIP = new Attributes.Name("Bundle-SymbolicName");
-    private static final String[] KNOWN_PACKAGES = 
+    private static final String[] KNOWN_PACKAGES =
             {"org.glassfish.", "com.sun.enterprise.", "org.eclipse.", "org.jboss.weld."};
     private static final String[] ATTRIBUTE_VALUES_OK = {"sample", "test"};
 
 
     // Use Bundle from another package
-    private static final Logger _logger = 
+    private static final Logger _logger =
             LogDomains.getLogger(EJBContainerProviderImpl.class, LogDomains.EJB_LOGGER);
-    private static final StringManager localStrings = 
+    private static final StringManager localStrings =
             StringManager.getManager(EJBContainerProviderImpl.class);
 
     private static final Object lock = new Object();
@@ -91,7 +91,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
     public EJBContainerProviderImpl() {}
 
     public EJBContainer createEJBContainer(Map<?, ?> properties) throws EJBException {
-        if (properties == null || properties.get(EJBContainer.PROVIDER) == null || 
+        if (properties == null || properties.get(EJBContainer.PROVIDER) == null ||
                 properties.get(EJBContainer.PROVIDER).equals(GF_PROVIDER_NAME)) {
 
             if (container != null && container.isOpen()) {
@@ -156,7 +156,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                 GlassFishProperties glassFishProperties = new GlassFishProperties(newProps);
                 if (Boolean.getBoolean(KEEP_TEMPORARY_FILES)) {
                     glassFishProperties.setProperty("org.glassfish.embeddable.autoDelete", "false"); // set autodelete to false.
-                    glassFishProperties.setConfigFileReadOnly(false); // make sure the domain.xml is written back. 
+                    glassFishProperties.setConfigFileReadOnly(false); // make sure the domain.xml is written back.
                 }
 
                 if (l.installed_root != null && l.instance_root != null) {
@@ -246,8 +246,8 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
                 for (File f : arr) {
                     addModule(l, modules, moduleNames, f);
                 }
-            } 
-        } 
+            }
+        }
 
         if (modules.isEmpty()) {
             // No file is specified - load from the classpath
@@ -283,7 +283,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
      * Returns null if it's an EJB module which name is not present in the list of requested
      * module names.
      */
-    private DeploymentElement getRequestedEJBModuleOrLibrary(File file, Map<String, Boolean> moduleNames) 
+    private DeploymentElement getRequestedEJBModuleOrLibrary(File file, Map<String, Boolean> moduleNames)
             throws Exception {
         DeploymentElement result = null;
         String fileName = file.getName();
@@ -315,7 +315,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.fine("... is EJB module: " + isEJBModule);
                 if (isEJBModule) {
-                    _logger.fine("... is Requested EJB module [" + moduleName + "]: " 
+                    _logger.fine("... is Requested EJB module [" + moduleName + "]: "
                             + (moduleNames.isEmpty() || moduleNames.containsKey(moduleName)));
                 }
             }
@@ -330,9 +330,9 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
 
             return result;
         } finally {
-            if (archive != null) 
+            if (archive != null)
                 archive.close();
-            if (is != null) 
+            if (is != null)
                 is.close();
         }
     }
@@ -353,16 +353,16 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             boolean skip_module_with_main_class) {
         try {
             if (f.exists() && !skipJar(f, l, skip_module_with_main_class)) {
-                
+
                 DeploymentElement de = getRequestedEJBModuleOrLibrary(f, moduleNames);
                 if (de != null) {
                     if (_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("... Added " + ((de.isEJBModule())? "EJB Module" : "library") + 
+                        _logger.fine("... Added " + ((de.isEJBModule())? "EJB Module" : "library") +
                                 " .... " + de.getElement().getName());
                     }
                     modules.add(de);
                 }
-            } 
+            }
         } catch (Exception ioe) {
             _logger.log(Level.FINE, "ejb.embedded.io_exception", ioe);
             // skip it
@@ -406,7 +406,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
         }
 
         // Skip jars in the install modules directory
-        if (l.modules_dir != null && 
+        if (l.modules_dir != null &&
                 l.modules_dir.equals(file.getAbsoluteFile().getParentFile().getAbsolutePath())) {
             _logger.info("... skipping module: " + file.getName());
             return true;
@@ -478,7 +478,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             java.util.jar.Attributes attributes = m.getMainAttributes();
             String value = attributes.getValue(Attributes.Name.MAIN_CLASS);
             return (value != null && value.length() > 0);
-        } 
+        }
 
         return false;
     }
@@ -505,7 +505,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
         }
 
         if (installed_root_location == null) {
-            // Try to calculate installation location relative to 
+            // Try to calculate installation location relative to
             // the jar that contains this class
             try {
                 installed_root_location = Which.jarFile(getClass()).
@@ -524,8 +524,8 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
             if (installed_root != null) {
                 if (instance_root_location == null) {
                     // Calculate location for the domain relative to GF install
-                    instance_root_location = installed_root_location 
-                            + File.separatorChar + "domains" 
+                    instance_root_location = installed_root_location
+                            + File.separatorChar + "domains"
                             + File.separatorChar + "domain1";
                 }
 
@@ -538,7 +538,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
         if (instance_root != null && domain_file_location == null) {
             // Calculate location for the domain.xml relative to GF instance
             domain_file_location = instance_root_location
-                    + File.separatorChar + "config" 
+                    + File.separatorChar + "config"
                     + File.separatorChar + "domain.xml";
         }
 

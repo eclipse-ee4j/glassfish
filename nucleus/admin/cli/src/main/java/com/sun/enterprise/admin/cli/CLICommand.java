@@ -92,7 +92,7 @@ public abstract class CLICommand implements PostConstruct {
 
     // tokens that are substituted in manual pages
     // the tokens are delimited with {}
-    // the tokens and tokenValues arrays must be kept in sync.  See the 
+    // the tokens and tokenValues arrays must be kept in sync.  See the
     // expandManPage method for where the tokenValues are assigned.
     private static String manpageTokens[] = { "cname", // the command name
             "cprefix", // the environment variable prefix
@@ -276,7 +276,7 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /*
-     * Return the command scope for this command.  The command scope is 
+     * Return the command scope for this command.  The command scope is
      * a name space in which commands are defined. Command clients can specify a scope
      * to use in looking up a command. Currently this is only used for remote
      * commands. By default, the context is null.
@@ -286,7 +286,7 @@ public abstract class CLICommand implements PostConstruct {
     }
 
     /*
-     * Set the command scope for this command.  
+     * Set the command scope for this command.
      */
     public static void setCommandScope(String ctx) {
         commandScope = ctx;
@@ -294,7 +294,7 @@ public abstract class CLICommand implements PostConstruct {
 
     /**
      * Returns the program options associated with this command.
-     * 
+     *
      * @return the command's program options
      */
     public ProgramOptions getProgramOptions() {
@@ -474,7 +474,7 @@ public abstract class CLICommand implements PostConstruct {
     /**
      * Get the usage text for the command. This usage text shows the details of the command options but does not show the
      * details for the subcommand options. The subcommand argument is used to fill in the subcommand name in the usage text.
-     * 
+     *
      * @return usage text for the command
      */
     public String getCommandUsage() {
@@ -512,7 +512,7 @@ public abstract class CLICommand implements PostConstruct {
                 if (opt.getParam().primary())
                     continue;
                 // include every option that was specified on the command line
-                // and every option that has a default value                               
+                // and every option that has a default value
                 if (opt.getParam().multiple()) {
                     List<String> paramValues = getOptions(opt.getName());
                     for (String v : paramValues) {

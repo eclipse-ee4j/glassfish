@@ -25,7 +25,7 @@ import pe.ejb.ejb30.persistence.toplinksample.ejb.*;
 import java.util.*;
 
 @Stateless
-@Remote({StatelessInterface.class}) 
+@Remote({StatelessInterface.class})
 public class StatelessBean implements StatelessInterface {
 
     @Resource SessionContext sc;

@@ -83,7 +83,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
     public void setClassLoadingPolicy(String value) throws PropertyVetoException;
 
     /**
-     *	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     *    Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      *
      *  Properties are used to override the ManagedConnectionFactory  javabean
      * configuration settings. When one or more of these properties are

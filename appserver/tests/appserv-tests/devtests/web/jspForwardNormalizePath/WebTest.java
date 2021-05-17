@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Tomcat forward and getRequestDispatcher security issue");
         WebTest webTest = new WebTest(args);
@@ -51,8 +51,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);

@@ -28,11 +28,11 @@ import jakarta.xml.ws.handler.PortInfo;
  * is only used on the client side.
  */
 public class PortInfoImpl implements PortInfo {
-    
+
     private BindingID bindingId;
     private QName portName;
     private QName serviceName;
-        
+
     public PortInfoImpl(BindingID bindingId, QName portName, QName serviceName) {
         this.bindingId = bindingId;
         this.portName = portName;
@@ -50,7 +50,7 @@ public class PortInfoImpl implements PortInfo {
     public QName getServiceName() {
         return serviceName;
     }
-    
+
     public boolean equals(Object obj) {
         if (obj instanceof PortInfo) {
             PortInfo info = (PortInfo) obj;
@@ -68,5 +68,5 @@ public class PortInfoImpl implements PortInfo {
      */
     public int hashCode() {
         return bindingId.toString().hashCode();
-    }    
+    }
 }

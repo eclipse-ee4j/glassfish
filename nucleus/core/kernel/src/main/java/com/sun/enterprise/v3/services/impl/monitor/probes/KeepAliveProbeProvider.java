@@ -22,7 +22,7 @@ import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 
 /**
  * Probe provider interface for connections keep-alive related events.
- * 
+ *
  * @author Alexey Stashok
  */
 @ProbeProvider (moduleProviderName="glassfish", moduleName="kernel", probeProviderName="connections-keep-alive")

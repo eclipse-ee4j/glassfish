@@ -189,7 +189,7 @@ public class VirtualServerPipeline extends StandardPipeline {
         if (redirects == null) {
             return false;
         }
-   
+
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
         HttpServletResponse hres = (HttpServletResponse) request.getResponse();
         String requestURI = hreq.getRequestURI();
@@ -242,12 +242,12 @@ public class VirtualServerPipeline extends StandardPipeline {
                 // Replace 'from' URI prefix with complete URL
                 location = redirectMatch.url;
             }
-  
+
             String queryString = hreq.getQueryString();
             if (queryString != null) {
                 location += "?" + queryString;
             }
-     
+
             CharChunk locationCC = null;
 
             if (redirectMatch.isEscape) {

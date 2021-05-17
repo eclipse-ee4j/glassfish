@@ -30,25 +30,25 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 
 /**
- * This class encapsulates information about a component (usually a Java EE 
- * component). 
+ * This class encapsulates information about a component (usually a Java EE
+ * component).
  * @author Jerome Dochez
  */
 public interface ComponentInfo {
-    
+
     /*
      * @return the list of constructors
      */
     public Constructor[] getConstructors();
-    
+
     /*
      * @return the list of public methods
      */
     public Method[] getMethods();
-    
+
     /*
      * @return the list of public fields
      */
     public Field[] getFields();
-    
+
 }

@@ -70,7 +70,7 @@ public class SlessEJB implements SlessBusiness, SlessBusiness2, SlessRemoteBusin
     /**
      * Business method declared on a super interface extended by both
      * remote and local business interface.  Test that tx attribute is
-     * set appropriately for local vs. remote.  
+     * set appropriately for local vs. remote.
      */
     public void sharedRemoteLocalBusinessSuper(boolean expectTx) {
 
@@ -78,10 +78,10 @@ public class SlessEJB implements SlessBusiness, SlessBusiness2, SlessRemoteBusin
 
         try {
 
-            // Proprietary way to look up tx manager.  
+            // Proprietary way to look up tx manager.
             TransactionManager tm = (TransactionManager)
-		//  TODO check this, it worked inV2              new InitialContext().lookup("java:pm/TransactionManager");
-		              new InitialContext().lookup("java:appserver/TransactionManager");
+        //  TODO check this, it worked inV2              new InitialContext().lookup("java:pm/TransactionManager");
+                      new InitialContext().lookup("java:appserver/TransactionManager");
 
             // Use an implementation-specific check whether there is a tx.
             // A portable application couldn't make this check
@@ -93,13 +93,13 @@ public class SlessEJB implements SlessBusiness, SlessBusiness2, SlessRemoteBusin
         } catch(Exception e) {
             throw new EJBException(e);
         }
-            
+
         if( expectTx && hasTx ) {
             System.out.println("Successfully verified tx");
         } else if( !expectTx && !hasTx ) {
             System.out.println("Successfully verified there is no tx");
         } else {
-            throw new EJBException("Invalid tx status.  ExpectTx = " + 
+            throw new EJBException("Invalid tx status.  ExpectTx = " +
                                    expectTx + " hasTx = " + hasTx);
         }
 

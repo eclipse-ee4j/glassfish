@@ -98,7 +98,7 @@ public class SystemPropertyConstants {
      * Field
      */
     public static final String INSTANCE_ROOT_PROPERTY = "com.sun.aas.instanceRoot";
-    
+
     /**
      * Field
      */
@@ -202,7 +202,7 @@ public class SystemPropertyConstants {
     public static final String DEFAULT_ADMIN_PASSWORD = "";
 
     private static final StringManager sm = StringManager.getManager(SystemPropertyConstants.class);
-    
+
     public static final String OPEN = "${";
     public static final String CLOSE = "}";
 
@@ -218,7 +218,7 @@ public class SystemPropertyConstants {
         if (name == null) {
             throw new IllegalArgumentException(sm.getString("spc.null_name", "property"));
         }
-        
+
         return new StringBuffer().append(OPEN)
                                  .append(name)
                                  .append(CLOSE)
@@ -234,12 +234,12 @@ public class SystemPropertyConstants {
         if (sp == null) {
             throw new IllegalArgumentException("null_arg");
         }
-        
+
         String ret = sp;
         if (isSystemPropertySyntax(sp)) {
             ret = sp.substring(2, sp.length() - 1);
         }
-        
+
         return ret;
     }
 
@@ -247,12 +247,12 @@ public class SystemPropertyConstants {
         if (s == null) {
             throw new IllegalArgumentException("null_arg");
         }
-        
+
         boolean sp = false;
         if (s.startsWith(OPEN) && s.endsWith(CLOSE)) {
             sp = true;
         }
-        
+
         return sp;
     }
 

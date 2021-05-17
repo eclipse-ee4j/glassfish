@@ -39,7 +39,7 @@ public interface HealthChecker extends ConfigBeanProxy {
      * Gets the value of the url property.
      *
      * URL to ping so as to determine the health state of a listener. This must be a relative URL.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -76,7 +76,7 @@ public interface HealthChecker extends ConfigBeanProxy {
      *
      * Maximum time, in seconds, that a server must respond to a health check request to be considered healthy. Default is
      * 10 seconds. Must be greater than 0.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "10")

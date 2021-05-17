@@ -29,16 +29,16 @@
     <fileSets>
         <fileSet>
             <directory>${project.build.directory}/dependency/config</directory>
-			 <excludes>
-			   <exclude>logging.properties</exclude>
-			 </excludes>
-			<outputDirectory>./config</outputDirectory>
+             <excludes>
+               <exclude>logging.properties</exclude>
+             </excludes>
+            <outputDirectory>./config</outputDirectory>
          </fileSet>
-		 <fileSet>
+         <fileSet>
             <directory>${project.build.directory}/dependency</directory>
-			 <excludes>
-			   <exclude>config/**</exclude>
-			 </excludes>
+             <excludes>
+               <exclude>config/**</exclude>
+             </excludes>
             <outputDirectory>./</outputDirectory>
          </fileSet>
     </fileSets>

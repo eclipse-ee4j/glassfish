@@ -54,7 +54,7 @@ import org.glassfish.webservices.node.WebServicesDescriptorNode;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This annotation handler is responsible for processing the jakarta.jws.WebService 
+ * This annotation handler is responsible for processing the jakarta.jws.WebService
  * annotation type.
  *
  * @author Jerome Dochez
@@ -62,15 +62,15 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(jakarta.xml.ws.WebServiceProvider.class)
 public class WebServiceProviderHandler extends AbstractHandler {
-    
+
     private static final Logger conLogger = LogUtils.getLogger();
 
     private static final LocalStringManagerImpl wsLocalStrings = new LocalStringManagerImpl(WebServiceProviderHandler.class);
-    
+
     /** Creates a new instance of WebServiceHandler */
     public WebServiceProviderHandler() {
     }
-        
+
     /**
      * @return an array of annotation types this annotation handler would
      * require to be processed (if present) before it processes it's own
@@ -81,13 +81,13 @@ public class WebServiceProviderHandler extends AbstractHandler {
         return dependencies;*/
         return getEjbAndWebAnnotationTypes();
     }
-    
-    public HandlerProcessingResult processAnnotation(AnnotationInfo annInfo) 
-        throws AnnotationProcessorException     
+
+    public HandlerProcessingResult processAnnotation(AnnotationInfo annInfo)
+        throws AnnotationProcessorException
     {
         AnnotatedElementHandler annCtx = annInfo.getProcessingContext().getHandler();
         AnnotatedElement annElem = annInfo.getAnnotatedElement();
-        
+
         boolean ejbInWar = ignoreWebserviceAnnotations(annElem, annCtx);
         //Bug  http://monaco.sfbay/detail.jsf?cr=6956406
         //When there is an ejb webservice packaged in a war
@@ -104,8 +104,8 @@ public class WebServiceProviderHandler extends AbstractHandler {
             AnnotationProcessorException ape = new AnnotationProcessorException(
                     "@WebServiceProvider can only be specified on TYPE", annInfo);
             annInfo.getProcessingContext().getErrorHandler().error(ape);
-            return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.FAILED);                        
-        }             
+            return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.FAILED);
+        }
 
         if(isJaxwsRIDeployment(annInfo)) {
             // Looks like JAX-WS RI specific deployment, do not process Web Service annotations otherwise would end up as two web service endpoints
@@ -113,20 +113,20 @@ public class WebServiceProviderHandler extends AbstractHandler {
                     new Object[] {annInfo.getProcessingContext().getArchive().getName(), "WEB-INF/sun-jaxws.xml"});
             return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
         }
-        
+
         // WebServiceProvider MUST implement the provider interface, let's check this
         if (!jakarta.xml.ws.Provider.class.isAssignableFrom((Class) annElem)) {
             AnnotationProcessorException ape = new AnnotationProcessorException(
                     annElem.toString() + "does not implement the jakarta.xml.ws.Provider interface", annInfo);
             annInfo.getProcessingContext().getErrorHandler().error(ape);
-            return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.FAILED);                                    
+            return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.FAILED);
         }
-    
-        // let's get the main annotation of interest. 
-        jakarta.xml.ws.WebServiceProvider ann = (jakarta.xml.ws.WebServiceProvider) annInfo.getAnnotation();        
-        
+
+        // let's get the main annotation of interest.
+        jakarta.xml.ws.WebServiceProvider ann = (jakarta.xml.ws.WebServiceProvider) annInfo.getAnnotation();
+
         BundleDescriptor bundleDesc = null;
-        
+
         try {
             // let's see the type of web service we are dealing with...
             if ((ejbProvider != null) && ejbProvider.getType("jakarta.ejb.Stateless") != null) {
@@ -168,7 +168,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
 
         // For WSProvider, portComponentName is the fully qualified class name
         String portComponentName = ((Class) annElem).getName();
-        
+
         // As per JSR181, the serviceName is either specified in the deployment descriptor
         // or in @WebSErvice annotation in impl class; if neither service name implclass+Service
         String svcName  = ann.serviceName();
@@ -183,7 +183,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
         if(bindingAnn != null) {
             userSpecifiedBinding = bindingAnn.value();
         }
-        
+
         // In case user gives targetNameSpace in the Impl class, that has to be used as
         // the namespace for service, port; typically user will do this in cases where
         // port_types reside in a different namespace than that of server/port.
@@ -197,7 +197,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
         if(portName == null) {
             portName = "";
         }
-        
+
         // Check if the same endpoint is already defined in webservices.xml
         WebServicesDescriptor wsDesc = bundleDesc.getWebServices();
         WebServiceEndpoint endpoint = wsDesc.getEndpointByName(portComponentName);
@@ -216,14 +216,14 @@ public class WebServiceProviderHandler extends AbstractHandler {
                 if (svcName.length()!=0) {
                     newWS.setName(svcName);
                 } else {
-                    newWS.setName(((Class)annElem).getSimpleName());            
+                    newWS.setName(((Class)annElem).getSimpleName());
                 }
                 wsDesc.addWebService(newWS);
             }
             endpoint = new WebServiceEndpoint();
             // port-component-name is fully qualified class name
             endpoint.setEndpointName(portComponentName);
-            newWS.addEndpoint(endpoint);            
+            newWS.addEndpoint(endpoint);
             wsDesc.setSpecVersion(WebServicesDescriptorNode.SPEC_VERSION);
         } else {
             newWS = endpoint.getWebService();
@@ -237,20 +237,20 @@ public class WebServiceProviderHandler extends AbstractHandler {
             if((targetNameSpace.length() > 0) &&
                 (!endpoint.getWsdlService().getNamespaceURI().equals(targetNameSpace)) ) {
                 throw new AnnotationProcessorException(
-                        "Target Namespace inwsdl-service element does not match @WebService.targetNamespace", 
+                        "Target Namespace inwsdl-service element does not match @WebService.targetNamespace",
                         annInfo);
             }
             targetNameSpace = endpoint.getWsdlService().getNamespaceURI();
         }
-        
+
         // Set binding id id @BindingType is specified by the user in the impl class
         if((!endpoint.hasUserSpecifiedProtocolBinding()) &&
                     (userSpecifiedBinding != null) &&
                         (userSpecifiedBinding.length() != 0)){
             endpoint.setProtocolBinding(userSpecifiedBinding);
-        }        
+        }
 
-        // Use annotated values only if the deployment descriptor equivalent has not been specified        
+        // Use annotated values only if the deployment descriptor equivalent has not been specified
         if(newWS.getWsdlFileUri() == null) {
             // take wsdl location from annotation
             if (ann.wsdlLocation()!=null && ann.wsdlLocation().length()!=0) {
@@ -259,7 +259,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
         }
 
         annElem = annInfo.getAnnotatedElement();
-        
+
         // we checked that the endpoint implements the provider interface above
         Class clz = (Class) annElem;
         Class serviceEndpointIntf = null;
@@ -270,7 +270,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
             }
         }
         if (serviceEndpointIntf==null) {
-            endpoint.setServiceEndpointInterface("jakarta.xml.ws.Provider"); 
+            endpoint.setServiceEndpointInterface("jakarta.xml.ws.Provider");
         } else {
             endpoint.setServiceEndpointInterface(serviceEndpointIntf.getName());
         }
@@ -322,11 +322,11 @@ public class WebServiceProviderHandler extends AbstractHandler {
         if(endpoint.getWsdlPort() == null) {
             endpoint.setWsdlPort(new QName(targetNameSpace, portName, "ns1"));
         }
-        
+
         if(endpoint.getWsdlService() == null) {
             endpoint.setWsdlService(new QName(targetNameSpace, svcName, "ns1"));
         }
-                
+
         return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
     }
 
@@ -350,7 +350,7 @@ public class WebServiceProviderHandler extends AbstractHandler {
         }
         return riDeployment;
     }
-    
+
     /**
      * This is for the ejb webservices in war case Incase there is an@Stateless
      * and

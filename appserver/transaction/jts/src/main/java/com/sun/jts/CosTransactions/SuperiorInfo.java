@@ -174,7 +174,7 @@ class SuperiorInfo {
         //$For non-deferred registration, the RecoveryCoordinator
         //$must be destroyed by the subordinate as no-one else will.
 
-        if (recovery != null && 
+        if (recovery != null &&
                 !(recovery instanceof org.omg.CORBA.LocalObject)) {
             recovery._release();
         }
@@ -194,7 +194,7 @@ class SuperiorInfo {
      * <p>
      * The SuperiorInfo then adds the given Coordinator to the
      * RecoveryManager mappings.  If the SuperiorInfo has already been defined
-     * or reconstructed, the operation does nothing. 
+     * or reconstructed, the operation does nothing.
      * If the state cannot be reconstructed, the
      * Coordinator is not added.
      * <p>
@@ -246,7 +246,7 @@ class SuperiorInfo {
                         _is_a(RecoveryCoordinatorHelper.id())) {
                     // TN - used to be com.sun.CORBA.iiop.CORBAObjectImpl
                     java.lang.Object rcimpl = logObjects[0];
-                        
+
                     /*
                     String[] ids = StubAdapter.getTypeIds(rcimpl);
                     for (int i = 0; i < ids.length; i++)
@@ -256,7 +256,7 @@ class SuperiorInfo {
 
                     // TN - used to be com.sun.CORBA.iiop.CORBAObjectImpl
                     java.lang.Object crimpl = logObjects[1];
-                        
+
                     /*
                     ids = StubAdapter.getTypeIds(crimpl);
                     for( int i = 0; i < ids.length; i++ )
@@ -320,7 +320,7 @@ class SuperiorInfo {
                         _is_a(RecoveryCoordinatorHelper.id())) {
                     // TN - used to be com.sun.CORBA.iiop.CORBAObjectImpl
                     java.lang.Object rcimpl = logObjects[0];
-                        
+
                     /*
                     String[] ids = StubAdapter.getTypeIds(rcimpl);
                     for (int i = 0; i < ids.length; i++)
@@ -330,7 +330,7 @@ class SuperiorInfo {
 
                     // TN - used to be com.sun.CORBA.iiop.CORBAObjectImpl
                     java.lang.Object crimpl = logObjects[1];
-                        
+
                     /*
                     ids = StubAdapter.getTypeIds(crimpl);
                     for( int i = 0; i < ids.length; i++ )

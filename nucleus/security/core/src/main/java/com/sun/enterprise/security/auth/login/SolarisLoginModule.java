@@ -62,7 +62,7 @@ public class SolarisLoginModule extends PasswordLoginModule
             String msg = sm.getString("solarislm.badrealm");
             throw new LoginException(msg);
         }
-        
+
         SolarisRealm solarisRealm = (SolarisRealm)_currentRealm;
 
         // A solaris user must have a name not null so check here.
@@ -70,7 +70,7 @@ public class SolarisLoginModule extends PasswordLoginModule
             String msg = sm.getString("solarislm.nulluser");
             throw new LoginException(msg);
         }
-        
+
         String[] grpList = solarisRealm.authenticate(_username, getPasswordChar());
 
         if (grpList == null) {  // JAAS behavior

@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.*;
  * exception in server.log file").
  *
  * This test's build.xml configures <web-container> property named
- * dispatcher-max-depth in domain.xml and sets its value to 5 before 
+ * dispatcher-max-depth in domain.xml and sets its value to 5 before
  * restarting the server.
  */
 public class WebTest {
@@ -45,7 +45,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 4703023");
 
@@ -57,18 +57,18 @@ public class WebTest {
             ex.printStackTrace();
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/foo.jsp");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                                 ", received: " + responseCode);
         }

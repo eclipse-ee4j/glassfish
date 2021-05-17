@@ -75,7 +75,7 @@ public class LibrariesTldProvider implements TldProvider, PostConstruct {
     private Map<URI, List<String>> cloneTldMap() {
         return (Map<URI, List<String>>)((HashMap<URI, List<String>>)tldMap).clone();
     }
- 
+
     public void postConstruct() {
         File[] domainLibJars = serverEnvironment.getLibPath().listFiles(
                 new FileFilter() {

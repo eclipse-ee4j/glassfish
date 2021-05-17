@@ -32,12 +32,12 @@ import java.net.URLConnection;
 import javax.naming.InitialContext;
 
 public class WebTest {
-        
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 3;
 
     private String contextPath = "test";
-    
+
     @BeforeClass
     public static void setup() throws IOException {
     }

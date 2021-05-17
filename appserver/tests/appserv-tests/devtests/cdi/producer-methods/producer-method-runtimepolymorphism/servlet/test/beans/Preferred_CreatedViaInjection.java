@@ -33,5 +33,5 @@ import jakarta.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Preferred_CreatedViaInjection {
 
-    
+
 }

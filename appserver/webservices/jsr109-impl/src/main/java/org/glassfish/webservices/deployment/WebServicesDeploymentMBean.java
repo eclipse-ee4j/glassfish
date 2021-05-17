@@ -250,7 +250,7 @@ public class WebServicesDeploymentMBean {
         Application application = applications.get(appName);
         if (application == null) {
             application = new Application(appName);
-            applications.put(appName, application);            
+            applications.put(appName, application);
         }
         application.addEndpoint(moduleName, endpointName, data);
     }

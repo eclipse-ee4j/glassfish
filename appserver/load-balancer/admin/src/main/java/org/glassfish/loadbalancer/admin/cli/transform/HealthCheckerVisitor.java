@@ -33,18 +33,18 @@ public class HealthCheckerVisitor implements Visitor {
     }
 
     /**
-     * Visit reader class 
+     * Visit reader class
      */
     @Override
     public void visit(BaseReader br) throws Exception{
         // FIXME, make as assert here about no class cast exception
-		if (br instanceof HealthCheckerReader) {
-			HealthCheckerReader hRdr = (HealthCheckerReader) br;
-			_c.setHealthChecker(true);
-			_c.setHealthCheckerUrl(hRdr.getUrl());
-			_c.setHealthCheckerIntervalInSeconds(hRdr.getIntervalInSeconds());
-			_c.setHealthCheckerTimeoutInSeconds(hRdr.getTimeoutInSeconds());
-		}
+        if (br instanceof HealthCheckerReader) {
+            HealthCheckerReader hRdr = (HealthCheckerReader) br;
+            _c.setHealthChecker(true);
+            _c.setHealthCheckerUrl(hRdr.getUrl());
+            _c.setHealthCheckerIntervalInSeconds(hRdr.getIntervalInSeconds());
+            _c.setHealthCheckerTimeoutInSeconds(hRdr.getTimeoutInSeconds());
+        }
     }
     //--- PRIVATE VARS ----
     Cluster _c = null;

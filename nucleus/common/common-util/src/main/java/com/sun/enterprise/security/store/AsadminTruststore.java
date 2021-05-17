@@ -42,9 +42,9 @@ import java.security.cert.Certificate;
 public class AsadminTruststore {
     private static final String ASADMIN_TRUSTSTORE = "truststore";
     private KeyStore _keyStore = null;
-    private File _keyFile = null;        
+    private File _keyFile = null;
     private char[] _password = null;
-      
+
     public static File getAsadminTruststore()
     {
         String location = System.getProperty(SystemPropertyConstants.CLIENT_TRUSTSTORE_PROPERTY);
@@ -68,31 +68,31 @@ public class AsadminTruststore {
                 .getInstance(password, true /* isPromptable */)
                 .getAsadminTruststore();
     }
-    
+
     AsadminTruststore(final char[] password) throws CertificateException, IOException,
-        KeyStoreException, NoSuchAlgorithmException 
-    {                 
+        KeyStoreException, NoSuchAlgorithmException
+    {
         init(getAsadminTruststore(), password);
     }
-    
+
     private void init(File keyfile, final char[] password)
         throws CertificateException, IOException,
-        KeyStoreException, NoSuchAlgorithmException 
+        KeyStoreException, NoSuchAlgorithmException
     {
         _keyFile = keyfile;
-        _keyStore = KeyStore.getInstance("JKS"); 
+        _keyStore = KeyStore.getInstance("JKS");
         _password = password;
-        BufferedInputStream bInput = null;        
+        BufferedInputStream bInput = null;
         if (_keyFile.exists()) {
             bInput = new BufferedInputStream(new FileInputStream(_keyFile));
         }
-        try {            
+        try {
             //load must be called with null to initialize an empty keystore
             _keyStore.load(bInput, _password);
             if (bInput != null) {
                 bInput.close();
                 bInput = null;
-            } 
+            }
         } finally {
              if (bInput != null) {
                  try {
@@ -101,22 +101,22 @@ public class AsadminTruststore {
                      //ignore we are cleaning up
                  }
              }
-        }        
-    }   
-    
+        }
+    }
+
     public boolean certificateExists(Certificate cert) throws KeyStoreException
     {
         return (_keyStore.getCertificateAlias(cert) == null ? false : true);
     }
-    
-    public void addCertificate(String alias, Certificate cert) throws KeyStoreException, IOException, 
+
+    public void addCertificate(String alias, Certificate cert) throws KeyStoreException, IOException,
         NoSuchAlgorithmException, CertificateException
     {
         _keyStore.setCertificateEntry(alias, cert);
         writeStore();
     }
-    
-    public void writeStore() throws KeyStoreException, IOException, 
+
+    public void writeStore() throws KeyStoreException, IOException,
         NoSuchAlgorithmException, CertificateException
     {
          BufferedOutputStream boutput = null;
@@ -136,5 +136,5 @@ public class AsadminTruststore {
                  }
              }
          }
-    }    
+    }
 }

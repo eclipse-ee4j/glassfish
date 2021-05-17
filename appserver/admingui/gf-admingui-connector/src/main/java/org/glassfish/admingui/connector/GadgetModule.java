@@ -24,81 +24,81 @@ import java.util.List;
 
 
 /**
- *  <p>	This class is configured via XML.  This is done via the HK2
- *	<code>ConfigParser</code>.  This is the root node of a "gadget".
- *	The "text" can be retrived via getText (or #{module.text} via
- *	EL).</p>
+ *  <p>    This class is configured via XML.  This is done via the HK2
+ *    <code>ConfigParser</code>.  This is the root node of a "gadget".
+ *    The "text" can be retrived via getText (or #{module.text} via
+ *    EL).</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen    (ken.paulsen@sun.com)
  */
 @Configured(name="Module")
 public class GadgetModule {
 
     /**
-     *	<p> Accessor for the {@link GadgetUserPref}s.</p>
+     *    <p> Accessor for the {@link GadgetUserPref}s.</p>
      */
     public List<GadgetUserPref> getGadgetUserPrefs() {
-	return this.userPrefs;
+    return this.userPrefs;
     }
 
     /**
-     *	<p> {@link GadgetUserPref}s setter.</p>
+     *    <p> {@link GadgetUserPref}s setter.</p>
      */
     @Element("UserPref")
     void setGadgetUserPref(List<GadgetUserPref> userPrefs) {
-	this.userPrefs = userPrefs;
+    this.userPrefs = userPrefs;
     }
 
     private List<GadgetUserPref> userPrefs = null;
 
     /**
-     *	<p> Accessor for the {@link GadgetModulePrefs}.</p>
+     *    <p> Accessor for the {@link GadgetModulePrefs}.</p>
      */
     public GadgetModulePrefs getGadgetModulePrefs() {
-	return this.prefs;
+    return this.prefs;
     }
 
     /**
-     *	<p> {@link GadgetModulePrefs} setter.</p>
+     *    <p> {@link GadgetModulePrefs} setter.</p>
      */
     @Element("ModulePrefs")
     void setGadgetModulePrefs(GadgetModulePrefs prefs) {
-	this.prefs = prefs;
+    this.prefs = prefs;
     }
 
     private GadgetModulePrefs prefs = null;
 
     /**
-     *	<p> A unique identifier for the content.</p>
+     *    <p> A unique identifier for the content.</p>
     public GadgetContent getContent() {
-	return this.content;
+    return this.content;
     }
      */
 
     /**
-     *	<p> Setter for the content.</p>
+     *    <p> Setter for the content.</p>
 FIXME: I can't seem to get the attributes while also getting the body content...
     @Element("Content")
     void setContent(GadgetContent content) {
-	this.content = content;
+    this.content = content;
     }
 
     private GadgetContent content;
      */
 
     /**
-     *	<p> A unique identifier for the text.</p>
+     *    <p> A unique identifier for the text.</p>
      */
     public String getText() {
-	return this.text;
+    return this.text;
     }
 
     /**
-     *	<p> Setter for the text.</p>
+     *    <p> Setter for the text.</p>
      */
     @Element("Content")
     void setText(String text) {
-	this.text = text;
+    this.text = text;
     }
 
     private String text;

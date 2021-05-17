@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6220818");
         WebTest webTest = new WebTest(args);
@@ -47,8 +47,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeServlet();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed.");
@@ -58,7 +58,7 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
- 
+
         URL url = new URL("http://" + host + ":" + port + contextRoot
                           + "/From");
         System.out.println("Connecting to: " + url.toString());

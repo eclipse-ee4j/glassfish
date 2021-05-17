@@ -45,7 +45,7 @@ public class TestServlet extends HttpServlet {
             sb.append(", ");
             sb.append(attrB);
         }
-        String output = sb.toString(); 
+        String output = sb.toString();
         writer.write(output);
         System.out.println(output);
     }

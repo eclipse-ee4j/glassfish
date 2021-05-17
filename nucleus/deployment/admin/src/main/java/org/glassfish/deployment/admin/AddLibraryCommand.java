@@ -66,16 +66,16 @@ public class AddLibraryCommand implements AdminCommand {
     @Inject
     ServerEnvironment env;
 
-    @Inject 
+    @Inject
     DomainXmlPersistence dxp;
 
-    @Inject 
-    UnprocessedConfigListener ucl; 
+    @Inject
+    UnprocessedConfigListener ucl;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AddLibraryCommand.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AddLibraryCommand.class);
 
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
         final Logger logger = context.getLogger();
 
@@ -85,10 +85,10 @@ public class AddLibraryCommand implements AdminCommand {
             libDir = new File(libDir, "applibs");
         }
 
-        // rename or copy the library file to the appropriate 
+        // rename or copy the library file to the appropriate
         // library directory
         try {
-            List<UnprocessedChangeEvent> unprocessed = 
+            List<UnprocessedChangeEvent> unprocessed =
                 new ArrayList<UnprocessedChangeEvent>();
 
             StringBuffer msg = new StringBuffer();
@@ -97,7 +97,7 @@ public class AddLibraryCommand implements AdminCommand {
                 if (libraryFile.exists()) {
                     DeploymentCommandUtils.renameUploadedFileOrCopyInPlaceFile(
                         libDir, libraryFile, logger, env);
-                    PropertyChangeEvent pe = new PropertyChangeEvent(libDir, 
+                    PropertyChangeEvent pe = new PropertyChangeEvent(libDir,
                         "add-library", null, libraryFile);
                     UnprocessedChangeEvent uce = new UnprocessedChangeEvent(
                         pe, "add-library");
@@ -115,12 +115,12 @@ public class AddLibraryCommand implements AdminCommand {
             // set the restart required flag
             UnprocessedChangeEvents uces = new UnprocessedChangeEvents(
                 unprocessed);
-            List<UnprocessedChangeEvents> ucesList = 
+            List<UnprocessedChangeEvents> ucesList =
                 new ArrayList<UnprocessedChangeEvents>();
             ucesList.add(uces);
-            ucl.unprocessedTransactedEvents(ucesList); 
+            ucl.unprocessedTransactedEvents(ucesList);
 
-            // touch the domain.xml so instances restart will synch 
+            // touch the domain.xml so instances restart will synch
             // over the libraries.
             dxp.touch();
 

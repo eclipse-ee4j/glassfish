@@ -50,7 +50,7 @@ public class UberMain {
                 System.getProperty("org.glassfish.embeddable.autoDelete", "true"));
 
         gf = GlassFishRuntime.bootstrap().newGlassFish(gfProps);
-        
+
         gf.start();
 
         CommandRunner cr = gf.getCommandRunner();

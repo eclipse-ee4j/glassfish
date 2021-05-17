@@ -54,10 +54,10 @@ public class HASSOFactory implements SSOFactory {
 
     @Inject
     private ServiceLocator services;
-   
+
     @Inject
     private JavaEEIOUtils ioUtils;
-    
+
     /**
      * Create a SingleSignOn valve
      * HASingleSignOnValve is created is global availability-enabled
@@ -68,8 +68,8 @@ public class HASSOFactory implements SSOFactory {
         String persistenceType = PersistenceType.REPLICATED.getType();
         return new HASingleSignOn(ioUtils,
                 getSsoEntryMetadataBackingStore(persistenceType, STORE_NAME, services));
-    }   
-    
+    }
+
     protected static synchronized BackingStore<String, HASingleSignOnEntryMetadata>
             getSsoEntryMetadataBackingStore(
             String persistenceType, String storeName, ServiceLocator services) {
@@ -96,7 +96,7 @@ public class HASSOFactory implements SSOFactory {
             try {
                 ssoEntryMetadataBackingStore = factory.createBackingStore(conf);
             } catch (BackingStoreException e) {
-                e.printStackTrace();  
+                e.printStackTrace();
             }
         }
 

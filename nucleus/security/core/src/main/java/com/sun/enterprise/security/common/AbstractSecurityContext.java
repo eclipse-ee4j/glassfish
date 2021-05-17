@@ -22,30 +22,30 @@ import javax.security.auth.Subject;
 
 /**
  * This base class defines the methods that Security Context should exhibit.
- * There are two places where a derived class are used. They are on the 
+ * There are two places where a derived class are used. They are on the
  * appclient side and ejb side. The derived classes can use thread local
  * storage to store the security contexts.
- * 
+ *
  * @author Harpreet Singh
  */
 public abstract class AbstractSecurityContext implements AppServSecurityContext, java.io.Serializable {
     // the principal that this security context represents.
     protected Principal initiator = null;
     protected Subject subject = null;
-    
+
     /**
      * This method should  be implemented by the subclasses to
      * return the caller principal. This information may be redundant
      * since the same information can be inferred by inspecting the
-     * Credentials of the caller. 
-     * @return The caller Principal. 
+     * Credentials of the caller.
+     * @return The caller Principal.
      */
     abstract public Principal getCallerPrincipal();
-    
+
     /**
-     * This method should be implemented by the subclasses to return 
+     * This method should be implemented by the subclasses to return
      * the Credentials of the caller principal.
-     * @return A credentials object associated with the current client 
+     * @return A credentials object associated with the current client
      * invocation.
      */
     abstract public Subject getSubject();

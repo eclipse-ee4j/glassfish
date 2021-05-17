@@ -69,10 +69,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
     private int timeOut = 0;
     private static boolean active = true;
     private TransactionFactory factory = null;
-	/*
-		Logger to log transaction messages
-	*/ 
-	static Logger _logger = LogDomains.getLogger(CurrentImpl.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+    static Logger _logger = LogDomains.getLogger(CurrentImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     /**Default CurrentImpl constructor.
      *
@@ -202,12 +202,12 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                 // Create the new transaction.
 
                 if (factory != null) {
-		    		if(_logger.isLoggable(Level.FINEST))
+                    if(_logger.isLoggable(Level.FINEST))
                     {
-						_logger.logp(Level.FINEST,"CurrentImpl","begin()",
-								"Before invoking create() on TxFactory");
+                        _logger.logp(Level.FINEST,"CurrentImpl","begin()",
+                                "Before invoking create() on TxFactory");
                     }
- 
+
                     if (Configuration.isLocalFactory()) {
                       controlImpl = ((TransactionFactoryImpl) factory).localCreate(timeOut);
                     } else {
@@ -232,9 +232,9 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                     }
                 }
             } catch( Throwable exc ) {
-				_logger.log(Level.WARNING,
-						"jts.unexpected_error_in_begin",exc);
-						
+                _logger.log(Level.WARNING,
+                        "jts.unexpected_error_in_begin",exc);
+
             }
         }
 
@@ -251,10 +251,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
         else
             try {
-				if(_logger.isLoggable(Level.FINEST))
+                if(_logger.isLoggable(Level.FINEST))
                     {
-						_logger.logp(Level.FINEST,"CurrentImpl","begin()",
-								"Before invoking CurrentTransaction.setCurrent(control,true)");
+                        _logger.logp(Level.FINEST,"CurrentImpl","begin()",
+                                "Before invoking CurrentTransaction.setCurrent(control,true)");
                     }
                 CurrentTransaction.setCurrent(controlImpl,true);
             }
@@ -269,10 +269,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
     }
 
-	//START RI PERFIMPROVEMENT
-	// This method is introduced to improve the performance. without this method external
-	// synchronization is required to associate the timeout with this transaction
-	// This method is not part of the standard Current interface
+    //START RI PERFIMPROVEMENT
+    // This method is introduced to improve the performance. without this method external
+    // synchronization is required to associate the timeout with this transaction
+    // This method is not part of the standard Current interface
     /**Creates a new Control object, containing new Terminator and Coordinator
      * objects.
      * <p>
@@ -386,12 +386,12 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                 // Create the new transaction.
 
                 if (factory != null) {
-		    		if(_logger.isLoggable(Level.FINEST))
+                    if(_logger.isLoggable(Level.FINEST))
                     {
-						_logger.logp(Level.FINEST,"CurrentImpl","begin()",
-								"Before invoking create() on TxFactory");
+                        _logger.logp(Level.FINEST,"CurrentImpl","begin()",
+                                "Before invoking create() on TxFactory");
                     }
- 
+
                     if (Configuration.isLocalFactory()) {
                       controlImpl = ((TransactionFactoryImpl) factory).localCreate(time_out);
                     } else {
@@ -416,9 +416,9 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                     }
                 }
             } catch( Throwable exc ) {
-				_logger.log(Level.WARNING,
-						"jts.unexpected_error_in_begin",exc);
-						
+                _logger.log(Level.WARNING,
+                        "jts.unexpected_error_in_begin",exc);
+
             }
         }
 
@@ -435,10 +435,10 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
 
         else
             try {
-				if(_logger.isLoggable(Level.FINEST))
+                if(_logger.isLoggable(Level.FINEST))
                     {
-						_logger.logp(Level.FINEST,"CurrentImpl","begin()",
-								"Before invoking CurrentTransaction.setCurrent(control,true)");
+                        _logger.logp(Level.FINEST,"CurrentImpl","begin()",
+                                "Before invoking CurrentTransaction.setCurrent(control,true)");
                     }
                 CurrentTransaction.setCurrent(controlImpl,true);
             }
@@ -452,7 +452,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
         }
 
     }
-	//END RI PERFIMPROVEMENT
+    //END RI PERFIMPROVEMENT
 
 
     /**Completes the current transaction.
@@ -586,13 +586,13 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
             }
             // Commit the transaction.
 
-	    try{
-            	term.commit(reportHeuristics);
+        try{
+                term.commit(reportHeuristics);
             } catch (TRANSACTION_ROLLEDBACK e) {
                 // ADDED (Ram J) (10/15/01) To handle asynchronous aborts. End
                 // thread-tx association before re-throwing exception. This is
                 // because commit/rollback operation by a different thread
-                // does not set all other thread's control's status to INACTIVE 
+                // does not set all other thread's control's status to INACTIVE
                 // anymore, for performance purposes.
                 CurrentTransaction.endCurrent(true);
                 throw e;
@@ -737,7 +737,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                 // ADDED (Ram J) (10/15/01) To handle asynchronous aborts. End
                 // thread-tx association before re-throwing exception. This is
                 // because commit/rollback operation by a different thread
-                // does not set all other thread's control's status to INACTIVE 
+                // does not set all other thread's control's status to INACTIVE
                 // anymore, for performance purposes.
                 CurrentTransaction.endCurrent(true);
                 //throw e; // no need to throw this for rollback operation.
@@ -856,7 +856,7 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
     }
 
     public int get_timeout() {
-	return timeOut;
+    return timeOut;
     }
 
     /**Returns the current ControlImpl object.
@@ -907,9 +907,9 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
         ControlImpl cImpl = CurrentTransaction.endCurrent(false);
         if(_logger.isLoggable(Level.FINEST))
         {
-			_logger.logp(Level.FINEST,"CurrentImpl","suspend()",
-					"Current thread has been disassociated from control :"
-					+cImpl);
+            _logger.logp(Level.FINEST,"CurrentImpl","suspend()",
+                    "Current thread has been disassociated from control :"
+                    +cImpl);
         }
 
         if (Configuration.isLocalFactory()) {
@@ -983,9 +983,9 @@ public class CurrentImpl extends org.omg.CORBA.LocalObject
                 CurrentTransaction.setCurrent(contImpl,false);
                 if(_logger.isLoggable(Level.FINEST))
                 {
-					_logger.logp(Level.FINEST,"CurrentImpl","resume(control)",
-							"Current thread has been associated with control :"
-							+contImpl);
+                    _logger.logp(Level.FINEST,"CurrentImpl","resume(control)",
+                            "Current thread has been associated with control :"
+                            +contImpl);
                 }
             }
 

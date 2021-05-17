@@ -30,7 +30,7 @@ import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import org.glassfish.persistence.common.I18NHelper;
 
-/** 
+/**
  *
  * @author  Michael Bouschen
  * @version 0.1
@@ -41,16 +41,16 @@ public class ErrorMsg
      *
      */
     protected String context = null;
-    
+
     /**
      * I18N support
      */
-	protected final static ResourceBundle messages = 
+    protected final static ResourceBundle messages =
       I18NHelper.loadBundle(ErrorMsg.class);
 
     /** The logger */
     private static Logger logger = LogHelperQueryCompilerJDO.getLogger();
-    
+
     /**
      *
      */
@@ -58,7 +58,7 @@ public class ErrorMsg
     {
         return context;
     }
-    
+
     /**
      *
      */
@@ -68,14 +68,14 @@ public class ErrorMsg
     }
 
     /**
-	 * Indicates an error situation. 
+     * Indicates an error situation.
      * @param line line number
      * @param col column number
      * @param msg error message
-	 */
+     */
     public void error(int line, int col, String msg)
         throws JDOQueryException
-	{
+    {
         JDOQueryException ex;
         if (line > 1)
         {
@@ -91,7 +91,7 @@ public class ErrorMsg
             ex = new JDOQueryException(I18NHelper.getMessage(
                 messages, "jqlc.errormsg.generic.msgcolumn", args)); //NOI18N
         }
-        else 
+        else
         {
             Object args[] = {context, msg};
             ex = new JDOQueryException(I18NHelper.getMessage(
@@ -99,17 +99,17 @@ public class ErrorMsg
         }
         logger.throwing("jqlc.ErrorMsg", "error", ex);
         throw ex;
-	}
-    
+    }
+
     /**
-	 * Indicates that a feature is not supported by the current release. 
+     * Indicates that a feature is not supported by the current release.
      * @param line line number
      * @param col column number
      * @param msg message
-	 */
+     */
     public void unsupported(int line, int col, String msg)
         throws JDOUnsupportedOptionException
-	{
+    {
         JDOUnsupportedOptionException ex;
         if (line > 1)
         {
@@ -124,41 +124,41 @@ public class ErrorMsg
             Object args[] = {context, new Integer(col), msg};
             ex = new JDOUnsupportedOptionException(I18NHelper.getMessage(
                 messages, "jqlc.errormsg.generic.msgcolumn", args)); //NOI18N
-                                                                         
+
         }
-        else 
+        else
         {
             Object args[] = {context, msg};
             ex = new JDOUnsupportedOptionException(I18NHelper.getMessage(
                 messages, "jqlc.errormsg.generic.msg", args)); //NOI18N
-        }	
+        }
         logger.throwing("jqlc.ErrorMsg", "unsupported", ex);
         throw ex;
     }
-    
+
     /**
-	 * Indicates a fatal situation (implementation error).
+     * Indicates a fatal situation (implementation error).
      * @param msg error message
-	 */
-	public void fatal(String msg)
+     */
+    public void fatal(String msg)
         throws JDOFatalInternalException
-	{
+    {
         JDOFatalInternalException ex = new JDOFatalInternalException(msg);
         logger.throwing("jqlc.ErrorMsg", "fatal", ex);
         throw ex;
-	}
+    }
 
     /**
-	 * Indicates a fatal situation (implementation error).
+     * Indicates a fatal situation (implementation error).
      * @param msg error message
-	 */
-	public void fatal(String msg, Exception nested)
+     */
+    public void fatal(String msg, Exception nested)
         throws JDOFatalInternalException
-	{
+    {
         JDOFatalInternalException ex = new JDOFatalInternalException(msg, nested);
         logger.throwing("jqlc.ErrorMsg", "fatal", ex);
         throw ex;
-	}
+    }
 }
 
 

@@ -27,8 +27,8 @@ public class Client extends HttpServlet {
 
         @WebServiceRef SubtractNumbersService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

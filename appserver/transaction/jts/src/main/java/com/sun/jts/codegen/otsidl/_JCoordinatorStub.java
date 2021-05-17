@@ -461,7 +461,7 @@ public class _JCoordinatorStub extends org.omg.CORBA.portable.ObjectImpl impleme
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:otsidl/JCoordinator:1.0", 
+    "IDL:otsidl/JCoordinator:1.0",
     "IDL:omg.org/CosTransactions/Coordinator:1.0"};
 
   public String[] _ids ()

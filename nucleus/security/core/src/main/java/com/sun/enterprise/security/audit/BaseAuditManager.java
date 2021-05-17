@@ -61,9 +61,9 @@ import jakarta.inject.Singleton;
  * that specific type in the typedModules field which subclasses can refer
  * to directly.
  * <p>
- * (This implementation was largely refactored from the original 
+ * (This implementation was largely refactored from the original
  * BaseAuditManager implementation that combined nucleus and app server features.)
- * 
+ *
  * @author  Harpreet Singh
  * @author  Shing Wai Chan
  * @author tjquinn
@@ -73,19 +73,19 @@ import jakarta.inject.Singleton;
 public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager {
     static final String NAME = "name";
     static final String CLASSNAME = "classname";
-    
+
     // For speed, maintain a separate list of audit modules of the specified
     // module subtype (if any).  This allows subclasses to have very efficient
     // access to the specified audit modules which the subclass audit manager
     // deals with.
     protected List<T> typedModules = Collections.synchronizedList(new ArrayList<T>());
     private Class<T> typedModuleClass = null; // typically set by postConstruct of a subclass invoking setTypeClass
-    
-    private static final Logger _logger = 
+
+    private static final Logger _logger =
              SecurityLoggerInfo.getLogger();
 
     private static final LocalStringManagerImpl _localStrings =
-	new LocalStringManagerImpl(BaseAuditManager.class);
+    new LocalStringManagerImpl(BaseAuditManager.class);
 
     private List<BaseAuditModule> instances = Collections.synchronizedList(new ArrayList<BaseAuditModule>());
     // just a copy of names of the audit classes - helpful for log messages
@@ -93,16 +93,16 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     // seems reasonable.
     private Map<BaseAuditModule,String> moduleToNameMap = new HashMap<BaseAuditModule,String>();
     private Map<String,BaseAuditModule> nameToModuleMap = new HashMap<String,BaseAuditModule>();
-    // make this accessible to the containers so that the cost of non-audit case, 
+    // make this accessible to the containers so that the cost of non-audit case,
     // is just a comparision.
     protected boolean auditOn = false;
-   
+
     @Inject
     private ServerContext serverContext;
-    
-    private static final String AUDIT_MGR_SERVER_STARTUP_KEY = 
+
+    private static final String AUDIT_MGR_SERVER_STARTUP_KEY =
         "auditmgr.serverStartup";
-    private static final String AUDIT_MGR_SERVER_SHUTDOWN_KEY = 
+    private static final String AUDIT_MGR_SERVER_SHUTDOWN_KEY =
         "auditmgr.serverShutdown";
 
     /**
@@ -114,7 +114,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
         try {
             SecurityService securityBean = serverContext.getDefaultServices().getService(SecurityService.class,
                     ServerEnvironment.DEFAULT_INSTANCE_NAME);
-            
+
             assert(securityBean != null);
             // @todo will be removed to incorporate the new structure.
             //v3:Commented boolean auditFlag = securityBean.isAuditEnabled();
@@ -157,15 +157,15 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
                     }
                 } catch(Exception ex){
                      String msg = _localStrings.getLocalString(
-                         "auditmgr.loaderror", 
+                         "auditmgr.loaderror",
                          "Audit: Cannot load AuditModule = {0}",
                          //V3:Commented new Object[]{ am[i].getName() });
                          new Object[]{ it.getName() });
-                     _logger.log(Level.WARNING, msg, ex);                    
+                     _logger.log(Level.WARNING, msg, ex);
                 }
             }
         } catch (Exception e) {
-            String msg = _localStrings.getLocalString("auditmgr.badinit", 
+            String msg = _localStrings.getLocalString("auditmgr.badinit",
                    "Audit: Cannot load Audit Module Initialization information. AuditModules will not be loaded.");
             _logger.log(Level.WARNING, msg, e);
         }
@@ -175,9 +175,9 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
      * Add the given audit module to the list of loaded audit module.
      * Adding the same name twice will override previous one.
      * @param name of auditModule
-     * @param am an instance of a class extending BaseAuditModule that has been 
+     * @param am an instance of a class extending BaseAuditModule that has been
      * successfully loaded into the system.
-     * @exception 
+     * @exception
      */
     public BaseAuditModule addAuditModule(String name, String classname, Properties props)
             throws Exception {
@@ -194,25 +194,25 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
         }
         return am;
     }
-    
+
     private boolean isAuditModuleOfParameterizedType(final BaseAuditModule am) {
         return (typedModuleClass != null && typedModuleClass.isAssignableFrom(am.getClass()));
     }
-    
+
     private <U extends BaseAuditModule> List<U> copyAndAdd(final List<U> orig, final U am) {
         final List<U> list = new ArrayList<U>();
         Collections.copy(orig, list);
         list.add(am);
         return list;
     }
-    
+
     private <U extends BaseAuditModule> List<U> copyAndRemove(final List<U> orig, final U am) {
         final List<U> list = new ArrayList<U>();
         Collections.copy(orig, list);
         list.remove(am);
         return list;
     }
-    
+
     /**
      * Remove the audit module of given name from the loaded list.
      * @param name of auditModule
@@ -255,15 +255,15 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
         auditModule.init(props);
         return auditModule;
     }
-    
+
     public LocalStringManagerImpl getLocalStrings() {
         return _localStrings;
     }
-    
+
     public Logger getLogger() {
         return _logger;
     }
-    
+
     /**
      * logs the authentication call for all the loaded modules.
      * @see com.sun.appserv.security.BaseAuditModule.authentication
@@ -275,7 +275,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
                     am.authentication(user, realm, success);
                 } catch (Exception ex) {
                     final String name = moduleName(am);
-                    final String msg = 
+                    final String msg =
                         _localStrings.getLocalString(
                             "auditmgr.authentication",
                             " Audit Module {0} threw the following exception during authentication:",
@@ -285,7 +285,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
             }
         }
     }
-    
+
     public void serverStarted(){
         if (auditOn) {
             for (BaseAuditModule am : instances) {
@@ -293,7 +293,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
                     am.serverStarted();
                 } catch (Exception ex) {
                     final String name = moduleName(am);
-                    final String msg = 
+                    final String msg =
                         _localStrings.getLocalString(
                             AUDIT_MGR_SERVER_STARTUP_KEY,
                             " Audit Module {0} threw the following exception during server startup :",
@@ -311,7 +311,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
                     am.serverShutdown();
                 } catch (Exception ex) {
                     final String name = moduleName(am);
-                    final String msg = 
+                    final String msg =
                         _localStrings.getLocalString(
                             AUDIT_MGR_SERVER_SHUTDOWN_KEY,
                             " Audit Module {0} threw the following exception during server shutdown :",
@@ -325,15 +325,15 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     public void setAuditOn(boolean auditOn) {
         this.auditOn = auditOn;
     }
-    
+
     public boolean isAuditOn() {
         return auditOn;
     }
-    
+
     protected String moduleName(final BaseAuditModule am) {
         return moduleToNameMap.get(am);
     }
-    
+
     protected List<T> instances(final Class<T> c) {
         final List<T> result = new ArrayList<T>();
         for (BaseAuditModule am : instances) {

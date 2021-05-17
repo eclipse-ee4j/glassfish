@@ -49,7 +49,7 @@ public @interface Attribute {
      * <p>
      * Therefore, for example, a field name "httpBufferSize" would yield
      * "http-buffer-size", and a method name "setThreadCount" would yield
-     * "thread-count" 
+     * "thread-count"
      */
     String value() default "";
 
@@ -94,7 +94,7 @@ public @interface Attribute {
      * @return default value as String
      */
     String defaultValue() default "\u0000";
-        
+
     /** Specifies the data type. It should be the fully qualified name of
      *  the class that identifies the real data type. For attributes that
      *  are of type defined by basic Java primitives (or wrappers), there is

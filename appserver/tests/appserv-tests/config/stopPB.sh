@@ -31,18 +31,18 @@ esac
 if [ $OS = "win32" ]; then
     for x in `ps|grep "startPB"|cut -d' ' -f 2`
     do
-        echo "killing startPB process with processid: $x"; 
+        echo "killing startPB process with processid: $x";
         kill -9 $x
     done
     for x in `ps|grep "pointbase"|cut -d' ' -f 2`
     do
-        echo "killing pointbase process with processid: $x"; 
+        echo "killing pointbase process with processid: $x";
         kill -9 $x
     done
 else
     for x in `ps -ef|grep "java"|cut -d' ' -f 3`
     do
-        echo "killing java process with processid: $x"; 
+        echo "killing java process with processid: $x";
         kill -9 $x
     done
 fi

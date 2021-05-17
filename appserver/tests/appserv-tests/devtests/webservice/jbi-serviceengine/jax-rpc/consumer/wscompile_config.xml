@@ -19,7 +19,7 @@
 
 <configuration
   xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
-  <wsdl 
+  <wsdl
       location="FindInterest.wsdl"
       packageName="myejb"/>
 </configuration>

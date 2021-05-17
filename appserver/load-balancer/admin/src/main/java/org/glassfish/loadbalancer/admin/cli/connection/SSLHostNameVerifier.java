@@ -84,11 +84,11 @@ public class SSLHostNameVerifier implements HostnameVerifier {
                 return true;
             }
         }
-		if (session != null) {
-			String msg = LbLogUtil.getStringManager().getString("NotCertMatch",
-					hostname, new String(session.getId()));
-			LbLogUtil.getLogger().warning(msg);
-		}
+        if (session != null) {
+            String msg = LbLogUtil.getStringManager().getString("NotCertMatch",
+                    hostname, new String(session.getId()));
+            LbLogUtil.getLogger().warning(msg);
+        }
         return false;
     }
 }

@@ -73,7 +73,7 @@
               <method-name>test1</method-name>
           </method>
           <trans-attribute>Required</trans-attribute>
-      </container-transaction> 
+      </container-transaction>
       <container-transaction>
           <method>
               <ejb-name>TxBeanB</ejb-name>
@@ -81,7 +81,7 @@
               <method-name>test2</method-name>
           </method>
           <trans-attribute>Required</trans-attribute>
-      </container-transaction> 
+      </container-transaction>
       <container-transaction>
           <method>
               <ejb-name>TxBeanB</ejb-name>
@@ -89,6 +89,6 @@
               <method-name>getCommitStatus</method-name>
           </method>
           <trans-attribute>NotSupported</trans-attribute>
-      </container-transaction> 
+      </container-transaction>
   </assembly-descriptor>
 </ejb-jar>

@@ -21,32 +21,32 @@ import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import java.util.Set;
 
 /**
- * This type defines the behaviour of a J2EE Component containing 
+ * This type defines the behaviour of a J2EE Component containing
  * resources env references.
  *
  * @author  Jeome Dochez
- * @version 
+ * @version
  */
 public interface ResourceEnvReferenceContainer {
-    
+
     /**
      * Add a resource environment reference to myself
-     * 
+     *
      * @param the new resource environment ref
      */
     public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference);
-    
+
     /**
      * Return a resource environment reference by the same name or throw an IllegalArgumentException.
      *
      * @param the resource environment reference name
      */
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name);
-    
+
    /**
     * Return the set of resource environment references
     */
     public Set getResourceEnvReferenceDescriptors();
-   
+
 }
 

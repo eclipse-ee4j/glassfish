@@ -132,7 +132,7 @@ public class DistributedEJBTimerService
             //throw new IllegalStateException("EJB Timer service is null. "
                     //+ "Cannot migrate timers for: " + serverId);
         }
-        
+
         return result;
     }
 

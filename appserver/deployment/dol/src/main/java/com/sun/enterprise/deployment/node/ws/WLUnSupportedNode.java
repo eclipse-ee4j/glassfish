@@ -59,6 +59,6 @@ public class WLUnSupportedNode extends DeploymentDescriptorNode {
 
     @Override
     public void addDescriptor(Object descriptor) {
-        
+
     }
 }

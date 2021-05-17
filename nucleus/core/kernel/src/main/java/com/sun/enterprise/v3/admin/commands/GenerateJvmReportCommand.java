@@ -46,22 +46,22 @@ import org.glassfish.config.support.TargetType;
 @ExecuteOn(value = {RuntimeType.INSTANCE}, ifNeverStarted=FailurePolicy.Error)
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="generate-jvm-report", 
+        opType=RestEndpoint.OpType.GET,
+        path="generate-jvm-report",
         description="Generate Report",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="generate-jvm-report", 
+        opType=RestEndpoint.OpType.GET,
+        path="generate-jvm-report",
         description="Generate Report",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=JavaConfig.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="generate-jvm-report", 
+        opType=RestEndpoint.OpType.GET,
+        path="generate-jvm-report",
         description="Generate Report",
         params={
             @RestParam(name="target", value="$grandparent")
@@ -69,14 +69,14 @@ import org.glassfish.config.support.TargetType;
 })
 @AccessRequired(resource="domain/jvm", action="read")
 public class GenerateJvmReportCommand implements AdminCommand {
-    
-    @Param(name="target", optional=true) 
+
+    @Param(name="target", optional=true)
     String target;
-    
+
     @Param(name="type", optional=true, defaultValue="summary",
            acceptableValues = "summary, thread, class, memory, log")
     String type;
-    
+
     private MBeanServer mbs = null;  //needs to be injected, I guess
 
     public void execute(AdminCommandContext ctx) {
@@ -86,7 +86,7 @@ public class GenerateJvmReportCommand implements AdminCommand {
         report.setMessage(result);
         report.setActionExitCode(ExitCode.SUCCESS);
     }
-    
+
     private synchronized void prepare() {
         mbs = ManagementFactory.getPlatformMBeanServer();
     }

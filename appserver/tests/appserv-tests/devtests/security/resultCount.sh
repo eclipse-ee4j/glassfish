@@ -24,11 +24,11 @@ PASSED=0
 FAILED=0
 for i in $FILES
 do
-	echo "input file=$i"
-	P=`grep "\"pass\"" $i |  wc -l`
-	F=`grep "\"fail\"" $i |  wc -l`
-	PASSED=`expr $PASSED + $P`
-	FAILED=`expr $FAILED + $F`
+    echo "input file=$i"
+    P=`grep "\"pass\"" $i |  wc -l`
+    F=`grep "\"fail\"" $i |  wc -l`
+    PASSED=`expr $PASSED + $P`
+    FAILED=`expr $FAILED + $F`
 done
 TOTAL_RUN=`expr $PASSED + $FAILED `
 DNR=`expr $TOTAL - $TOTAL_RUN `

@@ -21,7 +21,7 @@ package com.sun.enterprise.deployment.web;
     * in the wen application. */
 
 public interface SecurityRoleReference {
-    
+
     /** The one in the dd. */
     public SecurityRole getSecurityRoleLink();
     public void setSecurityRoleLink(SecurityRole securityRole);

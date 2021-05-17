@@ -24,38 +24,38 @@ import org.glassfish.deployment.common.Descriptor;
  * XML element as well as the runtime principal to be used.
  *
  * @author Sanjeev Krishnan
- */ 
+ */
 
 public final class RunAsIdentityDescriptor extends Descriptor {
 
     private String roleName="";
     private String principal="";
 
-    public RunAsIdentityDescriptor() 
+    public RunAsIdentityDescriptor()
     {}
 
-    public RunAsIdentityDescriptor(String description) 
+    public RunAsIdentityDescriptor(String description)
     {
-	super("no name", description);
+    super("no name", description);
     }
 
     public void setRoleName(String roleName)
     {
-	this.roleName = roleName;
+    this.roleName = roleName;
     }
 
     public String getRoleName()
     {
-	return roleName;
+    return roleName;
     }
 
     public void setPrincipal(String principal)
     {
-	this.principal = principal;
+    this.principal = principal;
     }
 
     public String getPrincipal()
     {
-	return principal;
-    }    
+    return principal;
+    }
 }

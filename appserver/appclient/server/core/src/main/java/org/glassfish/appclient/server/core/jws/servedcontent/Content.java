@@ -42,7 +42,7 @@ public interface Content {
     public void start();
 
     public void stop();
-    
+
     public class Adapter implements Content {
 
         private State state = State.AVAILABLE;

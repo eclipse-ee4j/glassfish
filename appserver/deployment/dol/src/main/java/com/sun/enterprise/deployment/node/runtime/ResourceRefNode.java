@@ -35,14 +35,14 @@ import org.w3c.dom.Node;
  * This node handles the runtime deployment descriptors for resource-ref tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceDescriptor> {
 
     private ResourceReferenceDescriptor descriptor;
 
-    public ResourceRefNode() {        
-        registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL), 
+    public ResourceRefNode() {
+        registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL),
                                DefaultResourcePrincipalNode.class, "setResourcePrincipal");
     }
 
@@ -53,7 +53,7 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
@@ -75,7 +75,7 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
     }
 
     @Override
-    public void addDescriptor(Object newDescriptor) {    
+    public void addDescriptor(Object newDescriptor) {
         if (descriptor == null) {
             DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment.backend.addDescriptorFailure",
                 new Object[] {newDescriptor, this});
@@ -95,34 +95,34 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor rrDescriptor) {        
+    public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor rrDescriptor) {
         Node rrNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(rrNode, TagNames.RESOURCE_REFERENCE_NAME, rrDescriptor.getName());
         appendTextChild(rrNode, RuntimeTagNames.JNDI_NAME, rrDescriptor.getJndiName());
         if (rrDescriptor.getResourcePrincipal() != null) {
             DefaultResourcePrincipalNode drpNode = new DefaultResourcePrincipalNode();
-            drpNode.writeDescriptor(rrNode, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL, 
+            drpNode.writeDescriptor(rrNode, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL,
                                     rrDescriptor.getResourcePrincipal());
         }
         return rrNode;
     }
-    
+
     /**
      * writes all the runtime information for resources references
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the J2EE component containing ejb references
-     */    
+     */
     public static void writeResourceReferences(Node parent, ResourceReferenceContainer descriptor) {
         // resource-ref*
         Iterator rrs = descriptor.getResourceReferenceDescriptors().iterator();
         if (rrs.hasNext()) {
-            
-            ResourceRefNode rrNode = new ResourceRefNode();                
+
+            ResourceRefNode rrNode = new ResourceRefNode();
             while (rrs.hasNext()) {
                 rrNode.writeDescriptor(parent, TagNames.RESOURCE_REFERENCE,
                     (ResourceReferenceDescriptor) rrs.next());
             }
-        }  
+        }
     }
 }

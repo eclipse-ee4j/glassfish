@@ -249,7 +249,7 @@ public class WebappClassLoader
      */
     private ConcurrentLinkedQueue<Permission> permissionList =
         new ConcurrentLinkedQueue<Permission>();
-    
+
     //holder for declared and ee permissions
     private PermsHolder permissionsHolder;
 
@@ -405,9 +405,9 @@ public class WebappClassLoader
             this.clazz = clazz;
         }
 
-        public ClassLoader run() {       
+        public ClassLoader run() {
             return clazz.getClassLoader();
-        }           
+        }
     }
 
     // START PE 4985680
@@ -541,7 +541,7 @@ public class WebappClassLoader
         }
 
         if (securityManager != null) {
-            
+
             securityManager.checkSecurityAccess(
                     DDPermissionsLoader.SET_EE_POLICY);
 
@@ -592,12 +592,12 @@ public class WebappClassLoader
             permissionList.add(permission);
         }
     }
-    
-    
+
+
     @Override
-    public void addDeclaredPermissions(PermissionCollection declaredPc 
+    public void addDeclaredPermissions(PermissionCollection declaredPc
             ) throws SecurityException {
-        
+
         if (securityManager != null) {
             securityManager.checkSecurityAccess(
                     DDPermissionsLoader.SET_EE_POLICY);
@@ -605,11 +605,11 @@ public class WebappClassLoader
             permissionsHolder.setDeclaredPermissions(declaredPc);
         }
     }
-    
+
     @Override
-    public void addEEPermissions(PermissionCollection eePc) 
+    public void addEEPermissions(PermissionCollection eePc)
          throws SecurityException {
-        
+
         if (securityManager != null) {
             securityManager.checkSecurityAccess(
                     DDPermissionsLoader.SET_EE_POLICY);
@@ -1368,7 +1368,7 @@ public class WebappClassLoader
     @Override
     public Enumeration<URL> getResources(String name) throws IOException {
 
-	final Enumeration[] enums = new Enumeration[2];
+    final Enumeration[] enums = new Enumeration[2];
 
         Enumeration<URL> localResources = findResources(name);
         Enumeration<URL> parentResources = null;
@@ -1597,7 +1597,7 @@ public class WebappClassLoader
         String codeUrl = codeSource.getLocation().toString();
         PermissionCollection pc = loaderPC.get(codeUrl);
         if (pc == null) {
-            pc = new Permissions();            
+            pc = new Permissions();
 
             PermissionCollection spc = super.getPermissions(codeSource);
 
@@ -1605,16 +1605,16 @@ public class WebappClassLoader
             while (permsa.hasMoreElements()) {
                 Permission p = permsa.nextElement();
                 pc.add(p);
-            }                 
-                
+            }
+
             Iterator<Permission> perms = permissionList.iterator();
             while (perms.hasNext()) {
                 Permission p = perms.next();
                 pc.add(p);
             }
-            
+
             //get the declared and EE perms
-            PermissionCollection pc1 = 
+            PermissionCollection pc1 =
                 permissionsHolder.getPermissions(codeSource, null);
             if  (pc1 != null) {
                 Enumeration<Permission> dperms =  pc1.elements();
@@ -1623,8 +1623,8 @@ public class WebappClassLoader
                     pc.add(p);
                 }
             }
-                
-            PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl,pc);                
+
+            PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl,pc);
             if (tmpPc != null) {
                 pc = tmpPc;
             }
@@ -1705,7 +1705,7 @@ public class WebappClassLoader
         }
 
         addOverridablePackage("com.sun.faces.extensions");
-        
+
         permissionsHolder = new PermsHolder();
     }
 
@@ -2954,7 +2954,7 @@ public class WebappClassLoader
     protected boolean isPackageSealed(String name, Manifest man) {
 
         String path = name.replace('.', '/') + '/';
-        Attributes attr = man.getAttributes(path); 
+        Attributes attr = man.getAttributes(path);
         String sealed = null;
         if (attr != null) {
             sealed = attr.getValue(Name.SEALED);
@@ -3286,8 +3286,8 @@ public class WebappClassLoader
 
         String version = null;
 
-	SecurityManager sm = System.getSecurityManager();
-	if (sm != null) {
+    SecurityManager sm = System.getSecurityManager();
+    if (sm != null) {
             version = AccessController.doPrivileged(
                 new PrivilegedAction<String>() {
                     public String run() {
@@ -3320,7 +3320,7 @@ public class WebappClassLoader
     /**
      * To determine whether one should delegate to parent for loading
      * resource of the given resource name.
-     * 
+     *
      * @param name
      */
     private boolean isResourceDelegate(String name) {

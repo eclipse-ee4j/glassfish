@@ -32,7 +32,7 @@ import org.glassfish.cditest.user.model.UserImpl;
  * <p>
  * Implementation of the UserService.
  * </p>
- * 
+ *
  * @author chaoslayer
  */
 @Stateless
@@ -45,16 +45,16 @@ public class UserServiceImpl implements UserService {
      * <p>
      * Add a new user
      * </p>
-     * 
+     *
      * <p>
      * The implementation must ensure that the provided user object is persisted
      * before returning the assigned persistent user ID.
      * </p>
-     * 
+     *
      * @param user
      *            The user object to persist
      * @return The newly created persistent ID of the user object
-     * 
+     *
      * @see UserImpl
      */
     @Override
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
      * <p>
      * Get a {@link User} by the user id
      * </p>
-     * 
+     *
      * @param userid
      *            The userid to search for
      * @return A {@link User} object or <code>null</code> if no user was found

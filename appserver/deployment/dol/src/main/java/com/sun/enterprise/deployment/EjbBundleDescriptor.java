@@ -35,7 +35,7 @@ public abstract class EjbBundleDescriptor extends CommonResourceBundleDescriptor
     implements WritableJndiNameEnvironment, EjbReferenceContainer,
                ResourceEnvReferenceContainer, ResourceReferenceContainer,
                ServiceReferenceContainer, MessageDestinationReferenceContainer {
- 
+
     public abstract Set<EjbInterceptor> getInterceptors();
     public abstract EjbInterceptor getInterceptorByClassName(String className);
     public abstract EjbDescriptor getEjbByName(String name);

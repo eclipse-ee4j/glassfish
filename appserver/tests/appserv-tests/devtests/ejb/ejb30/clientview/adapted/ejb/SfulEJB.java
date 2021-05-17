@@ -103,7 +103,7 @@ import jakarta.annotation.PreDestroy;
         // Ignore input parameter.  client will use resulting unset state to
         // ensure correct mapping of @Init
 
-        System.out.println("In SfulEJB::adaptedCreate1(int ignore) method. " 
+        System.out.println("In SfulEJB::adaptedCreate1(int ignore) method. "
                            + "**ignoring** state=" + state);
 
         System.out.println("Caller principal = " + ctx.getCallerPrincipal());
@@ -113,7 +113,7 @@ import jakarta.annotation.PreDestroy;
     @Init("createFoo")
     public void adaptedCreate2(int argument1) {
         state = argument1;
-        System.out.println("In SfulEJB::adaptedCreate2(int arg) method " 
+        System.out.println("In SfulEJB::adaptedCreate2(int arg) method "
                            + "state=" + state);
 
         System.out.println("Caller principal = " + ctx.getCallerPrincipal());
@@ -154,7 +154,7 @@ import jakarta.annotation.PreDestroy;
     public void remove() {}
 
     @Remove(retainIfException=true)
-    public void removeRetainIfException(boolean throwException) 
+    public void removeRetainIfException(boolean throwException)
         throws Exception {
         if( throwException ) {
             throw new Exception("exception from retainIfException. " +

@@ -58,8 +58,8 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
-/** 
- * Utility methods for deployment. 
+/**
+ * Utility methods for deployment.
  */
 
 public class DeploymentUtils {
@@ -70,7 +70,7 @@ public class DeploymentUtils {
     private static final String EXCEPTION_CAUGHT = "NCLS-DEPLOYMENT-00010";
 
     public static final String DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentUtils.class);
 
     private static final String V2_COMPATIBILITY = "v2";
@@ -93,7 +93,7 @@ public class DeploymentUtils {
 
     /**
      * Computes the checksum of the URIs of files contained in a directory.
-     * 
+     *
      * @param directory the directory for which to compute a checksum
      * @return checksum calculated from URIs of files in the directory
      */
@@ -150,7 +150,7 @@ public class DeploymentUtils {
     public static Artifacts generatedArtifacts(final DeploymentContext dc) {
         return Artifacts.get(dc, GENERATED_ARTIFACTS_KEY_PREFIX);
     }
-    
+
     /**
      * Returns the generated artifacts object derived from the properties
      * saved with the specified Application
@@ -173,7 +173,7 @@ public class DeploymentUtils {
 
     // check if the archive matches the specified archive type
     public static boolean isArchiveOfType(ReadableArchive archive, ArchiveType archiveType, DeploymentContext context, ServiceLocator locator) {
-        if (archive == null || archiveType == null) { 
+        if (archive == null || archiveType == null) {
             return false;
         }
         String type = archiveType.toString();
@@ -182,11 +182,11 @@ public class DeploymentUtils {
             return type.equals(context.getArchiveHandler().getArchiveType());
         }
         try {
-            ArchiveDetector detector = locator.getService(ArchiveDetector.class, type); 
+            ArchiveDetector detector = locator.getService(ArchiveDetector.class, type);
             if (detector == null) {
                 return false;
             }
-            return detector.handles(archive); 
+            return detector.handles(archive);
         } catch (IOException ioe) {
             LogRecord lr = new LogRecord(Level.WARNING, EXCEPTION_CAUGHT);
             Object args[] = { ioe.getMessage() };
@@ -203,8 +203,8 @@ public class DeploymentUtils {
 
    /**
      * @param pathName
-     * @return the default value of the EE name. 
-     * The default name is the pathname with any filename extension 
+     * @return the default value of the EE name.
+     * The default name is the pathname with any filename extension
      * (.jar, .war, .rar) removed, but with any directory names included.
      */
     public static String getDefaultEEName(String pathName) {
@@ -230,14 +230,14 @@ public class DeploymentUtils {
     }
 
     /**
-     * This method returns the relative file path of an embedded module to 
+     * This method returns the relative file path of an embedded module to
      * the application root.
-     * For example, if the module is expanded/located at 
+     * For example, if the module is expanded/located at
      * $domain_dir/applications/j2ee-apps/foo/fooEJB_jar,
      * this method will return fooEJB_jar
      *
      *@param appRootPath The path of the application root which
-     *                   contains the module 
+     *                   contains the module
      *                   e.g. $domain_dir/applications/j2ee-apps/foo
      *@param moduleUri The module uri
      *                 e.g. fooEJB.jar
@@ -254,14 +254,14 @@ public class DeploymentUtils {
     }
 
     /**
-     * This method returns the file path of an embedded module. 
-     * For example, if the module is expanded/located at 
+     * This method returns the file path of an embedded module.
+     * For example, if the module is expanded/located at
      * $domain_dir/applications/j2ee-apps/foo/fooEJB_jar,
-     * this method will return 
+     * this method will return
      * $domain_dir/applications/j2ee-apps/foo/fooEJB_jar
      *
      *@param appRootPath The path of the application root which
-     *                   contains the module 
+     *                   contains the module
      *                   e.g. $domain_dir/applications/j2ee-apps/foo
      *@param moduleUri The module uri
      *                 e.g. fooEJB.jar
@@ -287,12 +287,12 @@ public class DeploymentUtils {
     }
 
     public static void validateApplicationName(String name) {
-        if (name.indexOf('/') != -1) { 
-            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "/", name)); 
+        if (name.indexOf('/') != -1) {
+            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "/", name));
         } else if (name.indexOf('#') != -1) {
-            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "#", name)); 
+            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", "#", name));
         } else if (name.indexOf(';') != -1) {
-            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", ";", name)); 
+            throw new IllegalArgumentException(localStrings.getLocalString("illegal_char_in_name", "Illegal character [{0}] in the name [{1}].", ";", name));
         }
         return;
     }
@@ -349,12 +349,12 @@ public class DeploymentUtils {
         return sb.toString();
     }
 
-    public static List<URL> getManifestLibraries(DeploymentContext context) 
+    public static List<URL> getManifestLibraries(DeploymentContext context)
         throws IOException {
         return getManifestLibraries(context.getSource());
     }
 
-    public static List<URL> getManifestLibraries(DeploymentContext context, 
+    public static List<URL> getManifestLibraries(DeploymentContext context,
         Manifest manifest) throws IOException {
         return getManifestLibraries(context.getSource(), manifest);
     }
@@ -373,7 +373,7 @@ public class DeploymentUtils {
             try {
                 appRootPath = (new File(archive.getURI().getPath())).getParent();
             } catch (Exception e) {
-                // ignore, this is the jar inside jar case 
+                // ignore, this is the jar inside jar case
             }
         }
 
@@ -393,7 +393,7 @@ public class DeploymentUtils {
             for (URL manifestURL : manifestURLs) {
                 URI manifestLibURI = archiveURI.relativize(manifestURL.toURI());
                 if (manifestLibURI.isAbsolute()) {
-                    File externalLib = new File(manifestLibURI); 
+                    File externalLib = new File(manifestLibURI);
                     if (externalLib.exists()) {
                         externalLibURIs.add(manifestLibURI);
                     }

@@ -19,9 +19,9 @@ package statelesshello;
 import java.rmi.RemoteException;
 
 public class StatelesshelloException extends Exception {
-    
+
     public StatelesshelloException(String str) {
-	super(str);
+    super(str);
     }
-    
+
 }

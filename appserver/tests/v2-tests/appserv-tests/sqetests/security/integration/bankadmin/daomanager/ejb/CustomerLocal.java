@@ -20,8 +20,8 @@ import jakarta.ejb.EJBLocalObject;
 
 public interface CustomerLocal extends jakarta.ejb.EJBLocalObject
 {
-	public String getCustomerName();
-	public String getCustomerID();
+    public String getCustomerName();
+    public String getCustomerID();
 
 
 }

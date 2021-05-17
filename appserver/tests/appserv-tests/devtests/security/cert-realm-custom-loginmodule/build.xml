@@ -33,7 +33,7 @@
     &commonRun;
     &commonSecurity;
     &testProperties;
-    
+
     <target name="all" depends="build, setup, deploy, run, undeploy, unsetup"/>
     <target name="clean" depends="init-common">
         <delete dir="${build.classes.dir}"/>
@@ -47,7 +47,7 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes" />
         </antcall>
@@ -97,24 +97,24 @@
 
     <target name="setup" depends="init-common,prepare-store-common">
         <antcall target="env-check" />
-	<copy file="${assemble.dir}/test-${appname}.jar"
+    <copy file="${assemble.dir}/test-${appname}.jar"
             todir="${env.S1AS_HOME}/lib"/>
-	<copy file="${admin.domain.dir}/${admin.domain}/config/login.conf"
+    <copy file="${admin.domain.dir}/${admin.domain}/config/login.conf"
             tofile="${admin.domain.dir}/${admin.domain}/config/login.conf.ORIG"/>
-	<concat destfile="${admin.domain.dir}/${admin.domain}/config/login.conf" append="true"><![CDATA[certRealm {
+    <concat destfile="${admin.domain.dir}/${admin.domain}/config/login.conf" append="true"><![CDATA[certRealm {
         com.sun.s1asdev.security.certrealm.lm.CertificateLM required;
 };]]>
-	</concat>
+    </concat>
         <antcall target="restart-server-instance-common"/>
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command"
                    value="set" />
             <param name="as.props" value="${as.props}"/>
             <param name="operand.props"
                    value="configs.config.server-config.security-service.auth-realm.certificate.property.jaas-context=certRealm" />
-	</antcall>
+    </antcall>
     </target>
- 
+
     <target name="unsetup">
         <antcall target="restore"/>
     </target>
@@ -130,7 +130,7 @@
         <antcall target="remove-store-common"/>
         <move file="${admin.domain.dir}/${admin.domain}/config/login.conf.ORIG"
             tofile="${admin.domain.dir}/${admin.domain}/config/login.conf"/>
-	<delete file="${env.S1AS_HOME}/lib/test-${appname}.jar" failonerror="false"/>
+    <delete file="${env.S1AS_HOME}/lib/test-${appname}.jar" failonerror="false"/>
         <antcall target="restart-server-instance-common"/>
     </target>
 

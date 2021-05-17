@@ -23,11 +23,11 @@ import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.SynchronizationType;
 import java.util.Map;
 
-/** 
+/**
  * Protocol associated with defining an EntityManager reference
  *
  */
-public interface EntityManagerReference extends NamedInformation, 
+public interface EntityManagerReference extends NamedInformation,
     InjectionCapable {
 
     /**
@@ -43,7 +43,7 @@ public interface EntityManagerReference extends NamedInformation,
      */
     public String getUnitName();
 
-    
+
     public void setPersistenceContextType(PersistenceContextType type);
     public PersistenceContextType getPersistenceContextType();
 
@@ -54,13 +54,13 @@ public interface EntityManagerReference extends NamedInformation,
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * reference is declared. 
+     * reference is declared.
      */
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * reference is declared.  
+     * reference is declared.
      */
     public BundleDescriptor getReferringBundleDescriptor();
 

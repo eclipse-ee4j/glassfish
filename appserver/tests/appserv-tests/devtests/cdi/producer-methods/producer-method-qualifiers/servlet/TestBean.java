@@ -16,10 +16,10 @@
 
 import jakarta.inject.Inject;
 public class TestBean {
- 
-    //This should use the int chosen in BeanToTestQualiferInProducerMethods 
+
+    //This should use the int chosen in BeanToTestQualiferInProducerMethods
     @Inject int rng;
-    
+
     public boolean testProducerMethod(){
         return rng <= 100;
     }

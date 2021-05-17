@@ -37,19 +37,19 @@ public class MessageSecurityBindingNode extends DeploymentDescriptorNode {
 
     public MessageSecurityBindingNode() {
         registerElementHandler(new XMLElement(
-            WebServicesTagNames.MESSAGE_SECURITY), MessageSecurityNode.class, 
+            WebServicesTagNames.MESSAGE_SECURITY), MessageSecurityNode.class,
             "addMessageSecurityDescriptor");
     }
-    
+
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
        if (descriptor == null) {
             descriptor = new MessageSecurityBindingDescriptor();
         }
         return descriptor;
-    }     
+    }
 
     /**
      * parsed an attribute of an element
@@ -76,19 +76,19 @@ public class MessageSecurityBindingNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for 
+     * @param node name for
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
-        MessageSecurityBindingDescriptor messageSecurityBindingDesc) {    
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
+        MessageSecurityBindingDescriptor messageSecurityBindingDesc) {
         Element messageSecurityBindingNode = (Element)super.writeDescriptor(parent, nodeName, messageSecurityBindingDesc);
 
         // message-security
-        ArrayList messageSecDescs = 
+        ArrayList messageSecDescs =
             messageSecurityBindingDesc.getMessageSecurityDescriptors();
         if (!messageSecDescs.isEmpty()) {
-            MessageSecurityNode messageSecurityNode = 
+            MessageSecurityNode messageSecurityNode =
                 new MessageSecurityNode();
             for (Iterator messageSecIterator = messageSecDescs.iterator();
                 messageSecIterator.hasNext();) {
@@ -103,13 +103,13 @@ public class MessageSecurityBindingNode extends DeploymentDescriptorNode {
             messageSecurityBindingDesc.AUTH_LAYER) != null) {
             setAttribute(messageSecurityBindingNode, WebServicesTagNames.AUTH_LAYER, messageSecurityBindingDesc.getAttributeValue(messageSecurityBindingDesc.AUTH_LAYER));
         }
-    
+
         // provider-id
         if (messageSecurityBindingDesc.getAttributeValue(
             messageSecurityBindingDesc.PROVIDER_ID) != null) {
-            setAttribute(messageSecurityBindingNode, WebServicesTagNames.PROVIDER_ID, messageSecurityBindingDesc.getAttributeValue(messageSecurityBindingDesc.PROVIDER_ID)); 
-        }   
-            
+            setAttribute(messageSecurityBindingNode, WebServicesTagNames.PROVIDER_ID, messageSecurityBindingDesc.getAttributeValue(messageSecurityBindingDesc.PROVIDER_ID));
+        }
+
         return messageSecurityBindingNode;
     }
 }

@@ -65,28 +65,28 @@ public class ServiceRefPortInfo extends Descriptor {
     private String mtomEnabled = null;
 
     public ServiceRefPortInfo(ServiceRefPortInfo other) {
-	super(other);
-	serviceEndpointInterface = other.serviceEndpointInterface;
-	containerManaged = other.containerManaged;
-	portComponentLinkName = other.portComponentLinkName;
-	portComponentLink = other.portComponentLink; // copy as-is
-	serviceRef = other.serviceRef; // copy as-is
-	wsdlPort = other.wsdlPort; // copy as-is
+    super(other);
+    serviceEndpointInterface = other.serviceEndpointInterface;
+    containerManaged = other.containerManaged;
+    portComponentLinkName = other.portComponentLinkName;
+    portComponentLink = other.portComponentLink; // copy as-is
+    serviceRef = other.serviceRef; // copy as-is
+    wsdlPort = other.wsdlPort; // copy as-is
         mtomEnabled = other.mtomEnabled;
 
         stubProperties = new HashSet();
-	for (Iterator i = other.stubProperties.iterator(); i.hasNext();) {
-	    stubProperties.add(new NameValuePairDescriptor
+    for (Iterator i = other.stubProperties.iterator(); i.hasNext();) {
+        stubProperties.add(new NameValuePairDescriptor
                 ((NameValuePairDescriptor)i.next()));
-	}
+    }
 
         callProperties = new HashSet(); // NameValuePairDescriptor
-	for (Iterator i = other.callProperties.iterator(); i.hasNext();) {
-	    callProperties.add(new NameValuePairDescriptor(
-		(NameValuePairDescriptor)i.next()));
-	}
+    for (Iterator i = other.callProperties.iterator(); i.hasNext();) {
+        callProperties.add(new NameValuePairDescriptor(
+        (NameValuePairDescriptor)i.next()));
+    }
 
-	targetEndpointAddress = other.targetEndpointAddress; 
+    targetEndpointAddress = other.targetEndpointAddress;
     }
 
     public ServiceRefPortInfo() {
@@ -127,23 +127,23 @@ public class ServiceRefPortInfo extends Descriptor {
         return !containerManaged;
     }
 
-    /** 
+    /**
      * Sets the name of the port component to which I refer.
-     * NOTE : Does *NOT* attempt to resolve link name.  Use 
-     * overloaded version or resolveLink if link resolution 
+     * NOTE : Does *NOT* attempt to resolve link name.  Use
+     * overloaded version or resolveLink if link resolution
      * is required.
      */
     public void setPortComponentLinkName(String linkName) {
         setPortComponentLinkName(linkName, false);
     }
 
-    public WebServiceEndpoint setPortComponentLinkName(String linkName, 
+    public WebServiceEndpoint setPortComponentLinkName(String linkName,
                                                        boolean resolve) {
         portComponentLinkName = linkName;
 
         return resolve ? resolveLinkName() : null;
     }
-    
+
     public boolean hasPortComponentLinkName() {
         return (portComponentLinkName != null);
     }
@@ -169,11 +169,11 @@ public class ServiceRefPortInfo extends Descriptor {
         return (portComponentLinkName != null ) && (portComponentLink != null);
     }
 
-    /** 
+    /**
      * Try to resolve the current link name value to a WebServiceEndpoint
      * object.
      *
-     * @return WebServiceEndpoint to which link was resolved, or null if 
+     * @return WebServiceEndpoint to which link was resolved, or null if
      * link name resolution failed.
      */
     public WebServiceEndpoint resolveLinkName() {
@@ -189,7 +189,7 @@ public class ServiceRefPortInfo extends Descriptor {
             Application app = bundleDescriptor.getApplication();
             BundleDescriptor targetBundle = bundleDescriptor;
             String portName = linkName;
-            
+
             if( (app != null) && absoluteLink ) {
                 // Resolve <module>#<port-component-name> style link
                 String relativeModuleUri = linkName.substring(0, hashIndex);
@@ -233,7 +233,7 @@ public class ServiceRefPortInfo extends Descriptor {
             // Keep port component link name in synch with port component
             // object.
             BundleDescriptor bundleDescriptor = getBundleDescriptor();
-            BundleDescriptor targetBundleDescriptor = 
+            BundleDescriptor targetBundleDescriptor =
                 newPort.getBundleDescriptor();
             String linkName = newPort.getEndpointName();
             if( bundleDescriptor != targetBundleDescriptor ) {
@@ -254,7 +254,7 @@ public class ServiceRefPortInfo extends Descriptor {
     //
     // Runtime info
     //
-    
+
     public boolean hasWsdlPort() {
         return (wsdlPort != null);
     }
@@ -291,7 +291,7 @@ public class ServiceRefPortInfo extends Descriptor {
     public NameValuePairDescriptor getStubPropertyByName(String name) {
         NameValuePairDescriptor prop = null;
         for(Iterator iter = stubProperties.iterator(); iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) 
+            NameValuePairDescriptor next = (NameValuePairDescriptor)
                 iter.next();
             if( next.getName().equals(name) ) {
                 prop = next;
@@ -305,9 +305,9 @@ public class ServiceRefPortInfo extends Descriptor {
      * Add stub property, using property name as a key. This will
      * replace the property value of any existing stub property with
      * the same name.
-     */ 
+     */
     public void addStubProperty(NameValuePairDescriptor property) {
-        NameValuePairDescriptor prop = 
+        NameValuePairDescriptor prop =
             getStubPropertyByName(property.getName());
         if( prop != null ) {
             prop.setValue(property.getValue());
@@ -315,14 +315,14 @@ public class ServiceRefPortInfo extends Descriptor {
             stubProperties.add(property);
         }
     }
-    
+
      /**
      * Remove stub property, using property name as a key. This will
      * remove the property value of an existing stub property with
      * the matching name.
-     */ 
+     */
     public void removeStubProperty(NameValuePairDescriptor property) {
-        NameValuePairDescriptor prop = 
+        NameValuePairDescriptor prop =
             getStubPropertyByName(property.getName());
         if (prop != null) {
             stubProperties.remove(property);
@@ -333,7 +333,7 @@ public class ServiceRefPortInfo extends Descriptor {
      * Add stub property, using property name as a key. This will
      * replace the property value of any existing stub property with
      * the same name.
-     */ 
+     */
     public void addStubProperty(String name, String value) {
         NameValuePairDescriptor nvPair = new NameValuePairDescriptor();
         nvPair.setName(name);
@@ -352,7 +352,7 @@ public class ServiceRefPortInfo extends Descriptor {
     public NameValuePairDescriptor getCallPropertyByName(String name) {
         NameValuePairDescriptor prop = null;
         for(Iterator iter = callProperties.iterator(); iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) 
+            NameValuePairDescriptor next = (NameValuePairDescriptor)
                 iter.next();
             if( next.getName().equals(name) ) {
                 prop = next;
@@ -366,9 +366,9 @@ public class ServiceRefPortInfo extends Descriptor {
      * Add call property, using property name as a key. This will
      * replace the property value of any existing stub property with
      * the same name.
-     */ 
+     */
     public void addCallProperty(NameValuePairDescriptor property) {
-        NameValuePairDescriptor prop = 
+        NameValuePairDescriptor prop =
             getCallPropertyByName(property.getName());
         if( prop != null ) {
             prop.setValue(property.getValue());
@@ -377,18 +377,18 @@ public class ServiceRefPortInfo extends Descriptor {
         }
     }
 
-    
+
     /**
      * Remove call property, using property name as a key. This will
      * remove the property value of an existing stub property with
      * the matching name.
-     */ 
+     */
     public void removeCallProperty(NameValuePairDescriptor property) {
-        NameValuePairDescriptor prop = 
+        NameValuePairDescriptor prop =
             getCallPropertyByName(property.getName());
         if( prop != null ) {
             callProperties.remove(property);
-        } 
+        }
     }
 
     public boolean hasTargetEndpointAddress() {
@@ -406,7 +406,7 @@ public class ServiceRefPortInfo extends Descriptor {
     public void setMtomEnabled(String value) {
         mtomEnabled = value;
     }
-    
+
     public String getMtomEnabled() {
         return mtomEnabled;
     }

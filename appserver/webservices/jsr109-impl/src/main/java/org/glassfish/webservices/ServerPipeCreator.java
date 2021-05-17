@@ -32,30 +32,30 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This is used by JAXWSContainer to return proper 196 security and
- *  app server monitoing pipes to the StandAlonePipeAssembler and 
+ *  app server monitoing pipes to the StandAlonePipeAssembler and
  *  TangoPipeAssembler
  */
 @Contract
 public abstract class ServerPipeCreator extends ServerPipelineHook {
-    
+
     protected WebServiceEndpoint endpoint;
     protected boolean isHttpBinding;
 
     protected ServerPipeCreator(){
     }
-    
+
     public void init(WebServiceEndpoint ep){
         endpoint = ep;
-	isHttpBinding = 
-	    ((HTTPBinding.HTTP_BINDING.equals
-	      (endpoint.getProtocolBinding())) ? true : false); 
+    isHttpBinding =
+        ((HTTPBinding.HTTP_BINDING.equals
+          (endpoint.getProtocolBinding())) ? true : false);
     }
 
     public Pipe createMonitoringPipe(ServerPipeAssemblerContext ctxt, Pipe tail) {
         return new MonitoringPipe(ctxt, tail, endpoint);
-    }    
-    
+    }
+
     public abstract Pipe createSecurityPipe(PolicyMap map, SEIModel sei,
             WSDLPort port, WSEndpoint owner, Pipe tail);
-    
+
 }

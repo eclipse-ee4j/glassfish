@@ -21,11 +21,11 @@ import jakarta.ejb.EJBObject;
 
 public interface JustBean extends EJBObject {
 
-    public void 
-    log(String message) 
+    public void
+    log(String message)
         throws RemoteException;
 
     public String[]
-    findAllMarbles() 
+    findAllMarbles()
         throws RemoteException;
 }

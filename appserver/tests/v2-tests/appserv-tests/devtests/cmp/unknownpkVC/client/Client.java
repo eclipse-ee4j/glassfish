@@ -33,16 +33,16 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @version
  */
 public class Client {
-    
+
      private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
 
-	    stat.addDescription("unknownpkVC");
+        stat.addDescription("unknownpkVC");
 
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/UNPK2");
@@ -67,16 +67,16 @@ public class Client {
             a1bean = a1home.findByPrimaryKey(pk1);
             System.out.println("FOUND 1.1: " + a1bean.getName());
 
-	    stat.addStatus("ejbclient unknownpkVC", stat.PASS);
+        stat.addStatus("ejbclient unknownpkVC", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient unknownpkVC", stat.FAIL);
+        stat.addStatus("ejbclient unknownpkVC", stat.FAIL);
         }
 
-	   stat.printSummary("unknownpkVC");
+       stat.printSummary("unknownpkVC");
     }
-    
+
 }

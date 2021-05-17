@@ -148,7 +148,7 @@ public interface DomainRoot extends AMXProxy
     public AMXConfigProxy getDomain();
 
     /**
-    @return the singleton {@link MonitoringRoot}. 
+    @return the singleton {@link MonitoringRoot}.
      */
     @ManagedAttribute
     @Description("Get the root MBean of all monitoring MBeans")
@@ -239,7 +239,7 @@ public interface DomainRoot extends AMXProxy
     @ManagedAttribute
     @Description("Return the time the domain admin server has been running.  uptime[0] contains the time in milliseconds.  uptime[1] contains a human-readable string describing the duration.")
     public Object[] getUptimeMillis();
-    
+
     /**
         Return a Map of all non-compliant MBeans (MBeans might no longer be registered).
         The List&lt;String> contains all issues with that MBean.

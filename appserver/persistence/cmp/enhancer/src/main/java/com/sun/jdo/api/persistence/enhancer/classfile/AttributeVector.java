@@ -67,16 +67,16 @@ public class AttributeVector {
       private int current = 0;
 
       AttributeVectorEnumeration(ClassAttribute attrs[]) {
-	attributes = attrs;
+    attributes = attrs;
       }
 
       public boolean hasMoreElements() {
-	return attributes != null && current < attributes.length;
+    return attributes != null && current < attributes.length;
       }
       public Object nextElement() {
-	if (!hasMoreElements())
-	  throw new NoSuchElementException();
-	return attributes[current++];
+    if (!hasMoreElements())
+      throw new NoSuchElementException();
+    return attributes[current++];
       }
     }
 
@@ -91,7 +91,7 @@ public class AttributeVector {
     while (e.hasMoreElements()) {
       ClassAttribute attr = (ClassAttribute) e.nextElement();
       if (attr.attrName().asString().equals(attrName))
-	return attr;
+    return attr;
     }
     return null;
   }
@@ -100,8 +100,8 @@ public class AttributeVector {
    * General attribute reader
    */
   static AttributeVector readAttributes(
-	DataInputStream data, ConstantPool constantPool)
-	throws IOException {
+    DataInputStream data, ConstantPool constantPool)
+    throws IOException {
     AttributeVector attribs = new AttributeVector();
     int n_attrs = data.readUnsignedShort();
     while (n_attrs-- > 0) {
@@ -114,8 +114,8 @@ public class AttributeVector {
    * ClassMethod attribute reader
    */
   static AttributeVector readAttributes(
-	DataInputStream data, CodeEnv codeEnv)
-	throws IOException {
+    DataInputStream data, CodeEnv codeEnv)
+    throws IOException {
     AttributeVector attribs = new AttributeVector();
     int n_attrs = data.readUnsignedShort();
     while (n_attrs-- > 0) {
@@ -133,7 +133,7 @@ public class AttributeVector {
     } else {
       out.writeShort(attributes.length);
       for (int i=0; i<attributes.length; i++)
-	attributes[i].write(out);
+    attributes[i].write(out);
     }
   }
 
@@ -143,7 +143,7 @@ public class AttributeVector {
   void print(PrintStream out, int indent) {
     if (attributes != null) {
       for (int i=0; i<attributes.length; i++)
-	attributes[i].print(out, indent);
+    attributes[i].print(out, indent);
     }
   }
 
@@ -152,7 +152,7 @@ public class AttributeVector {
    */
   void summarize() {
     System.out.println((attributes == null ? 0 : attributes.length) +
-		       " attributes");//NOI18N
+               " attributes");//NOI18N
   }
 
 }

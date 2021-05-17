@@ -17,7 +17,7 @@
 package com.sun.s1asdev.deployment.ejb30.ear.xmloverride;
 
 import jakarta.ejb.Remote;
-	
+
 @Remote
 public interface Sful
 {

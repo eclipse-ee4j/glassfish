@@ -83,9 +83,9 @@ public class SQLStoreManager implements PersistenceStore {
         return configCache.getPersistenceConfig(classType);
     }
 
-    /**  
+    /**
      * @inheritDoc
-     */  
+     */
     public ConfigCache getConfigCache() {
         return configCache;
     }

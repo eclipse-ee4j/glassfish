@@ -18,7 +18,7 @@
 list_test_ids(){
   echo jms_all
 }
- 
+
 test_run(){
   cd ${APS_HOME}/devtests/jms
   ant ${TARGET} | tee ${TEST_RUN_LOG}
@@ -34,13 +34,13 @@ run_test_id(){
   generate_junit_report ${1}
   change_junit_report_class_names
 }
- 
+
 get_test_target(){
-	case ${1} in
-		jms_all )
-			TARGET=all
-			export TARGET;;
-	esac
+    case ${1} in
+        jms_all )
+            TARGET=all
+            export TARGET;;
+    esac
 }
 
 OPT=${1}

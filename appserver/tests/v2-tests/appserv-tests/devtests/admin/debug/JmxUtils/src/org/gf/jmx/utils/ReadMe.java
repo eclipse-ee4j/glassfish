@@ -30,7 +30,7 @@ package org.gf.jmx.utils;
  * @author Administrator
  */
 public class ReadMe {
-    
+
     private ReadMe() {
     }
     public static void main(final String args[]) {

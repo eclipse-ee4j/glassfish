@@ -88,7 +88,7 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
 
             boolean ejbJar = enclosingBundle instanceof EjbBundleDescriptor;
 
-            if( (aeHandler == null) && ejbJar ) {               
+            if( (aeHandler == null) && ejbJar ) {
                 aeHandler = ejbBundleContext;
             }
 
@@ -121,7 +121,7 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();
     }
-    
+
 
     protected boolean isAEjbComponentClass(Annotation[] annotations) {
         Class<? extends Annotation> ejbAnnotations[] = getEjbAnnotationTypes();
@@ -134,7 +134,7 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
         }
         return false;
     }
-    
+
     protected boolean isAWebComponentClass(Annotation[] annotations) {
         Class<? extends Annotation> webAnnotations[] = getWebAnnotationTypes();
         for (Annotation annotation : annotations) {

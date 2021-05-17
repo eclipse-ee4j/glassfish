@@ -131,14 +131,14 @@ public class AdminConsoleConfigUpgrade implements ConfigurationUpgrade, PostCons
             // get admin port property from config
             Config parent = service.getParent(Config.class);
             if (parent.getAdminListener() == null) {
-                LogRecord lr = new LogRecord(Level.WARNING, 
+                LogRecord lr = new LogRecord(Level.WARNING,
                         String.format(
                             "Couldn't get admin port from config '%s'. Using default %s",
                             parent.getName(),
                             DEFAULT_ADMIN_PORT)
                 );
                 lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);                
+                EarlyLogHandler.earlyMessages.add(lr);
             }
 
             // add properties

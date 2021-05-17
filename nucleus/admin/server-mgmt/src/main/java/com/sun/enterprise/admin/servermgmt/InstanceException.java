@@ -19,7 +19,7 @@ package com.sun.enterprise.admin.servermgmt;
 public class InstanceException extends RepositoryException {
     /**
      * Constructs a new InstanceException object.
-     * 
+     *
      * @param message
      */
     public InstanceException(String message) {
@@ -28,7 +28,7 @@ public class InstanceException extends RepositoryException {
 
     /**
      * Constructs a new InstanceException object.
-     * 
+     *
      * @param cause
      */
     public InstanceException(Throwable cause) {
@@ -37,7 +37,7 @@ public class InstanceException extends RepositoryException {
 
     /**
      * Constructs a new InstanceException object.
-     * 
+     *
      * @param message
      * @param cause
      */

@@ -17,7 +17,7 @@
 -->
 
 <!--
-    Targets to be shared by all unit tests 
+    Targets to be shared by all unit tests
 -->
 
 <!-- configuration -->
@@ -40,7 +40,7 @@
 <property name="customtasks.dest" value="${testsRoot}/util/build/customAntTasks"/>
 <property name="customtasks.jar" value="${customtasks.dest}/customAntTasks.jar"/>
 <property name="junit.jar" value="${env.APS_HOME}/devtests/deployment/junit-4.12.jar" />
-<property name="annotation.report.dir" value="${testsRoot}/annotation/report"/> 
+<property name="annotation.report.dir" value="${testsRoot}/annotation/report"/>
 <property name="testDomain" value="depltest-domain"/>
 <property name="testServer" value="depltest-server"/>
 <property name="testCluster" value="depltest-cluster"/>
@@ -77,13 +77,13 @@
     util directory for its own build.xml and the source files.
 -->
 
-        
+
 <target name="init" depends="init.os,init.tools,setAsadminArgs">
     <get src="https://repo1.maven.org/maven2/junit/junit/4.12/junit-4.12.jar" dest="${env.APS_HOME}/devtests/deployment/junit-4.12.jar" usetimestamp="true"/>
     <property name="root" value="${basedir}"/>
 
     <available property="cluster.exists" file="${s1as.home}/domains/${testDomain}"/>
-    
+
     <available property="SetupStarted" file="${build}/setupdone"/>
 
     <condition property="EE" value="true">
@@ -92,7 +92,7 @@
             <equals arg1="${env.DEPL_TARGET}" arg2="CLUSTER"/>
         </or>
     </condition>
-    
+
     <condition property="doCluster">
         <equals arg1="${env.DEPL_TARGET}" arg2="CLUSTER"/>
     </condition>
@@ -100,7 +100,7 @@
     <condition property="doInstance">
         <equals arg1="${env.DEPL_TARGET}" arg2="SERVER"/>
     </condition>
-    
+
     <condition property="PE">
         <and>
             <not>
@@ -123,7 +123,7 @@
     <property name="s1as.secure" value="false"/>
 
     <condition property="run.jsr88" value="false">
-        <equals arg1="${run.jsr88}" arg2="false" /> 
+        <equals arg1="${run.jsr88}" arg2="false" />
     </condition>
 
     <condition property="jsr88.uri" value="deployer:Sun:AppServer::${admin.host}:${admin.port}:https">
@@ -144,13 +144,13 @@
 
     <!--
         See if the custom ant tasks jar file is up-to-date as compare to the source files.  The
-        resulting property will control whether the tasks are compiled and the jar file built 
+        resulting property will control whether the tasks are compiled and the jar file built
         because the init.customtasks task uses unless="customtasks.uptodate."
     -->
     <uptodate property="customtasks.uptodate" targetfile="${customtasks.jar}">
         <srcfiles dir="${customtasks.src}" includes="*.java"/>
     </uptodate>
-    
+
     <antcall target="init.customtasks"/>
     <taskdef name="javaWithResult" classname="devtests.deployment.util.JavaWithResult" classpath="${customtasks.jar}"/>
 
@@ -312,12 +312,12 @@
 </target>
 
 <!--
-    The following target compiles all Java files that are used in custom Ant tasks and places them into a 
+    The following target compiles all Java files that are used in custom Ant tasks and places them into a
     jar file.  Subsequent taskdefs can then refer to the jar file.
-    
+
     Note that the compilation and construction of the jar file will occur only if the jar file is obsolete
     compared to the java sources, thanks to the uptodate setting of customtasks.uptodate in the init target.
-    
+
     Note also that we use a separate build directory so we can capture only the custom task .class files into
     the jar and not all .class files under the util tree.
 -->
@@ -334,7 +334,7 @@
             <path location="${customtasks.dest}"/> <!-- for cross-dependencies, if any, among custom task classes and/or helpers -->
         </classpath>
     </javac>
-    <jar 
+    <jar
         destfile="${customtasks.jar}"
         basedir="${customtasks.dest}"
         includes="**/*.class"
@@ -353,7 +353,7 @@ AS_ADMIN_PASSWORD=
 AS_ADMIN_MASTERPASSWORD=changeit
   </echo>
   <antcall target="common.run.asadmin">
-    <param name="arg.list" 
+    <param name="arg.list"
            value="create-file-user ${ASADMIN-ARGS-NOPASSWD} --passwordfile ${user.password.file} --echo=true --terse=true ${arg.list}"/>
     </antcall>
   <delete file="${user.password.file}" failonerror="false"/>
@@ -363,7 +363,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <!-- set dotted name enable using asadmin -->
 <target name="common.dotted.enable.ref.asadmin" depends="setInstanceName">
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="set servers.server.${depltest.instance.name}.application-ref.${testName}.enabled=true"/>
     </antcall>
     <antcall target="dotted.enableAppOnInstance">
@@ -412,7 +412,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <!-- @param ${arg.list} (required) -->
 <target name="common.disable.asadmin" depends="setAsadminArgs">
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="disable ${ASADMIN-ARGS} ${arg.list}"/>
     </antcall>
     <antcall target="disableAppOnInstance">
@@ -494,7 +494,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <!-- @param ${arg.list} (required) -->
 <target name="common.deploy.asadmin" depends="setAsadminArgs">
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="${deploy} ${ASADMIN-ARGS} ${arg.list}"/>
     </antcall>
     <antcall target="createAppRef">
@@ -507,7 +507,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
         <param name="testName" value="${testName}"/>
     </antcall>
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="${deploy} ${ASADMIN-ARGS} --force=true ${arg.list}"/>
     </antcall>
     <antcall target="createAppRef">
@@ -519,7 +519,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <!-- @param ${arg.list} (required) -->
 <target name="common.deploy.osgi.asadmin" depends="setAsadminArgs">
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="${deploy} ${ASADMIN-ARGS} --type osgi ${arg.list}"/>
     </antcall>
     <antcall target="createAppRef">
@@ -532,7 +532,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
         <param name="testName" value="${testName}"/>
     </antcall>
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="${deploy} ${ASADMIN-ARGS} --type osgi --force=true ${arg.list}"/>
     </antcall>
     <antcall target="createAppRef">
@@ -547,7 +547,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
         <param name="testName" value="${testName}"/>
     </antcall>
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="${undeploy} ${ASADMIN-ARGS} ${arg.list}"/>
     </antcall>
 </target>
@@ -571,7 +571,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <target name="createAppRef" depends="init,setEnabled" if="doCluster" unless="doRollingUpgrade">
     <echo message="Create Application Reference for ${testName}"/>
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="create-application-ref --user ${admin.user} --passwordfile ${passwordFile} --port ${admin.port} --target ${testServer} --enabled ${enabled} ${testName}"/>
     </antcall>
 </target>
@@ -579,7 +579,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <target name="delAppRef" depends="init" if="doCluster">
     <echo message="Delete Application Reference for ${testName}"/>
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="delete-application-ref --user ${admin.user} --passwordfile ${passwordFile} --port ${admin.port} --target ${testServer} ${testName}"/>
     </antcall>
 </target>
@@ -602,7 +602,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 
 <target name="dotted.enableAppOnInstance" depends="init" if="doCluster">
     <antcall target="common.run.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="set servers.server.${testServer}.application-ref.${testName}.enabled=true"/>
     </antcall>
 </target>
@@ -795,7 +795,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 
     <!--
         Due to differences in command line parsing on Windows and non-Windows systems we need
-        to pass the possibly-empty admin.password differently.  
+        to pass the possibly-empty admin.password differently.
     -->
     <condition property="admin.password.arg" value="&quot;${admin.password}&quot;" else="${admin.password}">
         <os family="windows"/>
@@ -803,7 +803,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 
     <echo message="JSR88Deployer ${command} ${jsr88.uri} ${admin.user} ${admin.password}  ${arg.list}"/>
     <javaWithResult
-            fork="true" 
+            fork="true"
             failonerror="false"
             jvm="${JAVA}"
             classname="devtests.deployment.util.JSR88Deployer"
@@ -895,8 +895,8 @@ AS_ADMIN_MASTERPASSWORD=changeit
 </target>
 
 <target name="transform" depends="init">
-    <style in="${root}/tests-results.xml" 
-           out="${root}/results.html" extension=".html" 
+    <style in="${root}/tests-results.xml"
+           out="${root}/results.html" extension=".html"
            style="${testsRoot}/config/convert.xsl" destdir="."/>
     <condition property="hasAnnotation">
         <!-- need a better way to check if annotation is executed for this run -->
@@ -908,7 +908,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
            </or>
            <available file="${annotation.report.dir}"/>
         </and>
-    </condition> 
+    </condition>
     <antcall target="jutransform"/>
 </target>
 
@@ -934,8 +934,8 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <delete dir="${annotation.report.dir}"/>
 </target>
 
-<!-- 
-    Targets to process the test results 
+<!--
+    Targets to process the test results
 -->
 <target name="processResult">
     <condition property="testPassed">
@@ -956,11 +956,11 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <condition property="statusProvided">
         <or>
             <equals arg1="${result}" arg2="0"/>
-            <equals arg1="${result}" arg2="-1"/>				
-            <equals arg1="${result}" arg2="1"/>				
+            <equals arg1="${result}" arg2="-1"/>
+            <equals arg1="${result}" arg2="1"/>
         </or>
     </condition>
-    <dirname property="antfile.dir" file="${ant.file}"/>		
+    <dirname property="antfile.dir" file="${ant.file}"/>
     <basename property="current.dir" file="${antfile.dir}"/>
     <antcall target="failed">
         <param name="testname" value="${current.dir}"/>
@@ -974,7 +974,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 </target>
 
 <!--
-  Paramters: 
+  Paramters:
     testname - name of the test
     result - numeric value of the exit status from the client
     status - typically FAILED or UNKNOWN
@@ -1007,7 +1007,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <target name="passed" if="testPassed">
     <echo message="Test ${testname} Passed"/>
     <concat destfile="${root}/tests-results.xml" append="yes">&lt;result status="PASSED" log="${log}"/></concat>
-    <concat destfile="${root}/tests-results.xml" append="yes">&lt;/test></concat>	
+    <concat destfile="${root}/tests-results.xml" append="yes">&lt;/test></concat>
 </target>
 
 <target name="unknown" unless="statusProvided">
@@ -1018,22 +1018,22 @@ AS_ADMIN_MASTERPASSWORD=changeit
 
 <!-- @param ${description} (required) -->
 <target name="declare-test">
-    <dirname property="antfile.dir" file="${ant.file}"/>		
+    <dirname property="antfile.dir" file="${ant.file}"/>
     <basename property="current.dir" file="${antfile.dir}"/>
     <echo message="Starting test ${current.dir} ${description}"/>
     <concat destfile="${root}/tests-results.xml" append="yes">&lt;test name="${current.dir}" description="${description}"></concat>
 </target>
 
-<!-- 
-    Targets private to this xml file only 
+<!--
+    Targets private to this xml file only
 -->
 <target name="preTestsRun" depends="clean">
-    <dirname property="antfile.dir" file="${ant.file}"/>		
+    <dirname property="antfile.dir" file="${ant.file}"/>
     <basename property="current.dir" file="${antfile.dir}"/>
     <echo message="Running all ${current.dir} devtests"/>
     <mkdir dir="${testsRoot}/build/archives"/>
     <delete file="${root}/tests-results.xml"/>
-    <concat destfile="${root}/tests-results.xml" append="yes">&lt;tests></concat>		
+    <concat destfile="${root}/tests-results.xml" append="yes">&lt;tests></concat>
 </target>
 
 <target name="restart.server">
@@ -1054,7 +1054,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <exec executable="${ASADMIN}" failonerror="true">
         <arg line="list-instances --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile}"/>
     </exec>
-    <mkdir dir="${build}/setupdone"/>    
+    <mkdir dir="${build}/setupdone"/>
 </target>
 
 <target name="setupDomain">
@@ -1149,7 +1149,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 </target>
 
 <target name="deleteCluster" if="doCluster">
-    <!-- stop-cluster does not work so use stop-instance to make sure 
+    <!-- stop-cluster does not work so use stop-instance to make sure
          instance is stopped before deleting it -->
     <echo message="Running... asadmin stop-instance"/>
     <exec executable="${ASADMIN}">
@@ -1198,7 +1198,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <copy todir="server-logs/${testServer}/logs">
        <fileset dir="${testServer.dir}/logs" includes="*.log *.log.*"/>
     </copy>
-	<antcall target="copyClusterLog"/>
+    <antcall target="copyClusterLog"/>
     <antcall target="deleteInstance"/>
     <antcall target="deleteCluster"/>
     <delete dir="${s1as.home}/nodeagents"/>
@@ -1213,7 +1213,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 </target>
 
 <target name="postTestsRun">
-    <concat destfile="${root}/tests-results.xml" append="yes">&lt;/tests></concat>		
+    <concat destfile="${root}/tests-results.xml" append="yes">&lt;/tests></concat>
     <echo message="Processing tests results"/>
     <antcall target="transform"/>
     <loadfile srcFile="results.html" property="results"/>
@@ -1252,14 +1252,14 @@ AS_ADMIN_MASTERPASSWORD=changeit
     <property name="APPCLIENT" value="${s1as.home}/bin/appclient.bat"/>
 </target>
 
-<!-- 
-    Targets to be deprecated 
+<!--
+    Targets to be deprecated
 -->
 
 <target name="prepare-jsr88" >
     <ant dir="${env.APS_HOME}/devtests/deployment/jsr88/tester" target="compile">
         <property name="build" value="${build}"/>
-    </ant>	
+    </ant>
 </target>
 
 <target name="jsr88-deploy" depends="prepare-jsr88" >
@@ -1276,7 +1276,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
         <arg value="${admin.user}"/>
         <arg value="${admin.password}"/>
     </java>
-</target>  
+</target>
 
 <target name="list">
     <echo message="All AVAILABLE modules"/>
@@ -1301,8 +1301,8 @@ AS_ADMIN_MASTERPASSWORD=changeit
 <!--
   On Windows, ant hangs when it runs an asadmin command that starts a process.
   To work around that, this task distinguishes between Windows and non-Windows
-  systems and uses a custom ant task for Windows. 
-  
+  systems and uses a custom ant task for Windows.
+
   Any test that needs to start a process should NOT use ${ASADMIN} directly
   but should call this start-process target instead.  Pass the command line
   to be run as <param name="line" value="..."/>.
@@ -1320,7 +1320,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
       <isset property="start-target"/>
     </not>
   </condition>
-  
+
   <!--
     Invoke the target just chosen.
   -->
@@ -1347,7 +1347,7 @@ AS_ADMIN_MASTERPASSWORD=changeit
 </target>
 
 <!--
-  For non-Windows systems, ant works fine when invoking asadmin to start a 
+  For non-Windows systems, ant works fine when invoking asadmin to start a
   process, so do it that way for those systems.
 -->
 <target name="start-process-non-windows">

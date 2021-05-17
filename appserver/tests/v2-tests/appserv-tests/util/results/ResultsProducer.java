@@ -44,7 +44,7 @@ public class ResultsProducer {
                 System.err.println("Usage: java ResultProducer file");
                 return;
             }
-             
+
             FileOutputStream outputStream = new FileOutputStream(args[2]);
             FileChannel channel = outputStream.getChannel();
             CharBuffer buffer = CharBuffer.allocate(8192);
@@ -56,7 +56,7 @@ public class ResultsProducer {
             int pass = 0;
             int fail = 0;
             while( tokens.hasMoreElements() ){
-                token = tokens.nextToken(); 
+                token = tokens.nextToken();
                 compile(token);
 
                 count = countOccurance(charBuffer);
@@ -67,8 +67,8 @@ public class ResultsProducer {
                 } else {
                     fail = count;
                 }
-            } 
-            buffer.put("DID NOT RUN=   " 
+            }
+            buffer.put("DID NOT RUN=   "
                      +  (new Integer(args[1]).intValue() - (pass + fail))+ "\n");
             buffer.put("------------  =========\n");
             buffer.put("Total Expected=" + args[1]);
@@ -86,7 +86,7 @@ public class ResultsProducer {
             ex.printStackTrace();
         }
     }
-    
+
 
     private static void compile(String pat) {
         try {
@@ -100,10 +100,10 @@ public class ResultsProducer {
 
     private static int countOccurance(CharBuffer cb) {
         Matcher lm = linePattern.matcher(cb);
-        Matcher pm = null;			
+        Matcher pm = null;
         int count = 0;
         while (lm.find()) {
-            CharSequence cs = lm.group(); 	
+            CharSequence cs = lm.group();
             if (pm == null)
                 pm = pattern.matcher(cs);
             else
@@ -118,7 +118,7 @@ public class ResultsProducer {
         return count;
     }
 
-    
+
     private static CharBuffer loadFile(File f) throws IOException {
         FileInputStream fis = new FileInputStream(f);
         FileChannel fc = fis.getChannel();

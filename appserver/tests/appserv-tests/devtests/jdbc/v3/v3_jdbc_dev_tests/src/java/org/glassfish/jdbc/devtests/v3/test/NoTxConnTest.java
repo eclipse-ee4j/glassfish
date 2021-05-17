@@ -35,7 +35,7 @@ import org.glassfish.jdbc.devtests.v3.util.TablesUtil;
 public class NoTxConnTest implements SimpleTest {
 
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
-    
+
     public Map<String, Boolean> runTest(DataSource ds, PrintWriter out) {
         /*try {
             if (testNoTxConnTest1(ds, out)) {
@@ -58,7 +58,7 @@ public class NoTxConnTest implements SimpleTest {
         }
 
         HtmlUtil.printHR(out);
-        return resultsMap;        
+        return resultsMap;
     }
 
     private boolean testNoTxConnTest1(DataSource ds, PrintWriter out) {
@@ -74,8 +74,8 @@ public class NoTxConnTest implements SimpleTest {
         String content = "method1";
         String columnName = "name";
         TablesUtil.createTables(ds, out, tableName, columnName);
-        
-        out.println("<h4> NoTxConn Test1 </h4>");    
+
+        out.println("<h4> NoTxConn Test1 </h4>");
         UserTransaction tx = null;
         try {
             out.println("<br>");
@@ -95,7 +95,7 @@ public class NoTxConnTest implements SimpleTest {
             noTxConn = ((com.sun.appserv.jdbc.DataSource)ds).getNonTxConnection();
             out.println("<br>Got noTx connection - noTxConn : " + noTxConn);
             stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO " + tableName + " VALUES('" + 
+            stmt.executeUpdate("INSERT INTO " + tableName + " VALUES('" +
                     content + "')");
 
             stmt2 = noTxConn.createStatement();
@@ -146,10 +146,10 @@ public class NoTxConnTest implements SimpleTest {
                    HtmlUtil.printException(e1, out);
                 }
             }
-            
+
             TablesUtil.deleteTables(ds, out, tableName);
             out.println("<br> Test result : " + result);
-            return result;            
+            return result;
         }
     }
 
@@ -162,7 +162,7 @@ public class NoTxConnTest implements SimpleTest {
         jakarta.transaction.UserTransaction tx = null;
         try {
             out.println("<br>Starting test ...");
-            
+
             InitialContext ctx = new InitialContext();
 
             tx =(UserTransaction)ctx.lookup("java:comp/UserTransaction");
@@ -183,7 +183,7 @@ public class NoTxConnTest implements SimpleTest {
                 noTxConn = ((com.sun.appserv.jdbc.DataSource)ds).getNonTxConnection();
                 out.println("<br>Autocommit of noTxConn => " + noTxConn.getAutoCommit());
                 if (noTxConn.getAutoCommit() == false ) {
-                    result = false;       
+                    result = false;
                 }
                 noTxConn.close();
             }

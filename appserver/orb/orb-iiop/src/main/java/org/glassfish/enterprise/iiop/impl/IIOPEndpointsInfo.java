@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * This class is responsible for reading the domain.xml via Config API
- * and producing a list of instances in the form of ClusterInstanceInfo 
+ * and producing a list of instances in the form of ClusterInstanceInfo
  * objects.
  * This class is designed for use by both FailoverIORInterceptor
  * and Java Web Start.
@@ -36,24 +36,24 @@ import java.util.logging.Logger;
  * @date 1/12/05
  */
 
-public class IIOPEndpointsInfo {  
+public class IIOPEndpointsInfo {
 
     private static final IIOPUtils iiopUtils = IIOPUtils.getInstance();
 
     private static Logger _logger = LogDomains.getLogger(IIOPEndpointsInfo.class, LogDomains.CORBA_LOGGER);
-    
-    private static final String baseMsg	= IIOPEndpointsInfo.class.getName();
+
+    private static final String baseMsg    = IIOPEndpointsInfo.class.getName();
 
 
     /**
      * TODO implement post V3 FCS
     public static Collection<ServerRef> getServersInCluster() {
-    
+
         return iiopUtils.getServerRefs();
     }
 
     public static List<IiopListener> getListenersInCluster() {
- 
+
 
         return iiopUtils.getIiopListeners();
     }
@@ -61,36 +61,36 @@ public class IIOPEndpointsInfo {
     **/
 
     /**
-     * This method returns a list of SocketInfo objects for a particular 
-     * server. This method is the common code called by 
+     * This method returns a list of SocketInfo objects for a particular
+     * server. This method is the common code called by
      * getIIOPEndpoints() and getClusterInstanceInfo()
      */
     /*
-    public static List<SocketInfo> getSocketInfoForServer(ServerRef serverRef, 
-							  IiopListener[] listen) {
-      
+    public static List<SocketInfo> getSocketInfoForServer(ServerRef serverRef,
+                              IiopListener[] listen) {
+
         List<SocketInfo> listOfSocketInfo =
-		    new LinkedList<SocketInfo>();
-	String serverName = serverRef.getRef();
-	String hostName =
-	  getHostNameForServerInstance(serverName);
-	if (hostName == null) {
-	    hostName = listen[0].getAddress();
-	}
-	for (int j = 0; j < listen.length; j++) { 
-	    String id = listen[j].getId();
-	    String port = 
-	      getResolvedPort(listen[j], serverName);
-	    if (_logger.isLoggable(Level.FINE)) {
-	        _logger.log(Level.FINE, 
-			    baseMsg + ".getSocketInfoForServer:" +
-			    " adding address for "+ 
-			    serverName + "/" + id +
-			    "/" + hostName + "/" + port);
-	    }
-	    listOfSocketInfo.add(new SocketInfo(id, hostName, Integer.valueOf(port)));
-	}
-	return listOfSocketInfo;
+            new LinkedList<SocketInfo>();
+    String serverName = serverRef.getRef();
+    String hostName =
+      getHostNameForServerInstance(serverName);
+    if (hostName == null) {
+        hostName = listen[0].getAddress();
+    }
+    for (int j = 0; j < listen.length; j++) {
+        String id = listen[j].getId();
+        String port =
+          getResolvedPort(listen[j], serverName);
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE,
+                baseMsg + ".getSocketInfoForServer:" +
+                " adding address for "+
+                serverName + "/" + id +
+                "/" + hostName + "/" + port);
+        }
+        listOfSocketInfo.add(new SocketInfo(id, hostName, Integer.valueOf(port)));
+    }
+    return listOfSocketInfo;
     }
     */
 
@@ -102,7 +102,7 @@ public class IIOPEndpointsInfo {
         //TODO FIXME
         String endpoints = null;
 
-	    return endpoints;
+        return endpoints;
 
     }
 
@@ -124,21 +124,21 @@ public class IIOPEndpointsInfo {
       */
     /*
     public static IiopListener[][] getIIOPEndPointsForCurrentCluster() {
-	// For each server instance in a cluster, there are 3 iiop listeners:
-	// one for non ssl, one for ssl and third for ssl mutual auth
-	
-        IiopListener[][] listeners = new IiopListener[serverRefs.length][3];  //SHEETAL can there be multiple SSL or 
+    // For each server instance in a cluster, there are 3 iiop listeners:
+    // one for non ssl, one for ssl and third for ssl mutual auth
+
+        IiopListener[][] listeners = new IiopListener[serverRefs.length][3];  //SHEETAL can there be multiple SSL or
                                                                          //SSL_MUTH_AUTH ports? bug 6321813
-	for (int i = 0; i < serverRefs.length; i++) {
-	    Server server = 
-		ServerHelper.getServerByName(configCtx, serverRefs[i].getRef());
-	    String configRef = server.getConfigRef();
-	    Config config =
-		ConfigAPIHelper.getConfigByName(configCtx, configRef);
-	    IiopService iiopService = config.getIiopService();
-	    listeners[i] = iiopService.getIiopListener();
-	}
-	return listeners;
+    for (int i = 0; i < serverRefs.length; i++) {
+        Server server =
+        ServerHelper.getServerByName(configCtx, serverRefs[i].getRef());
+        String configRef = server.getConfigRef();
+        Config config =
+        ConfigAPIHelper.getConfigByName(configCtx, configRef);
+        IiopService iiopService = config.getIiopService();
+        listeners[i] = iiopService.getIiopListener();
+    }
+    return listeners;
     }
     */
     /**
@@ -148,24 +148,24 @@ public class IIOPEndpointsInfo {
      * @author  sridatta.viswanath@sun.com
      */
     /*
-    public static String getHostNameForServerInstance(String serverName) 
+    public static String getHostNameForServerInstance(String serverName)
     {
         try {
-            JMXConnectorConfig info = 
-		ServerHelper.getJMXConnectorInfo(configCtx, serverName);
-            _logger.log(Level.FINE, 
-			baseMsg + ".getHostNameForServerInstance: " +
-			"found info: " + info.toString());
-	    String host = info.getHost();
-            _logger.log(Level.FINE, 
-			baseMsg + ".getHostNameForServerInstance: " +
-			"found host: " + host);
+            JMXConnectorConfig info =
+        ServerHelper.getJMXConnectorInfo(configCtx, serverName);
+            _logger.log(Level.FINE,
+            baseMsg + ".getHostNameForServerInstance: " +
+            "found info: " + info.toString());
+        String host = info.getHost();
+            _logger.log(Level.FINE,
+            baseMsg + ".getHostNameForServerInstance: " +
+            "found host: " + host);
             return host;
         } catch (Throwable e){
-            _logger.log(Level.FINE, 
-			baseMsg + ".getHostNameForServerInstance: " +
-			"gotException: " + e + " " + e.getMessage() +
-			"; returning null");
+            _logger.log(Level.FINE,
+            baseMsg + ".getHostNameForServerInstance: " +
+            "gotException: " + e + " " + e.getMessage() +
+            "; returning null");
             return null;
         }
     }
@@ -179,10 +179,10 @@ public class IIOPEndpointsInfo {
      */
     /*
     public static String getResolvedPort(IiopListener l,
-					  String server) {
-	String rawPort = l.getRawAttributeValue("port");
-	PropertyResolver pr = new PropertyResolver(configCtx, server);
-	return pr.resolve(rawPort);
+                      String server) {
+    String rawPort = l.getRawAttributeValue("port");
+    PropertyResolver pr = new PropertyResolver(configCtx, server);
+    return pr.resolve(rawPort);
     }
     */
 }

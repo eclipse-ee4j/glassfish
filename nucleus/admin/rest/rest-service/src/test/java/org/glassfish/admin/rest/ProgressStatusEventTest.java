@@ -35,15 +35,15 @@ import static org.junit.Assert.*;
  * @author martinmares
  */
 public class ProgressStatusEventTest {
-    
+
     private static ProgressStatusEventSet EVENT_SET = new ProgressStatusEventSet("a", 1, null);
     private static ProgressStatusEventProgress EVENT_PROGRESS = new ProgressStatusEventProgress("a", 3, "some message", true);
     private static ProgressStatusEventComplete EVENT_COMPLETE = new ProgressStatusEventComplete("a", "some message");
     private static ProgressStatusEventCreateChild EVENT_CREATE_CHILD = new ProgressStatusEventCreateChild("a", "child", "a.b", 10, 5);
-    
+
     private static ProgressStatusEventJsonProvider writer = new ProgressStatusEventJsonProvider();
     private static ProgressStatusEventJsonProprietaryReader reader = new ProgressStatusEventJsonProprietaryReader();
-    
+
     @Test
     public void testEventSet() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -53,7 +53,7 @@ public class ProgressStatusEventTest {
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
         assertEquals(event, EVENT_SET);
     }
-    
+
     @Test
     public void testEventProgress() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -63,7 +63,7 @@ public class ProgressStatusEventTest {
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
         assertEquals(event, EVENT_PROGRESS);
     }
-    
+
     @Test
     public void testEventComplete() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -73,7 +73,7 @@ public class ProgressStatusEventTest {
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
         assertEquals(event, EVENT_COMPLETE);
     }
-    
+
     @Test
     public void testEventCreateChild() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -83,5 +83,5 @@ public class ProgressStatusEventTest {
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
         assertEquals(event, EVENT_CREATE_CHILD);
     }
-    
+
 }

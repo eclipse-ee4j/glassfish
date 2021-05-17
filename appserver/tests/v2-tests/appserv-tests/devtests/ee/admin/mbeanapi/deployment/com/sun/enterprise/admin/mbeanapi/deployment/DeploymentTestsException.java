@@ -28,19 +28,19 @@ package com.sun.enterprise.admin.mbeanapi.deployment;
  */
 public class DeploymentTestsException extends Exception
 {
-	public DeploymentTestsException(String s)
-	{
-		super(s);
-	}
+    public DeploymentTestsException(String s)
+    {
+        super(s);
+    }
 
-	public DeploymentTestsException(Throwable t)
-	{
-		super(t);
-	}
+    public DeploymentTestsException(Throwable t)
+    {
+        super(t);
+    }
 
-	public DeploymentTestsException(String s, Throwable t)
-	{
-		super(s, t);
-	}
-	
+    public DeploymentTestsException(String s, Throwable t)
+    {
+        super(s, t);
+    }
+
 }

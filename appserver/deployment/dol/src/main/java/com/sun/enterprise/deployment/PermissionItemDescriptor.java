@@ -20,20 +20,20 @@ import org.glassfish.deployment.common.Descriptor;
 
 
 public class PermissionItemDescriptor extends Descriptor {
-    
+
     private String permClassName;
     private String targetName;
     private String actions;
-    
+
     private boolean statingPermIetmRead;
 
     private PermissionsDescriptor parent;
-    
-    
+
+
     public PermissionItemDescriptor() {
-        
+
     }
-    
+
     public PermissionsDescriptor getParent() {
         return parent;
     }
@@ -43,30 +43,30 @@ public class PermissionItemDescriptor extends Descriptor {
         this.parent = parent;
     }
 
-    
+
     public String getPermissionClassName () {
         return permClassName;
     }
-    
+
     public void setPermissionClassName (String permClassName) {
         this.permClassName = permClassName;
     }
-    
-    
+
+
     public String getTargetName() {
         return targetName;
     }
-    
+
     public void setTargetName(String targetName) {
-        
+
         this.targetName = targetName;
     }
 
-    
+
     public String getActions() {
         return this.actions;
     }
-    
+
     public void setActions(String actions) {
         this.actions = actions;
     }

@@ -24,7 +24,7 @@ import java.io.IOException;
 
 /**
  * A class for keeping track of the directories that an instance lives in and under.
- * All the methods throw checked exception to avoid the inevitable NPE otherwise - 
+ * All the methods throw checked exception to avoid the inevitable NPE otherwise -
  * when working with invalid directories...
  *
  * Example:

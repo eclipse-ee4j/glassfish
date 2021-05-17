@@ -97,7 +97,7 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
 
     //private static final Logger logger =
     //    LogDomains.getLogger(GMSAdapterImpl.class, LogDomains.GMS_LOGGER);
-    
+
     private static final String BEGINS_WITH = "^";
     private static final String GMS_PROPERTY_PREFIX = "GMS_";
     private static final String GMS_PROPERTY_PREFIX_REGEXP = BEGINS_WITH + GMS_PROPERTY_PREFIX;

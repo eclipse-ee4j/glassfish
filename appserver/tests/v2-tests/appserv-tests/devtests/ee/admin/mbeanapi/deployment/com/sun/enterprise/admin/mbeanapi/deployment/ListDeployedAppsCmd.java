@@ -60,10 +60,10 @@ public class ListDeployedAppsCmd extends DeployCmd
 
         final Set s2 = getDeployedItemRefs(target);
 
-		Set[] sets = new Set[] { s1, s2};
-        
-		return sets;
-		//return intersect(s1, s2);
+        Set[] sets = new Set[] { s1, s2};
+
+        return sets;
+        //return intersect(s1, s2);
 
     }
 
@@ -84,22 +84,22 @@ public class ListDeployedAppsCmd extends DeployCmd
 
     private Set getDeployedItemRefs(final String target) throws Exception
     {
-		Object o = getClusterOrServer(target);
-		
-		if(o == null)
-			throw new Exception("Can't find config for this target.");
-		
-		if(o instanceof ServerConfig)
-			return ((ServerConfig)o).getDeployedItemRefConfigMap().keySet();
+        Object o = getClusterOrServer(target);
 
-		if(o instanceof ClusterConfig)
-			return ((ClusterConfig)o).getDeployedItemRefConfigMap().keySet();
+        if(o == null)
+            throw new Exception("Can't find config for this target.");
 
-		if(o instanceof ClusteredServerConfig)
-			return ((ClusteredServerConfig)o).getDeployedItemRefConfigMap().keySet();
-		
-		throw new RuntimeException("???");
-	}
+        if(o instanceof ServerConfig)
+            return ((ServerConfig)o).getDeployedItemRefConfigMap().keySet();
+
+        if(o instanceof ClusterConfig)
+            return ((ClusterConfig)o).getDeployedItemRefConfigMap().keySet();
+
+        if(o instanceof ClusteredServerConfig)
+            return ((ClusteredServerConfig)o).getDeployedItemRefConfigMap().keySet();
+
+        throw new RuntimeException("???");
+    }
 
     private String getAppType()
     {

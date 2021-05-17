@@ -113,7 +113,7 @@ public class DeleteConnectorWorkSecurityMap implements AdminCommand {
             report.setFailureCause(tfe);
             return;
         }
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 

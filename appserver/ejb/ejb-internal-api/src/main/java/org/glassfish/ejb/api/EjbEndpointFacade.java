@@ -37,7 +37,7 @@ public interface EjbEndpointFacade {
      * web service endpoint.  This class loader must be the
      * Thread's context class loader when startInvocation() is called
      * and must remain the Thread's context class loader until
-     * after endInvocation() returns.   
+     * after endInvocation() returns.
      */
     public ClassLoader getEndpointClassLoader();
 
@@ -52,7 +52,7 @@ public interface EjbEndpointFacade {
      *         passed to the corresponding endInvocation.
      */
     public ComponentInvocation startInvocation();
-    
+
 
     /**
      * Perform post-processing for the web service endpoint invocation.

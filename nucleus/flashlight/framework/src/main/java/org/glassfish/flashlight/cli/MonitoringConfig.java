@@ -38,12 +38,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Service(name="monitoring-config")
 public class MonitoringConfig {
 
-    final private static LocalStringManagerImpl localStrings = 
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(MonitoringConfig.class);
 
     private static AtomicBoolean valueUpdated = new AtomicBoolean(false);
 
-    static void setMonitoringEnabled(MonitoringService ms, 
+    static void setMonitoringEnabled(MonitoringService ms,
         final String enabled, final ActionReport report) {
 
         try {
@@ -62,7 +62,7 @@ public class MonitoringConfig {
     }
 
 
-    static void setMBeanEnabled(MonitoringService ms, 
+    static void setMBeanEnabled(MonitoringService ms,
         final String enabled, final ActionReport report) {
 
         try {
@@ -81,7 +81,7 @@ public class MonitoringConfig {
     }
 
 
-    static void setDTraceEnabled(MonitoringService ms, 
+    static void setDTraceEnabled(MonitoringService ms,
         final String enabled, final ActionReport report) {
 
         try {
@@ -99,7 +99,7 @@ public class MonitoringConfig {
         }
     }
 
-    static void setMonitoringLevel(MonitoringService ms, 
+    static void setMonitoringLevel(MonitoringService ms,
         final String moduleName, final String level, final ActionReport report) {
 
         if (ms.getMonitoringLevel(moduleName) == null) {
@@ -126,7 +126,7 @@ public class MonitoringConfig {
         }
     }
 
-    static void setMonitoringLevelX(MonitoringService ms, 
+    static void setMonitoringLevelX(MonitoringService ms,
         final String moduleName, final String level, final ActionReport report) {
 
         ModuleMonitoringLevels mmls = ms.getModuleMonitoringLevels();
@@ -149,7 +149,7 @@ public class MonitoringConfig {
         } catch(TransactionFailure tfe) {
             valueUpdated.set(false);
             report.setMessage(localStrings.getLocalString("disable.monitoring.level",
-                "Encountered exception {0} while setting monitoring level to OFF for {1}", 
+                "Encountered exception {0} while setting monitoring level to OFF for {1}",
                 tfe.getMessage(), moduleName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }
@@ -181,7 +181,7 @@ public class MonitoringConfig {
             }, cm);
         } catch(TransactionFailure tfe) {
             report.setMessage(localStrings.getLocalString("disable.monitoring.level",
-                "Encountered exception {0} while setting monitoring level to OFF for {1}", 
+                "Encountered exception {0} while setting monitoring level to OFF for {1}",
                 tfe.getMessage(), moduleName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }

@@ -33,18 +33,18 @@ public class JWSACCClassLoader extends URLClassLoader {
         clientCLDelegate = new ClientClassLoaderDelegate(this);
     }
 
-    
+
     @Override
     protected PermissionCollection getPermissions(CodeSource codesource) {
 
         if (System.getSecurityManager() == null)
             return super.getPermissions(codesource);
-        
-        //when security manager is enabled, find the declared permissions        
+
+        //when security manager is enabled, find the declared permissions
         if (clientCLDelegate.getCachedPerms(codesource) != null)
             return clientCLDelegate.getCachedPerms(codesource);
-        
-        return clientCLDelegate.getPermissions(codesource, 
+
+        return clientCLDelegate.getPermissions(codesource,
                 super.getPermissions(codesource));
     }
 

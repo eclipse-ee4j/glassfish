@@ -93,7 +93,7 @@ public class EjbAsyncTask<V>
                 // exception that would be received in the synchronous case will
                 // be set as the cause of the ExecutionException returned from
                 // Future.get().
-                
+
                 if (inv.exception != null) {
                     if (inv.isLocal) {
                         InvocationHandlerUtil.throwLocalException(

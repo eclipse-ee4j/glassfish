@@ -22,7 +22,7 @@ import jakarta.resource.spi.work.WorkException;
 import jakarta.resource.spi.work.WorkManager;
 
 /**
- * 
+ *
  * @author Qingqing Ouyang
  */
 public class TestWMWork implements Work {
@@ -33,7 +33,7 @@ public class TestWMWork implements Work {
     private boolean doNest;
     private WorkManager wm;
     private ExecutionContext ctx;
-    
+
     public TestWMWork(int id, boolean isRogue) {
         this(id, isRogue, false, null);
     }

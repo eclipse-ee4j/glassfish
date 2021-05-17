@@ -74,7 +74,7 @@ public class ConstantPool implements VMConstants {
     }
     return c;
   }
-  
+
   /**
    * Find or create a field constant in the pool
    */
@@ -86,7 +86,7 @@ public class ConstantPool implements VMConstants {
 
     if (f == null) {
       f = new ConstFieldRef (addClass(className),
-			     addNameAndType(fieldName, type));
+                 addNameAndType(fieldName, type));
       internConstant(f);
     }
     return f;
@@ -96,13 +96,13 @@ public class ConstantPool implements VMConstants {
    * Find or create a method constant in the pool
    */
   public ConstMethodRef addMethodRef (String className, String methodName,
-				      String type) {
+                      String type) {
     hashConstants();
     ConstMethodRef m = (ConstMethodRef)
       searchTable(methodRefTable, className, methodName, type);
     if (m == null) {
       m = new ConstMethodRef (addClass(className),
-			      addNameAndType(methodName, type));
+                  addNameAndType(methodName, type));
       internConstant(m);
     }
     return m;
@@ -118,7 +118,7 @@ public class ConstantPool implements VMConstants {
       searchTable(ifaceMethodRefTable, className, methodName, type);
     if (m == null) {
       m = new ConstInterfaceMethodRef (addClass(className),
-				       addNameAndType(methodName, type));
+                       addNameAndType(methodName, type));
       internConstant(m);
     }
     return m;
@@ -136,7 +136,7 @@ public class ConstantPool implements VMConstants {
     }
     return cs;
   }
-  
+
   /**
    * Find or create an integer constant in the pool
    */
@@ -150,7 +150,7 @@ public class ConstantPool implements VMConstants {
     }
     return ci;
   }
-  
+
   /**
    * Find or create a float constant in the pool
    */
@@ -164,7 +164,7 @@ public class ConstantPool implements VMConstants {
     }
     return cf;
   }
-  
+
   /**
    * Find or create a long constant in the pool
    */
@@ -179,7 +179,7 @@ public class ConstantPool implements VMConstants {
     }
     return cl;
   }
-  
+
   /**
    * Find or create a double constant in the pool
    */
@@ -194,7 +194,7 @@ public class ConstantPool implements VMConstants {
     }
     return cd;
   }
-  
+
   /**
    * Find or create a name/type constant in the pool
    */
@@ -203,8 +203,8 @@ public class ConstantPool implements VMConstants {
     for (int i=0; i<nameAndTypeTable.size(); i++) {
       ConstNameAndType nt = (ConstNameAndType) nameAndTypeTable.elementAt(i);
       if (nt.name().asString().equals(name) &&
-	  nt.signature().asString().equals(type))
-	return nt;
+      nt.signature().asString().equals(type))
+    return nt;
     }
 
     ConstNameAndType nt =
@@ -272,13 +272,13 @@ public class ConstantPool implements VMConstants {
     for (int i=0; i<pool.size(); i++) {
       ConstBasic c = constantAt(i);
       if (c != null && c.tag() == CONSTANTUtf8) {
-	ConstUtf8 utf8 = (ConstUtf8) c;
-	stringSize += utf8.asString().length();
-	nStrings++;
+    ConstUtf8 utf8 = (ConstUtf8) c;
+    stringSize += utf8.asString().length();
+    nStrings++;
       }
     }
     System.out.println("  " + nStrings + " strings totalling " + //NOI18N
-		       stringSize + " bytes");//NOI18N
+               stringSize + " bytes");//NOI18N
   }
 
   void write (DataOutputStream buff) throws IOException {
@@ -286,8 +286,8 @@ public class ConstantPool implements VMConstants {
     for (int i=1; i<pool.size(); i++) {
       ConstBasic cb = (ConstBasic) pool.elementAt(i);
       if (cb != null) {
-	buff.writeByte((byte) cb.tag());
-	cb.formatData(buff);
+    buff.writeByte((byte) cb.tag());
+    cb.formatData(buff);
       }
     }
   }
@@ -299,7 +299,7 @@ public class ConstantPool implements VMConstants {
     for (int i=0; i<pool.size(); i++) {
       ConstBasic c = constantAt(i);
       if (c != null) {
-	c.setIndex(i);
+    c.setIndex(i);
         c.resolve(this);
       }
     }
@@ -313,7 +313,7 @@ public class ConstantPool implements VMConstants {
     for (int j=0; j<pool.size(); j++) {
       ConstBasic c = constantAt(j);
       if (c != null) {
-	recordConstant(c);
+    recordConstant(c);
       }
     }
 
@@ -366,12 +366,12 @@ public class ConstantPool implements VMConstants {
       break;
     default:
         throw new ClassFormatError("Don't know this constant type: " +//NOI18N
-			 Integer.toString(b));
+             Integer.toString(b));
     }
 
     pool.addElement(basic);
     if (slots > 1)
-      pool.addElement(null);   
+      pool.addElement(null);
     return slots;
   }
 
@@ -387,53 +387,53 @@ public class ConstantPool implements VMConstants {
     if (c != null) {
       switch (c.tag()) {
       case CONSTANTUtf8:
-	utfTable.put(((ConstUtf8)c).asString(), c);
-	break;
+    utfTable.put(((ConstUtf8)c).asString(), c);
+    break;
       case CONSTANTUnicode:
-	unicodeTable.put(((ConstUnicode)c).asString(), c);
-	break;
+    unicodeTable.put(((ConstUnicode)c).asString(), c);
+    break;
       case CONSTANTInteger:
-	intTable.put(new Integer(((ConstInteger)c).value()), c);
-	break;
+    intTable.put(new Integer(((ConstInteger)c).value()), c);
+    break;
       case CONSTANTFloat:
-	floatTable.put(new Float(((ConstFloat)c).value()), c);
-	break;
+    floatTable.put(new Float(((ConstFloat)c).value()), c);
+    break;
       case CONSTANTLong:
-	longTable.put(new Long(((ConstLong)c).value()), c);
-	break;
+    longTable.put(new Long(((ConstLong)c).value()), c);
+    break;
       case CONSTANTDouble:
-	doubleTable.put(new Double(((ConstDouble)c).value()), c);
-	break;
+    doubleTable.put(new Double(((ConstDouble)c).value()), c);
+    break;
       case CONSTANTClass:
-	classTable.put(((ConstClass)c).asString(), c);
-	break;
+    classTable.put(((ConstClass)c).asString(), c);
+    break;
       case CONSTANTString:
-	stringTable.put(((ConstString)c).value().asString(), c);
-	break;
+    stringTable.put(((ConstString)c).value().asString(), c);
+    break;
       case CONSTANTFieldRef:
-	fieldRefTable.addElement(c);
-	break;
+    fieldRefTable.addElement(c);
+    break;
       case CONSTANTMethodRef:
-	methodRefTable.addElement(c);
-	break;
+    methodRefTable.addElement(c);
+    break;
       case CONSTANTInterfaceMethodRef:
-	ifaceMethodRefTable.addElement(c);
-	break;
+    ifaceMethodRefTable.addElement(c);
+    break;
       case CONSTANTNameAndType:
-	nameAndTypeTable.addElement(c);
-	break;
+    nameAndTypeTable.addElement(c);
+    break;
       }
     }
   }
 
   private ConstBasicMemberRef searchTable(Vector table, String cname,
-					  String mname, String sig) {
+                      String mname, String sig) {
     for (int i=0; i<table.size(); i++) {
       ConstBasicMemberRef memRef = (ConstBasicMemberRef) table.elementAt(i);
       if (memRef.className().asString().equals(cname) &&
-	  memRef.nameAndType().name().asString().equals(mname) &&
-	  memRef.nameAndType().signature().asString().equals(sig))
-	return memRef;
+      memRef.nameAndType().name().asString().equals(mname) &&
+      memRef.nameAndType().signature().asString().equals(sig))
+    return memRef;
     }
     return null;
   }

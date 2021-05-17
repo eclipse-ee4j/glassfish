@@ -39,11 +39,11 @@ import org.glassfish.api.admin.PasswordAliasStore;
  * Provides the PasswordAliasStore behavior using a JCEKS keystore.
  * <p>
  * The keystore is actually managed by the PasswordAdapter, to which
- * this implementation currently delegates its work.  
+ * this implementation currently delegates its work.
  * <p>
  * Note that this service is currently per-lookup.  This is so that each
  * use of the alias store gets the current on-disk information.  Ideally we can change this
- * when we can use Java 7 features, including the WatchService feature.  
+ * when we can use Java 7 features, including the WatchService feature.
  * <p>
  * This class's methods are not
  * synchronized because the PasswordAdapter's methods are.  If this implementation
@@ -51,27 +51,27 @@ import org.glassfish.api.admin.PasswordAliasStore;
  * methods, then make sure that the implementation is thread-safe.
  * <p>
  * Note that the domain-scoped password alias store service class extends this
- * class.  As a service, that class will be instantiated using the no-args 
+ * class.  As a service, that class will be instantiated using the no-args
  * constructor.  So the actual initialization of the class occurs in the init
  * method.  The domain-scoped service class invokes the init method itself.
  * Any code that needs to create some other alias store can use the newInstance
  * method to provide the location of the alias store file and the password.
- * 
+ *
  * @author tjquinn
  */
 public class JCEKSPasswordAliasStore implements PasswordAliasStore {
 
     private final static Charset utf8 = Charset.forName("UTF-8");
-    
+
     private PasswordAdapter pa = null;
     private String pathToAliasStore;
     private char[] storePassword;
-    
+
     protected final void init(final String pathToAliasStore, final char[] storePassword) {
         this.pathToAliasStore = pathToAliasStore;
         this.storePassword = storePassword;
     }
-    
+
     private synchronized PasswordAdapter pa() {
         if (pa == null) {
             try {
@@ -82,13 +82,13 @@ public class JCEKSPasswordAliasStore implements PasswordAliasStore {
         }
         return pa;
     }
-    
+
     public static JCEKSPasswordAliasStore newInstance(final String pathToAliasStore, final char[] storePassword) {
         final JCEKSPasswordAliasStore result = new JCEKSPasswordAliasStore();
         result.init(pathToAliasStore, storePassword);
         return result;
     }
-    
+
     @Override
     public void clear() {
         try {

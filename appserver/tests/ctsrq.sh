@@ -31,22 +31,22 @@ Usage:
  4. ctsrq.sh -b <Glassfish_Branch> -a [-e "<email-id1> <email-id2> .."]
                  --->  Run all the available top-level CTS test identifiers
                        against the specified local Glassfish branch and email
-		       the results to the specified email-ids
+               the results to the specified email-ids
  5. ctsrq.sh -b <Glassfish_Branch> -t "<test_id1> <test_id2> <test_id3>"
                                   [-e "email-id1 email-id2 .."]
                  --->  Run the specified CTS test identifiers against the
                        specified local Glassfish branch and email the results
-		       to the specified email-ids. Note that double quotes are
+               to the specified email-ids. Note that double quotes are
                        necessary if providing multiple test-ids.
  6. ctsrq.sh -b <Glassfish_Branch> -a|-t
-	                     -c "</net/<Host_name>/<cts_bundle_location>/*.zip"
-		 --->  Run the specified CTS test identifiers against specified
-		       branch using the locally built CTS bundle. Note that CTS
-		       bundle location should be network accessible.
+                         -c "</net/<Host_name>/<cts_bundle_location>/*.zip"
+         --->  Run the specified CTS test identifiers against specified
+               branch using the locally built CTS bundle. Note that CTS
+               bundle location should be network accessible.
  7. ctsrq.sh -u <glassfish binary url>  -a|-t
-		 --->  For running all tests or specified tests with GlassFish
-		       binary provided in the http url. Note that -u option
-		       works with -a and -t options as well.
+         --->  For running all tests or specified tests with GlassFish
+               binary provided in the http url. Note that -u option
+               works with -a and -t options as well.
  8. ctsrq.sh [-h]--->  Show this message
 EOF
 )
@@ -72,13 +72,13 @@ main() {
         case "$opt" in
             b) gfs_branch=$OPTARG;;
             t) test_ids=($OPTARG);;
-	    c) cts_bundle_location=$OPTARG;;
+        c) cts_bundle_location=$OPTARG;;
             a) test_ids=(`list_top_level_test_ids`);;
             l) print_test_ids "${valid_test_ids}";;
             s) print_test_ids "$(list_top_level_test_ids)";;
             i) print_test_ids "$(list_inner_level_test_ids $OPTARG)";;
             e) email_ids=$OPTARG;;
-	    u) gfs_url=$OPTARG;;
+        u) gfs_url=$OPTARG;;
             h) echo -e "${USAGE}"; exit 0;;
            \?) echo "Invalid option -$OPTARG is specified"; exit 1;;
             :) case "$OPTARG" in
@@ -98,13 +98,13 @@ main() {
     validate_given_test_ids ${test_ids[@]}
 
     fork_origin=`git config --get remote.origin.url`
-    test_ids_encoded=`echo ${test_ids[@]} | tr ' ' '+'`    
+    test_ids_encoded=`echo ${test_ids[@]} | tr ' ' '+'`
     email_ids_encoded=`echo ${email_ids} | tr ' ' '+'`
     # Generate a unique id for the job which will be used for identifying the job id later
-	unique_id=$RANDOM
+    unique_id=$RANDOM
 
     params="BRANCH=${gfs_branch}&TEST_IDS=${test_ids_encoded}&FORK_ORIGIN=${fork_origin}&UNIQUE_ID=${unique_id}&EMAIL_IDS=${email_ids_encoded}&CTS_BUNDLE_LOCATION=${cts_bundle_location}&GLASSFISH_URL=${gfs_url}"
-    last_build=`get_last_build_number`        
+    last_build=`get_last_build_number`
 
     # Trigger the build
     curl -g -X POST "${CTS_REMOTE_QUEUE_URL}/buildWithParameters?${params}&delay=0sec" 2> /dev/null
@@ -160,7 +160,7 @@ is_test_id_valid() {
     for valid_test_id in ${valid_test_ids[@]}; do
         [[ "$given_test_id" = "$valid_test_id" ]] &&  { echo true; return 0; }
     done
-    echo false 
+    echo false
 }
 
 # Find the job id using the unique id that is generated while submitting the job

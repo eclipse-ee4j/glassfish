@@ -18,18 +18,18 @@
 -->
 
 <console-config id="community-theme">
-        <integration-point 
-                id="customtheme" 
-                type="org.glassfish.admingui:customtheme" 
+        <integration-point
+                id="customtheme"
+                type="org.glassfish.admingui:customtheme"
                 priority="100"
-                content="customtheme.properties" 
+                content="customtheme.properties"
         />
-        <integration-point 
-                id="customtheme" 
-                type="org.glassfish.admingui:masthead" 
+        <integration-point
+                id="customtheme"
+                type="org.glassfish.admingui:masthead"
                 priority="100"
-                content="branding/masthead.inc" 
-        />   
+                content="branding/masthead.inc"
+        />
         <integration-point
                 id="customtheme"
                 type="org.glassfish.admingui:favicon"
@@ -37,41 +37,41 @@
                 content="branding/favicon.inc"
                 parentId="head"
         />
-        <integration-point 
-                id="customtheme" 
-                type="org.glassfish.admingui:loginimage" 
+        <integration-point
+                id="customtheme"
+                type="org.glassfish.admingui:loginimage"
                 priority="100"
-                content="branding/loginimage.inc" 
-        />  
-        <integration-point 
-                id="customtheme" 
+                content="branding/loginimage.inc"
+        />
+        <integration-point
+                id="customtheme"
                 type="org.glassfish.admingui:loginform"
                 priority="100"
                 content="branding/loginform.inc"
-        />          
-        <integration-point 
-                id="customtheme" 
+        />
+        <integration-point
+                id="customtheme"
                 type="org.glassfish.admingui:shutdownform"
                 priority="100"
                 content="branding/shutdown.inc"
-        />          
+        />
         <integration-point
                 id="customtheme"
                 type="org.glassfish.admingui:versioninfo"
                 priority="100"
                 content="branding/versioninfo.inc"
         />
-        <integration-point 
-                id="customtheme" 
-                type="org.glassfish.admingui:upsellframepe" 
+        <integration-point
+                id="customtheme"
+                type="org.glassfish.admingui:upsellframepe"
                 priority="100"
-                content="branding/upsellpe.inc" 
-        /> 
-        <integration-point 
-                id="customtheme" 
-                type="org.glassfish.admingui:upsellframeee" 
+                content="branding/upsellpe.inc"
+        />
+        <integration-point
+                id="customtheme"
+                type="org.glassfish.admingui:upsellframeee"
                 priority="100"
-                content="branding/upsellee.inc" 
-        />         
+                content="branding/upsellee.inc"
+        />
 </console-config>
 

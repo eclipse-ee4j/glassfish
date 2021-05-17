@@ -42,7 +42,7 @@ public final class Environment {
 
     /**
      * Set the prefix for environment variables referenced from the system environment by Environment objects.
-     * 
+     *
      * @param p the new prefix
      */
     public static void setPrefix(String p) {

@@ -62,7 +62,7 @@ public class Client {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-    	return;
+        return;
     }
 
     private void testResponse(String testDescription, String response){

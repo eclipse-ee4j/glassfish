@@ -46,7 +46,7 @@ import org.glassfish.internal.api.Globals;
  */
 public class VirtualServerFacade implements org.glassfish.embeddable.web.VirtualServer {
 
-        
+
     // ----------------------------------------------------------- Constructors
 
 

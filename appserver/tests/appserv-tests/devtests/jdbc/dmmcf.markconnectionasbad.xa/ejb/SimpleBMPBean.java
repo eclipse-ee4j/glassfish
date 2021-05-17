@@ -51,13 +51,13 @@ public class SimpleBMPBean
 
 
     public Set<Integer> getFromLocalDS(int count) {
-        int connHashCode = 0;	
+        int connHashCode = 0;
         Connection conn = null;
-	Set<Integer> hashCodeSet = new HashSet();
+    Set<Integer> hashCodeSet = new HashSet();
         for (int i = 0; i < count; i++) {
-	    try {
-		conn = localds.getNonTxConnection();
-		connHashCode = (localds.getConnection(conn)).hashCode();
+        try {
+        conn = localds.getNonTxConnection();
+        connHashCode = (localds.getConnection(conn)).hashCode();
                 hashCodeSet.add(connHashCode);
             } catch (Exception e) {
 
@@ -69,8 +69,8 @@ public class SimpleBMPBean
                     }
                 }
             }
-	}
-	return hashCodeSet;
+    }
+    return hashCodeSet;
     }
 
     /* Read Operation - Driver  - shareable */
@@ -332,7 +332,7 @@ public class SimpleBMPBean
             stmt.executeUpdate("insert into owner values (9,'localds')");
 
             conn1 = ds1.getConnection();
-	    System.out.println("Conn1 got " + conn1);
+        System.out.println("Conn1 got " + conn1);
             Statement stmt1 = conn1.createStatement();
             stmt1.executeUpdate("insert into o_customer values (9,'xads')");
 
@@ -351,7 +351,7 @@ public class SimpleBMPBean
                 try {
                     ds1.markConnectionAsBad(conn1);
                     conn1.close();
-		    System.out.println("Conn1 closed "+ conn1);
+            System.out.println("Conn1 closed "+ conn1);
                 } catch (Exception e1) {
                 }
             }

@@ -21,7 +21,7 @@
 <!ENTITY testproperties SYSTEM "./build.properties">
 <!ENTITY common SYSTEM "../../../config/common.xml">
 <!ENTITY testcommon SYSTEM "../../../config/properties.xml">
-   
+
 ]>
 
 <project name="simpleApp" default="usage" basedir=".">
@@ -40,7 +40,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -52,17 +52,17 @@
 
     <target name="build" depends="compile">
         <antcall target="ejb-jar-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*Bean*.class" />
-	</antcall>
-	<echo message="Preparing Jar file to execute in the client ${build.classes.dir}"  />
-  	<jar jarfile="${assemble.dir}/${appname}-client.jar" basedir="${build.classes.dir}"
-      	   update="true" includes ="**/*Client*.class"
+    </antcall>
+    <echo message="Preparing Jar file to execute in the client ${build.classes.dir}"  />
+      <jar jarfile="${assemble.dir}/${appname}-client.jar" basedir="${build.classes.dir}"
+             update="true" includes ="**/*Client*.class"
           manifest="./client/MANIFEST.MF" />
         <antcall target="ear-common">
         </antcall>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common">
         <antcall target="deploy-jms-common"/>
     </target>
@@ -70,25 +70,25 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="${test.client}" fork="true">
-	   <classpath>
-	       <pathelement location="${assemble.dir}/${appname}-client.jar"/>
-<!--	       <pathelement location="${jmsra.jar}"/>-->
-	       <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
-	       <pathelement location="${java.home}/lib/jsse.jar"/>
-	       <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar"/>
-<!--	       <pathelement path="${s1astest.classpath}"/>-->
-	   </classpath>
-	   <sysproperty key="org.omg.CORBA.ORBInitialHost" value="${orb.host}"/>
-	   <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
-	</java>
+       <classpath>
+           <pathelement location="${assemble.dir}/${appname}-client.jar"/>
+<!--           <pathelement location="${jmsra.jar}"/>-->
+           <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+           <pathelement location="${java.home}/lib/jsse.jar"/>
+           <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar"/>
+<!--           <pathelement path="${s1astest.classpath}"/>-->
+       </classpath>
+       <sysproperty key="org.omg.CORBA.ORBInitialHost" value="${orb.host}"/>
+       <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
+    </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup" depends="init-common">
         <antcall target="undeploy-jms-common"/>

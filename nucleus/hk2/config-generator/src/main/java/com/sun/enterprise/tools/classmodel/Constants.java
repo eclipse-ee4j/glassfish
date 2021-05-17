@@ -24,21 +24,21 @@ public class Constants {
    * Passed as a system property.
    */
   public static final String PARAM_INHABITANT_TARGET_FILE = "inhabitants.target.file";
-  
+
   /**
    * This is the source inhabitants file read.
    * <p>
    * Passed as a system property.
    */
   public static final String PARAM_INHABITANT_SOURCE_FILE = "inhabitants.source.file";
-  
+
   /**
-   * This is the source files (jars | directories) to introspect and build a habitat for. 
+   * This is the source files (jars | directories) to introspect and build a habitat for.
    * <p>
    * Passed as a system property.
    */
   public static final String PARAM_INHABITANTS_SOURCE_FILES = "inhabitants.source.files";
-  
+
   /**
    * This is the working classpath the introspection machinery will use to resolve
    * referenced contracts and annotations.  <b>Without this you may see a bogus
@@ -55,7 +55,7 @@ public class Constants {
    * Passed as a system property.
    */
   public static final String PARAM_INHABITANTS_SORTED = "inhabitants.sorted";
-  
+
   /**
    * This is the optionally provided Advisor for pruning and/or caching the {@link #PARAM_INHABITANTS_CLASSPATH}.
    * <p>

@@ -60,10 +60,10 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         if (conf.getLogger() != null) {
             logger = conf.getLogger();
         }
-        
+
         super.initialize(conf);
         debugStr = "[FileBackingStore - " + conf.getStoreName() + "] ";
-        
+
         baseDir = conf.getBaseDirectory();
 
         try {
@@ -119,7 +119,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
                 logger.log(Level.WARNING,debugStr + "Failed to load(" + key + ", " + version + ")", ex);
             }
         }
-        
+
         return value;
     }
 
@@ -174,7 +174,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
         return removeExpired(defaultMaxIdleTimeoutInSeconds * 1000L);
     }
 
-    //TODO: deprecate after next shoal integration   
+    //TODO: deprecate after next shoal integration
     public int removeExpired(long idleForMillis) {
         long threshold = System.currentTimeMillis() - idleForMillis;
         int expiredSessions = 0;
@@ -247,7 +247,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
             throws BackingStoreException {
         updateTimestamp(k, timeStamp);
     }
-    
+
     public void updateTimestamp(K sessionKey, long time)
             throws BackingStoreException {
         if (logger.isLoggable(TRACE_LEVEL)) {
@@ -317,7 +317,7 @@ public class FileBackingStore<K extends Serializable, V extends Serializable>
             throw new BackingStoreException("Error during getSerializedState", ioEx);
         } finally {
             try {
-		if (oos != null) {
+        if (oos != null) {
                     oos.close();
                 }
             } catch (IOException ioEx) {/* Noop */}

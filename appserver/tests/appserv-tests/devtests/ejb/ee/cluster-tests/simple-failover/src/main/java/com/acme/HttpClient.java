@@ -72,10 +72,10 @@ public class HttpClient {
                 System.out.println("Connecting for the " + i + " time....");
                 u = new URL(url);
                 uc = u.openConnection();
-		for (String cookie : responseCookies) {
-                	uc.setRequestProperty("Cookie", cookie);
+        for (String cookie : responseCookies) {
+                    uc.setRequestProperty("Cookie", cookie);
                         System.out.println("==>Setting Cookie: " + cookie);
-		}
+        }
                 uc.connect();
                 SessionStateInfo info = extractSessionStates(uc);
                 info.setAccessCount(2+i);
@@ -105,10 +105,10 @@ public class HttpClient {
                 System.out.println("Connecting for the " + i + " time....");
                 u = new URL(url);
                 uc = u.openConnection();
-		for (String cookie : responseCookies) {
-                	uc.setRequestProperty("Cookie", cookie);
+        for (String cookie : responseCookies) {
+                    uc.setRequestProperty("Cookie", cookie);
                         System.out.println("==>Setting Cookie: " + cookie);
-		}
+        }
                 uc.connect();
                 SessionStateInfo info = extractSessionStates(uc);
                 info.setAccessCount(5+i);
@@ -121,7 +121,7 @@ public class HttpClient {
                     System.out.println("Failed " + info);
                 }
             }
-            
+
 /*
             System.out.println("Restarting inst1...");
             proc = Runtime.getRuntime().exec(ASADMIN + "  start-instance inst1");
@@ -146,14 +146,14 @@ public class HttpClient {
                 responseCookies.add(cookie);
                 System.out.println("JUST READ COOKIE: " + cookie);
                 if (cookie.startsWith("JSESSIONID=")) {
-		    jsessionIDCookie = cookie;
+            jsessionIDCookie = cookie;
                 }
             }
         }
 
         if (tmpSessState.getJsessionCookie() == null) {
-            tmpSessState.setJsessionCookie(jsessionIDCookie);    
-            responseCookies.add(jsessionIDCookie);    
+            tmpSessState.setJsessionCookie(jsessionIDCookie);
+            responseCookies.add(jsessionIDCookie);
         }
         int code = ((HttpURLConnection) uc).getResponseCode();
         InputStream is = uc.getInputStream();
@@ -220,7 +220,7 @@ public class HttpClient {
             result = result && prev.getHttpCounter() < current.getHttpCounter();
             result = result && prev.getEjb1Counter() < current.getEjb1Counter();
             result = result && prev.getEjb2Counter() < current.getEjb2Counter();
-            
+
         }
         return result;
     }

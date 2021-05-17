@@ -54,14 +54,14 @@ import com.sun.enterprise.admin.mbeanapi.common.AMXConnector;
  */
 public class MiscMonitoring {
 
-    private static DomainRoot	mDomainRoot;
+    private static DomainRoot    mDomainRoot;
 
     private static final String SERVER_NAME = "server";
 
     public void  testThreadPoolStats(ServerRootMonitor svrRootMtr)
     {
         Map tpMap= svrRootMtr.getThreadPoolMonitorMap();
-        System.out.println("\n" + "Thread Pool Monitor Stats: " 
+        System.out.println("\n" + "Thread Pool Monitor Stats: "
         + "\n");
 
         System.out.println("Thread PoolORB monitor map " + tpMap.size());
@@ -80,7 +80,7 @@ public class MiscMonitoring {
     public void  testORBStats(ServerRootMonitor svrRootMtr)
     {
         Map orbMap= svrRootMtr.getORBConnectionManagerMonitorMap();
-        System.out.println("\n" + "ORB Connection Manager Monitor Stats: " 
+        System.out.println("\n" + "ORB Connection Manager Monitor Stats: "
         + "\n");
 
         System.out.println("ORB monitor map " + orbMap.size());
@@ -106,7 +106,7 @@ public class MiscMonitoring {
 
     public void  testTransactionServiceStats(ServerRootMonitor svrRootMtr)
     {
-        TransactionServiceMonitor tsMtr = 
+        TransactionServiceMonitor tsMtr =
             svrRootMtr.getTransactionServiceMonitor();
 
         System.out.println("\n" + "Transaction Service Monitor Stats: " + "\n");
@@ -140,40 +140,40 @@ public class MiscMonitoring {
         }
     }
 
-    public void printStats(Statistic[] stats) 
+    public void printStats(Statistic[] stats)
     {
         if (stats == null)
             return;
 
-        for ( int i=0; i < stats.length; i++) 
+        for ( int i=0; i < stats.length; i++)
         {
             printStat(stats[i]);
         }
-        
+
     }
-    
-    public void printStat(Statistic stat) 
+
+    public void printStat(Statistic stat)
     {
         if (stat == null)
             return;
         else
-            System.out.println(" Stat name is " + stat.getName() + 
-                " description: " + stat.getDescription() + " start time " 
-                + stat.getStartTime() + " last sample time " 
+            System.out.println(" Stat name is " + stat.getName() +
+                " description: " + stat.getDescription() + " start time "
+                + stat.getStartTime() + " last sample time "
                 + stat.getLastSampleTime() + " unit " + stat.getUnit());
     }
 
-    public MiscMonitoring(final String host, 
-                                   final int port, 
-                                   final String adminUser, 
+    public MiscMonitoring(final String host,
+                                   final int port,
+                                   final String adminUser,
                                    final String adminPassword,
                                    final boolean useTLS)
                                     throws IOException
     {
-        final AMXConnector ct	= 
+        final AMXConnector ct    =
             new AMXConnector( host, port, adminUser, adminPassword, useTLS );
 
-        mDomainRoot	= ct.getDomainRoot();
+        mDomainRoot    = ct.getDomainRoot();
 
     }
 
@@ -196,8 +196,8 @@ public class MiscMonitoring {
             ServerRootMonitor svrRootMtr = (ServerRootMonitor) monitorRoot.
                         getServerRootMonitorMap().  get(SERVER_NAME);
 
-            miscMtr.testJVMStats(svrRootMtr); 
-            miscMtr.testTransactionServiceStats(svrRootMtr); 
+            miscMtr.testJVMStats(svrRootMtr);
+            miscMtr.testTransactionServiceStats(svrRootMtr);
             miscMtr.testHTTPServiceStats(svrRootMtr);
             miscMtr.testThreadPoolStats(svrRootMtr);
             miscMtr.testORBStats(svrRootMtr);

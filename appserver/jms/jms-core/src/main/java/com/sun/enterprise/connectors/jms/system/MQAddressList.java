@@ -258,7 +258,7 @@ public class MQAddressList {
         final Server[] buddies = getServersInCluster(cluster);
         final Config cfg =  getConfigForServer(buddies[0]);
         return cfg.getExtensionByType(JmsService.class);
-	}
+    }
 
     private Config getConfigForServer(Server server){
 
@@ -297,16 +297,16 @@ public class MQAddressList {
          else{
             Server[] buddies = getServersInCluster(cluster);
             // return the first valid host
-			// there may be hosts attached to an NA that is down
+            // there may be hosts attached to an NA that is down
             if (buddies.length > 0){
                 masterBrokerInstance = buddies[0];
             }
         }
         final JmsHost copy = getResolvedJmsHost(masterBrokerInstance);
-	    if (copy != null)
+        if (copy != null)
             return copy;
         else
-	        throw new RuntimeException("No JMS hosts available to select as Master");
+            throw new RuntimeException("No JMS hosts available to select as Master");
     }
 
     public Cluster getClusterByName(String clusterName)
@@ -612,7 +612,7 @@ public class MQAddressList {
             logFine("getResolvedJmsHost " + as);
 //        final JmsService jmsService     = Globals.get(JmsService.class);
   //      JmsHost jmsHost                 = null;
-    //    if (JMSServiceType.LOCAL.toString().equals(jmsService.getType())	|| JMSServiceType.EMBEDDED.toString().equals(jmsService.getType())) {
+    //    if (JMSServiceType.LOCAL.toString().equals(jmsService.getType())    || JMSServiceType.EMBEDDED.toString().equals(jmsService.getType())) {
       //      jmsHost = getDefaultJmsHost(jmsService);
         //}
        // return ( jmsHost );
@@ -673,7 +673,7 @@ public class MQAddressList {
         {
             JmsService jmsService = config.getExtensionByType(JmsService.class);
             JmsHost jmsHost = null;
-             if (JMSServiceType.LOCAL.toString().equals(jmsService.getType())	|| JMSServiceType.EMBEDDED.toString().equals(jmsService.getType())) {
+             if (JMSServiceType.LOCAL.toString().equals(jmsService.getType())    || JMSServiceType.EMBEDDED.toString().equals(jmsService.getType())) {
             jmsHost = getDefaultJmsHost(jmsService);
             }
             return ( jmsHost );

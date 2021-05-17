@@ -39,7 +39,7 @@ public class SfulDriverEJB
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public String sayRemoteHello() {
-	return remoteSful.sayNamaste();
+    return remoteSful.sayNamaste();
     }
 
 

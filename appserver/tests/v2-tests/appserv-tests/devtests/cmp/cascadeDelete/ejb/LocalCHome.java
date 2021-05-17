@@ -25,10 +25,10 @@ import jakarta.ejb.*;
  */
 
 public interface LocalCHome extends jakarta.ejb.EJBLocalHome {
-    
+
     public cascadeDelete.LocalC findByPrimaryKey(java.lang.Integer aKey)
     throws jakarta.ejb.FinderException;
-    
+
     public java.util.Collection findAll() throws jakarta.ejb.FinderException;
-    
+
 }

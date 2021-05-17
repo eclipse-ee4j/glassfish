@@ -82,10 +82,10 @@ abstract class ConnectionPoolStatsTest
         final CountStatistic c5 = s.getNumConnDestroyed();
         assert (c5 != null);
 
-        //final CountStatistic c6	= s.getNumConnOpened();
+        //final CountStatistic c6    = s.getNumConnOpened();
         // assert( c6 != null );
 
-        //final CountStatistic c7	= s.getNumConnClosed();
+        //final CountStatistic c7    = s.getNumConnClosed();
         // assert( c7 != null );
 
         final CountStatistic c8 = s.getAverageConnWaitTime();

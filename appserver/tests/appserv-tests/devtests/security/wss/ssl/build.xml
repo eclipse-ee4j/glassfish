@@ -55,7 +55,7 @@
     </target>
 
     <target name="compile-client" depends="prepare-truststore-common, init-security-util">
-        <mkdir dir="${build.classes.dir}/client"/> 
+        <mkdir dir="${build.classes.dir}/client"/>
         <antcall target="wsimport">
                 <!--value="-keep -d ${build.classes.dir}/client https://${s1asCN}:${https.port}/WssSslEjbService/HelloEjb?WSDL"/>-->
             <param name="wsimport.VMARGS" value=" -Djavax.net.ssl.trustStore=${build.base.dir}/cacerts.jks -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
@@ -80,7 +80,7 @@
 
     <target name="build-server" depends="compile-server">
         <mkdir dir="${assemble.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/> 
+        <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/ejbws"/>
@@ -93,16 +93,16 @@
             <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
         </antcall>
 
-        <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/> 
-        <jar jarfile="${assemble.dir}/${appname}App.ear"> 
+        <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+        <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
                <include name="*.jar"/>
                <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-	       <include name="META-INF/application.xml"/>
+           <include name="META-INF/application.xml"/>
             </fileset>
-        </jar>   
+        </jar>
     </target>
 
     <target name="build-client" depends="compile-client">
@@ -110,11 +110,11 @@
 
         <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
         <antcall target="package-appclientjar-common">
-            <param name="appclientjar.files" 
+            <param name="appclientjar.files"
                 value="${build.classes.dir}/client"/>
-            <param name="appclient.jar" 
+            <param name="appclient.jar"
                 value="${assemble.dir}/${appname}-client.jar"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
                 value="com/sun/**/*.class"/>
         </antcall>
     </target>

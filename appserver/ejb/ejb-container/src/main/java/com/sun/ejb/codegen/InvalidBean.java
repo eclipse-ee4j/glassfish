@@ -21,6 +21,6 @@ public class InvalidBean extends GeneratorException {
      * Constructs the InvalidBean exception with the specified string.
      */
     public InvalidBean(String s) {
-	super(s);
+    super(s);
     }
 }

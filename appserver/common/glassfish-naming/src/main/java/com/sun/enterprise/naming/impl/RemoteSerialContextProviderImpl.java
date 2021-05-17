@@ -33,7 +33,7 @@ import org.omg.CORBA.ORB;
  *
  * @author Sheetal Vartak
  */
-public class RemoteSerialContextProviderImpl 
+public class RemoteSerialContextProviderImpl
     extends SerialContextProviderImpl {
 
     static public final String SERIAL_CONTEXT_PROVIDER_NAME =
@@ -42,13 +42,13 @@ public class RemoteSerialContextProviderImpl
     private ORB orb;
 
     private RemoteSerialContextProviderImpl(ORB orb, TransientContext rootContext)
-	    throws RemoteException {
+        throws RemoteException {
 
-	    super(rootContext);
+        super(rootContext);
 
         this.orb = orb;
     }
-    
+
     @Override
     public Hashtable list() throws RemoteException {
         try {
@@ -66,7 +66,7 @@ public class RemoteSerialContextProviderImpl
             Object val = it.next().getValue();
             // Issue 17219 skip non-serializable values for remote client.
             if(!(val instanceof java.io.Serializable) || val instanceof Context) {
-                it.remove();  
+                it.remove();
             }
         }
         return ne;
@@ -76,24 +76,24 @@ public class RemoteSerialContextProviderImpl
      * Create the remote object and publish it in the CosNaming name service.
      */
     static public Remote initSerialContextProvider(ORB orb, TransientContext rootContext)
-	    throws RemoteException {
+        throws RemoteException {
        return new RemoteSerialContextProviderImpl(orb, rootContext);
     }
-        
+
     @Override
     public Object lookup(String name) throws NamingException, RemoteException {
         Object obj = super.lookup(name);
 
         // If CORBA object, resolve here in server to prevent a
-	    // another round-trip to CosNaming.
+        // another round-trip to CosNaming.
 
         ClassLoader originalClassLoader = null;
 
-	    try {
-	        if( obj instanceof Reference ) {
-		        Reference ref = (Reference) obj;
-                         
-		        if( ref.getFactoryClassName().equals(GlassfishNamingManagerImpl.IIOPOBJECT_FACTORY) ) {
+        try {
+            if( obj instanceof Reference ) {
+                Reference ref = (Reference) obj;
+
+                if( ref.getFactoryClassName().equals(GlassfishNamingManagerImpl.IIOPOBJECT_FACTORY) ) {
 
                     // Set CCL to this CL so it's guaranteed to be able to find IIOPObjectFactory
                     originalClassLoader = Utility.setContextClassLoader(getClass().getClassLoader());
@@ -105,21 +105,21 @@ public class RemoteSerialContextProviderImpl
                             (obj, new CompositeName(name), null, env);
                 }
 
-		    } else if (obj instanceof NamingObjectProxy) {
+            } else if (obj instanceof NamingObjectProxy) {
 
                 NamingObjectProxy namingProxy = (NamingObjectProxy) obj;
 
                 //this call will make sure that the actual object is initialized
                 obj  = ((NamingObjectProxy) obj).create(new InitialContext());
 
-		// If it's an InitialNamingProxy, ignore the result of the
-		// create() call and re-lookup the name.
+        // If it's an InitialNamingProxy, ignore the result of the
+        // create() call and re-lookup the name.
                 if( namingProxy instanceof NamingObjectProxy.InitializationNamingObjectProxy ) {
                     return super.lookup(name);
                 }
             }
-	    } catch(Exception e) {
-	        RemoteException re = new RemoteException("", e);
+        } catch(Exception e) {
+            RemoteException re = new RemoteException("", e);
             throw re;
         }  finally {
             if( originalClassLoader != null ) {

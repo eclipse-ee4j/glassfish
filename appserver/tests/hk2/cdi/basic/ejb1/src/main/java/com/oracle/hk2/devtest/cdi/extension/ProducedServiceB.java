@@ -19,7 +19,7 @@ package com.oracle.hk2.devtest.cdi.extension;
 /**
  * This is a service that is produces to test that producer
  * events have access to the ServiceLocator
- * 
+ *
  * @author jwells
  *
  */

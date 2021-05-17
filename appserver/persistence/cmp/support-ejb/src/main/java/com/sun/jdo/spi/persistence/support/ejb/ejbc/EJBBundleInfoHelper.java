@@ -39,205 +39,205 @@ import org.glassfish.ejb.deployment.descriptor.RelationRoleDescriptor;
 import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;
 import org.netbeans.modules.dbschema.SchemaElement;
 
-/** This is a class which implements the EJBInfoHelper interface 
+/** This is a class which implements the EJBInfoHelper interface
  * based on EjbBundleDescriptor and other DOL classes.
  *
  * @author Rochelle Raccah
  */
 public class EJBBundleInfoHelper implements EJBInfoHelper {
-	private static final char UNDERLINE = '_'; // NOI18N
-	private static final char DOT = '.'; // NOI18N
+    private static final char UNDERLINE = '_'; // NOI18N
+    private static final char DOT = '.'; // NOI18N
 
-	private final EjbBundleDescriptorImpl bundleDescriptor;
-	private Collection availableSchemaNames;
-	private NameMapper nameMapper;	// standard one
-	private Model model;
+    private final EjbBundleDescriptorImpl bundleDescriptor;
+    private Collection availableSchemaNames;
+    private NameMapper nameMapper;    // standard one
+    private Model model;
 
-	/** Creates a new instance of EJBBundleInfoHelper
-	 * @param bundleDescriptor the EjbBundleDescriptor which defines the 
-	 * universe of names for this application.
-	 * @param availableSchemaNames a Collection of available schemas 
-	 * in the application - used only during development
-	 */
-	public EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor,
-			Collection availableSchemaNames) {
-		this(bundleDescriptor, null, null, availableSchemaNames);
-	}
+    /** Creates a new instance of EJBBundleInfoHelper
+     * @param bundleDescriptor the EjbBundleDescriptor which defines the
+     * universe of names for this application.
+     * @param availableSchemaNames a Collection of available schemas
+     * in the application - used only during development
+     */
+    public EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor,
+            Collection availableSchemaNames) {
+        this(bundleDescriptor, null, null, availableSchemaNames);
+    }
 
-	/** Creates a new instance of EJBBundleInfoHelper
-	 * @param bundleDescriptor the EjbBundleDescriptor which defines the 
-	 * universe of names for this application.
-	 * @param nameMapper the NameMapper object to be used - allows 
-	 * a client to supply its own mapper to the helper rather than 
-	 * have the helper construct a new instance
-	 * @param model the Model object to be used - allows 
-	 * a client to supply its own mapper to the helper rather than 
-	 * have the helper construct a new instance
-	 * @param availableSchemaNames a Collection of available schemas 
-	 * in the application - used only during development
-	 */
-	EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor,
-			NameMapper nameMapper, Model model, 
-			Collection availableSchemaNames) {
-		this.bundleDescriptor = bundleDescriptor;
-		this.nameMapper = nameMapper;
-		this.model = model;
-		this.availableSchemaNames = availableSchemaNames;
-	}
+    /** Creates a new instance of EJBBundleInfoHelper
+     * @param bundleDescriptor the EjbBundleDescriptor which defines the
+     * universe of names for this application.
+     * @param nameMapper the NameMapper object to be used - allows
+     * a client to supply its own mapper to the helper rather than
+     * have the helper construct a new instance
+     * @param model the Model object to be used - allows
+     * a client to supply its own mapper to the helper rather than
+     * have the helper construct a new instance
+     * @param availableSchemaNames a Collection of available schemas
+     * in the application - used only during development
+     */
+    EJBBundleInfoHelper(EjbBundleDescriptorImpl bundleDescriptor,
+            NameMapper nameMapper, Model model,
+            Collection availableSchemaNames) {
+        this.bundleDescriptor = bundleDescriptor;
+        this.nameMapper = nameMapper;
+        this.model = model;
+        this.availableSchemaNames = availableSchemaNames;
+    }
 
-	/** Gets the EjbBundleDescriptor which defines the universe of
-	 * names for this application.
-	 * @return the EjbBundleDescriptor which defines the universe of
-	 * names for this application.
-	 */
-	private EjbBundleDescriptorImpl getBundleDescriptor() {
-		return bundleDescriptor;
-	}
+    /** Gets the EjbBundleDescriptor which defines the universe of
+     * names for this application.
+     * @return the EjbBundleDescriptor which defines the universe of
+     * names for this application.
+     */
+    private EjbBundleDescriptorImpl getBundleDescriptor() {
+        return bundleDescriptor;
+    }
 
-	/** 
-	 * @see EJBInfoHelper#getEjbJarDisplayName
-	 */
-	public String getEjbJarDisplayName() {
-		return bundleDescriptor.getName();
-	}
+    /**
+     * @see EJBInfoHelper#getEjbJarDisplayName
+     */
+    public String getEjbJarDisplayName() {
+        return bundleDescriptor.getName();
+    }
 
-	/** Gets a collection of names of schemas defined in this
-	 * ejb jar.  This implementation simply returns the list passed in
-	 * the constructor or <code>null</code> if there was none supplied.
-	 * @return a collection schema names
-	 */
-	public Collection getAvailableSchemaNames () {
-		return availableSchemaNames;
-	}
+    /** Gets a collection of names of schemas defined in this
+     * ejb jar.  This implementation simply returns the list passed in
+     * the constructor or <code>null</code> if there was none supplied.
+     * @return a collection schema names
+     */
+    public Collection getAvailableSchemaNames () {
+        return availableSchemaNames;
+    }
 
-	/** Gets the name to use for schema generation.  This implementation 
-	 * uses a combo of app name, module name, etc.
-	 * @return the name to use for schema generation
-	 */
-	public String getSchemaNameToGenerate() {
-		// make sure there is no '.' in schema name
-		return DeploymentHelper.getDDLNamePrefix(
-			getBundleDescriptor()).replace(DOT, UNDERLINE);
-	}
+    /** Gets the name to use for schema generation.  This implementation
+     * uses a combo of app name, module name, etc.
+     * @return the name to use for schema generation
+     */
+    public String getSchemaNameToGenerate() {
+        // make sure there is no '.' in schema name
+        return DeploymentHelper.getDDLNamePrefix(
+            getBundleDescriptor()).replace(DOT, UNDERLINE);
+    }
 
-	/** Gets the schema with the specified name, loading it if necessary.
-	 * This implementation uses the class loader as the extra context 
-	 * information used to load.
-	 * @param schemaName the name of the schema to be loaded
-	 * @return the schema object
-	 */
-	public SchemaElement getSchema(String schemaName) {
-		return SchemaElement.forName(schemaName, getClassLoader());
-	}
+    /** Gets the schema with the specified name, loading it if necessary.
+     * This implementation uses the class loader as the extra context
+     * information used to load.
+     * @param schemaName the name of the schema to be loaded
+     * @return the schema object
+     */
+    public SchemaElement getSchema(String schemaName) {
+        return SchemaElement.forName(schemaName, getClassLoader());
+    }
 
-	/** 
-	 * @see EJBInfoHelper#getEjbNames
-	 */
-	public Collection getEjbNames() {
-		Iterator iterator = getBundleDescriptor().getEjbs().iterator();
-		ArrayList returnList = new ArrayList();
+    /**
+     * @see EJBInfoHelper#getEjbNames
+     */
+    public Collection getEjbNames() {
+        Iterator iterator = getBundleDescriptor().getEjbs().iterator();
+        ArrayList returnList = new ArrayList();
 
-		while (iterator.hasNext()) {
-			EjbDescriptor ejb = (EjbDescriptor)iterator.next();
+        while (iterator.hasNext()) {
+            EjbDescriptor ejb = (EjbDescriptor)iterator.next();
 
             if (ejb instanceof EjbCMPEntityDescriptor)
-				returnList.add(ejb.getName());
-		}
-		
-		return returnList;
-	}
+                returnList.add(ejb.getName());
+        }
 
-	/** 
-	 * @see EJBInfoHelper#getFieldsForEjb
-	 */
-	public Collection getFieldsForEjb(String ejbName) {
-		Iterator iterator = getModel().getFields(ejbName).iterator();
-		ArrayList returnList = new ArrayList();
+        return returnList;
+    }
 
-		while (iterator.hasNext())
-			returnList.add(iterator.next());
+    /**
+     * @see EJBInfoHelper#getFieldsForEjb
+     */
+    public Collection getFieldsForEjb(String ejbName) {
+        Iterator iterator = getModel().getFields(ejbName).iterator();
+        ArrayList returnList = new ArrayList();
 
-		return returnList;
-	}
+        while (iterator.hasNext())
+            returnList.add(iterator.next());
 
-	/** 
-	 * @see EJBInfoHelper#getRelationshipsForEjb
-	 */
-	public Collection getRelationshipsForEjb(String ejbName) {
-		Iterator iterator = getBundleDescriptor().getRelationships().iterator();
-		ArrayList returnList = new ArrayList();
+        return returnList;
+    }
 
-		// TODO: issue of usage of this - several iterations of this if
-		// iterating all the bean - but, I think it can change, so can't 
-		// cache it in a map (same comment applies to getEjbNames and 
-		// getFieldsForEjb)
-		while (iterator.hasNext()) {
-			RelationshipDescriptor relD =
-				(RelationshipDescriptor)iterator.next();
-			RelationRoleDescriptor testRole = relD.getSource();
-			String cmrField = null;
+    /**
+     * @see EJBInfoHelper#getRelationshipsForEjb
+     */
+    public Collection getRelationshipsForEjb(String ejbName) {
+        Iterator iterator = getBundleDescriptor().getRelationships().iterator();
+        ArrayList returnList = new ArrayList();
 
-			if (ejbName.equals(testRole.getOwner().getName())) {
-				cmrField = testRole.getCMRField();
-				if (cmrField != null)
-					returnList.add(cmrField);
-			}
+        // TODO: issue of usage of this - several iterations of this if
+        // iterating all the bean - but, I think it can change, so can't
+        // cache it in a map (same comment applies to getEjbNames and
+        // getFieldsForEjb)
+        while (iterator.hasNext()) {
+            RelationshipDescriptor relD =
+                (RelationshipDescriptor)iterator.next();
+            RelationRoleDescriptor testRole = relD.getSource();
+            String cmrField = null;
 
-			testRole = relD.getSink();
-			if (ejbName.equals(testRole.getOwner().getName())) {
-				cmrField = testRole.getCMRField();
-				if (cmrField != null)
-					returnList.add(cmrField);
-			}
-		}
+            if (ejbName.equals(testRole.getOwner().getName())) {
+                cmrField = testRole.getCMRField();
+                if (cmrField != null)
+                    returnList.add(cmrField);
+            }
 
-		return returnList;
-	}
+            testRole = relD.getSink();
+            if (ejbName.equals(testRole.getOwner().getName())) {
+                cmrField = testRole.getCMRField();
+                if (cmrField != null)
+                    returnList.add(cmrField);
+            }
+        }
 
-	/** Gets the class loader which corresponds to this ejb bundle.
-	 * @return the class loader which corresponds to this ejb bundle
-	 */
-	public ClassLoader getClassLoader() {
-		return bundleDescriptor.getClassLoader();
-	}
+        return returnList;
+    }
 
-	/** 
-	 * @see EJBInfoHelper#getNameMapper
-	 */
-	public AbstractNameMapper getNameMapper() {
-		return getNameMapperInternal();
-	}
+    /** Gets the class loader which corresponds to this ejb bundle.
+     * @return the class loader which corresponds to this ejb bundle
+     */
+    public ClassLoader getClassLoader() {
+        return bundleDescriptor.getClassLoader();
+    }
 
-	/** 
-	 * @see EJBInfoHelper#createUniqueNameMapper
-	 */
-	public AbstractNameMapper createUniqueNameMapper() {
-		return new NameMapper(bundleDescriptor);
-	}
+    /**
+     * @see EJBInfoHelper#getNameMapper
+     */
+    public AbstractNameMapper getNameMapper() {
+        return getNameMapperInternal();
+    }
 
-	private NameMapper getNameMapperInternal() {
-		if (nameMapper == null)
-			nameMapper = new NameMapper(bundleDescriptor, false);
+    /**
+     * @see EJBInfoHelper#createUniqueNameMapper
+     */
+    public AbstractNameMapper createUniqueNameMapper() {
+        return new NameMapper(bundleDescriptor);
+    }
 
-		return nameMapper;
-	}
+    private NameMapper getNameMapperInternal() {
+        if (nameMapper == null)
+            nameMapper = new NameMapper(bundleDescriptor, false);
 
-	/** 
-	 * @see EJBInfoHelper#createConversionHelper
-	 */
-	public ConversionHelper createConversionHelper() {
-		return new EjbConversionHelper(getNameMapperInternal());
-	}
+        return nameMapper;
+    }
 
-	/** 
-	 * @see EJBInfoHelper#getModel
-	 */
-	public Model getModel() {
-		if (model == null) {
-			model = new DeploymentDescriptorModel(getNameMapperInternal(), 
-				getClassLoader());
-		}
+    /**
+     * @see EJBInfoHelper#createConversionHelper
+     */
+    public ConversionHelper createConversionHelper() {
+        return new EjbConversionHelper(getNameMapperInternal());
+    }
 
-		return model;
-	}
+    /**
+     * @see EJBInfoHelper#getModel
+     */
+    public Model getModel() {
+        if (model == null) {
+            model = new DeploymentDescriptorModel(getNameMapperInternal(),
+                getClassLoader());
+        }
+
+        return model;
+    }
 }

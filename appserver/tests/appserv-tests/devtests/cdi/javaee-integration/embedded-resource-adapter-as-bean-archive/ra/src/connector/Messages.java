@@ -21,7 +21,7 @@ import java.util.Hashtable;
 
 /**
  * collection of messages.
- * 
+ *
  * @author Qingqing Ouyang
  */
 public class Messages {

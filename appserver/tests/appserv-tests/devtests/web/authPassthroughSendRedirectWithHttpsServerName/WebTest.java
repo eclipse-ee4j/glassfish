@@ -55,7 +55,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6269102");
         WebTest webTest = new WebTest(args);
@@ -64,8 +64,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             testRemoteAddress();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -83,7 +83,7 @@ public class WebTest {
     }
 
     private void testRemoteAddress() throws Exception {
-         
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + " HTTP/1.0\n";

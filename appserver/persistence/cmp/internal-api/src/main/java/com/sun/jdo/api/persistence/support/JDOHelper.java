@@ -19,7 +19,7 @@
  *
  * Created on April 18, 2000
  */
- 
+
 package com.sun.jdo.api.persistence.support;
 
 import java.util.ResourceBundle;
@@ -55,7 +55,7 @@ public class JDOHelper
             return ((PersistenceCapable)obj).jdoGetPersistenceManager();
         return null;
     }
-    
+
     /**
      * Explicitly marks a field of an object as dirty if the object is
      * persistent and transactional.
@@ -77,7 +77,7 @@ public class JDOHelper
         if (obj instanceof PersistenceCapable)
             ((PersistenceCapable)obj).jdoMakeDirty(fieldName);
     }
-    
+
     /**
      * Returns a copy of the JDO identity associated with an object.
      *
@@ -109,11 +109,11 @@ public class JDOHelper
             return ((PersistenceCapable)obj).jdoGetObjectId();
         return null;
     }
-    
+
     /**
      * Tests whether an object is dirty.
      *
-     * If the object have been modified, deleted, or newly 
+     * If the object have been modified, deleted, or newly
      * made persistent in the current transaction, <code>true</code> is returned.
      * For transient objects, <code>false</code> is returned.
      *
@@ -178,7 +178,7 @@ public class JDOHelper
     /**
      * Tests whether the object has been newly made persistent.
      *
-     * For objects that have been made persistent in the current transaction, 
+     * For objects that have been made persistent in the current transaction,
      * <code>true</code> is returned.
      * For transient or objects, <code>false</code> is returned.
      *
@@ -213,7 +213,7 @@ public class JDOHelper
     static public boolean isDeleted(Object obj)
     {
         if (obj instanceof PersistenceCapable)
-            return ((PersistenceCapable)obj).jdoIsDeleted();    
+            return ((PersistenceCapable)obj).jdoIsDeleted();
         return false;
     }
 
@@ -240,7 +240,7 @@ public class JDOHelper
                 return null_instance;
         else if (isDeleted(o))
                 return I18NHelper.getMessage(messages, "jdohelper.deleted_instance", //NOI18N
-				o.getClass().getName());
+                o.getClass().getName());
         else
                 return o.toString();
   }
@@ -251,19 +251,19 @@ public class JDOHelper
    * of its elements.
    *
    * @param obj the object to get the class loader for
-   * @return the class loader that loaded the class or interface 
+   * @return the class loader that loaded the class or interface
    * represented by this object.
    */
    static private ClassLoader getObjectClassLoader(Object obj) {
-	Class clazz = obj.getClass();
+    Class clazz = obj.getClass();
 
-	if (obj instanceof Collection) {
-	    return getCollectionClassLoader((Collection)obj);
-	} else if (clazz.isArray()) {
-	    return getArrayClassLoader((Object[])obj);
-	} else {
-	    return clazz.getClassLoader();
-	}
+    if (obj instanceof Collection) {
+        return getCollectionClassLoader((Collection)obj);
+    } else if (clazz.isArray()) {
+        return getArrayClassLoader((Object[])obj);
+    } else {
+        return clazz.getClassLoader();
+    }
    }
 
    /** Returns the class loader for the elements of the collection.
@@ -271,32 +271,32 @@ public class JDOHelper
    * an Array it is recursively checked for its class loader.
    *
    * @param col collection of objects to get the class loader for
-   * @return the class loader that loaded the class or interface 
+   * @return the class loader that loaded the class or interface
    * represented by its elements.
    */
    static private ClassLoader getCollectionClassLoader (Collection col) {
-	Object[] arr = col.toArray();
-	return getArrayClassLoader(arr);
+    Object[] arr = col.toArray();
+    return getArrayClassLoader(arr);
    }
 
-   /** Returns the first not null class loader for the elements of the 
+   /** Returns the first not null class loader for the elements of the
    * object array.
    * If element is itself an instance of the java.util.Collection or
    * an Array it is recursively checked for its class loader.
    *
    * @param arr array of objects to get the class loader for
-   * @return the class loader that loaded the class or interface 
+   * @return the class loader that loaded the class or interface
    * represented by its elements.
    */
    static private ClassLoader getArrayClassLoader (Object[] arr) {
-	ClassLoader cl = null;
+    ClassLoader cl = null;
 
-	for (int i = 0; i < arr.length; i++) {
-	    cl = getObjectClassLoader(arr[i]);
-	    if (cl != null) {
-		break;
-	    }
-	}
-	return cl;
+    for (int i = 0; i < arr.length; i++) {
+        cl = getObjectClassLoader(arr[i]);
+        if (cl != null) {
+        break;
+        }
+    }
+    return cl;
    }
 }

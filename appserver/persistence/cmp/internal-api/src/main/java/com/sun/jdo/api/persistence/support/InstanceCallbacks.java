@@ -19,7 +19,7 @@
  *
  * Created on February 25, 2000
  */
- 
+
 package com.sun.jdo.api.persistence.support;
 
 /**
@@ -35,15 +35,15 @@ package com.sun.jdo.api.persistence.support;
  * <P>Classes which include derived fields (transient fields whose values depend
  * on the values of persistent fields) require callbacks on specific
  * JDO Instance life cycle events in order to correctly populate the
- * values in these fields.  
- * 
+ * values in these fields.
+ *
  * <P>This interface defines the methods executed
  * by the PersistenceManager for these life cycle events.  If the class
  * implements InstanceCallbacks, it must explicitly declare it in the
  * class definition.  The Reference Enhancer does not modify the declaration or
  * any of the methods in the interface.
  */
-public interface InstanceCallbacks 
+public interface InstanceCallbacks
 {
     /**
      * Called after the values are loaded from the data store into

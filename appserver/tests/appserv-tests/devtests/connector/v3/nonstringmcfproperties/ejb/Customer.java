@@ -47,4 +47,4 @@ public interface Customer extends EJBLocalObject
 
 }
 
-  
+

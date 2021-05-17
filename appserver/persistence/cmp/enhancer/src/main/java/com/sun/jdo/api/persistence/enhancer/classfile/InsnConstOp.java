@@ -21,7 +21,7 @@ import java.io.PrintStream;
 
 /**
  * An instruction which requires a single constant from the constant
- * pool as an immediate operand 
+ * pool as an immediate operand
  */
 
 public class InsnConstOp extends Insn {
@@ -32,17 +32,17 @@ public class InsnConstOp extends Insn {
 
   public int nStackArgs() {
     int n = VMOp.ops[opcode()].nStackArgs();
-    if (n >= 0) 
+    if (n >= 0)
       return n;
     switch (opcode()) {
     case opc_putstatic:
     case opc_putfield:
       {
-	ConstFieldRef fld = (ConstFieldRef) constValue;
-	String sig = fld.nameAndType().signature().asString();
-	if (sig.equals("J") || sig.equals("D"))//NOI18N
-	  return (opcode() == opc_putfield) ? 3 : 2;
-	return (opcode() == opc_putfield) ? 2 : 1;
+    ConstFieldRef fld = (ConstFieldRef) constValue;
+    String sig = fld.nameAndType().signature().asString();
+    if (sig.equals("J") || sig.equals("D"))//NOI18N
+      return (opcode() == opc_putfield) ? 3 : 2;
+    return (opcode() == opc_putfield) ? 2 : 1;
       }
     case opc_invokevirtual:
     case opc_invokespecial:
@@ -50,11 +50,11 @@ public class InsnConstOp extends Insn {
       /* handle interface invoke too */
     case opc_invokeinterface:
       {
-	ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
-	String sig = meth.nameAndType().signature().asString();
-	int nMethodArgWords = Descriptor.countMethodArgWords(sig);
-	return nMethodArgWords +
-	  ((opcode() == opc_invokestatic) ? 0 : 1);
+    ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
+    String sig = meth.nameAndType().signature().asString();
+    int nMethodArgWords = Descriptor.countMethodArgWords(sig);
+    return nMethodArgWords +
+      ((opcode() == opc_invokestatic) ? 0 : 1);
       }
     default:
         throw new InsnError("unexpected variable opcode");//NOI18N
@@ -63,17 +63,17 @@ public class InsnConstOp extends Insn {
 
   public int nStackResults() {
     int n = VMOp.ops[opcode()].nStackResults();
-    if (n >= 0) 
+    if (n >= 0)
       return n;
     switch (opcode()) {
     case opc_getstatic:
     case opc_getfield:
       {
-	ConstFieldRef fld = (ConstFieldRef) constValue;
-	String sig = fld.nameAndType().signature().asString();
-	if (sig.equals("J") || sig.equals("D"))//NOI18N
-	  return 2;
-	return 1;
+    ConstFieldRef fld = (ConstFieldRef) constValue;
+    String sig = fld.nameAndType().signature().asString();
+    if (sig.equals("J") || sig.equals("D"))//NOI18N
+      return 2;
+    return 1;
       }
     case opc_invokevirtual:
     case opc_invokespecial:
@@ -81,9 +81,9 @@ public class InsnConstOp extends Insn {
       /* handle interface invoke too */
     case opc_invokeinterface:
       {
-	ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
-	return Descriptor.countMethodReturnWords(
-	  meth.nameAndType().signature().asString());
+    ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
+    return Descriptor.countMethodReturnWords(
+      meth.nameAndType().signature().asString());
       }
     default:
         throw new InsnError("unexpected variable opcode");//NOI18N
@@ -95,12 +95,12 @@ public class InsnConstOp extends Insn {
     case opc_putstatic:
     case opc_putfield:
       {
-	ConstFieldRef fld = (ConstFieldRef) constValue;
-	String sig = fld.nameAndType().signature().asString();
-	if (opcode() == opc_putstatic)
-	  return sig;
-	else
-	  return descriptorTypeOfObject(fld) + sig;
+    ConstFieldRef fld = (ConstFieldRef) constValue;
+    String sig = fld.nameAndType().signature().asString();
+    if (opcode() == opc_putstatic)
+      return sig;
+    else
+      return descriptorTypeOfObject(fld) + sig;
       }
     case opc_invokevirtual:
     case opc_invokespecial:
@@ -108,13 +108,13 @@ public class InsnConstOp extends Insn {
       /* handle interface invoke too */
     case opc_invokeinterface:
       {
-	ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
-	String argSig =
-	  Descriptor.extractArgSig(meth.nameAndType().signature().asString());
-	if (opcode() == opc_invokestatic)
-	  return argSig;
-	else
-	  return descriptorTypeOfObject(meth) + argSig;
+    ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
+    String argSig =
+      Descriptor.extractArgSig(meth.nameAndType().signature().asString());
+    if (opcode() == opc_invokestatic)
+      return argSig;
+    else
+      return descriptorTypeOfObject(meth) + argSig;
       }
     default:
       return VMOp.ops[opcode()].argTypes();
@@ -129,25 +129,25 @@ public class InsnConstOp extends Insn {
       /* handle interface invoke too */
     case opc_invokeinterface:
       {
-	ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
-	String resultSig = Descriptor.extractResultSig(
-	  meth.nameAndType().signature().asString());
-	if (resultSig.equals("V"))//NOI18N
+    ConstBasicMemberRef meth = (ConstBasicMemberRef) constValue;
+    String resultSig = Descriptor.extractResultSig(
+      meth.nameAndType().signature().asString());
+    if (resultSig.equals("V"))//NOI18N
             return "";//NOI18N
-	return resultSig;
+    return resultSig;
       }
     case opc_getstatic:
     case opc_getfield:
       {
-	ConstFieldRef fld = (ConstFieldRef) constValue;
-	return fld.nameAndType().signature().asString();
+    ConstFieldRef fld = (ConstFieldRef) constValue;
+    return fld.nameAndType().signature().asString();
       }
     case opc_ldc:
     case opc_ldc_w:
     case opc_ldc2_w:
       {
-	ConstValue constVal = (ConstValue) constValue;
-	return constVal.descriptor();
+    ConstValue constVal = (ConstValue) constValue;
+    return constVal.descriptor();
       }
     default:
       return VMOp.ops[opcode()].resultTypes();
@@ -165,7 +165,7 @@ public class InsnConstOp extends Insn {
   public ConstBasic value() {
     return constValue;
   }
-    
+
   /**
    * Modify the referenced constant
    */
@@ -173,13 +173,13 @@ public class InsnConstOp extends Insn {
     checkConstant(newValue);
     constValue = newValue;
   }
-    
+
   /* package local methods */
 
   void print (PrintStream out, int indent) {
     ClassPrint.spaces(out, indent);
     out.println(offset() + "  " + opName(opcode()) + "  pool(" + //NOI18N
-		constValue.getIndex() + ")");//NOI18N
+        constValue.getIndex() + ")");//NOI18N
   }
 
   int store(byte[] buf, int index) {
@@ -201,7 +201,7 @@ public class InsnConstOp extends Insn {
   private boolean isNarrowldc() {
     return (opcode() == opc_ldc && constValue.getIndex() < 256);
   }
-    
+
 
   InsnConstOp (int theOpcode, ConstBasic theOperand) {
     this(theOpcode, theOperand, NO_OFFSET);
@@ -211,7 +211,7 @@ public class InsnConstOp extends Insn {
     super(theOpcode, pc);
     constValue = theOperand;
     checkConstant(theOperand);
-    if (theOpcode == opc_invokeinterface) 
+    if (theOpcode == opc_invokeinterface)
         throw new InsnError("attempt to create an " + opName(theOpcode) +//NOI18N
                             " as an InsnConstOp instead of InsnInterfaceInvoke");//NOI18N
   }
@@ -231,7 +231,7 @@ public class InsnConstOp extends Insn {
     case opc_ldc2_w:
       /* ConstValue */
       if (operand == null ||
-	  (! (operand instanceof ConstValue)))
+      (! (operand instanceof ConstValue)))
           throw new InsnError ("attempt to create an " + opName(opcode()) +//NOI18N
                                " without a ConstValue operand");//NOI18N
       break;
@@ -242,7 +242,7 @@ public class InsnConstOp extends Insn {
     case opc_putfield:
       /* ConstFieldRef */
       if (operand == null ||
-	  (! (operand instanceof ConstFieldRef)))
+      (! (operand instanceof ConstFieldRef)))
           throw new InsnError ("attempt to create an " + opName(opcode()) +//NOI18N
                                " without a ConstFieldRef operand");//NOI18N
       break;
@@ -252,15 +252,15 @@ public class InsnConstOp extends Insn {
     case opc_invokestatic:
       /* ConstMethodRef */
       if (operand == null ||
-	  (! (operand instanceof ConstMethodRef)))
+      (! (operand instanceof ConstMethodRef)))
           throw new InsnError ("attempt to create an " + opName(opcode()) +//NOI18N
                                " without a ConstMethodRef operand");//NOI18N
       break;
-      
+
     case opc_invokeinterface:
       /* ConstInterfaceMethodRef */
       if (operand == null ||
-	  (! (operand instanceof ConstInterfaceMethodRef)))
+      (! (operand instanceof ConstInterfaceMethodRef)))
           throw new InsnError("Attempt to create an " + opName(opcode()) +//NOI18N
                               " without a ConstInterfaceMethodRef operand");//NOI18N
       break;
@@ -271,7 +271,7 @@ public class InsnConstOp extends Insn {
     case opc_instanceof:
       /* ConstClass */
       if (operand == null ||
-	  (! (operand instanceof ConstClass)))
+      (! (operand instanceof ConstClass)))
           throw new InsnError ("attempt to create an " + opName(opcode()) +//NOI18N
                                " without a ConstClass operand");//NOI18N
       break;

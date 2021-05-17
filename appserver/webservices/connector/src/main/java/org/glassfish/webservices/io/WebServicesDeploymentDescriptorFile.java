@@ -29,7 +29,7 @@ import com.sun.enterprise.deployment.node.RootXMLNode;
 import java.util.Vector;
 
 /**
- * This class is responsible for handling the 
+ * This class is responsible for handling the
  * JSR 109 webservices deployment descriptor
  *
  * @author Kenneth Saks
@@ -42,7 +42,7 @@ public class WebServicesDeploymentDescriptorFile extends DeploymentDescriptorFil
         descriptorPath = ( desc instanceof WebBundleDescriptor ) ?
             DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY : DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY;
     }
-    
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
@@ -70,5 +70,5 @@ public class WebServicesDeploymentDescriptorFile extends DeploymentDescriptorFil
             return new WebServicesDescriptorNode((BundleDescriptor) descriptor);
         }
         return null;
-    }  
+    }
 }

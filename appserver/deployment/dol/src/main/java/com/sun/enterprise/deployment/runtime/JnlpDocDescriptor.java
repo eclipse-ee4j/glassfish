@@ -29,7 +29,7 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 public class JnlpDocDescriptor extends RuntimeDescriptor {
 
     public static final String HREF = "href";
-    
+
     private BundleDescriptor bundleDescriptor;
     private String href;
 

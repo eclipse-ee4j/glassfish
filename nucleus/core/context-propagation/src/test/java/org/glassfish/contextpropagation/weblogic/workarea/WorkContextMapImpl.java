@@ -46,7 +46,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
 
   /* package */ WorkContextMapImpl() {
   }
-  
+
   // Implementation of weblogic.workarea.WorkContextMap
   public WorkContext put(String key, WorkContext workContext,
                   int propagationMode) throws PropertyReadOnlyException {

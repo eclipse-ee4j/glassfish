@@ -38,7 +38,7 @@ public class MDBTests {
         execReturn = RtExec.execute(cmd);
         Assert.assertEquals(execReturn, true, "Create JMS resource failed ...");
     }
-    
+
     @Parameters({ "MDB_APP_DIR" })
     @Test(dependsOnMethods = { "createJMSRscTest" })
     public void deployJMSAppTest(String mdbAppDir) throws Exception {
@@ -71,5 +71,5 @@ public class MDBTests {
         execReturn = RtExec.execute(cmd);
         Assert.assertEquals(execReturn, true, "Delete JMD Resource failed ...");
     }
-    
+
 }

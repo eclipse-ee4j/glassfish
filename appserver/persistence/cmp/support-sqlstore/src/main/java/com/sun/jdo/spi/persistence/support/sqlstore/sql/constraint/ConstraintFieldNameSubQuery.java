@@ -26,7 +26,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore.sql.constraint;
 import com.sun.jdo.spi.persistence.support.sqlstore.ActionDesc;
 
 /**
- * <P>This class represents a constrint on field that is represented by 
+ * <P>This class represents a constrint on field that is represented by
  * a subquery
  */
 public class ConstraintFieldNameSubQuery extends ConstraintField {

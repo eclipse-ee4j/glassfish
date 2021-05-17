@@ -74,7 +74,7 @@ import org.glassfish.hk2.api.PostConstruct;
  */
 @Service
 public class EjbDeployer
-        extends JavaEEDeployer<EjbContainerStarter, EjbApplication> 
+        extends JavaEEDeployer<EjbContainerStarter, EjbApplication>
         implements PostConstruct, EventListener {
 
     @Inject
@@ -85,7 +85,7 @@ public class EjbDeployer
 
     @Inject
     protected PolicyLoader policyLoader;
-    
+
     @Inject
     protected EJBSecurityManagerFactory ejbSecManagerFactory;
 
@@ -108,21 +108,21 @@ public class EjbDeployer
     static final String IS_TIMEOUT_APP_PROP = "org.glassfish.ejb.container.is_timeout_application";
 
     private AtomicLong uniqueIdCounter;
-    
+
     private static final Logger _logger =
                 LogDomains.getLogger(EjbDeployer.class, LogDomains.EJB_LOGGER);
 
-    private static final LocalStringManagerImpl localStrings = 
+    private static final LocalStringManagerImpl localStrings =
                 new LocalStringManagerImpl(EjbDeployer.class);
 
     private final EjbSecurityProbeProvider probeProvider = new EjbSecurityProbeProvider();
 
     @Inject
     Provider<RegisteredComponentInvocationHandler> registeredComponentInvocationHandlerProvider;
-    
+
     @Inject
     Provider<CMPService> cmpServiceProvider;
-    
+
     @Inject
     Provider<CMPDeployer> cmpDeployerProvider;
 
@@ -207,7 +207,7 @@ public class EjbDeployer
             // this is the only place where Application.setUniqueId() should be called.
             app.setUniqueId(uniqueAppId);
         }
-        
+
         return super.prepare(dc);
     }
 
@@ -224,7 +224,7 @@ public class EjbDeployer
         handler.register();
 
         EjbBundleDescriptorImpl ejbBundle = dc.getModuleMetaData(EjbBundleDescriptorImpl.class);
-        
+
         if( ejbBundle == null ) {
             throw new RuntimeException("Unable to load EJB module.  DeploymentContext does not contain any EJB " +
                     " Check archive to ensure correct packaging for " + dc.getSourceDir());
@@ -274,7 +274,7 @@ public class EjbDeployer
         EjbBundleDescriptorImpl ejbBundle = ejbApplication.getEjbBundleDescriptor();
 
         try {
-            compEnvManager.unbindFromComponentNamespace(ejbBundle);          
+            compEnvManager.unbindFromComponentNamespace(ejbBundle);
         } catch(Exception e) {
              _logger.log( Level.WARNING, "Error unbinding ejb bundle " +
                      ejbBundle.getModuleName() + " dependency namespace", e);
@@ -286,8 +286,8 @@ public class EjbDeployer
                 cmpDeployer.unload(ejbBundle.getClassLoader());
             }
         }
-        
-        // All the other work is done in EjbApplication. 
+
+        // All the other work is done in EjbApplication.
 
     }
 
@@ -315,7 +315,7 @@ public class EjbDeployer
             String uniqueAppId = appProps.getProperty(APP_UNIQUE_ID_PROP);
             try {
                 if (getTimeoutStatusFromApplicationInfo(params.name()) && uniqueAppId != null) {
-                    String target = ((params.origin.isDeploy())? 
+                    String target = ((params.origin.isDeploy())?
                             dc.getCommandParameters(DeployCommandParameters.class).target :
                             dc.getCommandParameters(UndeployCommandParameters.class).target);
 
@@ -335,12 +335,12 @@ public class EjbDeployer
                     }
 
                     if(timerService == null) {
-                        _logger.log( Level.WARNING, "EJB Timer Service is not available. Timers for application with id " + 
+                        _logger.log( Level.WARNING, "EJB Timer Service is not available. Timers for application with id " +
                                 uniqueAppId + " will not be deleted");
                     } else {
                         if (getKeepStateFromApplicationInfo(params.name())) {
                             _logger.log(Level.INFO,
-                                     "Timers will not be destroyed since keepstate is true for application {0}", 
+                                     "Timers will not be destroyed since keepstate is true for application {0}",
                                      params.name());
                         } else {
                             timerService.destroyAllTimers(Long.parseLong(uniqueAppId));
@@ -401,7 +401,7 @@ public class EjbDeployer
             //Generate artifacts only when being deployed on DAS
             return;
         }
-        
+
         EjbBundleDescriptorImpl bundle = dc.getModuleMetaData(EjbBundleDescriptorImpl.class);
 
         DeployCommandParameters dcp =
@@ -427,7 +427,7 @@ public class EjbDeployer
         if (cmpDeployer == null) {
             throw new DeploymentException("No CMP Deployer is available to deploy this module");
         }
-        cmpDeployer.deploy(dc);   
+        cmpDeployer.deploy(dc);
 
 
     }
@@ -447,7 +447,7 @@ public class EjbDeployer
             }
 
             if (_logger.isLoggable(Level.FINE)) {
-                _logger.log( Level.FINE, "EjbDeployer in APPLICATION_PREPARED for origin: " + opsparams.origin + 
+                _logger.log( Level.FINE, "EjbDeployer in APPLICATION_PREPARED for origin: " + opsparams.origin +
                         ", target: " + dcp.target + ", name: " + opsparams.name());
             }
 
@@ -472,7 +472,7 @@ public class EjbDeployer
                     if (domain.getClusterNamed(target) != null) {
                         break; // prefer cluster target
                     }
-                 } 
+                 }
             }
 
             if (_logger.isLoggable(Level.FINE)) {
@@ -481,11 +481,11 @@ public class EjbDeployer
 
             boolean isTimedApp = false;
             for (EjbBundleDescriptorImpl ejbBundle : app.getBundleDescriptors(EjbBundleDescriptorImpl.class)) {
-                if (checkEjbBundleForTimers(ejbBundle, createTimers, target)) { 
+                if (checkEjbBundleForTimers(ejbBundle, createTimers, target)) {
                     isTimedApp = true;
                 }
             }
-    
+
             if (isTimedApp && (opsparams.origin.isDeploy() || opsparams.origin.isLoad())) {
                 // Mark application as a timeout application, so that the clean() call removes the timers.
                 appInfo.addTransientAppMetaData(IS_TIMEOUT_APP_PROP, Boolean.TRUE);
@@ -530,21 +530,21 @@ public class EjbDeployer
 
             if( timerService != null ) {
                 if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log( Level.FINE, "EjbDeployer - calling timerService.createSchedules for " + 
+                    _logger.log( Level.FINE, "EjbDeployer - calling timerService.createSchedules for " +
                             ejbDescriptor.getUniqueId());
-                }  
+                }
                 timerService.createSchedulesOnServer(ejbDescriptor, getOwnerId(target));
 
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log( Level.FINE, "EjbDeployer Done With BEAN ID: " + ejbDescriptor.getUniqueId());
-                }  
+                }
             } else {
                 throw new RuntimeException("EJB Timer Service is not available");
-            }  
+            }
 
         } catch (Exception e) {
             throw new DeploymentException("Failed to create automatic timers for " + ejbDescriptor.getName(), e);
-        }  
+        }
     }
 
     private String getOwnerId(String target) {
@@ -570,7 +570,7 @@ public class EjbDeployer
             }
             // If none of the instances is running, return a random instance in a
             // cluster
-            return s0.getName(); 
+            return s0.getName();
         }
 
 
@@ -598,7 +598,7 @@ public class EjbDeployer
         // ejb application deployments than elapsed milliseconds, since the
         // next time the server starts it will simply seed from
         // currentTimeMillis() again rather than remembering the largest unique
-        // id that was used the last time the server ran.  
+        // id that was used the last time the server ran.
 
         return next << 16;
     }
@@ -610,7 +610,7 @@ public class EjbDeployer
             }
         }
     }
-    
+
    /**
     * Embedded is a single-instance like DAS
     */

@@ -46,8 +46,8 @@ import org.glassfish.api.admin.RestParam;
 @I18n("recover.transactions")
 @RestEndpoints({
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="recover-transactions", 
+        opType=RestEndpoint.OpType.POST,
+        path="recover-transactions",
         description="Recover Transactions",
         params={
             @RestParam(name="id", value="$parent")
@@ -58,7 +58,7 @@ public class RecoverTransactions extends RecoverTransactionsBase implements Admi
     @Param(name="target", alias = "destination", optional = true)
     String destinationServer;
 
-    @Inject 
+    @Inject
     CommandRunner runner;
 
     public void execute(AdminCommandContext context) {

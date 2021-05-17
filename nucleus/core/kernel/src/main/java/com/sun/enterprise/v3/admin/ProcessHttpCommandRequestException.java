@@ -24,7 +24,7 @@ import org.glassfish.grizzly.http.util.HttpStatus;
  * @author mmares
  */
 public class ProcessHttpCommandRequestException extends Exception {
-    
+
     private ActionReport report;
     private HttpStatus responseStatus = HttpStatus.OK_200;
 
@@ -38,7 +38,7 @@ public class ProcessHttpCommandRequestException extends Exception {
     public ProcessHttpCommandRequestException(ActionReport report) {
         this(report, null);
     }
-    
+
     /**
      * Constructs an instance of
      * <code>InvalidPreconditionException</code> with the specified detail
@@ -49,7 +49,7 @@ public class ProcessHttpCommandRequestException extends Exception {
     public ProcessHttpCommandRequestException(HttpStatus responseStatus) {
         this(null, responseStatus);
     }
-    
+
     /**
      * Constructs an instance of
      * <code>InvalidPreconditionException</code> with the specified detail
@@ -73,6 +73,6 @@ public class ProcessHttpCommandRequestException extends Exception {
     public HttpStatus getResponseStatus() {
         return responseStatus;
     }
-    
-    
+
+
 }

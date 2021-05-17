@@ -34,7 +34,7 @@ import jakarta.inject.Inject;
 
 /**
  * Ping Connection Pool Command
- * 
+ *
  */
 @Service(name="ping-connection-pool")
 @PerLookup
@@ -43,22 +43,22 @@ import jakarta.inject.Inject;
 @I18n("ping.connection.pool")
 @RestEndpoints({
     @RestEndpoint(configBean=JdbcConnectionPool.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="ping", 
+        opType=RestEndpoint.OpType.GET,
+        path="ping",
         description="Ping",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="ping-connection-pool", 
+        opType=RestEndpoint.OpType.GET,
+        path="ping-connection-pool",
         description="Ping")
 })
 public class PingConnectionPool implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = 
+
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(PingConnectionPool.class);
-                                                    
+
     @Param(name="pool_name", primary=true)
     private String poolName;
 
@@ -104,7 +104,7 @@ public class PingConnectionPool implements AdminCommand {
             scope = "java:module/";
         }else if(applicationName != null){
             if(!poolUtil.isValidApplication(applicationName, poolName, report)){
-                return;    
+                return;
             }
             Application application = applications.getApplication(applicationName);
             resources = application.getResources();

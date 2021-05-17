@@ -60,7 +60,7 @@ public final class WorkManagerFactoryImpl implements WorkManagerFactory {
     private static final String WORK_MANAGER_CLASS = "workmanager.class";
 
     private static final Logger logger = LogFacade.getLogger();
-    
+
     private static final Map<String, WorkManager> workManagers;
 
     @Inject

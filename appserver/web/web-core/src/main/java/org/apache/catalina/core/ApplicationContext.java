@@ -130,7 +130,7 @@ public class ApplicationContext implements ServletContext {
 
     private boolean isRestricted;
 
-    
+
     // --------------------------------------------------------- Public Methods
 
     /**
@@ -268,7 +268,7 @@ public class ApplicationContext implements ServletContext {
         }
         return context.getEffectiveMajorVersion();
     }
-        
+
     /**
      * Gets the minor version of the Servlet specification that the
      * application represented by this ServletContext is based on.
@@ -430,7 +430,7 @@ public class ApplicationContext implements ServletContext {
      *  <code>log(String, Throwable)</code> instead
      */
     @Override
-    public void log(Exception exception, String message) {   
+    public void log(Exception exception, String message) {
         context.log(exception, message);
     }
 
@@ -536,12 +536,12 @@ public class ApplicationContext implements ServletContext {
                 replaced = true;
             attributes.put(name, value);
         }
-        
+
         if (name.equals(Globals.CLASS_PATH_ATTR) ||
                 name.equals(Globals.JSP_TLD_URI_TO_LOCATION_MAP)) {
             setAttributeReadOnly(name);
         }
-        
+
         // Notify interested application event listeners
         List<EventListener> listeners =
             context.getApplicationEventListeners();
@@ -560,12 +560,12 @@ public class ApplicationContext implements ServletContext {
                                                  name, value);
         }
 
-        Iterator<EventListener> iter = listeners.iterator(); 
+        Iterator<EventListener> iter = listeners.iterator();
         while (iter.hasNext()) {
             EventListener eventListener = iter.next();
             if (!(eventListener instanceof ServletContextAttributeListener)) {
                 continue;
-	    }
+        }
             ServletContextAttributeListener listener =
                 (ServletContextAttributeListener) eventListener;
             try {
@@ -712,7 +712,7 @@ public class ApplicationContext implements ServletContext {
         }
         return context.addFilter(filterName, className);
     }
-    
+
     /*
      * Registers the given filter instance with this ServletContext
      * under the given <tt>filterName</tt>.
@@ -740,7 +740,7 @@ public class ApplicationContext implements ServletContext {
         }
         return context.addFilter(filterName, filterClass);
     }
-    
+
     /**
      * Instantiates the given Filter class and performs any required
      * resource injection into the new Filter instance before returning
@@ -793,9 +793,9 @@ public class ApplicationContext implements ServletContext {
             throw new UnsupportedOperationException(
                     rb.getString(LogFacade.UNSUPPORTED_OPERATION_EXCEPTION));
         }
-        return context.getSessionCookieConfig();        
+        return context.getSessionCookieConfig();
     }
-  
+
     /**
      * Sets the session tracking modes that are to become effective for this
      * <tt>ServletContext</tt>.
@@ -1004,7 +1004,7 @@ public class ApplicationContext implements ServletContext {
             sm.checkPermission(GET_UNWRAPPED_CONTEXT_PERMISSION);
         }
 
-        return this.context;        
+        return this.context;
     }
     */
     // END PWC 1.2
@@ -1032,9 +1032,9 @@ public class ApplicationContext implements ServletContext {
         while (keys.hasNext()) {
             String key = keys.next();
             removeAttribute(key);
-        }        
+        }
     }
-    
+
     /**
      * Return the facade associated with this ApplicationContext.
      */

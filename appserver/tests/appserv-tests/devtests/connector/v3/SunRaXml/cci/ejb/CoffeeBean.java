@@ -128,4 +128,4 @@ public class CoffeeBean implements SessionBean {
     public void ejbPassivate() {
     }
 
-} 
+}

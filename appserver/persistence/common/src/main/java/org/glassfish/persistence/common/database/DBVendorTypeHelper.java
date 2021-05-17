@@ -62,7 +62,7 @@ public class DBVendorTypeHelper {
      * Please make sure that array indexes and enum values are kept in sync.
      */
     private final static String enumToStringMapping[] =
-        {"SQL92", "ORACLE", "POINTBASE", "MSSQL", "SYBASE", "DB2", "MYSQL", 
+        {"SQL92", "ORACLE", "POINTBASE", "MSSQL", "SYBASE", "DB2", "MYSQL",
          "INFORMIX", "INGRES", "DERBY", "SYMFOWARE"}; // NOI18N
 
     public final static String DEFAULT_DB  = enumToStringMapping[DEFAULT_DB_ENUM];

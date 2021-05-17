@@ -69,7 +69,7 @@ public class DetachAttachTest {
             assertTrue(result.out.contains("uptime"));
         }
     }
-    
+
     public void commandWithProgressStatus() throws InterruptedException {
         NadminReturn result = nadminWithOutput("--detach", "--terse", "progress-custom", "6x1");
         assertTrue(result.returnValue);
@@ -87,7 +87,7 @@ public class DetachAttachTest {
         result = nadminWithOutput("attach", id);
         assertFalse(result.returnValue);
     }
-    
+
     public void detachOnesAttachMulti() throws InterruptedException, ExecutionException {
         ExecutorService pool = Executors.newCachedThreadPool(new ThreadFactory() {
                                             @Override
@@ -125,7 +125,7 @@ public class DetachAttachTest {
             assertEquals(100, prgs.get(prgs.size() - 1).getValue());
         }
     }
-    
+
     private String parseJobIdFromEchoTerse(String str) {
         StringTokenizer stok = new StringTokenizer(str, "\n\r");
         assertTrue(stok.hasMoreTokens());
@@ -137,9 +137,9 @@ public class DetachAttachTest {
         assertFalse(result.contains(" ")); //With space does not look like ID but like some error message
         return result;
     }
-    
+
     static class NadminCallable implements Callable<NadminReturn> {
-        
+
         private final String[] args;
 
         public NadminCallable(String... args) {
@@ -150,9 +150,9 @@ public class DetachAttachTest {
         public NadminReturn call() throws Exception {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-        
-        
-    
+
+
+
     }
-    
+
 }

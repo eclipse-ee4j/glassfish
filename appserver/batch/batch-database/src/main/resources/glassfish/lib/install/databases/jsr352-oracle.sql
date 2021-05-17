@@ -22,8 +22,8 @@ DROP TABLE EXECUTIONINSTANCEDATA;
 DROP TABLE STEPEXECUTIONINSTANCEDATA;
 
 CREATE TABLE JOBINSTANCEDATA(
-  jobinstanceid		NUMBER(19,0) PRIMARY KEY,
-  name		VARCHAR2(512), 
+  jobinstanceid        NUMBER(19,0) PRIMARY KEY,
+  name        VARCHAR2(512),
   apptag VARCHAR(512)
 );
 CREATE SEQUENCE JOBINSTANCEDATA_SEQ;
@@ -36,15 +36,15 @@ BEGIN
 END;
 
 CREATE TABLE EXECUTIONINSTANCEDATA(
-  jobexecid			NUMBER(19,0) PRIMARY KEY,
-  jobinstanceid	NUMBER(19,0),
-  createtime	TIMESTAMP,
-  starttime		TIMESTAMP,
-  endtime		TIMESTAMP,
-  updatetime	TIMESTAMP,
-  parameters	BLOB,
-  batchstatus		VARCHAR2(512),
-  exitstatus		VARCHAR2(512),
+  jobexecid            NUMBER(19,0) PRIMARY KEY,
+  jobinstanceid    NUMBER(19,0),
+  createtime    TIMESTAMP,
+  starttime        TIMESTAMP,
+  endtime        TIMESTAMP,
+  updatetime    TIMESTAMP,
+  parameters    BLOB,
+  batchstatus        VARCHAR2(512),
+  exitstatus        VARCHAR2(512),
   CONSTRAINT JOBINST_JOBEXEC_FK FOREIGN KEY (jobinstanceid) REFERENCES JOBINSTANCEDATA (jobinstanceid)
 );
 CREATE SEQUENCE EXECUTIONINSTANCEDATA_SEQ;
@@ -55,25 +55,25 @@ FOR EACH ROW
 BEGIN
   SELECT EXECUTIONINSTANCEDATA_SEQ.nextval INTO :new.jobexecid FROM dual;
 END;
-  
+
 CREATE TABLE STEPEXECUTIONINSTANCEDATA(
-	stepexecid			NUMBER(19,0) PRIMARY KEY,
-	jobexecid	NUMBER(19,0),
-	batchstatus         VARCHAR2(512),
-    exitstatus			VARCHAR2(512),
-    stepname			VARCHAR2(512),
-	readcount			NUMBER(11, 0),
-	writecount			NUMBER(11, 0),
-	commitcount         NUMBER(11, 0),
-	rollbackcount		NUMBER(11, 0),
-	readskipcount		NUMBER(11, 0),
-	processskipcount	NUMBER(11, 0),
-	filtercount			NUMBER(11, 0),
-	writeskipcount		NUMBER(11, 0),
-	startTime           TIMESTAMP,
-	endTime             TIMESTAMP,
-	persistentData		BLOB,
-	CONSTRAINT JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES EXECUTIONINSTANCEDATA (jobexecid)
+    stepexecid            NUMBER(19,0) PRIMARY KEY,
+    jobexecid    NUMBER(19,0),
+    batchstatus         VARCHAR2(512),
+    exitstatus            VARCHAR2(512),
+    stepname            VARCHAR2(512),
+    readcount            NUMBER(11, 0),
+    writecount            NUMBER(11, 0),
+    commitcount         NUMBER(11, 0),
+    rollbackcount        NUMBER(11, 0),
+    readskipcount        NUMBER(11, 0),
+    processskipcount    NUMBER(11, 0),
+    filtercount            NUMBER(11, 0),
+    writeskipcount        NUMBER(11, 0),
+    startTime           TIMESTAMP,
+    endTime             TIMESTAMP,
+    persistentData        BLOB,
+    CONSTRAINT JOBEXEC_STEPEXEC_FK FOREIGN KEY (jobexecid) REFERENCES EXECUTIONINSTANCEDATA (jobexecid)
 );
 CREATE SEQUENCE STEPEXECUTIONINSTANCEDATA_SEQ;
 
@@ -85,21 +85,21 @@ BEGIN
 END;
 
 CREATE TABLE JOBSTATUS (
-  id		NUMBER(19,0) PRIMARY KEY,
-  obj		BLOB,
+  id        NUMBER(19,0) PRIMARY KEY,
+  obj        BLOB,
   CONSTRAINT JOBSTATUS_JOBINST_FK FOREIGN KEY (id) REFERENCES JOBINSTANCEDATA (jobinstanceid) ON DELETE CASCADE
 );
 
 CREATE TABLE STEPSTATUS(
-  id		NUMBER(19,0) PRIMARY KEY,
-  obj		BLOB,
+  id        NUMBER(19,0) PRIMARY KEY,
+  obj        BLOB,
   CONSTRAINT STEPSTATUS_STEPEXEC_FK FOREIGN KEY (id) REFERENCES STEPEXECUTIONINSTANCEDATA (stepexecid) ON DELETE CASCADE
 );
 
 CREATE TABLE CHECKPOINTDATA(
-  id		VARCHAR2(512),
-  obj		BLOB
+  id        VARCHAR2(512),
+  obj        BLOB
 );
 
 
-  
+

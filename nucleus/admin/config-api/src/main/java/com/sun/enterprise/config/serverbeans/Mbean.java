@@ -47,7 +47,7 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
 
     /**
      * Gets the value of the objectType property. A String representing whether it is a user-defined MBean or System MBean.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "user")
@@ -63,7 +63,7 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
     /**
      * Gets the value of the implClassName property. A String that represents fully qualified class name of MBean
      * implementation. This is read-only.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute

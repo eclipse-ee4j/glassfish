@@ -20,27 +20,27 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * This class holds information about a particular web server 
+ * This class holds information about a particular web server
  * installation, its running engines and so on...
  *
  * @author Jerome Dochez
  */
 public class WebServerInfo {
-    
+
     /**
      * Holds value of property httpVS.
      */
     private VirtualServerInfo httpVS;
-    
+
     /**
      * Holds value of property httpsVS.
      */
     private VirtualServerInfo httpsVS;
-    
+
     /** Creates a new instance of WebServerInfo */
     public WebServerInfo() {
     }
-    
+
     /**
      * Getter for property httpVS.
      * @return Value of property httpVS.
@@ -48,7 +48,7 @@ public class WebServerInfo {
     public VirtualServerInfo getHttpVS() {
         return this.httpVS;
     }
-    
+
     /**
      * Setter for property httpVS.
      * @param httpVS New value of property httpVS.
@@ -56,7 +56,7 @@ public class WebServerInfo {
     public void setHttpVS(VirtualServerInfo httpVS) {
         this.httpVS = httpVS;
     }
-    
+
     /**
      * Getter for property httpsVS.
      * @return Value of property httpsVS.
@@ -64,7 +64,7 @@ public class WebServerInfo {
     public VirtualServerInfo getHttpsVS() {
         return this.httpsVS;
     }
-    
+
     /**
      * Setter for property httpsVS.
      * @param httpsVS New value of property httpsVS.
@@ -72,17 +72,17 @@ public class WebServerInfo {
     public void setHttpsVS(VirtualServerInfo httpsVS) {
         this.httpsVS = httpsVS;
     }
-    
+
     public URL getWebServerRootURL(boolean secure) throws MalformedURLException {
         if (secure) {
             if (httpsVS!=null)
                 return httpsVS.getWebServerRootURL();
-            
+
         } else {
-            if (httpVS!=null) 
+            if (httpVS!=null)
                 return httpVS.getWebServerRootURL();
         }
         return null;
     }
-     
+
 }

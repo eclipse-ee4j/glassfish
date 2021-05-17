@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
 import jakarta.ejb.*;
 
-public interface Common 
+public interface Common
 {
     public static final int STATELESS = 0;
     public static final int STATEFUL = 1;

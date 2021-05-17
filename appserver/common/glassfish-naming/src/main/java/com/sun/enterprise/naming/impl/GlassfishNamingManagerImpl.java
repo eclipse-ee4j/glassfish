@@ -130,7 +130,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
         return nameParser;
     }
 
-    
+
     public Remote initializeRemoteNamingSupport(ORB orb) throws NamingException {
         Remote remoteProvider;
         try {
@@ -189,7 +189,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
         }
     }
 
-   
+
     public void publishCosNamingObject(String name, Object obj, boolean rebind)
             throws NamingException {
 
@@ -386,13 +386,13 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
     /**
      * @inheritDoc
      */
-    public Object lookupFromModuleNamespace(String appName, String moduleName, String name, Hashtable env) 
+    public Object lookupFromModuleNamespace(String appName, String moduleName, String name, Hashtable env)
             throws NamingException {
         AppModuleKey appModuleKey = new AppModuleKey(appName, moduleName);
         Map namespace = getModuleNamespace(appModuleKey);
         return lookupFromNamespace(name, namespace, env);
     }
-    
+
     private Object getObjectInstance(String name, Object obj, Hashtable env) throws Exception {
 
         if(env == null){
@@ -438,7 +438,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
     private Map getNamespace(String componentId, String logicalJndiName) throws NamingException {
 
         ComponentIdInfo info = componentIdInfo.get(componentId);
-        
+
         return (info != null) ?  getNamespace(info.appName, info.moduleName, componentId, logicalJndiName) :
                 getComponentNamespace(componentId);
     }
@@ -514,7 +514,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
             if( treatComponentAsModule && logicalJndiName.startsWith("java:comp")) {
                 logicalJndiName = logicalCompJndiNameToModule(logicalJndiName);
             }
-            
+
             if ( logicalJndiName.startsWith("java:comp")) {
 
                 namespace = getComponentNamespace(componentId);
@@ -593,8 +593,8 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
 
         name = name.substring((partialName + "/").length());
         StringTokenizer toks = new StringTokenizer(name, "/", false);
-		StringBuilder sb=new StringBuilder();
-		sb.append(partialName);
+        StringBuilder sb=new StringBuilder();
+        sb.append(partialName);
         while (toks.hasMoreTokens()) {
             String tok = toks.nextToken();
             sb.append("/").append(tok);
@@ -623,7 +623,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
             Map.Entry entry = (Map.Entry) moduleEntries.next();
 
             if( ((AppModuleKey) entry.getKey()).getAppName().equals(appName)) {
-                moduleEntries.remove();    
+                moduleEntries.remove();
             }
         }
     }
@@ -720,7 +720,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
             NamingObjectProxy namingProxy = (NamingObjectProxy) obj;
             obj = namingProxy.create(ctx);
         } else if( obj instanceof Context ) {
-            // Need to preserve the original prefix so that further operations 
+            // Need to preserve the original prefix so that further operations
             // on the context maintain the correct external view. In the case
             // of a replaced java:comp, create a new equivalent javaURLContext
             // and return that.
@@ -789,7 +789,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
             // Make sure keys reflect the original prefix in the case of comp->module
             // replacement
             // The search string itself is excluded from the returned list
-            if (key.startsWith(logicalJndiName) && 
+            if (key.startsWith(logicalJndiName) &&
                 key.indexOf('/', logicalJndiName.length()) == -1 &&
                 !key.equals(logicalJndiName)) {
                 String toAdd = replaceName ? logicalModuleJndiNameToComp(key) : key;
@@ -813,7 +813,7 @@ public final class  GlassfishNamingManagerImpl implements GlassfishNamingManager
         } else {
             ci= invMgr.getCurrentInvocation();
         }
-        
+
         if (ci == null) {
             throw new NamingException("Invocation exception: Got null ComponentInvocation ");
         }

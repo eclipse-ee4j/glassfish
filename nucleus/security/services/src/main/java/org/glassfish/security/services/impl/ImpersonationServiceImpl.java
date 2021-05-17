@@ -32,7 +32,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * The Impersonation Service Implementation.
- * 
+ *
  * @author jazheng
  */
 @Service(name="impersonationService")
@@ -48,15 +48,15 @@ public class ImpersonationServiceImpl implements ImpersonationService {
       boolean virtual) throws LoginException {
 
     // Use the supplied Subject or create a new Subject
-    final Subject _subject = 
+    final Subject _subject =
       (subject != null)? subject: new Subject();
-    
+
     if (user == null || user.isEmpty()) {
       return _subject;
     }
-    
+
     // TODO - Add support for virtual = false after IdentityManager
-    // is available in open source 
+    // is available in open source
     if (!virtual) {
       throw new UnsupportedOperationException(
           "Use of non-virtual parameter is not supported");
@@ -70,7 +70,7 @@ public class ImpersonationServiceImpl implements ImpersonationService {
         }
       }
     }
- 
+
     // Return the impersonated Subject
     return _subject;
   }

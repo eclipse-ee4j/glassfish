@@ -56,28 +56,28 @@ public class SimpleSessionBean implements SessionBean {
             ds = (com.sun.appserv.jdbc.DataSource) ic_.lookup("java:comp/env/DataSource");
 
             UserTransaction tx =(UserTransaction)ctxt_.getUserTransaction();
-	      tx.begin();
+          tx.begin();
             conn = ds.getConnection("scott", "tiger");
             stmt = conn.createStatement();
-	      stmt.executeUpdate("INSERT INTO NOTXCONNTABLE VALUES('method1',3)");
+          stmt.executeUpdate("INSERT INTO NOTXCONNTABLE VALUES('method1',3)");
             String query1 = "SELECT * FROM NOTXCONNTABLE";
             rs = stmt.executeQuery(query1);
-	      noTxConn = ((com.sun.appserv.jdbc.DataSource)ds).getNonTxConnection("scott", "tiger");
+          noTxConn = ((com.sun.appserv.jdbc.DataSource)ds).getNonTxConnection("scott", "tiger");
 
-	      stmt2 = noTxConn.createStatement();
+          stmt2 = noTxConn.createStatement();
             rs2 = stmt2.executeQuery("SELECT * FROM NOTXCONNTABLE");
-	      tx.commit();
+          tx.commit();
             if ( rs2.next() ) {
-	        return false;
-	      }
-            
-	      
-	      return true;
-	    
+            return false;
+          }
+
+
+          return true;
+
         } catch (Exception e) {
-	    System.out.println("Caught Exception---");
-	    e.printStackTrace();
-	    return false;
+        System.out.println("Caught Exception---");
+        e.printStackTrace();
+        return false;
         } finally {
             if (rs != null ) {
                 try { rs.close(); } catch( Exception e1) {}
@@ -88,20 +88,20 @@ public class SimpleSessionBean implements SessionBean {
             if (conn != null ) {
                 try {conn.close();} catch( Exception e1) {}
             }
-            	
+
             if (rs2 != null ) {
                 try {rs2.close();} catch( Exception e1 ) {}
             }
             if (stmt2 != null ) {
                 try {stmt2.close(); } catch( Exception e1) {}
             }
-            		
+
             if (noTxConn != null ) {
                 try { noTxConn.close(); }catch( Exception e1) {}
             }
-	}
+    }
 
-        
+
     }
 
     public void ejbLoad() {

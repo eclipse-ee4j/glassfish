@@ -139,7 +139,7 @@ public class TestRadixTreeNode {
         rootNode.addChildNode(firstChildNode);
         RadixTreeNode invalidNode = new RadixTreeNode("InvalidChildKey", "InvalidChildValue");
         rootNode.removeChildNode(invalidNode);
-    }  
+    }
 
     /**
      * Test child node removal.

@@ -30,7 +30,7 @@ public class StopClusterTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final StopClusterCmd stopClusterCmd = 
+        final StopClusterCmd stopClusterCmd =
                 cmdFactory.createStopClusterCmd(clusterName);
 
         target = new PipeCmd(connectCmd, stopClusterCmd);

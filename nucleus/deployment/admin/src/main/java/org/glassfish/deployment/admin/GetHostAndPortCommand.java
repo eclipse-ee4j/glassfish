@@ -56,8 +56,8 @@ import org.glassfish.hk2.api.PerLookup;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="host-port", 
+        opType=RestEndpoint.OpType.GET,
+        path="host-port",
         description="HostPort")
 })
 public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
@@ -77,12 +77,12 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
     @Inject
     Configs configs;
 
-    @Inject 
+    @Inject
     Domain domain;
-    
+
     private Config config;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetHostAndPortCommand.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetHostAndPortCommand.class);
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
@@ -104,9 +104,9 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
         return accessChecks;
     }
 
-    
+
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         ActionReport.MessagePart part = report.getTopMessagePart();
@@ -116,7 +116,7 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
 
         try {
             if (config == null) {
-                throw new Exception("No such target:" + target);   
+                throw new Exception("No such target:" + target);
             }
             httpService = config.getHttpService();
 
@@ -130,7 +130,7 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
         }
 
         if (hostAndPort != null) {
-            part.setMessage(hostAndPort.getHost() + ":" + 
+            part.setMessage(hostAndPort.getHost() + ":" +
                 hostAndPort.getPort());
             part.addProperty("host", hostAndPort.getHost()); //property for REST Access
             part.addProperty("port", ""+hostAndPort.getPort()); //property for REST Access
@@ -139,7 +139,7 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 
-    private HostAndPort getHostAndPortForRequest(HttpService httpService) 
+    private HostAndPort getHostAndPortForRequest(HttpService httpService)
         throws Exception {
         if (moduleId == null) {
             if (virtualServer == null) {
@@ -148,7 +148,7 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
                 VirtualServer vs = httpService.getVirtualServerByName(
                     virtualServer);
                 if (vs == null) {
-                    throw new Exception("Virtual server: " + 
+                    throw new Exception("Virtual server: " +
                         virtualServer + " does not exist!");
                 }
                 return getHostAndPort(httpService, vs, securityEnabled);
@@ -156,7 +156,7 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
         }
 
         ApplicationRef appRef = domain.getApplicationRefInTarget(
-            moduleId, target); 
+            moduleId, target);
 
         List<String> vsList = null;
         if (appRef != null) {
@@ -169,7 +169,7 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
 
         for (String virtualServer : vsList) {
             HostAndPort hp = getHostAndPort(httpService,
-                httpService.getVirtualServerByName(virtualServer), 
+                httpService.getVirtualServerByName(virtualServer),
                 securityEnabled);
             if (hp!=null) {
                 return hp;

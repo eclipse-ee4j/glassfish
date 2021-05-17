@@ -29,16 +29,16 @@ import com.sun.s1asdev.ejb.ejb30.hello.session2.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 
-@EJBs( 
- { @EJB(name="ejb/TypeLevelSless1", beanName="SlessEJB", 
+@EJBs(
+ { @EJB(name="ejb/TypeLevelSless1", beanName="SlessEJB",
        beanInterface=Sless.class),
-   @EJB(name="ejb/TypeLevelSless2", beanName="SlessEJB2", 
+   @EJB(name="ejb/TypeLevelSless2", beanName="SlessEJB2",
        beanInterface=Sless.class)
  })
 @EJB(name="ejb/TypeLevelSless3", beanInterface=SlessSub.class)
 public class Client extends ClientSuper {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -47,7 +47,7 @@ public class Client extends ClientSuper {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-session2ID");
-    }  
+    }
 
     private static @EJB Sful sful1;
     private static @EJB Sful sful2;
@@ -57,7 +57,7 @@ public class Client extends ClientSuper {
 
     private static @EJB(beanName="SlessEJB") Sless sless1;
 
-    // linked to SlessEJB2 via sun-application-client.xml 
+    // linked to SlessEJB2 via sun-application-client.xml
     // so no beanName disambiguation is needed
     private static @EJB Sless sless2;
 
@@ -67,11 +67,11 @@ public class Client extends ClientSuper {
 
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
-            
+
             System.out.println("Calling superSless1");
 
             Sless superSlessLookup = (Sless) new javax.naming.InitialContext().lookup("java:comp/env/com.sun.s1asdev.ejb.ejb30.hello.session2.client.ClientSuper/superSless1");
@@ -95,7 +95,7 @@ public class Client extends ClientSuper {
             }
 
             sful1.doRemoveMethodSessionSyncTests();
-            
+
             // Call application-defined @Remove method. This method has
             // no relationship to EJBObject.remove().  It's a coincidence
             // that it has the same name.
@@ -236,7 +236,7 @@ public class Client extends ClientSuper {
             if( r1.getId().equals(r2.getId()) ) {
                 throw new Exception("remote param passing getId() test failed");
             }
-            
+
             sless3.hello();
             sless3.hello3();
 
@@ -265,8 +265,8 @@ public class Client extends ClientSuper {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+        return;
     }
 
 }

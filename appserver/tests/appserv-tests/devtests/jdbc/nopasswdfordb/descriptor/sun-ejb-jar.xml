@@ -28,48 +28,48 @@
       <resource-ref>
         <res-ref-name>DataSource</res-ref-name>
         <jndi-name>jdbc/s1qeDB</jndi-name>
-	<default-resource-principal>
-	  <name>DBUSER</name>
-	  <password></password>
-	</default-resource-principal>
+    <default-resource-principal>
+      <name>DBUSER</name>
+      <password></password>
+    </default-resource-principal>
       </resource-ref>
       <resource-ref>
         <res-ref-name>DataSource1</res-ref-name>
         <jndi-name>jdbc/s1qeDB1</jndi-name>
-	<default-resource-principal>
-	  <name>DBUSER</name>
-	</default-resource-principal>
+    <default-resource-principal>
+      <name>DBUSER</name>
+    </default-resource-principal>
       </resource-ref>
       <resource-ref>
         <res-ref-name>DataSource2</res-ref-name>
         <jndi-name>jdbc/s1qeDB2</jndi-name>
-	<default-resource-principal>
-	  <name>DBUSER</name>
-	  <password>DBPASSWORD</password>
-	</default-resource-principal>
+    <default-resource-principal>
+      <name>DBUSER</name>
+      <password>DBPASSWORD</password>
+    </default-resource-principal>
       </resource-ref>
       <resource-ref>
         <res-ref-name>XADataSource</res-ref-name>
         <jndi-name>jdbc/s1qeDB-xa</jndi-name>
-	<default-resource-principal>
-	  <name>DBUSER</name>
-	  <password></password>
-	</default-resource-principal>
+    <default-resource-principal>
+      <name>DBUSER</name>
+      <password></password>
+    </default-resource-principal>
       </resource-ref>
       <resource-ref>
         <res-ref-name>XADataSource1</res-ref-name>
         <jndi-name>jdbc/s1qeDB1-xa</jndi-name>
-	<default-resource-principal>
-	  <name>DBUSER</name>
-	</default-resource-principal>
+    <default-resource-principal>
+      <name>DBUSER</name>
+    </default-resource-principal>
       </resource-ref>
       <resource-ref>
         <res-ref-name>XADataSource2</res-ref-name>
         <jndi-name>jdbc/s1qeDB2-xa</jndi-name>
-	<default-resource-principal>
-	  <name>DBUSER</name>
-	  <password>DBPASSWORD</password>
-	</default-resource-principal>
+    <default-resource-principal>
+      <name>DBUSER</name>
+      <password>DBPASSWORD</password>
+    </default-resource-principal>
       </resource-ref>
    </ejb>
   </enterprise-beans>

@@ -35,6 +35,6 @@ public class WebBean {
     public int getI() {
         return injectedResource;
     }
-    
+
     public String get() { return "BEAN" + injectedResource; }
 }

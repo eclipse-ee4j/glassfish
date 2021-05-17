@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  *   ("WAR from an EAR as default webapp no more working after stop/start")
  *
  * This unit test deploys an EAR, dynamically configures the EAR's embedded
- * WAR as the default-web-module of virtual server "server", accesses the 
+ * WAR as the default-web-module of virtual server "server", accesses the
  * WAR's JSP resource under both the WAR's context root and the empty context
  * root, stops and restarts the domain, and accesses the WAR's JSP resouce
  * again (under both the WAR's context root and the empty context root).
@@ -46,7 +46,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 542");
@@ -65,13 +65,13 @@ public class WebTest {
     }
 
     public void doTest(String uri) throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port + uri);
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                                 ", received: " + responseCode);
         } else {

@@ -33,7 +33,7 @@ import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 
 /**
  * Connection Queue statistics
- * 
+ *
  * @author Alexey Stashok
  */
 @AMXMetadata(type = "connection-queue-mon", group = "monitoring")
@@ -41,7 +41,7 @@ import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 @Description("Connection Queue Statistics")
 public class ConnectionQueueStatsProvider implements StatsProvider {
     protected static final long MINUTE = 60 * 1000;
-    
+
     private final String name;
 
     protected final CountStatisticImpl countTotalConnections = new CountStatisticImpl("CountTotalConnections", "count", "Total number of connections that have been accepted");
@@ -51,14 +51,14 @@ public class ConnectionQueueStatsProvider implements StatsProvider {
 
     protected final AtomicInteger countQueuedAtomic = new AtomicInteger();
     protected final CountStatisticImpl countQueued = new CountStatisticImpl("CountQueued", "count", "Number of connections currently in the queue");
-    
+
     protected final CountStatisticImpl countTotalQueued = new CountStatisticImpl("CountTotalQueued", "count", "Total number of connections that have been queued");
 
     protected final CountStatisticImpl maxQueued = new CountStatisticImpl("MaxQueued", "count", "Maximum size of the connection queue");
 
     protected final AtomicInteger peakQueuedAtomic = new AtomicInteger();
     protected final CountStatisticImpl peakQueued = new CountStatisticImpl("PeakQueued", "count", "Largest number of connections that were in the queue simultaneously");
-    
+
     protected final CountStatisticImpl ticksTotalQueued = new CountStatisticImpl("TicksTotalQueued", "count", "(Unsupported) Total number of ticks that connections have spent in the queue");
 
     protected final int[] averageStatsPerMinute = new int[15];
@@ -256,7 +256,7 @@ public class ConnectionQueueStatsProvider implements StatsProvider {
             if (currentTime - averageLastShift >= MINUTE) {
                 shiftAverage(currentTime);
             }
-            
+
             averageMinuteCounter++;
         }
     }

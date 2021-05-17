@@ -42,7 +42,7 @@ import java.util.*;
  * TODO:  This should be done via auto-depends (via Service and contract
  * and all that).  However, since those don't work yet with the new
  * API, we must code this up by hand.
- * 
+ *
  * @author jwells
  *
  */
@@ -56,7 +56,7 @@ public class ConfigModule {
 
     /**
      * Configures the HK2 instance
-     * 
+     *
      * @param configurator
      */
     public void configure(DynamicConfiguration configurator) {
@@ -90,7 +90,7 @@ public class ConfigModule {
         bindInjector(configurator, "generic-config",          GenericConfig.class,         GenericConfigInjector.class);
 
     }
-    
+
     private void bindInjector(DynamicConfiguration configurator, String elementName, Class contract, final Class clz) {
         DescriptorBuilder db = BuilderHelper.link(clz).
                 to(ConfigInjector.class).to(InjectionTarget.class).to(contract).
@@ -116,7 +116,7 @@ public class ConfigModule {
             }
             //db.andLoadWith(new MyHk2Loader(clz.getClassLoader()));
         }
-        
+
         for (String key : metaMap.keySet()) {
             db.has(key, metaMap.get(key));
         }
@@ -124,17 +124,17 @@ public class ConfigModule {
         configurator.bind(new AliasDescriptor(serviceLocator, desc, InjectionTarget.class.getName(), contract.getName()));
         System.out.println("**Successfully bound an alias descriptor for: " + elementName);
     }
-    
+
     class MyHk2Loader
         implements HK2Loader {
-        
-        
+
+
         private ClassLoader loader;
 
         MyHk2Loader(ClassLoader cl) {
             loader = cl;
         }
-        
+
         @Override
         public Class<?> loadClass(final String className) throws MultiException {
             try {

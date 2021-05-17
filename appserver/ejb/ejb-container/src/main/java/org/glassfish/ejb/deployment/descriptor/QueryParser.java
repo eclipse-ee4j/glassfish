@@ -21,7 +21,7 @@ import java.util.Iterator;
 /**
  * This interface is to define the functionality of a query Parser.
  */
-public interface QueryParser 
+public interface QueryParser
 {
     /**
      * This method returns an iterator over the parameter types of the

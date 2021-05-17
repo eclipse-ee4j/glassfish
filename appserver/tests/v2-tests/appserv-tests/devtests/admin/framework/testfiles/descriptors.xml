@@ -53,7 +53,7 @@
 <!-- +++++++++  4. j2ee-application  +++++++++++ -->
 <mbean name="j2ee-application" group="config" >
    <descriptor>
-      <field name="elementChangeEvent" value="ApplicationDeployEvent" /> 
+      <field name="elementChangeEvent" value="ApplicationDeployEvent" />
       <field name="ObjectName" value="{0}:type=j2ee-application,name={1},category=config" />
       <field name="xpath" value="/domain/applications/j2ee-application[@name='{1}']" />
       <field name="CLIName" value="domain.applications.j2ee-application.{1}" />
@@ -62,7 +62,7 @@
 <!-- +++++++++  5. ejb-module  +++++++++++ -->
 <mbean name="ejb-module" group="config" >
    <descriptor>
-      <field name="elementChangeEvent" value="ModuleDeployEvent" /> 
+      <field name="elementChangeEvent" value="ModuleDeployEvent" />
       <field name="ObjectName" value="{0}:type=ejb-module,name={1},category=config" />
       <field name="xpath" value="/domain/applications/ejb-module[@name='{1}']" />
       <field name="CLIName" value="domain.applications.ejb-module.{1}" />
@@ -71,7 +71,7 @@
 <!-- +++++++++  6. web-module  +++++++++++ -->
 <mbean name="web-module" group="config" >
    <descriptor>
-      <field name="elementChangeEvent" value="ModuleDeployEvent" /> 
+      <field name="elementChangeEvent" value="ModuleDeployEvent" />
       <field name="ObjectName" value="{0}:type=web-module,name={1},category=config" />
       <field name="xpath" value="/domain/applications/web-module[@name='{1}']" />
       <field name="CLIName" value="domain.applications.web-module.{1}" />
@@ -80,7 +80,7 @@
 <!-- +++++++++  7. connector-module  +++++++++++ -->
 <mbean name="connector-module" group="config" >
    <descriptor>
-      <field name="elementChangeEvent" value="ModuleDeployEvent" /> 
+      <field name="elementChangeEvent" value="ModuleDeployEvent" />
       <field name="ObjectName" value="{0}:type=connector-module,name={1},category=config" />
       <field name="xpath" value="/domain/applications/connector-module[@name='{1}']" />
       <field name="CLIName" value="domain.applications.connector-module.{1}" />
@@ -89,14 +89,14 @@
 <!-- +++++++++  8. appclient-module  +++++++++++ -->
 <mbean name="appclient-module" group="config" >
    <descriptor>
-      <field name="elementChangeEvent" value="ModuleDeployEvent" /> 
+      <field name="elementChangeEvent" value="ModuleDeployEvent" />
       <field name="ObjectName" value="{0}:type=appclient-module,name={1},category=config" />
       <field name="xpath" value="/domain/applications/appclient-module[@name='{1}']" />
       <field name="CLIName" value="domain.applications.appclient-module.{1}" />
    </descriptor>
 </mbean>
 <!-- +++++++++  9. resources  +++++++++++ -->
-<mbean name="resources" group="config" 
+<mbean name="resources" group="config"
    className="com.sun.enterprise.admin.mbeans.ResourcesMBean">
    <descriptor>
       <field name="ObjectName" value="{0}:type=resources,category=config" />
@@ -167,7 +167,7 @@
       <field name="CLIName" value="domain.resources.connector-resource.{1}" />
    </descriptor>
 </mbean>
-<!-- +++++++++  17. resource-adapter-config  +++++++++++ MANUALLY MODIFIED -->  
+<!-- +++++++++  17. resource-adapter-config  +++++++++++ MANUALLY MODIFIED -->
 <mbean name="resource-adapter-config" group="config">
    <descriptor>
       <field name="elementChangeEvent" value="ResourceDeployEvent" />
@@ -958,7 +958,7 @@
 <!-- +++++++++  131. nodeagent-auth-realm  +++++++++++ -->
 <mbean name="nodeagent-auth-realm" group="config" className="com.sun.enterprise.admin.mbeans.AuthRealmMBean">
    <descriptor>
-      <field name="elementChangeEvent" value="AuthRealmEvent" /> 
+      <field name="elementChangeEvent" value="AuthRealmEvent" />
       <field name="ObjectName" value="{0}:type=auth-realm,node-agent={1},category=config" />
       <field name="xpath" value="/domain/node-agents/node-agent[@name='{1}']/auth-realm" />
       <field name="CLIName" value="domain.node-agent.{1}.auth-realm" />

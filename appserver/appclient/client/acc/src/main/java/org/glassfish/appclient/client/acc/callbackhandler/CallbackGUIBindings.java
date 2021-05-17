@@ -66,21 +66,21 @@ public class CallbackGUIBindings {
         result.put(TextOutputCallback.class, TextOutput.class);
         return result;
     }
-    
+
     /**
      * Factory method for creating the appropriate callback-to-U/I binding
      * object given a callback.
      * @param callback the Callback for which to create the binding
      * @return the CallbackUIBinding suitable for the type of callback provided
-     * @throws javax.security.auth.callback.UnsupportedCallbackException if the 
+     * @throws javax.security.auth.callback.UnsupportedCallbackException if the
      * type of callback is not recognized
      */
-    public Binding createCallbackGUIBinding(Callback callback) 
+    public Binding createCallbackGUIBinding(Callback callback)
             throws UnsupportedCallbackException, InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException {
-        
+
         Class bindingClass = callbackToBinding.get(callback.getClass());
         if (bindingClass != null) {
-            Constructor<Binding> constructor = 
+            Constructor<Binding> constructor =
                     bindingClass.getConstructor(
                         new Class[] { CallbackGUIBindings.class });
             Binding binding = constructor.newInstance(new Object[] { this });
@@ -88,7 +88,7 @@ public class CallbackGUIBindings {
             return binding;
         }
         throw new UnsupportedCallbackException(callback);
-    }    
+    }
 
     /**
      * Creates a default ConfirmationCallback binding (because the caller did
@@ -101,18 +101,18 @@ public class CallbackGUIBindings {
                  ConfirmationCallback.OK_CANCEL_OPTION,
                  ConfirmationCallback.OK);
 
-        CallbackGUIBindings.Confirmation binding = 
+        CallbackGUIBindings.Confirmation binding =
                 new CallbackGUIBindings.Confirmation();
         binding.setCallback(defaultCallback);
         return binding;
     }
-    
+
     /** number of rows to be visible in JLists used to display information*/
     protected static final int LIST_ROWS = 4;
-    
+
     /** number of rows of text to be visible in text areas */
     protected static final int TEXT_ROWS = 4;
-    
+
     /** number of columns for text areas */
     protected static final int TEXT_COLUMNS = 20;
 
@@ -147,7 +147,7 @@ public class CallbackGUIBindings {
          * Creates a JScrollPane containing a column header and the specified component.
          * @param columnHeader String containing the header text
          * @param body the JComponent to enclose in the scroll pane
-         * @return the JScrollPane with the specified header and component 
+         * @return the JScrollPane with the specified header and component
          */
         protected JScrollPane prepareScrollPane(String columnHeader, JComponent body) {
             JScrollPane scrollPane = new JScrollPane(body);
@@ -171,7 +171,7 @@ public class CallbackGUIBindings {
             this.callback = callback;
         }
     }
-    
+
     public class Choice extends Binding<ChoiceCallback> {
         /**
          * The binding for ChoiceCallbacks.
@@ -181,7 +181,7 @@ public class CallbackGUIBindings {
         @Override
         protected JComponent createComponent() {
             jList = prepareList(
-                        callback.getChoices(), 
+                        callback.getChoices(),
                         callback.getSelectedIndexes());
             return prepareScrollPane(callback.getPrompt(), jList);
         }
@@ -193,7 +193,7 @@ public class CallbackGUIBindings {
             if (selectedIndexes != null) {
                 result.setSelectedIndices(selectedIndexes);
             }
-            result.setSelectionMode(this.callback.allowMultipleSelections() ? 
+            result.setSelectionMode(this.callback.allowMultipleSelections() ?
                 ListSelectionModel.MULTIPLE_INTERVAL_SELECTION :
                 ListSelectionModel.SINGLE_SELECTION);
 
@@ -271,7 +271,7 @@ public class CallbackGUIBindings {
                         callbackResult = ConfirmationCallback.YES;
                     } else if (result == JOptionPane.NO_OPTION) {
                         callbackResult = ConfirmationCallback.NO;
-                    }                    
+                    }
                 }
             }
             callback.setSelectedIndex(callbackResult);
@@ -324,8 +324,8 @@ public class CallbackGUIBindings {
         @Override
         public JComponent createComponent() {
             textArea = new JTextArea(
-                    callback.getDefaultText(), 
-                    TEXT_ROWS, 
+                    callback.getDefaultText(),
+                    TEXT_ROWS,
                     TEXT_COLUMNS);
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
@@ -372,7 +372,7 @@ public class CallbackGUIBindings {
             Locale defaultLocale = Locale.getDefault();
             LocaleEntry defaultEntry = null;
             Locale [] sortedLocales = Locale.getAvailableLocales();
-            Arrays.sort(sortedLocales, 
+            Arrays.sort(sortedLocales,
                     new Comparator<Locale>() {
                         @Override
                         public int compare(Locale l1, Locale l2) {
@@ -411,7 +411,7 @@ public class CallbackGUIBindings {
             }
 
 
-        }        
+        }
     }
 
     /**
@@ -424,7 +424,7 @@ public class CallbackGUIBindings {
          */
         PLAIN(JOptionPane.PLAIN_MESSAGE),
         INFORMATION(
-                JOptionPane.INFORMATION_MESSAGE, 
+                JOptionPane.INFORMATION_MESSAGE,
                 ConfirmationCallback.INFORMATION,
                 TextOutputCallback.INFORMATION),
         QUESTION(JOptionPane.QUESTION_MESSAGE),
@@ -436,17 +436,17 @@ public class CallbackGUIBindings {
                 JOptionPane.ERROR_MESSAGE,
                 ConfirmationCallback.ERROR,
                 TextOutputCallback.ERROR);
-        
+
         private int optionPaneMessageType;
         private int confirmationCallbackMessageType;
         private int textOutputCallbackMessageType;
         private boolean mapsToCallback;
-        
+
         private MessageType(int optionPaneMessageType) {
             this.optionPaneMessageType = optionPaneMessageType;
             mapsToCallback = false;
         }
-        
+
         private MessageType(
                 int optionPaneMessageType,
                 int confirmationCallbackMessageType,
@@ -456,15 +456,15 @@ public class CallbackGUIBindings {
             this.confirmationCallbackMessageType = confirmationCallbackMessageType;
             this.textOutputCallbackMessageType = textOutputCallbackMessageType;
         }
-        
+
         public int getOptionPaneMessageType() {
             return optionPaneMessageType;
         }
-        
+
         public boolean exceeds(MessageType ms) {
             return (ms == null) || ordinal() > ms.ordinal();
         }
-        
+
         public static MessageType severityForConfirmation(
                 int confirmationCallbackMessageType) {
             for (MessageType ms : values()) {
@@ -474,7 +474,7 @@ public class CallbackGUIBindings {
             }
             throw new IllegalArgumentException(Integer.toString(confirmationCallbackMessageType));
         }
-        
+
         public static MessageType severityForTextOutput(
                 int textOutputCallbackMessageType) {
             for (MessageType ms : values()) {

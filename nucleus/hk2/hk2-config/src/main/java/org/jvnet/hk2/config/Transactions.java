@@ -96,7 +96,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
      * @param <V> return type of the listener interface methods.
      */
     private abstract class Notifier<T, U, V> {
-        
+
         private final BlockingQueue<FutureTask> pendingJobs = new ArrayBlockingQueue<FutureTask>(50);
         private CountDownLatch latch = new CountDownLatch(1);
 
@@ -115,7 +115,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
          * @return a future on the return value.
          */
         public Future<V> add(final Job<T, U, V> job) {
-                
+
             // NOTE that this is put() which blocks, *not* add() which will not block and will
             // throw an IllegalStateException if the queue is full.
             if (latch.getCount()==0) {
@@ -128,7 +128,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
             }
             return null;
         }
-        
+
         protected void start() {
 
             executor.submit(new Runnable() {
@@ -138,7 +138,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
                         try {
                             final FutureTask job = pendingJobs.take();
                             // when listeners start a transaction themselves, several jobs try to get published
-                            // simultaneously so we cannot block the pump while delivering the messages. 
+                            // simultaneously so we cannot block the pump while delivering the messages.
                             executor.submit(new Runnable() {
                                 public void run() {
                                     job.run();
@@ -151,7 +151,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
                         }
                     }
                 }
-                
+
             });
         }
 
@@ -175,7 +175,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
      * @param <V> return type of the listener interface methods.
      */
     private class ListenerNotifier<T,U,V> extends Notifier<T,U,V> {
-        
+
         final T listener;
 
         public ListenerNotifier(T listener) {
@@ -195,14 +195,14 @@ public final class Transactions implements PostConstruct, PreDestroy {
                         return null;
                     }
                 });
-        }   
-        
+        }
+
     }
 
     /**
      * Configuration listener notification pump. All Listeners are notified within their own thread, only on thread
      * takes care of the job pump.
-     * 
+     *
      */
     private class ConfigListenerNotifier extends Notifier<ConfigListener,PropertyChangeEvent,UnprocessedChangeEvents> {
 
@@ -310,33 +310,33 @@ public final class Transactions implements PostConstruct, PreDestroy {
 
         private final CountDownLatch mLatch;
         protected final List<U> mEvents;
-        
+
         public Job(List<U> events, final CountDownLatch latch ) {
             mLatch  = latch;
             mEvents = events;
         }
-        
+
         public void waitForLatch() throws InterruptedException {
             if ( mLatch != null ) {
                 mLatch.await();
             }
         }
-        
+
         public void releaseLatch() {
             if ( mLatch != null ) {
                 mLatch.countDown();
             }
         }
-        
+
         public abstract V process(T target);
     }
-    
+
     private static class TransactionListenerJob extends Job<TransactionListener, PropertyChangeEvent, Void> {
 
         public TransactionListenerJob(List<PropertyChangeEvent> events, CountDownLatch latch) {
             super(events,  latch);
         }
-        
+
         @Override
         public Void process(TransactionListener listener) {
             try {
@@ -371,7 +371,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
 
         public ConfigListenerJob(List<PropertyChangeEvent> events, CountDownLatch latch) {
             super(events, latch);
-            eventsArray = mEvents.toArray(new PropertyChangeEvent[mEvents.size()]);            
+            eventsArray = mEvents.toArray(new PropertyChangeEvent[mEvents.size()]);
         }
 
         public UnprocessedChangeEvents process(ConfigListener target) {
@@ -451,9 +451,9 @@ public final class Transactions implements PostConstruct, PreDestroy {
         }
         return false;
     }
-    
+
     public List<TransactionListener> currentListeners() {
-        synchronized(listeners) {            
+        synchronized(listeners) {
             List<TransactionListener> l = new ArrayList<TransactionListener>();
             for (Provider<ListenerNotifier<TransactionListener, ?, Void>> holder : listeners) {
                 ListenerNotifier<TransactionListener, ?, Void> info = holder.get();
@@ -467,12 +467,12 @@ public final class Transactions implements PostConstruct, PreDestroy {
     /**
      * Synchronous notification of a new transactional configuration change operation.
      *
-     * @param events list of changes 
+     * @param events list of changes
      */
     void addTransaction( final List<PropertyChangeEvent> events) {
         addTransaction(events, true);
     }
-        
+
     /**
      * Notification of a new transaction completion
      *
@@ -483,20 +483,20 @@ public final class Transactions implements PostConstruct, PreDestroy {
     void addTransaction(
         final List<PropertyChangeEvent> events,
         final boolean waitTillCleared ) {
-        
+
         final List<ListenerNotifier<TransactionListener, ?, Void>> listInfos = new ArrayList<ListenerNotifier<TransactionListener, ?, Void>>();
         for (Provider<ListenerNotifier<TransactionListener, ?, Void>> holder : listeners) {
             ListenerNotifier<TransactionListener, ?, Void> info = holder.get();
             listInfos.add(info);
         }
-        
+
         // create a CountDownLatch to implement waiting for events to actually be sent
         final Job<TransactionListener, ?, Void> job = new TransactionListenerJob( events,
                                 waitTillCleared ? new CountDownLatch(listInfos.size()) : null);
-        
+
         final ConfigListenerJob configJob = new ConfigListenerJob(events,
                 waitTillCleared? new CountDownLatch(1):null);
-        
+
         // NOTE that this is put() which blocks, *not* add() which will not block and will
         // throw an IllegalStateException if the queue is full.
         try {
@@ -518,7 +518,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
         // that all prior jobs have finished
         addTransaction( new ArrayList<PropertyChangeEvent>(), true );
         // at this point all prior transactions are guaranteed to have cleared
-    }    
+    }
 }
 
 

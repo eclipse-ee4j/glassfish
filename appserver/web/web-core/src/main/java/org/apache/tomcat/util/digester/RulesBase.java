@@ -149,8 +149,8 @@ public class RulesBase implements Rules {
         if (patternLength>1 && pattern.endsWith("/")) {
             pattern = pattern.substring(0, patternLength-1);
         }
-        
-        
+
+
         List<Rule> list = cache.get(pattern);
         if (list == null) {
             list = new ArrayList<Rule>();

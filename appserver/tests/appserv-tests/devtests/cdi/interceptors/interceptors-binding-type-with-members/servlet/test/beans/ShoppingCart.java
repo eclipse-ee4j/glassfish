@@ -20,10 +20,10 @@ package test.beans;
 @Transactional(requiresNew=true)
 @Preferred
 public class ShoppingCart  {
-    
+
     public void addItem(String s) {
         System.out.println("ShoppingCart::addItem called");
-        
+
     }
 
 }

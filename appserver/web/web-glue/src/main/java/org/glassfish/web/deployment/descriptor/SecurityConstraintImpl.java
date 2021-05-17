@@ -26,9 +26,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-    /** 
+    /**
     * Objects exhibiting this interface represent a security constraint on the web application
-    * that owns them. 
+    * that owns them.
     * @author Danny Coward
     */
 
@@ -36,16 +36,16 @@ public class SecurityConstraintImpl extends Descriptor implements SecurityConstr
     private Set<WebResourceCollection> webResourceCollections;
     private AuthorizationConstraint authorizationConstraint;
     private UserDataConstraint userDataConstraint;
-    
+
     /** Default constructor.*/
     public SecurityConstraintImpl() {
-    
+
     }
-    
+
     /** Copy constructor.*/
     public SecurityConstraintImpl(SecurityConstraintImpl other) {
         if (other.webResourceCollections != null) {
-	        this.webResourceCollections = new HashSet<WebResourceCollection>();
+            this.webResourceCollections = new HashSet<WebResourceCollection>();
             for (WebResourceCollection wrc : other.webResourceCollections) {
                 webResourceCollections.add(new WebResourceCollectionImpl((WebResourceCollectionImpl)wrc));
             }
@@ -58,23 +58,23 @@ public class SecurityConstraintImpl extends Descriptor implements SecurityConstr
             this.userDataConstraint.setTransportGuarantee(other.userDataConstraint.getTransportGuarantee());
         }
     }
-    
-    
+
+
     /** Return all the web resource collection.
     */
     public Set<WebResourceCollection> getWebResourceCollections() {
-	if (this.webResourceCollections == null) {
-	    this.webResourceCollections = new HashSet<WebResourceCollection>();
-	}
-	return this.webResourceCollections;
+    if (this.webResourceCollections == null) {
+        this.webResourceCollections = new HashSet<WebResourceCollection>();
     }
-    
+    return this.webResourceCollections;
+    }
+
     /** Adds a web resource collection to this constraint.*/
     public void addWebResourceCollection(WebResourceCollection webResourceCollection) {
         this.getWebResourceCollections().add(webResourceCollection);
     }
 
-    public void addWebResourceCollection(WebResourceCollectionImpl webResourceCollection) {    
+    public void addWebResourceCollection(WebResourceCollectionImpl webResourceCollection) {
         addWebResourceCollection((WebResourceCollection) webResourceCollection);
     }
 
@@ -82,42 +82,42 @@ public class SecurityConstraintImpl extends Descriptor implements SecurityConstr
     public void removeWebResourceCollection(WebResourceCollection webResourceCollection) {
         this.getWebResourceCollections().remove(webResourceCollection);
     }
-    
-	/** The authorization constraint. */
+
+    /** The authorization constraint. */
     public AuthorizationConstraint getAuthorizationConstraint() {
-	return this.authorizationConstraint;
+    return this.authorizationConstraint;
     }
-    
+
     /** Sets the authorization constraint.*/
     public void setAuthorizationConstraint(AuthorizationConstraint authorizationConstraint) {
-	this.authorizationConstraint = authorizationConstraint;
+    this.authorizationConstraint = authorizationConstraint;
     }
-    
+
     /** Sets the authorization constraint.*/
     public void setAuthorizationConstraint(AuthorizationConstraintImpl authorizationConstraint) {
-	setAuthorizationConstraint((AuthorizationConstraint) authorizationConstraint);
+    setAuthorizationConstraint((AuthorizationConstraint) authorizationConstraint);
     }
-    
-	/** The user data constraint. */
+
+    /** The user data constraint. */
     public UserDataConstraint getUserDataConstraint() {
-	return this.userDataConstraint;
+    return this.userDataConstraint;
     }
-	/** Sets the user data constraint. */
+    /** Sets the user data constraint. */
     public void setUserDataConstraint(UserDataConstraint userDataConstraint) {
-	this.userDataConstraint = userDataConstraint;
+    this.userDataConstraint = userDataConstraint;
     }
-    
+
     public void setUserDataConstraint(UserDataConstraintImpl userDataConstraint) {
-	setUserDataConstraint((UserDataConstraint) userDataConstraint);
+    setUserDataConstraint((UserDataConstraint) userDataConstraint);
     }
 
     /** Returns a formatted String representing of my state.*/
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("SecurityConstraint: ");
-	toStringBuffer.append(" webResourceCollections: ").append(webResourceCollections);
-	toStringBuffer.append(" authorizationConstraint ").append(authorizationConstraint);
-	toStringBuffer.append(" userDataConstraint ").append(userDataConstraint);
-    
+    toStringBuffer.append("SecurityConstraint: ");
+    toStringBuffer.append(" webResourceCollections: ").append(webResourceCollections);
+    toStringBuffer.append(" authorizationConstraint ").append(authorizationConstraint);
+    toStringBuffer.append(" userDataConstraint ").append(userDataConstraint);
+
     }
-    
+
 }

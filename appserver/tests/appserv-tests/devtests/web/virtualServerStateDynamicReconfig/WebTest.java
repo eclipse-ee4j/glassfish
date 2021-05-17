@@ -66,12 +66,12 @@ public class WebTest {
         contextRoot = args[2];
         run = args[3];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for disabling a virtual server");
         WebTest webTest = new WebTest(args);
 
-        try { 
+        try {
             if ("on".equals(webTest.run)) {
                 TEST_NAME = TEST_ROOT_NAME + "-on";
                 webTest.onRun();
@@ -96,7 +96,7 @@ public class WebTest {
      * server.
      */
     private void onRun() throws Exception {
-        
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/test.txt HTTP/1.1\n";

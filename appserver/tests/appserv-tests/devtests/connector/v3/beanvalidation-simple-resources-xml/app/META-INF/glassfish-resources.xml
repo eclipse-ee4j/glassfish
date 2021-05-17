@@ -85,11 +85,11 @@
     <property name="intValue1" value="40"/>
   </admin-object-resource>
 
-<custom-resource res-type="java.lang.String" jndi-name="java:app/custom/primitive-resource" 
+<custom-resource res-type="java.lang.String" jndi-name="java:app/custom/primitive-resource"
      factory-class="org.glassfish.resources.custom.factory.PrimitivesAndStringFactory">
       <property name="value" value="TEST" />
     </custom-resource>
 <jdbc-resource pool-name="java:app/sr" jndi-name="java:app/jdbc/sr"  />
 <jdbc-resource pool-name="java:app/connector-bean-validation-pool" jndi-name="java:app/jdbc/connector-bean-validation-resource"  />
 
-</resources> 
+</resources>

@@ -164,7 +164,7 @@
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/lib/install/applications/metro</outputDirectory>
         </fileSet>
-        
+
         <!-- admingui -->
         <fileSet>
             <directory>${temp.dir}/war</directory>

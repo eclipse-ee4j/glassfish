@@ -27,10 +27,10 @@
     <ejb>
       <ejb-name>HelloImpl</ejb-name>
       <webservice-endpoint>
-	<port-component-name>HelloImpl</port-component-name>
-	<login-config>
-	  <auth-method>BASIC</auth-method>
-	</login-config>
+    <port-component-name>HelloImpl</port-component-name>
+    <login-config>
+      <auth-method>BASIC</auth-method>
+    </login-config>
       </webservice-endpoint>
     </ejb>
    </enterprise-beans>

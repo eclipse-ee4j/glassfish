@@ -28,27 +28,27 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class LoadGenerator {
     private static SimpleReporterAdapter stat =
-        new SimpleReporterAdapter("appserv-tests");    
-    private static String propsFileName = 
-	"/export/home/s1as/cts/ws/appserv-tests/devtests/ejb/sfsb/stress/client/jndi.properties";
+        new SimpleReporterAdapter("appserv-tests");
+    private static String propsFileName =
+    "/export/home/s1as/cts/ws/appserv-tests/devtests/ejb/sfsb/stress/client/jndi.properties";
 
     private Context ctx;
     private StressSFSBHome home;
 
     public LoadGenerator(String[] args)
-	throws Exception
+    throws Exception
     {
-	String jndiName = args[0];
-	ctx = getContext(args[1]);    
+    String jndiName = args[0];
+    ctx = getContext(args[1]);
 
-	Object ref = ctx.lookup(jndiName);
-	this.home = (StressSFSBHome) 
-	    PortableRemoteObject.narrow(ref, StressSFSBHome.class);
-	System.out.println("LoadGenerator got home: " + home.getClass());
+    Object ref = ctx.lookup(jndiName);
+    this.home = (StressSFSBHome)
+        PortableRemoteObject.narrow(ref, StressSFSBHome.class);
+    System.out.println("LoadGenerator got home: " + home.getClass());
     }
 
     private InitialContext getContext(String propsFileName)
-	throws Exception
+    throws Exception
     {
         InitialContext ic;
 
@@ -66,21 +66,21 @@ public class LoadGenerator {
 
 
     public void doTest() {
-	for (int i=0; i<10; i++) {
-	    System.out.println("Creating StressSFSBClient[" + i + "]");
-	    String clientName = "client-"+i;
-	    StressSFSBClient client = new StressSFSBClient(clientName,
-		    home, 10);
-	}
+    for (int i=0; i<10; i++) {
+        System.out.println("Creating StressSFSBClient[" + i + "]");
+        String clientName = "client-"+i;
+        StressSFSBClient client = new StressSFSBClient(clientName,
+            home, 10);
+    }
     }
 
 
     public static void main(String[] args) {
         try {
-	    stat.addDescription("ejb-sfsb-stress");
-	    LoadGenerator generator = new LoadGenerator(args);
-	    generator.doTest();
-	    stat.addStatus("ejb-sfsb-stress main", stat.PASS);
+        stat.addDescription("ejb-sfsb-stress");
+        LoadGenerator generator = new LoadGenerator(args);
+        generator.doTest();
+        stat.addStatus("ejb-sfsb-stress main", stat.PASS);
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus("ejb-sfsb-stress main", stat.FAIL);

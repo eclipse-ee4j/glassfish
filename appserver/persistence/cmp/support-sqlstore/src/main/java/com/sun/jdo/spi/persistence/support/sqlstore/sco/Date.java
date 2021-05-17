@@ -26,8 +26,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 
 /**
  * A mutable 2nd class object date.
- * @author Marina Vatkina 
- * @version 1.0 
+ * @author Marina Vatkina
+ * @version 1.0
  * @see     java.util.Date
  */
 public class Date
@@ -47,41 +47,41 @@ public class Date
      */
     public Date(Object owner, String fieldName)
     {
-	super();
-	if (owner instanceof PersistenceCapable)
+    super();
+    if (owner instanceof PersistenceCapable)
         {
                 this.owner = (PersistenceCapable)owner;
-		this.fieldName = fieldName;
+        this.fieldName = fieldName;
         }
     }
 
     /**
-     * Creates a <code>Date</code> object that represents the given time 
+     * Creates a <code>Date</code> object that represents the given time
      * in milliseconds. Assigns owning object and field name
-     * @param owner 	the owning object
+     * @param owner     the owning object
      * @param fieldName the owning field name
-     * @param date 	the number of milliseconds
+     * @param date     the number of milliseconds
      */
     public Date(Object owner, String fieldName, long date)
     {
-	super(date);
-	if (owner instanceof PersistenceCapable)
+    super(date);
+    if (owner instanceof PersistenceCapable)
         {
-			this.owner = (PersistenceCapable)owner;
-			this.fieldName = fieldName;
+            this.owner = (PersistenceCapable)owner;
+            this.fieldName = fieldName;
         }
     }
 
     /**
      * Sets the <tt>Date</tt> object to represent a point in time that is
      * <tt>time</tt> milliseconds after January 1, 1970 00:00:00 GMT.
-     *   
+     *
      * @param   time   the number of milliseconds.
      * @see     java.util.Date
-     */  
+     */
     public void setTime(long time) {
-	this.makeDirty();
-	super.setTime(time);
+    this.makeDirty();
+    super.setTime(time);
     }
 
     /**
@@ -94,10 +94,10 @@ public class Date
      */
     public Object clone()
     {
-		Date obj = (Date) super.clone();
+        Date obj = (Date) super.clone();
 
-		obj.owner = null; 
-		obj.fieldName = null; 
+        obj.owner = null;
+        obj.fieldName = null;
 
         return obj;
     }
@@ -106,21 +106,21 @@ public class Date
 
     /**
      * Sets the year of this <tt>Date</tt> object to be the specified
-     * value plus 1900. 
-     *   
+     * value plus 1900.
+     *
      * @param   year    the year value.
      * @see     java.util.Calendar
      * @see     java.util.Date
      * @deprecated As of JDK version 1.1,
      * replaced by <code>Calendar.set(Calendar.YEAR, year + 1900)</code>.
-     */  
+     */
     public void setYear(int year) {
         this.makeDirty();
         super.setYear(year);
-    }  
+    }
 
     /**
-     * Sets the month of this date to the specified value.      
+     * Sets the month of this date to the specified value.
      * @param   month   the month value between 0-11.
      * @see     java.util.Calendar
      * @see     java.util.Date
@@ -130,40 +130,40 @@ public class Date
     public void setMonth(int month) {
         this.makeDirty();
         super.setMonth(month);
-    }    
+    }
 
     /**
      * Sets the day of the month of this <tt>Date</tt> object to the
-     * specified value. 
-     *   
+     * specified value.
+     *
      * @param   date   the day of the month value between 1-31.
      * @see     java.util.Calendar
      * @see     java.util.Date
      * @deprecated As of JDK version 1.1,
      * replaced by <code>Calendar.set(Calendar.DAY_OF_MONTH, int date)</code>.
-     */  
+     */
     public void setDate(int date) {
         this.makeDirty();
         super.setDate(date);
-    } 
+    }
 
     /**
      * Sets the hour of this <tt>Date</tt> object to the specified value.
-     *   
+     *
      * @param   hours   the hour value.
      * @see     java.util.Calendar
      * @see     java.util.Date
      * @deprecated As of JDK version 1.1,
      * replaced by <code>Calendar.set(Calendar.HOUR_OF_DAY, int hours)</code>.
-     */  
+     */
     public void setHours(int hours) {
         this.makeDirty();
         super.setHours(hours);
-    }  
+    }
 
     /**
      * Sets the minutes of this <tt>Date</tt> object to the specified value.
-     *   
+     *
      * @param   minutes   the value of the minutes.
      * @see     java.util.Calendar
      * @see     java.util.Date
@@ -173,132 +173,132 @@ public class Date
     public void setMinutes(int minutes) {
         this.makeDirty();
         super.setMinutes(minutes);
-    }   
- 
+    }
+
     /**
      * Sets the seconds of this <tt>Date</tt> to the specified value.
-     *   
+     *
      * @param   seconds   the seconds value.
      * @see     java.util.Calendar
      * @see     java.util.Date
      * @deprecated As of JDK version 1.1,
      * replaced by <code>Calendar.set(Calendar.SECOND, int seconds)</code>.
-     */  
+     */
     public void setSeconds(int seconds) {
         this.makeDirty();
         super.setSeconds(seconds);
-    } 
+    }
 
     /** ---------------- internal methods ------------------- */
 
     /**
      * Creates and returns a copy of this object without resetting the owner and field value.
-     *   
-     */  
+     *
+     */
     public Object cloneInternal()
     {
         return super.clone();
-    } 
+    }
 
     /**
      * Sets the <tt>Date</tt> object without notification of the Owner
      * field. Used internaly to populate date from DB
-     *   
+     *
      * @param   time   the number of milliseconds.
      * @see     java.util.Date
-     */  
-    public void setTimeInternal(long time) {
-	super.setTime(time);
-    }
-
-    /**
-     * Nullifies references to the owner Object and Field 
-	 * NOTE: This method should be called under the locking of
-	 * the owener' state manager.
      */
-    public void unsetOwner() 
-    { 
-		this.owner = null; 
-		this.fieldName = null; 
+    public void setTimeInternal(long time) {
+    super.setTime(time);
     }
 
     /**
-     * Returns the owner object of the SCO instance 
-     * 
-     * @return owner object 
-     */ 
+     * Nullifies references to the owner Object and Field
+     * NOTE: This method should be called under the locking of
+     * the owener' state manager.
+     */
+    public void unsetOwner()
+    {
+        this.owner = null;
+        this.fieldName = null;
+    }
+
+    /**
+     * Returns the owner object of the SCO instance
+     *
+     * @return owner object
+     */
     public Object getOwner()
-    {    
-        return this.owner; 
-    } 
+    {
+        return this.owner;
+    }
 
     /**
      * Returns the field name
-     *   
+     *
      * @return field name as java.lang.String
-     */  
+     */
     public String getFieldName()
     {
         return this.fieldName;
     }
- 
+
     /**
      * Marks object dirty
      */
     public StateManager makeDirty()
     {
-		if (owner != null)
-		{
-			StateManager stateManager = owner.jdoGetStateManager();
+        if (owner != null)
+        {
+            StateManager stateManager = owner.jdoGetStateManager();
 
-			if (stateManager != null)
-			{
-				PersistenceManager pm = (PersistenceManager) stateManager.getPersistenceManagerInternal();
+            if (stateManager != null)
+            {
+                PersistenceManager pm = (PersistenceManager) stateManager.getPersistenceManagerInternal();
 
-				pm.acquireShareLock();
-				
-				try
-				{
-					synchronized (stateManager)
-					{
-						//
-						// Need to recheck owner because it could be set to
-						// null before we lock the stateManager.
-						//
-						if (owner != null)
-						{
-							stateManager.makeDirty(fieldName);
-							return stateManager;
-						}
-					}
-				}
-				finally
-				{
-					pm.releaseShareLock();
-				}
-			}
+                pm.acquireShareLock();
 
-		}
-	
-		return null;
-     }   
+                try
+                {
+                    synchronized (stateManager)
+                    {
+                        //
+                        // Need to recheck owner because it could be set to
+                        // null before we lock the stateManager.
+                        //
+                        if (owner != null)
+                        {
+                            stateManager.makeDirty(fieldName);
+                            return stateManager;
+                        }
+                    }
+                }
+                finally
+                {
+                    pm.releaseShareLock();
+                }
+            }
+
+        }
+
+        return null;
+     }
 
     /**
      * Apply changes (no-op)
-     */  
+     */
     public void applyUpdates(StateManager sm, boolean modified)
     {
     }
 
 
     /**
-     * Use java.util.Date as the designated object to be used when writing 
+     * Use java.util.Date as the designated object to be used when writing
      * this object to the stream.
-     *   
+     *
      * @return java.util.Date that represents the same value.
      * @throws ObjectStreamException.
-     */  
-    Object writeReplace() throws ObjectStreamException 
+     */
+    Object writeReplace() throws ObjectStreamException
     {
         return new java.util.Date(getTime());
     }

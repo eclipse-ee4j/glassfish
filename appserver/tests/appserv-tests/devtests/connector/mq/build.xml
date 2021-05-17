@@ -86,16 +86,16 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant cmt (Executes the cmt test)
-		ant all (Executes all the mq tests)
-		ant clean (cleans all the mq tests)
-		ant build (builds all the mq tests)
-		ant setup (sets up all resources for mq tests)
-		ant deploy (deploys all the mq apps)
-		ant run (Executes all the mq tests)
-		ant undeploy (undeploys all the  mq apps)
-		ant unsetup (unsets all resources for mq tests)
-	</echo>
+    <echo> Usage:
+        ant cmt (Executes the cmt test)
+        ant all (Executes all the mq tests)
+        ant clean (cleans all the mq tests)
+        ant build (builds all the mq tests)
+        ant setup (sets up all resources for mq tests)
+        ant deploy (deploys all the mq apps)
+        ant run (Executes all the mq tests)
+        ant undeploy (undeploys all the  mq apps)
+        ant unsetup (unsets all resources for mq tests)
+    </echo>
     </target>
 </project>

@@ -32,8 +32,8 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="oracle_dd_pool" 
+    <jdbc-connection-pool
+        name="oracle_dd_pool"
         datasource-classname="com.sun.sql.jdbcx.oracle.OracleDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -43,9 +43,9 @@
         <property name="port" value="1521"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/oracle_dd_resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/oracle_dd_resource"
+        object-type="user"
         pool-name="oracle_dd_pool"/>
-</resources> 
+</resources>

@@ -48,7 +48,7 @@ public class JavaMessageServiceTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertyContentPage:basicTable:rowGroup1:0:col3:col1St", "value");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:jmsConfiguration:jmsConfiguration_link");
 
@@ -56,7 +56,7 @@ public class JavaMessageServiceTest extends BaseSeleniumTestClass {
         assertEquals(interval, getValue("propertyForm:propertyContentPage:propertySheet:propertSectionTextField:intervalProp:Interval", "value"));
         assertEquals(attempts, getValue("propertyForm:propertyContentPage:propertySheet:propertSectionTextField:attemptsProp:Attempts", "value"));
         assertTableRowCount("propertyForm:propertyContentPage:basicTable", count);
-        
+
         //delete the property used to test
         clickByIdAction("propertyForm:propertyContentPage:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("propertyForm:propertyContentPage:basicTable:topActionsGroup1:button1");
@@ -81,7 +81,7 @@ public class JavaMessageServiceTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:newPasswordProp:NewPassword", "admin");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:confirmPasswordProp:ConfirmPassword", "admin");
         clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:configs", hostText, "colName");
         assertEquals(hostText, getText(prefix + "colName:link"));
 
@@ -89,7 +89,7 @@ public class JavaMessageServiceTest extends BaseSeleniumTestClass {
         clickByIdAction(clickId);
         assertEquals(host, getValue("propertyForm:propertySheet:propertSectionTextField:HostProp:Host", "value"));
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
-        
+
         //delete related jms host
         String deleteRow = prefix + "col0:select";
         clickByIdAction(deleteRow);
@@ -189,7 +189,7 @@ public class JavaMessageServiceTest extends BaseSeleniumTestClass {
 //        String selectId = prefix + "col0:select";
 //        clickByIdAction(selectId);;
 //        clickAndWait("propertyForm:configs:topActionsGroup1:flushButton");
-//        
+//
 //        gotoDasPage();
 //        clickAndWait("treeForm:tree:applicationServer:applicationServer_link");
 //        clickAndWait("propertyForm:serverInstTabs:jmsPhysDest");

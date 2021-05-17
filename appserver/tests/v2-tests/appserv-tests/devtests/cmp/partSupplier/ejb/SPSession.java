@@ -25,16 +25,16 @@ import jakarta.ejb.*;
  */
 
 public interface SPSession extends jakarta.ejb.EJBObject {
-    
+
     public int checkAllParts() throws java.rmi.RemoteException;
-    
+
     public int checkAllSuppliers() throws java.rmi.RemoteException;
-    
+
     public void createPartsAndSuppliers() throws java.rmi.RemoteException;
-    
+
     public void removePart(java.lang.Integer partid) throws java.rmi.RemoteException;
-    
+
     public void removeSupplier(java.lang.Integer partid, java.lang.Integer supplierid) throws java.rmi.RemoteException;
-    
+
 }
 

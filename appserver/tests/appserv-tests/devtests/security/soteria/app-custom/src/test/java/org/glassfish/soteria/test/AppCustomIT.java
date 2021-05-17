@@ -45,7 +45,7 @@ public class AppCustomIT extends ArquillianBase {
     public static void printSummary(){
       stat.printSummary();
     }
-   
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();
@@ -56,19 +56,19 @@ public class AppCustomIT extends ArquillianBase {
         assertDefaultAuthenticated(
                 responseFromServer("/servlet?name=reza&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
         assertDefaultNotAuthenticatedUnprotected(
                 responseFromServer("/servlet"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongName() {
         assertDefaultNotAuthenticated(
                 responseFromServer("/servlet?name=romo&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongPassword() {
         assertDefaultNotAuthenticated(

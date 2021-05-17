@@ -23,10 +23,10 @@ public interface CacheManagerListener {
    /**
     * cache manager was enabled
     */
-   public void cacheManagerEnabled(); 
+   public void cacheManagerEnabled();
 
    /**
     * cache manager was disabled
     */
-   public void cacheManagerDisabled(); 
+   public void cacheManagerDisabled();
 }

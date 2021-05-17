@@ -69,7 +69,7 @@
                                com/sun/s1asdev/deployment/noappxml/ejb/Sful.class,
                                com/sun/s1asdev/deployment/noappxml/ejb/Sless.class"/>
         </jar>
-        <jar destfile="${portable.ear}"> 
+        <jar destfile="${portable.ear}">
             <fileset dir="${build}" includes="lib/util.jar, ejb/ejb.jar, web/web.war, client/appclient.jar"/>
         </jar>
     </target>
@@ -94,7 +94,7 @@
             <param name="testName" value="${testName}"/>
         </antcall>
     </target>
-    
+
     <target name="deploy.jsr88" depends="prepare">
         <antcall target="common.deploy.jsr88">
             <param name="arg.list" value="${portable.ear} ${deployplan.jar}"/>
@@ -134,9 +134,9 @@
     </target>
 
     <target name="runclient" depends="prepare,setOrbPort2,setHttpPort2">
-        <exec executable="${APPCLIENT}" 
-              resultproperty="result" 
-              failonerror="false" 
+        <exec executable="${APPCLIENT}"
+              resultproperty="result"
+              failonerror="false"
               output="${build}/${log.id}.output.log">
           <arg line="-targetserver ${appclient.targetservers} -client ${testName}Client.jar http://${http.host}:${depltest.port}/web"/>
         </exec>

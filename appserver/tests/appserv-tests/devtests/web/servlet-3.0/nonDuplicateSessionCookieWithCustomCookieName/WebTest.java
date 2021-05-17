@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for CR: 7014654: Possible Duplicate session cookie when the session cookie name is configured.");

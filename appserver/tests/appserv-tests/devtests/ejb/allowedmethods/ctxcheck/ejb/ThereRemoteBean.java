@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.allowedmethods.ctxcheck;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -32,11 +32,11 @@ public class ThereRemoteBean implements SessionBean {
     public ThereRemoteBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In ThereRemoteBean::ejbCreate !!");
+    System.out.println("In ThereRemoteBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+    this.sc = sc;
     }
 
     public void doSomethingHere() {
@@ -44,7 +44,7 @@ public class ThereRemoteBean implements SessionBean {
     }
 
     public void accessEJBObject() {
-        sc.getEJBObject();      
+        sc.getEJBObject();
     }
 
     public void accessEJBLocalObject() {
@@ -52,7 +52,7 @@ public class ThereRemoteBean implements SessionBean {
     }
 
     public void accessEJBHome() {
-        sc.getEJBHome();      
+        sc.getEJBHome();
     }
 
     public void accessEJBLocalHome() {

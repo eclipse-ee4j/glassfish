@@ -35,20 +35,20 @@ public class JDBCConnectionPoolTest extends BaseTest
     static final String kTransactionIsolationLevel  = "repeatable-read";
     static final String kValidationTableName        = "tab1";
 
-    public JDBCConnectionPoolTest(final String user, 
-        final String password, final String host, final int port, 
-        final String name, final String datasourceClassname) 
+    public JDBCConnectionPoolTest(final String user,
+        final String password, final String host, final int port,
+        final String name, final String datasourceClassname)
     {
         final CmdFactory cmdFactory = getCmdFactory();
 
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateJDBCConnectionPoolCmd createCmd = 
+        final CreateJDBCConnectionPoolCmd createCmd =
                 cmdFactory.createCreateJDBCConnectionPoolCmd(name,
                         datasourceClassname, getOptional());
 
-        final DeleteJDBCConnectionPoolCmd deleteCmd = 
+        final DeleteJDBCConnectionPoolCmd deleteCmd =
                 cmdFactory.createDeleteJDBCConnectionPoolCmd(name);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -71,7 +71,7 @@ public class JDBCConnectionPoolTest extends BaseTest
     public static void main(String[] args) throws Exception
     {
         new JDBCConnectionPoolTest(
-                "admin", "password", "localhost", 8686, kName, 
+                "admin", "password", "localhost", 8686, kName,
                 kDatasourceClassname).run();
     }
 
@@ -102,7 +102,7 @@ public class JDBCConnectionPoolTest extends BaseTest
         public Object execute() throws Exception
         {
             System.out.println("Name="+res.getName());
-            System.out.println("DatasourceClassname="+ 
+            System.out.println("DatasourceClassname="+
                     res.getDatasourceClassname());
             System.out.println("ResType="+ res.getResType());
             System.out.println("SteadyPoolSize="+res.getSteadyPoolSize());

@@ -27,17 +27,17 @@ import java.util.*;
 /**
  *
  * @author  bnevins
- * @version 
+ * @version
  */
 public class FileListerRelative extends FileLister
 {
-	public FileListerRelative(File f)
-	{
-		super(f);
-	}
-	
-	protected boolean relativePath()
-	{
-		return true;
-	}
+    public FileListerRelative(File f)
+    {
+        super(f);
+    }
+
+    protected boolean relativePath()
+    {
+        return true;
+    }
 }

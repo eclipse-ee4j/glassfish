@@ -67,14 +67,14 @@
     <res-auth>Container</res-auth>
     <res-sharing-scope>Shareable</res-sharing-scope>
   </resource-ref>
-  <message-destination-ref>       
+  <message-destination-ref>
     <description>timertest destination</description>
     <message-destination-ref-name>jms/TimerMDBQueue_CMT</message-destination-ref-name>
     <message-destination-type>jakarta.jms.Queue</message-destination-type>
     <message-destination-usage>Produces</message-destination-usage>
     <message-destination-link>TimerMDBQueue_CMT</message-destination-link>
   </message-destination-ref>
-  <message-destination-ref>       
+  <message-destination-ref>
     <description>timertest destination</description>
     <message-destination-ref-name>jms/TimerMDBQueue_BMT</message-destination-ref-name>
     <message-destination-type>jakarta.jms.Queue</message-destination-type>

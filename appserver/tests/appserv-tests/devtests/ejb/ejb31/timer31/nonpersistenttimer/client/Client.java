@@ -25,14 +25,14 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
 
     @EJB private static StatefulWrapper wrapper;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         boolean doJms = false; // TODO (args.length == 1) && (args[0].equalsIgnoreCase("jms"));
 
         stat.addDescription("ejb31-timer-nonpersistenttimer");
@@ -54,22 +54,22 @@ public class Client {
         stat.addStatus("Foo: ejbs/Foo_BMT", (result)? stat.PASS : stat.FAIL);
 
 
-	/** TODO
+    /** TODO
         result = wrapper.doMessageDrivenTest("jms/TimerMDBQueue_CMT", doJms);
-        System.out.println("Message-driven test jms/TimerMDBQueue_CMT" 
+        System.out.println("Message-driven test jms/TimerMDBQueue_CMT"
                 + ((result)? " passed!!" : "failed!!"));
-        stat.addStatus("Message-driven test: jms/TimerMDBQueue_CMT", 
+        stat.addStatus("Message-driven test: jms/TimerMDBQueue_CMT",
                 (result)? stat.PASS : stat.FAIL);
 
         result = wrapper.doMessageDrivenTest("jms/TimerMDBQueue_BMT", doJms);
-        System.out.println("Message-driven test jms/TimerMDBQueue_BMT" 
+        System.out.println("Message-driven test jms/TimerMDBQueue_BMT"
                 + ((result)? " passed!!" : "failed!!"));
-        stat.addStatus("Message-driven test: jms/TimerMDBQueue_BMT", 
+        stat.addStatus("Message-driven test: jms/TimerMDBQueue_BMT",
                 (result)? stat.PASS : stat.FAIL);
-	**/
+    **/
 
         try {
-	     wrapper.removeFoo();
+         wrapper.removeFoo();
         } catch(Exception e) {
             e.printStackTrace();
         }

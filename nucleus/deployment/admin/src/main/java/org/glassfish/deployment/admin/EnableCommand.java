@@ -74,18 +74,18 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext.Phase;
 @TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="enable", 
+        opType=RestEndpoint.OpType.POST,
+        path="enable",
         description="enable",
         params={
             @RestParam(name="id", value="$parent")
         })
 })
-public class EnableCommand extends StateCommandParameters implements AdminCommand, 
+public class EnableCommand extends StateCommandParameters implements AdminCommand,
         DeploymentTargetResolver, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EnableCommand.class);
-    
+
     final static String ENABLE_ACTION = "enable";
 
     @Inject
@@ -108,7 +108,7 @@ public class EnableCommand extends StateCommandParameters implements AdminComman
 
     @Inject
     VersioningService versioningService;
-    
+
     @Inject
     ArchiveFactory archiveFactory;
 
@@ -116,7 +116,7 @@ public class EnableCommand extends StateCommandParameters implements AdminComman
     private Logger logger;
     private List<AccessCheck> accessChecks;
 
-        
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         report = context.getActionReport();
@@ -131,7 +131,7 @@ public class EnableCommand extends StateCommandParameters implements AdminComman
     public Collection<? extends AccessCheck> getAccessChecks() {
         accessChecks = new ArrayList<AccessCheck>();
         if (!DeploymentUtils.isDomainTarget(target)) {
-            
+
             ApplicationRef applicationRef = domain.getApplicationRefInTarget(name(), target);
             if (applicationRef != null && ! Boolean.getBoolean(applicationRef.getEnabled())) {
                 accessChecks.add(new AccessCheck(applicationRef, ENABLE_ACTION, true));
@@ -208,7 +208,7 @@ public class EnableCommand extends StateCommandParameters implements AdminComman
                     paramMap.set("DEFAULT", name());
 
                     notifier.ensureBeforeReported(Phase.REPLICATION);
-                    ClusterOperationUtil.replicateCommand("enable", FailurePolicy.Error, FailurePolicy.Warn, 
+                    ClusterOperationUtil.replicateCommand("enable", FailurePolicy.Error, FailurePolicy.Warn,
                             FailurePolicy.Ignore, targets, context, paramMap, habitat);
                 } catch (Exception e) {
                     report.failure(logger, e.getMessage());
@@ -232,7 +232,7 @@ public class EnableCommand extends StateCommandParameters implements AdminComman
         }
 
         try {
-            Application app = applications.getApplication(name()); 
+            Application app = applications.getApplication(name());
             ApplicationRef appRef = domain.getApplicationRefInServer(server.getName(), name());
 
             DeploymentContext dc = deployment.enable(target, app, appRef, report, logger);
@@ -250,8 +250,8 @@ public class EnableCommand extends StateCommandParameters implements AdminComman
             logger.log(Level.SEVERE, "Error during enabling: ", e);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(e.getMessage());
-        } 
-    }        
+        }
+    }
 
     public String getTarget(ParameterMap parameters) {
         return DeploymentCommandUtils.getTarget(parameters, OpsParams.Origin.load, deployment);

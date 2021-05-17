@@ -32,7 +32,7 @@ public class HelloBean implements Hello {
     private boolean activated = false;
 
     @EJB private SingletonNoIntf singletonNoIntf;
-   
+
     @EJB private SingletonMultiIntf singletonMultiIntf;
 
     @EJB private Local1 local1;
@@ -50,50 +50,50 @@ public class HelloBean implements Hello {
 
     @PostConstruct
     public void init() {
-	System.out.println("In HelloBean::init()");
+    System.out.println("In HelloBean::init()");
     }
 
     public String hello() {
-	System.out.println("In HelloBean::hello()");
+    System.out.println("In HelloBean::hello()");
 System.out.println("+++ sessionCtx type: " + sessionCtx.getClass());
 
-	StatefulExpiration se = (StatefulExpiration) sessionCtx.lookup("java:module/StatefulExpiration");
-	se.hello();
+    StatefulExpiration se = (StatefulExpiration) sessionCtx.lookup("java:module/StatefulExpiration");
+    se.hello();
 
-	singletonNoIntf.hello();
-	singletonMultiIntf.hello();
-	local1.hello();
-	local2.hello();
-	remote1.hello();
-	remote2.hello();
-	statelessNoIntf.hello();
-	statefulNoIntf.hello();
+    singletonNoIntf.hello();
+    singletonMultiIntf.hello();
+    local1.hello();
+    local2.hello();
+    remote1.hello();
+    remote2.hello();
+    statelessNoIntf.hello();
+    statefulNoIntf.hello();
 
-	return "hello, world\n";
+    return "hello, world\n";
     }
 
     public boolean passivatedAndActivated() {
-	return passivated && activated;
+    return passivated && activated;
     }
 
     @PrePassivate
     public void prePass() {
-	System.out.println("In HelloBean::prePass()");
-	passivated = true;
+    System.out.println("In HelloBean::prePass()");
+    passivated = true;
     }
 
     @PostActivate
     public void postAct() {
-	System.out.println("In HelloBean::postAct()");
+    System.out.println("In HelloBean::postAct()");
         hello();
-	activated = true;
+    activated = true;
     }
-    
+
 
 
     @PreDestroy
     public void destroy() {
-	System.out.println("In HelloBean::destroy()");
+    System.out.println("In HelloBean::destroy()");
     }
 
 

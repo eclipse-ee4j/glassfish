@@ -63,12 +63,12 @@
     </target>
 
     <target name="undeploy">
-	<antcall target="uninstall-bundle" />
+    <antcall target="uninstall-bundle" />
     </target>
 
     <target name="runtest">
-	<antcall target="test">
-	  <param name="testURL" value="http://localhost:8080/test7" />
+    <antcall target="test">
+      <param name="testURL" value="http://localhost:8080/test7" />
         </antcall>
     </target>
 

@@ -85,9 +85,9 @@ public class AddressEJB implements jakarta.ejb.EntityBean {
         return null;
     }
 
-    public void ejbPostCreate() {       
-    }  
-    
+    public void ejbPostCreate() {
+    }
+
     public void ejbRemove() {
     }
 
@@ -118,7 +118,7 @@ public class AddressEJB implements jakarta.ejb.EntityBean {
             conn.close();
         } catch (SQLException e) {
             System.out.println("SQLException occurred in ejbLoad() method");
-        }   
+        }
     }
 
     public void ejbActivate() {}

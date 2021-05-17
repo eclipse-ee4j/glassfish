@@ -47,7 +47,7 @@ public class Constants {
     public final static String STAT_LRUCACHE_TRIM_COUNT="cache.LruCache.stat_trimCount";
 
     public final static String STAT_MULTILRUCACHE_SEGMENT_SIZE="cache.MultiLruCache.stat_segmentSize";
-    public final static String STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH="cache.MultiLruCache.stat_segmentListLength"; 
+    public final static String STAT_MULTILRUCACHE_SEGMENT_LIST_LENGTH="cache.MultiLruCache.stat_segmentListLength";
     public final static String STAT_MULTILRUCACHE_TRIM_COUNT="cache.MultiLruCache.stat_trimCount";
 
     public final static String STAT_BOUNDEDMULTILRUCACHE_CURRENT_SIZE="cache.BoundedMultiLruCache.stat_currentSize";

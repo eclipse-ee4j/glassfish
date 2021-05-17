@@ -38,9 +38,9 @@ public class TestServlet extends HttpServlet {
     TestBean tb;
     @Inject
     BeanManager bm;
-    
+
     BeanManager bm1;
-    
+
     @Inject
     ServletContext sc;
 

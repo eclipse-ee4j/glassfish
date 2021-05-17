@@ -53,6 +53,6 @@ public class SfulEJB implements Sful, Sful2
     public void sameMethod() {
         System.out.println("In SfulEJB:sameMethod()");
     }
-    
+
 
 }

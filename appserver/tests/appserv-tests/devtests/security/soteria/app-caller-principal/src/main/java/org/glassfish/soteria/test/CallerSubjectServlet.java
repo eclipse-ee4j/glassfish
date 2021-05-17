@@ -42,7 +42,7 @@ import java.util.Set;
 public class CallerSubjectServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private SecurityContext securityContext;
 

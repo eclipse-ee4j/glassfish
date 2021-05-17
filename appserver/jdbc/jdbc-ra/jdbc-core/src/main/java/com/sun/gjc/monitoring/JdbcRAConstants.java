@@ -43,7 +43,7 @@ public interface JdbcRAConstants {
     public static final String TRACE_SQL = "traceSQLEvent";
 
     public static final String POTENTIAL_STATEMENT_LEAK = "potentialStatementLeakEvent";
-    
+
     /**
      * Represents module provider name.
      */
@@ -80,7 +80,7 @@ public interface JdbcRAConstants {
 
     public static final String STATEMENT_LEAK_DOTTED_NAME = GLASSFISH + ":" +
             JDBCRA + ":" + STATEMENT_LEAK_PROBE + ":";
-    
+
     /**
      * Represents top queries to report.
      */

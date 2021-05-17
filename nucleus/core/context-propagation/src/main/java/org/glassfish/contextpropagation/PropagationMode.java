@@ -21,7 +21,7 @@ import java.util.EnumSet;
 /**
  * The propagation mode determines if a work context is propagated. The creator
  * of a work context declares a set of propagation modes that is allowed by
- * the context. When protocols send or receive messages, they will propagate 
+ * the context. When protocols send or receive messages, they will propagate
  * any work context that includes the protocol's specific propagation mode.
  *  - LOCAL Context lives only in the current thread
  *  - THREAD Context will be propagated from thread to thread
@@ -37,7 +37,7 @@ import java.util.EnumSet;
  *  - IIOP propagation with IIOP messages
  */
 public enum PropagationMode {
-  LOCAL, THREAD, RMI, TRANSACTION, JMS_QUEUE, JMS_TOPIC, SOAP, MIME_HEADER, 
+  LOCAL, THREAD, RMI, TRANSACTION, JMS_QUEUE, JMS_TOPIC, SOAP, MIME_HEADER,
   ONEWAY; /*SECRET, IIOP, CUSTOM; think about extension */
   private static PropagationMode[] byOrdinal = createByOrdinal();
 
@@ -60,7 +60,7 @@ public enum PropagationMode {
   public static PropagationMode fromOrdinal(int ordinal) {
     return byOrdinal[ordinal];
   }
-  
+
   /**
    * @return The default set of propagation modes: THREAD, RMI, JMS_QUEUE, SOAP and MIME_HEADER
    */
@@ -71,6 +71,6 @@ public enum PropagationMode {
   public static EnumSet<PropagationMode> defaultSetOneway() {
     return EnumSet.of(THREAD, RMI, JMS_QUEUE, SOAP, MIME_HEADER, ONEWAY);
   }
-  
+
 
 }

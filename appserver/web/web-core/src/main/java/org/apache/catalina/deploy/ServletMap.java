@@ -25,7 +25,7 @@ package org.apache.catalina.deploy;
 public class ServletMap {
     String servletName;
     String[] urlPatterns = new String[0];
-    
+
     public void setServletName(String name) {
         servletName = name;
     }
@@ -40,7 +40,7 @@ public class ServletMap {
     public String getServletName() {
         return servletName;
     }
-        
+
     public String[] getURLPatterns() {
         return urlPatterns;
     }

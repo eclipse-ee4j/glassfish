@@ -50,7 +50,7 @@
 
     </target>
 
- 
+
 
     <target name="compile" depends="clean">
 
@@ -74,21 +74,21 @@
 
         <antcall target="build-ear-common">
 
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
 
               value="**/*Exception.class,**/*Interceptor*.class,**/Dummy*.class,**/Sless*.class,**/Sful*.class,"/>
 
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
 
               value="**/*Exception.class,**/Client.class,**/Sful.class"/>
 
         </antcall>
 
-    </target> 
+    </target>
 
-    
 
-    <target name="deploy" 
+
+    <target name="deploy"
 
             depends="init-common">
 
@@ -104,13 +104,13 @@
 
     </target>
 
- 
+
 
     <target name="undeploy" depends="init-common">
 
         <antcall target="undeploy-common"/>
 
-    </target>   
+    </target>
 
 
 

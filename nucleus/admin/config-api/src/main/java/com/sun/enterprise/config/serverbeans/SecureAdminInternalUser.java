@@ -34,7 +34,7 @@ import jakarta.inject.Inject;
 /**
  * Records information about a username/password-alias pair to be used for authentication internally among GlassFish
  * processes (DAS to instance, for example).
- * 
+ *
  * @author Tim Quinn
  */
 public interface SecureAdminInternalUser extends ConfigBeanProxy {

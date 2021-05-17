@@ -103,7 +103,7 @@ public interface Tools extends AMXProxy, Utility, Singleton
     @Description("Dump the hierarchy of AMX MBeans by recursive descent")
     @ManagedAttribute
     public String getHierarchy();
-    
+
 }
 
 

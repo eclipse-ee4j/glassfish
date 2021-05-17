@@ -29,40 +29,40 @@ import org.glassfish.apf.AnnotationHandler;
  * @author dochez
  */
 public class HandlerProcessingResultImpl implements HandlerProcessingResult {
-    
+
     Map<Class<? extends Annotation>,ResultType> results;
     ResultType overallResult = ResultType.UNPROCESSED;
-    
+
     /**
-     * Creates a new instance of HandlerProcessingResultImpl 
+     * Creates a new instance of HandlerProcessingResultImpl
      */
     public HandlerProcessingResultImpl(Map<Class<? extends Annotation>, ResultType> results) {
         this.results = results;
     }
-    
-    public HandlerProcessingResultImpl() {        
+
+    public HandlerProcessingResultImpl() {
         results = new HashMap<Class<? extends Annotation>, ResultType>();
     }
-    
+
     public static HandlerProcessingResultImpl getDefaultResult(Class<? extends Annotation> annotationType, ResultType result) {
-        
+
         HandlerProcessingResultImpl impl = new HandlerProcessingResultImpl();
         impl.results.put(annotationType, result);
         impl.overallResult = result;
-        return impl;                
+        return impl;
     }
-    
+
     public Map<Class<? extends Annotation>,ResultType> processedAnnotations() {
         return results;
     }
-    
+
     public void addResult(Class<? extends Annotation> annotationType, ResultType result) {
         if (result.compareTo(overallResult)>0) {
             overallResult = result;
         }
         results.put(annotationType, result);
     }
-    
+
     public void addAll(HandlerProcessingResult result) {
          if (result == null) {
              return;
@@ -72,9 +72,9 @@ public class HandlerProcessingResultImpl implements HandlerProcessingResult {
         }
         results.putAll(result.processedAnnotations());
     }
-    
+
     public ResultType getOverallResult(){
         return overallResult;
     }
-  
+
 }

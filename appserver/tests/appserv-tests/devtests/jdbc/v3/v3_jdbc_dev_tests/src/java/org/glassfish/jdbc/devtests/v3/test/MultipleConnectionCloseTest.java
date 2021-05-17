@@ -63,7 +63,7 @@ public class MultipleConnectionCloseTest implements SimpleTest {
         Connection conn1 = null;
         boolean passed = true;
         //clean the database
-        out.println("<h4> Multiple close connection - Test1 </h4>");    
+        out.println("<h4> Multiple close connection - Test1 </h4>");
 
         try {
             conn1 = ds1.getConnection();
@@ -93,7 +93,7 @@ public class MultipleConnectionCloseTest implements SimpleTest {
         String columnName = "name";
         TablesUtil.createTables(ds1, out, tableName, columnName);
 
-        out.println("<h4> Multiple close connection - Test2 </h4>");    
+        out.println("<h4> Multiple close connection - Test2 </h4>");
         try {
             conn1 = ds1.getConnection();
             stmt = conn1.createStatement();

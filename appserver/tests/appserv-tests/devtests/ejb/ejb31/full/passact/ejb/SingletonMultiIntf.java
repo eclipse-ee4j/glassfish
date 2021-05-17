@@ -31,18 +31,18 @@ public class SingletonMultiIntf {
 
     @PostConstruct
     public void init() {
-	System.out.println("In SingletonMultiIntf::init()");
+    System.out.println("In SingletonMultiIntf::init()");
     }
 
     public String hello() {
-	System.out.println("In SingletonMultiIntf::hello() invoked by " +
-			   sessionCtx.getInvokedBusinessInterface());
-	return "hello, world\n";
+    System.out.println("In SingletonMultiIntf::hello() invoked by " +
+               sessionCtx.getInvokedBusinessInterface());
+    return "hello, world\n";
     }
 
     @PreDestroy
     public void destroy() {
-	System.out.println("In SingletonMultiIntf::destroy()");
+    System.out.println("In SingletonMultiIntf::destroy()");
     }
 
 

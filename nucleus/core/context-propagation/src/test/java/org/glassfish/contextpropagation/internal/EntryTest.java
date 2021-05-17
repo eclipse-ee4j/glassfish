@@ -31,7 +31,7 @@ import org.glassfish.contextpropagation.internal.Entry.ContextType;
 import org.junit.Test;
 
 public class EntryTest {
-  
+
   private static final boolean IS_ORIGIN = true;
   private static final boolean ALLOW_ALL_TO_READ = true;
 
@@ -39,7 +39,7 @@ public class EntryTest {
   public void validatel() {
     createContext("value", PropagationMode.defaultSet(), ContextType.ASCII_STRING, IS_ORIGIN, ALLOW_ALL_TO_READ).validate();
   }
-  
+
   @Test(expected=IllegalStateException.class)
   public void validateNullValue() {
     createContext(null, PropagationMode.defaultSet(), ContextType.ASCII_STRING, IS_ORIGIN, ALLOW_ALL_TO_READ).validate();
@@ -86,7 +86,7 @@ public class EntryTest {
     assertEquals(ContextType.LONG, ContextType.fromNumberClass(Long.class));
     assertEquals(ContextType.SHORT, ContextType.fromNumberClass(Short.class));
   }
-  
+
 //  @Test
 //  public void testToContextTypeOrdinal() {
 //    ContextType[] byOrdinal = Deencapsulation.getField(ContextType.class, "byOrdinal");

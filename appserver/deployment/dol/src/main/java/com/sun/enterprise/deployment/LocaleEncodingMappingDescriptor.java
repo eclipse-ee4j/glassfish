@@ -21,23 +21,23 @@ import org.glassfish.deployment.common.Descriptor;
 /**
  */
 public class LocaleEncodingMappingDescriptor extends Descriptor {
-    
+
     private String locale = "en";
     private String encoding = "UTF-8";
-     
+
     /*
-     * standard constructor 
+     * standard constructor
      */
     public LocaleEncodingMappingDescriptor() {
     }
 
     /*
-     * copy constructor 
+     * copy constructor
      */
     public LocaleEncodingMappingDescriptor(LocaleEncodingMappingDescriptor other) {
-	super(other);
-	locale = other.locale;
-	encoding = other.encoding;
+    super(other);
+    locale = other.locale;
+    encoding = other.encoding;
     }
 
     /**
@@ -46,7 +46,7 @@ public class LocaleEncodingMappingDescriptor extends Descriptor {
     public void setLocale(String value) {
         locale = value;
     }
-    
+
     /**
      * set the encoding
      */
@@ -58,16 +58,16 @@ public class LocaleEncodingMappingDescriptor extends Descriptor {
      * @return the locale
      */
     public String getLocale() {
-        return locale;        
+        return locale;
     }
-    
+
     /**
      * @return the encoding
      */
     public String getEncoding() {
-        return encoding;        
+        return encoding;
     }
-    
+
     /**
      * @return a string describing the values I hold
      */

@@ -462,4 +462,4 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract Set<String> getConflictedMimeMappingExtensions();
 }
-    
+

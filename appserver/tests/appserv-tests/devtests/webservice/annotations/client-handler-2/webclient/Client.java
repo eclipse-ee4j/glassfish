@@ -28,8 +28,8 @@ public class Client extends HttpServlet {
         @jakarta.jws.HandlerChain(name="some name", file="myhandler.xml")
         @WebServiceRef SubtractNumbersService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

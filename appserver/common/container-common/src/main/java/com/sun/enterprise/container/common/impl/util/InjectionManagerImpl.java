@@ -128,9 +128,9 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
     }
 
-    public void injectInstance(Object instance, 
-                               JndiNameEnvironment componentEnv) 
-        throws InjectionException 
+    public void injectInstance(Object instance,
+                               JndiNameEnvironment componentEnv)
+        throws InjectionException
     {
 
         inject(instance.getClass(), instance, componentEnv, null, true);
@@ -164,7 +164,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 inject(instance.getClass(), instance, componentEnv, componentId, invokePostConstruct);
             } else {
                 throw new InjectionException(localStrings.getLocalString(
-                        "injection-manager.no-descriptor-registered-for-component", 
+                        "injection-manager.no-descriptor-registered-for-component",
                         "No descriptor registered for componentId: {0}", componentId));
             }
         } else {
@@ -197,15 +197,15 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     public void injectClass(Class clazz,
-                            JndiNameEnvironment componentEnv) 
+                            JndiNameEnvironment componentEnv)
         throws InjectionException
     {
         injectClass(clazz, componentEnv, true);
     }
 
-    public void injectClass(Class clazz, 
+    public void injectClass(Class clazz,
                             JndiNameEnvironment componentEnv,
-                            boolean invokePostConstruct) 
+                            boolean invokePostConstruct)
         throws InjectionException
     {
         inject(clazz, null, componentEnv, null, invokePostConstruct);
@@ -224,7 +224,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     {
         invokePostConstruct(instance.getClass(), instance, componentEnv);
     }
-    
+
     public void invokeInstancePreDestroy(Object instance)
             throws InjectionException {
         invokeInstancePreDestroy(instance, true);
@@ -233,7 +233,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     public void invokeInstancePreDestroy(Object instance, boolean validate)
         throws InjectionException {
         ComponentInvocation inv = invocationMgr.getCurrentInvocation();
-        
+
         //if ComponentInv is null and validate is true, throw InjectionException;
         //if component JndiNameEnvironment is null and validate is true, throw InjectionException;
         //if validate is false, the above 2 null conditions are basically ignored,
@@ -310,7 +310,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
                     // Create , inject, and call PostConstruct via managed bean manager
                     managedObject = managedBeanMgr.createManagedBean(clazz);
-                        
+
                 } else {
 
                     // Not in a 299-enabled module and not annoated with @ManagedBean, so
@@ -326,7 +326,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             }
         } catch(Exception e) {
             throw new InjectionException(localStrings.getLocalString(
-                    "injection-manager.error-creating-managed-object", 
+                    "injection-manager.error-creating-managed-object",
                     "Error creating managed object for class: {0}", clazz), e);
         }
 
@@ -423,7 +423,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      */
     public void destroyManagedObject(Object managedObject, boolean validate)
         throws InjectionException {
-                      
+
         Class managedObjectClass = managedObject.getClass();
 
         ManagedBean managedBeanAnn = (ManagedBean) managedObjectClass.getAnnotation(ManagedBean.class);
@@ -464,19 +464,19 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     public void inject(final Class clazz, final Object instance,
                         JndiNameEnvironment envDescriptor,
                         String componentId,
-                        boolean invokePostConstruct) 
-        throws InjectionException 
+                        boolean invokePostConstruct)
+        throws InjectionException
     {
-        
+
         LinkedList<Method> postConstructMethods = new LinkedList<Method>();
-            
+
         Class nextClass = clazz;
 
         // Process each class in the inheritance hierarchy, starting with
         // the most derived class and ignoring java.lang.Object.
         while((nextClass != Object.class) && (nextClass != null)) {
 
-            InjectionInfo injInfo = 
+            InjectionInfo injInfo =
                 envDescriptor.getInjectionInfoByClass(nextClass);
 
             if( injInfo.getInjectionResources().size() > 0 ) {
@@ -484,16 +484,16 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             }
 
             if( invokePostConstruct ) {
-                
+
                 if( injInfo.getPostConstructMethodName() != null ) {
-                    
+
                     Method postConstructMethod = getPostConstructMethod
                         (injInfo, nextClass);
-                    
+
                     // Delay calling post construct methods until all
                     // dependency injection within the hierarchy has been
                     // completed.  Then, invoke the methods starting from
-                    // the least-derived class downward.  
+                    // the least-derived class downward.
                     postConstructMethods.addFirst(postConstructMethod);
                 }
             }
@@ -511,32 +511,32 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     /**
-     * @param instance Target instance for preDestroy, or null if 
-     *                 class-based. 
+     * @param instance Target instance for preDestroy, or null if
+     *                 class-based.
      */
-    private void invokePreDestroy(final Class clazz, final Object instance, 
+    private void invokePreDestroy(final Class clazz, final Object instance,
                                   JndiNameEnvironment envDescriptor)
-        throws InjectionException 
+        throws InjectionException
     {
-        
+
         LinkedList<Method> preDestroyMethods = new LinkedList<Method>();
-            
+
         Class nextClass = clazz;
 
         // Process each class in the inheritance hierarchy, starting with
         // the most derived class and ignoring java.lang.Object.
         while((nextClass != Object.class) && (nextClass != null)) {
 
-            InjectionInfo injInfo = 
+            InjectionInfo injInfo =
                 envDescriptor.getInjectionInfoByClass(nextClass);
 
             if( injInfo.getPreDestroyMethodName() != null ) {
-                
+
                 Method preDestroyMethod = getPreDestroyMethod
                     (injInfo, nextClass);
-                
+
                 // Invoke the preDestroy methods starting from
-                // the least-derived class downward.  
+                // the least-derived class downward.
                 preDestroyMethods.addFirst(preDestroyMethod);
             }
 
@@ -552,32 +552,32 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     /**
-     * @param instance Target instance for postConstruct, or null if 
-     * class-based. 
+     * @param instance Target instance for postConstruct, or null if
+     * class-based.
      */
     private void invokePostConstruct(final Class clazz,
-                                     final Object instance, 
+                                     final Object instance,
                                      JndiNameEnvironment envDescriptor)
-        throws InjectionException 
-    {     
+        throws InjectionException
+    {
         LinkedList<Method> postConstructMethods = new LinkedList<Method>();
-            
+
         Class nextClass = clazz;
 
         // Process each class in the inheritance hierarchy, starting with
         // the most derived class and ignoring java.lang.Object.
         while ((nextClass != Object.class) && (nextClass != null)) {
 
-            InjectionInfo injInfo = 
+            InjectionInfo injInfo =
                 envDescriptor.getInjectionInfoByClass(nextClass);
 
             if (injInfo.getPostConstructMethodName() != null) {
-                
+
                 Method postConstructMethod = getPostConstructMethod
                     (injInfo, nextClass);
-                
+
                 // Invoke the postConstruct methods starting from
-                // the least-derived class downward.  
+                // the least-derived class downward.
                 postConstructMethods.addFirst(postConstructMethod);
             }
 
@@ -592,15 +592,15 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     /**
      *
      * Internal injection operation.  componentId is only specified if
-     * componentId-specific lookup operation should be used. 
+     * componentId-specific lookup operation should be used.
      */
     private void _inject(final Class clazz, final Object instance,
                          String componentId,
-                        List<InjectionCapable> injectableResources) 
-        throws InjectionException 
+                        List<InjectionCapable> injectableResources)
+        throws InjectionException
     {
 
-	for (InjectionCapable next : injectableResources ) {
+    for (InjectionCapable next : injectableResources ) {
 
             try {
 
@@ -608,7 +608,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 if( !lookupName.startsWith("java:") ) {
                     lookupName = "java:comp/env/" + lookupName;
                 }
-                
+
                 final Object value =  (componentId != null) ?
                         glassfishNamingManager.lookup(componentId, lookupName) :
                         glassfishNamingManager.getInitialContext().lookup(lookupName);
@@ -616,16 +616,16 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 // there still could be 2 injection on the same class, better
                 // do a loop here
                 for (InjectionTarget target : next.getInjectionTargets()) {
-                    
+
                     // if target class is not the class we are injecting
                     // we can just jump to the next target
                     if (!clazz.getName().equals(target.getClassName()))
                         continue;
-                    
+
                     if( target.isFieldInjectable() ) {
-                        
+
                         final Field f = getField(target, clazz);
-                        
+
                         if( Modifier.isStatic(f.getModifiers()) &&
                             (instance != null) ) {
                             throw new InjectionException(localStrings.getLocalString(
@@ -646,10 +646,10 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                         if(_logger.isLoggable(Level.FINE)) {
                             _logger.fine(localStrings.getLocalString(
                                 "injection-manager.injecting-dependency-field",
-                                "Injecting dependency with logical name: {0} into field: {1} on class: {2}", 
+                                "Injecting dependency with logical name: {0} into field: {1} on class: {2}",
                                 next.getComponentEnvName(), f, clazz));
                         }
-                        
+
                         // Wrap actual value insertion in doPrivileged to
                         // allow for private/protected field access.
                         if( System.getSecurityManager() != null ) {
@@ -664,29 +664,29 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                             f.set(instance, value);
                         }
                     } else if( target.isMethodInjectable() ) {
-                        
+
                         final Method m = getMethod(next, target, clazz);
 
                         if( Modifier.isStatic(m.getModifiers()) &&
                             (instance != null) ) {
                             throw new InjectionException(localStrings.getLocalString(
-                                "injection-manager.illegal-use-of-static-method", 
-                                "Illegal use of static method on class that only supports instance-based injection: {0}", 
+                                "injection-manager.illegal-use-of-static-method",
+                                "Illegal use of static method on class that only supports instance-based injection: {0}",
                                 m));
                         }
 
                         if( (instance == null) &&
                             !Modifier.isStatic(m.getModifiers()) ) {
                             throw new InjectionException(localStrings.getLocalString(
-                                "injection-manager.appclient-injected-method-must-be-static", 
-                                "Injected method: {0} on Application Client class: {1} must be declared static", 
+                                "injection-manager.appclient-injected-method-must-be-static",
+                                "Injected method: {0} on Application Client class: {1} must be declared static",
                                 m, clazz));
                         }
-                        
+
                         if(_logger.isLoggable(Level.FINE)) {
                             _logger.fine(localStrings.getLocalString(
-                                "injection-manager.injecting-dependency-method", 
-                                "Injecting dependency with logical name: {0} into method: {1} on class: {2}", 
+                                "injection-manager.injecting-dependency-method",
+                                "Injecting dependency with logical name: {0} into method: {1} on class: {2}",
                                 next.getComponentEnvName(), m, clazz));
                         }
 
@@ -702,7 +702,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                         } else {
                             m.invoke(instance, new Object[] { value });
                         }
-                        
+
                     }
                 }
             } catch(Throwable t) {
@@ -719,7 +719,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     private void invokeLifecycleMethod(final Method lifecycleMethod,
-                                       final Object instance) 
+                                       final Object instance)
         throws InjectionException {
 
         try {
@@ -754,7 +754,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             ie.initCause( cause );
             throw ie;
         }
-        
+
         return;
 
     }
@@ -797,7 +797,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
 
         return f;
-    }                                               
+    }
 
     private Method getMethod(InjectionCapable resource, InjectionTarget target,
                              Class resourceClass) throws Exception {
@@ -808,12 +808,12 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             // Check for the method within the resourceClass only.
             // This does not include super-classses.
             for(Method next : resourceClass.getDeclaredMethods()) {
-                // Overloading is not supported for setter injection 
-                // methods, so matching on method-name is sufficient.  
+                // Overloading is not supported for setter injection
+                // methods, so matching on method-name is sufficient.
                 if(next.getName().equals(target.getMethodName())) {
                     m = next;
                     target.setMethod(m);
-                    
+
                     final Method finalM = m;
                     java.security.AccessController.doPrivileged(
                        new java.security.PrivilegedExceptionAction() {
@@ -831,7 +831,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
         if( m == null ) {
             throw new Exception(localStrings.getLocalString(
-                "injection-manager.method-not-found", 
+                "injection-manager.method-not-found",
                 "InjectionManager exception.  Method: void {0} ({1}) not found in class: {2}",
                 target.getMethodName(), resource.getInjectResourceType(), resourceClass));
         }
@@ -846,14 +846,14 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         Method m = injInfo.getPostConstructMethod();
 
         if( m == null ) {
-            String postConstructMethodName = 
+            String postConstructMethodName =
                 injInfo.getPostConstructMethodName();
 
             // Check for the method within the resourceClass only.
             // This does not include super-classes.
             for(Method next : resourceClass.getDeclaredMethods()) {
                 // InjectionManager only handles injection into PostConstruct
-                // methods with no arguments. 
+                // methods with no arguments.
                 if( next.getName().equals(postConstructMethodName) &&
                     (next.getParameterTypes().length == 0) ) {
                     m = next;
@@ -886,7 +886,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             // This does not include super-classses.
             for(Method next : resourceClass.getDeclaredMethods()) {
                 // InjectionManager only handles injection into PreDestroy
-                // methods with no arguments. 
+                // methods with no arguments.
                 if( next.getName().equals(preDestroyMethodName) &&
                     (next.getParameterTypes().length == 0) ) {
                     m = next;

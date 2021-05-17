@@ -51,7 +51,7 @@ public class ShoppingCartItem {
 
     public BigDecimal getPounds() {
         return pounds;
-    }		 
+    }
 
     public BigDecimal getPrice() {
         return price;

@@ -20,7 +20,7 @@ import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 
 /**
  * CLIProcessExecutor A simple process executor class that is used by CLI.
- * 
+ *
  * @author jane.young@sun.com
  */
 public class CLIProcessExecutor {
@@ -31,7 +31,7 @@ public class CLIProcessExecutor {
 
     /**
      * This method invokes the runtime exec
-     * 
+     *
      * @param cmd the command to execute
      * @param wait if true, wait for process to end.
      * @exception Exception

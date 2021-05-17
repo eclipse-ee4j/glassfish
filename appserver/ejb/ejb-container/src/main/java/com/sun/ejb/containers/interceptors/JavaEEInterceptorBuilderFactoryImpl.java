@@ -85,7 +85,7 @@ public class JavaEEInterceptorBuilderFactoryImpl implements JavaEEInterceptorBui
 
         return (OptionalLocalInterfaceProvider.class.isAssignableFrom(clazz));
     }
-    
+
 
 }
 

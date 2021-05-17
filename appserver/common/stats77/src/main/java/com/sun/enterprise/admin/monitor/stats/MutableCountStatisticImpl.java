@@ -34,7 +34,7 @@ public class MutableCountStatisticImpl implements CountStatistic, MutableCountSt
     private long                    count;
     private long                    lastSampleTime;
     private long                    startTime;
-    
+
     /** Constructs an instance of MutableCountStatistic that encapsulates the given Statistic.
      * The only parameter denotes the initial state of this statistic. It is
      * guaranteed that the initial state is preserved internally, so that one
@@ -47,7 +47,7 @@ public class MutableCountStatisticImpl implements CountStatistic, MutableCountSt
         this.lastSampleTime = initial.getLastSampleTime();
         this.startTime      = lastSampleTime;
     }
-    
+
     /** Resets to the initial state. It is guaranteed that following changes occur
      * to the statistic if this method is called:
      * <ul>
@@ -62,13 +62,13 @@ public class MutableCountStatisticImpl implements CountStatistic, MutableCountSt
         this.lastSampleTime = System.currentTimeMillis();
         this.startTime      = this.lastSampleTime;
     }
-    
+
     /** Changes the value of the encapsulated CountStatistic to the given value.
      * Since this is the only mutator exposed here, here are the other side effects
      * of calling this method:
      * <ul>
      *  <li> lastSampleTime is set to <b> current time in milliseconds. </b> </li>
-     * </ul> 
+     * </ul>
      * In a real-time system with actual probes for measurement, the lastSampleTime
      * could be different from the instant when this method is called, but that is deemed insignificant.
      * @param count         long that represents the current value of the Statistic.
@@ -77,11 +77,11 @@ public class MutableCountStatisticImpl implements CountStatistic, MutableCountSt
         this.count = count;
         this.lastSampleTime = System.currentTimeMillis();
     }
-    
+
     /** This method is the essence of this class. It provides the read-only view of encapsulated
      * Statistic. If the clients have to know the Statistic, this is what should
      * be called by actual data collecting component to return the value to them.
-     * The principle advantage is from the data collecting component's standpoint, in 
+     * The principle advantage is from the data collecting component's standpoint, in
      * that it does not have to create instances of CountStatistic when its
      * current value is queried/measured.
      * @see #reset
@@ -97,36 +97,36 @@ public class MutableCountStatisticImpl implements CountStatistic, MutableCountSt
             this.lastSampleTime,        // changes all the time!
             this.startTime              // changes if reset is called earlier
         ));
-    }  
-    
-    public long getLastSampleTime() {
-	return ( this.lastSampleTime );
     }
-    
+
+    public long getLastSampleTime() {
+    return ( this.lastSampleTime );
+    }
+
     public long getStartTime() {
-	return ( this.startTime );
+    return ( this.startTime );
     }
 
     public String getName() {
-	return ( initial.getName() );
+    return ( initial.getName() );
     }
-    
+
     public String getDescription() {
-	return ( initial.getDescription() );
+    return ( initial.getDescription() );
     }
 
     public String getUnit() {
-	return ( initial.getUnit());
+    return ( initial.getUnit());
     }
-    
+
     public Statistic modifiableView() {
-	return ( this );
+    return ( this );
     }
-    
+
     public long getCount() {
-	return ( this.count );
+    return ( this.count );
     }
-    
+
     /* hack: bug 5045413 */
     public void setDescription (final String s) {
         try {

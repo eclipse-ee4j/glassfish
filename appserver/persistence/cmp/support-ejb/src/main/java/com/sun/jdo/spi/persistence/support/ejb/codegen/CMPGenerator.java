@@ -41,7 +41,7 @@ public interface CMPGenerator {
      * @param cl the ClassLoader that loaded user defined classes.
      * @param bundlePathName full path to the directory where this bundle's
      * files are located.
-     * @throws GeneratorException if there is a problem initializing bean 
+     * @throws GeneratorException if there is a problem initializing bean
      * processing.
      */
     void init(EjbBundleDescriptorImpl ejbBundleDescriptor, ClassLoader cl,
@@ -56,13 +56,13 @@ public interface CMPGenerator {
      * @param ctx the DeploymentContext associated with the deployment request.
      * @param bundlePathName full path to the directory where this bundle's
      * files are located.
-     * @param generatedXmlsPathName full path to the directory where the 
+     * @param generatedXmlsPathName full path to the directory where the
      * generated files are located.
-     * @throws GeneratorException if there is a problem initializing bean 
+     * @throws GeneratorException if there is a problem initializing bean
      * processing.
      */
     void init(EjbBundleDescriptorImpl ejbBundleDescriptor, DeploymentContext ctx,
-        String bundlePathName, String generatedXmlsPathName) 
+        String bundlePathName, String generatedXmlsPathName)
             throws GeneratorException;
 
     /**
@@ -84,7 +84,7 @@ public interface CMPGenerator {
     Collection<File> cleanup() throws GeneratorException;
 
     /**
-     * This method may be called once for each CMP bean of the corresponding 
+     * This method may be called once for each CMP bean of the corresponding
      * ejb module to perform the validation.
      * @param descr the IASEjbCMPEntityDescriptor associated with this CMP bean.
      * @return a Collection of Exceptions if there are any problems processing the bean.
@@ -92,4 +92,4 @@ public interface CMPGenerator {
      */
     Collection validate(IASEjbCMPEntityDescriptor descr);
 
-} 
+}

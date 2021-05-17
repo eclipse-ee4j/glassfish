@@ -72,7 +72,7 @@ public class WebTest {
                     System.out.println();
                 }
             }
-            
+
             stat.addStatus(TEST_NAME, ((expected) ? stat.PASS : stat.FAIL));
         } catch(Exception ex) {
             ex.printStackTrace();

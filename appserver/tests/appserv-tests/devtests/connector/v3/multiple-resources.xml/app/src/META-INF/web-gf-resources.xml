@@ -53,4 +53,4 @@
     </jdbc-connection-pool>
 
     <jdbc-resource enabled="true" jndi-name="jdbc/web-level-ds" object-type="user" pool-name="jdbc/web-level-pool"/>
-</resources> 
+</resources>

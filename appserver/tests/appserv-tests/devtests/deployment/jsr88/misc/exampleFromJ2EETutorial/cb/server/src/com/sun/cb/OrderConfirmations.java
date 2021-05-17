@@ -17,19 +17,19 @@
 package com.sun.cb;
 
 import java.util.*;
- 
+
 public class OrderConfirmations {
   ArrayList items = null;
 
   public OrderConfirmations() {
-  	items = new ArrayList();
+      items = new ArrayList();
   }
 
   public synchronized void add(OrderConfirmation oc) {
     items.add(oc);
   }
-  
-  
+
+
   public synchronized Collection getItems() {
       return items;
   }

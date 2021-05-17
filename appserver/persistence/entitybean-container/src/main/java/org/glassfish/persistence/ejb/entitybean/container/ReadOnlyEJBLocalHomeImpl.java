@@ -27,8 +27,8 @@ import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBLocalHo
  * Implementation of the EJBHome interface.
  * This class is also the base class for all generated concrete ReadOnly
  * EJBLocalHome implementations.
- * At deployment time, one instance of ReadOnlyEJBHomeImpl is created 
- * for each EJB class in a JAR that has a local home. 
+ * At deployment time, one instance of ReadOnlyEJBHomeImpl is created
+ * for each EJB class in a JAR that has a local home.
  *
  * @author Mahesh Kannan
  */
@@ -44,7 +44,7 @@ public class ReadOnlyEJBLocalHomeImpl
         super(ejbDescriptor, localHomeIntf);
     }
 
-    /** 
+    /**
      * Called from ReadOnlyBeancontainer only.
      */
     final void setReadOnlyBeanContainer(ReadOnlyBeanContainer robContainer) {
@@ -59,7 +59,7 @@ public class ReadOnlyEJBLocalHomeImpl
         return (methodClass == ReadOnlyEJBLocalHome.class);
     }
 
-    protected Object invokeSpecialEJBLocalHomeMethod(Method method, Class methodClass, 
+    protected Object invokeSpecialEJBLocalHomeMethod(Method method, Class methodClass,
             Object[] args) throws Throwable {
         return getReadOnlyBeanLocalNotifier();
     }

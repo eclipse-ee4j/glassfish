@@ -28,25 +28,25 @@ public class Client {
 
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main (String[] args) {
         stat.addDescription("webservices-signature");
         Client client = new Client();
         client.doTest(args);
         stat.printSummary("webservices-signatureID");
     }
-    
+
     public void doTest(String[] args) {
-    	try {
+        try {
 
            String targetEndpointAddress = args[0];
 
-	    Context ic = new InitialContext();
-            
+        Context ic = new InitialContext();
+
             SignatureTestService testService =
                 (SignatureTestService) ic.lookup("java:comp/env/service/signature");
             SignatureTest test = testService.getSignatureTestPort();
-            
+
             ((Stub)test)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY,
                                             targetEndpointAddress);
 
@@ -58,13 +58,13 @@ public class Client {
                 System.out.println("MSG: " + msg);
                 stat.addStatus("signature SEI.sayHello(msg)", stat.PASS);
             } catch (Exception e1) {
-		e1.printStackTrace();
+        e1.printStackTrace();
                 stat.addStatus("signature SEI.sayHello(msg)", stat.FAIL);
             }
 
 
 /* uncomment the following when the date->calendar is done
-            MySecondDateValueType d = 
+            MySecondDateValueType d =
                 new MySecondDateValueType(new java.util.GregorianCalendar(), "Suck it up and do it!");
             MyDateValueType c = new MyDateValueType();
             c.setDate(new java.util.GregorianCalendar());
@@ -83,7 +83,7 @@ public class Client {
             try {
                 test.setMyDateValueType(c);
                 MyDateValueType date2 = test.getMyDateValueType();
-                System.out.println("RETURNED ANOTHER LUCKY DATE = " 
+                System.out.println("RETURNED ANOTHER LUCKY DATE = "
                     + date2.getDate() + "; with message = " + date2.getWhine());
                 stat.addStatus("signature SEI.setValueTypeWithDate", stat.PASS);
 
@@ -107,10 +107,10 @@ public class Client {
                 stat.addStatus("signature SEI.setValueTypeWithDates", stat.FAIL);
             }
 */
-    	} catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println("signature client test failed");
             ex.printStackTrace();
             stat.addStatus("signature client main", stat.FAIL);
-	} 
+    }
     }
 }

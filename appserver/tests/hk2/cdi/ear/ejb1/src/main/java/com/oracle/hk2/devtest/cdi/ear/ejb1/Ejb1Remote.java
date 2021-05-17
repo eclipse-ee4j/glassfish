@@ -22,7 +22,7 @@ package com.oracle.hk2.devtest.cdi.ear.ejb1;
  */
 public interface Ejb1Remote {
     public boolean isEjb1HK2ServiceAvailable();
-    
+
     public boolean isLib1HK2ServiceAvailable();
 
 }

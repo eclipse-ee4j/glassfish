@@ -28,7 +28,7 @@
       <persistence-type>Bean</persistence-type>
       <prim-key-class>java.lang.String</prim-key-class>
       <reentrant>false</reentrant>
-	<resource-ref>
+    <resource-ref>
         <res-ref-name>jdbc/bmp-enrollerDB</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>

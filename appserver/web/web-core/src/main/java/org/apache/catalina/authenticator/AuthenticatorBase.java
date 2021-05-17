@@ -952,9 +952,9 @@ public abstract class AuthenticatorBase
     // ------------------------------------------------------ Private Methods
 
     private int processSecurityCheck(HttpRequest hrequest,
-				     HttpResponse hresponse,
-				     LoginConfig config)
-	throws IOException {
+                     HttpResponse hresponse,
+                     LoginConfig config)
+    throws IOException {
 
         // Special handling for form-based logins to deal with the case
         // where the login form (and therefore the "j_security_check" URI
@@ -971,7 +971,7 @@ public abstract class AuthenticatorBase
                 return END_PIPELINE;
             }
         }
-	return INVOKE_NEXT;
+    return INVOKE_NEXT;
     }
 
     // ------------------------------------------------------ Lifecycle Methods

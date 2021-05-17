@@ -17,7 +17,7 @@
 package Data;
 
 import jakarta.ejb.*;
-import java.util.*; 
+import java.util.*;
 
 /**
  * Created Dec 16, 2002 1:22:14 PM
@@ -27,84 +27,84 @@ import java.util.*;
 
 
 public abstract class PartsBean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract java.lang.Integer getPartid();
     public abstract void setPartid(java.lang.Integer partid);
-    
+
     public abstract java.lang.String getName();
     public abstract void setName(java.lang.String name);
-    
+
     public abstract java.lang.String getColor();
     public abstract void setColor(java.lang.String color);
-    
+
     public abstract java.math.BigDecimal getWeight();
     public abstract void setWeight(java.math.BigDecimal weight);
-    
+
     public abstract java.lang.Double getPrice();
     public abstract void setPrice(java.lang.Double price);
-    
+
     public abstract java.util.Collection getSuppliers();
-    
+
     public abstract void setSuppliers(java.util.Collection suppliers);
-    
+
     public java.lang.Integer ejbCreate(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws jakarta.ejb.CreateException {
         if (partid == null) {
             throw new jakarta.ejb.CreateException("The partid is required.");
@@ -117,11 +117,11 @@ public abstract class PartsBean implements jakarta.ejb.EntityBean {
 
         return null;
     }
-    
+
     public void ejbPostCreate(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws jakarta.ejb.CreateException {
-        
+
     }
-    
+
     public void addSupplier(Data.LocalSuppliers supplier) {
         System.out.println("Debug : PartsBean addSupplier");
         if (supplier != null)
@@ -134,7 +134,7 @@ public abstract class PartsBean implements jakarta.ejb.EntityBean {
             throw new EJBException(ex.getMessage());
         }
     }
-    
+
     public void dropSupplier(Data.LocalSuppliers supplier) {
         System.out.println("Debug : PartsBean dropSupplier");
         try {
@@ -144,9 +144,9 @@ public abstract class PartsBean implements jakarta.ejb.EntityBean {
             throw new EJBException(ex.getMessage());
         }
     }
-    
+
     public void testInCascadeDelete() {
         throw new RuntimeException("Called testInCascadeDelete!!!");
     }
-    
+
 }

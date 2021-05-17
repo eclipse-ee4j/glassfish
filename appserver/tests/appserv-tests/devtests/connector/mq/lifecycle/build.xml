@@ -38,7 +38,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -50,17 +50,17 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*Bean*.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-    </target> 
+    </target>
 
     <target name="restart-appserver" depends="init-common">
-	<antcall target="restart-server-instance-common"/>
+    <antcall target="restart-server-instance-common"/>
     </target>
-    
+
     <target name="setup" depends="init-common">
         <antcall target="deploy-jms-common"/>
     </target>
@@ -68,18 +68,18 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
       <property file="${env.APS_HOME}/devtests/connector/config/oracle.properties"/>
       <exec executable="${APPCLIENT}" failonerror="true">
           <env key="APPCPATH" value="${env.S1AS_HOME}/domains/domain1/lib/ext/Oranxo.jar:${env.APS_HOME}/lib/reporter.jar"/>
           <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
-	  <arg line="-name ${appname}Client"/>
-	  <arg line="-textauth"/>
-	  <arg line="-user j2ee"/>
-	  <arg line="-password j2ee"/>
+      <arg line="-name ${appname}Client"/>
+      <arg line="-textauth"/>
+      <arg line="-user j2ee"/>
+      <arg line="-password j2ee"/>
           <arg line=" ${oracleForConnector.driver} ${oracleForConnector.url} ${oracleForConnector.user} ${oracleForConnector.pwd} "/>
-	  <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
+      <arg line="-xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml"/>
        </exec>
     </target>
 
@@ -110,10 +110,10 @@
           <param name="sql.file" value="sql/drop_pointbase.sql"/>
       </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup" depends="init-common">
         <antcall target="undeploy-jms-common"/>

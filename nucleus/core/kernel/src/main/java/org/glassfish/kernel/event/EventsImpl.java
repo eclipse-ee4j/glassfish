@@ -35,7 +35,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Simple implementation of the events dispatching facility.
- * 
+ *
  * @author Jerome Dochez
  */
 @Service
@@ -43,7 +43,7 @@ public class EventsImpl implements Events {
 
     @Inject
     ExecutorService executor;
-    
+
     final static Logger logger = KernelLoggerInfo.getLogger();
 
     List<EventListener> listeners = Collections.synchronizedList(new ArrayList<EventListener>());
@@ -60,11 +60,11 @@ public class EventsImpl implements Events {
 
     @Override
     public void send(final Event event, boolean asynchronously) {
-        
+
         List<EventListener> l = new ArrayList<EventListener>();
         l.addAll(listeners);
         for (final EventListener listener : l) {
-            
+
             Method m =null;
             try {
                 // check if the listener is interested with his event.

@@ -52,13 +52,13 @@ public interface Realm {
      * preAuthenticateCheck method.
      */
     public static final int AUTHENTICATE_NEEDED = 1;
-    
+
     /**
      * Flag indicating authentication is not needed for current request. Used
      * by preAuthenticateCheck method.
      */
     public static final int AUTHENTICATE_NOT_NEEDED = 0;
-    
+
     /**
      * Flag indicating the user has been authenticated but been denied access
      * to the requested resource.
@@ -66,7 +66,7 @@ public interface Realm {
     public static final int AUTHENTICATED_NOT_AUTHORIZED = -1;
 
     //END SJSAS 6202703
-    
+
     // ------------------------------------------------------------- Properties
 
 
@@ -94,7 +94,7 @@ public interface Realm {
 
     // --------------------------------------------------------- Public Methods
 
-    
+
     /**
      * Add a property change listener to this component.
      *
@@ -141,7 +141,7 @@ public interface Realm {
      *  the array being the certificate of the client itself.
      */
     public Principal authenticate(X509Certificate certs[]);
-    
+
     /**
      * Return the SecurityConstraints configured to guard the request URI for
      * this request, or <code>null</code> if there is no such constraint.
@@ -162,7 +162,7 @@ public interface Realm {
      * @return the security constraints configured by the given context
      * for the given request URI and method, or null
      */
-    public SecurityConstraint[] findSecurityConstraints(String uri, 
+    public SecurityConstraint[] findSecurityConstraints(String uri,
                                                         String method,
                                                         Context context);
 
@@ -183,8 +183,8 @@ public interface Realm {
                                          SecurityConstraint[] constraint,
                                          Context context)
         throws IOException;
-    
-    
+
+
     /**
      * Return <code>true</code> if the specified Principal has the specified
      * security role, within the context of this Realm; otherwise return
@@ -206,12 +206,12 @@ public interface Realm {
      * @param principal Principal for whom the role is to be checked
      * @param role Security role to be checked
      */
-    public boolean hasRole(HttpRequest request, 
-                           HttpResponse response, 
-                           Principal principal, 
+    public boolean hasRole(HttpRequest request,
+                           HttpResponse response,
+                           Principal principal,
                            String role);
     //END SJSAS 6232464
-    
+
     //START SJSAS 6202703
     /**
      * Checks whether or not authentication is needed.
@@ -223,7 +223,7 @@ public interface Realm {
      * @param constraints Security constraint we are enforcing
      * @param disableProxyCaching whether or not to disable proxy caching for
      *        protected resources.
-     * @param securePagesWithPragma true if we add headers which 
+     * @param securePagesWithPragma true if we add headers which
      * are incompatible with downloading office documents in IE under SSL but
      * which fix a caching problem in Mozill
      * @param ssoEnabled true if sso is enabled
@@ -235,9 +235,9 @@ public interface Realm {
                                     boolean disableProxyCaching,
                                     boolean securePagesWithPragma,
                                     boolean ssoEnabled)
-        throws IOException;    
-    
-    
+        throws IOException;
+
+
     /**
      * Authenticates the user making this request, based on the specified
      * login configuration.  Return <code>true</code> if any specified
@@ -271,7 +271,7 @@ public interface Realm {
                                               HttpResponse response,
                                               Context context)
            throws IOException;
-    
+
     //END SJSAS 6202703
 
         /**
@@ -289,16 +289,16 @@ public interface Realm {
     public boolean hasUserDataPermission(HttpRequest request,
         HttpResponse response, SecurityConstraint[] constraint)
             throws IOException;
-    
+
     /**
      * Checks if the given request URI and method are the target of any
      * user-data-constraint with a transport-guarantee of CONFIDENTIAL,
      * and whether any such constraint is already satisfied.
-     * 
+     *
      * If <tt>uri</tt> and <tt>method</tt> are null, then the URI and method
      * of the given <tt>request</tt> are checked.
      *
-     * If a user-data-constraint exists that is not satisfied, then the 
+     * If a user-data-constraint exists that is not satisfied, then the
      * given <tt>request</tt> will be redirected to HTTPS.
      *
      * @param request the request that may be redirected
@@ -353,8 +353,8 @@ public interface Realm {
      * @param name the name of the realm.
      */
     public void setRealmName(String name, String authMethod);
- 
- 
+
+
     /**
      * Returns the name of the associated realm.
      *
@@ -363,17 +363,17 @@ public interface Realm {
     public String getRealmName();
     // END IASRI 4856062,4918627,4874504
     /**
-     * Does digest authentication and returns the Principal associated with the username in the 
+     * Does digest authentication and returns the Principal associated with the username in the
      * HTTP header.
      *
      * @param hreq HTTP servlet request.
      */
     public Principal authenticate(HttpServletRequest hreq);
-    
+
     /**
      * Returns whether the specified ServletContext indicates that security
      * extension is enabled.
-     * 
+     *
      * @param servletContext the ServletContext
      * @return true if security extension is enabled; false otherwise
      */
@@ -381,7 +381,7 @@ public interface Realm {
 
     /**
      * Logs out.
-     * 
+     *
      * @param hreq the HttpRequest
      */
     public void logout(HttpRequest hreq);

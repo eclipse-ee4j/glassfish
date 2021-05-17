@@ -40,7 +40,7 @@ public class MBeanNotificationInfoStringifier
     {
         return DEFAULT.stringify(info);
     }
-    
+
     public String stringify(Object o)
     {
         final MBeanNotificationInfo notif = (MBeanNotificationInfo) o;

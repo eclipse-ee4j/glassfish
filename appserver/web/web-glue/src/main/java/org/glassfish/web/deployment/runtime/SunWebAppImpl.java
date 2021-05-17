@@ -25,94 +25,94 @@ import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 
 public class SunWebAppImpl extends WebPropertyContainer implements SunWebApp
 {
-    
+
     public SunWebAppImpl()
     {
-	// set default values
-	setAttributeValue(CACHE, "MaxEntries", "4096");
-	setAttributeValue(CACHE, "TimeoutInSeconds", "30");
-	setAttributeValue(CACHE, "Enabled", "false");
+    // set default values
+    setAttributeValue(CACHE, "MaxEntries", "4096");
+    setAttributeValue(CACHE, "TimeoutInSeconds", "30");
+    setAttributeValue(CACHE, "Enabled", "false");
     }
-    
+
     // This attribute is an array, possibly empty
     public void setSecurityRoleMapping(int index, SecurityRoleMapping value)
     {
-	this.setValue(SECURITY_ROLE_MAPPING, index, value);
+    this.setValue(SECURITY_ROLE_MAPPING, index, value);
     }
-    
+
     //
     public SecurityRoleMapping getSecurityRoleMapping(int index)
     {
-	return (SecurityRoleMapping)this.getValue(SECURITY_ROLE_MAPPING, index);
+    return (SecurityRoleMapping)this.getValue(SECURITY_ROLE_MAPPING, index);
     }
-    
+
     // This attribute is an array, possibly empty
     public void setSecurityRoleMapping(SecurityRoleMapping[] value)
     {
-	this.setValue(SECURITY_ROLE_MAPPING, value);
+    this.setValue(SECURITY_ROLE_MAPPING, value);
     }
-    
+
     //
     public SecurityRoleMapping[] getSecurityRoleMapping()
     {
-	return (SecurityRoleMapping[])this.getValues(SECURITY_ROLE_MAPPING);
+    return (SecurityRoleMapping[])this.getValues(SECURITY_ROLE_MAPPING);
     }
-    
+
     // Return the number of properties
     public int sizeSecurityRoleMapping()
     {
-	return this.size(SECURITY_ROLE_MAPPING);
+    return this.size(SECURITY_ROLE_MAPPING);
     }
-    
+
     // Add a new element returning its index in the list
     public int addSecurityRoleMapping(SecurityRoleMapping value)
     {
-	return this.addValue(SECURITY_ROLE_MAPPING, value);
+    return this.addValue(SECURITY_ROLE_MAPPING, value);
     }
-    
+
     //
     // Remove an element using its reference
     // Returns the index the element had in the list
     //
     public int removeSecurityRoleMapping(SecurityRoleMapping value)
     {
-	return this.removeValue(SECURITY_ROLE_MAPPING, value);
+    return this.removeValue(SECURITY_ROLE_MAPPING, value);
     }
 
     // This attribute is an array, possibly empty
     public void setSecurityRoleAssignment(int index, SecurityRoleAssignment value)
     {
-	this.setValue(SECURITY_ROLE_ASSIGNMENT, index, value);
+    this.setValue(SECURITY_ROLE_ASSIGNMENT, index, value);
     }
 
     //
     public SecurityRoleAssignment getSecurityRoleAssignment(int index)
     {
-	return (SecurityRoleAssignment)this.getValue(SECURITY_ROLE_ASSIGNMENT, index);
+    return (SecurityRoleAssignment)this.getValue(SECURITY_ROLE_ASSIGNMENT, index);
     }
 
     // This attribute is an array, possibly empty
     public void setSecurityRoleAssignments(SecurityRoleAssignment[] value)
     {
-	this.setValue(SECURITY_ROLE_ASSIGNMENT, value);
+    this.setValue(SECURITY_ROLE_ASSIGNMENT, value);
     }
 
     //
     public SecurityRoleAssignment[] getSecurityRoleAssignments()
     {
-	return (SecurityRoleAssignment[])this.getValues(SECURITY_ROLE_ASSIGNMENT);
+    return (SecurityRoleAssignment[])this.getValues(SECURITY_ROLE_ASSIGNMENT);
     }
 
     // Return the number of properties
     public int sizeSecurityRoleAssignment()
     {
-	return this.size(SECURITY_ROLE_ASSIGNMENT);
+    return this.size(SECURITY_ROLE_ASSIGNMENT);
     }
 
     // Add a new element returning its index in the list
     public int addSecurityRoleAssignment(SecurityRoleAssignment value)
     {
-	return this.addValue(SECURITY_ROLE_ASSIGNMENT, value);
+    return this.addValue(SECURITY_ROLE_ASSIGNMENT, value);
     }
 
     //
@@ -121,54 +121,54 @@ public class SunWebAppImpl extends WebPropertyContainer implements SunWebApp
     //
     public int removeSecurityRoleAssignment(SecurityRoleAssignment value)
     {
-	return this.removeValue(SECURITY_ROLE_ASSIGNMENT, value);
+    return this.removeValue(SECURITY_ROLE_ASSIGNMENT, value);
     }
-    
+
     // This attribute is an array, possibly empty
     public void setServlet(int index, Servlet value)
     {
-	this.setValue(SERVLET, index, value);
+    this.setValue(SERVLET, index, value);
     }
-    
+
     //
     public Servlet getServlet(int index)
     {
-	return (Servlet)this.getValue(SERVLET, index);
+    return (Servlet)this.getValue(SERVLET, index);
     }
-    
+
     // This attribute is an array, possibly empty
     public void setServlet(Servlet[] value)
     {
-	this.setValue(SERVLET, value);
+    this.setValue(SERVLET, value);
     }
-    
+
     //
     public Servlet[] getServlet()
     {
-	return (Servlet[])this.getValues(SERVLET);
+    return (Servlet[])this.getValues(SERVLET);
     }
-    
+
     // Return the number of properties
     public int sizeServlet()
     {
-	return this.size(SERVLET);
+    return this.size(SERVLET);
     }
-    
+
     // Add a new element returning its index in the list
     public int addServlet(Servlet value)
     {
-	return this.addValue(SERVLET, value);
+    return this.addValue(SERVLET, value);
     }
-    
+
     //
     // Remove an element using its reference
     // Returns the index the element had in the list
     //
     public int removeServlet(Servlet value)
     {
-	return this.removeValue(SERVLET, value);
+    return this.removeValue(SERVLET, value);
     }
-    
+
     // This attribute is an array, possibly empty
     public void setIdempotentUrlPattern(int index, IdempotentUrlPattern value)
     {
@@ -216,27 +216,27 @@ public class SunWebAppImpl extends WebPropertyContainer implements SunWebApp
     // This attribute is optional
     public void setSessionConfig(SessionConfig value)
     {
-	this.setValue(SESSION_CONFIG, value);
+    this.setValue(SESSION_CONFIG, value);
     }
-    
+
     //
     public SessionConfig getSessionConfig()
     {
-	return (SessionConfig)this.getValue(SESSION_CONFIG);
+    return (SessionConfig)this.getValue(SESSION_CONFIG);
     }
 
     // This attribute is optional
     public void setCache(Cache value)
     {
-	this.setValue(CACHE, value);
+    this.setValue(CACHE, value);
     }
-    
+
     //
     public Cache getCache()
     {
-	return (Cache)this.getValue(CACHE);
+    return (Cache)this.getValue(CACHE);
     }
-    
+
     // This attribute is optional
     public void setClassLoader(ClassLoader value)
     {
@@ -249,35 +249,35 @@ public class SunWebAppImpl extends WebPropertyContainer implements SunWebApp
         return (ClassLoader)this.getValue(CLASS_LOADER);
     }
 
-    
+
     // This attribute is optional
     public void setJspConfig(JspConfig value)
     {
-	this.setValue(JSP_CONFIG, value);
+    this.setValue(JSP_CONFIG, value);
     }
-    
+
     //
     public JspConfig getJspConfig()
     {
-	return (JspConfig)this.getValue(JSP_CONFIG);
+    return (JspConfig)this.getValue(JSP_CONFIG);
     }
-    
+
     // This attribute is optional
     public void setLocaleCharsetInfo(LocaleCharsetInfo value)
     {
-	this.setValue(LOCALE_CHARSET_INFO, value);
+    this.setValue(LOCALE_CHARSET_INFO, value);
     }
-    
+
     //
     public LocaleCharsetInfo getLocaleCharsetInfo()
     {
-	return (LocaleCharsetInfo)this.getValue(LOCALE_CHARSET_INFO);
+    return (LocaleCharsetInfo)this.getValue(LOCALE_CHARSET_INFO);
     }
-    
+
     // This method verifies that the mandatory properties are set
     public boolean verify()
     {
-	return true;
+    return true;
     }
 
     // This attribute is optional

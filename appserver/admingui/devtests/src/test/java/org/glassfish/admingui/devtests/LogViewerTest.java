@@ -30,29 +30,29 @@ public class LogViewerTest extends BaseSeleniumTestClass {
     // basic sanity test for log viewer
     @Test
     public void testLogViewer() {
-    	try {
-	        clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
-	        pressButton("propertyForm:propertyContentPage:logViewer");
-	        waitForPopUp("LogViewerWindow", "300000");
-	        selectWindow("LogViewerWindow");
-	        assertTrue(isTextPresent(TRIGGER_LV));
-    	} finally {
-    		selectWindow(null);
-    	}
+        try {
+            clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
+            pressButton("propertyForm:propertyContentPage:logViewer");
+            waitForPopUp("LogViewerWindow", "300000");
+            selectWindow("LogViewerWindow");
+            assertTrue(isTextPresent(TRIGGER_LV));
+        } finally {
+            selectWindow(null);
+        }
     }
 
     // basic sanity test for raw log viewer
     @Test
     public void testRawLogViewer() {
-    	try {
-		    clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
-		    pressButton("propertyForm:propertyContentPage:logViewerRaw");
-		    waitForPopUp("LogViewerRawWindow", "300000");
-		    selectWindow("LogViewerRawWindow");
-		    assertTrue(isTextPresent(TRIGGER_IV));
-    	} finally {
-    		selectWindow(null);
-    	}
+        try {
+            clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
+            pressButton("propertyForm:propertyContentPage:logViewerRaw");
+            waitForPopUp("LogViewerRawWindow", "300000");
+            selectWindow("LogViewerRawWindow");
+            assertTrue(isTextPresent(TRIGGER_IV));
+        } finally {
+            selectWindow(null);
+        }
     }
 }
 

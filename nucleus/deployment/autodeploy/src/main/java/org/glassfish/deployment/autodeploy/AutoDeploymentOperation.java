@@ -38,9 +38,9 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * Performs a single auto-deployment operation for a single file.
  * <p>
  * Note - Use the newInstance static method to obtain a fully-injected operation;
- * it is safer and more convenient than using the no-arg constructor and then 
+ * it is safer and more convenient than using the no-arg constructor and then
  * invoking init yourself.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -63,31 +63,31 @@ public class AutoDeploymentOperation extends AutoOperation {
     static AutoDeploymentOperation newInstance(
             ServiceLocator habitat,
             boolean renameOnSuccess,
-            File file, 
+            File file,
             boolean enabled,
             String virtualServer,
             boolean forceDeploy,
             boolean verify,
             boolean preJspCompilation,
             String target) {
-        
-        AutoDeploymentOperation o = 
+
+        AutoDeploymentOperation o =
                 (AutoDeploymentOperation) habitat.getService(AutoDeploymentOperation.class);
-        
+
         o.init(renameOnSuccess, file, enabled, virtualServer, forceDeploy, verify, preJspCompilation, target);
         return o;
-    }  
-    
+    }
+
     private boolean renameOnSuccess;
-    
+
     private static final String COMMAND_NAME = "deploy";
-    
+
     @Inject @Named(COMMAND_NAME)
     private AdminCommand deployCommand;
-    
+
     @Inject
     private AutodeployRetryManager retryManager;
-    
+
     public static final Logger deplLogger =
         org.glassfish.deployment.autodeploy.AutoDeployer.deplLogger;
 
@@ -108,18 +108,18 @@ public class AutoDeploymentOperation extends AutoOperation {
      */
     protected AutoDeploymentOperation init (
             boolean renameOnSuccess,
-            File file, 
+            File file,
             boolean enabled,
             String virtualServer,
             boolean forceDeploy,
             boolean verify,
             boolean preJspCompilation,
             String target) {
-        
+
         super.init(file, getDeployActionProperties(
-                        file, 
-                        enabled, 
-                        virtualServer, 
+                        file,
+                        enabled,
+                        virtualServer,
                         forceDeploy,
                         verify,
                         preJspCompilation,
@@ -129,14 +129,14 @@ public class AutoDeploymentOperation extends AutoOperation {
         this.renameOnSuccess = renameOnSuccess;
         return this;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     protected String getMessageString(AutodeploymentStatus ds, File file) {
         return localStrings.getLocalString(
-                ds.deploymentMessageKey, 
-                ds.deploymentDefaultMessage, 
+                ds.deploymentMessageKey,
+                ds.deploymentDefaultMessage,
                 file);
     }
 
@@ -178,7 +178,7 @@ public class AutoDeploymentOperation extends AutoOperation {
             }
         }
     }
-    
+
     // Methods for creating operation status file(s)
     private void markDeployed(File f) {
         try {
@@ -189,11 +189,11 @@ public class AutoDeploymentOperation extends AutoOperation {
                                CREATE_FILE_FAILED,
                                deployedFile.getAbsolutePath());
             }
-        } catch (Exception e) { 
-            //ignore 
+        } catch (Exception e) {
+            //ignore
         }
     }
-    
+
     private void markDeployFailed(File f) {
         try {
             deleteAllMarks(f);
@@ -203,11 +203,11 @@ public class AutoDeploymentOperation extends AutoOperation {
                                CREATE_FILE_FAILED,
                                deployFailedFile.getAbsolutePath());
             }
-        } catch (Exception e) { 
-            //ignore 
+        } catch (Exception e) {
+            //ignore
         }
     }
-    
+
     private static Properties getDeployActionProperties(
             File deployablefile,
             boolean enabled,
@@ -216,7 +216,7 @@ public class AutoDeploymentOperation extends AutoOperation {
             boolean verify,
             boolean jspPreCompilation,
             String target){
-        
+
         DeploymentProperties dProps = new DeploymentProperties();
         dProps.setPath(deployablefile.getAbsolutePath());
 //        dProps.setUpload(false);

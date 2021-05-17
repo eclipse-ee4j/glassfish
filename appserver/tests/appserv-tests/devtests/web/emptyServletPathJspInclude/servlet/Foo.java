@@ -27,6 +27,6 @@ public class Foo extends HttpServlet {
 System.out.println("FOOFOO: " + req.getRequestURL());
         RequestDispatcher rd = getServletConfig().getServletContext().getNamedDispatcher("jsp");
         rd.forward(req, res);
-       
+
     }
 }

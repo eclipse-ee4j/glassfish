@@ -35,27 +35,27 @@ import org.glassfish.grizzly.http.server.HttpHandler;
  */
 public class CoyoteConnectorLauncher implements ProtocolHandler
 {
-    // START SJSAS 6439313     
+    // START SJSAS 6439313
     protected boolean blocking = false;
-    // END SJSAS 6439313     
+    // END SJSAS 6439313
 
     /**
-     * The <code>SelectorThread</code> implementation class. Not used when 
+     * The <code>SelectorThread</code> implementation class. Not used when
      * Coyote is used.
      */
-    protected String selectorThreadImpl = null; 
-    
-    
+    protected String selectorThreadImpl = null;
+
+
     public CoyoteConnectorLauncher() {
-        // START SJSAS 6439313 
+        // START SJSAS 6439313
         this(false,false,null);
     }
 
-    
-    public CoyoteConnectorLauncher(boolean secure, boolean blocking, 
+
+    public CoyoteConnectorLauncher(boolean secure, boolean blocking,
                           String selectorThreadImpl) {
         this.secure = secure;
-        this.blocking = blocking; 
+        this.blocking = blocking;
         this.selectorThreadImpl = selectorThreadImpl;
     }
 
@@ -63,13 +63,13 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     public int getMaxHttpHeaderSize() {
         return maxHttpHeaderSize;
     }
-    
+
 
     public void setMaxHttpHeaderSize(int valueI) {
         maxHttpHeaderSize = valueI;
         setAttribute("maxHttpHeaderSize", "" + valueI);
     }
-    
+
 
     /** Pass config info
      */
@@ -105,7 +105,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
         return (String)getAttribute(name);
     }
 
-    /** The adapter, used to call the connector 
+    /** The adapter, used to call the connector
      */
     @Override
     public void setHandler(HttpHandler adapter) {
@@ -117,13 +117,13 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
         return adapter;
     }
 
-    
+
     /** Start the protocol
      */
     @Override
     public void init() throws Exception {
     }
-    
+
     @Override
     public void start() throws Exception {
 
@@ -133,7 +133,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     public void destroy() throws Exception {
 
     }
-    
+
     // -------------------- Properties--------------------
     protected boolean secure;
 
@@ -143,21 +143,21 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     protected String sslImplementationName=null;
 
     private int maxKeepAliveRequests=100; // as in Apache HTTPD server
-    protected int timeout = 300000;	// 5 minutes as in Apache HTTPD server
+    protected int timeout = 300000;    // 5 minutes as in Apache HTTPD server
     protected int maxPostSize = 2 * 1024 * 1024;
     protected int maxHttpHeaderSize = 4 * 1024;
     private String reportedname;
     protected int socketCloseDelay=-1;
     protected boolean disableUploadTimeout = true;
     protected HttpHandler adapter;
-    
+
     // START OF SJSAS PE 8.1 6172948
     /**
      * The input request buffer size.
      */
     protected int requestBufferSize = 4096;
     // END OF SJSAS PE 8.1 6172948
-    
+
     /**
      * Compression value.
      */
@@ -209,7 +209,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
         maxPostSize = valueI;
         setAttribute("maxPostSize", "" + valueI);
     }
-    
+
     public String getKeystore() {
         return getProperty("keystore");
     }
@@ -229,7 +229,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
 
     public String getKeytype() {
         return getProperty("keystoreType");
-    } 
+    }
 
     public void setKeytype( String k ) {
         setAttribute("keystoreType", k);
@@ -242,7 +242,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
 
     public void setTruststoreType(String truststoreType) {
         setAttribute("truststoreType", truststoreType);
-    }    
+    }
     // END GlassFish Issue 657
 
     public String getClientauth() {
@@ -252,7 +252,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     public void setClientauth( String k ) {
         setAttribute("clientauth", k);
     }
-    
+
     public String getProtocol() {
         return getProperty("protocol");
     }
@@ -282,21 +282,21 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     }
 
     public void setSecure( boolean b ) {
-    	secure=b;
+        secure=b;
         setAttribute("secure", "" + b);
     }
-    
-    // START SJSAS 6439313     
+
+    // START SJSAS 6439313
     public boolean getBlocking() {
         return blocking;
     }
 
     public void setBlocking( boolean b ) {
-    	blocking=b;
+        blocking=b;
         setAttribute("blocking", "" + b);
     }
-    // END SJSAS 6439313     
-    
+    // END SJSAS 6439313
+
     public String getCiphers() {
         return getProperty("ciphers");
     }
@@ -320,7 +320,7 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     /** Set the maximum number of Keep-Alive requests that we will honor.
      */
     public void setMaxKeepAliveRequests(int mkar) {
-	maxKeepAliveRequests = mkar;
+    maxKeepAliveRequests = mkar;
         setAttribute("maxKeepAliveRequests", "" + mkar);
     }
 
@@ -334,11 +334,11 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     }
 
     protected static ServerSocketFactory string2SocketFactory( String val)
-	throws ClassNotFoundException, IllegalAccessException,
-	InstantiationException
+    throws ClassNotFoundException, IllegalAccessException,
+    InstantiationException
     {
-	Class chC=Class.forName( val );
-	return (ServerSocketFactory)chC.newInstance();
+    Class chC=Class.forName( val );
+    return (ServerSocketFactory)chC.newInstance();
     }
 
     public int getTimeout() {
@@ -346,18 +346,18 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     }
 
     public void setTimeout( int timeouts ) {
-	timeout = timeouts * 1000;
+    timeout = timeouts * 1000;
         setAttribute("timeout", "" + timeouts);
     }
- 
+
     public String getReportedname() {
         return reportedname;
     }
 
     public void setReportedname( String reportedName) {
-	reportedname = reportedName;
+    reportedname = reportedName;
     }
-    
+
     // START OF SJSAS PE 8.1 6172948
     /**
      * Set the request input buffer size
@@ -365,13 +365,13 @@ public class CoyoteConnectorLauncher implements ProtocolHandler
     public void setBufferSize(int requestBufferSize){
         this.requestBufferSize = requestBufferSize;
     }
-    
+
 
     /**
      * Return the request input buffer size
      */
     public int getBufferSize(){
         return requestBufferSize;
-    }    
-    // END OF SJSAS PE 8.1 6172948 
+    }
+    // END OF SJSAS PE 8.1 6172948
 }

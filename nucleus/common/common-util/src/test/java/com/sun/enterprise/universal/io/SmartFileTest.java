@@ -96,7 +96,7 @@ public class SmartFileTest {
     public void edgeCase() {
         if(OS.isWindows())
             return;
-        
+
         String fn = "/../../../../../../../../foo";
         assertEquals(SmartFile.sanitize(fn), "/foo");
         fn = "/../foo";

@@ -23,7 +23,7 @@ create table PART (
 go
 
 alter table PART
-        add CONSTRAINT FK_1 FOREIGN KEY (BOM_PART_NUMBER, BOM_REVISION) 
+        add CONSTRAINT FK_1 FOREIGN KEY (BOM_PART_NUMBER, BOM_REVISION)
                 REFERENCES PART (PART_NUMBER, REVISION)
 
 go
@@ -43,7 +43,7 @@ go
 
 /* PK can be mapped to a primitive PK field type */
 create table VENDOR (
-        VENDOR_ID       INTEGER         NOT NULL, 
+        VENDOR_ID       INTEGER         NOT NULL,
         NAME            VARCHAR(30)     NOT NULL,
         ADDRESS         VARCHAR(255)    NOT NULL,
         CONTACT         VARCHAR(255)    NOT NULL,

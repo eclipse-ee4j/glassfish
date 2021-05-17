@@ -36,14 +36,14 @@ public class SimpleConfigViewWrapper implements ConfigView {
     final static Pattern p = Pattern.compile("([^\\$]*)\\$\\{([^\\}]*)\\}([^\\$]*)");
 
     private static final String ALIAS_TOKEN = "ALIAS";
-    
+
     public static Object getTranslatedValue(Object value) {
         return value;
     }
 
     final ConfigView masterView;
 
-    
+
     SimpleConfigViewWrapper(ConfigView master) {
         this.masterView = master;
 

@@ -33,20 +33,20 @@ public class ContextListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent sce) {
 
-	System.out.println("In ContextListener::contextInitialized");
+    System.out.println("In ContextListener::contextInitialized");
 
-	simpleStateless.hello();
+    simpleStateless.hello();
 
     }
 
     @PostConstruct
     public void pc() {
-	System.out.println("In ContextListener::postConstruct");
+    System.out.println("In ContextListener::postConstruct");
     }
 
     public void contextDestroyed(ServletContextEvent sce) {
 
-	System.out.println("In ContextListener::contextDestroyed");
+    System.out.println("In ContextListener::contextDestroyed");
 
     }
 

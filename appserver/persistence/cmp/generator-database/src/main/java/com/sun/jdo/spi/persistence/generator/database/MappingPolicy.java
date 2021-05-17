@@ -69,7 +69,7 @@ public class MappingPolicy implements Cloneable {
     // Note that some property names have more than one base concatenated.
     // See SQL92.properties for examples.
     //
-    
+
     /** @see DatabaseGenerationConstants#DOT */
     static final char DOT = DatabaseGenerationConstants.DOT;
 
@@ -108,7 +108,7 @@ public class MappingPolicy implements Cloneable {
     // Indicator names for properties which describe how class and field
     // names are to be represented in a database.
     //
-    
+
     /** Indicator that property is for a table name. */
     private static final String INDICATOR_TABLE_NAME =
         "table-name"; //NOI18N
@@ -161,7 +161,7 @@ public class MappingPolicy implements Cloneable {
     // potential values for some property names composed of the above bases
     // and indicators.
     //
-    
+
     /** Property value indicating table name must be same as class name. */
     private static final String TABLE_NAME_AS_CLASSNAME =
         "{className}"; //NOI18N
@@ -253,7 +253,7 @@ public class MappingPolicy implements Cloneable {
 
     /** Prefix of column names which are foreign key columns. */
     private static final String FK_PREFIX = "FK_"; //NOI18N
-    
+
     /** Name of the "global" namespace. */
     private static final String GLOBAL_NAMING_SPACE = "GLOBAL"; //NOI18N
 
@@ -289,8 +289,8 @@ public class MappingPolicy implements Cloneable {
     //
     // The above are all constants; below things get "interesting".
     //
-    
-    
+
+
     /** This is the set of all default properties. */
     private static final Properties defaultProps = new Properties();
 
@@ -320,7 +320,7 @@ public class MappingPolicy implements Cloneable {
      * <em>Note that a single counter is used across all namespaces.</em>
      */
     private int counter = 0;
-    
+
     /**
      * Map from namespaces to Set of names defined in each namespace.  Used
      * to ensure uniqueness within namespaces.
@@ -342,7 +342,7 @@ public class MappingPolicy implements Cloneable {
      * Set of reserved words for the default database.
      */
     private static Set defaultReservedWords;
-    
+
     /**
      * Map from the string names of the java types (e.g. "java.lang.String")
      * to a JDBCInfo of information about the corresponding java.sql.Types
@@ -369,7 +369,7 @@ public class MappingPolicy implements Cloneable {
     // Maximum lengths for table, column, and constraint names are
     // vendor-specific.
     //
-    
+
     /** Maximum length of the name of a table. */
     private int tableNameMaxLength;
 
@@ -432,7 +432,7 @@ public class MappingPolicy implements Cloneable {
      /** Logger for warning & error messages */
     private static final Logger logger =
             LogHelperDatabaseGenerator.getLogger();
-    
+
     /** I18N message handler */
     private final static ResourceBundle messages =
             I18NHelper.loadBundle(MappingPolicy.class);
@@ -469,7 +469,7 @@ public class MappingPolicy implements Cloneable {
         jdbcTypes.put("TIMESTAMP", new Integer(Types.TIMESTAMP)); // NOI18N
         jdbcTypes.put("TINYINT", new Integer(Types.TINYINT)); // NOI18N
         jdbcTypes.put("VARCHAR", new Integer(Types.VARCHAR)); // NOI18N
-        
+
         jdbcTypeNames.put(new Integer(Types.BIGINT), "BIGINT"); // NOI18N
         jdbcTypeNames.put(new Integer(Types.BIT), "BIT"); // NOI18N
         jdbcTypeNames.put(new Integer(Types.BLOB), "BLOB"); // NOI18N
@@ -488,7 +488,7 @@ public class MappingPolicy implements Cloneable {
         jdbcTypeNames.put(new Integer(Types.TIMESTAMP), "TIMESTAMP"); // NOI18N
         jdbcTypeNames.put(new Integer(Types.TINYINT), "TINYINT"); // NOI18N
         jdbcTypeNames.put(new Integer(Types.VARCHAR), "VARCHAR"); // NOI18N
-        
+
         try {
 
             // Create and load the default mapping policy.
@@ -537,7 +537,7 @@ public class MappingPolicy implements Cloneable {
         Properties mergedProp = new Properties(defaultProps);
         load(getPropertyFileName(databaseType), mergedProp, false);
         init(mergedProp);
-        instances.put(databaseType, this);        
+        instances.put(databaseType, this);
 
         if (logger.isLoggable(Logger.FINEST)) {
             logger.finest("new MappingPolicy(" // NOI18N
@@ -551,17 +551,17 @@ public class MappingPolicy implements Cloneable {
      * user-specific overrides.
      * @param databaseType a database vendor name as a String.
      * @return MappingPolicy instance corresponding to the provided
-     * database vendor name. 
+     * database vendor name.
      * @throws IOException if there are problems reading the vendor-
-     * specific mappinng policy file 
+     * specific mappinng policy file
      */
     public synchronized static MappingPolicy getMappingPolicy(
            String databaseType) throws IOException {
-               
+
         if (logger.isLoggable(Logger.FINE)) {
             logger.fine("get MappingPolicy"+databaseType); // NOI18N
         }
-        
+
         MappingPolicy mappingPolicy = null;
         try {
             if (databaseType == null) {
@@ -608,7 +608,7 @@ public class MappingPolicy implements Cloneable {
     private synchronized void load(
             final String resourceName, Properties properties, boolean override)
             throws IOException {
- 
+
         if (logger.isLoggable(Logger.FINE)) {
             logger.fine("load resource:" + resourceName); // NOI18N
         }
@@ -658,7 +658,7 @@ public class MappingPolicy implements Cloneable {
             }
         }
     }
- 
+
     /**
      * Resets the namespaces and counter.
      */
@@ -850,9 +850,9 @@ public class MappingPolicy implements Cloneable {
      */
     private JDBCInfo getdbJDBCInfo(String fieldType) {
         JDBCInfo rc = (JDBCInfo) dbJdbcInfoMap.get(fieldType);
-        
+
         if (null == rc) {
-            
+
             // There is also nothing provided for the field's
             // type, so use a BLOB.
             rc = (JDBCInfo) dbJdbcInfoMap.get("BLOB"); // NOI18N
@@ -881,7 +881,7 @@ public class MappingPolicy implements Cloneable {
      */
     public static String getOverrideForLength(
             String className, String fieldName) {
-        
+
         return className
             + DOT + fieldName
             + DOT + DatabaseGenerationConstants.INDICATOR_JDBC_LENGTH;
@@ -897,7 +897,7 @@ public class MappingPolicy implements Cloneable {
      */
     public static String getOverrideForNullability(
             String className, String fieldName) {
-        
+
         return className
             + DOT + fieldName
             + DOT + DatabaseGenerationConstants.INDICATOR_JDBC_NULLABLE;
@@ -913,7 +913,7 @@ public class MappingPolicy implements Cloneable {
      */
     public static String getOverrideForPrecision(
             String className, String fieldName) {
-        
+
         return className
             + DOT + fieldName
             + DOT + DatabaseGenerationConstants.INDICATOR_JDBC_PRECISION;
@@ -929,7 +929,7 @@ public class MappingPolicy implements Cloneable {
      */
     public static String getOverrideForScale(
             String className, String fieldName) {
-        
+
         return className
             + DOT + fieldName
             + DOT + DatabaseGenerationConstants.INDICATOR_JDBC_SCALE;
@@ -945,7 +945,7 @@ public class MappingPolicy implements Cloneable {
      */
     public static String getOverrideForType(
             String className, String fieldName) {
-        
+
         return className
             + DOT + fieldName
             + DOT + DatabaseGenerationConstants.INDICATOR_JDBC_TYPE;
@@ -975,7 +975,7 @@ public class MappingPolicy implements Cloneable {
     // created from the given name(s), so that the result of looking up a
     // policy might actually be the name that is returned.
     //
-    
+
     /**
      * Returns the name of a table for a given class, as per current policy.
      * @param name Basis for what the returned table should be named, for
@@ -1008,7 +1008,7 @@ public class MappingPolicy implements Cloneable {
         } else if (rc.equals(TABLE_NAME_HASH_UPPERCASE)) {
             rc = uniqueName.toUpperCase();
         }
-        
+
         return getUniqueGlobalName(rc, tableNameMaxLength);
     }
 
@@ -1019,8 +1019,8 @@ public class MappingPolicy implements Cloneable {
      * @param fieldName Name of the field for which a column name is returned.
      * @param tableName Name of the table in which the column name is created.
      * @return Name of a column that is unique within the named table.
-     */    
-    public String getColumnName(String className, String fieldName, 
+     */
+    public String getColumnName(String className, String fieldName,
             String tableName) {
 
         // Get column naming policy based on className and fieldName
@@ -1074,7 +1074,7 @@ public class MappingPolicy implements Cloneable {
 
     /**
      * Returns the name of a constraint corresponding to the named
-     * relationship. 
+     * relationship.
      * @param relName Name of a relationship.
      * @param uniqueId Id that can be appened to relName to distinguish it
      * from other relNames in the database.  Will be appended only if
@@ -1104,7 +1104,7 @@ public class MappingPolicy implements Cloneable {
 
     /**
      * Returns the name of a PK constraint, unique-ified as required.
-     * @param tableName Name of a table on which a constraint is to be placed. 
+     * @param tableName Name of a table on which a constraint is to be placed.
      * @return Name of a constraint on named table.
      */
     public String getPrimaryKeyConstraintName(String tableName) {
@@ -1192,7 +1192,7 @@ public class MappingPolicy implements Cloneable {
             nameUpper += RESERVED_WORD_UNRESERVER;
             rc += RESERVED_WORD_UNRESERVER;
         }
-        
+
         Set names = (Set) namespaces.get(namespace);
 
         if (names == null) {
@@ -1301,7 +1301,7 @@ public class MappingPolicy implements Cloneable {
     // This method and the 4 subsequent ones initialize a MappingPolicy
     // instance from a give Properties object.
     //
-    
+
     /**
      * Initialize this MappingPolicy as per the values in the given
      * properties.
@@ -1318,7 +1318,7 @@ public class MappingPolicy implements Cloneable {
                 initReservedWords(value);
                 continue;
             }
-                
+
             // The indicator is the last DOT-separated substring in name.
             String indicator = null;
             StringTokenizer nameParser =
@@ -1332,13 +1332,13 @@ public class MappingPolicy implements Cloneable {
 
             } else if (indicator.startsWith(INDICATOR_JDBC_PREFIX)) {
                 setJDBCInfoEntry(dbJdbcInfoMap, name, value, indicator);
-                
+
             } else if (indicator.equals(INDICATOR_MAXIMUM_LENGTH)) {
                 setLengthEntry(name, value);
-                
-            } else if (indicator.equals(INDICATOR_TABLE_NAME) || 
-                       indicator.equals(INDICATOR_COLUMN_NAME) || 
-                       indicator.equals(INDICATOR_JOIN_TABLE_NAME) || 
+
+            } else if (indicator.equals(INDICATOR_TABLE_NAME) ||
+                       indicator.equals(INDICATOR_COLUMN_NAME) ||
+                       indicator.equals(INDICATOR_JOIN_TABLE_NAME) ||
                        indicator.equals(INDICATOR_CONSTRAINT_NAME)) {
                 setNamingEntry(name, value);
 
@@ -1362,7 +1362,7 @@ public class MappingPolicy implements Cloneable {
     //
     // These methods each set a value in one of our maps.
     //
-    
+
     /**
      * Sets a SQL formatting property in this MappingPolicy.
      * @param name Name of the policy property, including its indicator.
@@ -1398,10 +1398,10 @@ public class MappingPolicy implements Cloneable {
 
             } else if (name.startsWith(FOREIGN_KEY_CONSTRAINT_INDICATOR)) {
                 foreignKeyConstraint = value;
-                
+
             } else if (name.startsWith(COLUMN_NULLABILITY_INDICATOR)) {
                 columnNullability = value;
-                
+
             } else if (name.startsWith(LOB_LOGGING_INDICATOR)) {
                 lobLogging = value;
             }
@@ -1571,4 +1571,4 @@ public class MappingPolicy implements Cloneable {
         return rc.toString();
     }
 }
-            
+

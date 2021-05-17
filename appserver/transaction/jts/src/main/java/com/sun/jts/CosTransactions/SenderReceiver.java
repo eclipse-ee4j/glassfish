@@ -63,9 +63,9 @@ import com.sun.logging.LogDomains;
 class SenderReceiver implements Sender, Receiver {
 
     private static SenderReceiver sendRec = new SenderReceiver();
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(SenderReceiver.class, LogDomains.TRANSACTION_LOGGER);
 
     /**
@@ -99,10 +99,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"In sending_request"+
-			":"+id+","+holder.value.current.otid.formatID);
+        _logger.log(Level.FINE,"In sending_request"+
+            ":"+id+","+holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In sending_request"+ ":"+id+","+holder);
+        _logger.log(Level.FINE,"In sending_request"+ ":"+id+","+holder);
             }
         }
 
@@ -110,10 +110,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"Out sending_request"+
-			":"+id+","+holder.value.current.otid.formatID);
+        _logger.log(Level.FINE,"Out sending_request"+
+            ":"+id+","+holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out sending_request"+ ":"+id+","+holder);
+        _logger.log(Level.FINE,"Out sending_request"+ ":"+id+","+holder);
             }
         }
     }
@@ -138,10 +138,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"In received_reply"+
-			":"+id+","+context.current.otid.formatID);
+        _logger.log(Level.FINE,"In received_reply"+
+            ":"+id+","+context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In received_reply"+ ":"+id+", null context");
+        _logger.log(Level.FINE,"In received_reply"+ ":"+id+", null context");
             }
         }
 
@@ -149,10 +149,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"Out received_reply"+
-			":"+id+","+context.current.otid.formatID);
+        _logger.log(Level.FINE,"Out received_reply"+
+            ":"+id+","+context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out received_reply"+ ":"+id+", null context");
+        _logger.log(Level.FINE,"Out received_reply"+ ":"+id+", null context");
             }
         }
     }
@@ -171,10 +171,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"In received_request"+
-			":"+id+","+context.current.otid.formatID);
+        _logger.log(Level.FINE,"In received_request"+
+            ":"+id+","+context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In received_request"+ ":"+id+", null context");
+        _logger.log(Level.FINE,"In received_request"+ ":"+id+", null context");
             }
         }
 
@@ -182,10 +182,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"Out received_request"+
-			":"+id+","+context.current.otid.formatID);
+        _logger.log(Level.FINE,"Out received_request"+
+            ":"+id+","+context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out received_request"+ ":"+id+", null context");
+        _logger.log(Level.FINE,"Out received_request"+ ":"+id+", null context");
             }
         }
     }
@@ -212,10 +212,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"In sending_reply"+
-			":"+id+","+holder.value.current.otid.formatID);
+        _logger.log(Level.FINE,"In sending_reply"+
+            ":"+id+","+holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In sending_reply"+ ":"+id+","+holder);
+        _logger.log(Level.FINE,"In sending_reply"+ ":"+id+","+holder);
             }
         }
 
@@ -223,10 +223,10 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"Out sending_reply"+
-			":"+id+","+holder.value.current.otid.formatID);
+        _logger.log(Level.FINE,"Out sending_reply"+
+            ":"+id+","+holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out sending_reply"+ ":"+id+","+holder);
+        _logger.log(Level.FINE,"Out sending_reply"+ ":"+id+","+holder);
             }
         }
     }
@@ -249,20 +249,20 @@ class SenderReceiver implements Sender, Receiver {
                                    " successfully identified");
             }
         } catch(AlreadyIdentified exc) {
-			_logger.log(Level.FINE,"jts.already_indetified_communication_manager");
+            _logger.log(Level.FINE,"jts.already_indetified_communication_manager");
         } catch (NotAvailable exc) {
-			_logger.log(Level.WARNING,"jts.unable_to_indetify_communication_manager");
+            _logger.log(Level.WARNING,"jts.unable_to_indetify_communication_manager");
         }
     }
 
     private void debugMessage(String msg, int id, PropagationContext ctx) {
-		//System.err.print is not removed as debug Message will no more be
-		//used.
-		_logger.log(Level.FINE,msg+";"+id);
+        //System.err.print is not removed as debug Message will no more be
+        //used.
+        _logger.log(Level.FINE,msg+";"+id);
         if (ctx == null) {
-			_logger.log(Level.FINE,"");
+            _logger.log(Level.FINE,"");
         } else {
-			_logger.log(Level.FINE,"," + ctx.current.otid.formatID);
+            _logger.log(Level.FINE,"," + ctx.current.otid.formatID);
         }
     }
 }

@@ -91,8 +91,8 @@ public final class ClassUtil
     /**
     Test whether an Object is an array
 
-    @param o	object to test
-    @return	true if the object is an array, false otherwise.
+    @param o    object to test
+    @return    true if the object is an array, false otherwise.
      */
     public static boolean objectIsArray(Object o)
     {
@@ -102,8 +102,8 @@ public final class ClassUtil
     /**
     Test whether a Class is an array
 
-    @param theClass		class to test
-    @return			true if the class is an array, false otherwise.
+    @param theClass        class to test
+    @return            true if the class is an array, false otherwise.
      */
     public static boolean classIsArray(Class theClass)
     {
@@ -113,8 +113,8 @@ public final class ClassUtil
     /**
     Test whether an Object is an array of primitive types
 
-    @param o		object to test
-    @return		true if the object is an array, false otherwise.
+    @param o        object to test
+    @return        true if the object is an array, false otherwise.
      */
     public static boolean objectIsPrimitiveArray(Object o)
     {
@@ -124,8 +124,8 @@ public final class ClassUtil
     /**
     Test whether a classname is an array
 
-    @param classname	classname string
-    @return			true if the object is an array, false otherwise.
+    @param classname    classname string
+    @return            true if the object is an array, false otherwise.
      */
     public static boolean classnameIsArray(String classname)
     {
@@ -135,8 +135,8 @@ public final class ClassUtil
     /**
     Strip the package name.
 
-    @param classname	classname string
-    @return	the classname, without its package
+    @param classname    classname string
+    @return    the classname, without its package
      */
     public static String stripPackageName(String classname)
     {
@@ -152,8 +152,8 @@ public final class ClassUtil
     /**
     Test whether a classname is a primitive array
 
-    @param classname	classname string
-    @return			true if the object is a primitive array, false otherwise.
+    @param classname    classname string
+    @return            true if the object is a primitive array, false otherwise.
      */
     public static boolean classnameIsPrimitiveArray(String classname)
     {
@@ -164,8 +164,8 @@ public final class ClassUtil
     Return the primitive element type code for an array of primitive types.
     Same as getPrimitiveArrayTypeCode( theClass.getName() )
 
-    @param theClass		the Class object
-    @return				the element type code; otherwise (char)0
+    @param theClass        the Class object
+    @return                the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(Class theClass)
     {
@@ -182,8 +182,8 @@ public final class ClassUtil
     /**
     Return the primitive element type code for an array of primitive types.
 
-    @param classname	classname string
-    @return			the element type code; otherwise (char)0
+    @param classname    classname string
+    @return            the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(String classname)
     {
@@ -220,8 +220,8 @@ public final class ClassUtil
     /**
     Get the classname for an array element.
 
-    @param classname	classname string
-    @return			the classname for the array element
+    @param classname    classname string
+    @return            the classname for the array element
      */
     public static String getArrayMemberClassName(String classname)
     {
@@ -335,8 +335,8 @@ public final class ClassUtil
     Get a Class from a classname.  Class.forName does not work for primitive types;
     this methods returns the correct Class for any type.
 
-    @param classname	classname string
-    @return			the classname for the array element
+    @param classname    classname string
+    @return            the classname for the array element
      */
     public static Class<?> getClassFromName(final String classname)
             throws ClassNotFoundException
@@ -384,8 +384,8 @@ public final class ClassUtil
     /**
     Map primitive class Classes to Object forms eg int.class to Integer.class
 
-    @param		theClass	the class to map
-    @return	the corresponding Object class or the original Class if not a primitive.
+    @param        theClass    the class to map
+    @return    the corresponding Object class or the original Class if not a primitive.
      */
     public static Class primitiveClassToObjectClass(final Class theClass)
     {
@@ -409,8 +409,8 @@ public final class ClassUtil
     /**
     Map primitive class Classes to Object forms eg int.class to Integer.class
 
-    @param		theClass	the class to map
-    @return	the corresponding Object class or the original Class if not a primitive.
+    @param        theClass    the class to map
+    @return    the corresponding Object class or the original Class if not a primitive.
      */
     public static Class objectClassToPrimitiveClass(final Class theClass)
     {
@@ -434,8 +434,8 @@ public final class ClassUtil
     /**
     Test whether a class is a primitive class.
 
-    @param		theClass	the class to test
-    @return	true if it's a primitive class, false otherwise.
+    @param        theClass    the class to test
+    @return    true if it's a primitive class, false otherwise.
      */
     public static boolean isPrimitiveClass(final Class theClass)
     {
@@ -459,8 +459,8 @@ public final class ClassUtil
     /**
     Convert a primitive class letter to its corresponding class name.
 
-    @param		primitive	the primitive character code
-    @return		the corresponding classname
+    @param        primitive    the primitive character code
+    @return        the corresponding classname
      */
     public static String primitiveLetterToClassName(final char primitive)
     {
@@ -506,8 +506,8 @@ public final class ClassUtil
 
     If an element is null, then its corresponding Class will also be null.
 
-    @param		args	an array of objects.
-    @return		an array of classes
+    @param        args    an array of objects.
+    @return        an array of classes
      */
     public static String[] getTypes(final Object[] args)
     {
@@ -540,8 +540,8 @@ public final class ClassUtil
 
     If an element is null, then its corresponding Class will also be null.
 
-    @param		classnames	an array of classnames.
-    @return		an array of classes
+    @param        classnames    an array of classnames.
+    @return        an array of classes
      */
     public static Class[] signatureFromClassnames(String[] classnames)
             throws ClassNotFoundException
@@ -566,8 +566,8 @@ public final class ClassUtil
 
     If an element is null, then its corresponding Class will also be null.
 
-    @param		classes	an array of classnames.
-    @return		an array of classes
+    @param        classes    an array of classnames.
+    @return        an array of classes
      */
     public static String[] classnamesFromSignature(Class[] classes)
     {
@@ -586,8 +586,8 @@ public final class ClassUtil
     <p>
     Calls getFriendlyClassname( theClass.getName() )
 
-    @param		theClass	the class for which the name should be gotten
-    @return		the "friendly" name
+    @param        theClass    the class for which the name should be gotten
+    @return        the "friendly" name
      */
     public static String getFriendlyClassname(Class theClass)
     {
@@ -597,16 +597,16 @@ public final class ClassUtil
     /**
     Convert a Java class name string into a more user friendly string. Examples:
     <p>
-    java.lang.String		=> String
-    java.lang.<type>		=> <type>;
-    [i						=> int[]
-    [Lfoo.bar.ClassName;	=> foo.bar.ClassName[]
+    java.lang.String        => String
+    java.lang.<type>        => <type>;
+    [i                        => int[]
+    [Lfoo.bar.ClassName;    => foo.bar.ClassName[]
     <p>
     The names returned correspond exactly to what a Java programmer would write, rather
     than the internal JVM representation.
 
-    @param 		type
-    @return	a friendlier string representing the type
+    @param         type
+    @return    a friendlier string representing the type
      */
     final static String javaLang = "java.lang.";
 
@@ -779,8 +779,8 @@ public final class ClassUtil
     /**
     Return true if caller signature is compatible with callee.
 
-    @param callee			the signature of the method to be called
-    @param argsSignature	the signature of the argument list
+    @param callee            the signature of the method to be called
+    @param argsSignature    the signature of the argument list
      */
     public static boolean signaturesAreCompatible(final Class<?>[] callee, final Class<?>[] argsSignature)
     {
@@ -849,8 +849,8 @@ public final class ClassUtil
     Create a new object of the specified class using a constructor
     that accepts the specified arguments.
 
-    @param theClass	the Class of the desired Object
-    @param args		the argument list for the constructor
+    @param theClass    the Class of the desired Object
+    @param args        the argument list for the constructor
      */
     public static <T> T instantiateObject(final Class<T> theClass, final Object[] args)
             throws Exception
@@ -922,8 +922,8 @@ public final class ClassUtil
     /**
     Create a new object of the specified class using a String constructor.
 
-    @param theClass		the Class of the desired Object
-    @param theString	the string for a String constructor
+    @param theClass        the Class of the desired Object
+    @param theString    the string for a String constructor
     @return the resulting Object
      */
     public static <T> T instantiateObject(final Class<T> theClass, final String theString)
@@ -966,10 +966,10 @@ public final class ClassUtil
     Create a new number based on a String.
     <p>
     Don't get fancy here, simple precedence:
-    Integer, Long	 if no decimal point, use Long if won't fit in an Integer
-    Double			 if decimal point (for maximum precision)
+    Integer, Long     if no decimal point, use Long if won't fit in an Integer
+    Double             if decimal point (for maximum precision)
 
-    @param theString	String representation of the number
+    @param theString    String representation of the number
     @return the resulting Object
      */
     private static Object instantiateNumber(final String theString)
@@ -1000,8 +1000,8 @@ public final class ClassUtil
     Given a Class and a String, create a new instance with a constructor that accept
     a String. Primitive types are instantiated as their equivalent Object forms.
 
-    @param theClass		the class from which an instance should be instantiated
-    @param theString	the string to be supplied to the constructor
+    @param theClass        the class from which an instance should be instantiated
+    @param theString    the string to be supplied to the constructor
     @return the resulting Object
      */
     public static Object instantiateFromString(final Class<?> theClass, final String theString)
@@ -1044,7 +1044,7 @@ public final class ClassUtil
     Primitive types are instantiated as their equivalent Object forms.
     Any value is acceptable in the newly created object.
 
-    @param inClass		the class from which an instance should be instantiated
+    @param inClass        the class from which an instance should be instantiated
     @return the resulting Object
      */
     public static Object instantiateDefault(final Class<?> inClass)
@@ -1094,7 +1094,7 @@ public final class ClassUtil
         else
         {
             result = objectClass.newInstance();
-            //result	= InstantiateFromString( objectClass, "0" );
+            //result    = InstantiateFromString( objectClass, "0" );
         }
         return result;
     }
@@ -1125,7 +1125,7 @@ public final class ClassUtil
             }
         }
 
-        if (fullName == name)	// no match so far
+        if (fullName == name)    // no match so far
         {
             if (name.equals("Number"))
             {
@@ -1159,7 +1159,7 @@ public final class ClassUtil
     convertArrayClass( "[[[LObject;", "Long" ) =>[[[LLong;
 
     @param arrayClass
-    @param newInnerType		the desired Class of the innermost element
+    @param newInnerType        the desired Class of the innermost element
      */
     public static Class convertArrayClass(final Class arrayClass, final Class newInnerType)
             throws ClassNotFoundException

@@ -141,7 +141,7 @@ public class AppUtil {
     static public Boolean doesAppContainsResources(String appName){
         return RestUtil.doesProxyExist(GuiUtil.getSessionValue("REST_URL") + "/applications/application/" + appName + "/resources");
     }
-    
+
     static public String getAppScopedResType(String resName, String type){
         int index = appResTypes.indexOf(resName);
         if (index != -1){

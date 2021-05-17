@@ -23,7 +23,7 @@ import org.glassfish.grizzly.http.server.util.Mapper;
 /**
  * Listener interface for objects, which are interested in handling
  * {@link Mapper} udpdates.
- * 
+ *
  * @author Alexey Stashok
  */
 public interface MapperUpdateListener {

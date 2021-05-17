@@ -50,28 +50,28 @@ public class SSLClientConfigurator {
 
     @LogMessageInfo(level="SEVERE", message="Error preparing SSL context", action="Please refer to the stack trace", cause="unknown")
     private final static String errorPreparingSSL = Util.LOG_PREFIX + "00014";
-    
+
     @LogMessageInfo(level="WARNING", message="No Key store found for {0}")
     private final static String noKeyEntry = Util.LOG_PREFIX + "00015";
-    
+
     @LogMessageInfo(level="WARNING", message="No keystores defined")
     private final static String noKeyStores = Util.LOG_PREFIX + "00016";
-    
+
     @LogMessageInfo(level="WARNING", message="Bad maxCertLength: {0}")
     private final static String badMaxCertLength = Util.LOG_PREFIX + "00017";
 
     @LogMessageInfo(level="SEVERE", message="JSSE keystoreload failed for type = {0} path = {1} {2}", action="Please refer to the stack trace", cause="unknown")
     private final static String keystoreLoadFailed = Util.LOG_PREFIX + "00018";
-    
+
     @LogMessageInfo(level="WARNING", message="All SSL protocol variants disabled for network-listener, using SSL implementation specific defaults")
     private final static String allVariantsDisabled = Util.LOG_PREFIX + "00019";
-    
+
     @LogMessageInfo(level="WARNING", message="All SSL cipher suites disabled for network-listener(s).  Using SSL implementation specific defaults")
     private final static String allCipherSuitesDisabled = Util.LOG_PREFIX + "00020";
-    
+
     @LogMessageInfo(level="WARNING", message="Unknown cipher error for cipher {0}")
     private final static String unkCipher = Util.LOG_PREFIX + "00021";
-    
+
     // Private constructor
     private SSLClientConfigurator() {
 
@@ -94,18 +94,18 @@ public class SSLClientConfigurator {
      * This method creates an SSLContext based on the default provider and then
      * created TrustManagers, KeyManagers and initializes the SSLContext with
      * the TrustManager, KeyManager
-     * 
+     *
      * @return SSLContext
      */
     public SSLContext configure(SSLParams sslParams) {
         this.sslParams = sslParams;
-        
+
         // get the protocol and the SSLContext.
         String protocol = sslParams.getProtocol();
         try {
             sslContext = SSLContext.getInstance(protocol);
         } catch (NoSuchAlgorithmException ex) {
-    
+
             _logger.log(Level.SEVERE, errorPreparingSSL, ex);
         }
 
@@ -127,7 +127,7 @@ public class SSLClientConfigurator {
        if (keyAlias == null) {
            keyAlias = "s1as";
        }
-       
+
        // Initialize the SSLContext
         try {
             sslContext.init(getKeyManagers(algorithm, keyAlias),
@@ -194,7 +194,7 @@ public class SSLClientConfigurator {
                 throws Exception {
 
         // hack
-    
+
         if(System.getProperty("javax.net.ssl.keyStore") == null) {
             _logger.log(Level.WARNING, noKeyStores);
             return null;
@@ -202,13 +202,13 @@ public class SSLClientConfigurator {
         _logger.log(Level.FINE, "Algorithm ::{0}", algorithm);
         _logger.log(Level.FINE, "Key Alias ::{0}", keyAlias);
         _logger.log(Level.FINE, "KeyStore Type ::{0}", sslParams.getKeyStoreType());
-        
+
         String keystorePass = sslParams.getKeyStorePassword();
 
         KeyStore ks = getStore(sslParams.getKeyStoreType(),
                     sslParams.getKeyStore().getPath(), keystorePass);
         if (keyAlias != null && !ks.isKeyEntry(keyAlias)) {
-    
+
             _logger.log(Level.WARNING, noKeyEntry, keyAlias);
             //throw new IOException( "jsse.alias_no_key_entry for "+keyAlias);
             return null;
@@ -229,9 +229,9 @@ public class SSLClientConfigurator {
         String crlf = sslParams.getCrlFile();
 
         TrustManager[] tms = null;
-        _logger.log(Level.FINE, "in getTrustManagers TrustManager type = {0} path = {1} password = {2}", 
-                new Object[]{sslParams.getTrustStoreType(), 
-                    sslParams.getTrustStore().getPath(), 
+        _logger.log(Level.FINE, "in getTrustManagers TrustManager type = {0} path = {1} password = {2}",
+                new Object[]{sslParams.getTrustStoreType(),
+                    sslParams.getTrustStore().getPath(),
                     sslParams.getTrustStorePassword()});
 
         KeyStore trustStore = getStore(sslParams.getTrustStoreType(),
@@ -287,7 +287,7 @@ public class SSLClientConfigurator {
                 try {
                     xparams.setMaxPathLength(Integer.parseInt(trustLength));
                 } catch(Exception ex) {
-    
+
                     _logger.log(Level.WARNING, badMaxCertLength, trustLength);
                 }
             }
@@ -355,9 +355,9 @@ public class SSLClientConfigurator {
             }
 
             ks.load(istream, pass.toCharArray());
-    
+
         } catch (FileNotFoundException fnfe) {
-             _logger.log(Level.SEVERE, 
+             _logger.log(Level.SEVERE,
                      formatMessage(keystoreLoadFailed, type, path, fnfe.getMessage()),
                      fnfe);
             throw fnfe;
@@ -367,7 +367,7 @@ public class SSLClientConfigurator {
                      ioe);
             throw ioe;
         } catch(Exception ex) {
-             _logger.log(Level.SEVERE, 
+             _logger.log(Level.SEVERE,
                      formatMessage(keystoreLoadFailed, type, path, ex.getMessage()),
                      ex);
             throw new IOException(ex.getMessage());
@@ -383,7 +383,7 @@ public class SSLClientConfigurator {
 
         return ks;
     }
-    
+
     private static String formatMessage(final String key, final Object... args) {
         final String format = Util.JMX_LOGGER.getResourceBundle().getString(key);
         return MessageFormat.format(format, args);
@@ -405,7 +405,7 @@ public class SSLClientConfigurator {
         if (sslParams.getSsl3Enabled() || sslParams.getTlsEnabled()) {
             tmpSSLArtifactsList.add("SSLv2Hello");
         }
-        
+
         if (tmpSSLArtifactsList.isEmpty()) {
             _logger.log(Level.WARNING, allVariantsDisabled);
         } else {
@@ -591,5 +591,5 @@ public class SSLClientConfigurator {
 
     } // END CipherInfo
 
-    
+
 }

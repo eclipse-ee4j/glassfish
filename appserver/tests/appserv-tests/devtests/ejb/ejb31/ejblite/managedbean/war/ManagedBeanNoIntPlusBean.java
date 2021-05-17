@@ -30,31 +30,31 @@ public class ManagedBeanNoIntPlusBean extends ManagedBeanSuper {
     private String aroundInvoke = "";
 
     public void newInterceptorInstance() {
-	numInterceptorInstances++;
+    numInterceptorInstances++;
     }
 
     public int getNumInstances() {
-	return numInstances;
+    return numInstances;
     }
 
     public int getNumInterceptorInstances() {
-	return numInterceptorInstances;
+    return numInterceptorInstances;
     }
 
      @AroundInvoke
     private Object roundInvoke(InvocationContext c) throws Exception {
-	System.out.println("In ManagedBeanNoIntPlusBean::roundInvoke() ");
-	if( c.getMethod().getName().equals("getAroundInvokeSequence") ) {
-	    String result = (String) c.proceed();
-	    return "M" + result;
-	} else {
-	    return c.proceed();
-	}
+    System.out.println("In ManagedBeanNoIntPlusBean::roundInvoke() ");
+    if( c.getMethod().getName().equals("getAroundInvokeSequence") ) {
+        String result = (String) c.proceed();
+        return "M" + result;
+    } else {
+        return c.proceed();
+    }
     }
 
     @PostConstruct
     private void init() {
-	numInstances++;
+    numInstances++;
     }
 
     @PreDestroy

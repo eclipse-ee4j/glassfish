@@ -42,7 +42,7 @@ public class EJBRecorderHome implements java.io.Serializable  {
   /** Private constructor to make class Singleton*/
   private EJBRecorderHome() {
     System.out.println("EjbRecorderHome constructor");
-   
+
   }
 
   /** Creates a new instance of EJBRecorderHome */
@@ -77,9 +77,9 @@ public class EJBRecorderHome implements java.io.Serializable  {
   public void setBeanMap(String EJBName,HashMap map) {
       m_bean=EJBName;
       beanStatus.put(EJBName, map);
-      
+
   }
-  
+
   public HashMap getAllBeanResults(){
       System.out.println("EJBRECORDER :Returning bean results..");
       String keys=beanStatus.keySet().toString();

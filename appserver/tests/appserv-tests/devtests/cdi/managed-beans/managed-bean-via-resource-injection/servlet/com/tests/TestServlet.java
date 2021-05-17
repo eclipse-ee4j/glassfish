@@ -50,7 +50,7 @@ public class TestServlet extends HttpServlet {
     private String testOverriddenMethods() {
         String s = "";
         System.out.println("toString returned:" +testResource.toString());
-        if (!testResource.toString().equals(TestManagedBean.TOSTRING)) 
+        if (!testResource.toString().equals(TestManagedBean.TOSTRING))
             s += "TestManagedBean obtained via @Resource toString method invocation failed";
         return s;
     }

@@ -35,7 +35,7 @@ public class FormLoginConfig {
     /**
      * Creates an instance of the <tt>FormLoginConfig</tt> with the specified <tt>loginPage</tt> and
      * <tt>errorPage</tt>
-     * 
+     *
      * @param loginPage the login page
      * @param errorPage the form error page
      */

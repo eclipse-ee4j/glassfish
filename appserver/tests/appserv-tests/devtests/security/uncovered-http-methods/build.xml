@@ -25,14 +25,14 @@
 ]>
 
 <project name="uncovered-http-methods" default="usage" basedir=".">
-  
+
   &commonSetup;
   &commonBuild;
   &testproperties;
   &commonSecurity;
-  
+
   <target name="all" depends="clean, setup, build, deploy, run, undeploy, unsetup"/>
-  
+
   <target name="setup" depends="init-common">
     <antcall target="create-user-common">
       <param name="user" value="testuser"/>
@@ -50,20 +50,20 @@
         <arg value="javaee"/>
     </java>
   </target>
-  
+
   <target name="unsetup" depends="init-common">
     <antcall target="delete-user-common">
       <param name="user" value="testuser"/>
     </antcall>
   </target>
-  
+
   <target name="clean" depends="init-common">
     <antcall target="clean-common"/>
   </target>
-  
+
   <target name="compile" depends="clean">
   </target>
-  
+
   <target name="build" depends="compile">
     <antcall target="compile-common">
       <param name="src" value="web"/>
@@ -80,10 +80,10 @@
       <param name="war.file" value="${assemble.dir}/denyUncoveredServletTest-web.war"/>
     </antcall>
 
-    <mkdir dir="${build.classes.dir}/META-INF"/> 
-    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/> 
-    <copy file="${glassfish-application.xml}" tofile="${build.classes.dir}/META-INF/glassfish-application.xml" failonerror="false"/> 
-    <jar jarfile="${assemble.dir}/${appname}App.ear"> 
+    <mkdir dir="${build.classes.dir}/META-INF"/>
+    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+    <copy file="${glassfish-application.xml}" tofile="${build.classes.dir}/META-INF/glassfish-application.xml" failonerror="false"/>
+    <jar jarfile="${assemble.dir}/${appname}App.ear">
       <fileset dir="${assemble.dir}">
         <include name="*.war"/>
       </fileset>
@@ -91,13 +91,13 @@
         <include name="META-INF/application.xml"/>
         <include name="META-INF/glassfish-application.xml"/>
       </fileset>
-    </jar>   
+    </jar>
 
     <antcall target="compile-common">
       <param name="src" value="client"/>
     </antcall>
   </target>
-  
+
   <target name="deploy" depends="init-common">
     <antcall target="deploy-common"/>
   </target>
@@ -105,7 +105,7 @@
   <target name="undeploy" depends="init-common">
     <antcall target="undeploy-common"/>
   </target>
-  
+
   <target name="usage">
     <antcall target="usage-common"/>
   </target>

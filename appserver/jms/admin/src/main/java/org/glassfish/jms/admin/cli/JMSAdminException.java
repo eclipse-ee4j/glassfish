@@ -44,7 +44,7 @@ public class JMSAdminException extends Exception
     public JMSAdminException(String message)
     {
         super(message);
-	_message = message;
+    _message = message;
         linkedException = null;
     }
 
@@ -71,24 +71,24 @@ public class JMSAdminException extends Exception
      *
      **/
     public String getMessage() {
-	String retString = null;
+    String retString = null;
 
-	// Return the message of this exception.
-	if (_message != null) {
-	   retString = _message;
-	}
+    // Return the message of this exception.
+    if (_message != null) {
+       retString = _message;
+    }
 
-	// Append any message from the linked exception.
-	Exception localLinkedException = linkedException;
-	if (localLinkedException != null && localLinkedException.getMessage() != null) {
-	    if (retString != null) {
-	        retString += retString + "\n" + localLinkedException.getMessage();
-	    } else {
-	        retString = localLinkedException.getMessage();
-	    }
-	}
+    // Append any message from the linked exception.
+    Exception localLinkedException = linkedException;
+    if (localLinkedException != null && localLinkedException.getMessage() != null) {
+        if (retString != null) {
+            retString += retString + "\n" + localLinkedException.getMessage();
+        } else {
+            retString = localLinkedException.getMessage();
+        }
+    }
 
-	return retString;
+    return retString;
 
     }
 

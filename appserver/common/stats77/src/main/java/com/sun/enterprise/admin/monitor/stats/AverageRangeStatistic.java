@@ -18,7 +18,7 @@ package com.sun.enterprise.admin.monitor.stats;
 
 import org.glassfish.j2ee.statistics.RangeStatistic;
 
-/** An interface that Specifies standard measurements of the lowest and highest values an attribute has held 
+/** An interface that Specifies standard measurements of the lowest and highest values an attribute has held
  * as well as its current value.  Extending RangeStatistic, it also provides the average value.
  * @author Larry White
  * @author Kedar Mhaswade
@@ -31,7 +31,7 @@ import org.glassfish.j2ee.statistics.RangeStatistic;
  * @author  lwhite
  */
 public interface AverageRangeStatistic extends RangeStatistic {
-    
+
     public long getAverage();
-    
+
 }

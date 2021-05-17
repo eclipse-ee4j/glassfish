@@ -37,10 +37,10 @@ import java.lang.annotation.Annotation;
 @Service
 @AnnotationHandlerFor(PermitAll.class)
 public class PermitAllHandler extends AbstractAuthAnnotationHandler {
-    
+
     public PermitAllHandler() {
     }
-    
+
     @Override
     protected void processEjbMethodSecurity(Annotation authAnnoation,
             MethodDescriptor md, EjbDescriptor ejbDesc) {

@@ -47,7 +47,7 @@
 
     <artifactId>felix</artifactId>
     <!-- This is a distribution fragement.
-         It is distributed as part of nucleus-base. 
+         It is distributed as part of nucleus-base.
     -->
     <packaging>distribution-fragment</packaging>
 

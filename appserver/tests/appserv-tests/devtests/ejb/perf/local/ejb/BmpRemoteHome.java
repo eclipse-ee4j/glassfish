@@ -22,5 +22,5 @@ import java.rmi.RemoteException;
 public interface BmpRemoteHome extends EJBHome
 {
     BmpRemote create(String s) throws RemoteException, CreateException;
-    BmpRemote findByPrimaryKey(String s) throws RemoteException, CreateException;    
+    BmpRemote findByPrimaryKey(String s) throws RemoteException, CreateException;
 }

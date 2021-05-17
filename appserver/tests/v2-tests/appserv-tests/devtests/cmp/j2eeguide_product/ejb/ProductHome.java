@@ -22,12 +22,12 @@ import jakarta.ejb.*;
 
 public interface ProductHome extends EJBHome {
 
-    public Product create(String productId, String description, 
+    public Product create(String productId, String description,
         double balance) throws RemoteException, CreateException;
-    
-    public Product findByPrimaryKey(String productId) 
+
+    public Product findByPrimaryKey(String productId)
         throws FinderException, RemoteException;
-    
+
     public Collection findByDescription(String description)
         throws FinderException, RemoteException;
 

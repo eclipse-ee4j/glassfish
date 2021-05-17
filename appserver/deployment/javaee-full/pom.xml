@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>deployment-javaee-full</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Deployment Related JavaEE Full Profile Classes </name>
 
     <developers>
@@ -130,6 +130,6 @@
             <groupId>org.glassfish.main.security</groupId>
             <artifactId>security-ee</artifactId>
             <version>${project.version}</version>
-        </dependency>        
+        </dependency>
    </dependencies>
 </project>

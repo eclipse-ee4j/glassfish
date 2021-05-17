@@ -35,15 +35,15 @@ import static org.junit.Assert.*;
 public class AccessLogAllDefaultsTest extends ConfigApiTest {
 
     private AccessLog al = null;
-            
+
     public AccessLogAllDefaultsTest() {
     }
-    
+
     @Override
     public String getFileName() {
         return ("AccessLogAllDefaultsTest"); //this is the xml to load
     }
-    
+
     @Before
     public void setUp() {
         al = super.getHabitat().getService(AccessLog.class);
@@ -53,7 +53,7 @@ public class AccessLogAllDefaultsTest extends ConfigApiTest {
     public void tearDown() {
         al = null;
     }
-    @Test 
+    @Test
     public void testAllDefaults() {
         assertEquals("true", al.getRotationEnabled());
         assertEquals("1440", al.getRotationIntervalInMinutes());

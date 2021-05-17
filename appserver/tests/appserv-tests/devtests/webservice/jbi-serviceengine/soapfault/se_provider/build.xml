@@ -34,7 +34,7 @@
     &jaxwsTools;
     &jbicommon;
     &jbiproperties;
-    <target name="all" depends="clean, setup, runtest,undeploy"/> 
+    <target name="all" depends="clean, setup, runtest,undeploy"/>
 
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>

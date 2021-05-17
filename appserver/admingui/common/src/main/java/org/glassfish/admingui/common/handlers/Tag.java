@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  <p>	Tag Class.</p>
+ *  <p>    Tag Class.</p>
  *
  *  @author Ken Paulsen (ken.paulsen@sun.com)
  */
@@ -33,13 +33,13 @@ public class Tag implements java.io.Serializable {
     private List<String> users = null;
 
     /**
-     *	<p> Default constructor.</p>
+     *    <p> Default constructor.</p>
      */
     Tag() {
     }
 
     /**
-     *	<p> The constructor that should normally be used.</p>
+     *    <p> The constructor that should normally be used.</p>
      */
     public Tag(String tagName, String tagViewId, String displayName, String user) {
         this.tagName = tagName;
@@ -52,7 +52,7 @@ public class Tag implements java.io.Serializable {
     }
 
     /**
-     *	<p> Allows an additional user to be added as a Tag creator.</p>
+     *    <p> Allows an additional user to be added as a Tag creator.</p>
      */
     public void addUser(String name) {
         if (users == null) {
@@ -62,15 +62,15 @@ public class Tag implements java.io.Serializable {
     }
 
     /**
-     *	<p> Provides access to all the users that have created this Tag.  This
-     *	    may be null.</p>
+     *    <p> Provides access to all the users that have created this Tag.  This
+     *        may be null.</p>
      */
     public List<String> getUsers() {
         return users;
     }
 
     /**
-     *  <p>	Checks to see if the given user is an owner of this Tag.</p>
+     *  <p>    Checks to see if the given user is an owner of this Tag.</p>
      */
     public boolean containsUser(String name) {
         return (users == null) ? false : users.contains(name);
@@ -78,15 +78,15 @@ public class Tag implements java.io.Serializable {
 
     /**
      *  <p> This method ensures the specified <code>user</code> is removed
-     *	    from the list of users for this <code>Tag</code>.</p>
+     *        from the list of users for this <code>Tag</code>.</p>
      *
      *  <p> While a <code>Tag</code> is of little or no use when 0 users own
-     *	    the <code>Tag</code>, it is not the responsibility of this method
-     *	    to remove the <code>Tag</code> if this state occurs as a result of
-     *	    a call to this method.</p>
+     *        the <code>Tag</code>, it is not the responsibility of this method
+     *        to remove the <code>Tag</code> if this state occurs as a result of
+     *        a call to this method.</p>
      *
-     *	@return	The <code>List</code> of users remaining after removing this
-     *		user, or <code>null</code> if none.
+     *    @return    The <code>List</code> of users remaining after removing this
+     *        user, or <code>null</code> if none.
      */
     public List<String> removeUser(String name) {
         if (users != null) {
@@ -99,10 +99,10 @@ public class Tag implements java.io.Serializable {
     }
 
     /**
-     *	<p> This implementation of equals only checks the tagName and the
-     *	    tagViewId for equality.  This means 2 tags with different user
-     *	    Lists are still considered equal.  The Display Name is also of no
-     *	    importance to this implementation of equality.</p>
+     *    <p> This implementation of equals only checks the tagName and the
+     *        tagViewId for equality.  This means 2 tags with different user
+     *        Lists are still considered equal.  The Display Name is also of no
+     *        importance to this implementation of equality.</p>
      */
     @Override
     public boolean equals(Object obj) {
@@ -124,7 +124,7 @@ public class Tag implements java.io.Serializable {
     }
 
     /**
-     *  <p>	String representation of this Tag.</p>
+     *  <p>    String representation of this Tag.</p>
      */
     @Override
     public String toString() {
@@ -132,22 +132,22 @@ public class Tag implements java.io.Serializable {
     }
 
     /**
-     *	<p> This provides access to the tag name.</p>
+     *    <p> This provides access to the tag name.</p>
      */
     public String getTagName() {
         return tagName;
     }
 
     /**
-     *	<p> This provides access to the TagViewId value.</p>
+     *    <p> This provides access to the TagViewId value.</p>
      */
     public String getTagViewId() {
         return tagViewId;
     }
 
     /**
-     *	<p> This returns a <code>String</code> that is meaningful to the user
-     *	    which represents the content of this <code>Tag</code> instance.</p>
+     *    <p> This returns a <code>String</code> that is meaningful to the user
+     *        which represents the content of this <code>Tag</code> instance.</p>
      */
     public String getDisplayName() {
         // FIXME: I have I18N concerns about this... perhaps it's acceptible to

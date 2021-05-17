@@ -26,12 +26,12 @@ public interface JDBCConnectionStats extends Stats {
     String getJdbcDataSource();
 
     /**
-     * Time spent waiting for a connection to be available. 
+     * Time spent waiting for a connection to be available.
      */
     TimeStatistic getWaitTime();
 
     /**
-     * Time spent using a connection. 
+     * Time spent using a connection.
      */
     TimeStatistic getUseTime();
 }

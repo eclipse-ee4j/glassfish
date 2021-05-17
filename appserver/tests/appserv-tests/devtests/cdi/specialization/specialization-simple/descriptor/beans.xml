@@ -29,5 +29,5 @@
    <alternatives>
    <stereotype>test.beans.artifacts.MockStereotype</stereotype>
    </alternatives>
-   
+
 </beans>

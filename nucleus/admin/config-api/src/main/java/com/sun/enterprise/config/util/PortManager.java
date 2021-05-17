@@ -31,7 +31,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 /**
  * Hiding place for the remarkably complex logic of assigning ports to instances GUARANTEE -- the only thing thrown from
  * here is TransactionFailure
- * 
+ *
  * @author Byron Nevins
  */
 public final class PortManager {

@@ -69,7 +69,7 @@ public interface AuditModule extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the classname property. Defines the java class which implements this audit module
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute

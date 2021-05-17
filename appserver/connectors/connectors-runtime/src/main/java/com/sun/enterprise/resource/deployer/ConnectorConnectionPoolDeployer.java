@@ -123,7 +123,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         }
 
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -189,13 +189,13 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
     public synchronized void redeployResource(Object resource)
             throws Exception {
         //Connector connection pool reconfiguration or
-        //change in security maps 
+        //change in security maps
         org.glassfish.connectors.config.ConnectorConnectionPool
                 domainCcp =
                 (org.glassfish.connectors.config.ConnectorConnectionPool) resource;
         List<SecurityMap> securityMaps = domainCcp.getSecurityMap();
 
-        //Since 8.1 PE/SE/EE, only if pool has already been deployed in this 
+        //Since 8.1 PE/SE/EE, only if pool has already been deployed in this
         //server-instance earlier, reconfig this pool
         PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(domainCcp);
         if (!runtime.isConnectorConnectionPoolDeployed(poolInfo)) {
@@ -325,7 +325,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         }
         ccp.setTransactionSupport(txSupportIntVal);
 
-        //Always for ccp	
+        //Always for ccp
         ccp.setNonComponent(false);
         ccp.setNonTransactional(false);
         ccp.setConnectionLeakTracingTimeout(domainCcp.getConnectionLeakTimeoutInSeconds());
@@ -335,7 +335,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         ccp.setAssociateWithThread(Boolean.valueOf(domainCcp.getAssociateWithThread()));
         ccp.setPooling(Boolean.valueOf(domainCcp.getPooling()));
         ccp.setPingDuringPoolCreation(Boolean.valueOf(domainCcp.getPing()));
-        
+
         boolean lazyConnectionEnlistment = Boolean.valueOf(domainCcp.getLazyConnectionEnlistment());
         boolean lazyConnectionAssociation = Boolean.valueOf(domainCcp.getLazyConnectionAssociation());
 
@@ -356,7 +356,7 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
             ccp.setLazyConnectionEnlist(lazyConnectionEnlistment);
         }
         boolean pooling = Boolean.valueOf(domainCcp.getPooling());
-        
+
         //TODO: should this be added to the beginning of this method?
         if(!pooling) {
             //Throw exception if assoc with thread is set to true.
@@ -367,29 +367,29 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
                         "cpou.pooling_disabled_assocwiththread_invalid_combination", domainCcp.getName());
                 throw new RuntimeException(i18nMsg);
             }
-            
+
             //Below are useful in pooled environment only.
             //Throw warning for connection validation/validate-atmost-once/
             //match-connections/max-connection-usage-count/idele-timeout
             if(Boolean.valueOf(domainCcp.getIsConnectionValidationRequired())) {
                 _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination",
-                        domainCcp.getName());                
+                        domainCcp.getName());
             }
             if(Integer.parseInt(domainCcp.getValidateAtmostOncePeriodInSeconds()) > 0) {
                 _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination",
-                        domainCcp.getName());                                
+                        domainCcp.getName());
             }
             if(Boolean.valueOf(domainCcp.getMatchConnections())) {
                 _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination",
-                        domainCcp.getName());                                                
+                        domainCcp.getName());
             }
             if(Integer.parseInt(domainCcp.getMaxConnectionUsageCount()) > 0) {
                 _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_max_conn_usage_invalid_combination",
-                        domainCcp.getName());                                                                
+                        domainCcp.getName());
             }
             if(Integer.parseInt(domainCcp.getIdleTimeoutInSeconds()) > 0) {
                 _logger.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_idle_timeout_invalid_combination",
-                        domainCcp.getName());                
+                        domainCcp.getName());
             }
         }
         ccp.setPooling(pooling);

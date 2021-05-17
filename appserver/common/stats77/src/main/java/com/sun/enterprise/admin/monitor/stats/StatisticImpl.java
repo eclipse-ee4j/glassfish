@@ -28,18 +28,18 @@ import com.sun.enterprise.util.i18n.StringManager;
  */
 
 public abstract class StatisticImpl implements Statistic,Serializable {
-    
+
     private String statisticName;
     private String statisticDesc;
     private String statisticUnit;
     private long startTime;
     private long sampleTime;
-    
-	/** DEFAULT_UNIT is an empty string */
-	public static final String	DEFAULT_UNIT;
+
+    /** DEFAULT_UNIT is an empty string */
+    public static final String    DEFAULT_UNIT;
     public static final StringManager localStrMgr;
-	/** DEFAULT_VALUE of any statistic is 0 */
-	public static final long	DEFAULT_VALUE	= java.math.BigInteger.ZERO.longValue();
+    /** DEFAULT_VALUE of any statistic is 0 */
+    public static final long    DEFAULT_VALUE    = java.math.BigInteger.ZERO.longValue();
 
     static {
         localStrMgr = StringManager.getManager(StatisticImpl.class);
@@ -47,7 +47,7 @@ public abstract class StatisticImpl implements Statistic,Serializable {
     }
 
     protected static final String NEWLINE = System.getProperty( "line.separator" );
-    /** 
+    /**
      * Constructor
      * @param name      The name of the statistic
      * @param unit      The unit of measurement for this statistic
@@ -55,44 +55,44 @@ public abstract class StatisticImpl implements Statistic,Serializable {
      * @param startTime Time in milliseconds at which the measurement was started
      * @param sampleTime Time at which the last measurement was done.
      **/
-    protected StatisticImpl(String name, String unit, String desc, 
+    protected StatisticImpl(String name, String unit, String desc,
                           long start_time, long sample_time) {
-        
+
         statisticName = name;
         statisticUnit = unit;
         statisticDesc = desc;
         startTime = start_time;
         sampleTime = sample_time;
     }
-    
+
     /**
      * returns the name of the statistic
      */
     public String getName() {
         return this.statisticName;
     }
-    
+
     /**
      * returns the description of the statistic
      */
     public String getDescription() {
         return this.statisticDesc;
     }
-    
+
     /**
      * returns the unit of measurement for the statistic
      */
     public String getUnit() {
         return this.statisticUnit;
     }
-    
+
     /**
      * returns the time in millis, at which the last measurement was taken
      */
     public long getLastSampleTime() {
         return this.sampleTime;
     }
-    
+
     /**
      * returns the time in millis, at which the first measurement was taken
      */
@@ -106,7 +106,7 @@ public abstract class StatisticImpl implements Statistic,Serializable {
     public void setDescription(final String desc) {
         this.statisticDesc = desc;
     }
-    
+
     public String toString() {
         return "Statistic " + getClass().getName() + NEWLINE +
             "Name: " + getName() + NEWLINE +

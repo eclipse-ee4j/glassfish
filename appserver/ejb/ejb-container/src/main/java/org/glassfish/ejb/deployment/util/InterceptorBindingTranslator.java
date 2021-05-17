@@ -35,7 +35,7 @@ public class InterceptorBindingTranslator {
     private List<InterceptorBindingDescriptor> interceptorBindings;
     private EjbBundleDescriptorImpl ejbBundle;
 
-    private List<String> defaultInterceptorChain = 
+    private List<String> defaultInterceptorChain =
         new LinkedList<String>();
 
     private List<String> classInterceptorChain =
@@ -45,10 +45,10 @@ public class InterceptorBindingTranslator {
     private List<String> totalClassLevelOrdering =
         new LinkedList<String>();
 
-    private Map<MethodDescriptor, LinkedList<String>> methodInterceptorsMap = 
+    private Map<MethodDescriptor, LinkedList<String>> methodInterceptorsMap =
         new HashMap<MethodDescriptor, LinkedList<String>>();
 
-    // true if there are 0 bindings.  
+    // true if there are 0 bindings.
     private boolean isEmpty;
 
     public InterceptorBindingTranslator(EjbBundleDescriptorImpl bundle) {
@@ -66,7 +66,7 @@ public class InterceptorBindingTranslator {
 
         }
 
-        
+
     }
 
     public TranslationResults apply(String ejbName) {
@@ -89,7 +89,7 @@ public class InterceptorBindingTranslator {
             if( binding.getBindingType() == BindingType.DEFAULT ) {
                 defaultInterceptorChain.addAll
                     (binding.getInterceptorClasses());
-            } 
+            }
 
         }
 
@@ -101,14 +101,14 @@ public class InterceptorBindingTranslator {
                 if( binding.getEjbName().equals(ejbName) ) {
                     processClassLevelBinding(binding);
                 }
-            } 
+            }
 
         }
 
         // Now do method-level bindings.
 
-        Map<MethodDescriptor, List<InterceptorBindingDescriptor>> 
-            methodBindings = new HashMap<MethodDescriptor, 
+        Map<MethodDescriptor, List<InterceptorBindingDescriptor>>
+            methodBindings = new HashMap<MethodDescriptor,
                                          List<InterceptorBindingDescriptor>>();
 
         // First build a map of all business methods for the current
@@ -117,14 +117,14 @@ public class InterceptorBindingTranslator {
         for(InterceptorBindingDescriptor binding : interceptorBindings) {
 
             if( (binding.getEjbName().equals(ejbName)) &&
-                (binding.getBindingType() == BindingType.METHOD) ) { 
+                (binding.getBindingType() == BindingType.METHOD) ) {
 
                 MethodDescriptor method = binding.getBusinessMethod();
 
                 List<InterceptorBindingDescriptor> methodBindingDescs =
                     methodBindings.get(method);
                 if( methodBindingDescs == null ) {
-                    methodBindingDescs = 
+                    methodBindingDescs =
                         new LinkedList<InterceptorBindingDescriptor>();
                 }
 
@@ -141,25 +141,25 @@ public class InterceptorBindingTranslator {
         }
 
         TranslationResults results = buildResults();
-        
+
         return results;
 
     }
 
-    private void processClassLevelBinding(InterceptorBindingDescriptor 
+    private void processClassLevelBinding(InterceptorBindingDescriptor
                                           binding) {
 
         if( binding.getExcludeDefaultInterceptors() ) {
             defaultInterceptorChain.clear();
-        } 
-            
+        }
+
         if( binding.getIsTotalOrdering() ) {
 
             hasTotalClassLevelOrdering = true;
             totalClassLevelOrdering.clear();
             totalClassLevelOrdering.addAll(binding.getInterceptorClasses());
-            
-            // totalClassLevelOrdering will take precedence, but keep 
+
+            // totalClassLevelOrdering will take precedence, but keep
             // classInterceptorChain updated to contain class-level, but not
             // default-level, interceptors.  These might be needed during
             // method-level exclude-class-interceptors processing.
@@ -179,7 +179,7 @@ public class InterceptorBindingTranslator {
     private void processMethod(MethodDescriptor businessMethod,
                                List<InterceptorBindingDescriptor> bindings) {
 
-        LinkedList<String> tempDefaultInterceptorChain = 
+        LinkedList<String> tempDefaultInterceptorChain =
             new LinkedList<String>();
 
         LinkedList<String> tempClassInterceptorChain =
@@ -190,7 +190,7 @@ public class InterceptorBindingTranslator {
 
         if( hasTotalClassLevelOrdering ) {
             tempClassInterceptorChain.addAll(totalClassLevelOrdering);
-        } else {                
+        } else {
             tempDefaultInterceptorChain.addAll(defaultInterceptorChain);
             tempClassInterceptorChain.addAll(classInterceptorChain);
         }
@@ -214,7 +214,7 @@ public class InterceptorBindingTranslator {
                     tempClassInterceptorChain.clear();
                 }
             }
-            
+
             if( nextBinding.getIsTotalOrdering() ) {
                 tempDefaultInterceptorChain.clear();
                 tempClassInterceptorChain.clear();
@@ -232,17 +232,17 @@ public class InterceptorBindingTranslator {
         methodInterceptors.addAll(tempMethodInterceptorChain);
 
         methodInterceptorsMap.put(businessMethod, methodInterceptors);
-        
+
     }
 
     private TranslationResults buildResults() {
 
-        TranslationResults results = new TranslationResults();        
+        TranslationResults results = new TranslationResults();
 
         if( hasTotalClassLevelOrdering ) {
 
             for(String next : totalClassLevelOrdering ) {
-                EjbInterceptor interceptor = 
+                EjbInterceptor interceptor =
                     ejbBundle.getInterceptorByClassName(next);
                 results.allInterceptorClasses.add(interceptor);
                 results.classInterceptorChain.add(interceptor);
@@ -251,7 +251,7 @@ public class InterceptorBindingTranslator {
         } else {
 
             for(String next : defaultInterceptorChain) {
-                EjbInterceptor interceptor = 
+                EjbInterceptor interceptor =
                     ejbBundle.getInterceptorByClassName(next);
 
                 results.allInterceptorClasses.add(interceptor);
@@ -259,7 +259,7 @@ public class InterceptorBindingTranslator {
             }
 
             for(String next : classInterceptorChain) {
-                EjbInterceptor interceptor = 
+                EjbInterceptor interceptor =
                     ejbBundle.getInterceptorByClassName(next);
 
                 results.allInterceptorClasses.add(interceptor);
@@ -301,7 +301,7 @@ public class InterceptorBindingTranslator {
                 if(ejbBundle.getInterceptorByClassName(interceptor) == null) {
                     throw new IllegalStateException
                         ("Interceptor binding contains an interceptor class " +
-                         " name = " + interceptor + 
+                         " name = " + interceptor +
                          " that is not defined as an interceptor");
                 }
             }
@@ -310,18 +310,18 @@ public class InterceptorBindingTranslator {
     }
 
     public static class TranslationResults {
-        
+
         public Set<EjbInterceptor> allInterceptorClasses;
 
         public List<EjbInterceptor> classInterceptorChain;
 
-        public Map<MethodDescriptor, List<EjbInterceptor>> 
+        public Map<MethodDescriptor, List<EjbInterceptor>>
             methodInterceptorsMap;
 
         public TranslationResults() {
             allInterceptorClasses = new HashSet<EjbInterceptor>();
             classInterceptorChain = new LinkedList<EjbInterceptor>();
-            methodInterceptorsMap = 
+            methodInterceptorsMap =
                 new HashMap<MethodDescriptor, List<EjbInterceptor>>();
         }
 

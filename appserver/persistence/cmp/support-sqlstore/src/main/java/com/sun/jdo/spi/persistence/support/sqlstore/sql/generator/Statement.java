@@ -267,7 +267,7 @@ public abstract class Statement extends Object implements Cloneable {
      * the constraint stack.
      *
      * @param stack
-     * 	The stack parameter holds the constraint stack to be decoded.
+     *     The stack parameter holds the constraint stack to be decoded.
      *
      *  RESOLVE:  We don't support constraints on multiple statements yet.
      *  We would need to sort constraints out by statement and do something
@@ -900,13 +900,13 @@ public abstract class Statement extends Object implements Cloneable {
     //only operations end with ")" or nothing can be here, cf. getWhereText
     protected String infixOperator(int operation, int position) {
         //
-        //	InfixOperator
-        //		The InfixOperator method returns the SQL text for the operator specified
-        //		by the operation parameter.
+        //    InfixOperator
+        //        The InfixOperator method returns the SQL text for the operator specified
+        //        by the operation parameter.
         //
-        //	operation
-        //		The operation parameter specifies which operation for which to return
-        //		SQL text.  Legal values are defined by the ConstraintOperation class.
+        //    operation
+        //        The operation parameter specifies which operation for which to return
+        //        SQL text.  Legal values are defined by the ConstraintOperation class.
         //
         StringBuffer result = new StringBuffer();
 
@@ -1079,13 +1079,13 @@ public abstract class Statement extends Object implements Cloneable {
 
     protected String postfixOperator(int operation) {
         //
-        //	PostfixOperator
-        //		The PostfixOperator method returns the SQL text for the operator specified
-        //		by the operation parameter.
+        //    PostfixOperator
+        //        The PostfixOperator method returns the SQL text for the operator specified
+        //        by the operation parameter.
         //
-        //	operation
-        //		The operation parameter specifies which operation for which to return
-        //		SQL text.  Legal values are defined by the ConstraintOperation class.
+        //    operation
+        //        The operation parameter specifies which operation for which to return
+        //        SQL text.  Legal values are defined by the ConstraintOperation class.
         //
         StringBuffer result = new StringBuffer();
 

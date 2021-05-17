@@ -25,7 +25,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 
 /**
  * Tests Application Authentication
- * 
+ *
  * @author shalini
  */
 public class ApplicationAuthTest implements SimpleTest {
@@ -68,7 +68,7 @@ public class ApplicationAuthTest implements SimpleTest {
         } catch (Exception e) {
             resultsMap.put("app-auth-wrong-credentials", false);
         }
-        
+
         try {
             if (testTwiceWithCredentials(ds, out)) {
                 resultsMap.put("app-auth-twice-with-credentials", true);
@@ -90,12 +90,12 @@ public class ApplicationAuthTest implements SimpleTest {
         }
 
         HtmlUtil.printHR(out);
-        return resultsMap;                
+        return resultsMap;
     }
 
     /**
-     * Tests application authentication by ensuring that connection with 
-     * the same username is returned when got from 2 different credentials - 
+     * Tests application authentication by ensuring that connection with
+     * the same username is returned when got from 2 different credentials -
      * first one being the right one.
      * @param ds
      * @param out
@@ -122,7 +122,7 @@ public class ApplicationAuthTest implements SimpleTest {
                 HtmlUtil.printException(ex, out);
                 return result;
             }
-            
+
             try {
                 out.println("<br> Getting the NonTx Connection for \"APP\" ...");
                 conn2 = ((com.sun.appserv.jdbc.DataSource)ds).getNonTxConnection(
@@ -131,7 +131,7 @@ public class ApplicationAuthTest implements SimpleTest {
                 if (conn2.getMetaData().getUserName().equals("APP")) {
                     out.println("<br> UserName matches the right credentials");
                     passed2 = true;
-                }                
+                }
             } catch (Exception ex2) {
                 HtmlUtil.printException(ex2, out);
             }
@@ -150,11 +150,11 @@ public class ApplicationAuthTest implements SimpleTest {
                 } catch (Exception e1) {
                     HtmlUtil.printException(e1, out);
                 }
-            }            
+            }
         }
         result = passed1 && passed2;
         out.println("<br> Test result : " + result);
-        return result;        
+        return result;
     }
 
     /**
@@ -234,7 +234,7 @@ public class ApplicationAuthTest implements SimpleTest {
     }
 
     /**
-     * Tests application authentication when right username/password are 
+     * Tests application authentication when right username/password are
      * specified.
      * @param ds
      * @param out

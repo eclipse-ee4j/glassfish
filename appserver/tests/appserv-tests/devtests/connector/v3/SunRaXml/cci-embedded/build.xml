@@ -93,7 +93,7 @@
     </target>
 
     <!--
-	Custom target for compilation with local libraries for connector
+    Custom target for compilation with local libraries for connector
     -->
     <target name="compile-cci" depends="init-common">
         <mkdir dir="${build.classes.dir}"/>

@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-ejb-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console EJB Container Plugin</name>
     <description>EJB container plugin bundle for GlassFish Admin Console</description>
 

@@ -30,7 +30,7 @@ public class Client {
 
     private static final String TEST_NAME = "bean-in-lib-dir-of-ear-used-by-ejb";
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
                             new SimpleReporterAdapter("appserv-tests");
 
     private static String appName;

@@ -31,12 +31,12 @@ import org.jvnet.hk2.annotations.Contract;
  * It's safer to require such uses to specify an internal system admin rather than
  * to assume that if no subject is specified to authorization then it should
  * be treated as a system admin.
- * 
+ *
  * @author tjquinn
  */
 @Contract
 public interface InternalSystemAdministrator {
-    
+
     public Subject getSubject();
-    
+
 }

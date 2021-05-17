@@ -19,7 +19,7 @@ package com.sun.connector.cciblackbox;
 import java.util.Hashtable;
 
 /** Mapping between JDBC Type codes and the ResultSet.getXXX methods
- * This class is used by the CciInteractionSpec.exec() to determine 
+ * This class is used by the CciInteractionSpec.exec() to determine
  * what getXXX method to use for a particular type of parameter.
  * @author Sheetal Vartak
  */

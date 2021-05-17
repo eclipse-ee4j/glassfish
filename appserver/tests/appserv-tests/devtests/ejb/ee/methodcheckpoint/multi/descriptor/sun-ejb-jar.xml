@@ -23,14 +23,14 @@
      <ejb>
         <ejb-name>SFSBEJB</ejb-name>
         <jndi-name>ejb/ejb_ee_methodcheckpoint_multi_SFSB</jndi-name>
-	<checkpoint-at-end-of-method>
-	    <method>
-		<method-name>nonTxCheckpointedMethod</method-name>
-	    </method>
-	    <method>
-		<method-name>txCheckpointedMethod</method-name>
-	    </method>
-	</checkpoint-at-end-of-method>
+    <checkpoint-at-end-of-method>
+        <method>
+        <method-name>nonTxCheckpointedMethod</method-name>
+        </method>
+        <method>
+        <method-name>txCheckpointedMethod</method-name>
+        </method>
+    </checkpoint-at-end-of-method>
      </ejb>
    </enterprise-beans>
 </sun-ejb-jar>

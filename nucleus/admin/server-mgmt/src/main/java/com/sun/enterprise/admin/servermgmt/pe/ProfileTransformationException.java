@@ -23,7 +23,7 @@ public class ProfileTransformationException extends Exception {
 
     /**
      * Constructs an instance of <code>ProfleTransformationException</code> with the specified detail message.
-     * 
+     *
      * @param msg the detail message.
      */
     public ProfileTransformationException(String msg) {

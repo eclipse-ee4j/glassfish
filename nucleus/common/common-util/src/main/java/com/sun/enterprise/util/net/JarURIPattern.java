@@ -39,7 +39,7 @@ public class JarURIPattern {
      * @param pattern
      */
     public static List<String> getJarEntries(URI uri, Pattern pattern) {
-        List<String> results = new ArrayList<String>();   
+        List<String> results = new ArrayList<String>();
 
         File file = null;
         try {
@@ -49,7 +49,7 @@ public class JarURIPattern {
         }
         if (file == null || file.isDirectory()) {
             return results;
-        } 
+        }
 
         String fileName = file.getName();
 
@@ -68,8 +68,8 @@ public class JarURIPattern {
                 }
             } catch(Exception ex) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, 
-                            CULoggerInfo.getString(CULoggerInfo.exceptionJarOpen, fileName), 
+                    logger.log(Level.WARNING,
+                            CULoggerInfo.getString(CULoggerInfo.exceptionJarOpen, fileName),
                             ex);
                 }
                 throw new RuntimeException(ex);
@@ -86,5 +86,5 @@ public class JarURIPattern {
 
         return results;
     }
-    
+
 }

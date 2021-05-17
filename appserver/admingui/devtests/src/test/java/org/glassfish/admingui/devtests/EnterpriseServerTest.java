@@ -54,7 +54,7 @@ public class EnterpriseServerTest extends BaseSeleniumTestClass {
 
         assertEquals("5", getFieldValue("propertyForm:propertySheet:propertSectionTextField:reloadIntervalProp:ReloadInterval"));
         assertEquals("30", getFieldValue("propertyForm:propertySheet:propertSectionTextField:AdminTimeoutProp:AdminTimeout"));
-        
+
         assertTableRowCount("propertyForm:basicTable", count);
     }
 
@@ -105,7 +105,7 @@ public class EnterpriseServerTest extends BaseSeleniumTestClass {
 
         JdbcTest jdbcTest = new JdbcTest();
         jdbcTest.createJDBCResource(jndiName, description, "server", MonitoringTest.TARGET_SERVER_TYPE);
-        
+
         gotoServerResourcesPage();
         waitForPageLoad(jndiName, TIMEOUT);
         assertTrue(isTextPresent(jndiName));

@@ -46,5 +46,5 @@
         <servlet-name>mytest</servlet-name>
         <url-pattern>/myurl</url-pattern>
     </servlet-mapping>
-     
+
 </web-app>

@@ -20,8 +20,8 @@ import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 
-/** 
- * 
+/**
+ *
  *
  * @author Kenneth Saks
  */
@@ -34,7 +34,7 @@ public interface MessageDestinationReferencer {
      */
     public boolean isLinkedToMessageDestination();
 
-    /** 
+    /**
      * Gets the link name of the reference. Points to the associated
      * message destination within the J2EE application. Can be NULL
      * if link is not set.
@@ -42,30 +42,30 @@ public interface MessageDestinationReferencer {
      */
     public String getMessageDestinationLinkName();
 
-    /** 
+    /**
      * Sets the link name of the reference. Points to the associated
      * message destination within the J2EE application.  Can be NULL
      * if link is not set.
      * @param the link name.
      */
     public void setMessageDestinationLinkName(String linkName);
-    
-    /** 
+
+    /**
      * Sets the name of the message destination to which I refer.
      * @param resolve if true,  *try* to resolve link to the target message
-     * destination.  
+     * destination.
      *
-     * @return MessageDestination to which link was resolved, or null if 
+     * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
     public MessageDestinationDescriptor setMessageDestinationLinkName
         (String linkName, boolean resolve);
 
-    /** 
+    /**
      * Try to resolve the current link name value to a MessageDestination
      * object.
      *
-     * @return MessageDestination to which link was resolved, or null if 
+     * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
     public MessageDestinationDescriptor resolveLinkName();
@@ -77,31 +77,31 @@ public interface MessageDestinationReferencer {
     public MessageDestinationDescriptor getMessageDestination();
 
     /**
-     * @param destination set the message destination object to which this 
+     * @param destination set the message destination object to which this
      * message destination ref is linked.  Can be NULL.
-     * 
+     *
      */
     public void setMessageDestination(MessageDestinationDescriptor destination);
 
     /**
      * True if the owner is a message destination reference.
-     */ 
+     */
     public boolean ownedByMessageDestinationRef();
 
     /**
      * Get the descriptor for the message destination reference owner.
-     */ 
+     */
     public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner
         ();
 
     /**
      * True if the owner is a message-driven bean.
-     */ 
+     */
     public boolean ownedByMessageBean();
 
     /**
      * Get the descriptor for the message-driven bean owner.
-     */ 
+     */
     public EjbMessageBeanDescriptor getMessageBeanOwner();
 
 }

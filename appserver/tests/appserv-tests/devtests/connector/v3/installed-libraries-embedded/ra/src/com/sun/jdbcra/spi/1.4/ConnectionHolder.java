@@ -24,24 +24,24 @@ import java.util.Properties;
 import java.util.concurrent.Executor;
 
 /**
- * Holds the java.sql.Connection object, which is to be 
+ * Holds the java.sql.Connection object, which is to be
  * passed to the application program.
  *
- * @version	1.0, 02/07/23
- * @author	Binod P.G
+ * @version    1.0, 02/07/23
+ * @author    Binod P.G
  */
-public class ConnectionHolder implements Connection{ 
+public class ConnectionHolder implements Connection{
 
     private Connection con;
-    
+
     private ManagedConnection mc;
-    
-    private boolean wrappedAlready = false;    
-    
+
+    private boolean wrappedAlready = false;
+
     private boolean isClosed = false;
-    
+
     private boolean valid = true;
-    
+
     private boolean active = false;
     /**
      * The active flag is false when the connection handle is
@@ -53,219 +53,219 @@ public class ConnectionHolder implements Connection{
      * function, the above method invocation succeeds; otherwise
      * an exception is thrown.
      */
-    
+
     /**
      * Constructs a Connection holder.
-     * 
-     * @param	con	<code>java.sql.Connection</code> object.
+     *
+     * @param    con    <code>java.sql.Connection</code> object.
      */
     public ConnectionHolder(Connection con, ManagedConnection mc) {
         this.con = con;
         this.mc  = mc;
     }
-        
+
     /**
      * Returns the actual connection in this holder object.
-     * 
-     * @return	Connection object.
+     *
+     * @return    Connection object.
      */
     Connection getConnection() {
-    	return con;
+        return con;
     }
-    
+
     /**
      * Sets the flag to indicate that, the connection is wrapped already or not.
      *
-     * @param	wrapFlag	
+     * @param    wrapFlag
      */
     void wrapped(boolean wrapFlag){
         this.wrappedAlready = wrapFlag;
     }
-    
+
     /**
      * Returns whether it is wrapped already or not.
      *
-     * @return	wrapped flag.
+     * @return    wrapped flag.
      */
     boolean isWrapped(){
         return wrappedAlready;
     }
-    
+
     /**
      * Returns the <code>ManagedConnection</code> instance responsible
      * for this connection.
      *
-     * @return	<code>ManagedConnection</code> instance.
+     * @return    <code>ManagedConnection</code> instance.
      */
     ManagedConnection getManagedConnection() {
         return mc;
     }
-    
+
     /**
      * Replace the actual <code>java.sql.Connection</code> object with the one
-     * supplied. Also replace <code>ManagedConnection</code> link.     
+     * supplied. Also replace <code>ManagedConnection</code> link.
      *
-     * @param	con <code>Connection</code> object.
-     * @param	mc  <code> ManagedConnection</code> object.
+     * @param    con <code>Connection</code> object.
+     * @param    mc  <code> ManagedConnection</code> object.
      */
     void associateConnection(Connection con, ManagedConnection mc) {
-    	this.mc = mc;
-    	this.con = con;
+        this.mc = mc;
+        this.con = con;
     }
-    
+
     /**
      * Clears all warnings reported for the underlying connection  object.
      *
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
-    public void clearWarnings() throws SQLException{    
-	checkValidity();
+    public void clearWarnings() throws SQLException{
+    checkValidity();
         con.clearWarnings();
     }
-    
+
     /**
-     * Closes the logical connection.    
+     * Closes the logical connection.
      *
-     * @throws SQLException In case of a database error. 
+     * @throws SQLException In case of a database error.
      */
     public void close() throws SQLException{
         isClosed = true;
-        mc.connectionClosed(null, this);        
+        mc.connectionClosed(null, this);
     }
-    
+
     /**
      * Invalidates this object.
      */
     public void invalidate() {
-    	valid = false;
+        valid = false;
     }
-    
+
     /**
      * Closes the physical connection involved in this.
      *
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
-    void actualClose() throws SQLException{    
+    void actualClose() throws SQLException{
         con.close();
     }
-    
+
     /**
      * Commit the changes in the underlying Connection.
      *
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
     public void commit() throws SQLException {
-	checkValidity();    
-    	con.commit();
+    checkValidity();
+        con.commit();
     }
-    
+
     /**
      * Creates a statement from the underlying Connection
      *
-     * @return	<code>Statement</code> object.
-     * @throws SQLException In case of a database error.      
+     * @return    <code>Statement</code> object.
+     * @throws SQLException In case of a database error.
      */
     public Statement createStatement() throws SQLException {
-	checkValidity();    
+    checkValidity();
         return con.createStatement();
     }
-    
+
     /**
      * Creates a statement from the underlying Connection.
      *
-     * @param	resultSetType	Type of the ResultSet
-     * @param	resultSetConcurrency	ResultSet Concurrency.
-     * @return	<code>Statement</code> object.     
-     * @throws SQLException In case of a database error.      
+     * @param    resultSetType    Type of the ResultSet
+     * @param    resultSetConcurrency    ResultSet Concurrency.
+     * @return    <code>Statement</code> object.
+     * @throws SQLException In case of a database error.
      */
     public Statement createStatement(int resultSetType, int resultSetConcurrency) throws SQLException {
-	checkValidity();    
+    checkValidity();
         return con.createStatement(resultSetType, resultSetConcurrency);
     }
-    
+
     /**
      * Creates a statement from the underlying Connection.
      *
-     * @param	resultSetType	Type of the ResultSet
-     * @param	resultSetConcurrency	ResultSet Concurrency.
-     * @param	resultSetHoldability	ResultSet Holdability.     
-     * @return	<code>Statement</code> object. 
-     * @throws SQLException In case of a database error.          
+     * @param    resultSetType    Type of the ResultSet
+     * @param    resultSetConcurrency    ResultSet Concurrency.
+     * @param    resultSetHoldability    ResultSet Holdability.
+     * @return    <code>Statement</code> object.
+     * @throws SQLException In case of a database error.
      */
-    public Statement createStatement(int resultSetType, int resultSetConcurrency, 
-    				     int resultSetHoldabilty) throws SQLException {
-	checkValidity();    				     
+    public Statement createStatement(int resultSetType, int resultSetConcurrency,
+                         int resultSetHoldabilty) throws SQLException {
+    checkValidity();
         return con.createStatement(resultSetType, resultSetConcurrency,
-        			   resultSetHoldabilty);
+                       resultSetHoldabilty);
     }
- 
+
     /**
      * Retrieves the current auto-commit mode for the underlying <code> Connection</code>.
      *
      * @return The current state of connection's auto-commit mode.
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
     public boolean getAutoCommit() throws SQLException {
-	checkValidity();    
-    	return con.getAutoCommit();
-    }   
- 
+    checkValidity();
+        return con.getAutoCommit();
+    }
+
     /**
      * Retrieves the underlying <code>Connection</code> object's catalog name.
      *
-     * @return	Catalog Name.
-     * @throws SQLException In case of a database error.      
+     * @return    Catalog Name.
+     * @throws SQLException In case of a database error.
      */
     public String getCatalog() throws SQLException {
-	checkValidity();    
+    checkValidity();
         return con.getCatalog();
     }
-    
+
     /**
      * Retrieves the current holdability of <code>ResultSet</code> objects created
      * using this connection object.
      *
-     * @return	holdability value.
-     * @throws SQLException In case of a database error.      
+     * @return    holdability value.
+     * @throws SQLException In case of a database error.
      */
     public int getHoldability() throws SQLException {
-	checkValidity();    
-    	return	con.getHoldability();
+    checkValidity();
+        return    con.getHoldability();
     }
-    
+
     /**
      * Retrieves the <code>DatabaseMetaData</code>object from the underlying
      * <code> Connection </code> object.
      *
      * @return <code>DatabaseMetaData</code> object.
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
     public DatabaseMetaData getMetaData() throws SQLException {
-	checkValidity();    
-    	return con.getMetaData();
+    checkValidity();
+        return con.getMetaData();
     }
- 
+
     /**
      * Retrieves this <code>Connection</code> object's current transaction isolation level.
      *
      * @return Transaction level
-     * @throws SQLException In case of a database error.      
-     */   
+     * @throws SQLException In case of a database error.
+     */
     public int getTransactionIsolation() throws SQLException {
-	checkValidity();    
+    checkValidity();
         return con.getTransactionIsolation();
     }
-    
+
     /**
-     * Retrieves the <code>Map</code> object associated with 
+     * Retrieves the <code>Map</code> object associated with
      * <code> Connection</code> Object.
      *
-     * @return	TypeMap set in this object.
-     * @throws SQLException In case of a database error.      
+     * @return    TypeMap set in this object.
+     * @throws SQLException In case of a database error.
      */
     public Map getTypeMap() throws SQLException {
-	checkValidity();    
-    	return con.getTypeMap();
+    checkValidity();
+        return con.getTypeMap();
     }
 
 /*
@@ -279,184 +279,184 @@ public class ConnectionHolder implements Connection{
      * <code>Connection</code> object.
      *
      * @return First <code> SQLWarning</code> Object or null.
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
     public SQLWarning getWarnings() throws SQLException {
-	checkValidity();    
-    	return con.getWarnings();
+    checkValidity();
+        return con.getWarnings();
     }
-    
+
     /**
      * Retrieves whether underlying <code>Connection</code> object is closed.
      *
-     * @return	true if <code>Connection</code> object is closed, false
-     * 		if it is closed.
-     * @throws SQLException In case of a database error.      
+     * @return    true if <code>Connection</code> object is closed, false
+     *         if it is closed.
+     * @throws SQLException In case of a database error.
      */
     public boolean isClosed() throws SQLException {
-    	return isClosed;
+        return isClosed;
     }
-    
+
     /**
      * Retrieves whether this <code>Connection</code> object is read-only.
      *
-     * @return	true if <code> Connection </code> is read-only, false other-wise
-     * @throws SQLException In case of a database error.      
+     * @return    true if <code> Connection </code> is read-only, false other-wise
+     * @throws SQLException In case of a database error.
      */
     public boolean isReadOnly() throws SQLException {
-	checkValidity();    
-    	return con.isReadOnly();
+    checkValidity();
+        return con.isReadOnly();
     }
-    
+
     /**
      * Converts the given SQL statement into the system's native SQL grammer.
      *
-     * @param	sql	SQL statement , to be converted.
-     * @return	Converted SQL string.
-     * @throws SQLException In case of a database error.      
+     * @param    sql    SQL statement , to be converted.
+     * @return    Converted SQL string.
+     * @throws SQLException In case of a database error.
      */
     public String nativeSQL(String sql) throws SQLException {
-	checkValidity();    
-    	return con.nativeSQL(sql);
+    checkValidity();
+        return con.nativeSQL(sql);
     }
-    
+
     /**
      * Creates a <code> CallableStatement </code> object for calling database
      * stored procedures.
      *
-     * @param	sql	SQL Statement
+     * @param    sql    SQL Statement
      * @return <code> CallableStatement</code> object.
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
     public CallableStatement prepareCall(String sql) throws SQLException {
-	checkValidity();    
-    	return con.prepareCall(sql);
-    }
-    
-    /**
-     * Creates a <code> CallableStatement </code> object for calling database
-     * stored procedures.
-     *
-     * @param	sql	SQL Statement
-     * @param	resultSetType	Type of the ResultSet
-     * @param	resultSetConcurrency	ResultSet Concurrency.
-     * @return <code> CallableStatement</code> object.
-     * @throws SQLException In case of a database error.      
-     */
-    public CallableStatement prepareCall(String sql,int resultSetType, 
-    					int resultSetConcurrency) throws SQLException{
-	checkValidity();    					
-    	return con.prepareCall(sql, resultSetType, resultSetConcurrency);
-    }
-    
-    /**
-     * Creates a <code> CallableStatement </code> object for calling database
-     * stored procedures.
-     *
-     * @param	sql	SQL Statement
-     * @param	resultSetType	Type of the ResultSet
-     * @param	resultSetConcurrency	ResultSet Concurrency.
-     * @param	resultSetHoldability	ResultSet Holdability.          
-     * @return <code> CallableStatement</code> object.
-     * @throws SQLException In case of a database error.      
-     */
-    public CallableStatement prepareCall(String sql, int resultSetType, 
-    					 int resultSetConcurrency, 
-    					 int resultSetHoldabilty) throws SQLException{
-	checkValidity();    					 
-    	return con.prepareCall(sql, resultSetType, resultSetConcurrency,
-    			       resultSetHoldabilty);
+    checkValidity();
+        return con.prepareCall(sql);
     }
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending 
+     * Creates a <code> CallableStatement </code> object for calling database
+     * stored procedures.
+     *
+     * @param    sql    SQL Statement
+     * @param    resultSetType    Type of the ResultSet
+     * @param    resultSetConcurrency    ResultSet Concurrency.
+     * @return <code> CallableStatement</code> object.
+     * @throws SQLException In case of a database error.
+     */
+    public CallableStatement prepareCall(String sql,int resultSetType,
+                        int resultSetConcurrency) throws SQLException{
+    checkValidity();
+        return con.prepareCall(sql, resultSetType, resultSetConcurrency);
+    }
+
+    /**
+     * Creates a <code> CallableStatement </code> object for calling database
+     * stored procedures.
+     *
+     * @param    sql    SQL Statement
+     * @param    resultSetType    Type of the ResultSet
+     * @param    resultSetConcurrency    ResultSet Concurrency.
+     * @param    resultSetHoldability    ResultSet Holdability.
+     * @return <code> CallableStatement</code> object.
+     * @throws SQLException In case of a database error.
+     */
+    public CallableStatement prepareCall(String sql, int resultSetType,
+                         int resultSetConcurrency,
+                         int resultSetHoldabilty) throws SQLException{
+    checkValidity();
+        return con.prepareCall(sql, resultSetType, resultSetConcurrency,
+                       resultSetHoldabilty);
+    }
+
+    /**
+     * Creates a <code> PreparedStatement </code> object for sending
      * paramterized SQL statements to database
      *
-     * @param	sql	SQL Statement
+     * @param    sql    SQL Statement
      * @return <code> PreparedStatement</code> object.
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
      */
     public PreparedStatement prepareStatement(String sql) throws SQLException {
-	checkValidity();    
-    	return con.prepareStatement(sql);
+    checkValidity();
+        return con.prepareStatement(sql);
     }
-    
-    /**
-     * Creates a <code> PreparedStatement </code> object for sending 
-     * paramterized SQL statements to database
-     *
-     * @param	sql	SQL Statement
-     * @param	autoGeneratedKeys a flag indicating AutoGeneratedKeys need to be returned.
-     * @return <code> PreparedStatement</code> object.
-     * @throws SQLException In case of a database error.      
-     */
-    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
-	checkValidity();    
-    	return con.prepareStatement(sql,autoGeneratedKeys);
-    }    
-      
-    /**
-     * Creates a <code> PreparedStatement </code> object for sending 
-     * paramterized SQL statements to database
-     *
-     * @param	sql	SQL Statement
-     * @param	columnIndexes an array of column indexes indicating the columns that should be
-     *		returned from the inserted row or rows.
-     * @return <code> PreparedStatement</code> object.
-     * @throws SQLException In case of a database error.      
-     */
-    public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
-	checkValidity();    
-    	return con.prepareStatement(sql,columnIndexes);
-    }          
- 
-    /**
-     * Creates a <code> PreparedStatement </code> object for sending 
-     * paramterized SQL statements to database
-     *
-     * @param	sql	SQL Statement
-     * @param	resultSetType	Type of the ResultSet
-     * @param	resultSetConcurrency	ResultSet Concurrency.
-     * @return <code> PreparedStatement</code> object.
-     * @throws SQLException In case of a database error.      
-     */
-    public PreparedStatement prepareStatement(String sql,int resultSetType, 
-    					int resultSetConcurrency) throws SQLException{
-	checkValidity();    					
-    	return con.prepareStatement(sql, resultSetType, resultSetConcurrency);
-    }
-    
-    /**
-     * Creates a <code> PreparedStatement </code> object for sending 
-     * paramterized SQL statements to database
-     *
-     * @param	sql	SQL Statement
-     * @param	resultSetType	Type of the ResultSet
-     * @param	resultSetConcurrency	ResultSet Concurrency.
-     * @param	resultSetHoldability	ResultSet Holdability.          
-     * @return <code> PreparedStatement</code> object.
-     * @throws SQLException In case of a database error.      
-     */
-    public PreparedStatement prepareStatement(String sql, int resultSetType, 
-    					 int resultSetConcurrency, 
-    					 int resultSetHoldabilty) throws SQLException {
-	checkValidity();    					 
-    	return con.prepareStatement(sql, resultSetType, resultSetConcurrency,
-    				    resultSetHoldabilty);
-    }           
 
     /**
-     * Creates a <code> PreparedStatement </code> object for sending 
+     * Creates a <code> PreparedStatement </code> object for sending
      * paramterized SQL statements to database
      *
-     * @param	sql	SQL Statement
-     * @param	columnNames Name of bound columns.
+     * @param    sql    SQL Statement
+     * @param    autoGeneratedKeys a flag indicating AutoGeneratedKeys need to be returned.
      * @return <code> PreparedStatement</code> object.
-     * @throws SQLException In case of a database error.      
+     * @throws SQLException In case of a database error.
+     */
+    public PreparedStatement prepareStatement(String sql, int autoGeneratedKeys) throws SQLException {
+    checkValidity();
+        return con.prepareStatement(sql,autoGeneratedKeys);
+    }
+
+    /**
+     * Creates a <code> PreparedStatement </code> object for sending
+     * paramterized SQL statements to database
+     *
+     * @param    sql    SQL Statement
+     * @param    columnIndexes an array of column indexes indicating the columns that should be
+     *        returned from the inserted row or rows.
+     * @return <code> PreparedStatement</code> object.
+     * @throws SQLException In case of a database error.
+     */
+    public PreparedStatement prepareStatement(String sql, int[] columnIndexes) throws SQLException {
+    checkValidity();
+        return con.prepareStatement(sql,columnIndexes);
+    }
+
+    /**
+     * Creates a <code> PreparedStatement </code> object for sending
+     * paramterized SQL statements to database
+     *
+     * @param    sql    SQL Statement
+     * @param    resultSetType    Type of the ResultSet
+     * @param    resultSetConcurrency    ResultSet Concurrency.
+     * @return <code> PreparedStatement</code> object.
+     * @throws SQLException In case of a database error.
+     */
+    public PreparedStatement prepareStatement(String sql,int resultSetType,
+                        int resultSetConcurrency) throws SQLException{
+    checkValidity();
+        return con.prepareStatement(sql, resultSetType, resultSetConcurrency);
+    }
+
+    /**
+     * Creates a <code> PreparedStatement </code> object for sending
+     * paramterized SQL statements to database
+     *
+     * @param    sql    SQL Statement
+     * @param    resultSetType    Type of the ResultSet
+     * @param    resultSetConcurrency    ResultSet Concurrency.
+     * @param    resultSetHoldability    ResultSet Holdability.
+     * @return <code> PreparedStatement</code> object.
+     * @throws SQLException In case of a database error.
+     */
+    public PreparedStatement prepareStatement(String sql, int resultSetType,
+                         int resultSetConcurrency,
+                         int resultSetHoldabilty) throws SQLException {
+    checkValidity();
+        return con.prepareStatement(sql, resultSetType, resultSetConcurrency,
+                        resultSetHoldabilty);
+    }
+
+    /**
+     * Creates a <code> PreparedStatement </code> object for sending
+     * paramterized SQL statements to database
+     *
+     * @param    sql    SQL Statement
+     * @param    columnNames Name of bound columns.
+     * @return <code> PreparedStatement</code> object.
+     * @throws SQLException In case of a database error.
      */
     public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
-	checkValidity();    
-    	return con.prepareStatement(sql,columnNames);
+    checkValidity();
+        return con.prepareStatement(sql,columnNames);
     }
 
     public Clob createClob() throws SQLException {
@@ -506,162 +506,162 @@ public class ConnectionHolder implements Connection{
     /**
      * Removes the given <code>Savepoint</code> object from the current transaction.
      *
-     * @param	savepoint	<code>Savepoint</code> object
-     * @throws SQLException In case of a database error.      
+     * @param    savepoint    <code>Savepoint</code> object
+     * @throws SQLException In case of a database error.
      */
     public void releaseSavepoint(Savepoint savepoint) throws SQLException {
-	checkValidity();    
-    	con.releaseSavepoint(savepoint);
-    } 
-    
+    checkValidity();
+        con.releaseSavepoint(savepoint);
+    }
+
     /**
      * Rolls back the changes made in the current transaction.
      *
-     * @throws SQLException In case of a database error.      
-     */        
+     * @throws SQLException In case of a database error.
+     */
     public void rollback() throws SQLException {
-	checkValidity();    
-    	con.rollback();
+    checkValidity();
+        con.rollback();
     }
-    
+
     /**
      * Rolls back the changes made after the savepoint.
      *
-     * @throws SQLException In case of a database error.      
-     */        
+     * @throws SQLException In case of a database error.
+     */
     public void rollback(Savepoint savepoint) throws SQLException {
-	checkValidity();    
-    	con.rollback(savepoint);
+    checkValidity();
+        con.rollback(savepoint);
     }
-        
+
     /**
      * Sets the auto-commmit mode of the <code>Connection</code> object.
      *
-     * @param	autoCommit boolean value indicating the auto-commit mode.     
-     * @throws SQLException In case of a database error.      
+     * @param    autoCommit boolean value indicating the auto-commit mode.
+     * @throws SQLException In case of a database error.
      */
     public void setAutoCommit(boolean autoCommit) throws SQLException {
-	checkValidity();    
-    	con.setAutoCommit(autoCommit);
+    checkValidity();
+        con.setAutoCommit(autoCommit);
     }
-    
+
     /**
      * Sets the catalog name to the <code>Connection</code> object
      *
-     * @param	catalog	Catalog name.
-     * @throws SQLException In case of a database error.      
+     * @param    catalog    Catalog name.
+     * @throws SQLException In case of a database error.
      */
     public void setCatalog(String catalog) throws SQLException {
-	checkValidity();    
-    	con.setCatalog(catalog);
+    checkValidity();
+        con.setCatalog(catalog);
     }
-    
+
     /**
-     * Sets the holdability of <code>ResultSet</code> objects created 
+     * Sets the holdability of <code>ResultSet</code> objects created
      * using this <code>Connection</code> object.
      *
-     * @param	holdability	A <code>ResultSet</code> holdability constant
-     * @throws SQLException In case of a database error.      
+     * @param    holdability    A <code>ResultSet</code> holdability constant
+     * @throws SQLException In case of a database error.
      */
     public void setHoldability(int holdability) throws SQLException {
-	checkValidity();    
-     	con.setHoldability(holdability);
+    checkValidity();
+         con.setHoldability(holdability);
     }
-    
+
     /**
-     * Puts the connection in read-only mode as a hint to the driver to 
+     * Puts the connection in read-only mode as a hint to the driver to
      * perform database optimizations.
      *
-     * @param	readOnly  true enables read-only mode, false disables it.
-     * @throws SQLException In case of a database error.      
+     * @param    readOnly  true enables read-only mode, false disables it.
+     * @throws SQLException In case of a database error.
      */
     public void setReadOnly(boolean readOnly) throws SQLException {
-	checkValidity();    
-    	con.setReadOnly(readOnly);
+    checkValidity();
+        con.setReadOnly(readOnly);
     }
-    
+
     /**
      * Creates and unnamed savepoint and returns an object corresponding to that.
      *
-     * @return	<code>Savepoint</code> object.
+     * @return    <code>Savepoint</code> object.
      * @throws SQLException In case of a database error.
      */
     public Savepoint setSavepoint() throws SQLException {
-	checkValidity();    
-    	return con.setSavepoint();
+    checkValidity();
+        return con.setSavepoint();
     }
-    
+
     /**
      * Creates a savepoint with the name and returns an object corresponding to that.
      *
-     * @param	name	Name of the savepoint.
-     * @return	<code>Savepoint</code> object.
-     * @throws SQLException In case of a database error.      
+     * @param    name    Name of the savepoint.
+     * @return    <code>Savepoint</code> object.
+     * @throws SQLException In case of a database error.
      */
     public Savepoint setSavepoint(String name) throws SQLException {
-	checkValidity();    
-    	return con.setSavepoint(name);
-    }    
-    
+    checkValidity();
+        return con.setSavepoint(name);
+    }
+
     /**
      * Creates the transaction isolation level.
      *
-     * @param	level transaction isolation level.
-     * @throws SQLException In case of a database error.      
+     * @param    level transaction isolation level.
+     * @throws SQLException In case of a database error.
      */
     public void setTransactionIsolation(int level) throws SQLException {
-	checkValidity();    
-    	con.setTransactionIsolation(level);
-    }     
-    
+    checkValidity();
+        con.setTransactionIsolation(level);
+    }
+
     /**
-     * Installs the given <code>Map</code> object as the tyoe map for this 
+     * Installs the given <code>Map</code> object as the tyoe map for this
      * <code> Connection </code> object.
      *
-     * @param	map	<code>Map</code> a Map object to install.
-     * @throws SQLException In case of a database error.      
+     * @param    map    <code>Map</code> a Map object to install.
+     * @throws SQLException In case of a database error.
      */
     public void setTypeMap(Map map) throws SQLException {
-	checkValidity();
-    	con.setTypeMap(map);
+    checkValidity();
+        con.setTypeMap(map);
     }
 
     public int getNetworkTimeout() throws SQLException {
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public void abort(Executor executor)  throws SQLException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public String getSchema() throws SQLException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public void setSchema(String schema) throws SQLException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
-    
+
+
     /**
      * Checks the validity of this object
      */
     private void checkValidity() throws SQLException {
-    	if (isClosed) throw new SQLException ("Connection closed");
-    	if (!valid) throw new SQLException ("Invalid Connection");
-    	if(active == false) {
-    	    mc.checkIfActive(this);
-    	}
+        if (isClosed) throw new SQLException ("Connection closed");
+        if (!valid) throw new SQLException ("Invalid Connection");
+        if(active == false) {
+            mc.checkIfActive(this);
+        }
     }
-    
+
     /**
      * Sets the active flag to true
      *
-     * @param	actv	boolean
+     * @param    actv    boolean
      */
     void setActive(boolean actv) {
         active = actv;

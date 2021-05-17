@@ -24,8 +24,8 @@ import jakarta.jws.WebService;
     portName="Hello"
 )
 public class Hello2 {
-	
+
     public String sayHello(String param) {
-	return "WebSvcTest-Hello " + param;
+    return "WebSvcTest-Hello " + param;
     }
 }

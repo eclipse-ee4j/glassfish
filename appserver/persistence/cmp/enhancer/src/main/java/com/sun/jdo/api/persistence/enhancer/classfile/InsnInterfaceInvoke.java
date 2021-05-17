@@ -71,28 +71,28 @@ public class InsnInterfaceInvoke extends InsnConstOp {
   /**
    * constructor for opc_invokeinterface
    */
-  public InsnInterfaceInvoke (ConstInterfaceMethodRef methodRefOp, 
-			      int nArgsOp) {
+  public InsnInterfaceInvoke (ConstInterfaceMethodRef methodRefOp,
+                  int nArgsOp) {
     this(methodRefOp, nArgsOp, NO_OFFSET);
   }
 
   /* package local methods */
 
   InsnInterfaceInvoke (ConstInterfaceMethodRef methodRefOp, int nArgsOp,
-		       int offset) {
+               int offset) {
     super(opc_invokeinterface, methodRefOp, offset);
 
-    this.nArgsOp = nArgsOp; 
+    this.nArgsOp = nArgsOp;
 
     if (methodRefOp == null || nArgsOp < 0)
-	throw new InsnError ("attempt to create an opc_invokeinterface" +//NOI18N
-			     " with invalid operands");//NOI18N
+    throw new InsnError ("attempt to create an opc_invokeinterface" +//NOI18N
+                 " with invalid operands");//NOI18N
   }
 
   void print (PrintStream out, int indent) {
     ClassPrint.spaces(out, indent);
     out.println(offset() + "  opc_invokeinterface  " + //NOI18N
-		"pool(" + method().getIndex() + ")," + nArgsOp);//NOI18N
+        "pool(" + method().getIndex() + ")," + nArgsOp);//NOI18N
   }
 
   int store(byte[] buf, int index) {

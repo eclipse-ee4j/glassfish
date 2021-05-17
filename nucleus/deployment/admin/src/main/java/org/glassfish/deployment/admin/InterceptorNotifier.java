@@ -29,12 +29,12 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
  */
 public class InterceptorNotifier {
 
-    private boolean[] isBeforeReported = initialIsReported(); 
+    private boolean[] isBeforeReported = initialIsReported();
     private boolean[] isAfterReported = initialIsReported();
-    
+
     private Collection<ApplicationLifecycleInterceptor> interceptors;
     private ExtendedDeploymentContext dc = null;
-    
+
     private static boolean[] initialIsReported() {
         final boolean[] result = new boolean[ExtendedDeploymentContext.Phase.values().length];
         Arrays.fill(result, false);
@@ -60,12 +60,12 @@ public class InterceptorNotifier {
         }
         isBeforeReported[phase.ordinal()] = true;
     }
-    
+
     synchronized void ensureAfterReported(final ExtendedDeploymentContext.Phase phase) {
         if (isAfterReported[phase.ordinal()]) {
             return;
         }
-        
+
         for (ApplicationLifecycleInterceptor i : interceptors) {
             i.after(phase, dc);
         }
@@ -74,5 +74,5 @@ public class InterceptorNotifier {
 
     ExtendedDeploymentContext dc() {
         return dc;
-    }    
+    }
 }

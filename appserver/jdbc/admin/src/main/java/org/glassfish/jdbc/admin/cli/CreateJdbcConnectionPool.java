@@ -35,15 +35,15 @@ import java.util.Properties;
 
 /**
  * Create JDBC Connection Pool Command
- * 
+ *
  */
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="create-jdbc-connection-pool")
 @PerLookup
 @I18n("create.jdbc.connection.pool")
 public class CreateJdbcConnectionPool implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJdbcConnectionPool.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJdbcConnectionPool.class);
 
     @Param(name = "datasourceClassname",  optional=true)
     String datasourceclassname;
@@ -56,64 +56,64 @@ public class CreateJdbcConnectionPool implements AdminCommand {
 
     @Param(name = "maxPoolSize",  optional=true, defaultValue = "32")
     String maxpoolsize = "32";
-    
+
     @Param(name="maxWait", alias = "maxWaitTimeInMillis",  optional=true, defaultValue = "60000")
     String maxwait = "60000";
 
     @Param(name="poolResize", alias = "poolResizeQuantity",  optional=true, defaultValue = "2")
     String poolresize = "2";
-    
+
     @Param(name="idleTimeout", alias = "idleTimeoutInSeconds",  optional=true, defaultValue = "300")
     String idletimeout = "300";
 
     @Param(name = "initSql", optional=true)
     String initsql;
-        
+
     @Param(name="isolationLevel", alias = "transactionIsolationLevel",  optional=true)
     String isolationlevel;
-            
+
     @Param(name="isIsolationGuaranteed", alias = "isIsolationLevelGuaranteed",  optional=true, defaultValue="true")
     Boolean isisolationguaranteed;
-                
+
     @Param(name="isConnectValidateReq", alias = "isConnectionValidationRequired",  optional=true, defaultValue="false")
     Boolean isconnectvalidatereq;
-    
+
     @Param(name = "validationMethod", optional=true, alias = "connectionValidationMethod",  acceptableValues="auto-commit,meta-data,table,custom-validation", defaultValue = "table")
     String validationmethod = "table";
-    
+
     @Param(name="validationTable", alias = "validationTableName",  optional=true)
     String validationtable;
-    
+
     @Param(name="failConnection", alias = "failAllConnections",  optional=true, defaultValue="false")
     Boolean failconnection;
-    
+
     @Param(name = "allowNonComponentCallers",  optional=true, defaultValue="false")
     Boolean allownoncomponentcallers;
-    
+
     @Param(name = "nonTransactionalConnections",  optional=true, defaultValue="false")
     Boolean nontransactionalconnections;
-    
+
     @Param(name="validateAtMostOncePeriod", alias = "validateAtmostOncePeriodInSeconds",  optional=true, defaultValue = "0")
     String validateatmostonceperiod = "0";
-    
+
     @Param(name="leakTimeout", alias = "connectionLeakTimeoutInSeconds",  optional=true, defaultValue = "0")
     String leaktimeout = "0";
-    
+
     @Param(name="leakReclaim", alias = "connectionLeakReclaim",  optional=true, defaultValue="false")
     Boolean leakreclaim;
-    
+
     @Param(name="creationRetryAttempts", alias = "connectionCreationRetryAttempts",  optional=true, defaultValue = "0")
     String creationretryattempts = "0";
-    
+
     @Param(name="creationRetryInterval", alias = "connectionCreationRetryIntervalInSeconds",  optional=true, defaultValue = "10")
     String creationretryinterval = "10";
 
     @Param(name = "sqlTraceListeners", optional=true)
     String sqltracelisteners;
-    
+
     @Param(name="statementTimeout", alias = "statementTimeoutInSeconds",  optional=true, defaultValue = "-1")
     String statementtimeout = "-1";
-    
+
     @Param(name="statementLeakTimeout", alias = "statementLeakTimeoutInSeconds",  optional=true, defaultValue = "0")
     String statementLeaktimeout = "0";
 
@@ -122,19 +122,19 @@ public class CreateJdbcConnectionPool implements AdminCommand {
 
     @Param(name = "lazyConnectionEnlistment",  optional=true, defaultValue="false")
     Boolean lazyconnectionenlistment;
-    
+
     @Param(name = "lazyConnectionAssociation",  optional=true, defaultValue="false")
     Boolean lazyconnectionassociation;
-    
+
     @Param(name = "associateWithThread",  optional=true, defaultValue="false")
     Boolean associatewiththread;
 
     @Param(name = "driverClassname",  optional=true)
     String driverclassname;
-    
+
     @Param(name = "matchConnections",  optional=true, defaultValue="false")
     Boolean matchconnections;
-    
+
     @Param(name = "maxConnectionUsageCount",  optional=true, defaultValue = "0")
     String maxconnectionusagecount = "0";
 
@@ -149,19 +149,19 @@ public class CreateJdbcConnectionPool implements AdminCommand {
 
     @Param(name = "validationClassname",  optional=true)
     String validationclassname;
-    
+
     @Param(name = "wrapJdbcObjects",  optional=true, defaultValue="true")
     Boolean wrapjdbcobjects;
-    
+
     @Param(name="description", optional=true)
     String description;
-    
+
     @Param(name="property", optional=true, separator=':')
     Properties properties;
 
     @Param(optional=true, obsolete = true)
     String target = SystemPropertyConstants.DAS_SERVER_NAME;
-    
+
     @Param(name="jdbc_connection_pool_id", alias = "name" /*Mapped to ResourceConstants.CONNECTION_POOL_NAME below */,  primary=true)
     String jdbc_connection_pool_id;
 
@@ -179,7 +179,7 @@ public class CreateJdbcConnectionPool implements AdminCommand {
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-       
+
         HashMap attrList = new HashMap();
         attrList.put(ResourceConstants.CONNECTION_POOL_NAME, jdbc_connection_pool_id);
         attrList.put(ResourceConstants.DATASOURCE_CLASS, datasourceclassname);
@@ -219,7 +219,7 @@ public class CreateJdbcConnectionPool implements AdminCommand {
         attrList.put(ResourceConstants.POOLING, pooling.toString());
         attrList.put(ResourceConstants.VALIDATION_CLASSNAME, validationclassname);
         attrList.put(ResourceConstants.WRAP_JDBC_OBJECTS, wrapjdbcobjects.toString());
-        
+
         ResourceStatus rs;
 
         try {

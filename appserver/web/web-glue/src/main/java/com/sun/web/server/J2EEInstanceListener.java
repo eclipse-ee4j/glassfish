@@ -160,61 +160,61 @@ public final class J2EEInstanceListener implements InstanceListener {
             if (request != null && request instanceof HttpServletRequest) {
 
                 HttpServletRequest hreq = (HttpServletRequest)request;
-		HttpServletRequest base = hreq;
+        HttpServletRequest base = hreq;
 
-		Principal prin = hreq.getUserPrincipal();
-		Principal basePrincipal = prin;
+        Principal prin = hreq.getUserPrincipal();
+        Principal basePrincipal = prin;
 
-		boolean wrapped = false;
+        boolean wrapped = false;
 
-		while (prin != null) {
+        while (prin != null) {
 
-		    if (base instanceof ServletRequestWrapper) {
-			// unwarp any wrappers to find the base object
-			ServletRequest sr =
-			    ((ServletRequestWrapper) base).getRequest();
+            if (base instanceof ServletRequestWrapper) {
+            // unwarp any wrappers to find the base object
+            ServletRequest sr =
+                ((ServletRequestWrapper) base).getRequest();
 
-			if (sr instanceof HttpServletRequest) {
+            if (sr instanceof HttpServletRequest) {
 
-			    base = (HttpServletRequest) sr;
-			    wrapped = true;
-			    continue;
-			}
-		    }
+                base = (HttpServletRequest) sr;
+                wrapped = true;
+                continue;
+            }
+            }
 
-		    if (wrapped) {
-			basePrincipal = base.getUserPrincipal();
-		    }
+            if (wrapped) {
+            basePrincipal = base.getUserPrincipal();
+            }
 
-		    else if (base instanceof RequestFacade) {
-			// try to avoid the getUnWrappedCoyoteRequest call
-			// when we can identify see we have the texact class.
-			if (base.getClass() != RequestFacade.class) {
-			    basePrincipal = ((RequestFacade)base).
-				getUnwrappedCoyoteRequest().getUserPrincipal();
-			}
-		    } else {
-			basePrincipal = base.getUserPrincipal();
-		    }
+            else if (base instanceof RequestFacade) {
+            // try to avoid the getUnWrappedCoyoteRequest call
+            // when we can identify see we have the texact class.
+            if (base.getClass() != RequestFacade.class) {
+                basePrincipal = ((RequestFacade)base).
+                getUnwrappedCoyoteRequest().getUserPrincipal();
+            }
+            } else {
+            basePrincipal = base.getUserPrincipal();
+            }
 
-		    break;
-		}
+            break;
+        }
 
-		if (prin != null && prin == basePrincipal &&
+        if (prin != null && prin == basePrincipal &&
                         prin.getClass().getName().equals(SecurityConstants.WEB_PRINCIPAL_CLASS)) {
                     securityContext.setSecurityContextWithPrincipal(prin);
-		} else if (prin != basePrincipal) {
+        } else if (prin != basePrincipal) {
 
-		    // the wrapper has overridden getUserPrincipal
-		    // reject the request if the wrapper does not have
-		    // the necessary permission.
+            // the wrapper has overridden getUserPrincipal
+            // reject the request if the wrapper does not have
+            // the necessary permission.
 
-		    checkObjectForDoAsPermission(hreq);
+            checkObjectForDoAsPermission(hreq);
                     securityContext.setSecurityContextWithPrincipal(prin);
 
-		}
+        }
 
-	    }
+        }
         }
         // END OF IASRI 4713234
         // END IASRI 4688449
@@ -222,13 +222,13 @@ public final class J2EEInstanceListener implements InstanceListener {
         ComponentInvocation inv;
         if (eventType == InstanceEvent.EventType.BEFORE_INIT_EVENT) {
           // The servletName is not avaiable from servlet instance before servlet init.
-          // We have to pass the servletName to ComponentInvocation so it can be retrieved 
+          // We have to pass the servletName to ComponentInvocation so it can be retrieved
           // in RealmAdapter.getServletName().
           inv = new WebComponentInvocation(wm, instance, event.getWrapper().getName());
         } else {
           inv = new WebComponentInvocation(wm, instance);
         }
-        
+
         try {
             im.preInvoke(inv);
             if (eventType == InstanceEvent.EventType.BEFORE_SERVICE_EVENT) {
@@ -249,26 +249,26 @@ public final class J2EEInstanceListener implements InstanceListener {
 
 
     private static javax.security.auth.AuthPermission doAsPrivilegedPerm =
- 	new javax.security.auth.AuthPermission("doAsPrivileged");
+     new javax.security.auth.AuthPermission("doAsPrivileged");
 
 
     private static void checkObjectForDoAsPermission(final Object o)
             throws AccessControlException{
 
-	if (System.getSecurityManager() != null) {
-	    AccessController.doPrivileged(new PrivilegedAction<Void>() {
-		public Void run() {
-		    ProtectionDomain pD = o.getClass().getProtectionDomain();
-		    Policy p = Policy.getPolicy();
-		    if (!p.implies(pD,doAsPrivilegedPerm)) {
-			throw new AccessControlException
-			    ("permission required to override getUserPrincipal",
-			     doAsPrivilegedPerm);
-		    }
-		    return null;
-		}
-	    });
-	}
+    if (System.getSecurityManager() != null) {
+        AccessController.doPrivileged(new PrivilegedAction<Void>() {
+        public Void run() {
+            ProtectionDomain pD = o.getClass().getProtectionDomain();
+            Policy p = Policy.getPolicy();
+            if (!p.implies(pD,doAsPrivilegedPerm)) {
+            throw new AccessControlException
+                ("permission required to override getUserPrincipal",
+                 doAsPrivilegedPerm);
+            }
+            return null;
+        }
+        });
+    }
     }
 
     private void handleAfterEvent(InstanceEvent event,
@@ -379,7 +379,7 @@ public final class J2EEInstanceListener implements InstanceListener {
         if (inhabitant != null && inhabitant.isActive()) {
             tm = inhabitant.getService();
         }
-        
+
         return tm;
     }
 }

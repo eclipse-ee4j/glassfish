@@ -33,7 +33,7 @@ import java.lang.reflect.Proxy;
  *   }
  * }
  * </code>
- * 
+ *
  * @author Andriy Zhdanov
  *
  */
@@ -47,13 +47,13 @@ public class OnDeleteCascade implements ConfigBeanInterceptor<Object> {
     @Override
     public void beforeChange(PropertyChangeEvent evt)
             throws PropertyVetoException {
-        
+
         Object oldValue = evt.getOldValue();
         if (oldValue != null && oldValue instanceof ConfigBeanProxy) {
             ConfigBean bean = ((ConfigBean) Proxy.getInvocationHandler(evt.getSource()));
             WriteableView writeableSource = bean.getWriteableView();
             writeableSource.removeNestedElements(oldValue);
-        }      
+        }
     }
 
     @Override

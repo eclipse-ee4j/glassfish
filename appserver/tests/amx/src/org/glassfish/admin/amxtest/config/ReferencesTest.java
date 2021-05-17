@@ -162,7 +162,7 @@ public final class ReferencesTest
         ClusterConfig cluster = clusterMap.get("testCluster");
 
         cluster.createResourceRefConfig("jdbc/PointBase");
-        
+
         cluster.removeResourceRefConfig("jdbc/PointBase");
     }
     */

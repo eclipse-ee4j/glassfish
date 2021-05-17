@@ -50,7 +50,7 @@
                         </goals>
                         <configuration>
                             <skip>false</skip>
-			    <enableAssertions>false</enableAssertions>
+                <enableAssertions>false</enableAssertions>
                         </configuration>
                     </execution>
                 </executions>

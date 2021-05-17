@@ -34,7 +34,7 @@ public final class AMXConfigTest {
     @After
     public void tearDown() {
     }
-    
+
     private void _testConvertName( final String str, final String out)
     {
         assert AMXConfigImpl.convertAttributeName(str).equals(out) :
@@ -43,13 +43,13 @@ public final class AMXConfigTest {
         assert AMXConfigImpl.convertAttributeName(out).equals(out) :
             "Expected " + out + " for " + out + " (no change), but got " + AMXConfigImpl.convertAttributeName(out);
     }
-    
+
     @Test
     public void testDomConvertName() {
         _testConvertName( "Is", "is" );
-        
+
         _testConvertName( "IsFooBar", "is-foo-bar" );
-        
+
         _testConvertName( "IsConnectionValidationRequired", "is-connection-validation-required" );
     }
 }

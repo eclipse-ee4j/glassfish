@@ -24,10 +24,10 @@ package com.sun.enterprise.deployment.util;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 
 /**
- * This class defines a Visitor API for the DOL application client descriptor. 
+ * This class defines a Visitor API for the DOL application client descriptor.
  *
  * @author  Sheetal Vartak
- * @version 
+ * @version
  */
 public interface AppClientVisitor extends ComponentVisitor {
 
@@ -35,7 +35,7 @@ public interface AppClientVisitor extends ComponentVisitor {
      * visits an application client descriptor
      * @param an application client descriptor
      */
-    public void accept(ApplicationClientDescriptor descriptor);    
+    public void accept(ApplicationClientDescriptor descriptor);
 
 }
 

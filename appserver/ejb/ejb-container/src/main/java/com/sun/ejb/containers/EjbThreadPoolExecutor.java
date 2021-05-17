@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class EjbThreadPoolExecutor extends ThreadPoolExecutor {
     public EjbThreadPoolExecutor(int corePoolSize, int maximumPoolSize,
             long keepAliveTime, BlockingQueue<Runnable> workQueue, String threadPoolName) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue, 
+        super(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS, workQueue,
                 new ThreadFactoryImpl(threadPoolName));
     }
 
@@ -79,7 +79,7 @@ public class EjbThreadPoolExecutor extends ThreadPoolExecutor {
             e.printStackTrace();
         }
     }
-    
+
     private static class ThreadFactoryImpl implements ThreadFactory {
         private AtomicInteger threadId = new AtomicInteger(0);
         private String threadPoolName;

@@ -25,7 +25,7 @@ import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;
 
 public class BaseLifecycleInterceptor
-	implements java.io.Serializable {
+    implements java.io.Serializable {
 
     protected int basePrePassivateCount = 0;
     protected int basePostActivateCount = 0;
@@ -36,12 +36,12 @@ public class BaseLifecycleInterceptor
 
     @PrePassivate
     private void prePassivate(InvocationContext ctx) {
-	basePrePassivateCount++;
+    basePrePassivateCount++;
     }
 
     @PostActivate
     private void postActivate(InvocationContext ctx) {
-	basePostActivateCount++;
+    basePostActivateCount++;
     }
 
 }

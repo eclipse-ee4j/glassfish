@@ -42,7 +42,7 @@ public interface WebListener  {
      *
      * @return id of this <tt>WebListener</tt>
      */
-    public String getId();   
+    public String getId();
 
     /**
      * Sets the port number for this <tt>WebListener</tt>.

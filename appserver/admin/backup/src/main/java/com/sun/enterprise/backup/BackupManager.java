@@ -46,7 +46,7 @@ public class BackupManager extends BackupRestoreManager {
             mesg.append(StringHelper.get("backup-res.SuccessfulBackup",
                                     request.domainName, backupTime));
         }
-        
+
         try {
             ZipStorage zs = new ZipStorage(request);
             zs.store();
@@ -93,18 +93,18 @@ public class BackupManager extends BackupRestoreManager {
             BackupUtils.protect(request.backupFile);
         }
     }
-    
+
     ////////////////////////////////////////////////////////////////////////
 
     void init() throws BackupException {
         super.init();
-        
+
         if(request.backupFile != null)
             throw new BackupException("backup-res.InternalError",
                 "No backupFilename may be specified for a backup -- it is reserved for restore operations only.");
-        
+
         if(!FileUtils.safeIsDirectory(request.domainDir))
-            throw new BackupException("backup-res.NoDomainDir", 
+            throw new BackupException("backup-res.NoDomainDir",
                                       request.domainDir);
 
         File backupDir = getBackupDirectory(request);
@@ -115,11 +115,11 @@ public class BackupManager extends BackupRestoreManager {
             if(!FileUtils.safeIsDirectory(backupDir))
                 throw new BackupException("backup-res.NoBackupDirCantCreate",
                                       backupDir);
-	}
+    }
 
-        BackupFilenameManager bfmgr = 
+        BackupFilenameManager bfmgr =
             new BackupFilenameManager(backupDir, request.domainName);
-        request.backupFile = bfmgr.next();        
+        request.backupFile = bfmgr.next();
 
         // get customized description if user hasn't specified one
         if(request.description == null || request.description.length() <= 0)
@@ -127,12 +127,12 @@ public class BackupManager extends BackupRestoreManager {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private String writeStatus() {
         status = new Status();
         return status.write(request);
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
 
        Status status;

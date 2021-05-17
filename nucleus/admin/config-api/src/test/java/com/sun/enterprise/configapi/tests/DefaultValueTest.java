@@ -49,7 +49,7 @@ public class DefaultValueTest extends ConfigApiTest {
         Dom raw = Dom.unwrap(listener);
         Attribute attr = raw.getProxyType().getMethod("getAddress").getAnnotation(Attribute.class);
         assertEquals(attr.defaultValue(), address);
-        
+
         assertEquals(raw.attribute("address"), address);
         assertEquals(raw.rawAttribute("address"), address);
 
@@ -62,7 +62,7 @@ public class DefaultValueTest extends ConfigApiTest {
             Http http = protocol.getHttp();
             System.out.println(http.getCompressableMimeType());
         }
-        
+
     }
 
 }

@@ -17,7 +17,7 @@
 package org.glassfish.flashlight.client;
 
 public interface StatefulProbeClientInvoker extends ProbeClientInvoker {
-	public Object invokeBefore(Object[] params);    
-	public void invokeAfter(Object state, Object returnValue);
-	public void invokeOnException(Object state, Object exceptionValue);
+    public Object invokeBefore(Object[] params);
+    public void invokeAfter(Object state, Object returnValue);
+    public void invokeOnException(Object state, Object exceptionValue);
 }

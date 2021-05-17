@@ -28,5 +28,5 @@ public interface JCAResource extends J2EEResource
     /** ObjectName   */
     @ManagedAttribute
     public String getjcaConnectionFactory();
-   
+
 }

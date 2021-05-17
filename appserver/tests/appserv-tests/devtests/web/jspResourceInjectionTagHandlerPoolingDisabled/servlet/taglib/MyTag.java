@@ -76,7 +76,7 @@ public class MyTag extends TagSupport {
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new JspException(ex);
-        } 
+        }
 
         return SKIP_BODY;
     }

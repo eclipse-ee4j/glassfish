@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * handles Context and Session related events.
  * @author Tony Ng
  */
-public final class WebContainerListener 
+public final class WebContainerListener
     implements ContainerListener {
 
     private static final Logger _logger = LogFacade.getLogger();
@@ -126,7 +126,7 @@ public final class WebContainerListener
 
     public void containerEvent(ContainerEvent event) {
         if(_logger.isLoggable(Level.FINEST)) {
-	    _logger.log(Level.FINEST, LogFacade.CONTAINER_EVENT,
+        _logger.log(Level.FINEST, LogFacade.CONTAINER_EVENT,
                         event.getType() + "," +
                         event.getContainer() + "," +
                         event.getData());

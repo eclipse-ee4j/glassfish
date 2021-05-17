@@ -127,7 +127,7 @@ public class Target {
         List<Server> instances = new ArrayList<Server>();
         for(String aName : names)
             instances.addAll(getInstances(aName));
-        return instances;        
+        return instances;
     }
 
     public Node getNode(String targetName) {

@@ -18,11 +18,11 @@
 -->
 
 <console-config id="corba">
-        <integration-point 
+        <integration-point
                 id="corba_container"
-                type="org.glassfish.admingui:navNode" 
+                type="org.glassfish.admingui:navNode"
                 priority="600"
-                parentId="#{configNameId}" 
+                parentId="#{configNameId}"
                 content="pluginTreeNodeCorba.jsf"
         />
 

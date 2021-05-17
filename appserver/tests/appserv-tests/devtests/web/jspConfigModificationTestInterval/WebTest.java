@@ -23,7 +23,7 @@ import com.sun.ejte.ccl.reporter.*;
  * ignored").
  *
  * This test:
- * 
+ *
  *  - accesses a JSP,
  *
  *  - updates the JSP (through a servlet),
@@ -52,7 +52,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for modificationTestInterval "
                             + "jsp-config property");
@@ -61,8 +61,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             run();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -86,10 +86,10 @@ public class WebTest {
         System.out.println("Updating JSP ...");
         bodyLine = getBodyLine("UpdateJsp");
         System.out.println(bodyLine);
-                
+
         /*
-         * Access JSP. Must get original contents, because the 
-         * modificationTestInterval specified in sun-web.xml has not yet 
+         * Access JSP. Must get original contents, because the
+         * modificationTestInterval specified in sun-web.xml has not yet
          * expired, which means that we must not (yet) check for any
          * modifications of the JSP
          */
@@ -154,5 +154,5 @@ public class WebTest {
                 if (bis != null) bis.close();
             } catch (IOException ex) {}
         }
-    }   
+    }
 }

@@ -23,9 +23,9 @@ import java.util.ArrayList;
 @Singleton
 public class KeepStateBean implements KeepStateIF {
     private List<String> infos = new ArrayList<String>();
-    
+
     /**
-     * keepstate is passed from build.xml to appclient as application args, and to this 
+     * keepstate is passed from build.xml to appclient as application args, and to this
      * business method. The test EAR app is deployed once first, then KeepStateIF.INFO
      * is modified, rebuild, and redeployed.  If redeployed with keepstate true, no new
      * auto timers are created, and existing timers are carried over.  So these timers

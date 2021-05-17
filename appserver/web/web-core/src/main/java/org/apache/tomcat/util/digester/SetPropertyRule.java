@@ -45,7 +45,7 @@ public class SetPropertyRule extends Rule {
      * @param value Name of the attribute that will contain the value to which
      *  the property should be set
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #SetPropertyRule(String name, String value)} instead.
      */
     public SetPropertyRule(Digester digester, String name, String value) {
@@ -125,8 +125,8 @@ public class SetPropertyRule extends Rule {
         }
 
         // Set the property (with conversion as necessary)
-        if (!digester.isFakeAttribute(top, actualName) 
-                && !IntrospectionUtils.setProperty(top, actualName, actualValue) 
+        if (!digester.isFakeAttribute(top, actualName)
+                && !IntrospectionUtils.setProperty(top, actualName, actualValue)
                 && digester.getRulesValidation()) {
             digester.log.log(Level.WARNING, LogFacade.PROPERTY_RULE_NOT_FIND_MATCHING_PROPERTY,
                              new Object[] {digester.match, name, value});

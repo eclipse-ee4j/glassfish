@@ -24,8 +24,8 @@ import jakarta.persistence.*;
 
 @Entity
 public class FooEntity {
-    
-    @Id 
+
+    @Id
     @GeneratedValue
     private int id;
     private String name;
@@ -33,10 +33,10 @@ public class FooEntity {
     public FooEntity(String name) {
         setName(name);
     }
-    
+
     public FooEntity() {
     }
-    
+
     public String getName() {
         return name;
     }

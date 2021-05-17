@@ -71,7 +71,7 @@ public class WebServicesApplication implements ApplicationContainer {
         this.httpHandler = new EjbWSAdapter();
         this.publishedFiles = publishedFiles;
     }
-    
+
     public Object getDescriptor() {
         return null;
     }

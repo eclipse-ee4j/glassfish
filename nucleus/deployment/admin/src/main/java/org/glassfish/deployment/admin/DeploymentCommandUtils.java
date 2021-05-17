@@ -57,13 +57,13 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 public class DeploymentCommandUtils {
 
     public final static String APPLICATION_RESOURCE_NAME = "domain/applications/application";
-    
+
     final static String LIBRARY_SECURITY_RESOURCE_PREFIX = "domain/libraries/";
     final static String CLUSTERS_RESOURCE_NAME = "domain/clusters/cluster";
     final static String SERVERS_RESOURCE_NAME = "domain/servers/server";
-    
+
     final private static String COPY_IN_PLACE_ARCHIVE_PROP_NAME = "copy.inplace.archive";
-    
+
     private static final List<String> LIST_CONTAINING_DOMAIN = new ArrayList<String>(Arrays.asList(DeploymentUtils.DOMAIN_TARGET_NAME));
 
     /**
@@ -75,7 +75,7 @@ public class DeploymentCommandUtils {
      * @param target name of the target being enabled or disabled
      * @param appName name of the application being enabled or disabled
      * @param habitat hk2 habitat
-     * @param context command context passed to the running enable or disable command 
+     * @param context command context passed to the running enable or disable command
      * @param command command object
      * @return
      */
@@ -216,14 +216,14 @@ public class DeploymentCommandUtils {
      * @param matchedVersions
      * @param appAction
      * @param appRefAction
-     * @return 
+     * @return
      */
     public static Collection<? extends AccessRequired.AccessCheck> getAccessChecksForExistingApp(
             final Domain domain, final Applications applications,
             final String target, final Collection<String> matchedVersions,
             final String appAction, final String appRefAction) {
         final List<AccessRequired.AccessCheck> accessChecks = new ArrayList<AccessRequired.AccessCheck>();
-        
+
         final List<String> targets = domain.getTargets(target);
         for (String mv : matchedVersions) {
             final Application app = applications.getApplication(mv);
@@ -241,7 +241,7 @@ public class DeploymentCommandUtils {
         }
         return accessChecks;
     }
-    
+
     /**
      * Returns access checks for a new application (not already deployed) and
      * for the corresponding app ref(s) given the specified target.  This method
@@ -250,18 +250,18 @@ public class DeploymentCommandUtils {
      * @param applications
      * @param target
      * @param action
-     * @return 
+     * @return
      */
     public static Collection<? extends AccessRequired.AccessCheck> getAccessChecksForNewApp(
             final Domain domain, final Applications applications,
-            final String target, 
+            final String target,
             final String action) {
         final List<AccessRequired.AccessCheck> accessChecks = new ArrayList<AccessRequired.AccessCheck>();
         accessChecks.add(new AccessRequired.AccessCheck(getResourceNameForApps(domain), action));
         accessChecks.add(new AccessRequired.AccessCheck(getTargetResourceNameForNewAppRef(domain, target), action));
         return accessChecks;
     }
-    
+
     public static String getTargetResourceNameForNewApp(
             final Domain d, final String target) {
         final StringBuilder sb = getTargetResourceName(d, target);
@@ -276,32 +276,32 @@ public class DeploymentCommandUtils {
         }
         return null;
     }
-    
+
     public static String getTargetResourceNameForNewAppRef(
             final Domain d, final String target) {
         return new StringBuilder(getTargetResourceNameForNewApp(d, target)).append("/application-ref").toString();
     }
-    
+
     public static String getTargetResourceNameForNewAppRef(
             final Domain d, final String target, final String appName) {
         return new StringBuilder(getTargetResourceNameForNewAppRef(d, target)).append('/').append(appName).toString();
     }
-    
+
     public static String getTargetResourceNameForExistingAppRef(
             final Domain d, final String target, final String appName) {
         return AccessRequired.Util.resourceNameFromConfigBeanProxy(d.getApplicationRefInTarget(appName, target));
     }
-    
+
     public static String getResourceNameForApps(
             final Domain d) {
         return APPLICATION_RESOURCE_NAME;
     }
-    
+
     public static String getResourceNameForNewApp(
             final Domain d, final String appName) {
         return new StringBuilder(APPLICATION_RESOURCE_NAME).append('/').append(appName).toString();
     }
-    
+
     public static String getResourceNameForExistingApp(
             final Domain d, final String appName) {
         final Application app = d.getApplications().getApplication(appName);

@@ -29,7 +29,7 @@ public class TestURLPattern {
         String description = "testPatternType:" + p;
         URLPattern u = new URLPattern(p);
         int result = u.patternType();
-        if (result == expected) { 
+        if (result == expected) {
             System.out.println("patternType: " + expected + " " +
                     result + " succeded " + u);
             stat.addStatus(description, stat.PASS);
@@ -62,16 +62,16 @@ public class TestURLPattern {
                         result + " succeded " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.PASS);
             } else if (result != 0 && unknown) {
-                System.out.println("compareTo(->): !0 " + 
+                System.out.println("compareTo(->): !0 " +
                         result +  " succeded " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.PASS);
             } else {
-                System.out.println("compareTo(->): " + expected + " " + 
+                System.out.println("compareTo(->): " + expected + " " +
                         result + " failed    " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.FAIL);
             }
         } else {
-            System.out.println("compareTo(<-): " + expected * -1 + " " + 
+            System.out.println("compareTo(<-): " + expected * -1 + " " +
                     inverse + " failed    " + u2 + "\t" + u1);
             stat.addStatus(description, stat.FAIL);
         }
@@ -86,13 +86,13 @@ public class TestURLPattern {
                 expected = true;
             }
             break;
-        case URLPattern.PT_DEFAULT:    
+        case URLPattern.PT_DEFAULT:
             expected = true;
             break;
         case URLPattern.PT_EXTENSION:
             if (p2Type == URLPattern.PT_EXTENSION && p1.equals(p2)) {
                 expected = true;
-            } else if (p2Type == URLPattern.PT_EXACT && 
+            } else if (p2Type == URLPattern.PT_EXACT &&
                      p2.endsWith(p1.substring(1))) {
                 expected = true;
             }
@@ -101,7 +101,7 @@ public class TestURLPattern {
             if (p1.equals("/*")) {
                 expected = true;
             } else if (p2.startsWith(p1.substring(0,p1.length()-2)) &&
-                     (p2.length() == p1.length()-2 || 
+                     (p2.length() == p1.length()-2 ||
                       p2.substring(p1.length()-2).startsWith("/"))) {
                 expected = true;
             }
@@ -124,16 +124,16 @@ public class TestURLPattern {
         boolean result = u1.implies(u2);
         boolean inverse = u2.implies(u1);
 
-        if (result == expected) { 
-            System.out.println("implies(->): " + expected + " " + result + 
+        if (result == expected) {
+            System.out.println("implies(->): " + expected + " " + result +
                     " succeded " + u1 + "\t" + u2);
             stat.addStatus(description, stat.PASS);
         } else if (inverse != expectedInverse) {
-            System.out.println("implies(<-): " + expectedInverse + " " + 
+            System.out.println("implies(<-): " + expectedInverse + " " +
                     inverse + " failed    " + u2 + "\t" + u1);
             stat.addStatus(description, stat.FAIL);
         } else {
-            System.out.println("implies(->): " + expected + " " + result + 
+            System.out.println("implies(->): " + expected + " " + result +
                     " failed    " + u1 + "\t" + u2);
             stat.addStatus(description, stat.FAIL);
         }
@@ -142,7 +142,7 @@ public class TestURLPattern {
 
     private static void test_equals(
             String p1, int p1Type, String p2, int p2Type) {
-        String description = "testEquals:" + 
+        String description = "testEquals:" +
             p1 + "-" + p1Type + "-" + p2 + "-" + p2Type;
         URLPattern u1 = new URLPattern(p1);
         URLPattern u2 = new URLPattern(p2);
@@ -154,7 +154,7 @@ public class TestURLPattern {
 
         if (result == inverse) {
             if (result == true && (!u1.implies(u2) || !u2.implies(u1))) {
-                System.out.println("equals(<->): " + expected + " " + 
+                System.out.println("equals(<->): " + expected + " " +
                         result + " failed    " + u2 + "\t" + u1);
                 stat.addStatus(description, stat.FAIL);
 
@@ -163,13 +163,13 @@ public class TestURLPattern {
                         result + " succeded " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.PASS);
 
-            } else { 
-                System.out.println("equals(-->): " + expected + " " + 
+            } else {
+                System.out.println("equals(-->): " + expected + " " +
                         result + " failed    " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.FAIL);
             }
         } else {
-            System.out.println("equals(<--): " + result + " " + 
+            System.out.println("equals(<--): " + result + " " +
                     inverse + " failed    " + u2 + "\t" + u1);
             stat.addStatus(description, stat.FAIL);
         }
@@ -182,7 +182,7 @@ public class TestURLPattern {
             "/a/b/c.jsp",
             "/a/c",
             "/*",
-            "/a/*", 
+            "/a/*",
             "/a/c/*",
             "//*",
             "*.jsp",
@@ -204,17 +204,17 @@ public class TestURLPattern {
             /* COMMENTED OUT! ,URLPattern.PT_DEFAULT */
         };
 
-        for (int i=0; i<upArray.length; i++) { 
+        for (int i=0; i<upArray.length; i++) {
             test_patternType(upArray[i],upTypeArray[i]);
         }
-    
+
         for (int i=0; i<upArray.length; i++) {
             for (int j=0; j<upArray.length; j++) {
                 test_compareTo(upArray[i],upTypeArray[i],
                                upArray[j],upTypeArray[j]);
             }
         }
-    
+
         for (int i=0; i<upArray.length; i++) {
             for (int j=0; j<upArray.length; j++) {
                 test_implies(upArray[i],upTypeArray[i],
@@ -222,13 +222,13 @@ public class TestURLPattern {
             }
         }
 
-        for (int i=0; i<upArray.length; i++) { 
+        for (int i=0; i<upArray.length; i++) {
             for (int j=0; j<upArray.length; j++) {
                 test_equals(upArray[i],upTypeArray[i],
                              upArray[j],upTypeArray[j]);
             }
         }
-    
+
         stat.printSummary(testSuite);
     }
 }

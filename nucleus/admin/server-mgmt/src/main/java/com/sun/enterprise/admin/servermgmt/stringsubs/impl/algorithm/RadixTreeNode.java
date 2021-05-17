@@ -158,7 +158,7 @@ class RadixTreeNode {
 
     /**
      * Gets a child node associated with a given character.
-     * 
+     *
      * @param c input char to retrieve associated child node.
      * @return The associated node or <code>null</code> if no association found.
      */

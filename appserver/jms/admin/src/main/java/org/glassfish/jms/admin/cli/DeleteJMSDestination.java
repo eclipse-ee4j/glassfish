@@ -56,15 +56,15 @@ import org.glassfish.config.support.TargetType;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-jmsdest", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-jmsdest",
         description="Delete JMS Destination",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-jmsdest", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-jmsdest",
         description="Delete JMS Destination",
         params={
             @RestParam(name="target", value="$parent")
@@ -104,7 +104,7 @@ public class DeleteJMSDestination extends JMSDestination implements AdminCommand
         logger.entering(getClass().getName(), "deleteJMSDestination",
         new Object[] {destName, destType});
 
-		 try{
+         try{
             validateJMSDestName(destName);
             validateJMSDestType(destType);
         }catch (IllegalArgumentException e){
@@ -126,35 +126,35 @@ public class DeleteJMSDestination extends JMSDestination implements AdminCommand
      }
 
        // delete-jmsdest
-	private Object deleteJMSDestination(String destName, String destType,
-		String tgtName)
-		throws Exception {
+    private Object deleteJMSDestination(String destName, String destType,
+        String tgtName)
+        throws Exception {
 
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "deleteJMSDestination ...");
         }
         MQJMXConnectorInfo mqInfo = getMQJMXConnectorInfo(target, config, serverContext, domain, connectorRuntime);
 
-		//MBeanServerConnection  mbsc = getMBeanServerConnection(tgtName);
+        //MBeanServerConnection  mbsc = getMBeanServerConnection(tgtName);
 
-		try {
-			MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
-			ObjectName on = new ObjectName(
-				DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
-			String [] signature = null;
-			Object [] params = null;
+        try {
+            MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
+            ObjectName on = new ObjectName(
+                DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
+            String [] signature = null;
+            Object [] params = null;
 
-			signature = new String [] {
-				"java.lang.String",
-				"java.lang.String"};
+            signature = new String [] {
+                "java.lang.String",
+                "java.lang.String"};
 
-			if (destType.equalsIgnoreCase("topic")) {
-				destType = DESTINATION_TYPE_TOPIC;
-			} else if (destType.equalsIgnoreCase("queue")) {
-				destType = DESTINATION_TYPE_QUEUE;
-			}
-			params = new Object [] {destType, destName};
-			return mbsc.invoke(on, "destroy", params, signature);
+            if (destType.equalsIgnoreCase("topic")) {
+                destType = DESTINATION_TYPE_TOPIC;
+            } else if (destType.equalsIgnoreCase("queue")) {
+                destType = DESTINATION_TYPE_QUEUE;
+            }
+            params = new Object [] {destType, destName};
+            return mbsc.invoke(on, "destroy", params, signature);
 
         } catch (Exception e) {
                    //log JMX Exception trace as WARNING

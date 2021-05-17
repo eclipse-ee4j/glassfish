@@ -1,5 +1,5 @@
-create table FinderStudent 
-(studentid varchar(3) constraint pk_FinderStudent primary key not null,  
+create table FinderStudent
+(studentid varchar(3) constraint pk_FinderStudent primary key not null,
 name varchar(36));
 
 insert into FinderStudent
@@ -12,8 +12,8 @@ insert into FinderStudent
 values ('456', 'Joe Smith');
 
 
-create table FinderCourse 
-(courseid varchar(3) constraint pk_FinderCourse primary key not null,  
+create table FinderCourse
+(courseid varchar(3) constraint pk_FinderCourse primary key not null,
 name varchar(36));
 
 insert into FinderCourse
@@ -26,8 +26,8 @@ insert into FinderCourse
 values ('777', 'An Introduction to Java Programming');
 
 create table FinderEnrollment
-(studentid varchar(3),  
-courseid varchar(3),  
+(studentid varchar(3),
+courseid varchar(3),
 constraint fk_studentid
 foreign key (studentid)
 references FinderStudent(studentid),

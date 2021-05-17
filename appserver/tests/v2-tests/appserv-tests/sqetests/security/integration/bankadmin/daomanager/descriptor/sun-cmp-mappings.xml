@@ -20,8 +20,8 @@
 
 <sun-cmp-mappings>
    <sun-cmp-mapping>
-	<schema>sec_bankadmin_schema</schema>
-	<entity-mapping>
+    <schema>sec_bankadmin_schema</schema>
+    <entity-mapping>
             <ejb-name>CustomerBean</ejb-name>
             <table-name>SEC_BANKADMIN_CUSTOMEREJB</table-name>
             <cmp-field-mapping>
@@ -41,7 +41,7 @@
                 </column-pair>
             </cmr-field-mapping>
         </entity-mapping>
-	<entity-mapping>
+    <entity-mapping>
             <ejb-name>AccountBean</ejb-name>
             <table-name>SEC_BANKADMIN_ACCOUNTEJB</table-name>
             <cmp-field-mapping>

@@ -74,50 +74,50 @@ import jakarta.inject.Named;
                 @RestParam(name = "id", value = "$parent"), @RestParam(name = "type", value = "protocol") }) })
 public class CreateSsl implements AdminCommand {
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateSsl.class);
-    
+
     @Param(name = "certname", alias = "certNickname")
     String certName;
-    
+
     @Param(name = "type", acceptableValues = "network-listener, http-listener, iiop-listener, iiop-service, jmx-connector, protocol")
     String type;
-    
+
     @Param(name = "ssl2Enabled", optional = true, defaultValue = Ssl.SSL2_ENABLED + "")
     Boolean ssl2Enabled;
-    
+
     @Param(name = "ssl2Ciphers", optional = true)
     String ssl2ciphers;
-    
+
     @Param(name = "ssl3Enabled", optional = true, defaultValue = Ssl.SSL3_ENABLED + "")
     Boolean ssl3Enabled;
-    
+
     @Param(name = "ssl3TlsCiphers", optional = true)
     String ssl3tlsciphers;
-    
+
     @Param(name = "tlsEnabled", optional = true, defaultValue = Ssl.TLS_ENABLED + "")
     Boolean tlsenabled;
-    
+
     @Param(name = "tlsRollbackEnabled", optional = true, defaultValue = Ssl.TLS_ROLLBACK_ENABLED + "")
     Boolean tlsrollbackenabled;
-    
+
     @Param(name = "clientAuthEnabled", optional = true, defaultValue = Ssl.CLIENT_AUTH_ENABLED + "")
     Boolean clientauthenabled;
-    
+
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
-    
+
     @Param(name = "listener_id", primary = true, optional = true)
     public String listenerId;
-    
+
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     public Config config;
-    
+
     @Inject
     Domain domain;
-    
+
     @Inject
     ServiceLocator habitat;
-    
+
     private static final String GF_SSL_IMPL_NAME = "com.sun.enterprise.security.ssl.GlassfishSSLImpl";
 
     /**

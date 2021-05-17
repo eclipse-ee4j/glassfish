@@ -18,7 +18,7 @@ package amxtest;
 
 import org.glassfish.admin.amx.j2ee.*;
 
-/** Adds glassfish interfaces (those that are present in the glassfish distribution 
+/** Adds glassfish interfaces (those that are present in the glassfish distribution
   as opposed to the basic web distribution */
 final class InterfacesGlassfish extends Interfaces {
     public InterfacesGlassfish()

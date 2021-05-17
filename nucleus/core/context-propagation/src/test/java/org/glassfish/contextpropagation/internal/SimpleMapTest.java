@@ -48,12 +48,12 @@ import org.junit.Test;
 @Ignore
 public class SimpleMapTest {
 //  SimpleMap sm;
-//  static RecordingLoggerAdapter logger;  
-//  
+//  static RecordingLoggerAdapter logger;
+//
 //  public static class LifeCycleEventRecorder implements ContextLifecycle {
 //    StackTraceElement lastElement;
 //    Object lastArg;
-//    
+//
 //    @Override
 //    public void contextChanged(Object replacementContext) {
 //      set(Thread.currentThread().getStackTrace(), replacementContext);
@@ -61,7 +61,7 @@ public class SimpleMapTest {
 //
 //    @Override
 //    public void contextAdded() {
-//      set(Thread.currentThread().getStackTrace(), null);      
+//      set(Thread.currentThread().getStackTrace(), null);
 //    }
 //
 //    @Override
@@ -74,21 +74,21 @@ public class SimpleMapTest {
 //      set(Thread.currentThread().getStackTrace(), null);
 //      return this;
 //    }
-//    
+//
 //    void set(StackTraceElement[] trace, Object arg) {
 //      lastElement = trace[1];
 //      lastArg = arg;
 //    }
-//    
+//
 //    void verify(String methodName, Object arg) {
 //      assertEquals(methodName, lastElement.getMethodName());
 //      assertEquals(arg, lastArg);
 //      lastElement = null;
 //      lastArg = null;
 //    }
-//    
+//
 //  }
-//  
+//
 //  private static final LifeCycleEventRecorder LIFE_CYCLE_CONTEXT = new LifeCycleEventRecorder();
 //  static final Entry DUMMY_ENTRY = createEntry(LIFE_CYCLE_CONTEXT, PropagationMode.defaultSet(), ContextType.OPAQUE);
 //
@@ -102,8 +102,8 @@ public class SimpleMapTest {
 //  public static void setupClass() {
 //    logger = new RecordingLoggerAdapter();
 //    BootstrapUtils.reset();
-//    ContextBootstrap.configure(logger, 
-//        new DefaultWireAdapter(), new MockThreadLocalAccessor(), 
+//    ContextBootstrap.configure(logger,
+//        new DefaultWireAdapter(), new MockThreadLocalAccessor(),
 //        new MockContextAccessController(), "guid");
 //  }
 //
@@ -208,7 +208,7 @@ public class SimpleMapTest {
 //      public boolean keep(java.util.Map.Entry<String, Entry> mapEntry,
 //          PropagationMode mode) {
 //        return false;
-//      }      
+//      }
 //    }, PropagationMode.JMS_QUEUE);
 //    assertFalse(iter.hasNext());
 //  }
@@ -222,7 +222,7 @@ public class SimpleMapTest {
 //      public boolean keep(java.util.Map.Entry<String, Entry> mapEntry,
 //          PropagationMode mode) {
 //        return true;
-//      }      
+//      }
 //    }, PropagationMode.JMS_QUEUE);
 //    int count = 0;
 //    HashSet<String> keys = new HashSet<String>();
@@ -242,7 +242,7 @@ public class SimpleMapTest {
 //      public boolean keep(java.util.Map.Entry<String, Entry> mapEntry,
 //          PropagationMode mode) {
 //        return true;
-//      }      
+//      }
 //    }, PropagationMode.JMS_QUEUE);
 //    assertEquals(2, sm.map.size());
 //    assertNotNull(iter.next());

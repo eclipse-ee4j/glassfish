@@ -55,14 +55,14 @@ public class ServletFilterDescriptor
 
     /** generic constructor */
     public ServletFilterDescriptor() {
-	super("", ""/*description*/);
-	this.setClassName("");
+    super("", ""/*description*/);
+    this.setClassName("");
     }
 
     /** constructor specifying descriptor name (Filter name) & displayName */
     public ServletFilterDescriptor(String className, String name) {
-	super(name, ""/*description*/);
-	this.setClassName(className);
+    super(name, ""/*description*/);
+    this.setClassName(className);
     }
 
     /* ----
@@ -70,29 +70,29 @@ public class ServletFilterDescriptor
 
     /** set class name */
     public void setClassName(String name) {
-	this.className = (name != null)? name : "";
+    this.className = (name != null)? name : "";
     }
 
     /** get class name */
     public String getClassName() {
-	if (this.className == null) {
-	    this.className = "";
-	}
-	return this.className;
+    if (this.className == null) {
+        this.className = "";
+    }
+    return this.className;
     }
 
     /** set display name */
     public void setDisplayName(String name) {
-	this.displayName = (name != null)? name : "";
+    this.displayName = (name != null)? name : "";
     }
 
     /** get display name */
     public String getDisplayName() {
-	String n = this.displayName;
-	if ((n == null) || n.equals("")) {
-	    n = this.getName();
-	}
-	return n;
+    String n = this.displayName;
+    if ((n == null) || n.equals("")) {
+        n = this.getName();
+    }
+    return n;
     }
 
     public boolean hasSetDisplayName() {
@@ -106,12 +106,12 @@ public class ServletFilterDescriptor
 
     /** get filter name */
     public String getName() {
-	if ((filterName == null) || filterName.equals("")) {
-	    String c = this.getClassName();
-	    int p = c.lastIndexOf('.');
-	    filterName = (p < 0)? c : c.substring(p + 1);
-	}
-	return filterName;
+    if ((filterName == null) || filterName.equals("")) {
+        String c = this.getClassName();
+        int p = c.lastIndexOf('.');
+        filterName = (p < 0)? c : c.substring(p + 1);
+    }
+    return filterName;
     }
 
     /* ----
@@ -119,29 +119,29 @@ public class ServletFilterDescriptor
 
     /* set initialization parameters */
     public void setInitializationParameters(Collection<InitializationParameter> c) {
-	this.initParms.clear();
-	this.initParms.addAll(c);
+    this.initParms.clear();
+    this.initParms.addAll(c);
     }
 
     /* get initialization parameters */
     @SuppressWarnings("unchecked")
     public Vector<InitializationParameter> getInitializationParameters() {
-	return (Vector<InitializationParameter>)this.initParms.clone();
+    return (Vector<InitializationParameter>)this.initParms.clone();
     }
 
     /* add a single initialization parameter */
     public void addInitializationParameter(InitializationParameter ref) {
-	this.initParms.addElement(ref);
+    this.initParms.addElement(ref);
     }
-    
+
     /* add a single initialization parameter */
     public void addInitializationParameter(EnvironmentProperty ref) {
-	addInitializationParameter((InitializationParameter) ref);
-    }    
+    addInitializationParameter((InitializationParameter) ref);
+    }
 
     /* remove a single initialization parameter */
     public void removeInitializationParameter(InitializationParameter ref) {
-	this.initParms.removeElement(ref);
+    this.initParms.removeElement(ref);
     }
 
     /* set asyncSupported */
@@ -189,7 +189,7 @@ public class ServletFilterDescriptor
         //Should allow a filter with different name mapping
         //to the same class.
         if (obj instanceof ServletFilter) {
-	    if (this.getClassName().equals(
+        if (this.getClassName().equals(
                         ((ServletFilter)obj).getClassName())
                     && this.getName().equals(
                             ((ServletFilter)obj).getName())) {

@@ -30,27 +30,27 @@ import javax.swing.JTextArea;
 import org.glassfish.appclient.client.acc.UserError;
 
 /**
- * Displays errors detected after Java Web Start has launched the 
+ * Displays errors detected after Java Web Start has launched the
  * Java Web Start-aware ACC but before the developer's client has
  * launched.  Such errors would normally go to the Java Web Start trace file
- * or the Java Console (if either is enabled) but by default neither of those 
+ * or the Java Console (if either is enabled) but by default neither of those
  * is turned on, with the result that the end-user has no information about
  * such errors.  The client would simply never start.
  *
  * @author tjquinn
  */
 public class ErrorDisplayDialog {
-    
+
     private static final String LINE_SEP = System.getProperty("line.separator");
-    
+
     private static ResourceBundle rb;
-    
+
     /**
      * Displays a kinder, gentler display for user errors - ones that normally
      * a user could correct.  This is not typically user-fixable in a
-     * Java Web Start launch environment, but the nature of the error still 
+     * Java Web Start launch environment, but the nature of the error still
      * does not call for a stack trace.
-     * 
+     *
      * @param ue UserError to be displayed
      * @param rb ResourceBundle from which to retrieve i18n strings
      */
@@ -83,31 +83,31 @@ public class ErrorDisplayDialog {
      * @param rb ResourceBundle containing the i18n strings
      */
     private static void showText(final String text, final ResourceBundle rb) {
-        
+
         ErrorDisplayDialog.rb = rb;
-        
+
         /*
          *The JOptionPane class will accept other Components as elements of
          *the dialog box.  Build a JTextArea containing the stack trace.  Do not
-         *let the user edit the text.  
+         *let the user edit the text.
          */
         JTextArea stackTraceArea = new JTextArea();
         stackTraceArea.setEditable(false);
         stackTraceArea.setRows(16);
-        
+
         stackTraceArea.setText(text);
-        
+
         /*
          *Place the text area inside a scroll pane.
          */
         JScrollPane sp = new JScrollPane(stackTraceArea);
-        
+
         /*
          *Build a check box for the user to click to copy the error information
          *to the platform's clipboard.
          */
         JCheckBox copyToClipboardCB = new JCheckBox(getString("jwsacc.errorDialog.copyToClipboardLabel"));
-        
+
         /*
          *Display the dialog box that also contains the text area's scroll
          *pane and the checkbox and then wait for the user to close it.
@@ -119,11 +119,11 @@ public class ErrorDisplayDialog {
                 sp,
                 copyToClipboardCB
                 );
-        
+
         if (copyToClipboard) {
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
             StringSelection ss = new StringSelection(stackTraceArea.getText());
-            
+
             try {
                 cb.setContents(ss, null);
             }
@@ -142,7 +142,7 @@ public class ErrorDisplayDialog {
             }
         }
     }
-    
+
     /**
      *Displays a dialog box with the specified main message and stack trace.
      *@param mainMessage the string to display at the top of the dialog box introducing the stack trace
@@ -151,11 +151,11 @@ public class ErrorDisplayDialog {
      *@return whether the user wants to copy the error text to the clipboard
      */
     private static boolean showDialog(
-            String mainMessage, 
+            String mainMessage,
             JScrollPane sp,
             JCheckBox copyToClipboardCB) {
         String close = getString("jwsacc.errorDialog.closeLabel");
-        Object [] displayElements = (copyToClipboardCB == null) ? 
+        Object [] displayElements = (copyToClipboardCB == null) ?
                     new Object[] {mainMessage, sp} :
                     new Object[] {mainMessage, sp, copyToClipboardCB};
         JOptionPane pane = new JOptionPane(
@@ -165,7 +165,7 @@ public class ErrorDisplayDialog {
                 null,
                 new String[] {close},
                 close);
-     
+
         JDialog dialog = pane.createDialog(null, getString("jwsacc.errorDialog.title"));
         dialog.setResizable(true);
         dialog.setVisible(true);
@@ -173,7 +173,7 @@ public class ErrorDisplayDialog {
         dialog.dispose();
         return result;
     }
-    
+
     private static String getString(String key) {
         return rb.getString(key);
     }

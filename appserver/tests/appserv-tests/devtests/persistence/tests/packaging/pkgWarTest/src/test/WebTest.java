@@ -43,7 +43,7 @@ public class WebTest {
           System.err.println("Usage: java WebTest <TestSuiteID> <host> <port> <contextRoot> <urlPattern> " );
           return;
         }
- 
+
         testSuiteID = args[0];
         host = args[1];
         port = args[2];
@@ -51,24 +51,24 @@ public class WebTest {
         urlPattern = args[4];
         TEST_NAME = testSuiteID;
     }
-    
+
     public static void main(String[] args) {
         WebTest webTest = new WebTest(args);
         webTest.doTest();
     }
 
-    public void doTest() {     
-       
-        try { 
-            WebTestUtil wtu = new WebTestUtil ( host, port, contextRoot, urlPattern, testSuiteID, stat); 
-	    stat.addDescription("Persistence Package Test ");
+    public void doTest() {
+
+        try {
+            WebTestUtil wtu = new WebTestUtil ( host, port, contextRoot, urlPattern, testSuiteID, stat);
+        stat.addDescription("Persistence Package Test ");
             wtu.test("testInsert");
             wtu.test("verifyInsert");
             wtu.test("testDelete");
             wtu.test("verifyDelete");
-	    stat.printSummary(TEST_NAME);
+        stat.printSummary(TEST_NAME);
         } catch (Exception ex) {
-	    stat.addStatus(TEST_NAME, stat.FAIL);
+        stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
     }

@@ -30,7 +30,7 @@ public class PersistenceTest extends ConfigPersistence {
     public String getFileName() {
         return "DomainTest";
     }
-    
+
     public void doTest() throws TransactionFailure {
         NetworkListeners service = getHabitat().getService(NetworkListeners.class);
         // now do a transaction

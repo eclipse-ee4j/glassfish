@@ -34,7 +34,7 @@ import javax.security.auth.Subject;
  * needs to be accessed and authentication information is needed. Pops up
  * a UI to input username and password.
  */
-public class HttpAuthenticator extends Authenticator 
+public class HttpAuthenticator extends Authenticator
 {
     public static final boolean debug = false;
 
@@ -58,80 +58,80 @@ public class HttpAuthenticator extends Authenticator
      * If the data is not found then login is invoked on the login context.
      */
     @Override
-    protected PasswordAuthentication getPasswordAuthentication() 
+    protected PasswordAuthentication getPasswordAuthentication()
     {
-	String user = null;
-	char[] password = null;
-	Subject subject = null;
+    String user = null;
+    char[] password = null;
+    Subject subject = null;
 
-	String scheme = getRequestingScheme();
+    String scheme = getRequestingScheme();
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("scheme=" + scheme);
             _logger.fine("requesting prompt=" + getRequestingPrompt());
             _logger.fine("requesting protocol=" + getRequestingProtocol());
         }
 
-	ClientSecurityContext cont = ClientSecurityContext.getCurrent();
-	subject = (cont != null) ? cont.getSubject() : null;
-	user = getUserName(subject);
-	password = getPassword(subject);
-	if(user == null || password == null) {
-	    try {
+    ClientSecurityContext cont = ClientSecurityContext.getCurrent();
+    subject = (cont != null) ? cont.getSubject() : null;
+    user = getUserName(subject);
+    password = getPassword(subject);
+    if(user == null || password == null) {
+        try {
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.fine("Initiating login again...");
                 }
-                
-		securityInfo.doClientLogin(
+
+        securityInfo.doClientLogin(
                 loginType);
-		cont = ClientSecurityContext.getCurrent();
-		subject = cont.getSubject();
-		user = getUserName(subject);
-		password = getPassword(subject);
-	    } catch(Exception e) {
+        cont = ClientSecurityContext.getCurrent();
+        subject = cont.getSubject();
+        user = getUserName(subject);
+        password = getPassword(subject);
+        } catch(Exception e) {
                 _logger.log(Level.FINE, "Exception " + e.toString(), e);
-	        return null;
-	    }
-	}
+            return null;
+        }
+    }
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("Username:" + user);
         }
-	return new PasswordAuthentication(user, password);
+    return new PasswordAuthentication(user, password);
     }
 
     /**
      * Return the username from the subject.
      */
     private String getUserName(Subject s) {
-	String user = null; 
-	if(s == null)
-	    return null;
-	Set principalSet = s.getPrincipals();
-	Iterator itr = principalSet.iterator();
-	if(itr.hasNext()) {
-	    Principal p = (Principal) itr.next();
-	    user = p.getName();
-	}
-	return user;
+    String user = null;
+    if(s == null)
+        return null;
+    Set principalSet = s.getPrincipals();
+    Iterator itr = principalSet.iterator();
+    if(itr.hasNext()) {
+        Principal p = (Principal) itr.next();
+        user = p.getName();
+    }
+    return user;
     }
 
     /**
      * Return the password for the subject.
      */
     private char[] getPassword(Subject s) {
-	char[] password = null;
-	if(s == null)
-	    return null;
-	Set credentials = s.getPrivateCredentials();
-	Iterator credIter = credentials.iterator();
-	if(credIter.hasNext()) {
-	    Object o = credIter.next();
-	    if(o instanceof PasswordCredential) {
-		PasswordCredential pc = (PasswordCredential) o;
-		// CHECK REALM.
-	        password = pc.getPassword();
-	    }
-	}
-	return password;
+    char[] password = null;
+    if(s == null)
+        return null;
+    Set credentials = s.getPrivateCredentials();
+    Iterator credIter = credentials.iterator();
+    if(credIter.hasNext()) {
+        Object o = credIter.next();
+        if(o instanceof PasswordCredential) {
+        PasswordCredential pc = (PasswordCredential) o;
+        // CHECK REALM.
+            password = pc.getPassword();
+        }
+    }
+    return password;
     }
 }
 

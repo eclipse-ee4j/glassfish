@@ -43,12 +43,12 @@ public class AfterBeginHandler extends AbstractAttributeHandler {
 
     public AfterBeginHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
-        
+
         for (EjbContext ejbContext : ejbContexts) {
-            EjbSessionDescriptor ejbDesc = 
+            EjbSessionDescriptor ejbDesc =
                     (EjbSessionDescriptor) ejbContext.getDescriptor();
 
             Method annMethod = (Method) ainfo.getAnnotatedElement();
@@ -64,14 +64,14 @@ public class AfterBeginHandler extends AbstractAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {
-        
+
         return new Class[] { Stateful.class};
-                
+
     }
 
     protected boolean supportTypeInheritance() {

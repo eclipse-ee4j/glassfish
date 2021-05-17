@@ -29,7 +29,7 @@
   </parent>
 
     <artifactId>bootstrap</artifactId>
-    
+
     <name>GlassFish UberJar Activator</name>
 
     <build>

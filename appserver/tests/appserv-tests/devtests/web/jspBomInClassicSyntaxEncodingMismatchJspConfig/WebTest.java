@@ -23,7 +23,7 @@ import com.sun.ejte.ccl.reporter.*;
  *
  * This test enforces that a translation error be reported if the page
  * encoding identified by a BOM (in this case: UTF-16BE) does not match the
- * page encoding derived from jsp configuration element page-encoding 
+ * page encoding derived from jsp configuration element page-encoding
  * (in this case: UTF-8).
  */
 public class WebTest {
@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for BOM encoding mismatch");
@@ -56,11 +56,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/UTF-16BE.jsp");
         System.out.println("Connecting to: " + url.toString());
@@ -68,7 +68,7 @@ public class WebTest {
         conn.connect();
 
         int responseCode = conn.getResponseCode();
-        if (responseCode != 500) { 
+        if (responseCode != 500) {
             System.err.println("Wrong response code. Expected: 500"
                                + ", received: " + responseCode);
             stat.addStatus(TEST_NAME, stat.FAIL);

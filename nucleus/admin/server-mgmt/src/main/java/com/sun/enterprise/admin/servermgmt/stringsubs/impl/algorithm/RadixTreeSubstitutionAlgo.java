@@ -28,7 +28,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
  * Perform's string substitution by constructing the {@link RadixTree} of change-value pair.
- * 
+ *
  * @see RadixTreeSubstitution
  */
 public class RadixTreeSubstitutionAlgo implements SubstitutionAlgorithm {

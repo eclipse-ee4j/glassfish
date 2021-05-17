@@ -21,5 +21,5 @@ import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 public interface ItemRemote extends EJBObject {
-     
+
 }

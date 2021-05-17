@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 public class HttpServiceTest extends BaseSeleniumTestClass {
     private static final String TRIGGER_HTTP_SERVICE = "i18n_web.httpService.pageTitleHelp";
-    
+
     @Test
     public void testHttpService() {
         final String interval = Integer.toString(generateRandomNumber(2880));
@@ -43,7 +43,7 @@ public class HttpServiceTest extends BaseSeleniumTestClass {
         setFieldValue("form1:basicTable:rowGroup1:0:col3:col1St", "value");
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
-        reset(); 
+        reset();
         clickAndWait("treeForm:tree:configurations:server-config:httpService:httpService_link", TRIGGER_HTTP_SERVICE);
         assertEquals(true, isChecked("form1:propertySheet:http:acLog:ssoEnabled"));
         assertEquals(interval, getFieldValue("form1:propertySheet:accessLog:intervalProp:Interval"));

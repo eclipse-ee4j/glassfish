@@ -69,15 +69,15 @@ public class TransactionScopedBean<T> implements Synchronization {
             if (transactionSynchronizationRegistry != null) {
                 if (transactionScopedContext != null) {
                     // Get list of TransactionScopedBeans for this Transaction
-                    Set<TransactionScopedBean<?>> transactionScopedBeanSet = 
+                    Set<TransactionScopedBean<?>> transactionScopedBeanSet =
                         transactionScopedContext.beansPerTransaction.get(transactionSynchronizationRegistry);
-                    
+
                     if (transactionScopedBeanSet != null) {
                         // Remove the current TransactionScopedBean from list as we are destroying it now
                         if (transactionScopedBeanSet.contains(this)) {
                             transactionScopedBeanSet.remove(this);
                         }
-                        
+
                         // If current TransactionScopedBean is last in list, fire destroyed event and remove transaction entry from main Map
                         if (transactionScopedBeanSet.size() == 0) {
                             TransactionScopedCDIUtil.fireEvent(DESTORYED_EVENT);
@@ -98,12 +98,12 @@ public class TransactionScopedBean<T> implements Synchronization {
     private TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() throws NamingException {
         TransactionSynchronizationRegistry transactionSynchronizationRegistry;
         try {
-            transactionSynchronizationRegistry = (TransactionSynchronizationRegistry) 
+            transactionSynchronizationRegistry = (TransactionSynchronizationRegistry)
                 new InitialContext().lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME);
         } catch (NamingException ne) {
             throw ne;
         }
-        
+
         // Not checking for transaction status, it would be 6, as its in afterCompletion
         return transactionSynchronizationRegistry;
     }

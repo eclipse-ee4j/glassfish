@@ -30,7 +30,7 @@ import java.util.HashMap;
 
 
 /**
- * Concrete InvocationContext implementation passed to callback methods 
+ * Concrete InvocationContext implementation passed to callback methods
  * defined in interceptor classes.
  */
 public class CallbackInvocationContext implements InvocationContext {
@@ -92,7 +92,7 @@ public class CallbackInvocationContext implements InvocationContext {
         }
 
         ctorParamTypes = ctor.getParameterTypes();
-        ctorParams = new Object[ctorParamTypes.length]; 
+        ctorParams = new Object[ctorParamTypes.length];
 
         this.interceptorInfo = interceptorInfo;
     }
@@ -144,7 +144,7 @@ public class CallbackInvocationContext implements InvocationContext {
         return method;
     }
 
-    
+
     @Override
     public Object[] getParameters() {
         if (eventType == CallbackType.AROUND_CONSTRUCT) {
@@ -173,7 +173,7 @@ public class CallbackInvocationContext implements InvocationContext {
 
         return contextData;
     }
-    
+
     @Override
     public Object proceed() throws Exception {
         try {

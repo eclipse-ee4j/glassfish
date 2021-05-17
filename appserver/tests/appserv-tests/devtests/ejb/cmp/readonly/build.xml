@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -48,25 +48,25 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*Student*.class,**/*.dbschema" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/Student.class,**/*Home*.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common">
       <antcall target="execute-ejb-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
     </target>
 
-    <target name="deploy" depends="init-common">           
+    <target name="deploy" depends="init-common">
       <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
-      <antcall target="runclient-common">           
+      <antcall target="runclient-common">
       </antcall>
     </target>
 
@@ -75,10 +75,10 @@
          <param name="appclient.application.args" value="100 10 1 100"/>
       </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup" depends="init-common">
       <antcall target="execute-ejb-sql-common">

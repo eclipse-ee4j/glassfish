@@ -33,9 +33,9 @@ public class InterceptorF {
 
     @AroundInvoke
     Object aroundInvoke(InvocationContext ctx)
-	        throws Exception {
+            throws Exception {
         Common.aroundInvokeCalled(ctx, "F");
         return ctx.proceed();
     }
-   
+
 }

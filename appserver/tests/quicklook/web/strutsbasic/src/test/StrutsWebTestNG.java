@@ -34,7 +34,7 @@ public class StrutsWebTestNG {
 
     private static final String EXPECTED_RESPONSE =
         "JSP Page Test";
-    
+
     private String strContextRoot="strutsbasic";
 
     static String result = "";
@@ -42,7 +42,7 @@ public class StrutsWebTestNG {
     String m_port="";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-    
+
     //@Parameters({"host","port"})
     @BeforeMethod
     //public void beforeTest(String httpHost,String httpPort){
@@ -52,7 +52,7 @@ public class StrutsWebTestNG {
         System.out.println("Host is-->"+m_host);
         System.out.println("Port is-->"+m_port);
     }
-            
+
     /*
      *If two asserts are mentioned in one method, then last assert is taken in
      *to account.
@@ -63,9 +63,9 @@ public class StrutsWebTestNG {
     @Test(groups ={ "pulse"} ) // test method
     //public void webtest(String host, String port, String contextroot) throws Exception{
     public void strutsAppDeployedtest() throws Exception{
-        
+
         try{
-         
+
 
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/index.jsp";
         System.out.println("URL is: "+testurl);
@@ -80,31 +80,31 @@ public class StrutsWebTestNG {
 
         String line = null;
         boolean result=false;
-        String testLine = null;        
+        String testLine = null;
         while ((line = input.readLine()) != null) {
             if(line.indexOf("Struts Welcome Page")!=-1){
                 result=true;
              testLine = line;
            System.out.println(testLine);
             }
-          
-        }        
-                
+
+        }
+
         Assert.assertEquals(result, true,"Unexpected HTML");
-               
-        
+
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
 
     }
-    
-    
+
+
     @Test(groups ={ "pulse"} ) // test method
     public void strutsBasicHTMLTest() throws Exception{
          try{
-         
+
 
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/Welcome.do";
         System.out.println("URL is: "+testurl);
@@ -119,24 +119,24 @@ public class StrutsWebTestNG {
 
         String line = null;
         boolean result=false;
-        String testLine = null;        
+        String testLine = null;
         while ((line = input.readLine()) != null) {
             if(line.indexOf("Struts Applications in Netbeans!")!=-1){
                 result=true;
              testLine = line;
            System.out.println(testLine);
             }
-          
-        }        
-                
+
+        }
+
         Assert.assertEquals(result, true,"Unexpected HTML");
-               
-        
+
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
-        
+
     }
 
     public static void echo(String msg) {

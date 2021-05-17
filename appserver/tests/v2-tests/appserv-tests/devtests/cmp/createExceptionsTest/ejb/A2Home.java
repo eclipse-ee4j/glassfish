@@ -24,15 +24,15 @@ import java.util.*;
  */
 
 public interface A2Home extends jakarta.ejb.EJBHome {
-    
+
     public  A2 findByPrimaryKey(java.lang.String pk)  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
-    
+
     public  java.util.Collection findAll()  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
-    
+
     public  A2 create(java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
     public  A2 create() throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
     public  A2 create(int i) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

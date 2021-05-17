@@ -38,31 +38,31 @@ public class ShoppingCartClient {
         ShoppingCartClient client = new ShoppingCartClient(args);
         client.doTest();
     }
-    
+
     public ShoppingCartClient(String[] args) {
         //super(args);
     }
-    
+
     public String doTest() {
-        
-	ShoppingCartRemote hr=null;
+
+    ShoppingCartRemote hr=null;
         String res=null;
         Context ic = null;
         LoginContext lc=null;
         ShoppingCartHome home=null;
         String testId = "Sec::Stateful Login Bean";
-    	try {
+        try {
             stat.addDescription("Security::Statefule Login Bean");
-	    ic = new InitialContext();
-            // create EJB using factory from container 
+        ic = new InitialContext();
+            // create EJB using factory from container
             java.lang.Object objref = ic.lookup("statefulLoginBean");
-		
-	    System.err.println("Looked up home!!");
-		
-	    home = (ShoppingCartHome)PortableRemoteObject.narrow(
-					   objref, ShoppingCartHome.class);
-	    System.err.println("Narrowed home!!");
-				
+
+        System.err.println("Looked up home!!");
+
+        home = (ShoppingCartHome)PortableRemoteObject.narrow(
+                       objref, ShoppingCartHome.class);
+        System.err.println("Narrowed home!!");
+
             hr = home.create("LizHurley");
             System.out.println("Got the EJB!!");
 
@@ -102,15 +102,15 @@ public class ShoppingCartClient {
             stat.addStatus(testId, stat.FAIL);
             System.out.println("Shopping Cart:StatefulLoginBean Test Failed");
             System.exit(-1);
-	} finally {
+    } finally {
             stat.printSummary();
         }
         System.out.println("ShoppingCart:StatefulLoginBean Test Passed");
         return res;
-        
+
     }
 
-    
+
     public final static String helloStr = "Hello ShoppingCart!!!";
 }
 

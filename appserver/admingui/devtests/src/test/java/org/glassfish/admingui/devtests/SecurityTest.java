@@ -246,7 +246,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
           enableSecureAdministration(true);
       } finally {
           enableSecureAdministration(false);
-          updateAdminPassword("");          
+          updateAdminPassword("");
       }
     }
 
@@ -319,7 +319,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
         reset();
         String TRIGGER_SECURITY_REALMS_LINK = "treeForm:tree:configurations:" + configName + ":security:realms:realms_link";
         clickAndWaitForElement("Masthead:homeLink", TRIGGER_SECURITY_REALMS_LINK);
-        clickAndWait(TRIGGER_SECURITY_REALMS_LINK, TRIGGER_SECURITY_REALMS);	
+        clickAndWait(TRIGGER_SECURITY_REALMS_LINK, TRIGGER_SECURITY_REALMS);
         clickAndWait(getLinkIdByLinkText("propertyForm:realmsTable", realmName), TRIGGER_EDIT_REALM);
 
         clickAndWait("form1:propertyContentPage:manageUsersButton", TRIGGER_FILE_USERS);
@@ -333,7 +333,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:confirmPasswordProp:ConfirmPassword", userPassword);
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
     }
-    
+
     public void enableSecureAdministration(boolean enable) {
         boolean isSecureAdminEnabled = isSecureAdminEnabled();
         reset();
@@ -356,10 +356,10 @@ public class SecurityTest extends BaseSeleniumTestClass {
             clickLink("here");
             waitForLoginPageLoad(TIMEOUT);
             handleLogin("admin", "admin", TRIGGER_COMMON_TASKS);
-            updateAdminPassword("");//Make sure admin password changed to "" after disabling            
+            updateAdminPassword("");//Make sure admin password changed to "" after disabling
         }
     }
-    
+
     public boolean isSecureAdminEnabled() {
         reset();
        clickAndWaitForElement("treeForm:tree:applicationServer:applicationServer_link", "propertyForm:propertyContentPage:secureAdmin");

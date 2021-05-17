@@ -45,12 +45,12 @@
     </target>
 
     <target name="compile">
-  	<mkdir dir="${basedir}/WEB-INF/classes"/>
-  	<javac srcdir="${basedir}/src"
-    	destdir="${basedir}/WEB-INF/classes"
+      <mkdir dir="${basedir}/WEB-INF/classes"/>
+      <javac srcdir="${basedir}/src"
+        destdir="${basedir}/WEB-INF/classes"
         classpath="${env.S1AS_HOME}/modules/jakarta.servlet.jar"
-    	debug="on"
-	failonerror="true"/>
+        debug="on"
+    failonerror="true"/>
     </target>
 
     <target name="deploy" depends="compile">
@@ -60,12 +60,12 @@
     </target>
 
     <target name="undeploy">
-	<antcall target="uninstall-bundle" />
+    <antcall target="uninstall-bundle" />
     </target>
 
     <target name="runtest">
-	<antcall target="test">
-	  <param name="testURL" value="http://localhost:8080/test6/login.html" />
+    <antcall target="test">
+      <param name="testURL" value="http://localhost:8080/test6/login.html" />
         </antcall>
     </target>
 

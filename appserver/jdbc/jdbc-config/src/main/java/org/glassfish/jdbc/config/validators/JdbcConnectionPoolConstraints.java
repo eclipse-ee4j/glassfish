@@ -22,7 +22,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * List of @ConnectionPoolConstraint
- * 
+ *
  * @author Shalini M
  */
 @Retention(RUNTIME)

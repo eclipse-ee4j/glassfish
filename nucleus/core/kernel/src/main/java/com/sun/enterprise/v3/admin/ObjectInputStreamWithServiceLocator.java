@@ -30,7 +30,7 @@ import org.glassfish.hk2.api.MultiException;
 /**
  * This subclass of ObjectInputStream uses HK2 to lookup classes not resolved by
  * default ClassLoader.
- * 
+ *
  * @author Andriy Zhdanov
  */
 

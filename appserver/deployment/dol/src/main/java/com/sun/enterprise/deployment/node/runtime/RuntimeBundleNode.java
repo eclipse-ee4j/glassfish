@@ -39,54 +39,54 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor>
 
     protected T descriptor=null;
 
-    // we record the XML element to node class mapping when parsing and 
+    // we record the XML element to node class mapping when parsing and
     // retrieve it when writing out
-    // The first level map is indexed by the parent element name, and the 
+    // The first level map is indexed by the parent element name, and the
     // second level of the map is indexed by the sub element name and the
     // corresponding handler node class name
     protected HashMap<String, LinkedHashMap<String, Class>> elementToNodeMappings = new HashMap<String, LinkedHashMap<String, Class>>();
-    
+
     public RuntimeBundleNode(T descriptor) {
         this.descriptor = descriptor;
-	init();
-    }   
+    init();
+    }
 
     public RuntimeBundleNode() {
         this(null);
-    } 
-    
+    }
+
     /**
      * Initializes the child handler;
      */
     protected void init() {
-	// we do not care about standard DDs common tags
-	handlers=null;
+    // we do not care about standard DDs common tags
+    handlers=null;
     }
-    
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param descriptor the new descriptor
      */
-    public void addDescriptor(Object descriptor) {    
+    public void addDescriptor(Object descriptor) {
         return;
     }
-    
+
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public T getDescriptor() {
         return descriptor;
-    } 
-    
+    }
+
     /**
      * @return the default spec version level this node complies to
      */
     public String getSpecVersion() {
         return "1.5";
     }
-    
+
     /**
      * set the DOCTYPE as read in the input XML File
      * @param DOCTYPE
@@ -94,29 +94,29 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor>
     public void setDocType(String docType) {
         // I do not care about the version of the runtime descriptors
     }
-    
+
     /**
      * Sets the specVersion for this descriptor depending on the docType
      */
     protected void setSpecVersion() {
         // I do not care about the version of the runtime descriptors
-    }  
+    }
 
     /**
      * writes the message destination references runtime information
      */
-    protected void writeMessageDestinationInfo(Node parent, 
+    protected void writeMessageDestinationInfo(Node parent,
                                                BundleDescriptor descriptor) {
         for(Iterator iter = descriptor.getMessageDestinations().iterator();
             iter.hasNext();) {
-            MessageDestinationRuntimeNode node = 
+            MessageDestinationRuntimeNode node =
                 new MessageDestinationRuntimeNode();
             node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION,
                                  (MessageDestinationDescriptor) iter.next());
         }
-    }    
-    
-    /** 
+    }
+
+    /**
      * @return true if the runtime bundle node should only process
      * the product FCS DTD declarations
      */
@@ -126,7 +126,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor>
         }
         return restrictDTDDeclarations.booleanValue();
     }
-    
+
     public static Element appendChildNS(Node parent, String elementName,
         String nameSpace) {
         Element child = getOwnerDocument(parent).createElementNS(nameSpace, elementName);
@@ -152,7 +152,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor>
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -161,11 +161,11 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor>
         super.setElementValue(element, value);
       }
     }
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     protected Map<String, String> getDispatchTable() {

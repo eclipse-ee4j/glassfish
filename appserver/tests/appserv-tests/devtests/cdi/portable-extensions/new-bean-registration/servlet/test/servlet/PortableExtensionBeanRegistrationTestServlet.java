@@ -48,10 +48,10 @@ public class PortableExtensionBeanRegistrationTestServlet extends HttpServlet {
     @Inject
     @Preferred
     TestBean tb;
-    
+
     @Inject
     BeanManager bm;
-    
+
     @Inject
     @FrameworkService(serviceCriteria="TEST", dynamic=true)
     SomeFwkServiceInterface sfc_proxy;
@@ -82,25 +82,25 @@ public class PortableExtensionBeanRegistrationTestServlet extends HttpServlet {
                     + TransactionInterceptor.aroundInvokeInvocationCount;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
-        
+
         //check if our portable extension was called
         if (!ServiceFrameworkExtension.beforeBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-            		"beforeBeanDiscovery not called";
+                    "beforeBeanDiscovery not called";
 
         if (!ServiceFrameworkExtension.afterBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-            		"afterBeanDiscovery not called or injection of BeanManager " +
-            		"in an observer method failed";
-        
+                    "afterBeanDiscovery not called or injection of BeanManager " +
+                    "in an observer method failed";
+
         if (!ServiceFrameworkExtension.processAnnotatedTypeCalled)
             msg += "Portable Extension lifecycle observer method: process " +
-            		"annotated type not called";
+                    "annotated type not called";
 
         //BeanManager lookup
         if (bm == null)
             msg += "Injection of BeanManager into servlet failed";
-        
+
         //Get all beans and count the number of beans in the test package
         Set<Bean<?>> allBeans = bm.getBeans(Object.class, new AnnotationLiteral<Any>(){});
 
@@ -113,11 +113,11 @@ public class PortableExtensionBeanRegistrationTestServlet extends HttpServlet {
         //check if proxied service reference is indeed proxied
         if (!Proxy.isProxyClass(sfc_proxy.getClass()))
             msg += "Expected Proxied service reference, but got back an " +
-            		"unproxied service reference ";
+                    "unproxied service reference ";
         //invoke a method o
         if(!sfc_proxy.fooMethod())
             msg += "invocation of method on proxied service failed";
-        
+
         //check if unproxied service reference is not proxied
         if (Proxy.isProxyClass(sfc_unproxied.getClass()))
             msg += "Expected unProxied service reference, but got back an " +
@@ -125,32 +125,32 @@ public class PortableExtensionBeanRegistrationTestServlet extends HttpServlet {
         //invoke a method o
         if(!sfc_unproxied.fooMethod())
             msg += "invocation of method on unproxied service failed";
-        
+
         for (Iterator<Bean<?>> iterator = allBeans.iterator(); iterator.hasNext();) {
             Bean<?> bean = iterator.next();
             if (bean.getBeanClass().getName().contains("SomeFramework")){
                 msg += testFrameworkBean(bean);
             }
         }
-        
+
         if (!ServiceFrameworkExtension.afterProcessBeanCalled)
             msg += "Portable Extension lifecycle observer method: after " +
                     "ProcessBean not called for a bean registered by the portable" +
                     "extension";
-        
+
         writer.write(msg + "\n");
     }
 
 
     private String testFrameworkBean(Bean<?> bean) {
         String msg = "";
-        if (!bean.getQualifiers().contains(new AnnotationLiteral<Any>() {}) 
-                || !bean.getQualifiers().contains(new AnnotationLiteral<Default>() {}))  
+        if (!bean.getQualifiers().contains(new AnnotationLiteral<Any>() {})
+                || !bean.getQualifiers().contains(new AnnotationLiteral<Default>() {}))
             msg += "FrameworkBean does not have the default expected qualifiers";
-        
+
         if (!bean.getScope().equals(Dependent.class))
             msg += "FrameworkBean scope is not dependent";
-        
+
         if(!bean.getBeanClass().getName().equals(SomeFwkServiceImpl.class.getName()))
             msg += "Framework Bean: Incorrect bean class";
         return msg;

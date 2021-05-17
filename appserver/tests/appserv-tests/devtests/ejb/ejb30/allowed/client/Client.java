@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -34,39 +34,39 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-allowed-sessionID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB Sless sless;
 
 
     public void doTest() {
         try {
-	    sless.sayHello();
+        sless.sayHello();
             stat.addStatus("local setup", stat.PASS);
-	} catch (Exception ex) {
+    } catch (Exception ex) {
             stat.addStatus("local setup", stat.FAIL);
         }
 
-	boolean result = false;
+    boolean result = false;
 
         try {
-	    result = sless.lookupUserTransactionFromBMTBean();
-	} catch (Exception ex) {
+        result = sless.lookupUserTransactionFromBMTBean();
+    } catch (Exception ex) {
             stat.addStatus("local BMTOp_Ex", stat.FAIL);
-	}
+    }
         stat.addStatus("local BMTUserTx",
-		(result ? stat.PASS : stat.FAIL));
+        (result ? stat.PASS : stat.FAIL));
 
         try {
-	    result = sless.lookupUserTransactionFromCMTBean();
-	} catch (Exception ex) {
+        result = sless.lookupUserTransactionFromCMTBean();
+    } catch (Exception ex) {
             stat.addStatus("local CMTOp_Ex", stat.FAIL);
-	}
+    }
         stat.addStatus("local CMTUserTx",
-		(result ? stat.PASS : stat.FAIL));
+        (result ? stat.PASS : stat.FAIL));
 
     }
 

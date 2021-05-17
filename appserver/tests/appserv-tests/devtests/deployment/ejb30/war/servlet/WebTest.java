@@ -31,7 +31,7 @@ public class WebTest {
         port = Integer.parseInt(args[1]);
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         WebTest webTest = new WebTest(args);
@@ -44,12 +44,12 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         String contextPath = "/" + contextRoot + "/servlet";
         Socket s = new Socket(host, port);
 
         OutputStream os = s.getOutputStream();
-        
+
         System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
         os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
         os.write("Authorization: Basic ajJlZTpqMmVl\n".getBytes());

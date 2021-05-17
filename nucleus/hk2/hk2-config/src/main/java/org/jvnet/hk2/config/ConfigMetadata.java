@@ -53,7 +53,7 @@ public class ConfigMetadata {
      * <p>
      * This is either "@attr" or "&lt;element>" indicating
      * where the key is read.
-     * 
+     *
      * @see Attribute#key()
      * @see Element#key()
      */

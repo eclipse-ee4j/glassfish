@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -49,8 +49,8 @@
             <param name="ejbjar.classes" value="**/KeepState*.class" />
             <param name="appclientjar.classes" value="**/Client.class,**/KeepStateIF.class" />
         </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
         <echo message="First time deploy succeeded." />
@@ -90,10 +90,10 @@
               value="--force=true --keepstate=${keepstate} --retrieve ${assemble.dir} ${assemble.dir}/${appname}App.ear "/>
       </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

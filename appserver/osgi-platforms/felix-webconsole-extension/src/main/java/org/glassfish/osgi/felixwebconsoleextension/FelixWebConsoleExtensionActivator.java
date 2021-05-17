@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  * @author tangyong@cn.fujitsu.com
  */
 public class FelixWebConsoleExtensionActivator implements BundleActivator {
-	
+
     private Logger logger = Logger.getLogger(getClass().getPackage().getName());
     private BundleContext context;
     private static final String WEBCONSOLE_PID = "org.apache.felix.webconsole.internal.servlet.OsgiManager";
@@ -58,14 +58,14 @@ public class FelixWebConsoleExtensionActivator implements BundleActivator {
         registerWebConsoleSecurityProvider(); // GLASSFISH-12975
     }
 
-    private void registerWebConsoleSecurityProvider() {   	   	 
-    	 final GlassFishSecurityProvider secprovider = new GlassFishSecurityProvider();
-    	 secprovider.setBundleContext(context);
+    private void registerWebConsoleSecurityProvider() {
+         final GlassFishSecurityProvider secprovider = new GlassFishSecurityProvider();
+         secprovider.setBundleContext(context);
         context.registerService(WebConsoleSecurityProvider.class.getName(), secprovider, null);
          logger.logp(Level.INFO, "FelixWebConsoleExtensionActivator", "start", "Registered {0}", new Object[]{secprovider});
-	}
+    }
 
-	private void configureConsole() {
+    private void configureConsole() {
         tracker = new ServiceTracker(context, ConfigurationAdmin.class.getName(), null) {
             @Override
             public Object addingService(ServiceReference reference) {

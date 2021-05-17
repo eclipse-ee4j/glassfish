@@ -21,7 +21,7 @@ import jakarta.jms.*;
 import jakarta.ejb.*;
 import javax.naming.*;
 
-public class MessageBean  
+public class MessageBean
     implements MessageDrivenBean, MessageListener {
     private MessageDrivenContext mdc;
 
@@ -66,16 +66,16 @@ public class MessageBean
     }
 
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
-	this.mdc = mdc;
-	System.out.println("In MessageDrivenEJB::setMessageDrivenContext !!");
+    this.mdc = mdc;
+    System.out.println("In MessageDrivenEJB::setMessageDrivenContext !!");
     }
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In MessageDrivenEJB::ejbCreate !!");
+    System.out.println("In MessageDrivenEJB::ejbCreate !!");
     }
 
     public void ejbRemove() {
-	System.out.println("In MessageDrivenEJB::ejbRemove !!");
+    System.out.println("In MessageDrivenEJB::ejbRemove !!");
     }
 
 }

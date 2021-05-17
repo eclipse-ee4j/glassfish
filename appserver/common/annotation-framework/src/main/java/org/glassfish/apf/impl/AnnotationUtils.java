@@ -35,7 +35,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  * @author Jerome Dochez
  */
 public class AnnotationUtils {
-    
+
     private static Logger logger;
     private static String whatToLog="";
 
@@ -43,40 +43,40 @@ public class AnnotationUtils {
         if (logger==null) {
             logger = Logger.global;
         }
-        return logger;        
+        return logger;
     }
 
     public static void setLogger(Logger lg) {
         logger = lg;
     }
-    
+
     public static void setLoggerTarget(String what) {
         whatToLog = what;
     }
-    
+
     public static String getLoggerTarget() {
         return whatToLog;
     }
-    
+
     public static boolean shouldLog(String what) {
-        
+
         if (logger.isLoggable(Level.FINER)) {
-            if (whatToLog.indexOf(what)!=-1) 
+            if (whatToLog.indexOf(what)!=-1)
                 return true;
             if ("*".equals(whatToLog))
                 return true;
         }
         return false;
     }
-    
+
     public static String getLocalString(String key, String defaultString, Object... arguments){
         return MessageFormat.format(defaultString, arguments);
     }
-    
+
     /**
      * Gets the annotation handler for the given class (without causing any of the annotation handlers
      * to be classloaded)
-     * 
+     *
      * @param locator The locator to find the annotation handler for
      * @param forThis The class to find the annotation handler for
      * @return
@@ -90,9 +90,9 @@ public class AnnotationUtils {
                 Map<String, List<String>> metadata = d.getMetadata();
                 List<String> handlerForList = metadata.get(AnnotationHandler.ANNOTATION_HANDLER_METADATA);
                 if (handlerForList == null || handlerForList.isEmpty()) return false;
-                
+
                 String descriptorForThis = handlerForList.get(0);
-                
+
                 return descriptorForThis.equals(forThis.getName());
             }
 
@@ -105,9 +105,9 @@ public class AnnotationUtils {
             public String getName() {
                 return null;
             }
-            
+
         });
-        
+
         return (ActiveDescriptor<AnnotationHandler>) retVal;
     }
 }

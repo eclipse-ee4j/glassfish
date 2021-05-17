@@ -40,8 +40,8 @@ public class TestServlet extends HttpServlet {
     @Inject TestBean tb;
     @Inject BeanManager bm;
     BeanManager bm1;
-    
-    @Inject 
+
+    @Inject
     private transient org.jboss.logging.Logger log;
 
     public void service(HttpServletRequest req, HttpServletResponse res)
@@ -60,7 +60,7 @@ public class TestServlet extends HttpServlet {
             msg += "BeanManager Injection via component environment lookup failed";
         }
         if (bm1 == null) msg += "BeanManager Injection via component environment lookup failed";
-        
+
         //Ensure that the OptionalService Bean is not registered.
         Set<Bean<?>> optionalServiceBeans = bm.getBeans(TestService.class,new AnnotationLiteral<Any>() {});
         boolean optionalServiceAvailable = false;
@@ -68,12 +68,12 @@ public class TestServlet extends HttpServlet {
                 .hasNext();) {
             Bean<?> b =  iterator.next();
             System.out.println("-----" + b + " " + b.getClass() + " " + b.getBeanClass().getCanonicalName());
-            if (b.getBeanClass().getCanonicalName().contains("Optional")) optionalServiceAvailable = true; 
+            if (b.getBeanClass().getCanonicalName().contains("Optional")) optionalServiceAvailable = true;
         }
-        
+
         //The OptionalService Bean was not added to the WAR and hence must not available through the BM.
         if (optionalServiceAvailable) msg += "OptionalServiceBean is registered, though it was not included in the WAR";
-        
+
         System.out.println("BeanManager is " + bm);
         System.out.println("BeanManager via lookup is " + bm1);
         writer.write("initParams: " + msg + "\n");

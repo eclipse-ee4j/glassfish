@@ -37,7 +37,7 @@ public class JDOException extends java.lang.RuntimeException {
   /** This exception may be the result of incorrect parameters supplied
    * to an API.  This is the array from which the user can determine
    * the cause of the problem.
-   * The failed Object array is transient because it might contain 
+   * The failed Object array is transient because it might contain
    * non-Serializable instances.
    */
   transient Object[] failed;
@@ -90,21 +90,21 @@ public class JDOException extends java.lang.RuntimeException {
   }
 
   /** The exception may need to add objects to an array of failed objects.
-   * @param o	the failed object to add to an array.
+   * @param o    the failed object to add to an array.
    */
   public void addFailedObject(Object o) {
     if (failed == null)
-	//Create new
-	failed = new Object[] {o};
+    //Create new
+    failed = new Object[] {o};
     else {
-	//Extend exisisting
-    	int len = failed.length;
-	Object[] ofailed = failed;
-	failed = new Object[len + 1];
-	for (int i = 0; i < len; i++)
-		failed[i] = ofailed[i];
+    //Extend exisisting
+        int len = failed.length;
+    Object[] ofailed = failed;
+    failed = new Object[len + 1];
+    for (int i = 0; i < len; i++)
+        failed[i] = ofailed[i];
 
-	failed[len] = o;
+    failed[len] = o;
     }
   }
 

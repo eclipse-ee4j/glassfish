@@ -27,36 +27,36 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
 
 public interface SCO
 {
-	/**
+    /**
          * Returns the field name
-	 * 
+     *
          * @return field name as java.lang.String
          */
-	String getFieldName();
+    String getFieldName();
 
-	/**
+    /**
          * Returns the owner object of the SCO instance
-	 * 
+     *
          * @return owner object
          */
-	Object getOwner();
+    Object getOwner();
 
-	/**
+    /**
          * Nullifies references to the owner Object and Field
          */
         void unsetOwner();
 
-	/**
+    /**
          * Apply changes (can be a no-op)
-	 */
-	void applyUpdates(StateManager sm, boolean modified);
+     */
+    void applyUpdates(StateManager sm, boolean modified);
 
-	/**
+    /**
          * Marks object dirty
-	 *
-	 * @return StateManager associated with the owner
-	 */
-	StateManager makeDirty();
+     *
+     * @return StateManager associated with the owner
+     */
+    StateManager makeDirty();
 
         /**
          * Creates clone with the same owner and field value.

@@ -20,7 +20,7 @@ import org.glassfish.external.probe.provider.annotations.*;
 import org.glassfish.gmbal.Description;
 
 /**
- * Probe emitter for the Ejb Timed Object monitoring events. 
+ * Probe emitter for the Ejb Timed Object monitoring events.
  * Used by the probe framework as an event notifier.
  *
  * @author Marina Vatkina

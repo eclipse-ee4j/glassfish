@@ -128,7 +128,7 @@ public class TransactionIIOPInterceptorFactory implements IIOPInterceptorFactory
                         (org.omg.CORBA.Object)transactionCurrent));
 
                 // the JTS PI use this to call the proprietary hooks
-                theORB.getLocalResolver().register( "TSIdentification", 
+                theORB.getLocalResolver().register( "TSIdentification",
                         NullaryFunction.Factory.makeConstant((org.omg.CORBA.Object)tsIdent));
                 txServiceInitialized = true;
             } catch (Exception ex) {

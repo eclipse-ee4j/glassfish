@@ -21,6 +21,6 @@ import jakarta.ejb.CreateException;
 import jakarta.ejb.EJBLocalHome;
 
 public interface RosterHome extends EJBLocalHome {
- 
+
     Roster create() throws CreateException;
 }

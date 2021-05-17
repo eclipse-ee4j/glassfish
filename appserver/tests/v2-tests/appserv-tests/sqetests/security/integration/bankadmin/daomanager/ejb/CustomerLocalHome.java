@@ -24,8 +24,8 @@ import jakarta.ejb.FinderException;
 
 public interface CustomerLocalHome extends jakarta.ejb.EJBLocalHome
 {
-	public CustomerLocal createCustomer (String id,String name)
-	throws jakarta.ejb.CreateException;
+    public CustomerLocal createCustomer (String id,String name)
+    throws jakarta.ejb.CreateException;
         public CustomerLocal findByPrimaryKey(String id) throws jakarta.ejb.FinderException;
 
 }

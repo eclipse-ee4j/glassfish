@@ -19,7 +19,7 @@
  *
  * Created on February 25, 2000
  */
- 
+
 package com.sun.jdo.api.persistence.support;
 
 /**
@@ -31,7 +31,7 @@ package com.sun.jdo.api.persistence.support;
 /**
  * A class that can be managed by a JDO implementation.
  *
- * <P>Every class whose instances can be managed by a JDO PersistenceManager must 
+ * <P>Every class whose instances can be managed by a JDO PersistenceManager must
  * implement the PersistenceCapable interface.
  *
  * <P>This interface defines methods that allow the implementation to manage
@@ -54,14 +54,14 @@ public interface PersistenceCapable
 {
     /** Return the associated PersistenceManager if there is one.
    * Transactional and persistent instances return the associated
-   * PersistenceManager.  
+   * PersistenceManager.
    *
    * <P>Transient non-transactional instances return null.
      *<P>
    * @return the PersistenceManager associated with this instance.
    */
     PersistenceManager jdoGetPersistenceManager();
-    
+
     /** Explicitly mark this instance and this field dirty.
      * Normally, PersistenceCapable classes are able to detect changes made
      * to their fields.  However, if a reference to an Array is given to a
@@ -74,13 +74,13 @@ public interface PersistenceCapable
      * @param fieldName the name of the field to be marked dirty.
      */
     void jdoMakeDirty(String fieldName);
-    
+
     /** Return a copy of the JDO identity associated with this instance.
      *
      * <P>Persistent instances of PersistenceCapable classes have a JDO identity
      * managed by the PersistenceManager.  This method returns a copy of the
-     * ObjectId that represents the JDO identity.  
-     * 
+     * ObjectId that represents the JDO identity.
+     *
      * <P>Transient instances return null.
      *
      * <P>The ObjectId may be serialized
@@ -100,10 +100,10 @@ public interface PersistenceCapable
      * @return a copy of the ObjectId of this instance.
      */
     Object jdoGetObjectId();
-    
+
     /** Tests whether this object is dirty.
      *
-     * Instances that have been modified, deleted, or newly 
+     * Instances that have been modified, deleted, or newly
      * made persistent in the current transaction return true.
      *
      *<P>Transient instances return false.
@@ -140,7 +140,7 @@ public interface PersistenceCapable
 
     /** Tests whether this object has been newly made persistent.
      *
-     * Instances that have been made persistent in the current transaction 
+     * Instances that have been made persistent in the current transaction
      * return true.
      *
      *<P>Transient instances return false.
@@ -162,6 +162,6 @@ public interface PersistenceCapable
      * in the current transaction.
      */
     boolean jdoIsDeleted();
-    
-    
+
+
 }

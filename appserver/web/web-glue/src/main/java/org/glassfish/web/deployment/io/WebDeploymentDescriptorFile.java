@@ -36,9 +36,9 @@ public class WebDeploymentDescriptorFile extends DeploymentDescriptorFile<WebBun
      */
     @Override
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.WEB_JAR_ENTRY;        
+        return DescriptorConstants.WEB_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -50,5 +50,5 @@ public class WebDeploymentDescriptorFile extends DeploymentDescriptorFile<WebBun
         return new WebBundleNode();
     }
 
-    
+
 }

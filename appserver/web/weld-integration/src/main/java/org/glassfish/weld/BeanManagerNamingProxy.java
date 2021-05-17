@@ -71,7 +71,7 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
                     if (componentEnv == null) {
                         throw new IllegalStateException("No invocation context found");
                     }
-                    
+
                     BundleDescriptor bundle = null;
 
                     if (componentEnv instanceof EjbDescriptor) {

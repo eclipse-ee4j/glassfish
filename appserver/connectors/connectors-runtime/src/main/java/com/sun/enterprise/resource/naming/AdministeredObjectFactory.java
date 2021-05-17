@@ -34,7 +34,7 @@ import javax.naming.spi.ObjectFactory;
 /**
  * An object factory to handle creation of administered object
  *
- * @author	Qingqing Ouyang
+ * @author    Qingqing Ouyang
  *
  */
 public class AdministeredObjectFactory implements ObjectFactory {
@@ -46,11 +46,11 @@ public class AdministeredObjectFactory implements ObjectFactory {
     public AdministeredObjectFactory() {}
 
     public Object getObjectInstance(Object obj,
-				    Name name,
-				    Context nameCtx,
-				    Hashtable env) throws Exception {
+                    Name name,
+                    Context nameCtx,
+                    Hashtable env) throws Exception {
 
-	Reference ref = (Reference) obj;
+    Reference ref = (Reference) obj;
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("AdministeredObjectFactory: " + ref
                     + " Name:" + name);
@@ -85,13 +85,13 @@ public class AdministeredObjectFactory implements ObjectFactory {
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (runtime.checkAccessibility(moduleName, loader) == false) {
-	        throw new NamingException("Only the application that has the embedded resource" +
-	                               "adapter can access the resource adapter");
+            throw new NamingException("Only the application that has the embedded resource" +
+                                   "adapter can access the resource adapter");
 
-	    }
+        }
 
         if(logger.isLoggable(Level.FINE)) {
-	    logger.fine("[AdministeredObjectFactory] ==> Got AdministeredObjectResource = " + aor);
+        logger.fine("[AdministeredObjectFactory] ==> Got AdministeredObjectResource = " + aor);
         }
 
     // all RARs except system RARs should have been available now.
@@ -107,6 +107,6 @@ public class AdministeredObjectFactory implements ObjectFactory {
                 loader = ConnectorRegistry.getInstance().getActiveResourceAdapter(moduleName).getClassLoader();
             }
         }
-	return aor.createAdministeredObject(loader);
+    return aor.createAdministeredObject(loader);
     }
 }

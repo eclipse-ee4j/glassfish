@@ -28,10 +28,10 @@ import java.util.List;
 
 /**
  * Base interface for all security service configurations.
- * 
+ *
  * Each security service configuration has a name, indication of the service
  * configuration being the default when multiple service configurations are
- * present and an optional list of the specific security provider plugins. 
+ * present and an optional list of the specific security provider plugins.
  */
 @Configured
 public interface SecurityConfiguration extends ConfigBeanProxy {
@@ -66,7 +66,7 @@ public interface SecurityConfiguration extends ConfigBeanProxy {
         /**
          * Gets a named security provider.
          */
-    	public static SecurityProvider getSecurityProviderByName(SecurityConfiguration securityServiceConfiguration, String name) {
+        public static SecurityProvider getSecurityProviderByName(SecurityConfiguration securityServiceConfiguration, String name) {
             for (SecurityProvider config : securityServiceConfiguration.getSecurityProviders()) {
                 if (config.getProviderName().equals(name)) {
                     return config;

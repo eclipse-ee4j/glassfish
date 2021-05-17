@@ -30,7 +30,7 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 
 /**
  * This is a local command for listing backed up domains.
- * 
+ *
  */
 @Service(name = "list-backups")
 @PerLookup
@@ -58,14 +58,14 @@ public final class ListBackupsCommand extends BackupCommands {
         prepareRequest();
         initializeLogger();     // in case program options changed
     }
-     
-  
+
+
     @Override
     protected int executeCommand()
             throws CommandException {
         try {
             ListManager mgr = new ListManager(request);
-            logger.info(mgr.list());            
+            logger.info(mgr.list());
         } catch (BackupWarningException bwe) {
             logger.info(bwe.getMessage());
         } catch (BackupException be) {
@@ -78,5 +78,5 @@ public final class ListBackupsCommand extends BackupCommands {
     public String toString() {
         return super.toString() + "\n" + ObjectAnalyzer.toString(this);
     }
-   
+
 }

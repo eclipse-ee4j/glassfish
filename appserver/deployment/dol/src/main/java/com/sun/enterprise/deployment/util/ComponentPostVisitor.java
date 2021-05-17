@@ -20,8 +20,8 @@ import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
- * This class does the necessary post processing for J2EE Component DOL  
- * related classes 
+ * This class does the necessary post processing for J2EE Component DOL
+ * related classes
  *
  */
 @Contract

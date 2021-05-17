@@ -84,7 +84,7 @@ class LogException extends Exception {
 
     /**Strings which contain error messages from the log.
      */
-    private static final String[] statusStrings = 
+    private static final String[] statusStrings =
     { "jts.LOG_000_Operation_successful"/*#Frozen*/,
       "jts.LOG_001_Log_not_initialised"/*#Frozen*/,
       "jts.LOG_002_Open_failure"/*#Frozen*/,

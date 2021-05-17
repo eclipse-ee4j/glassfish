@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
  * This node is responsible for handling all sub-element of cmp-field tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class CmpFieldNode extends DeploymentDescriptorNode<FieldDescriptor> {
 
@@ -40,7 +40,7 @@ public class CmpFieldNode extends DeploymentDescriptorNode<FieldDescriptor> {
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(EjbTagNames.FIELD_NAME, "setName");
         return table;

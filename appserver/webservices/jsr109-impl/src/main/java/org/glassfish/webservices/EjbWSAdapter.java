@@ -38,11 +38,11 @@ public class EjbWSAdapter extends ServletHandler {
         } catch (Exception ignored) {
         }
     }
-    
-    
+
+
     // ---------------------------------------------------------- Nested Classes
-    
-    
+
+
     private static class EjbWSServletConfig extends ServletConfigImpl {
 
         private EjbWSServletConfig(WebappContext servletContextImpl) {

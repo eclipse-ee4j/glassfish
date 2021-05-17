@@ -43,10 +43,10 @@
         </delete>
         <record name="persistence_packaging.output" action="start" />
 
-	<ant dir="pkgEarLibTest" target="all"/>
-	<ant dir="pkgEjbTest" target="all"/>
-	<ant dir="pkgWarTest" target="all"/>
-	<ant dir="pkgWarTest1" target="all"/>
+    <ant dir="pkgEarLibTest" target="all"/>
+    <ant dir="pkgEjbTest" target="all"/>
+    <ant dir="pkgWarTest" target="all"/>
+    <ant dir="pkgWarTest1" target="all"/>
 
 
         <record name="persistence_packaging.output" action="stop" />
@@ -67,10 +67,10 @@
     </target>
 
     <target name="pkgEjbTest">
-	<record name="pkgEjbTest.output" action="start" />
+    <record name="pkgEjbTest.output" action="start" />
             <ant dir="pkgEjbTest" target="all"/>
-	<record name="pkgEjbTest.output" action="stop" />
-	<antcall target="report"/>
+    <record name="pkgEjbTest.output" action="stop" />
+    <antcall target="report"/>
     </target>
 
     <target name="pkgWarTest">
@@ -88,9 +88,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the persistence_packaging tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the persistence_packaging tests)
+    </echo>
     </target>
 </project>

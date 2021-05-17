@@ -50,15 +50,15 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="__update-jmsdest", 
+        opType=RestEndpoint.OpType.POST,
+        path="__update-jmsdest",
         description="Update JMS Destination",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="__update-jmsdest", 
+        opType=RestEndpoint.OpType.POST,
+        path="__update-jmsdest",
         description="Update JMS Destination",
         params={
             @RestParam(name="target", value="$parent")

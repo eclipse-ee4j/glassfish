@@ -27,7 +27,7 @@ import org.glassfish.contextpropagation.wireadapters.WireAdapter;
 /**
  * Used by messaging protocols to integrate with the context-propagation framework.
  */
-public interface ContextMapPropagator { 
+public interface ContextMapPropagator {
   /**
    * Transfers the entries with the specified {@link org.glassfish.contextpropagation.PropagationMode}
    * from {@link org.glassfish.contextpropagation.ContextMap}s,
@@ -43,7 +43,7 @@ public interface ContextMapPropagator {
    * @exception IOException if the data cannot be serialized.
    */
   public void sendRequest(OutputStream out, PropagationMode propagationMode) throws IOException;
-  
+
   /**
    * Transfers the entries with the specified {@link org.glassfish.contextpropagation.PropagationMode}
    * from {@link org.glassfish.contextpropagation.ContextMap}s,
@@ -59,7 +59,7 @@ public interface ContextMapPropagator {
    * @exception IOException if the data cannot be serialized.
    */
   public void sendResponse(OutputStream out, PropagationMode propagationMode) throws IOException;
-  
+
   /**
    * Deserializes context from an {@link java.io.InputStream} provided by
    * a protocol that is receiving a request. This must be
@@ -67,7 +67,7 @@ public interface ContextMapPropagator {
    * All existing thread-local contexts are overwritten, although in
    * general the thread execution model should ensure that there are
    * no existing thread-local contexts.
-   * 
+   *
    * While the receiver will attempt to read all and only the context propagation
    * data, it may not do so under unusual circumstances such as when there is a
    * bug in a third-party context implementation. For that reason, if IOException
@@ -75,11 +75,11 @@ public interface ContextMapPropagator {
    * immediately after the context-propagation data.
    *
    * @param in A {@link java.io.InputStream} provided by the protocol and containing the serialized contexts
-   * serialized context propagation bytes and no more. 
+   * serialized context propagation bytes and no more.
    * @exception IOException if the data cannot be read.
    */
   public void receiveRequest(InputStream in) throws IOException;
-  
+
   /**
    * Deserializes context from an {@link java.io.InputStream} provided by
    * a protocol that is receiving a request. This must be
@@ -98,7 +98,7 @@ public interface ContextMapPropagator {
    * @exception IOException if the data cannot be read.
    */
   public void receiveResponse(InputStream in, PropagationMode mode) throws IOException;
-  
+
   /**
    * Copies the entries that have the propagation mode THREAD to this thread's
    * ContextMap.
@@ -107,10 +107,10 @@ public interface ContextMapPropagator {
    * {@link #copyThreadContexts}.
    */
   public void restoreThreadContexts(AccessControlledMap contexts);
-  
+
   /**
    * A protocol that propagates context data can choose an alternate
-   * WireAdapter, and thus a different encoding format on the wire. 
+   * WireAdapter, and thus a different encoding format on the wire.
    * @param wireAdapter
    */
   public void useWireAdapter(WireAdapter wireAdapter);

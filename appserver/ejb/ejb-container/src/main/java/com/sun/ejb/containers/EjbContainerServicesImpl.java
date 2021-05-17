@@ -56,7 +56,7 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         EjbDescriptor ejbDesc = container.getEjbDescriptor();
 
         S businessObject = null;
-        
+
         if (businessInterface != null) {
             String intfName = businessInterface.getName();
             if (ejbDesc.getLocalBusinessClassNames().contains(intfName)) {
@@ -69,18 +69,18 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
                 //can be accessed through interfaces in its superclass as well
                 boolean isValidBusinessInterface =
                     ejbDesc.getNoInterfaceLocalBeanClasses().contains(intfName);
-                if ((intfName.equals(ejbDesc.getEjbClassName())) 
-                        || isValidBusinessInterface) {  
+                if ((intfName.equals(ejbDesc.getEjbClassName()))
+                        || isValidBusinessInterface) {
                     businessObject = (S) localObjectImpl.getClientObject(ejbDesc.getEjbClassName());
                 }
-                
+
             }
         }
 
         if( businessObject == null ) {
             throw new IllegalStateException("Unable to convert ejbRef for ejb " +
             ejbDesc.getName() + " to a business object of type " + businessInterface);
-        }        
+        }
 
         return businessObject;
 
@@ -120,7 +120,7 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         try {
             localObjectImpl.remove();
         } catch(EJBException e) {
-            LogFacade.getLogger().log(Level.FINE, "EJBException during remove. ", e);    
+            LogFacade.getLogger().log(Level.FINE, "EJBException during remove. ", e);
         } catch(jakarta.ejb.RemoveException re) {
             throw new NoSuchEJBException(re.getMessage(), re);
         }
@@ -162,7 +162,7 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         boolean removed = false;
 
         try {
-            ((BaseContainer)container).checkExists(localObjectImpl);    
+            ((BaseContainer)container).checkExists(localObjectImpl);
         } catch(Exception e) {
             removed = true;
         }
@@ -182,7 +182,7 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
         try {
 
             localObj = (EJBLocalObjectInvocationHandlerDelegate) Proxy.getInvocationHandler(ejbRef);
-            
+
         } catch(IllegalArgumentException iae) {
 
             Proxy proxy;
@@ -211,13 +211,13 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
                     throw new IllegalArgumentException("Invalid ejb ref", e);
                 }
 
-                              
+
                 try {
 
                     localObj = (EJBLocalObjectInvocationHandlerDelegate)
                             Proxy.getInvocationHandler(proxy);
 
-                } catch(IllegalArgumentException i) {}                      
+                } catch(IllegalArgumentException i) {}
 
             }
         }

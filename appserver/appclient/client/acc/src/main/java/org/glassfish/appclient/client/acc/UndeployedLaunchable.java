@@ -106,7 +106,7 @@ public class UndeployedLaunchable implements Launchable {
                 /*
                  * Choose this nested app client if the caller-supplied name
                  * matches, or if the caller-supplied main class matches, or
-                 * if neither was provided.  
+                 * if neither was provided.
                  */
                 final boolean useThisClient =
                         (displayName != null && displayName.equals(callerSuppliedAppName))
@@ -229,10 +229,10 @@ public class UndeployedLaunchable implements Launchable {
                             return new ACCClassLoader(loader.getURLs(), loader.getParent());
                         }
                     }));
-                    
+
             _archivist.setAnnotationProcessingRequested(true);
             acDesc = _archivist.open(clientRA);
-            
+
             Application.createVirtualApplication(null, acDesc.getModuleDescriptor());
             acDesc.getApplication().setAppName(getDefaultApplicationName(clientRA));
         }

@@ -114,7 +114,7 @@ else
     elif [ "$1" = "all" ]; then
         TEST_TARGET="all";
     else
-        usage; 
+        usage;
     fi
     echo "granting permissions...";
     echo "grant codeBase \"file:${APS_HOME}/-\" {permission java.security.AllPermission;};" >> $S1AS_HOME/lib/appclient/client.policy;

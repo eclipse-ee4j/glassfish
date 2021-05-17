@@ -34,7 +34,7 @@ import myapp.util.HtmlUtil;
  */
 public class LeakTest implements SimpleTest{
 
-    
+
        Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
 
     public Map<String, Boolean> runTest(DataSource ds1, PrintWriter out) {

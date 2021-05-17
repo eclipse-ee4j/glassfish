@@ -34,17 +34,17 @@ public abstract class EJBLocalRemoteObject
 
 
     transient protected static final Logger _logger = EjbContainerUtilImpl.getLogger();
-    
+
     transient protected BaseContainer container;
     transient protected Object primaryKey;
     transient private boolean removed=false;
 
     // Only used for stateful SessionBeans
     transient private SessionContextImpl context;
-    
-    //Used only for SFSBs. 
+
+    //Used only for SFSBs.
     private long sfsbClientVersion;
-    
+
 
     final void setContainer(Container container)
     {
@@ -52,11 +52,11 @@ public abstract class EJBLocalRemoteObject
     }
 
     /**
-     * Container needs to be accessed from generated code as well 
+     * Container needs to be accessed from generated code as well
      * as from other classes in this package.  Rather than having one
      * public method, we have a protected one that is used from generated
      * code and a package-private one used within other container classes.
-     * 
+     *
      */
 
     protected final Container getContainer()
@@ -68,7 +68,7 @@ public abstract class EJBLocalRemoteObject
     {
         return container;
     }
-    
+
     final void setRemoved(boolean r)
     {
         removed = r;
@@ -106,13 +106,13 @@ public abstract class EJBLocalRemoteObject
     {
         context = null;
     }
-    
+
     //This is called when a local ref is serialized
     public long getSfsbClientVersion() {
         return this.sfsbClientVersion;
     }
 
-    //This is called when the assocaited SFSB context is 
+    //This is called when the assocaited SFSB context is
     //  checkpointed / passivated
     public void setSfsbClientVersion(long sfsbClientVersion) {
         this.sfsbClientVersion = sfsbClientVersion;

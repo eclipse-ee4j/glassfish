@@ -31,18 +31,18 @@ import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
  * This class is used to add IOR interceptors for supporting IN_ADDR_ANY
  * functionality in the ORB
  */
-public class IORAddrAnyInitializer extends org.omg.CORBA.LocalObject 
+public class IORAddrAnyInitializer extends org.omg.CORBA.LocalObject
                                 implements ORBInitializer{
-                                    
+
     private static final Logger _logger = LogDomains.getLogger(
         IORAddrAnyInitializer.class, LogDomains.CORBA_LOGGER);
-    
+
     public static final String baseMsg = IORAddrAnyInitializer.class.getName();
-    
+
     /** Creates a new instance of IORAddrAnyInitializer */
     public IORAddrAnyInitializer() {
     }
-    
+
     /**
      * Called during ORB initialization.  If it is expected that initial
      * services registered by an interceptor will be used by other
@@ -56,7 +56,7 @@ public class IORAddrAnyInitializer extends org.omg.CORBA.LocalObject
     @Override
     public void pre_init(org.omg.PortableInterceptor.ORBInitInfo info) {
     }
-    
+
     /**
      * Called during ORB initialization. If a service must resolve initial
      * references as part of its initialization, it can assume that all
@@ -79,21 +79,21 @@ public class IORAddrAnyInitializer extends org.omg.CORBA.LocalObject
     public void post_init(org.omg.PortableInterceptor.ORBInitInfo info) {
         Codec codec = null;
         CodecFactory cf = info.codec_factory();
-  
+
         byte major_version = 1;
         byte minor_version = 2;
-        Encoding encoding = new Encoding(ENCODING_CDR_ENCAPS.value, 
+        Encoding encoding = new Encoding(ENCODING_CDR_ENCAPS.value,
                                          major_version, minor_version);
         try {
             codec = cf.create_codec(encoding);
         } catch (org.omg.IOP.CodecFactoryPackage.UnknownEncoding e) {
             _logger.log(Level.WARNING,"UnknownEncoding from " + baseMsg,e);
-	    }
+        }
         try {
             info.add_ior_interceptor(new IORAddrAnyInterceptor(codec));
         } catch (DuplicateName ex) {
             _logger.log(Level.WARNING,"DuplicateName from " + baseMsg,ex);
         }
     }
-    
+
 }

@@ -32,8 +32,8 @@
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="notxconn.output" action="start" />
-	    <ant dir="test1" target="all"/>
-	    <ant dir="test2" target="all"/>
+        <ant dir="test1" target="all"/>
+        <ant dir="test2" target="all"/>
         <record name="notxconn.output" action="stop" />
     </target>
 
@@ -49,9 +49,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the reconfig tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the reconfig tests)
+    </echo>
     </target>
 </project>

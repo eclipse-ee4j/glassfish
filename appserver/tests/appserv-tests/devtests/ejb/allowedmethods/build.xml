@@ -47,11 +47,11 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant ctxcheck (Executes the ejb-allowedmethods ctxcheck test)
-			ant remove (Executes the ejb-allowedmethods remove test)
-			ant all (Executes all the ejb allowedmethods tests)
-	</echo>
+    <echo>
+        Usage:
+            ant ctxcheck (Executes the ejb-allowedmethods ctxcheck test)
+            ant remove (Executes the ejb-allowedmethods remove test)
+            ant all (Executes all the ejb allowedmethods tests)
+    </echo>
     </target>
 </project>

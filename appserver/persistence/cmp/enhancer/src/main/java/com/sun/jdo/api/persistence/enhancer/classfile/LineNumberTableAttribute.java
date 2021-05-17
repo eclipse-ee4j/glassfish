@@ -39,7 +39,7 @@ public class LineNumberTableAttribute extends ClassAttribute {
    * Constructor
    */
   public LineNumberTableAttribute(
-	ConstUtf8 nameAttr, short lineNums[], InsnTarget targets[]) {
+    ConstUtf8 nameAttr, short lineNums[], InsnTarget targets[]) {
     super(nameAttr);
     lineNumbers = lineNums;
     this.targets = targets;
@@ -48,7 +48,7 @@ public class LineNumberTableAttribute extends ClassAttribute {
   /* package local methods */
 
   static LineNumberTableAttribute read(
-	ConstUtf8 attrName, DataInputStream data, CodeEnv env)
+    ConstUtf8 attrName, DataInputStream data, CodeEnv env)
     throws IOException {
     int nLnums = data.readUnsignedShort();
     short lineNums[] = new short[nLnums];

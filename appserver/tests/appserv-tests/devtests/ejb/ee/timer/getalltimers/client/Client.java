@@ -133,7 +133,7 @@ public class Client extends AdminBaseDevTest {
 
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
-  
+
             String line = null;
             while ((line = input.readLine()) != null) {
                 System.out.println("Processing line: " + line);

@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit tests for pound syntax as literal");
         WebTest webTest = new WebTest(args);
@@ -54,11 +54,11 @@ public class WebTest {
         webTest.doTest4("/testjsp21z.jsp",
                         "pound-syntax-allowed-as-literal-true-test");
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     private boolean checkValue(BufferedReader input,
-                               String key, String expectedValue) 
+                               String key, String expectedValue)
             throws Exception {
         String line = input.readLine();
         while (line.equals(""))
@@ -75,7 +75,7 @@ public class WebTest {
                 + key + ": " + expectedValue + ", received: " + line);
             return true;
         }
-        return false; 
+        return false;
     }
 
     public void doTest1(String path, String testName) {
@@ -130,14 +130,14 @@ is));
 
 
     public void doTest2(String path, String testName) {
-     
-        try { 
+
+        try {
             URL url = new URL("http://" + host  + ':' + port + '/' + contextRoot + path);
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode == 200) { 
+            if (responseCode == 200) {
                 System.err.println("Wrong response code. Expected: 500"
                                    + ", received: " + responseCode);
                 stat.addStatus(testName, stat.FAIL);

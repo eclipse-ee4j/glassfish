@@ -20,7 +20,7 @@ databaseshome=/tmp/jdbc_devtests/databases
 cd $v3home
 
 echo Starting the domain ...
-./bin/asadmin start-domain 
+./bin/asadmin start-domain
 
 echo undeploying application .....
 ./bin/asadmin undeploy v3_jdbc_dev_tests

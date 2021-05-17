@@ -24,8 +24,8 @@ import com.sun.ejte.ccl.reporter.*;
  * Each of the JSP pages accessed by this test is preceded by a BOM from
  * which the JSP container derives the page encoding:
  *
- *  Page           Page Encoding          Bytes         
- *  UTF-16BE.jsp   UTF-16, big-endian     FE FF         
+ *  Page           Page Encoding          Bytes
+ *  UTF-16BE.jsp   UTF-16, big-endian     FE FF
  *  UTF-16LE.jsp   UTF-16, little-endian  FF FE
  *  UTF-8.jsp      UTF-8                  EF BB BF
  *
@@ -58,7 +58,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for BOM in JSP classic syntax");
@@ -86,14 +86,14 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     /*
      * @return true if passed, false if failed
      */
     public boolean doTest(String jspPage) throws Exception {
-     
+
         InputStream is = null;
         BufferedReader input = null;
         try {

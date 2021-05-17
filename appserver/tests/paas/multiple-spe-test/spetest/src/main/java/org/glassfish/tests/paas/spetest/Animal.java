@@ -26,19 +26,19 @@ import java.io.Serializable;
  *
  * @author ishan.vishnoi@java.net
  */
-@Entity 
+@Entity
 @Table(name = "ZOO_DIRECTORY")
 public class Animal implements Serializable {
-    
+
     @Id
     private int ID;
-    
+
     private String name;
-    
+
     private String species;
-    
+
     private String cageNumber;
-    
+
     private String yearOfBirth;
 
     public int getID() {
@@ -47,7 +47,7 @@ public class Animal implements Serializable {
 
     public void setID(int ID) {
         this.ID = ID;
-    }    
+    }
 
     public String getCageNumber() {
         return cageNumber;
@@ -80,7 +80,7 @@ public class Animal implements Serializable {
     public void setYearOfBirth(String yearOfBirth) {
         this.yearOfBirth = yearOfBirth;
     }
-  
+
     @Override
     public String toString() {
         return "entity.NewEntity[id=" + ID + "]";

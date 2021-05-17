@@ -18,7 +18,7 @@
 list_test_ids(){
   echo jdbc_all
 }
- 
+
 test_run(){
   ${S1AS_HOME}/bin/asadmin start-domain domain1
   ${S1AS_HOME}/bin/asadmin start-database
@@ -38,13 +38,13 @@ run_test_id(){
   generate_junit_report ${1}
   change_junit_report_class_names
 }
- 
+
 get_test_target(){
-	case ${1} in
-		jdbc_all )
-			TARGET=all
-			export TARGET;;
-	esac
+    case ${1} in
+        jdbc_all )
+            TARGET=all
+            export TARGET;;
+    esac
 }
 
 OPT=${1}

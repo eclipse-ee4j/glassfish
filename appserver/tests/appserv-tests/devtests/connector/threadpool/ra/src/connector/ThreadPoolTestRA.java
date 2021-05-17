@@ -70,18 +70,18 @@ implements ResourceAdapter, java.io.Serializable {
 
     public void
     endpointDeactivation (
-            MessageEndpointFactory endpointFactory, 
+            MessageEndpointFactory endpointFactory,
             ActivationSpec spec) {
         debug ("endpointDeactivation called...");
         throw new UnsupportedOperationException();
     }
-  
+
     void debug (String message) {
         if (debug)
             System.out.println("[SimpleResourceAdapterImpl] ==> " + message);
     }
 
-    public XAResource[] getXAResources(ActivationSpec[] specs) 
+    public XAResource[] getXAResources(ActivationSpec[] specs)
         throws ResourceException {
         throw new UnsupportedOperationException();
     }

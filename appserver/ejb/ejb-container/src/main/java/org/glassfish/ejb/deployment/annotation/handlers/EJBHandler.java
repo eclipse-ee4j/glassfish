@@ -52,7 +52,7 @@ public class EJBHandler extends AbstractResourceHandler {
 
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(EJBHandler.class);
-    
+
     public EJBHandler() {
     }
 
@@ -107,7 +107,7 @@ public class EJBHandler extends AbstractResourceHandler {
             target.setClassName(targetClassName);
             target.setFieldName(f.getName());
             target.setMetadataSource(MetadataSource.ANNOTATION);
-            
+
         } else if (ElementType.METHOD.equals(ainfo.getElementType())) {
 
             Method m = (Method)ainfo.getAnnotatedElement();
@@ -126,7 +126,7 @@ public class EJBHandler extends AbstractResourceHandler {
             target.setClassName(targetClassName);
             target.setMethodName(m.getName());
             target.setMetadataSource(MetadataSource.ANNOTATION);
-            
+
         } else if( ElementType.TYPE.equals(ainfo.getElementType()) ) {
             // name() and beanInterface() are required for TYPE-level @EJB
             // if either of them not set, fail fast.  See issue 17284
@@ -240,11 +240,11 @@ public class EJBHandler extends AbstractResourceHandler {
             // If beanInterface has @Remote annotation, setLocal(false);
             // If beanInterface has neither @Local nor @Remote,
             // assume remote for now. We can't know for sure until the
-            // post-validation stage.  Even though local business will 
-            // probably be more common than remote business, defaulting 
-            // to remote business simplifies the post-application 
-            // validation logic considerably.  See 
-            // EjbBundleValidator.accept(EjbReferenceDescriptor) 
+            // post-validation stage.  Even though local business will
+            // probably be more common than remote business, defaulting
+            // to remote business simplifies the post-application
+            // validation logic considerably.  See
+            // EjbBundleValidator.accept(EjbReferenceDescriptor)
             // for more details.
             ejbRef.setLocal(false);
         }
@@ -286,7 +286,7 @@ public class EJBHandler extends AbstractResourceHandler {
             }
         } catch(Exception e) {
             if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE, 
+                logger.log(Level.FINE,
                 "component intf / ejb type annotation processing error", e);
             }
         }

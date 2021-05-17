@@ -26,13 +26,13 @@ import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
 
 public class SFSBEJB
-    implements SessionBean 
+    implements SessionBean
 {
-	private SessionContext context;
+    private SessionContext context;
     private String sfsbName;
     private Context initialCtx;
 
-	public void ejbCreate(String sfsbName) {
+    public void ejbCreate(String sfsbName) {
         System.out.println ("In SFSB.ejbCreate() for name -> " + sfsbName);
         this.sfsbName = sfsbName;
     }
@@ -41,22 +41,22 @@ public class SFSBEJB
         return this.sfsbName;
     }
 
-	public void setSessionContext(SessionContext sc) {
-		this.context = sc;
+    public void setSessionContext(SessionContext sc) {
+        this.context = sc;
         try {
             this.initialCtx = new InitialContext();
         } catch (Throwable th) {
             th.printStackTrace();
         }
-	}
+    }
 
-	public void ejbRemove() {}
+    public void ejbRemove() {}
 
-	public void ejbActivate() {
+    public void ejbActivate() {
         System.out.println ("In SFSB.ejbActivate() for name -> " + sfsbName);
     }
 
-	public void ejbPassivate() {
+    public void ejbPassivate() {
         System.out.println ("In SFSB.ejbPassivate() for name -> " + sfsbName);
     }
 }

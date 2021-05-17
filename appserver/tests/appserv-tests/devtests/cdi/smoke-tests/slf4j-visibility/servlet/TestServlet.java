@@ -52,15 +52,15 @@ public class TestServlet extends HttpServlet {
         }
         if (bm1 == null) msg += "BeanManager Injection via component environment lookup failed";
 
-        
+
         System.out.println("BeanManager is " + bm);
         System.out.println("BeanManager via lookup is " + bm1);
-        
+
         Logger l = Logger.getLogger(getClass());
         String s = "[ Hello World is logged by an instance of " + l.getClass() + ", which is loaded by " + l.getClass().getClassLoader() + "]";
         msg += s;
         l.info(s);
-        
+
         writer.write(msg + "\n");
     }
 }

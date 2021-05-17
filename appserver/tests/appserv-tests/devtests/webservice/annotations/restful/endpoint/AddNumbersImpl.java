@@ -60,7 +60,7 @@ public class AddNumbersImpl implements Provider<Source> {
             throw new HTTPException(500);
         }
     }
-    
+
     private Source createSource(String str) {
         StringTokenizer st = new StringTokenizer(str, "=&/");
         String token = st.nextToken();
@@ -76,5 +76,5 @@ public class AddNumbersImpl implements Provider<Source> {
             new ByteArrayInputStream(body.getBytes()));
         return source;
     }
-    
+
 }

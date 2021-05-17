@@ -39,7 +39,7 @@ public class ValidateDasOptions extends LocalInstanceCommand {
     protected boolean mkdirs(File f) {
         return false;
     }
-    
+
     @Override
     protected boolean isDirectory(File f) {
         return true;
@@ -55,7 +55,7 @@ public class ValidateDasOptions extends LocalInstanceCommand {
         instanceName = instanceName0;
         super.validate();
 
-        File dasProperties = new File(new File(nodeDirChild, "agent" 
+        File dasProperties = new File(new File(nodeDirChild, "agent"
                 + File.separator + "config"), "das.properties");
 
         if (dasProperties.isFile()) {

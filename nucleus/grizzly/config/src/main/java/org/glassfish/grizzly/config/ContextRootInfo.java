@@ -48,7 +48,7 @@ public final class ContextRootInfo {
     /**
      * Create <tt>ContextRootInfo</tt> using prepared {@link HttpHandler} and
      * application container parameters.
-     * 
+     *
      * @param handler Grizzly {@link HttpHandler}, associated with the context.
      * @param container application container, associated with the context.
      */
@@ -60,7 +60,7 @@ public final class ContextRootInfo {
     /**
      * Create <tt>ContextRootInfo</tt> using passed {@link Holder} object, which
      * might be initialized lazily.
-     * 
+     *
      * @param holder context info {@link Holder}.
      */
     public ContextRootInfo(final Holder holder) {

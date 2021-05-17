@@ -24,7 +24,7 @@ import com.oracle.hk2.devtest.cdi.ear.lib1.HK2Service;
 import com.oracle.hk2.devtest.cdi.ear.lib1.Lib1HK2Service;
 
 /**
- * 
+ *
  * @author jwells
  *
  */
@@ -33,7 +33,7 @@ import com.oracle.hk2.devtest.cdi.ear.lib1.Lib1HK2Service;
 public class Ejb1 implements Ejb1Remote {
     @Inject
     private Ejb1HK2Service ejb1Service;
-    
+
     @Inject
     private Lib1HK2Service lib1Service;
 

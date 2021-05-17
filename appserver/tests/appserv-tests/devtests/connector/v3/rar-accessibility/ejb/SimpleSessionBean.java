@@ -57,7 +57,7 @@ public class SimpleSessionBean implements SessionBean {
                 InitialContext ctx = new InitialContext();
                 Object o = ctx.lookup(res);
                 System.out.println("CLASS_NAME: "+o.getClass().getName());
-                System.out.println("CLASS_LOADER: " + 
+                System.out.println("CLASS_LOADER: " +
                         Thread.currentThread().getContextClassLoader().loadClass(o.getClass().getName()).getClassLoader());
                 count++;
             }catch(Throwable e){

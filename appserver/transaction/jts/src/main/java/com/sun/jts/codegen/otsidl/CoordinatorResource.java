@@ -26,6 +26,6 @@ package com.sun.jts.codegen.otsidl;
 
 
 //#-----------------------------------------------------------------------------
-public interface CoordinatorResource extends CoordinatorResourceOperations, org.omg.CosTransactions.SubtransactionAwareResource, org.omg.CORBA.portable.IDLEntity 
+public interface CoordinatorResource extends CoordinatorResourceOperations, org.omg.CosTransactions.SubtransactionAwareResource, org.omg.CORBA.portable.IDLEntity
 {
 } // interface CoordinatorResource

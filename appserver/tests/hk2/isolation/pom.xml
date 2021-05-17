@@ -32,7 +32,7 @@
     <packaging>pom</packaging>
     <version>6.1.1-SNAPSHOT</version>
 
-    <name>GlassFish HK2 Isolation Tests</name>  
+    <name>GlassFish HK2 Isolation Tests</name>
     <modules>
         <module>web</module>
         <module>runner</module>

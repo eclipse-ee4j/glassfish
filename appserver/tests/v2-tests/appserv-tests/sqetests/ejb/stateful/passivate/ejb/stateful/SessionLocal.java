@@ -25,6 +25,6 @@ import jakarta.ejb.*;
  */
 
 public interface SessionLocal extends jakarta.ejb.EJBLocalObject {
-    
+
 }
 

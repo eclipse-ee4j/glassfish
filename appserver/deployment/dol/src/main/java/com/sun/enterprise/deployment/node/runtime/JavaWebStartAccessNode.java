@@ -31,9 +31,9 @@ import java.util.Map;
  * @author tjquinn
  */
 public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStartAccessDescriptor> {
-    
+
     protected JavaWebStartAccessDescriptor descriptor;
-    
+
     /** Creates a new instance of JavaWebStartAccessNode */
     public JavaWebStartAccessNode() {
         handlers = null;
@@ -48,11 +48,11 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
 
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     @Override
     public JavaWebStartAccessDescriptor getDescriptor() {
-	if (descriptor==null) {
-	    descriptor = new JavaWebStartAccessDescriptor();
+    if (descriptor==null) {
+        descriptor = new JavaWebStartAccessDescriptor();
             XMLNode parentNode = getParentNode();
             if (parentNode != null && (parentNode instanceof AppClientRuntimeNode)) {
                 Object parentDescriptor = parentNode.getDescriptor();
@@ -60,16 +60,16 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
                     ApplicationClientDescriptor acDescriptor = (ApplicationClientDescriptor) parentDescriptor;
                     acDescriptor.setJavaWebStartAccessDescriptor(descriptor);
                 }
-                
+
             }
-	} 
-	return descriptor;
     }
-    
+    return descriptor;
+    }
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -89,16 +89,16 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, JavaWebStartAccessDescriptor descr) {    
-	Node accessNode = super.writeDescriptor(parent, nodeName, descr);
+     */
+    public Node writeDescriptor(Node parent, String nodeName, JavaWebStartAccessDescriptor descr) {
+    Node accessNode = super.writeDescriptor(parent, nodeName, descr);
         appendTextChild(accessNode, RuntimeTagNames.CONTEXT_ROOT, descr.getContextRoot());
         appendTextChild(accessNode, RuntimeTagNames.ELIGIBLE, Boolean.toString(descr.isEligible()));
         appendTextChild(accessNode, RuntimeTagNames.VENDOR, descr.getVendor());
         appendTextChild(accessNode, RuntimeTagNames.JNLP_DOC, descr.getJnlpDocument());
-	return accessNode;
-    }    
-    
+    return accessNode;
+    }
+
     public static void writeJavaWebStartInfo(Node parent, JavaWebStartAccessDescriptor descr) {
         if (descr != null) {
             JavaWebStartAccessNode newNode = new JavaWebStartAccessNode();

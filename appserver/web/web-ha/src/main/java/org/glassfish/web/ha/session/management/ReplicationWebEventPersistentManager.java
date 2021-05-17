@@ -77,7 +77,7 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
     /**
      * The descriptive name of this Manager implementation (for logging).
      */
-    private static final String name = "ReplicationWebEventPersistentManager";    
+    private static final String name = "ReplicationWebEventPersistentManager";
 
 
     // ------------------------------------------------------------- Properties
@@ -93,7 +93,7 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
         return (this.info);
 
     }
-    
+
     /** Creates a new instance of ReplicationWebEventPersistentManager */
     public ReplicationWebEventPersistentManager() {
         super();
@@ -101,13 +101,13 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
             _logger.fine("ReplicationWebEventPersistentManager created");
         }
     }
-    
+
     /**
     * called from valve; does the save of session
     *
-    * @param session 
+    * @param session
     *   The session to store
-    */    
+    */
     public void doValveSave(Session session) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("in doValveSave");
@@ -124,21 +124,21 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
 
                 _logger.log(Level.FINE, "exception occurred in doValveSave id=" + session.getIdInternal(),
                                 ex);
-                
+
             }
     }
-   
+
 
     //START OF 6364900
     public void postRequestDispatcherProcess(ServletRequest request, ServletResponse response) {
         Session sess = this.getSession(request);
-        
-        if(sess != null) {         
-            doValveSave(sess);            
+
+        if(sess != null) {
+            doValveSave(sess);
         }
         return;
     }
-    
+
     private Session getSession(ServletRequest request) {
         jakarta.servlet.http.HttpServletRequest httpReq =
             (jakarta.servlet.http.HttpServletRequest) request;
@@ -153,18 +153,18 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
         } catch (java.io.IOException ex) {}
 
         return sess;
-    } 
-    //END OF 6364900 
-    
-    //new code start    
-    
+    }
+    //END OF 6364900
+
+    //new code start
+
 
     //private static int NUMBER_OF_REQUESTS_BEFORE_FLUSH = 1000;
     //volatile Map<String, String> removedKeysMap = new ConcurrentHashMap<String, String>();
     //private static AtomicInteger requestCounter = new AtomicInteger(0);
     private static int _messageIDCounter = 0;
     //private AtomicBoolean  timeToChange = new AtomicBoolean(false);
-    
+
 
     // ------------------------------------------------------------- Properties
 
@@ -187,7 +187,7 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
         //this is a deliberate no-op for this manager
         return;
     }
-    
+
     /**
      * Swap idle sessions out to Store if too many are active
      * Hercules: modified method

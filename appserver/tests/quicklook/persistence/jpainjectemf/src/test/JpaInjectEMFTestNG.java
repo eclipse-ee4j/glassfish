@@ -33,33 +33,33 @@ public class JpaInjectEMFTestNG {
     static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
 
     @Test(groups = { "init" })
     public void persistWithInjectEMF() throws Exception{
-        boolean result=false;       
+        boolean result=false;
 
         try{
 
           result = test("llinit");
-	  Assert.assertEquals(result, true,"Unexpected Results");
+      Assert.assertEquals(result, true,"Unexpected Results");
 
         }catch(Exception e){
 
-	  e.printStackTrace();
-	  throw new Exception(e);
+      e.printStackTrace();
+      throw new Exception(e);
 
         }
     }
 
     @Test(dependsOnGroups = { "init.*" })
     public void lazyLoadingByQuery() throws Exception{
-        boolean result=false;        
+        boolean result=false;
 
         try{
 
-            result = test("llquery");               
-  	    Assert.assertEquals(result, true,"Unexpected Results");
+            result = test("llquery");
+          Assert.assertEquals(result, true,"Unexpected Results");
 
         }catch(Exception e){
             e.printStackTrace();
@@ -71,7 +71,7 @@ public class JpaInjectEMFTestNG {
     private boolean test(String c) throws Exception {
         String EXPECTED_RESPONSE = c + ":pass";
         boolean result=false;
-        String url = "http://" + host + ":" + port + strContextRoot + 
+        String url = "http://" + host + ":" + port + strContextRoot +
                      "/jpa?testcase=" + c;
         //System.out.println("url="+url);
 
@@ -80,19 +80,19 @@ public class JpaInjectEMFTestNG {
         int code = conn.getResponseCode();
         if (code != 200) {
             System.err.println("Unexpected return code: " + code);
-	} else {
+    } else {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
-	    String line = null;
-	    while ((line = input.readLine()) != null) {
-	      if (line.contains(EXPECTED_RESPONSE)) {
+        String line = null;
+        while ((line = input.readLine()) != null) {
+          if (line.contains(EXPECTED_RESPONSE)) {
                 result = true;
-		break;
-	      }
-	    }
-	    
-        }    
-	return result;
+        break;
+          }
+        }
+
+        }
+    return result;
     }
 
     public static void echo(String msg) {

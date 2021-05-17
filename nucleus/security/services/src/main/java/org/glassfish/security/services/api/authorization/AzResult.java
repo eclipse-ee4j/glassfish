@@ -25,37 +25,37 @@ package org.glassfish.security.services.api.authorization;
  * the meaning of any specific obligation is established by an out-of-band agreement between the PDP and the PEP.
  */
 public interface AzResult {
-	
-	/**
-	 * The possible authorization decision values.  These carry the same meaning as the corresponding
-	 * decision values defined by XACML 2.0 and later.
-	 */
-	public enum Decision { PERMIT, DENY, INDETERMINATE, NOT_APPLICABLE };
-	/**
-	 * The possible authorization status values.  These carry the same meaning as the corresponding
-	 * status values defined by XACML 2.0 and later.
-	 */
-	public enum Status { OK, MISSING_ATTRIBUTE, PROCESSING_ERROR, SYNTAX_ERROR };
-	
-	/**
-	 * Get the authorization decision value for this AzResult.
-	 * 
-	 * @return The Decision value.
-	 */
-	public Decision getDecision();
-	
-	/**
-	 * Get the authorization status value for this AzResult.
-	 * 
-	 * @return The Status value.
-	 */
-	public Status getStatus();
-	
-	/**
-	 * Return the obligations that apply to this result.
-	 * 
-	 * @return The AzObligations.
-	 */
-	public AzObligations getObligations();
+
+    /**
+     * The possible authorization decision values.  These carry the same meaning as the corresponding
+     * decision values defined by XACML 2.0 and later.
+     */
+    public enum Decision { PERMIT, DENY, INDETERMINATE, NOT_APPLICABLE };
+    /**
+     * The possible authorization status values.  These carry the same meaning as the corresponding
+     * status values defined by XACML 2.0 and later.
+     */
+    public enum Status { OK, MISSING_ATTRIBUTE, PROCESSING_ERROR, SYNTAX_ERROR };
+
+    /**
+     * Get the authorization decision value for this AzResult.
+     *
+     * @return The Decision value.
+     */
+    public Decision getDecision();
+
+    /**
+     * Get the authorization status value for this AzResult.
+     *
+     * @return The Status value.
+     */
+    public Status getStatus();
+
+    /**
+     * Return the obligations that apply to this result.
+     *
+     * @return The AzObligations.
+     */
+    public AzObligations getObligations();
 
 }

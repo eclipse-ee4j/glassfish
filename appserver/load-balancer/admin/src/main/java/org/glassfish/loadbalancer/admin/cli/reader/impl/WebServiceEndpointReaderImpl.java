@@ -72,10 +72,10 @@ public class WebServiceEndpointReaderImpl implements WebModuleReader {
 
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof WebModuleVisitor) {
-			WebModuleVisitor wv = (WebModuleVisitor) v;
-			wv.visit(this);
-		}
+        if (v instanceof WebModuleVisitor) {
+            WebModuleVisitor wv = (WebModuleVisitor) v;
+            wv.visit(this);
+        }
     }
     // ---- VARIABLE(S) - PRIVATE -----------------------------
     private String _name = null;

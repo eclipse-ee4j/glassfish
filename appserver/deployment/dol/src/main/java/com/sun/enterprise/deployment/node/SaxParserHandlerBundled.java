@@ -34,7 +34,7 @@ import java.util.logging.Level;
  * schemas are at /schemas/<schema-name> and DTDs at /dtds/<dtd-name>
  *
  * This ParserHandler is used by Embedded GlassFish as well.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -66,7 +66,7 @@ public class SaxParserHandlerBundled extends SaxParserHandler {
      */
     public InputSource resolveEntity(String publicID, String systemID) throws SAXException {
         InputSource result = null;
-        
+
         /*
          *This logic was patterned after that in the superclass.
          */

@@ -32,12 +32,12 @@ public class Hello {
 @Resource
    private SessionContext sc;
 
-	public Hello() {}
+    public Hello() {}
 
-	@WebMethod(operationName="sayHello", action="urn:SayHello")
+    @WebMethod(operationName="sayHello", action="urn:SayHello")
         @jakarta.interceptor.Interceptors(SimpleInterceptor.class)
-	public String sayHello(Object who) {
-		return "Hello " + who  ;
+    public String sayHello(Object who) {
+        return "Hello " + who  ;
 
-	}
+    }
 }

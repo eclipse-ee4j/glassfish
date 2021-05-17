@@ -19,7 +19,7 @@ package org.glassfish.grizzly.config;
 /**
  * Common secure store password provider.
  * Used to customize the way of retrieving passwords for the key and trust stores.
- * 
+ *
  * @author Alexey Stashok
  */
 public interface SecurePasswordProvider {

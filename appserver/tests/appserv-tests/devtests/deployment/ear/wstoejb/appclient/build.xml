@@ -20,29 +20,29 @@
 
 <!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
 ]>
- 
+
 <project name="wstoejb" default="all" basedir=".">
 
- 	&commonBuild;
+     &commonBuild;
     <property name="archivedir" value="${build}/archives"/>
 
-	<target name="prepare" depends="init">
+    <target name="prepare" depends="init">
         <mkdir dir="${build}" />
         <mkdir dir="${archivedir}" />
         <copy file="WebServiceToEjb.wsdl" todir="${build}/META-INF/wsdl"/>
         <exec executable="${WSCOMPILE}" failonerror="true" >
-		    <arg line="-import -d ${build} -classpath ${build} -mapping ${build}/mapping.xml wscompile_config.xml"/>
+            <arg line="-import -d ${build} -classpath ${build} -mapping ${build}/mapping.xml wscompile_config.xml"/>
         </exec>
-	</target>
+    </target>
 
-	<target name="compile" depends="prepare">
-		<javac srcdir="wstoejb" destdir="${build}">
+    <target name="compile" depends="prepare">
+        <javac srcdir="wstoejb" destdir="${build}">
   <classpath refid="gfv3.classpath"/>
          </javac>
 
-	</target>
+    </target>
 
-	<target name="assemble" depends="compile,setHttpPort">
+    <target name="assemble" depends="compile,setHttpPort">
             <mkdir dir="${build}/META-INF"/>
             <copy file="application-client.xml" todir="${build}/META-INF"/>
             <jar destfile="${archivedir}/appclient-portable.jar" basedir="${build}">
@@ -60,8 +60,8 @@
                     <attribute name="main-class" value="wstoejb.Client"/>
                 </manifest>
             </jar>
-	</target>
-		
-	<target name="private-all" depends="assemble"/>
+    </target>
+
+    <target name="private-all" depends="assemble"/>
 
 </project>

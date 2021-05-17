@@ -320,16 +320,16 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
      * The Constraint stack can be manipulated directly if necessary.
      *
      * @param name
-     * 	The name parameter specifies the field whose value
-     * 	should be limited.
+     *     The name parameter specifies the field whose value
+     *     should be limited.
      * @param operation
-     * 	The operation parameter specifies the relationship the field
-     * 	should bear to the value.  Values for operation are defined in
-     * 	the ActionDesc interface.
+     *     The operation parameter specifies the relationship the field
+     *     should bear to the value.  Values for operation are defined in
+     *     the ActionDesc interface.
      * @param value
-     * 	The value parameter usually specifies the value to which the
-     * 	field should be limited, however it is sometimes used to
-     * 	hold a parameter count as for the OP_IN operation.
+     *     The value parameter usually specifies the value to which the
+     *     field should be limited, however it is sometimes used to
+     *     hold a parameter count as for the OP_IN operation.
      */
     public void addConstraint(String name,
                               int operation,
@@ -459,14 +459,14 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     }
 
     /**
-     * 	The getOperationInfo method returns information about the operation
-     * 	requested.  The following constants define different properties of
-     * 	an operation and can be or'd together:
+     *     The getOperationInfo method returns information about the operation
+     *     requested.  The following constants define different properties of
+     *     an operation and can be or'd together:
      *   OPINFO_FIELD_DISALLOWED A field parameter cannot be specified
      *                           with this operation
      *   OPINFO_FIELD_REQUIRED   A field parameter must be specified
      *                           with this operation
-     *   OPINFO_VAL_DISALLOWED	 A value parameter cannot be specified
+     *   OPINFO_VAL_DISALLOWED     A value parameter cannot be specified
      *                           with this operation
      *   OPINFO_VAL_REQUIRED     A value parameter must be specified
      *                           with this operation

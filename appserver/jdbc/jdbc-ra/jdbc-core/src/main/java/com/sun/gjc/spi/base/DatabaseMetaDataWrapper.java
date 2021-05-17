@@ -1521,7 +1521,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <LI><B>TABLE_SCHEM</B> String => table schema (may be <code>null</code>)
      * <LI><B>TABLE_NAME</B> String => table name
      * <LI><B>TABLE_TYPE</B> String => table type.  Typical types are "TABLE",
-     * "VIEW",	"SYSTEM TABLE", "GLOBAL TEMPORARY",
+     * "VIEW",    "SYSTEM TABLE", "GLOBAL TEMPORARY",
      * "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
      * <LI><B>REMARKS</B> String => explanatory comment on the table
      * <LI><B>TYPE_CAT</B> String => the types catalog (may be <code>null</code>)
@@ -1599,7 +1599,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <P>The table type is:
      * <OL>
      * <LI><B>TABLE_TYPE</B> String => table type.  Typical types are "TABLE",
-     * "VIEW",	"SYSTEM TABLE", "GLOBAL TEMPORARY",
+     * "VIEW",    "SYSTEM TABLE", "GLOBAL TEMPORARY",
      * "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
      * </OL>
      *
@@ -1647,7 +1647,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <LI><B>SQL_DATETIME_SUB</B> int => unused
      * <LI><B>CHAR_OCTET_LENGTH</B> int => for char types the
      * maximum number of bytes in the column
-     * <LI><B>ORDINAL_POSITION</B> int	=> index of column in table
+     * <LI><B>ORDINAL_POSITION</B> int    => index of column in table
      * (starting at 1)
      * <LI><B>IS_NULLABLE</B> String => "NO" means column definitely
      * does not allow NULL values; "YES" means the column might
@@ -1786,7 +1786,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * for a UDT the type name is fully qualified
      * <LI><B>COLUMN_SIZE</B> int => precision
      * <LI><B>BUFFER_LENGTH</B> int => not used
-     * <LI><B>DECIMAL_DIGITS</B> short	 => scale
+     * <LI><B>DECIMAL_DIGITS</B> short     => scale
      * <LI><B>PSEUDO_COLUMN</B> short => is this a pseudo column
      * like an Oracle ROWID
      * <UL>
@@ -1829,7 +1829,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <LI><B>TYPE_NAME</B> String => Data source-dependent type name
      * <LI><B>COLUMN_SIZE</B> int => precision
      * <LI><B>BUFFER_LENGTH</B> int => length of column value in bytes
-     * <LI><B>DECIMAL_DIGITS</B> short	 => scale
+     * <LI><B>DECIMAL_DIGITS</B> short     => scale
      * <LI><B>PSEUDO_COLUMN</B> short => whether this is pseudo column
      * like an Oracle ROWID
      * <UL>
@@ -2684,7 +2684,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <LI><B>SQL_DATETIME_SUB</B> int => unused
      * <LI><B>CHAR_OCTET_LENGTH</B> int => for char types the
      * maximum number of bytes in the column
-     * <LI><B>ORDINAL_POSITION</B> int	=> index of column in table
+     * <LI><B>ORDINAL_POSITION</B> int    => index of column in table
      * (starting at 1)
      * <LI><B>IS_NULLABLE</B> String => "NO" means column definitely
      * does not allow NULL values; "YES" means the column might

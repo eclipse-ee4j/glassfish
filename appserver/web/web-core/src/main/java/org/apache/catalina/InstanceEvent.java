@@ -328,7 +328,7 @@ public final class InstanceEvent
 
     /**
      * The exception that was thrown during the processing being reported
-     * by this event (AFTER_INIT_EVENT, AFTER_SERVICE_EVENT, 
+     * by this event (AFTER_INIT_EVENT, AFTER_SERVICE_EVENT,
      * AFTER_DESTROY_EVENT, AFTER_DISPATCH_EVENT, and AFTER_FILTER_EVENT only).
      */
     private Throwable exception = null;

@@ -41,7 +41,7 @@ public class TransactionInvocationHandler implements ComponentInvocationHandler 
     private JavaEETransactionManager tm;
 
     /**
-     * Dynamically init the reference. This avoids circular dependencies 
+     * Dynamically init the reference. This avoids circular dependencies
      * on injection: JavaEETransactionManager injects InvocationManager, which in
      * turn injects all ComponentInvocationHandler impls, i.e. instance of this class.
      * PostConstruct has a similar problem.

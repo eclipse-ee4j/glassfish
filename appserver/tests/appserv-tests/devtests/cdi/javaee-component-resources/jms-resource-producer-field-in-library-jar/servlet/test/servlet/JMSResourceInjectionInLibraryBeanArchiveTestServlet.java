@@ -36,29 +36,29 @@ public class JMSResourceInjectionInLibraryBeanArchiveTestServlet extends HttpSer
     @Inject
     @Preferred
     TestBeanInterface tb;
-    
+
     @Inject
     private Queue queue;
 
     @Inject
     private Session session;
-    
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
-        
+
         if (queue == null)
             msg += "typesafe Injection of queue into a servlet failed";
 
         if (session == null)
             msg += "typesafe Injection of Session into a servlet failed";
-        
+
         if (tb == null)
             msg += "Injection of request scoped bean failed";
-        
+
         if (tb.testDatasourceInjection().trim().length() != 0)
             msg += tb.testDatasourceInjection();
 

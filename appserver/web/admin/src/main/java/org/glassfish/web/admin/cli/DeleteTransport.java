@@ -50,7 +50,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Delete Transport command
- * 
+ *
  */
 @Service(name="delete-transport")
 @PerLookup
@@ -71,13 +71,13 @@ public class DeleteTransport implements AdminCommand {
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
-    
+
     @Inject
     Domain domain;
-    
+
     @Inject
     ServiceLocator services;
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -131,7 +131,7 @@ public class DeleteTransport implements AdminCommand {
                     return transportToBeRemoved;
                 }
             }, transports);
-            
+
         } catch(TransactionFailure e) {
             report.setMessage(MessageFormat.format(rb.getString(LogFacade.DELETE_TRANSPORT_FAIL), transportName) +
                     "  " + e.getLocalizedMessage());

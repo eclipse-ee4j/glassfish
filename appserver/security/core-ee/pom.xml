@@ -150,7 +150,7 @@
             <artifactId>libpam4j</artifactId>
             <version>${project.version}</version>
         </dependency>
-	<dependency>
+    <dependency>
             <groupId>org.glassfish.annotations</groupId>
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
@@ -258,7 +258,7 @@
                  <!--<outputDirectory>${maven.project.build.outputDirectory}</outputDirectory>-->
                  <outputDirectory>target/classes</outputDirectory>
                </configuration>
-             </execution>    
+             </execution>
            </executions>
          </plugin>
         </plugins>

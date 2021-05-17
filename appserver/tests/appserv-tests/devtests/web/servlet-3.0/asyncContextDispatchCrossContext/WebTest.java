@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for cross-context ASYNC dispatch.
  *
  * This unit test accesses servlet "dispatchFrom" in context "fromContext",
- * which initiates an ASYNC dispatch to servlet "dispatchTo" in context 
+ * which initiates an ASYNC dispatch to servlet "dispatchTo" in context
  * "toContext".
  */
 public class WebTest {
@@ -41,7 +41,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) throws Exception {
 
         stat.addDescription("Unit test for cross-context async dispatch");
@@ -55,11 +55,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port +
             "/fromContext/dispatchFrom?myname=myvalue");
         System.out.println("Connecting to: " + url.toString());

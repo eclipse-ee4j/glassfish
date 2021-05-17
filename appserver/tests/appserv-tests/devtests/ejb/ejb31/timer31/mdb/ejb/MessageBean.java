@@ -40,50 +40,50 @@ public class MessageBean implements MessageListener {
 
     String mname;
 
-    @EJB 
+    @EJB
     private SingletonBean singleton;
 
     @Resource
-	private MessageDrivenContext mdc;
-     
+    private MessageDrivenContext mdc;
+
     @PostConstruct
     public void init() {
         System.out.println("In MessageBean::init()");
     }
 
     public void onMessage(Message message) {
-	System.out.println("In MessageBean::onMessage()");
-	System.out.println("getCallerPrincipal = " + mdc.getCallerPrincipal());
+    System.out.println("In MessageBean::onMessage()");
+    System.out.println("getCallerPrincipal = " + mdc.getCallerPrincipal());
         verifyMethodName("onMessage");
     }
 
     @Schedule(second="*/1", minute="*", hour="*")
     private void onTimeout() {
-	System.out.println("In MessageBean::onTimeout()");
-	System.out.println("getCallerPrincipal = " + mdc.getCallerPrincipal());
+    System.out.println("In MessageBean::onTimeout()");
+    System.out.println("getCallerPrincipal = " + mdc.getCallerPrincipal());
 
         verifyMethodName("onTimeout");
-	try {
-	    System.out.println("IsCallerInRole('foo')= " + 
-			       mdc.isCallerInRole("foo"));
-	    throw new EJBException("Expecting IllegalStateEXception for call to isCallerInRole() from timer callback");
-	} catch(IllegalStateException ise) {
-	    System.out.println("Successfully received exception for invocation of isCallerInRole from timer callback");
-	}
-	    
+    try {
+        System.out.println("IsCallerInRole('foo')= " +
+                   mdc.isCallerInRole("foo"));
+        throw new EJBException("Expecting IllegalStateEXception for call to isCallerInRole() from timer callback");
+    } catch(IllegalStateException ise) {
+        System.out.println("Successfully received exception for invocation of isCallerInRole from timer callback");
+    }
+
         if (singleton.getAroundTimeoutCalled(null)) {
-	    singleton.test1Passed();
+        singleton.test1Passed();
         }
     }
 
     private void onDDTimeout(Timer t) {
-	System.out.println("In MessageBean::onDDTimeout()");
+    System.out.println("In MessageBean::onDDTimeout()");
         if (singleton.getAroundTimeoutCalled((String)t.getInfo())) {
-	    singleton.test2Passed();
+        singleton.test2Passed();
         }
     }
 
-    
+
     @PreDestroy
     public void destroy() {
         System.out.println("In MessageBean::destroy()");

@@ -95,7 +95,7 @@ public interface Engine extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Creates a new instance of the specified type of app config.
-     * 
+     *
      * @param <T> stands for the specific type required
      * @param configType the Class for the type required
      * @return new instance of the specified type of ApplicationConfig

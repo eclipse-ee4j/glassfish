@@ -143,7 +143,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
      */
     @Test
     public void testWebContainerPropertyTable() {
-        
+
         final String property1 = "property1" + generateRandomString();
         final String value1 = "()";
         final String description1 = "Description for " + property1;
@@ -160,7 +160,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", description1);
 
         count = addTableRow("form1:basicTable", "form1:basicTable:topActionsGroup1:addSharedTableButton");
-        
+
         setFieldValue("form1:basicTable:rowGroup1:0:col2:col1St", property2);
         setFieldValue("form1:basicTable:rowGroup1:0:col3:col1St", value2);
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", description2);

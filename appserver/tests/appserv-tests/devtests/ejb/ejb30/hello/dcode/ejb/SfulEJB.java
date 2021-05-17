@@ -24,7 +24,7 @@ import jakarta.ejb.RemoteHome;
 
 @RemoteHome(SfulHome.class)
 @Stateful
-public class SfulEJB 
+public class SfulEJB
 {
 
     // reference to a Remote Business object from another application
@@ -34,7 +34,7 @@ public class SfulEJB
     @EJB(mappedName="ejb_ejb30_hello_session2_Sless") com.sun.s1asdev.ejb.ejb30.hello.session2.SlessRemoteHome slessHome;
 
     com.sun.s1asdev.ejb.ejb30.hello.session2.SlessRemote slessRemote;
-    
+
     @Init
     public void create() {
         System.out.println("In SfulEJB::create");
@@ -52,20 +52,20 @@ public class SfulEJB
 
         sless.hello();
 
-        try {        
+        try {
 
             slessRemote.hello();
 
-            com.sun.s1asdev.ejb.ejb30.hello.session2.SlessRemote 
+            com.sun.s1asdev.ejb.ejb30.hello.session2.SlessRemote
                 anotherRemote = slessHome.create();
-        
+
             anotherRemote.hello();
 
         } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
-            
+
         System.out.println("Called sless.hello()");
 
         return "hello";

@@ -19,32 +19,32 @@ package com.sun.enterprise.server.logging;
 import java.util.regex.Pattern;
 
 /**
- * Helper class that provides methods to detect the log format of a record. 
+ * Helper class that provides methods to detect the log format of a record.
  *
  */
 public class LogFormatHelper {
 
     private static final int ODL_SUBSTRING_LEN = 5;
-    
+
     private static final String ODL_LINE_BEGIN_REGEX = "\\[(\\d){4}";
-    
+
     private static final class PatternHolder {
         private static final Pattern ODL_PATTERN = Pattern.compile(ODL_LINE_BEGIN_REGEX);
     }
-    
+
     /**
      * Determines whether the given line is the beginning of a UniformLogFormat log record.
      * @param line
      * @return
      */
     public static boolean isUniformFormatLogHeader(String line) {
-        if (line.startsWith("[#|") && countOccurrences(line, '|') > 4) { 
+        if (line.startsWith("[#|") && countOccurrences(line, '|') > 4) {
             return true;
         } else {
             return false;
         }
     }
-    
+
     /**
      * Determines whether the given line is the beginning of a ODL log record.
      * @param line
@@ -70,6 +70,6 @@ public class LogFormatHelper {
             }
         }
         return count;
-    }    
-    
+    }
+
 }

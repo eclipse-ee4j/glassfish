@@ -42,7 +42,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 1703");
         WebTest webTest = new WebTest(args);
@@ -51,8 +51,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -62,19 +62,19 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/TestServlet" + " HTTP/1.0\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("Accept-Language: de\n".getBytes());
-        // Send Accept-Language header with invalid locale code. Make sure 
-        // this locale is getting ignored 
+        // Send Accept-Language header with invalid locale code. Make sure
+        // this locale is getting ignored
         os.write("Accept-Language: 12\n".getBytes());
         os.write("Accept-Language: FR\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 

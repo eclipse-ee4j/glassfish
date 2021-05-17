@@ -24,54 +24,54 @@ import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
-/** 
- * Returns the statistical information associated with 
- * the HttpService thread pool 
+/**
+ * Returns the statistical information associated with
+ * the HttpService thread pool
  */
 public interface PWCThreadPoolStats extends Stats {
-    
-    /** 
+
+    /**
      * Returns the thread pool Id
      * @return id
-     */    
+     */
     public StringStatistic getId();
-    
-    /** 
+
+    /**
      * Returns the number of threads that are currently idle
      * @return idle threads
-     */    
+     */
     public CountStatistic getCountThreadsIdle();
-    
-    /** 
+
+    /**
      * Returns current number of threads
      * @return current threads
-     */    
+     */
     public CountStatistic getCountThreads();
-    
-    /** 
+
+    /**
      * Returns the maximum number of native threads allowed in the thread pool
      * @return max number of threads allowed
-     */    
+     */
     public CountStatistic getMaxThreads();
-    
-    /** 
+
+    /**
      * Returns the current number of requests waiting for a native thread
      * @return queued requests
-     */    
+     */
     public CountStatistic getCountQueued();
-    
-    /** 
+
+    /**
      * Returns the highest number of requests that were ever queued up
      * simultaneously for the use of a native thread since the server
      * was started
-     */    
+     */
     public CountStatistic getPeakQueued();
-    
-    /** 
+
+    /**
      * Returns the maximum number of requests that can be queued at one
      * time to wait for a native thread
      * @return max number of request to be queued
-     */    
+     */
     public CountStatistic getMaxQueued();
-    
+
 }

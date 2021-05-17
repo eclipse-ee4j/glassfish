@@ -90,7 +90,7 @@
       </service-endpoint-interface>
       <port-component-link>googleserver-web.war#GoogleSearchPort</port-component-link>
     </port-component-ref>
-  </service-ref>  
+  </service-ref>
 <!--  <service-ref>
     <description>partial wsdl test google service ref</description>
     <service-ref-name>service/partialGenerated</service-ref-name>

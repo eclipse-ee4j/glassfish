@@ -51,8 +51,8 @@ import java.util.Properties;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.DOMAIN})
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-jms-resource", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-jms-resource",
         description="create-jms-resource")
 })
 public class CreateJMSResource implements AdminCommand {
@@ -188,7 +188,7 @@ public class CreateJMSResource implements AdminCommand {
           if (cpool == null || ! filterForTarget (jndiNameForConnectionPool)) {
                 // Add connector-connection-pool.
               ParameterMap parameters = populateConnectionPoolParameters();
-	          commandRunner.getCommandInvocation("create-connector-connection-pool", subReport, context.getSubject()).parameters(parameters).execute();
+              commandRunner.getCommandInvocation("create-connector-connection-pool", subReport, context.getSubject()).parameters(parameters).execute();
               createdPool= true;
               if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
                     report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateConnectionPool",
@@ -198,7 +198,7 @@ public class CreateJMSResource implements AdminCommand {
               }
           }
               ParameterMap params = populateConnectionResourceParameters();
-	          commandRunner.getCommandInvocation("create-connector-resource", subReport, context.getSubject()).parameters(params).execute();
+              commandRunner.getCommandInvocation("create-connector-resource", subReport, context.getSubject()).parameters(params).execute();
 
               if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
                     report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateConnectorResource",
@@ -211,7 +211,7 @@ public class CreateJMSResource implements AdminCommand {
                       paramsForRollback.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
                       commandRunner.getCommandInvocation("delete-connector-connection-pool", subReport, context.getSubject())
                               .parameters(paramsForRollback)
-                              .execute();   
+                              .execute();
                   }
                   return;
               }
@@ -248,7 +248,7 @@ public class CreateJMSResource implements AdminCommand {
                 if(enabled!=null)
                     aoAttrList.set("enabled", Boolean.toString(enabled));
 
-	            commandRunner.getCommandInvocation("create-admin-object", subReport, context.getSubject()).parameters(aoAttrList).execute();
+                commandRunner.getCommandInvocation("create-admin-object", subReport, context.getSubject()).parameters(aoAttrList).execute();
 
                 if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
                     report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateAdminObject",
@@ -313,8 +313,8 @@ public class CreateJMSResource implements AdminCommand {
             String poolResizeQuantity = null;
             String idleTimeoutInSecs = null;
             String maxWaitTimeInMillis = null;
-	        String failAllConnections = null;
-	        String transactionSupport = null;
+            String failAllConnections = null;
+            String transactionSupport = null;
             ParameterMap parameters = new ParameterMap();
 
             if(props != null){
@@ -335,10 +335,10 @@ public class CreateJMSResource implements AdminCommand {
                     idleTimeoutInSecs = props.getProperty(propKey);
                 else if ("max-wait-time-in-millis".equals(propKey))
                     maxWaitTimeInMillis = props.getProperty(propKey);
-		        else if ("transaction-support".equals(propKey))
-		            transactionSupport = props.getProperty(propKey);
-		        else if("fail-all-connections".equals(propKey))
-		            failAllConnections = props.getProperty(propKey);
+                else if ("transaction-support".equals(propKey))
+                    transactionSupport = props.getProperty(propKey);
+                else if("fail-all-connections".equals(propKey))
+                    failAllConnections = props.getProperty(propKey);
                 else{
                     if ("AddressList".equals(propKey)){
                         String addressListProp = props.getProperty(propKey);
@@ -370,7 +370,7 @@ public class CreateJMSResource implements AdminCommand {
                }
          }
         //parameters.set("restype", resourceType);
-		parameters.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
+        parameters.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
         parameters.set("poolname", jndiName);
 
         if(description != null)
@@ -432,30 +432,30 @@ public class CreateJMSResource implements AdminCommand {
      * the properties object is updated with a computed Name.
      */
     private Properties validateDestinationResourceProps(Properties props,
-    		String jndiName) throws Exception {
+            String jndiName) throws Exception {
         String providedDestinationName = null;
         if(props != null)
              providedDestinationName = getProvidedDestinationName(props);
         else
             props = new Properties();
-        //sLogger.fine("provided destination name =  "	+ providedDestinationName);
+        //sLogger.fine("provided destination name =  "    + providedDestinationName);
         if (providedDestinationName != null) {
-        	//check validity of provided JMS destination name
+            //check validity of provided JMS destination name
             if (!isSyntaxValid(providedDestinationName)) {
                 throw new Exception(localStrings.getLocalString(
                       "admin.mbeans.rmb.destination_name_invalid",
-                      "Destination Resource " + jndiName + 
+                      "Destination Resource " + jndiName +
                       " has an invalid destination name " + providedDestinationName,
                       jndiName, providedDestinationName));
             }
-	} else {
+    } else {
             //compute a valid destination name from the JNDI name.
             String newDestName = computeDestinationName(jndiName);
             //sLogger.log(Level.WARNING, "admin.mbeans.rmb.destination_name_missing",new Object[]{jndiName, newDestName});
             props.put(NAME, newDestName);
             //sLogger.fine("Computed destination name" + newDestName  + " and updated props");
         }
-    	return props;
+        return props;
     }
 
     /**
@@ -508,11 +508,11 @@ public class CreateJMSResource implements AdminCommand {
      * an 'underscore'.
      */
     private String computeDestinationName(String providedJndiName) {
-    	char[] jndiName = providedJndiName.toCharArray();
+        char[] jndiName = providedJndiName.toCharArray();
         char[] finalName = new char[jndiName.length];
         finalName[0] = Character.isJavaIdentifierStart(jndiName[0]) ? jndiName[0] : '_';
         for (int i = 1; i < jndiName.length; i++) {
-        	finalName[i] = Character.isJavaIdentifierPart(jndiName[i])? jndiName[i] : '_';
+            finalName[i] = Character.isJavaIdentifierPart(jndiName[i])? jndiName[i] : '_';
         }
         return new String(finalName);
     }

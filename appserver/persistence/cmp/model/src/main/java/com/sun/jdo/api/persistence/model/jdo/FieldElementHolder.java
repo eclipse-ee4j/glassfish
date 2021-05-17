@@ -24,69 +24,69 @@ package com.sun.jdo.api.persistence.model.jdo;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public interface FieldElementHolder
 {
-	/** Add the supplied field to the collection of fields maintained by this 
-	 * holder.
-	 * @param field the field to be added
-	 * @exception ModelException if impossible
-	 */
-	public void addField (PersistenceFieldElement field) 
-		throws ModelException;
+    /** Add the supplied field to the collection of fields maintained by this
+     * holder.
+     * @param field the field to be added
+     * @exception ModelException if impossible
+     */
+    public void addField (PersistenceFieldElement field)
+        throws ModelException;
 
-	/** Add the supplied fields to the collection of fields maintained by this 
-	 * holder.
-	 * @param fields the array of fields to be added
-	 * @exception ModelException if impossible
-	 */
-	public void addFields (PersistenceFieldElement[] fields)
-		throws ModelException;
+    /** Add the supplied fields to the collection of fields maintained by this
+     * holder.
+     * @param fields the array of fields to be added
+     * @exception ModelException if impossible
+     */
+    public void addFields (PersistenceFieldElement[] fields)
+        throws ModelException;
 
-	/** Remove the supplied field from the collection of fields maintained by 
-	 * this holder.
-	 * @param field the field to be removed
-	 * @exception ModelException if impossible
-	 */
-	public void removeField (PersistenceFieldElement field)
-		throws ModelException;
+    /** Remove the supplied field from the collection of fields maintained by
+     * this holder.
+     * @param field the field to be removed
+     * @exception ModelException if impossible
+     */
+    public void removeField (PersistenceFieldElement field)
+        throws ModelException;
 
-	/** Removed the supplied fields from the collection of fields maintained 
-	 * by this holder.
-	 * @param fields the array of fields to be removed
-	 * @exception ModelException if impossible
-	 */
-	public void removeFields (PersistenceFieldElement[] fields)
-		throws ModelException;
+    /** Removed the supplied fields from the collection of fields maintained
+     * by this holder.
+     * @param fields the array of fields to be removed
+     * @exception ModelException if impossible
+     */
+    public void removeFields (PersistenceFieldElement[] fields)
+        throws ModelException;
 
-	/** Returns the collection of fields maintained by this holder in the form 
-	 * of an array.
-	 * @return the fields maintained by this holder
-	 */
-	public PersistenceFieldElement[] getFields ();
+    /** Returns the collection of fields maintained by this holder in the form
+     * of an array.
+     * @return the fields maintained by this holder
+     */
+    public PersistenceFieldElement[] getFields ();
 
-	/** Sets the collection of fields maintained by this holder to the contents  
-	 * of the supplied array.
-	 * @param fields the fields maintained by this holder
-	 * @exception ModelException if impossible
-	 */
-	public void setFields (PersistenceFieldElement[] fields)
-		throws ModelException;
+    /** Sets the collection of fields maintained by this holder to the contents
+     * of the supplied array.
+     * @param fields the fields maintained by this holder
+     * @exception ModelException if impossible
+     */
+    public void setFields (PersistenceFieldElement[] fields)
+        throws ModelException;
 
-	/** Returns the field with the supplied name from the collection of fields 
-	 * maintained by this holder.
-	 * @param name the name to match
-	 * @return the field with the supplied name, <code>null</code> if none exists
-	 */
-	public PersistenceFieldElement getField (String name);
+    /** Returns the field with the supplied name from the collection of fields
+     * maintained by this holder.
+     * @param name the name to match
+     * @return the field with the supplied name, <code>null</code> if none exists
+     */
+    public PersistenceFieldElement getField (String name);
 
-	/** Tests whether the supplied field is in the collection of fields 
-	 * maintained by this holder.
-	 * @param field the field to be tested
-	 */
-	public boolean containsField (PersistenceFieldElement field);
+    /** Tests whether the supplied field is in the collection of fields
+     * maintained by this holder.
+     * @param field the field to be tested
+     */
+    public boolean containsField (PersistenceFieldElement field);
 }

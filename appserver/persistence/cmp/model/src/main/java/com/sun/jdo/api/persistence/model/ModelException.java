@@ -22,27 +22,27 @@
 
 package com.sun.jdo.api.persistence.model;
 
-/** 
+/**
  *
  * @author  raccah
  * @version %I%
  */
 public class ModelException extends Exception
 {
-	/**
-	 * Creates new <code>ModelException</code> without detail message.
-	 */
-	public ModelException ()
-	{
-	}
+    /**
+     * Creates new <code>ModelException</code> without detail message.
+     */
+    public ModelException ()
+    {
+    }
 
 
-	/**
-	 * Constructs an <code>ModelException</code> with the specified detail message.
-	 * @param msg the detail message.
-	 */
-	public ModelException (String msg)
-	{
-		super(msg);
-	}
+    /**
+     * Constructs an <code>ModelException</code> with the specified detail message.
+     * @param msg the detail message.
+     */
+    public ModelException (String msg)
+    {
+        super(msg);
+    }
 }

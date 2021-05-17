@@ -35,12 +35,12 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for enum support in EL");
         WebTest webTest = new WebTest(args);
         webTest.doTest("/trim.jsp", "jsp-trimDirectiveWhitespaces");
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest(String path, String testName) {
@@ -69,7 +69,7 @@ is));
 //                System.out.println("line3:" + line3);
                 String line4 = input.readLine();
 //                System.out.println("line4:" + line4);
-                
+
                 if ("".equals(line1) &&
                     "xyz".equals(line2) &&
                     "".equals(line3) &&

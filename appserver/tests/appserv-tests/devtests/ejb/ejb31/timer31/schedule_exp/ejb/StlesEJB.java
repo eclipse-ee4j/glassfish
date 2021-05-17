@@ -53,7 +53,7 @@ public class StlesEJB implements Stles {
         expected_callers.add("" + tc.getInfo());
 
         int dayOfWeek = (now.get(Calendar.DAY_OF_WEEK) - 1); // SUN is 1
-        System.out.println("createTimers(): creating timer with dayOfWeek=today-today (" 
+        System.out.println("createTimers(): creating timer with dayOfWeek=today-today ("
                 + dayOfWeek + "-" + dayOfWeek + ") ");
         se = new ScheduleExpression().second("2 /    5").minute("*").hour("*").
                 dayOfWeek("" + dayOfWeek+" -  " + dayOfWeek);
@@ -77,7 +77,7 @@ public class StlesEJB implements Stles {
             second -= 60;
         }
 
-        System.out.println("createTimers(): creating timer with second=" + (second + 5) 
+        System.out.println("createTimers(): creating timer with second=" + (second + 5)
                 + ", hour=" + s );
         se = new ScheduleExpression().second(second + 5).minute("*").hour(s);
 
@@ -174,7 +174,7 @@ public class StlesEJB implements Stles {
             }
             t.cancel();
         }
-        
+
         if (!expected_callers.isEmpty()) {
             StringBuffer sb = new StringBuffer();
             for (String c : expected_callers) {
@@ -199,12 +199,12 @@ public class StlesEJB implements Stles {
             for (String e : errors) {
                 sb.append("" + e).append(", ");
             }
-            throw new EJBException("Internal error: ScheduleExpressions for infos: " 
+            throw new EJBException("Internal error: ScheduleExpressions for infos: "
                     + sb.toString() + " were not available at verify!");
         }
 
         if (timerSvc.getTimers().size() != 0) {
-            throw new EJBException("After cencel, timerSvc.getTimers().size() = " 
+            throw new EJBException("After cencel, timerSvc.getTimers().size() = "
                     + timerSvc.getTimers().size());
         }
     }

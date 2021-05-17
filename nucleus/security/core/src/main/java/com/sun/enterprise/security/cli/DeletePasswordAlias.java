@@ -59,7 +59,7 @@ import org.glassfish.hk2.api.PerLookup;
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
         opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE
-        path="delete-password-alias", 
+        path="delete-password-alias",
         description="delete-password-alias")
 })
 
@@ -71,7 +71,7 @@ public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.P
 
     @Param(name="aliasname", primary=true)
     private String aliasName;
-    
+
     @Inject
     private DomainScopedPasswordAliasStore domainPasswordAliasStore;
 
@@ -94,7 +94,7 @@ public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.P
         return true;
     }
 
-    
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -118,7 +118,7 @@ public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.P
             "Password alias for the alias {0} deleted successfully",
             aliasName));*/
     }
-    
+
     private void reportFailure(final ActionReport report,
             final Exception ex) {
         report.setMessage(localStrings.getLocalString(

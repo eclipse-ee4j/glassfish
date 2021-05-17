@@ -77,7 +77,7 @@ public final class WebServiceConfigCRTest
 
             ac.createWebServiceEndpointConfig("remove#me", null);
 
-            m = ac.getWebServiceEndpointConfigMap();             
+            m = ac.getWebServiceEndpointConfigMap();
             int afterCreate  = m.size();
             System.out.println("WebServiceEndpoints found " + afterCreate);
 

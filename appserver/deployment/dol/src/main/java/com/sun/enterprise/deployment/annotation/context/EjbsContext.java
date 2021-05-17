@@ -28,9 +28,9 @@ import java.lang.reflect.AnnotatedElement;
  *
  * @Author Shing Wai Chan
  */
-public class EjbsContext extends AnnotationContext 
+public class EjbsContext extends AnnotationContext
         implements ComponentContext {
-    
+
     private EjbContext[] ejbContexts;
     private String componentClassName;
 
@@ -41,7 +41,7 @@ public class EjbsContext extends AnnotationContext
         }
         this.componentClassName = ejbClass.getName();
     }
-   
+
     /**
      * Create a new instance of EjbContext.
      * Note that, for performance, we don't make a safe copy of array here.
@@ -57,9 +57,9 @@ public class EjbsContext extends AnnotationContext
     public EjbContext[] getEjbContexts() {
         return ejbContexts;
     }
-    
+
     public void endElement(ElementType type, AnnotatedElement element) {
-        
+
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();
@@ -69,5 +69,5 @@ public class EjbsContext extends AnnotationContext
     public String getComponentClassName() {
         return componentClassName;
     }
-      
+
 }

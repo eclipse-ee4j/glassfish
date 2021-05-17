@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -64,11 +64,11 @@
         <ear destfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
             <fileset dir="${assemble.dir}" includes="*.jar, *.war"/>
         </ear>
-    </target> 
+    </target>
 
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
-    </target>    
+    </target>
 
     <target name="runfirst" depends="init-common">
         <java classname="WebTest">
@@ -93,7 +93,7 @@
          </classpath>
         </java>
     </target>
-    
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>

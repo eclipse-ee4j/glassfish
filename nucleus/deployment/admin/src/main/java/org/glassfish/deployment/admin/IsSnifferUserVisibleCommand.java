@@ -41,8 +41,8 @@ import org.glassfish.deployment.common.DeploymentProperties;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="is-sniffer-user-visible", 
+        opType=RestEndpoint.OpType.GET,
+        path="is-sniffer-user-visible",
         description="Is Sniffer User Visible")
 })
 @AccessRequired(resource="domain/sniffers/$sniffername", action="read")
@@ -57,7 +57,7 @@ public class IsSnifferUserVisibleCommand implements AdminCommand {
     SnifferManager snifferManager;
 
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         ActionReport.MessagePart part = report.getTopMessagePart();

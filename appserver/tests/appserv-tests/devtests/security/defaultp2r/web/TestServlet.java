@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class TestServlet extends HttpServlet {
-    
+
     public void service(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
-        
+
         String method = req.getMethod();
         if (method.equals("FOO")) {
             doFoo(req, resp);
@@ -35,18 +35,18 @@ public class TestServlet extends HttpServlet {
             super.service(req, resp);
         }
     }
-    
+
     public void doFoo(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
-        
+
         PrintWriter out = resp.getWriter();
         out.println("doFoo with " + req.getUserPrincipal());
         out.close();
     }
-    
+
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
-        
+
         PrintWriter out = resp.getWriter();
         out.println("doGet with " + req.getUserPrincipal());
         out.close();

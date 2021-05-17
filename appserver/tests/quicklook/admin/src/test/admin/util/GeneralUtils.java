@@ -30,14 +30,14 @@ import org.testng.Reporter;
  * @since GlassFish v3 Prelude
  */
 public final class GeneralUtils {
-    
+
     public enum AsadminManifestKeyType {
         EXIT_CODE("exit-code"),
         CHILDREN ("children"),
         MESSAGE  ("message"),
         CAUSE    ("cause");
         private final String name;
-        
+
         AsadminManifestKeyType(String name) {
             this.name = name;
         }
@@ -46,14 +46,14 @@ public final class GeneralUtils {
             return name;
         }
     }
-    
+
     public static final String SUCCESS = "SUCCESS";
     public static final String FAILURE = "FAILURE";
-    
+
     /* These can't change. They are buried in CLI code on server side! */
-    
+
     /** Creates the final asadmin URL with command's bells and whistles.
-     * 
+     *
      * @param adminUrl
      * @param cmd
      * @param options
@@ -89,7 +89,7 @@ public final class GeneralUtils {
         }
         return ( buffer.toString());
     }
-    
+
     public static String getValueForTypeFromManifest(Manifest man, AsadminManifestKeyType key) {
         if (man == null)
             throw new IllegalArgumentException("null manifest received");
@@ -115,9 +115,9 @@ public final class GeneralUtils {
             String cause = GeneralUtils.getValueForTypeFromManifest(man, GeneralUtils.AsadminManifestKeyType.CAUSE);
             Reporter.log("Cause: " + cause);
             throw new RuntimeException("" + cause);
-        }        
+        }
     }
-    
+
     ///// private methods /////
     private static String encodePair(String name, String value) {
         try {
@@ -127,5 +127,5 @@ public final class GeneralUtils {
         } catch(UnsupportedEncodingException ue) {
             throw new RuntimeException(ue);
         }
-    }    
+    }
 }

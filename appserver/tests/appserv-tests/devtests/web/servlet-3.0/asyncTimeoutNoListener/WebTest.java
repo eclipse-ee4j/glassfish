@@ -21,7 +21,7 @@ import com.sun.ejte.ccl.reporter.*;
 /*
  * Unit test for the spec requirement that if an async timeout occurs, and
  * there are no AsyncListeners registered, the container MUST do an ERROR
- * dispatch with a status code equal to 500, which in this test case is 
+ * dispatch with a status code equal to 500, which in this test case is
  * mapped to error.jsp, which resets the status code to 200 and outputs
  * the string "SUCCESS" to the response.
  */
@@ -34,7 +34,7 @@ public class WebTest {
 
     private static final int EXPECTED_RESPONSE_CODE = 200;
     private static final String EXPECTED_RESPONSE = "SUCCESS";
-   
+
     private String host;
     private String port;
     private String contextRoot;
@@ -44,7 +44,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for async timeout without " +
@@ -58,11 +58,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         InputStream is = null;
         BufferedReader input = null;
 

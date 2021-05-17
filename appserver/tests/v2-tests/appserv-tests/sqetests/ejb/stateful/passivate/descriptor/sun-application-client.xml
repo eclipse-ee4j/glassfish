@@ -22,5 +22,5 @@
 <ejb-ref>
       <ejb-ref-name>ejb/SFSBSession</ejb-ref-name>
       <jndi-name>MySessionTest</jndi-name>
-    </ejb-ref>    
+    </ejb-ref>
 </sun-application-client>

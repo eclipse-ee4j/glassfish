@@ -21,21 +21,21 @@
 <!--
 
     Template file to create Primitive Types or String Object provider custom resources.
-    By specifying the built-in "factory-class" as 
-    org.glassfish.resources.custom.factory.PrimitivesAndStringFactory, 
+    By specifying the built-in "factory-class" as
+    org.glassfish.resources.custom.factory.PrimitivesAndStringFactory,
     "res-type" (short/int/long/float/double/char/byte/String)
-    and a property named "value" with the required value, a custom-resource can be created 
+    and a property named "value" with the required value, a custom-resource can be created
     that can be used by applications.
 
     To learn more on custom resources,refer :
 
     http://docs.sun.com/app/docs/doc/819-2554/ablld?l=en&a=view
-    
+
     http://docs.sun.com/app/docs/doc/820-4332/create-custom-resource-1?a=view
 
     http://docs.sun.com/app/docs/doc/820-4332/delete-custom-resource-1?a=view
 
-    http://docs.sun.com/app/docs/doc/820-4332/list-custom-resources-1?a=view 
+    http://docs.sun.com/app/docs/doc/820-4332/list-custom-resources-1?a=view
 
     For detailed explanation of attributes and elements of this resources xml
     pl. refer to sun-resources_1_3.dtd
@@ -44,7 +44,7 @@
     =========================================SAMPLE============================================
 
 
-    In the sample configuration below, 
+    In the sample configuration below,
     custom-resource will provide a long (java.lang.Long) upon lookup
 
     Applications can do  :
@@ -58,11 +58,11 @@
 
 
     <resources>
-        <custom-resource res-type="long" jndi-name="custom/my-primitive-long" 
+        <custom-resource res-type="long" jndi-name="custom/my-primitive-long"
          factory-class="org.glassfish.resources.custom.factory.PrimitivesAndStringFactory">
           <property name="value" value="2008" />
         </custom-resource>
-    </resources> 
+    </resources>
 
 
     =========================================SAMPLE============================================
@@ -70,7 +70,7 @@
 -->
 
 <resources>
-    <custom-resource res-type="<TYPE_OF_PRIMITIVE>" jndi-name="<RESOURCE_NAME>" 
+    <custom-resource res-type="<TYPE_OF_PRIMITIVE>" jndi-name="<RESOURCE_NAME>"
      factory-class="org.glassfish.resources.custom.factory.PrimitivesAndStringFactory">
       <property name="value" value="<VALUE>" />
     </custom-resource>

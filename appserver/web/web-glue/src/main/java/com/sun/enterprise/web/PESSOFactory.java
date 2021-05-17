@@ -28,11 +28,11 @@ import com.sun.enterprise.security.web.GlassFishSingleSignOn;
  * @author lwhite
  */
 public class PESSOFactory implements SSOFactory {
-    
+
     /** Creates a new instance of PESSOFactory */
     public PESSOFactory() {
     }
-    
+
     /**
      * Creates a SingleSignOn valve
      * @param virtualServerName
@@ -41,5 +41,5 @@ public class PESSOFactory implements SSOFactory {
             String virtualServerName) {
         return new GlassFishSingleSignOn();
     }
-    
+
 }

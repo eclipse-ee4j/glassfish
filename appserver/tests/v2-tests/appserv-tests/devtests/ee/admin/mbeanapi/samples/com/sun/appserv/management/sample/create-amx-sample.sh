@@ -18,25 +18,25 @@
 # resulting value is returned in the variable 'FULLPATH_RESULT'
 fullpath()
 {
-	if [ $# != 1 ]
-	then
-		echo "fullpath: exactly one argument required"
-		exit 1
-	fi
-	
-	DIR_IN=$1
+    if [ $# != 1 ]
+    then
+        echo "fullpath: exactly one argument required"
+        exit 1
+    fi
 
-	CWD=`pwd`
-		if [ -d $DIR_IN ]
-		then
-			cd $DIR_IN
-		    FULLPATH_RESULT=`pwd`
-	    else
-	    	echo "Can't cd to " $DIR_IN
-	    	exit 1
-	    fi
-	
-	cd $CWD
+    DIR_IN=$1
+
+    CWD=`pwd`
+        if [ -d $DIR_IN ]
+        then
+            cd $DIR_IN
+            FULLPATH_RESULT=`pwd`
+        else
+            echo "Can't cd to " $DIR_IN
+            exit 1
+        fi
+
+    cd $CWD
 }
 
 
@@ -47,16 +47,16 @@ SCRIPT_DIR=$FULLPATH_RESULT
 # the classpath separator--if not set, choose a default
 if [ -z "$CLASSPATH_SEPARATOR" ]
 then
-	# not defined--look for telltale sign of Windows--the ":\" in our path
-	echo $SCRIPT_DIR | grep -e ":\\\\" -e ":/"
-	if [ $? = 0 ]
-	then
-		CPS=";"
-	else
-		CPS=":"
-	fi
+    # not defined--look for telltale sign of Windows--the ":\" in our path
+    echo $SCRIPT_DIR | grep -e ":\\\\" -e ":/"
+    if [ $? = 0 ]
+    then
+        CPS=";"
+    else
+        CPS=":"
+    fi
 else
-	CPS=$CLASSPATH_SEPARATOR
+    CPS=$CLASSPATH_SEPARATOR
 fi
 
 

@@ -25,7 +25,7 @@ public class MyDateValueType {
 
     public MyDateValueType() {}
 
-    public MyDateValueType(Date date, java.lang.String whine, 
+    public MyDateValueType(Date date, java.lang.String whine,
                             MySecondDateValueType[] dates) {
         this.date = date;
         this.whine = whine;

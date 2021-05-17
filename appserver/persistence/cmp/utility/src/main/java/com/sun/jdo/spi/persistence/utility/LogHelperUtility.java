@@ -30,12 +30,12 @@ public class LogHelperUtility  {
 
     /** The class loader for this component
      */
-    private static final ClassLoader loader = 
+    private static final ClassLoader loader =
         LogHelperUtility.class.getClassLoader();
 
     /** The bundle name for this component
      */
-    private static final String bundleName = 
+    private static final String bundleName =
         "com.sun.jdo.spi.persistence.utility.Bundle"; // NOI18N
 
     /** Return the logger for this component

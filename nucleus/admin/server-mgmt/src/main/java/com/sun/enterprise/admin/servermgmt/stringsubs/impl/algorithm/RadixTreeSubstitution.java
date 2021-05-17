@@ -45,7 +45,7 @@ class RadixTreeSubstitution {
 
     /**
      * Construct {@link RadixTreeSubstitution} for the given {@link RadixTree}.
-     * 
+     *
      * @param tree
      */
     RadixTreeSubstitution(RadixTree tree) {
@@ -67,7 +67,7 @@ class RadixTreeSubstitution {
      * <p>
      * <b>NOTE:</b> A <code>null</code> input signify the end of the processing.
      * </p>
-     * 
+     *
      * @param c Input character to match with the node key.
      * @return
      * <li>Value of the matching node, if no further match available.</li>

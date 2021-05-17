@@ -57,7 +57,7 @@ public class StringUtilsTest {
         String b = "'hello'";
         String c = "\"hello'";
         String d = "\"\"hello";
-        
+
         assertEquals(StringUtils.removeEnclosingQuotes(a), "hello");
         assertEquals(StringUtils.removeEnclosingQuotes(b), "hello");
         assertEquals(StringUtils.removeEnclosingQuotes(c), "\"hello\'");
@@ -68,6 +68,6 @@ public class StringUtilsTest {
         assertEquals(StringUtils.removeEnclosingQuotes("\"\""), "");
         assertEquals(StringUtils.removeEnclosingQuotes(""), "");
         assertNull(StringUtils.removeEnclosingQuotes(null));
-        
+
     }
 }

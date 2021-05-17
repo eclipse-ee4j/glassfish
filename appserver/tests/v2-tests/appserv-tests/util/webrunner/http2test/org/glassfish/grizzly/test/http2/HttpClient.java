@@ -72,7 +72,7 @@ public class HttpClient implements AutoCloseable {
 
     private HttpClient() {
     }
-    
+
     private void setHost(String host) {
         this.host = host;
     }
@@ -101,7 +101,7 @@ public class HttpClient implements AutoCloseable {
         final FilterChainBuilder filterChainBuilder =
                 createClientFilterChainAsBuilder(secure);
         filterChainBuilder.add(new ClientAggregatorFilter(resultQueue));
-        
+
         final TCPNIOTransport clientTransport = TCPNIOTransportBuilder.newInstance().build();
         final FilterChain clientFilterChain = filterChainBuilder.build();
         clientTransport.setProcessor(clientFilterChain);
@@ -141,16 +141,16 @@ public class HttpClient implements AutoCloseable {
     private FilterChainBuilder createClientFilterChainAsBuilder(
             final boolean isSecure,
             final Filter... clientFilters) throws MalformedURLException {
-        
+
         final FilterChainBuilder builder = FilterChainBuilder.stateless()
              .add(new TransportFilter());
         if (isSecure) {
             builder.add(new SSLFilter(null, getClientSSLEngineConfigurator()));
         }
-        
+
         builder.add(new HttpClientFilter());
         builder.add(new Http2ClientFilter(Http2Configuration.builder().build()));
-        
+
         if (clientFilters != null) {
             for (Filter clientFilter : clientFilters) {
                 if (clientFilter != null) {
@@ -158,7 +158,7 @@ public class HttpClient implements AutoCloseable {
                 }
             }
         }
-        
+
         return builder;
     }
 

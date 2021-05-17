@@ -23,7 +23,7 @@ public abstract class AbstractResourceAdapter{
     private String testName;
     protected boolean debug = true;
 
-    
+
     public String getTestName() {
         return testName;
     }

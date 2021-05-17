@@ -47,7 +47,7 @@ public class WebBundleContext extends ResourceContainerContextImpl {
 
     /**
      * This method create a context for web component(s) by using
-     * descriptor(s) associated to given webComponet impl class. 
+     * descriptor(s) associated to given webComponet impl class.
      * Return null if corresponding descriptor is not found.
      */
     public AnnotatedElementHandler createContextForWeb() {
@@ -73,16 +73,16 @@ public class WebBundleContext extends ResourceContainerContextImpl {
         }
         return aeHandler;
     }
-    
-    public HandlerChainContainer[] 
+
+    public HandlerChainContainer[]
             getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
         if(serviceSideHandlerChain) {
-            List<WebServiceEndpoint> result = new ArrayList<WebServiceEndpoint>();            
+            List<WebServiceEndpoint> result = new ArrayList<WebServiceEndpoint>();
             for (WebServiceEndpoint endpoint : getDescriptor().getWebServices().getEndpoints()) {
                 if (endpoint.getWebComponentImpl().getWebComponentImplementation().equals(declaringClass.getName())) {
                     result.add(endpoint);
                 }
-            }            
+            }
             return(result.toArray(new HandlerChainContainer[result.size()]));
         } else {
             List<ServiceReferenceDescriptor> result = new ArrayList<ServiceReferenceDescriptor>();

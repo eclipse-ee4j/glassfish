@@ -18,8 +18,8 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
@@ -31,9 +31,9 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jta-xa</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>JTA-XA Implementation for Glassfish</name>
-    
+
     <developers>
         <developer>
             <id>mvatkina</id>

@@ -59,30 +59,30 @@ import jakarta.xml.soap.SOAPMessage;
 @Service
 @Singleton
 public class SecurityServiceImpl implements SecurityService {
-    
+
     @Inject
     private AppServerAuditManager auditManager;
 
     protected static final Logger _logger = LogUtils.getLogger();
-    
+
     private static final String AUTHORIZATION_HEADER = "authorization";
 
     private static ThreadLocal<WeakReference<SOAPMessage>> req = new ThreadLocal<WeakReference<SOAPMessage>>();
- 
+
     public Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc) {
         try {
-	    // merge message security policy from domain.xml and sun-specific
-	    // deployment descriptor
-	     ServerAuthConfig 
+        // merge message security policy from domain.xml and sun-specific
+        // deployment descriptor
+         ServerAuthConfig
                      serverAuthConfig =
                      com.sun.enterprise.security.jmac.provider.ServerAuthConfig.getConfig
-		(com.sun.enterprise.security.jauth.AuthConfig.SOAP,
-		 desc,
-		 null);
+        (com.sun.enterprise.security.jauth.AuthConfig.SOAP,
+         desc,
+         null);
              return serverAuthConfig;
-	} catch (Exception ae) {
+    } catch (Exception ae) {
             _logger.log(Level.SEVERE, LogUtils.EJB_SEC_CONFIG_FAILURE, ae);
-	}
+    }
         return null;
     }
 
@@ -178,7 +178,7 @@ public class SecurityServiceImpl implements SecurityService {
     private List<Object> parseUsernameAndPassword(String rawAuthInfo) {
 
         List usernamePassword = null;
-        if ( (rawAuthInfo != null) && 
+        if ( (rawAuthInfo != null) &&
              (rawAuthInfo.startsWith("Basic ")) ) {
             String authString = rawAuthInfo.substring(6).trim();
             // Decode and parse the authorization credentials
@@ -194,10 +194,10 @@ public class SecurityServiceImpl implements SecurityService {
         return usernamePassword;
     }
 
-    
+
      private void sendAuthenticationEvents(boolean success,
             String url, Principal principal) {
-        
+
         Endpoint endpoint = WebServiceEngineImpl.getInstance().getEndpoint(url);
         if (endpoint==null) {
             return;
@@ -211,8 +211,8 @@ public class SecurityServiceImpl implements SecurityService {
                         endpoint, principal);
             }
         }
-    }    
-        
+    }
+
     public void resetSecurityContext() {
         SecurityContext.setUnauthenticatedContext();
     }

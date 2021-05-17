@@ -58,18 +58,18 @@ public class OTSPolicyImpl extends LocalObject implements OTSPolicy {
     // org.omg.CORBA.PolicyOperations implementation
 
     public int policy_type() {
-	return OTS_POLICY_TYPE.value;
+    return OTS_POLICY_TYPE.value;
     }
 
     public Policy copy() {
-	return new OTSPolicyImpl(this.value);
+    return new OTSPolicyImpl(this.value);
     }
 
     public void destroy() {
-	value = FORBIDS.value;
+    value = FORBIDS.value;
     }
 
     public String toString() {
-	return "OTSPolicy[" + this.value + "]";
+    return "OTSPolicy[" + this.value + "]";
     }
 }

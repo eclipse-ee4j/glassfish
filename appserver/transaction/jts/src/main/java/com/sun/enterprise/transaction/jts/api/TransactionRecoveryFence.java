@@ -41,5 +41,5 @@ public interface TransactionRecoveryFence {
      * Lower the fence
      */
     public void lowerFence();
-        
+
 }

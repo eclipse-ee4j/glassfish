@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.Locale;
 /**
  * Implements the Server-side #flastmod command
- * 
+ *
  * @author Bip Thelin
  * @author Paul Speed
  * @author Dan Sandberg
@@ -40,7 +40,7 @@ public final class SSIFlastmod implements SSICommand {
      */
     public long process(SSIMediator ssiMediator, String commandName,
             String[] paramNames, String[] paramValues, PrintWriter writer) {
-    	long lastModified = 0;
+        long lastModified = 0;
         String configErrMsg = null;
         for (int i = 0; i < paramNames.length; i++) {
             String paramName = paramNames[i];

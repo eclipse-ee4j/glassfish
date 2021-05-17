@@ -93,7 +93,7 @@ public class AppclientCommandArguments {
 
     /**
      * Initializes the list of valued arguments with nulls for all values.
-     * 
+     *
      * @return
      */
     private Map<String, AtomicReference<String>> initValuedArgs() {
@@ -102,14 +102,14 @@ public class AppclientCommandArguments {
         for (String valuedArgName : valuedArgNames) {
             valuedArgs.put(valuedArgName, new AtomicReference<String>(null));
         }
-        
+
         return valuedArgs;
     }
 
     /**
      * Initializes the list of unvalued arguments with false for all values, indicating that none of the options has been
      * seen (yet).
-     * 
+     *
      * @return
      */
     private Map<String, AtomicBoolean> initUnvaluedArgs() {
@@ -118,7 +118,7 @@ public class AppclientCommandArguments {
         for (String unvaluedArgName : unvaluedArgNames) {
             unvaluedArgs.put(unvaluedArgName, new AtomicBoolean(false));
         }
-        
+
         return unvaluedArgs;
     }
 
@@ -184,7 +184,7 @@ public class AppclientCommandArguments {
         if (configPathToUse == null) {
             configPathToUse = chooseConfigFilePath();
         }
-        
+
         return configPathToUse;
     }
 
@@ -200,7 +200,7 @@ public class AppclientCommandArguments {
                 logger.log(Level.CONFIG, "Choosing app client container config from -configxml option: {0}", pathToUse);
             }
         }
-        
+
         return pathToUse;
     }
 
@@ -215,7 +215,7 @@ public class AppclientCommandArguments {
     private void processAppclientArgs(final List<String> commandArgs) throws UserError {
         boolean isConfig = logger.isLoggable(Level.CONFIG);
         StringBuilder sb = (isConfig ? new StringBuilder("Arguments from appclient command:") : null);
-        
+
         for (int slot = 0; slot < commandArgs.size(); slot++) {
             String arg = commandArgs.get(slot);
             if (arg.charAt(0) == '-') {
@@ -229,7 +229,7 @@ public class AppclientCommandArguments {
                         if ((value.length() > 1) && (value.charAt(0) == '\"') && (value.charAt(value.length() - 1) == '\"')) {
                             value = value.substring(1, value.length() - 1);
                         }
-                        
+
                         if (arg.equals(PASSWORD)) {
                             password = value.toCharArray();
                             isPasswordOptionUsed = true;
@@ -260,11 +260,11 @@ public class AppclientCommandArguments {
                 unrecognizedArgs.add(arg);
             }
         }
-        
+
         if (isConfig) {
             logger.config(sb.toString());
         }
-        
+
         validateOptions();
     }
 
@@ -312,7 +312,7 @@ public class AppclientCommandArguments {
 
     /**
      * Makes sure that at most one of the -name and -mainclass arguments appeared on the command line.
-     * 
+     *
      * @throws IllegalArgumentException if both appeared
      */
     private void ensureAtMostOneOfNameAndMainClass() throws UserError {

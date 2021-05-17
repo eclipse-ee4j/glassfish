@@ -17,7 +17,7 @@
 -->
 
 <property environment="env"/>
-<property file="${env.APS_HOME}/config.properties"/>   
+<property file="${env.APS_HOME}/config.properties"/>
 
 <target name="all" depends="clean, compile, run, undeploy, report"/>
 
@@ -39,21 +39,21 @@
 
 
 <target name="compile">
-    <mkdir dir="${env.APS_HOME}/build/module/classes"/>   
+    <mkdir dir="${env.APS_HOME}/build/module/classes"/>
     <basename file="${src-name}" property="server" suffix=".java"/>
     <dirname file="${src-name}" property="directory"/>
-    <basename file="${directory}" property="pkg-name"/> 
+    <basename file="${directory}" property="pkg-name"/>
     <property name="class-name" value="${pkg-name}/${server}.class"/>
     <echo message="Compiling into ${pkg-name}/${server}.class"/>
-    <javac srcdir="." destdir="${env.S1AS_HOME}/domains/domain1/autodeploy" 
+    <javac srcdir="." destdir="${env.S1AS_HOME}/domains/domain1/autodeploy"
         includes="${src-name}">
     <classpath refid="classpath"/>
    </javac>
 </target>
 
 <target name="compile-client">
-    <javac srcdir="." destdir="${env.APS_HOME}/build/module/classes" 
-        classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+    <javac srcdir="." destdir="${env.APS_HOME}/build/module/classes"
+        classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
         includes="${client-src-name}"/>
 </target>
 
@@ -64,7 +64,7 @@
 <target name="undeploy">
     <basename file="${src-name}" property="server" suffix=".java"/>
     <dirname file="${src-name}" property="directory"/>
-    <basename file="${directory}" property="pkg-name"/> 
+    <basename file="${directory}" property="pkg-name"/>
     <property name="class-name" value="${pkg-name}/${server}.class"/>
     <echo message="Removing file ${class-name} from autodeploy directory"/>
     <delete file="${env.S1AS_HOME}/domains/domain1/autodeploy/${class-name}"/>
@@ -83,7 +83,7 @@
 </target>
 
 <target name="report" depends="internal-report-success, internal-report-failure">
-    <delete file="${env.S1AS_HOME}/domains/domain1/autodeploy/${class-name}_*"/>    
+    <delete file="${env.S1AS_HOME}/domains/domain1/autodeploy/${class-name}_*"/>
 </target>
 
 <target name="run">
@@ -108,17 +108,17 @@
 <target name="internal-run" if="deploy_succeeded">
     <basename file="${client-src-name}" property="client" suffix=".java"/>
     <dirname file="${client-src-name}" property="client-directory"/>
-    <basename file="${client-directory}" property="client-pkg-name"/> 
+    <basename file="${client-directory}" property="client-pkg-name"/>
     <property name="client-class-name" value="${client-pkg-name}/${client}.class"/>
     <echo message="wsimporting http://${http.host}:${http.port}/${server}/${server}Service?WSDL"/>
     <exec executable="${env.S1AS_HOME}/bin/wsimport">
         <arg line="-keep -d ${env.APS_HOME}/build/module/classes http://${http.host}:${http.port}/${server}/${server}Service?WSDL"/>
     </exec>
-    <antcall target="compile-client"/>   
+    <antcall target="compile-client"/>
     <echo message="Running appclient with ${client-pkg-name}.${client}"/>
     <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${env.APS_HOME}/build/module/classes"/>
     <exec executable="${env.S1AS_HOME}/bin/appclient" dir="${env.APS_HOME}/build/module/classes">
-        <arg value="${client-pkg-name}.${client}"/>    
+        <arg value="${client-pkg-name}.${client}"/>
     </exec>
 </target>
 

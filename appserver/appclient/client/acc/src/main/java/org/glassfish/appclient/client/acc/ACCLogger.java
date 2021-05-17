@@ -52,7 +52,7 @@ import org.glassfish.appclient.client.acc.config.LogService;
 public class ACCLogger extends Logger {
 
     private static final String ACC_LOGGER_NAME = "GlassFish.ACC";
-    
+
     private static final Level DEFAULT_ACC_LOG_LEVEL = Level.INFO;
 
     public ACCLogger(final LogService logService) throws IOException {

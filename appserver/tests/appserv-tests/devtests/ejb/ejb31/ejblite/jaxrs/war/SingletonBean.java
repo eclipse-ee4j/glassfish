@@ -39,41 +39,41 @@ public class SingletonBean {
     @PostConstruct
     private void init() {
 
-	System.out.println("In SingletonBean:init() ");
-	
-	try {
-	    InitialContext ic = new InitialContext();
+    System.out.println("In SingletonBean:init() ");
 
-	    // Lookup simple form of portable JNDI name 
-	     stateless = (StatelessBean) 
-		ic.lookup("java:module/StatelessBean");
+    try {
+        InitialContext ic = new InitialContext();
 
-	     stateless.hello();
+        // Lookup simple form of portable JNDI name
+         stateless = (StatelessBean)
+        ic.lookup("java:module/StatelessBean");
 
-	    // Lookup fully-qualified for of portable JNDI name
-	    stateless2 = (StatelessBean) 
-		ic.lookup("java:module/StatelessBean!com.acme.StatelessBean");
-	  
-	} catch(NamingException ne) {
-	    throw new EJBException(ne);
-	}
+         stateless.hello();
+
+        // Lookup fully-qualified for of portable JNDI name
+        stateless2 = (StatelessBean)
+        ic.lookup("java:module/StatelessBean!com.acme.StatelessBean");
+
+    } catch(NamingException ne) {
+        throw new EJBException(ne);
+    }
     }
 
     public void hello() {
-	System.out.println("In SingletonBean:hello()");
-	stateless.hello();
-	stateless2.hello();
+    System.out.println("In SingletonBean:hello()");
+    stateless.hello();
+    stateless2.hello();
     }
 
     public void assertInterceptorBinding() {
-	if( !interceptorWasHere ) {
-	    throw new EJBException("interceptor was not here");
-	}
+    if( !interceptorWasHere ) {
+        throw new EJBException("interceptor was not here");
+    }
     }
 
     @PreDestroy
     private void destroy() {
-	System.out.println("In SingletonBean:destroy()");
+    System.out.println("In SingletonBean:destroy()");
     }
 
 

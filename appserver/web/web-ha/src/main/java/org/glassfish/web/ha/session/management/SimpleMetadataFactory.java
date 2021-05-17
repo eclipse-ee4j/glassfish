@@ -21,7 +21,7 @@ import org.glassfish.ha.store.util.SimpleMetadata;
 /**
  * @author Mahesh Kannan
  * @author Rajiv Mordani
- * 
+ *
  */
 public class
         SimpleMetadataFactory {

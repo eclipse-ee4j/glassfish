@@ -35,7 +35,7 @@ public interface ThreadPools extends ConfigBeanProxy {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getThreadPool().add(newItem);
      * </pre>

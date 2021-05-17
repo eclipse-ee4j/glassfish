@@ -64,7 +64,7 @@ public class WebTest {
             ex.printStackTrace();
         }
     }
-    
+
     private void runOneCycle(String whichEMF) throws Exception {
         invoke(whichEMF, "llinit");
         invoke(whichEMF, "llquery");
@@ -118,8 +118,8 @@ public class WebTest {
             }
         }
     }
-    
+
     private String getTestName(String whichEMF, String testCase){
-        return TEST_NAME + "_" + whichEMF + "_" +testCase;        
+        return TEST_NAME + "_" + whichEMF + "_" +testCase;
     }
 }

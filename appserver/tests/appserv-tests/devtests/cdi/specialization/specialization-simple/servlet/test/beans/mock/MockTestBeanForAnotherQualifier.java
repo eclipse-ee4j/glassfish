@@ -30,6 +30,6 @@ public class MockTestBeanForAnotherQualifier implements TestBeanInterface{
     public void m2() {
         System.out.println("MockBean::m2 called");
     }
-    
+
 
 }

@@ -45,7 +45,7 @@ public class Jdbc extends MonTest {
                 asadminWithOutput("get", "-m", "server.resources.jdbc-onlygetconnectionservlet-pool.numconnfree-current"),
                 "server.resources.jdbc-onlygetconnectionservlet-pool.numconnfree-current = 8"),
                 "jdbc-check-getm-numconnfree-count");
-        
+
         report(checkForString(
                 asadminWithOutput("get", "-m", "server.resources.jdbc-onlygetconnectionservlet-pool.numconnacquired-count"),
                 "server.resources.jdbc-onlygetconnectionservlet-pool.numconnacquired-count = 1"),
@@ -107,7 +107,7 @@ public class Jdbc extends MonTest {
 
 
 
-		/* After grizzly 2.0 integration numconfree changed from 5 to 7.  The onlygetconnectionservlet is being invoked
+        /* After grizzly 2.0 integration numconfree changed from 5 to 7.  The onlygetconnectionservlet is being invoked
                  in the *same* thread and com.sun.enterprise.resource.pool.AssocWithThreadResourcePool in this case doesn't allocate
                  new resource, but uses the one already associated with the thread. */
         //Comment out - this number seems upredictable to test - sometimes 6, sometimes 7 - JC
@@ -115,7 +115,7 @@ public class Jdbc extends MonTest {
         //        asadminWithOutput("get", "-m", "server.resources.jdbc-onlygetconnectionservlet-pool.numconnfree-current"),
         //        "server.resources.jdbc-onlygetconnectionservlet-pool.numconnfree-current = 7"),
         //        "jdbc-check-getm-numconnfree-count");
-		
+
 
 
         report(checkForString(
@@ -130,7 +130,7 @@ public class Jdbc extends MonTest {
                 asadminWithOutput("get", "-m", "server.resources.jdbc-onlygetconnectionservlet-pool.numconnreleased-count"),
                 "server.resources.jdbc-onlygetconnectionservlet-pool.numconnreleased-count = 0"),
                 "jdbc-check-getm-numconnreleased-count-0-reset");
-        
+
         report(wget(8080, "onlygetconnectionservlet/onlygetconnectionservlet"), "hit 4 onlygetconnectionservlet on 8080-");
 
         report(checkForString(
@@ -227,7 +227,7 @@ public class Jdbc extends MonTest {
         }
 
     }
-    
+
     private static final File connApp = new File(RESOURCES_DIR, "jdbc-onlygetconnection-servletApp.ear");
     private static final String connectionURL = "jdbc:derby://localhost:1527/testdb;create=true;";
     private static final String dbDriver ="org.apache.derby.jdbc.ClientDriver";

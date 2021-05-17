@@ -86,7 +86,7 @@ public class BootstrapProperties {
     public String getProperty(String key) {
         return properties.getProperty(key);
     }
-    
+
     /**
      * Optionally set the installation root using which the GlassFish should run.
      *

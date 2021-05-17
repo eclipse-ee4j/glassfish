@@ -38,7 +38,7 @@ public interface StringSubstitutor {
     /**
      * Set's the {@link AttributePreprocessor} to customize the substitution process. Attribute preprocessor takes care to
      * retrieve the value of substitutable key.
-     * 
+     *
      * @param attributePreprocessor Custom implementation of {@link AttributePreprocessor}
      */
     void setAttributePreprocessor(AttributePreprocessor attributePreprocessor);
@@ -46,14 +46,14 @@ public interface StringSubstitutor {
     /**
      * Set's a factory which can process a {@link FileEntry} or an {@link Archive} entry to retrieve all the
      * {@link Substitutable} entries.
-     * 
+     *
      * @param factory
      */
     void setEntryFactory(SubstitutableFactory factory);
 
     /**
      * TODO: Missing Implementation
-     * 
+     *
      * @param backupLocation
      */
     void setFileBackupLocation(File backupLocation);
@@ -61,7 +61,7 @@ public interface StringSubstitutor {
     /**
      * Get's the default {@link Property} for the given {@link PropertyType}, If the property type is null then all the
      * default properties will be returned.
-     * 
+     *
      * @param type The type for which default properties has to be retrieved.
      * @return List of default properties or empty list if no property found.
      */
@@ -74,7 +74,7 @@ public interface StringSubstitutor {
      * <p>
      * <b>NOTE</b>: This object is updatable.
      * </p>
-     * 
+     *
      * @return Parsed string-subs configuration object.
      */
     StringsubsDefinition getStringSubsDefinition();

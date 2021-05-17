@@ -27,14 +27,14 @@ import test.artifacts.SynchronousPaymentProcessor;
 public class BeanToTestInitializerMethodInjection {
     private PaymentProcessor syncPay;
     private PaymentProcessor asyncPay;
-    
+
     @Inject
     public void setPaymentProcessor(@Synchronous PaymentProcessor syncPay,
             @Asynchronous PaymentProcessor asyncPay) {
         this.syncPay = syncPay;
         this.asyncPay = asyncPay;
     }
-    
+
     public boolean testInjection(){
         return (syncPay instanceof SynchronousPaymentProcessor &&
         asyncPay instanceof AsynchronousPaymentProcessor);

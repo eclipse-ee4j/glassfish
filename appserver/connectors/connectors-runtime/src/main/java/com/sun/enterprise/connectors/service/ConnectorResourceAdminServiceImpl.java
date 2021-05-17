@@ -86,7 +86,7 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
             ConnectorDescriptorInfo cdi = ccp.getConnectorDescriptorInfo();
 
             javax.naming.Reference ref=new  javax.naming.Reference(
-                   cdi.getConnectionFactoryClass(), 
+                   cdi.getConnectionFactoryClass(),
                    "com.sun.enterprise.resource.naming.ConnectorObjectFactory",
                    null);
             RefAddr addr = new SerializableObjectRefAddr(PoolInfo.class.getName(), poolInfo);

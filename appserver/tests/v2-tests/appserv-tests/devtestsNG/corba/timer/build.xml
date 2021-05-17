@@ -73,7 +73,7 @@
     </target>
 
     <target name="build" depends="compile">
-    </target> 
+    </target>
 
     <!-- Run TestNG test via testng.xml -->
     <target name="run" depends="compile">
@@ -90,7 +90,7 @@
             <param name="run.testng.classfileset" value="run.classfileset"/>
         </antcall>
     </target>
- 
+
     <!-- Run failed tests from previous run -->
     <target name="run-failed" depends="common-run-failed"/>
 

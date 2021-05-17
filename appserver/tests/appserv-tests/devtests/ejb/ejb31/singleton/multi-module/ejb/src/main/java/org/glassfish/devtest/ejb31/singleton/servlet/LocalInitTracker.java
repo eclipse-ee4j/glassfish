@@ -22,7 +22,7 @@ import java.util.Map;
 
 @Local
 public interface LocalInitTracker {
-    
+
     public void add(String entry);
 
     public Map<String, Integer> getInitializedNames();

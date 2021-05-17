@@ -19,5 +19,5 @@
 
 <!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 8.1 Servlet 2.4//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_2_4-1.dtd">
 <sun-web-app>
-  <context-root>test4</context-root> 
+  <context-root>test4</context-root>
 </sun-web-app>

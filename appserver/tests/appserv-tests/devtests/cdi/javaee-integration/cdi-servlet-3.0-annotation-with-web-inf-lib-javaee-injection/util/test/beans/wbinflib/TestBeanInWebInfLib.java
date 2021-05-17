@@ -29,11 +29,11 @@ import jakarta.persistence.PersistenceContext;
 public class TestBeanInWebInfLib {
     @Inject
     BeanManager bm;
-    
-//    @Inject //@TestDatabase 
+
+//    @Inject //@TestDatabase
 //    EntityManager emf_at_inj;
 
-    @PersistenceContext(unitName="pu1")  
+    @PersistenceContext(unitName="pu1")
     EntityManager emf_at_pu;
 
     public String testInjection() {
@@ -44,8 +44,8 @@ public class TestBeanInWebInfLib {
         System.out.println("EMF injected in WEB-INF/lib bean is " + emf_at_pu);
         if (emf_at_pu == null)
             return "EMF injected via @PersistenceContext is not injected into " +
-            		"the TestBean packaged in WEB-INF/lib";
-        
+                    "the TestBean packaged in WEB-INF/lib";
+
         Set<Bean<?>> webinfLibBeans = bm.getBeans(TestBeanInWebInfLib.class, new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 1)
             return "TestBean in WEB-INF/lib is not available via the WEB-INF/lib "

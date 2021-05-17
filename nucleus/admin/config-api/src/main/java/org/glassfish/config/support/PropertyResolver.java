@@ -91,13 +91,13 @@ public class PropertyResolver {
         }
         if (propVal == null) {
             if (_cluster != null) {
-                //If not found in the server instance, look for the propName in the 
+                //If not found in the server instance, look for the propName in the
                 //cluster
                 propVal = getPropertyValue(propName, _cluster.getSystemProperty());
             }
             if (propVal == null) {
                 if (_config != null) {
-                    //If not found in the server instance or cluster, look for the 
+                    //If not found in the server instance or cluster, look for the
                     //propName in the config
                     propVal = getPropertyValue(propName, _config.getSystemProperty());
                     if (propVal == null) {

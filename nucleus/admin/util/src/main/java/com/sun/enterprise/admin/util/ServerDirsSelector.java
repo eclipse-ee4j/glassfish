@@ -49,7 +49,7 @@ public class ServerDirsSelector {
 
     /**
      * Creates a selector for choosing the correct set of directories.
-     * 
+     *
      * @param domainDirParent parent of the domain directory file(s)
      * @param serverName name of the requested instance or domain
      * @param nodeDir path to the node directory

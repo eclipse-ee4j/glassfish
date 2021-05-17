@@ -66,12 +66,12 @@ public class Constraint extends Object {
      * and adds it to the constraint stack.
      *
      * @param name
-     * 	The name parameter specifies the name of the field to be
-     * 	added to the constrant stack.
+     *     The name parameter specifies the name of the field to be
+     *     added to the constrant stack.
      *
      * @param desc
-     * 	The desc parameter specifies an operation descriptor describing
-     * 	what is to be done with the field named by the name parameter.
+     *     The desc parameter specifies an operation descriptor describing
+     *     what is to be done with the field named by the name parameter.
      */
     public void addField(String name, ActionDesc desc) {
         stack.add(new ConstraintFieldName(name, desc));
@@ -84,8 +84,8 @@ public class Constraint extends Object {
      * field descriptor and adds it to the constraint stack.
      *
      * @param desc
-     * 	The Desc parameter is the field descriptor to be
-     * 	added to the constrant stack.
+     *     The Desc parameter is the field descriptor to be
+     *     added to the constrant stack.
      */
     public void addField(LocalFieldDesc desc) {
         stack.add(new ConstraintFieldDesc(desc));
@@ -123,8 +123,8 @@ public class Constraint extends Object {
      * operation and adds it to the constraint stack.
      *
      * @param operation
-     * 	The operation parameter specifies the operation to be added to
-     * 	the constrant stack.
+     *     The operation parameter specifies the operation to be added to
+     *     the constrant stack.
      */
     public void addOperation(int operation) {
         stack.add(new ConstraintOperation(operation));

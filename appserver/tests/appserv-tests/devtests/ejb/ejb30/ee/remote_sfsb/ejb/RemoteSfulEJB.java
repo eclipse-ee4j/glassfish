@@ -19,14 +19,14 @@ package com.sun.s1asdev.ejb.ejb30.ee.remote_sfsb;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-	
+
 @Stateful
 public class RemoteSfulEJB
-	implements  RemoteSful {
+    implements  RemoteSful {
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public String sayNamaste() {
-	return "Remote Hello";
+    return "Remote Hello";
     }
 
 }

@@ -38,7 +38,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GLASSFISH-19364");
         WebTest webTest = new WebTest(args);
@@ -47,7 +47,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -64,7 +64,7 @@ public class WebTest {
         if (EXPECTED_RESPONSE.equals(lastLine)) {
             stat.addStatus(TEST_NAME, stat.PASS);
         } else {
-            System.out.println("Wrong response. Expected: " + 
+            System.out.println("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + lastLine);
             stat.addStatus(TEST_NAME, stat.FAIL);
         }

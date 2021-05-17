@@ -25,10 +25,10 @@
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <artifactId>javaee-pom</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish JavaEE Manifest pom</name>  
+    <name>GlassFish JavaEE Manifest pom</name>
     <modules>
         <module>manifest-jar</module>
         <module>dist-frag</module>

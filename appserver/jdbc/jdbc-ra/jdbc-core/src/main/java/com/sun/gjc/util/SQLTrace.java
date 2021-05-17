@@ -20,7 +20,7 @@ package com.sun.gjc.util;
  * Store the sql queries executed by applications along with the number of
  * times executed and the time stamp of the last usage.
  * Used for monitoring information.
- * 
+ *
  * @author Shalini M
  */
 public class SQLTrace implements Comparable {
@@ -34,7 +34,7 @@ public class SQLTrace implements Comparable {
         this.numExecutions = numExecutions;
         this.lastUsageTime = time;
     }
-    
+
     /**
      * Get the value of queryName
      *

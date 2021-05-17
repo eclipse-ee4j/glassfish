@@ -52,42 +52,42 @@ public class PayloadImplTest {
         private final String path;
         private final String pathPrefix;
         private final String content;
-        
+
         private FileInfo(final String name, final String pathPrefix, final String content) {
             this.name = name;
             this.pathPrefix = pathPrefix;
             this.path = (pathPrefix == null ? "" : pathPrefix + '/') + name;
             this.content = content;
         }
-        
+
         private File file(final File rootDir) {
             return new File(rootDir.toURI().resolve(path));
         }
     }
-    
+
     private static final String SUBDIR_LEVEL_1 = "a";
     private static final String SUBDIR_LEVEL_2 = "a1";
-    
+
     private static final FileInfo ORIGINAL_FILE_X =
             new FileInfo("x.txt", SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2, "old x");
-    
+
     private static final FileInfo ORIGINAL_FILE_Y =
             new FileInfo("y.txt", SUBDIR_LEVEL_1, "old y");
-    
-    
+
+
     private static final FileInfo[] ORIGINAL_FILES = {
         ORIGINAL_FILE_X, ORIGINAL_FILE_Y};
-    
-    private static final FileInfo ADDED_FILE_Z = 
+
+    private static final FileInfo ADDED_FILE_Z =
             new FileInfo("z.txt", SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2,
             "new z");
-    
+
     private static final FileInfo REPLACED_FILE_X =
             new FileInfo(ORIGINAL_FILE_X.name, ORIGINAL_FILE_X.pathPrefix, "replaced x");
-    
+
     private static final String REPL_SUBDIR_LEVEL_1 = "repl-a";
     private static final String REPL_SUBDIR_LEVEL_2 = "repl-a1";
-    
+
     private static final FileInfo REPLACEMENT_FILE_A =
             new FileInfo("r-a.txt", REPL_SUBDIR_LEVEL_1, "replacement a");
     private static final FileInfo REPLACEMENT_FILE_B =
@@ -96,17 +96,17 @@ public class PayloadImplTest {
             new FileInfo("r-c.txt", REPL_SUBDIR_LEVEL_1 + '/' + REPL_SUBDIR_LEVEL_2, "replacement c");
     private static final FileInfo[] REPLACEMENT_FILES = {
         REPLACEMENT_FILE_A, REPLACEMENT_FILE_B, REPLACEMENT_FILE_C};
-    
+
     /** The path of the original file that is replaced but the name and content of the replacement file */
     private static final FileInfo REPLACED_FILE_C =
             new FileInfo(REPLACEMENT_FILE_C.name, SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2,
                 REPLACEMENT_FILE_C.content);
-    
+
     private static final String LINE_SEP = System.getProperty("line.separator");
-    
+
     private File workingDir = null;
     private File replDir = null;
-    
+
     public PayloadImplTest() {
     }
 
@@ -147,17 +147,17 @@ public class PayloadImplTest {
         System.out.println("testDirectoryReplaceRequest");
         File dirToUseForReplacement = new File(replDir, REPL_SUBDIR_LEVEL_1);
         dirToUseForReplacement = new File(dirToUseForReplacement, REPL_SUBDIR_LEVEL_2);
-        
+
         File zipFile = null;
         try {
             Payload.Outbound outboundPayload = PayloadImpl.Outbound.newInstance();
-            outboundPayload.requestFileReplacement("application/octet-stream", 
-                    new URI(SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2 + '/'), "replacement", 
+            outboundPayload.requestFileReplacement("application/octet-stream",
+                    new URI(SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2 + '/'), "replacement",
                     null, dirToUseForReplacement, true);
             zipFile = writePayloadToFile(outboundPayload, File.createTempFile("payloadZip", ".zip"));
-            
+
             preparePFM(zipFile);
-            
+
             /*
              * Make sure the directory was replaced as desired and that other
              * original files are still there.  Specificaly, original file Y should still
@@ -167,42 +167,42 @@ public class PayloadImplTest {
             checkFile(ORIGINAL_FILE_Y, ORIGINAL_FILE_Y.file(workingDir));
             checkNoFile(ORIGINAL_FILE_X, ORIGINAL_FILE_X.file(workingDir));
             checkFile(REPLACED_FILE_C, REPLACED_FILE_C.file(workingDir));
-            
+
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
             deleteAndLogFailure(zipFile);
         }
     }
-    
+
     private void checkFile(final FileInfo fileInfo, final File f) throws FileNotFoundException, IOException {
-        assertTrue("Expected output file " + fileInfo.path + " does not exist", 
+        assertTrue("Expected output file " + fileInfo.path + " does not exist",
                 f.exists());
-        assertEquals("Expected file contents for " + fileInfo.path + " not correct", 
+        assertEquals("Expected file contents for " + fileInfo.path + " not correct",
                 fileInfo.content, readFromFile(f));
     }
-    
+
     private void checkNoFile(final FileInfo fileInfo, final File f) {
         assertFalse("File " + fileInfo.path + " not expected but exists",
                 f.exists());
     }
-    
+
     @Test
     public void testSingleFileReplaceRequest() {
         System.out.println("testSingleFileReplaceRequest");
         File newVersion = null;
         File zipFile = null;
-        
+
         try {
             Payload.Outbound outboundPayload = PayloadImpl.Outbound.newInstance();
             newVersion = populateFile(File.createTempFile("payload",".txt"), REPLACED_FILE_X.content);
-            outboundPayload.requestFileReplacement("application/octet-stream", 
-                    new URI(REPLACED_FILE_X.path), "replacement", 
+            outboundPayload.requestFileReplacement("application/octet-stream",
+                    new URI(REPLACED_FILE_X.path), "replacement",
                     null, newVersion, false);
             zipFile = writePayloadToFile(outboundPayload, File.createTempFile("payloadZip", ".zip"));
-            
+
             boolean isFileProcessed = false;
-            
+
             for (Map.Entry<File,Properties> entry : preparePFM(zipFile).entrySet()) {
                 final File processedFile = entry.getKey();
                 if (processedFile.toURI().getPath().endsWith(REPLACED_FILE_X.path)) {
@@ -210,13 +210,13 @@ public class PayloadImplTest {
                     /*
                      * Make sure the file exists and contains the new content.
                      */
-                    assertTrue("Expected original output file " + REPLACED_FILE_X.path + " does not exist", 
+                    assertTrue("Expected original output file " + REPLACED_FILE_X.path + " does not exist",
                             processedFile.exists());
-                    assertEquals("Expected new file contents for " + REPLACED_FILE_X.path + " not correct", 
+                    assertEquals("Expected new file contents for " + REPLACED_FILE_X.path + " not correct",
                             REPLACED_FILE_X.content, readFromFile(processedFile));
                 }
             }
-            
+
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
@@ -224,7 +224,7 @@ public class PayloadImplTest {
             deleteAndLogFailure(zipFile);
         }
     }
-    
+
     private static void deleteAndLogFailure(final File f) {
         if (f != null) {
             if ( ! f.delete()) {
@@ -232,7 +232,7 @@ public class PayloadImplTest {
             }
         }
     }
-    
+
     @Test
     public void testAddFiles() {
         System.out.println("testAddFiles");
@@ -254,17 +254,17 @@ public class PayloadImplTest {
              * the payload which makes non-asadmin clients - such as IDEs and
              * web browsers - happier.)
              */
-            outboundPayload.attachFile("application/octet-stream", new URI(ADDED_FILE_Z.path), "addText", 
+            outboundPayload.attachFile("application/octet-stream", new URI(ADDED_FILE_Z.path), "addText",
                     fileToBeAddedToPayload);
             log("  Attached " + ADDED_FILE_Z.path);
-            
+
             zipFile = writePayloadToFile(outboundPayload, File.createTempFile("payloadZip", ".zip"));
             log("  Wrote payload to " + zipFile.getAbsolutePath());
 
-            
+
         // XXX consume the map; check for the new file and contents
             boolean isFileProcessed = false;
-            
+
             for (Map.Entry<File,Properties> entry : preparePFM(zipFile).entrySet()) {
                 final File processedFile = entry.getKey();
                 if (processedFile.toURI().getPath().endsWith(ADDED_FILE_Z.path)) {
@@ -272,25 +272,25 @@ public class PayloadImplTest {
                     /*
                      * Make sure the file exists and contains what we expect.
                      */
-                    assertTrue("Expected output file " + ADDED_FILE_Z.path + " does not exist", 
+                    assertTrue("Expected output file " + ADDED_FILE_Z.path + " does not exist",
                             processedFile.exists());
-                    assertEquals("Expected new file contents for " + ADDED_FILE_Z.path + "not correct", 
+                    assertEquals("Expected new file contents for " + ADDED_FILE_Z.path + "not correct",
                             ADDED_FILE_Z.content, readFromFile(processedFile));
                 }
             }
             assertTrue("Added file " + ADDED_FILE_Z.path + " did not appear in the processed output",
                     isFileProcessed);
-            
+
             /*
              * Make sure the original file still exists and contains what it should.
              */
             final File originalFile = new File(workingDir.toURI().resolve(ORIGINAL_FILE_X.path));
             assertTrue("Original file " + ORIGINAL_FILE_X.path + " no longer exists but it should",
                     originalFile.exists());
-            assertEquals("Original file " + ORIGINAL_FILE_X.path + 
+            assertEquals("Original file " + ORIGINAL_FILE_X.path +
                     " exists as expected but no longer contains what it should",
                     ORIGINAL_FILE_X.content, readFromFile(originalFile));
-            
+
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
@@ -298,9 +298,9 @@ public class PayloadImplTest {
             deleteAndLogFailure(zipFile);
         }
     }
-    
+
     private Map<File,Properties> preparePFM(final File zipFile) throws FileNotFoundException, IOException, Exception {
-    
+
         PayloadFilesManager.Perm pfm = new PayloadFilesManager.Perm(
                 workingDir, null /* actionReporter */, Logger.getAnonymousLogger());
 
@@ -309,13 +309,13 @@ public class PayloadImplTest {
         final Map<File,Properties> map = pfm.processPartsExtended(inboundPayload);
         return map;
     }
-    
+
     private File writePayloadToFile(final Payload.Outbound ob, final File f) throws FileNotFoundException, IOException {
         final OutputStream os = new BufferedOutputStream(new FileOutputStream(f));
         ob.writeTo(os);
         return f;
     }
-    
+
     private String readFromFile(final File f) throws FileNotFoundException, IOException {
         final StringBuilder sb = new StringBuilder();
         final LineNumberReader r = new LineNumberReader(new FileReader(f));
@@ -332,36 +332,36 @@ public class PayloadImplTest {
             r.close();
         }
     }
-    
+
     /**
      * Create a directory anchored at a temp directory that looks like this:
      * a/
      * a/a1/
      * a/a1/x.txt (contains "old x")
-     * 
-     * @return 
+     *
+     * @return
      */
     private File createAndPopulateWorkingDir() throws IOException {
         return createAndPopulateDir(SUBDIR_LEVEL_1, SUBDIR_LEVEL_2, ORIGINAL_FILES);
     }
-    
+
     private File createAndPopulateReplacementDir() throws IOException {
-        return createAndPopulateDir(REPL_SUBDIR_LEVEL_1, 
+        return createAndPopulateDir(REPL_SUBDIR_LEVEL_1,
                 REPL_SUBDIR_LEVEL_2, REPLACEMENT_FILES);
     }
-    
+
     private File createAndPopulateDir(final String subdirLevel1Path, final String subdirLevel2Path,
             final FileInfo[] files) throws IOException {
         final File top = createTempDir("payload", "");
         final File subdirLevel1 = createSubdir(top, subdirLevel1Path);
         createSubdir(subdirLevel1, subdirLevel2Path);
         for (FileInfo replFile : files) {
-            populateFile(new File(top.toURI().resolve(replFile.path)), 
+            populateFile(new File(top.toURI().resolve(replFile.path)),
                     replFile.content);
         }
         return top;
     }
-    
+
     private File createTempDir(final String prefix, final String suffix) throws IOException {
         File temp = File.createTempFile(prefix, suffix);
         if ( ! temp.delete()) {
@@ -372,7 +372,7 @@ public class PayloadImplTest {
         }
         return temp;
     }
-    
+
     private File createSubdir(final File parent, final String subdirPath) throws IOException {
         final File f = new File(parent, subdirPath);
         if ( ! f.mkdirs()) {
@@ -380,18 +380,18 @@ public class PayloadImplTest {
         }
         return f;
     }
-    
+
     private File populateFile(final File f, final String content) throws FileNotFoundException {
         final PrintStream ps = new PrintStream(f);
         ps.println(content);
         ps.close();
         return f;
     }
-    
+
     private void cleanDir(final File d) {
         FileUtils.whack(d);
     }
-    
+
     private void log(final String s) {
         //System.out.println(s);
     }

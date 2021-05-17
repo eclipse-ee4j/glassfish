@@ -19,13 +19,13 @@ package com.sun.ejb.containers.util.cache;
 import com.sun.ejb.spi.container.SFSBContainerCallback;
 
 public class FIFOSessionCache
-	extends LruSessionCache
-{ 
+    extends LruSessionCache
+{
 
-    public FIFOSessionCache(String cacheName, 
-                            SFSBContainerCallback container, 
+    public FIFOSessionCache(String cacheName,
+                            SFSBContainerCallback container,
                             int cacheIdleTime, int removalTime) {
-    	super("FIFO-" + cacheName, container, cacheIdleTime, removalTime);
+        super("FIFO-" + cacheName, container, cacheIdleTime, removalTime);
     }
 
     protected void itemAccessed(CacheItem item) {
@@ -40,10 +40,10 @@ public class FIFOSessionCache
             }
         }
     }
-    
+
     protected void itemRefreshed(CacheItem item, int oldSize) {
     }
-    
+
     public void trimTimedoutItems(int  maxCount) {
         trimUnSortedTimedoutItems(maxCount);
     }

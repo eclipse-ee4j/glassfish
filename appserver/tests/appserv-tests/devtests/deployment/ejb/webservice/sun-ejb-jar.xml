@@ -19,15 +19,15 @@
 -->
 
 <sun-ejb-jar>
-	<enterprise-beans>
-		<name>SayHelloJAR</name>
-		<ejb>
-			<ejb-name>SayHelloEJB</ejb-name>
-			<jndi-name>SayHelloEJB</jndi-name>
-			<webservice-endpoint>
-				<port-component-name>SayHelloPort</port-component-name>
-				<endpoint-address-uri>ejb/sayhello</endpoint-address-uri>
-			</webservice-endpoint>
-		</ejb>
-	</enterprise-beans>
+    <enterprise-beans>
+        <name>SayHelloJAR</name>
+        <ejb>
+            <ejb-name>SayHelloEJB</ejb-name>
+            <jndi-name>SayHelloEJB</jndi-name>
+            <webservice-endpoint>
+                <port-component-name>SayHelloPort</port-component-name>
+                <endpoint-address-uri>ejb/sayhello</endpoint-address-uri>
+            </webservice-endpoint>
+        </ejb>
+    </enterprise-beans>
 </sun-ejb-jar>

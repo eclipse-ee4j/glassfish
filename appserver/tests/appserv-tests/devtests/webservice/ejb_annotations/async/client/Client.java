@@ -37,23 +37,23 @@ public class Client {
         static AddNumbersImplService service;
 
         public static void main(String[] args) {
-	    stat.addDescription("async-ejb-service");
+        stat.addDescription("async-ejb-service");
             Client client = new Client();
             client.doSyncTest();
             client.doASyncPollTest();
             client.doASyncCallBackTest();
-	    stat.printSummary("async-ejb-service");
+        stat.printSummary("async-ejb-service");
         }
 
         public void doSyncTest() {
             try {
                 AddNumbersImpl port = service.getAddNumbersImplPort();
                 int ret = port.addNumbers(2222, 1234);
-		if(ret!=(2222+1234)) {
+        if(ret!=(2222+1234)) {
                     System.out.println("Unexpected add result " + ret);
                     stat.addStatus("async-ejb-service-sync-test", stat.FAIL);
                     return;
-		}
+        }
                 System.out.println(ret);
                 stat.addStatus("async-ejb-service-sync-test", stat.PASS);
             } catch(Exception e) {
@@ -70,11 +70,11 @@ public class Client {
                 Thread.sleep (2000);
                 AddNumbersResponse output = resp.get();
                 int ret = output.getReturn();
-		if(ret!=(1234+5678)) {
+        if(ret!=(1234+5678)) {
                     System.out.println("Unexpected add result " + ret);
                     stat.addStatus("async-ejb-service-poll-test", stat.FAIL);
                     return;
-		}
+        }
                 System.out.println(ret);
                 stat.addStatus("async-ejb-service-poll-test", stat.PASS);
             } catch(Exception e) {
@@ -92,11 +92,11 @@ public class Client {
                 Thread.sleep (2000);
                 AddNumbersResponse output = cbh.getResponse ();
                 int ret = output.getReturn();
-		if(ret!=(9876+5432)) {
+        if(ret!=(9876+5432)) {
                     System.out.println("Unexpected add result " + ret);
                     stat.addStatus("async-ejb-service-callbackhandler-test", stat.FAIL);
                     return;
-		}
+        }
                 System.out.println(ret);
                 stat.addStatus("async-ejb-service-callbackhandler-test", stat.PASS);
             } catch(Exception e) {

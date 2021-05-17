@@ -18,25 +18,25 @@
 -->
 
 <console-config id="jdbc">
-        <integration-point 
-                id="jdbcNodes" 
-                type="org.glassfish.admingui:navNode" 
+        <integration-point
+                id="jdbcNodes"
+                type="org.glassfish.admingui:navNode"
                 priority="300"
-                parentId="resources" 
-                content="jdbcTreeNode.jsf" 
+                parentId="resources"
+                content="jdbcTreeNode.jsf"
         />
-        <integration-point 
-                id="jdbcCommonTask" 
-                type="org.glassfish.admingui:commonTask" 
+        <integration-point
+                id="jdbcCommonTask"
+                type="org.glassfish.admingui:commonTask"
                 priority="500"
                 parentId="commonTasksSection"
                 content="jdbcCommonTask.jsf"
         />
-        <integration-point 
+        <integration-point
                 id="jdbcResourceLink"
                 parentId="propSheetSection"
-                type="org.glassfish.admingui:resources" 
-                priority="100" 
+                type="org.glassfish.admingui:resources"
+                priority="100"
                 content="jdbcResourceLink.jsf"
         />
 
@@ -47,7 +47,7 @@
                 priority="450"
                 content="jdbc/jdbcResourceNew.jsf|org.glassfish.admingui.core.Strings|tree.jdbcResources"
         />
-        
+
         <integration-point
                 id="jdbcResourceFilter"
                 type="org.glassfish.admingui:resFilterDropdown"

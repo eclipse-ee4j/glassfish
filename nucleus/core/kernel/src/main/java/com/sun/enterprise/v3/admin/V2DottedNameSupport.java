@@ -239,7 +239,7 @@ public class V2DottedNameSupport {
         if (a.indexOf('.')!=-1) {
             nextTokenName = a.substring(0, a.indexOf('.'));
         }
-                
+
         if (nextTokenName.equals(b)) {
             return true;
         }
@@ -248,7 +248,7 @@ public class V2DottedNameSupport {
         }
         return false;
     }
-    
+
     final static class TreeNode {
         final Dom node;
         final String name;
@@ -381,7 +381,7 @@ public class V2DottedNameSupport {
         });
         return mapEntries;
     }
-    
+
     public List<org.glassfish.flashlight.datatree.TreeNode> sortTreeNodesByCompletePathName(List<org.glassfish.flashlight.datatree.TreeNode> nodes) {
         Collections.sort(nodes, new Comparator() {
             public int compare(Object o1, Object o2) {

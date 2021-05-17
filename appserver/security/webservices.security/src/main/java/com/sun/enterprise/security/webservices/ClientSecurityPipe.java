@@ -50,26 +50,26 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl
     implements SecureConversationInitiator {
 
     protected PipeHelper helper;
-   
+
     protected static final Logger _logger = LogUtils.getLogger();
 
-    protected static final LocalStringManagerImpl localStrings = 
+    protected static final LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(ClientSecurityPipe.class);
 
     private static final String WSIT_CLIENT_AUTH_CONTEXT="com.sun.xml.wss.provider.wsit.WSITClientAuthContext";
-    
+
     public ClientSecurityPipe(Map props, Pipe next) {
 
         super(next);
 
-	props.put(PipeConstants.SECURITY_PIPE,this);
+    props.put(PipeConstants.SECURITY_PIPE,this);
 
         WSDLPort wsdlModel = (WSDLPort)props.get(PipeConstants.WSDL_MODEL);
         if (wsdlModel != null) {
             props.put(PipeConstants.WSDL_SERVICE,
                 wsdlModel.getOwner().getName());
         }
-	this.helper = new PipeHelper(PipeConstants.SOAP_LAYER,props,null);
+    this.helper = new PipeHelper(PipeConstants.SOAP_LAYER,props,null);
 
     }
 
@@ -77,10 +77,10 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl
         super(that, cloner);
         this.helper = that.helper;
     }
-		       
+
     @Override
     public void preDestroy() {
-        //Give the AuthContext a chance to cleanup 
+        //Give the AuthContext a chance to cleanup
         //create a dummy request packet
         try {
             Packet request = new Packet();
@@ -94,86 +94,86 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl
         //ignore exceptions
         }
         helper.disable();
-        
 
-        
-    }    
-    
+
+
+    }
+
     @Override
     public final Pipe copy(PipeCloner cloner) {
         return new ClientSecurityPipe(this, cloner);
     }
-    
+
     public PipeHelper getPipeHelper() {
         return helper;
     }
-    
+
 
     @Override
     public Packet process(Packet request) {
 
-	/*
-	 * XXX should there be code like the following?
-	 if(isHttpBinding) {
-	     return next.process(request);
-	 }
+    /*
+     * XXX should there be code like the following?
+     if(isHttpBinding) {
+         return next.process(request);
+     }
         */
 
-	PacketMessageInfo info= new PacketMapMessageInfo(request,new Packet());
-        
+    PacketMessageInfo info= new PacketMapMessageInfo(request,new Packet());
+
         info.getMap().put(jakarta.xml.ws.Endpoint.WSDL_SERVICE,
             helper.getProperty(PipeConstants.WSDL_SERVICE));
 
         AuthStatus status = AuthStatus.SEND_SUCCESS;
 
-	Subject clientSubject = getClientSubject(request);
+    Subject clientSubject = getClientSubject(request);
 
-	ClientAuthContext cAC = null;
+    ClientAuthContext cAC = null;
 
-	try {
+    try {
 
-	    cAC = helper.getClientAuthContext(info,clientSubject);
+        cAC = helper.getClientAuthContext(info,clientSubject);
 
-	    if (cAC != null) {
+        if (cAC != null) {
 
-		// proceed to process message sescurity
-		status = cAC.secureRequest(info, clientSubject);
-	    }
+        // proceed to process message sescurity
+        status = cAC.secureRequest(info, clientSubject);
+        }
 
-	} catch(Exception e) {
+    } catch(Exception e) {
 
             _logger.log(Level.SEVERE, LogUtils.ERROR_REQUEST_SECURING, e);
-	    
-	    throw new WebServiceException
-		(localStrings.getLocalString
-		 ("enterprise.webservice.cantSecureRequst",
-		  "Cannot secure request for {0}",
-		  new Object[] { helper.getModelName() }),e);
-	} 
 
-	Packet response;
+        throw new WebServiceException
+        (localStrings.getLocalString
+         ("enterprise.webservice.cantSecureRequst",
+          "Cannot secure request for {0}",
+          new Object[] { helper.getModelName() }),e);
+    }
 
-	if (status == AuthStatus.FAILURE) {
-	    if (_logger.isLoggable(Level.FINE)) {
-		_logger.log(Level.FINE,"ws.status_secure_request", status);
-	    }
-	    response = info.getResponsePacket();
-	} else {
-	    response = processSecureRequest(info,cAC,clientSubject);
-	}
+    Packet response;
 
-	// may return a security fault even if the MEP was one-way
+    if (status == AuthStatus.FAILURE) {
+        if (_logger.isLoggable(Level.FINE)) {
+        _logger.log(Level.FINE,"ws.status_secure_request", status);
+        }
+        response = info.getResponsePacket();
+    } else {
+        response = processSecureRequest(info,cAC,clientSubject);
+    }
+
+    // may return a security fault even if the MEP was one-way
         return response;
-    }    
-	
-    private Packet processSecureRequest(PacketMessageInfo info, 
-	ClientAuthContext cAC, Subject clientSubject) 
-	throws WebServiceException {
-        
-	// send the request
-	Packet response = next.process(info.getRequestPacket());
-	
-	       // check for response
+    }
+
+    private Packet processSecureRequest(PacketMessageInfo info,
+    ClientAuthContext cAC, Subject clientSubject)
+    throws WebServiceException {
+
+    // send the request
+    Packet response = next.process(info.getRequestPacket());
+
+           // check for response
         Message m = response.getMessage();
 
         if (m != null) {
@@ -203,67 +203,67 @@ public class ClientSecurityPipe extends AbstractFilterPipeImpl
             }
         }
 
-	return response;
+    return response;
     }
 
     private static Subject getClientSubject(Packet p) {
 
-	Subject s = null;
+    Subject s = null;
 
-	if (p != null) {
-	    s = (Subject) 
-		p.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
-	}
+    if (p != null) {
+        s = (Subject)
+        p.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
+    }
 
-	if (s == null) {
+    if (s == null) {
 
-	    s = PipeHelper.getClientSubject();
+        s = PipeHelper.getClientSubject();
 
             if (p != null) {
-	        p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT,s);
+            p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT,s);
             }
-	}
-	
-	return s;
     }
-			
+
+    return s;
+    }
+
     @Override
-    public JAXBElement startSecureConversation(Packet packet) 
+    public JAXBElement startSecureConversation(Packet packet)
             throws WSSecureConversationException {
 
-	PacketMessageInfo info = new PacketMapMessageInfo(packet,new Packet());
-	JAXBElement token = null;
+    PacketMessageInfo info = new PacketMapMessageInfo(packet,new Packet());
+    JAXBElement token = null;
 
-	try {
+    try {
 
-	    // gets the subject from the packet (puts one there if not found)
-	    Subject clientSubject = getClientSubject(packet);
+        // gets the subject from the packet (puts one there if not found)
+        Subject clientSubject = getClientSubject(packet);
 
-	    // put MessageInfo in properties map, since MessageInfo 
-	    // is not passed to getAuthContext, key idicates function
-	    HashMap map = new HashMap();
-	    map.put(PipeConstants.SECURITY_TOKEN,info);
+        // put MessageInfo in properties map, since MessageInfo
+        // is not passed to getAuthContext, key idicates function
+        HashMap map = new HashMap();
+        map.put(PipeConstants.SECURITY_TOKEN,info);
 
-	    helper.getSessionToken(map,info,clientSubject);
+        helper.getSessionToken(map,info,clientSubject);
 
-	    // helper returns token in map of msgInfo, using same key
-	    Object o = info.getMap().get(PipeConstants.SECURITY_TOKEN);
+        // helper returns token in map of msgInfo, using same key
+        Object o = info.getMap().get(PipeConstants.SECURITY_TOKEN);
 
-	    if (o != null && o instanceof JAXBElement) {
-		token = (JAXBElement) o;
-	    }
+        if (o != null && o instanceof JAXBElement) {
+        token = (JAXBElement) o;
+        }
 
-	} catch(Exception e) {
+    } catch(Exception e) {
 
-	    if (e instanceof WSSecureConversationException) {
-		throw (WSSecureConversationException) e;
-	    } else {
-		throw new WSSecureConversationException
-		    ("Secure Conversation failure: ", e);
-	    }
-	} 
+        if (e instanceof WSSecureConversationException) {
+        throw (WSSecureConversationException) e;
+        } else {
+        throw new WSSecureConversationException
+            ("Secure Conversation failure: ", e);
+        }
+    }
 
-	return token;
+    return token;
     }
 }
 

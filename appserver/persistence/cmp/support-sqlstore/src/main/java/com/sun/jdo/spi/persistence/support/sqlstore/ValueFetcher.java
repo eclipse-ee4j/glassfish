@@ -25,11 +25,11 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
 /**
  * Interface wrapping values that can be fetched by index.
  */
-public interface ValueFetcher 
+public interface ValueFetcher
 {
     /**
      * Returns a specific value from this ValueFetcher.
-     * @param whichOne indicates which value to be returned 
+     * @param whichOne indicates which value to be returned
      */
     public Object getValue(int whichOne);
 

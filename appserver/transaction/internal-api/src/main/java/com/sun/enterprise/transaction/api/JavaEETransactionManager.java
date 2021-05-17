@@ -131,7 +131,7 @@ public interface JavaEETransactionManager extends TransactionManager {
     /**
      * This is called by Container to indicate that a component
      * is being destroyed. All resources registered in the context
-     * should be released. The ComponentInvocation will be used for 
+     * should be released. The ComponentInvocation will be used for
      * callback to calculate the resource table key.
      *
      * @param instance The component instance
@@ -151,7 +151,7 @@ public interface JavaEETransactionManager extends TransactionManager {
     /**
      * This is called by Container to indicate that a component
      * is being destroyed. All resources registered with this ResourceHandler
-     * should be released. 
+     * should be released.
      *
      * @param rh The ResourceHandler
      */
@@ -162,14 +162,14 @@ public interface JavaEETransactionManager extends TransactionManager {
      */
 
     public void preInvoke(ComponentInvocation prev)
-	throws InvocationException;
+    throws InvocationException;
 
     /**
      * Called by InvocationManager
      */
 
     public void postInvoke(ComponentInvocation curr, ComponentInvocation prev)
-	throws InvocationException;
+    throws InvocationException;
 
     public void setDefaultTransactionTimeout(int seconds);
     public void cleanTxnTimeout(); // clean up thread specific timeout
@@ -187,7 +187,7 @@ public interface JavaEETransactionManager extends TransactionManager {
 
     /**
      * Initialize recovery framework
-     * @param force if true, forces initialization, otherwise relies on the TimerService 
+     * @param force if true, forces initialization, otherwise relies on the TimerService
      * configuration.
      */
     public void initRecovery(boolean force);
@@ -321,11 +321,11 @@ public interface JavaEETransactionManager extends TransactionManager {
 
     /**
      *
-     * Return XAResourceWrapper instance specific to this datasource class name 
+     * Return XAResourceWrapper instance specific to this datasource class name
      * that can be used instead of the driver provided version for transaction recovery.
      *
      * @param clName the class name of a datasource.
-     * @return the XAResourceWrapper instance specific to this datasource class 
+     * @return the XAResourceWrapper instance specific to this datasource class
      * name or null if there is no special wrapper available.
      */
     public XAResourceWrapper getXAResourceWrapper(String clName);
@@ -347,7 +347,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param xaresArray the array of XA Resources to be recovered.
      * @return true if the recovery has been successful.
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, 
+    public boolean recoverIncompleteTx(boolean delegated, String logPath,
             XAResource[] xaresArray) throws Exception;
 
     /**

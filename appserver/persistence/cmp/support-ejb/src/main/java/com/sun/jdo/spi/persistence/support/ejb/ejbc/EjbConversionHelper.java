@@ -150,31 +150,31 @@ public class EjbConversionHelper implements ConversionHelper {
         return nameMapper.getPersistenceClassForEjbName(ejbName);
     }
 
-    /** 
-     * If {@link #generateFields} is <code>true</code>, then this method will 
+    /**
+     * If {@link #generateFields} is <code>true</code>, then this method will
      * check if the field is one of the cmp + cmr + pseudo cmr fields, otherwise
      * the method will check if the field is one of the cmp + cmr fields.
      * @param ejbName The ejb-name element for the bean
-     * @param fieldName The name of a container managed field in the named bean 
+     * @param fieldName The name of a container managed field in the named bean
      * @return <code>true</code> if the bean contains the field, otherwise
-     * return <code>false</code> 
+     * return <code>false</code>
      */
     public boolean hasField(String ejbName, String fieldName) {
         if (!generateFields && isGeneratedRelationship(ejbName, fieldName))
             return false;
         else {
             HashMap fieldMap = (HashMap)ejbFieldMap.get(ejbName);
-            return (fieldMap != null) ? 
+            return (fieldMap != null) ?
                 (fieldMap.get(fieldName) != null) : false;
         }
     }
 
-    /** 
-     * If {@link #generateFields} is <code>true</code>, then this method will 
-     * return an array of cmp + cmr + pseudo cmr fields, otherwise 
+    /**
+     * If {@link #generateFields} is <code>true</code>, then this method will
+     * return an array of cmp + cmr + pseudo cmr fields, otherwise
      * the method will return an array of cmp + cmr fields.
      * @param ejbName The ejb-name element for the bean
-     * @return an array of fields in the ejb bean 
+     * @return an array of fields in the ejb bean
      */
     public Object[] getFields(String ejbName) {
         HashMap fieldMap = (HashMap)ejbFieldMap.get(ejbName);
@@ -257,7 +257,7 @@ public class EjbConversionHelper implements ConversionHelper {
         return keyClassName != null &&
                 keyClassName.equals(Object.class.getName());
     }
-  
+
     /**
      * Returns the name used for generated primary key fields.
      * @return a string for key field name
@@ -282,7 +282,7 @@ public class EjbConversionHelper implements ConversionHelper {
     /**
      * Returns the flag whether the mapping conversion should generate
      * relationship fields and primary key fields to support run-time.
-     * The version field is always created even {@link #generateFields} is 
+     * The version field is always created even {@link #generateFields} is
      * <code>false</code> because it holds version column information.
      * @return <code>true</code> to generate fields in the dot-mapping file
      * (if they are not present).
@@ -324,7 +324,7 @@ public class EjbConversionHelper implements ConversionHelper {
      * types of generated fields: generated relationships, unknown primary key
      * fields, and version consistency fields.
      * @param ejbName The ejb-name element for the bean
-     * @param fieldName The name of a container managed field in the named bean 
+     * @param fieldName The name of a container managed field in the named bean
      * @return <code>true</code> if the field is generated; <code>false</code>
      * otherwise.
      */
@@ -344,7 +344,7 @@ public class EjbConversionHelper implements ConversionHelper {
      */
     public List getGeneratedRelationships(String ejbName) {
         return nameMapper.getGeneratedRelationshipsForEjbName(ejbName);
- 
+
     }
 
     //-------------------------------------

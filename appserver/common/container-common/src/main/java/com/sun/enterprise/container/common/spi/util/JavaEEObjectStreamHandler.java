@@ -25,7 +25,7 @@ public interface JavaEEObjectStreamHandler {
 
     /**
      * Called during serialization
-     * 
+     *
      * @param obj
      * @return
      * @throws IOException

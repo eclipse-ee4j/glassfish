@@ -747,7 +747,7 @@ public class Main
                                      throws FileNotFoundException
     {
 
-     	return new BufferedInputStream (new FileInputStream (new File (filename)));
+         return new BufferedInputStream (new FileInputStream (new File (filename)));
 
     }  //Main.openFileInputStream()
 

@@ -19,18 +19,18 @@ package com.sun.enterprise.deployment.interfaces;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 
 /**
- * 
+ *
  * @author Jerome Dochez
  */
 public class SecurityRoleMapperFactoryMgr {
-    
+
     //SecurityRoleMapperFactory is a singleton in the VM
     private static SecurityRoleMapperFactory rmFactory;
-    
+
     public static SecurityRoleMapperFactory getFactory() {
         return rmFactory;
     }
-    
+
     public static void registerFactory(SecurityRoleMapperFactory factory) {
         if (rmFactory == null) {
             rmFactory = factory;

@@ -30,9 +30,9 @@
     &testproperties;
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+    </exec>
   </target>
 
 <!-- NOTE. the simple mapping test and full mapping test can
@@ -49,45 +49,45 @@
       <param name="src" value="ejb"/>
     </antcall>
   </target>
-  
+
   <target name="gen-ejb-wsdl" depends="init-common">
-    <mkdir dir="${build.classes.dir}/META-INF/wsdl"/> 
+    <mkdir dir="${build.classes.dir}/META-INF/wsdl"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
-   value="-define -mapping ${build.classes.dir}/SimpleHandlerMapping_ejb.xml -cp ${build.classes.dir} -keep -d ${build.classes.dir}/META-INF/wsdl config-interface.xml"/> 
+      <param name="wscompile.command"
+   value="-define -mapping ${build.classes.dir}/SimpleHandlerMapping_ejb.xml -cp ${build.classes.dir} -keep -d ${build.classes.dir}/META-INF/wsdl config-interface.xml"/>
     </antcall>
-  </target>    
-   
+  </target>
+
   <target name="assemble-ejb" depends="init-common, compile, gen-ejb-wsdl">
     <antcall target="ejb-jar-common">
         <param name="ejbjar.classes" value="SimpleHandlerMapping_ejb.xml,META-INF/wsdl/**,ejb/*.class"/>
     </antcall>
   </target>
-             
+
   <target name="assemble" depends="assemble-ejb, assemble-client"/>
-  
+
   <target name="assemble-client" depends="init-common">
     <antcall target="compile-common">
         <param name="src" value="client"/>
-    </antcall>    
+    </antcall>
     <antcall target="gen-ejb-wsdl"/>
     <unjar src="${env.APS_HOME}/lib/reporter.jar"
         dest="${build.classes.dir}"/>
     <antcall target="appclient-jar-common">
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="SimpleHandlerMapping_ejb.xml,META-INF/wsdl/**,simplehandler/**,ejb/SimpleServer.class,com/**" />
-    </antcall>  
+    </antcall>
     <antcall target="deploy-client-common"/>
     <move file="${assemble.dir}/${appname}-clientClient.jar" toFile="${assemble.dir}/${appname}AppClient.jar"/>
   </target>
-  
+
     <target name="run" depends="init-common">
         <antcall target="runclient-common">
           <param name="appclient.application.args" value="http://${http.host}:${http.port}/simplehandler"/>
         </antcall>
-    </target>  
+    </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-jar-common"/>
     </target>
@@ -95,10 +95,10 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-jar-common"/>
         <antcall target="undeploy-client-common"/>
-    </target>  
-    
+    </target>
+
 </project>

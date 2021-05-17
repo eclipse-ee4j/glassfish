@@ -22,7 +22,7 @@ import jakarta.annotation.Resource;
 public class Foo {
 
 
-    @Resource ManagedBean1Int m; 
-    
+    @Resource ManagedBean1Int m;
+
 
 }

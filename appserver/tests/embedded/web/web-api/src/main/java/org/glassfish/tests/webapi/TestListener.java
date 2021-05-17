@@ -24,16 +24,16 @@ public final class TestListener
   implements ServletContextListener
 {
   public static String msg = "Context not YET initialized";
-  
+
   public void contextInitialized(ServletContextEvent event)
   {
     System.out.println("TestListener : contextInitialized called");
     try
     {
       System.out.println("TestListener : Trying to load TestCacaoList");
-      
+
       Class c = Class.forName("TestCacaoList");
-      
+
       msg = "Class TestCacaoList loaded successfully from listener";
       System.out.println(msg);
     }
@@ -44,6 +44,6 @@ public final class TestListener
     }
     System.out.println("TestListener : contextInitialized DONE");
   }
-  
+
   public void contextDestroyed(ServletContextEvent event) {}
 }

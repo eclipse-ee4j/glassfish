@@ -112,8 +112,8 @@ public class DynamicConfigListener implements ConfigListener {
                             notProcessed = processNetworkListener(type, listener, null);
                         }
                         return notProcessed;
-                    } else if (tClass == VirtualServer.class 
-                                    && t instanceof VirtualServer 
+                    } else if (tClass == VirtualServer.class
+                                    && t instanceof VirtualServer
                                     && !grizzlyService.hasMapperUpdateListener()) {
                         return processVirtualServer(type, (VirtualServer) t);
                     } else if (tClass == SystemProperty.class && t instanceof SystemProperty) {
@@ -146,7 +146,7 @@ public class DynamicConfigListener implements ConfigListener {
                     if (isAdminListener && ports[ports.length - 1] == -1) {
                         return null;
                     }
-                    
+
                     final Future future = grizzlyService.createNetworkProxy(listener);
                     if (future != null) {
                         future.get(RECONFIG_LOCK_TIMEOUT_SEC, TimeUnit.SECONDS);
@@ -173,7 +173,7 @@ public class DynamicConfigListener implements ConfigListener {
                         }
                         return null;
                     }
-                    
+
                     // Restart the network listener
                     grizzlyService.restartNetworkListener(listener, RECONFIG_LOCK_TIMEOUT_SEC, TimeUnit.SECONDS);
                 }

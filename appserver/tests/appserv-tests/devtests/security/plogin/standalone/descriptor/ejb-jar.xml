@@ -34,41 +34,41 @@
 
 
         <security-role>
-       	    <role-name>staff</role-name>
+               <role-name>staff</role-name>
         </security-role>
         <security-role>
-       	    <role-name>staff2</role-name>
+               <role-name>staff2</role-name>
         </security-role>
         <security-role>
-       	    <role-name>staff3</role-name>
+               <role-name>staff3</role-name>
         </security-role>
 
         <method-permission>
-	     <description>method authorized to only staff role</description>
+         <description>method authorized to only staff role</description>
              <role-name>staff</role-name>
              <method>
-	         <ejb-name>MySession1Bean</ejb-name>
-	         <method-name>businessMethod</method-name>
-	     </method>
+             <ejb-name>MySession1Bean</ejb-name>
+             <method-name>businessMethod</method-name>
+         </method>
         </method-permission>
 
 
         <method-permission>
-	     <description>method authorized to only staff2 role</description>
+         <description>method authorized to only staff2 role</description>
              <role-name>staff2</role-name>
              <method>
-	         <ejb-name>MySession1Bean</ejb-name>
-	         <method-name>businessMethod2</method-name>
-	     </method>
+             <ejb-name>MySession1Bean</ejb-name>
+             <method-name>businessMethod2</method-name>
+         </method>
         </method-permission>
 
         <method-permission>
-	     <description>method authorized to only staff3 role</description>
+         <description>method authorized to only staff3 role</description>
              <role-name>staff3</role-name>
              <method>
-	         <ejb-name>MySession1Bean</ejb-name>
-	         <method-name>businessMethod3</method-name>
-	     </method>
+             <ejb-name>MySession1Bean</ejb-name>
+             <method-name>businessMethod3</method-name>
+         </method>
         </method-permission>
 
         <container-transaction>

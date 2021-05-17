@@ -29,11 +29,11 @@ import test.beans.artifacts.TestDatabase;
 @Singleton
 public class JPAResourceProducer {
     @Produces @PersistenceUnit(unitName="pu3")
-    @TestDatabase 
+    @TestDatabase
     EntityManagerFactory customerDatabasePersistenceUnit;
 
     @Produces @PersistenceContext(unitName="pu3")
-    @TestDatabase 
+    @TestDatabase
     EntityManager customerDatabasePersistenceContext;
-    
+
 }

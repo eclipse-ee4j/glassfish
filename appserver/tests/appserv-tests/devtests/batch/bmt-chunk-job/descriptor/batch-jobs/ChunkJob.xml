@@ -20,9 +20,9 @@
 <job id="bmt-chunk-job" xmlns="https://jakarta.ee/xml/ns/jakartaee" version="2.0">
     <step id="step1">
         <chunk item-count="3">
-            <reader ref="SimpleItemReader"></reader> 
+            <reader ref="SimpleItemReader"></reader>
             <processor ref="SimpleItemProcessor"></processor>
-            <writer ref="SimpleItemWriter"></writer> 
+            <writer ref="SimpleItemWriter"></writer>
         </chunk>
     </step>
 </job>

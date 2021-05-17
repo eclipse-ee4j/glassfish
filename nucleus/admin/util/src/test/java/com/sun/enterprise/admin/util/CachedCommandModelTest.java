@@ -25,10 +25,10 @@ import static org.junit.Assert.*;
  * @author mmares
  */
 public class CachedCommandModelTest {
-    
+
     public CachedCommandModelTest() {
     }
-    
+
     public static CachedCommandModel createBeateles() {
         CachedCommandModel result = new CachedCommandModel("TheBeatles");
         result.dashOk = true;
@@ -41,7 +41,7 @@ public class CachedCommandModelTest {
         result.add(new CommandModelData.ParamModelData("Starr", String.class, true, null, null, false, "Ringo"));
         return result;
     }
-    
+
     @Test
     public void testETag() {
         CachedCommandModel beatles1 = createBeateles();

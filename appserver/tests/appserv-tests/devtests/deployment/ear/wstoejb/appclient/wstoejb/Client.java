@@ -29,26 +29,26 @@ import wstoejb.WebServiceToEjbSEI;
  * This is a appclient test
  */
 public class Client {
-    
+
     public static void main(String args[]) {
-        
+
         boolean testPositive = (Boolean.valueOf(args[0])).booleanValue();
         try {
-            Context ic = new InitialContext();        
-        
+            Context ic = new InitialContext();
+
             Service myWebService = (Service)
-                ic.lookup("java:comp/env/service/WstoEjbService");        
+                ic.lookup("java:comp/env/service/WstoEjbService");
             WebServiceToEjbSEI port = (WebServiceToEjbSEI) myWebService.getPort(WebServiceToEjbSEI.class);
             System.out.println(port.payload("APPCLIENT as client"));
         } catch(Throwable t) {
-			if(testPositive) {
-            	t.printStackTrace();
-            	System.exit(-1);
-			} else {
-				System.out.println("Recd exception as expected");
-			}
+            if(testPositive) {
+                t.printStackTrace();
+                System.exit(-1);
+            } else {
+                System.out.println("Recd exception as expected");
+            }
         }
-		System.exit(0);
+        System.exit(0);
     }
-    
+
 }

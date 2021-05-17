@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * MEJB service to register mejb with a temporary NamingObjectProxy at server 
+ * MEJB service to register mejb with a temporary NamingObjectProxy at server
  * start up time
  */
 @Service
@@ -48,23 +48,23 @@ public class MEJBService implements PostConstruct {
     @Inject
     ServiceLocator habitat;
 
-    @Inject 
+    @Inject
     Provider<GlassfishNamingManager> gfNamingManagerProvider;
 
     private static final Logger _logger = LogDomains.getLogger(
         MEJBService.class, LogDomains.EJB_LOGGER);
-  
+
     public void postConstruct() {
         GlassfishNamingManager gfNamingManager =
             gfNamingManagerProvider.get();
 
-        MEJBNamingObjectProxy mejbProxy = 
+        MEJBNamingObjectProxy mejbProxy =
             new MEJBNamingObjectProxy(habitat);
         for(String next : MEJBNamingObjectProxy.getJndiNames()) {
             try {
                 gfNamingManager.publishObject(next, mejbProxy, true);
             } catch (Exception e) {
-                _logger.log(Level.WARNING, "Problem in publishing temp proxy for MEJB: " + 
+                _logger.log(Level.WARNING, "Problem in publishing temp proxy for MEJB: " +
                     e.getMessage(), e);
             }
         }

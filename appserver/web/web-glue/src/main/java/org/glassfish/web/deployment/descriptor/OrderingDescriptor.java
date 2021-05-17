@@ -39,7 +39,7 @@ public class OrderingDescriptor extends Descriptor {
             new LocalStringManagerImpl(OrderingDescriptor.class);
 
     OrderingOrderingDescriptor after = null;
-    
+
     OrderingOrderingDescriptor before = null;
 
     public OrderingOrderingDescriptor getAfter() {
@@ -291,7 +291,7 @@ public class OrderingDescriptor extends Descriptor {
                 }
             }
         }
-        
+
         if (roots.empty() && rootsBefore.empty() && rootsAfter.empty()) {
             // check if it is a circle with others and empty remaining
             if (isCircleWithOthersAndNoRemaining(graph, hasRemaining, sortedNodes)) {
@@ -311,7 +311,7 @@ public class OrderingDescriptor extends Descriptor {
                 node = roots.pop();
             } else { // !rootsAfter.empty()
                 node = rootsAfter.pop();
-            } 
+            }
 
             sortedNodes.add(node);
             // for each outcoming edges

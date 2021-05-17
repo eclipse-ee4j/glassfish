@@ -49,10 +49,10 @@ public class InvocationInfo {
     public boolean    isCreateHomeFinder;
     public boolean    startsWithCreate;
     public boolean    startsWithFind;
-    public boolean    startsWithRemove; 
+    public boolean    startsWithRemove;
     public boolean    startsWithFindByPrimaryKey;
-    
-    // Used by InvocationHandlers to cache bean class methods that 
+
+    // Used by InvocationHandlers to cache bean class methods that
     // correspond to ejb interface methods.
     public Method     targetMethod1;
     public Method     targetMethod2;
@@ -81,7 +81,7 @@ public class InvocationInfo {
     public String str_method_sig;
 
     public InvocationInfo() {}
-    
+
     public InvocationInfo(Method method) {
         this.method = method;
     }

@@ -23,65 +23,65 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
-/** 
+/**
  * The DNS Cache caches IP addresses and DNS names. The server’s DNS cache is
  * disabled by default. A single cache entry represents a single IP address or DNS
  * name lookup
  */
 public interface PWCDnsStats extends Stats {
-    
+
     /**
      * Indicates whether the DNS cache is enabled or disable. Default is disabled.
      * @return DNS cache enabled?
      */
     public CountStatistic getFlagCacheEnabled();
-    
-    /** 
+
+    /**
      * The number of current cache entries
      * @return current cache entries
      */
     public CountStatistic getCountCacheEntries();
-    
-    /** 
+
+    /**
      * The maximum number of cache entries
      * @return max cache entries
      */
     public CountStatistic getMaxCacheEntries();
-    
-    /** 
+
+    /**
      * The number of cache hits
      * @return cache hits
      */
     public CountStatistic getCountCacheHits();
-    
-    /** 
+
+    /**
      * The number of cache misses
      * @return cache misses
      */
     public CountStatistic getCountCacheMisses();
-    
-    /** 
+
+    /**
      * Returns whether asynchronic lookup is enabled. 1 if true, 0 otherwise
      * @return enabled
      */
     public CountStatistic getFlagAsyncEnabled();
-    
-    /** 
+
+    /**
      * The total number of asynchronic name lookups
      * @return asyn name lookups
      */
     public CountStatistic getCountAsyncNameLookups();
-    
-    /** 
+
+    /**
      * The total number of asynchronic address lookups
      * @return asyn address lookups
      */
     public CountStatistic getCountAsyncAddrLookups();
-    
-    /** 
+
+    /**
      * The number of asynchronic lookups in progress
      * @return async lookups in progress
      */
     public CountStatistic getCountAsyncLookupsInProgress();
-    
+
 }

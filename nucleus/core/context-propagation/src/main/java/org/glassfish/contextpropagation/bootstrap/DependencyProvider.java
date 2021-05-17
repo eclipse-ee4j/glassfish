@@ -20,7 +20,7 @@ import org.glassfish.contextpropagation.wireadapters.WireAdapter;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * A DependencyProvider knows where all the adaptors required by context 
+ * A DependencyProvider knows where all the adaptors required by context
  * propagation are.
  */
 @Contract

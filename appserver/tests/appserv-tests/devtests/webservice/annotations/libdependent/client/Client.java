@@ -33,10 +33,10 @@ public class Client {
         static HelloService service;
 
         public static void main(String[] args) {
-	    stat.addDescription("webservices-simple-annotation");
+        stat.addDescription("webservices-simple-annotation");
             Client client = new Client();
             client.doTest(args);
-	    stat.printSummary("webservices-annotation");
+        stat.printSummary("webservices-annotation");
        }
 
        public void doTest(String[] args) {
@@ -44,16 +44,16 @@ public class Client {
                 Hello port = service.getHelloPort();
                 for (int i=0;i<10;i++) {
                     RetVal ret = port.sayHello("Appserver Tester !" + args[0]);
-		    if(ret.getRetVal().indexOf("WebSvcTest-Hello") == -1) {
+            if(ret.getRetVal().indexOf("WebSvcTest-Hello") == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus(args[0], stat.FAIL);
                         return;
-		    }
-		    if(ret.getRetVal().indexOf(args[0]) == -1) {
+            }
+            if(ret.getRetVal().indexOf(args[0]) == -1) {
                         System.out.println("Unexpected greeting " + ret);
                         stat.addStatus(args[0], stat.FAIL);
                         return;
-		    }
+            }
                     System.out.println(ret);
                     System.out.println(ret.getRetVal());
                 }

@@ -23,7 +23,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
@@ -33,7 +33,7 @@ public class Client {
     @EJB(lookup = "java:app/ejb-timer-getalltimers-ejb2/StlesNonTimeoutEJB")
     private static StlesNonTimeout stlesNonTimeout;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         stat.addDescription("ejb32-timer-getalltimers");
 
 

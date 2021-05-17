@@ -23,7 +23,7 @@ import java.util.Set;
 
 /**
  * Utilities for transaction config reflection.
- * 
+ *
  * @author Jeff Trent
  */
 /*public*/ class ReflectionHelper {
@@ -32,7 +32,7 @@ import java.util.Set;
     if (null == obj) {
       return null;
     }
-    
+
     Class<?> clazz = obj.getClass();
     if (Proxy.isProxyClass(clazz) || clazz.isAnonymousClass()) {
       for (Class<?> iface : clazz.getInterfaces()) {
@@ -41,12 +41,12 @@ import java.util.Set;
           return t;
         }
       }
-      
+
       if (clazz.isAnonymousClass()) {
         clazz = clazz.getSuperclass();
       }
     }
-    
+
     return clazz.getAnnotation(annotation);
   }
 
@@ -54,7 +54,7 @@ import java.util.Set;
   static void annotatedWith(Set<Class<?>> contracts, Object obj, Class annotation) {
     if (null != obj) {
       Class<?> clazz = obj.getClass();
-      
+
       while (Object.class != clazz) {
         if (!clazz.isAnonymousClass()) {
           Object t = clazz.getAnnotation(annotation);
@@ -63,7 +63,7 @@ import java.util.Set;
           } else {
             annotatedWith(contracts, annotation, clazz);
           }
-          
+
           for (Class<?> iface : clazz.getInterfaces()) {
             t = iface.getAnnotation(annotation);
             if (null != t) {
@@ -73,7 +73,7 @@ import java.util.Set;
             }
           }
         }
-        
+
         clazz = clazz.getSuperclass();
       }
     }
@@ -96,7 +96,7 @@ import java.util.Set;
 
   static String nameOf(Object configBean) {
     String name = null;
-    
+
     if (null != configBean) {
       try {
         Method m = configBean.getClass().getMethod("getName", (Class<?>[])null);
@@ -105,7 +105,7 @@ import java.util.Set;
         // swallow
       }
     }
-    
+
     return name;
   }
 

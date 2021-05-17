@@ -45,7 +45,7 @@ public final class AppservAccessController {
 
         if (isSecMgrOff) {
             try {
-                return action.run();       
+                return action.run();
             } catch(Exception e) {
                 throw new PrivilegedActionException(e);
             }

@@ -573,7 +573,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
 
     private boolean replicateSetCommand(AdminCommandContext context, String targetName, String value) {
         // "domain." on the front of the attribute name is optional.  So if it is
-        // there, strip it off. 
+        // there, strip it off.
         List<Server> replicationInstances = null;
         String tName;
         if (targetName.startsWith("domain.")) {

@@ -26,9 +26,9 @@ import org.glassfish.api.admin.WrappedAdminCommand;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Andriy Zhdanov
- * 
+ *
  */
 public class WrappedAdminCommandTest {
 

@@ -29,8 +29,8 @@ public interface AuthorizationConstraint extends WebDescriptor {
     public static String FORM_METHOD = "form";
     public static String MUTUAL_METHOD = "mutual";
 
-    /** 
-     * Return the security roles involved in this constraint. 
+    /**
+     * Return the security roles involved in this constraint.
      * @return the enumeration of security roles.
      */
     public Enumeration getSecurityRoles();

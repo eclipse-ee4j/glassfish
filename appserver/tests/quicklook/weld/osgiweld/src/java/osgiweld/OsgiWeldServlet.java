@@ -32,7 +32,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Test integrity of OSGi Weld Module.
- * 
+ *
  * @author Santiago.PericasGeertsen@sun.com
  */
 public class OsgiWeldServlet extends HttpServlet {
@@ -40,7 +40,7 @@ public class OsgiWeldServlet extends HttpServlet {
     private static List<Attributes.Name> ATTRS =
             Arrays.asList(new Attributes.Name("Export-Package"),
                           new Attributes.Name("Import-Package"));
-                          //new Attributes.Name("Private-Package")); 
+                          //new Attributes.Name("Private-Package"));
             //From Weld 1.1, Private-Package is not part of the OSGi headers
 
     protected void processRequest(HttpServletRequest request,
@@ -107,7 +107,7 @@ public class OsgiWeldServlet extends HttpServlet {
         return name.equals("org.jboss.weld.osgi-bundle");
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -120,7 +120,7 @@ public class OsgiWeldServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -133,7 +133,7 @@ public class OsgiWeldServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

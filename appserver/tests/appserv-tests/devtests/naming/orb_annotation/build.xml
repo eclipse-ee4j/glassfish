@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -48,20 +48,20 @@
           <param name="hasWebclient" value="true"/>
         </antcall>
 
- 
+
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
 
         <antcall target="appclient-jar-common">
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-  
+
         <antcall target="ear-common"/>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -71,10 +71,10 @@
           <param name="appclient.application.args" value="${http.host} ${http.port}"/>
         </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

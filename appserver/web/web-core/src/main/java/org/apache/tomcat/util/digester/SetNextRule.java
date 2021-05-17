@@ -28,9 +28,9 @@ import java.util.logging.Level;
  * commonly used to establish parent-child relationships.</p>
  *
  * <p>This rule now supports more flexible method matching by default.
- * It is possible that this may break (some) code 
+ * It is possible that this may break (some) code
  * written against release 1.1.1 or earlier.
- * See {@link #isExactMatch()} for more details.</p> 
+ * See {@link #isExactMatch()} for more details.</p>
  */
 
 public class SetNextRule extends Rule {
@@ -47,7 +47,7 @@ public class SetNextRule extends Rule {
      * @param digester The associated Digester
      * @param methodName Method name of the parent method to call
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #SetNextRule(String methodName)} instead.
      */
     public SetNextRule(Digester digester, String methodName) {
@@ -67,7 +67,7 @@ public class SetNextRule extends Rule {
      *  Java wrapper class instead, such as <code>java.lang.Boolean</code>
      *  for a <code>boolean</code> parameter)
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #SetNextRule(String methodName,String paramType)} instead.
      */
     public SetNextRule(Digester digester, String methodName,
@@ -134,15 +134,15 @@ public class SetNextRule extends Rule {
     /**
      * <p>Is exact matching being used.</p>
      *
-     * <p>This rule uses <code>org.apache.commons.beanutils.MethodUtils</code> 
+     * <p>This rule uses <code>org.apache.commons.beanutils.MethodUtils</code>
      * to introspect the relevent objects so that the right method can be called.
      * Originally, <code>MethodUtils.invokeExactMethod</code> was used.
-     * This matches methods very strictly 
+     * This matches methods very strictly
      * and so may not find a matching method when one exists.
      * This is still the behaviour when exact matching is enabled.</p>
      *
      * <p>When exact matching is disabled, <code>MethodUtils.invokeMethod</code> is used.
-     * This method finds more methods but is less precise when there are several methods 
+     * This method finds more methods but is less precise when there are several methods
      * with correct signatures.
      * So, if you want to choose an exact signature you might need to enable this property.</p>
      *
@@ -152,10 +152,10 @@ public class SetNextRule extends Rule {
      * @since Digester Release 1.1.1
      */
     public boolean isExactMatch() {
-    
+
         return useExactMatch;
     }
-    
+
     /**
      * <p>Set whether exact matching is enabled.</p>
      *
@@ -163,7 +163,7 @@ public class SetNextRule extends Rule {
      *
      * @param useExactMatch should this rule use exact method matching
      * @since Digester Release 1.1.1
-     */    
+     */
     public void setExactMatch(boolean useExactMatch) {
 
         this.useExactMatch = useExactMatch;
@@ -192,7 +192,7 @@ public class SetNextRule extends Rule {
         // Call the specified method
         IntrospectionUtils.callMethod1(parent, methodName,
                 child, paramType, digester.getClassLoader());
-                
+
     }
 
 

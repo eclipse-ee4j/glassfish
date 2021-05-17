@@ -18,7 +18,7 @@ package dummypkg;
 
 public class DummyLib {
 
-	public DummyLib() {}
+    public DummyLib() {}
 
     public String getDummyString() {
         return "This is the string from dummy lib";

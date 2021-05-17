@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -50,13 +50,13 @@
         <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
           <param name="hasWebclient" value="yes"/>
-          <param name="webclient.war.classes" value="**/servlet/*.class"/> 
+          <param name="webclient.war.classes" value="**/servlet/*.class"/>
         </antcall>
         <antcall target="appclient-jar-common"/>
         <antcall target="ear-common"/>
-    
-    </target> 
-    
+
+    </target>
+
     <target name="deploy" depends="init-common">
       <antcall target="deploy-jdbc-common">
         <param name="jdbc.resource.name" value="jdbc/onlygetconnectionservlet"/>
@@ -64,7 +64,7 @@
       </antcall>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
-	<param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-onlygetconnectionservlet-pool.property.associatewiththread=true"/>
+    <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-onlygetconnectionservlet-pool.property.associatewiththread=true"/>
       </antcall>
 <antcall target="deploy-common"/>
     </target>
@@ -73,21 +73,21 @@
       <antcall target="restart-server"/>
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create.sql"/>
-      </antcall>  
+      </antcall>
       <antcall target="runclient-common"/>
 
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop.sql"/>
-      </antcall>  
+      </antcall>
       <antcall target="undeploy-jdbc-common">
         <param name="jdbc.resource.name" value="jdbc/onlygetconnectionservlet"/>
         <param name="jdbc.connpool.name" value="jdbc-onlygetconnectionservlet-pool"/>
       </antcall>
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

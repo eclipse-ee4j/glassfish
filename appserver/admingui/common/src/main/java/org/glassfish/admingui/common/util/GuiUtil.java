@@ -307,14 +307,14 @@ public class GuiUtil {
     }
 
     /**
-     *	<p> This method generates an ID that is safe for JSF for the given
-     *	    String.  It does not guarantee that the id is unique, it is the
-     *	    responsibility of the caller to pass in a String that will result
-     *	    in a UID.  All non-ascii characters will be replaced with an
-     *	    '_'.  This method will also ensure an alpha character (or '_') is
-     *	    the first character in the id.</p>
+     *    <p> This method generates an ID that is safe for JSF for the given
+     *        String.  It does not guarantee that the id is unique, it is the
+     *        responsibility of the caller to pass in a String that will result
+     *        in a UID.  All non-ascii characters will be replaced with an
+     *        '_'.  This method will also ensure an alpha character (or '_') is
+     *        the first character in the id.</p>
      *
-     *	@param	uid	A non-null String.
+     *    @param    uid    A non-null String.
      */
     public static String genId(String uid) {
         char[] chArr = uid.toCharArray();
@@ -326,13 +326,13 @@ public class GuiUtil {
                 chArr[newIdx++] = test;
             } else {
                 chArr[newIdx++] = '_';
-	    }
         }
-	String result = new String(chArr, 0, newIdx);
-	if (!Character.isLetter(chArr[0]) && (chArr[0] != '_')) {
-	    // Make it start with a '_'
-	    result = "_" + result;
-	}
+        }
+    String result = new String(chArr, 0, newIdx);
+    if (!Character.isLetter(chArr[0]) && (chArr[0] != '_')) {
+        // Make it start with a '_'
+        result = "_" + result;
+    }
         return result;
     }
 
@@ -700,8 +700,8 @@ public class GuiUtil {
     Get the chain of exceptions via getCause(). The first element is the
     Exception passed.
 
-    @param start	the Exception to traverse
-    @return		a Throwable[] or an Exception[] as appropriate
+    @param start    the Exception to traverse
+    @return        a Throwable[] or an Exception[] as appropriate
      */
     public static Throwable[] getCauses(final Throwable start)
     {
@@ -737,8 +737,8 @@ public class GuiUtil {
     /**
     Get the original troublemaker.
 
-    @param e	the Exception to dig into
-    @return		the original Throwable that started the problem
+    @param e    the Exception to dig into
+    @return        the original Throwable that started the problem
      */
     public static Throwable getRootCause(final Throwable e)
     {

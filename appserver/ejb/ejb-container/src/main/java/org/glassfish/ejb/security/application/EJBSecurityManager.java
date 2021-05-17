@@ -114,11 +114,11 @@ public final class EJBSecurityManager
     private String codebase = null;
     private CodeSource codesource = null;
     private String realmName = null;
-    // this stores the role ref permissions. So will not need to spend runtime 
+    // this stores the role ref permissions. So will not need to spend runtime
     // resources generating permissions.
     //private Hashtable cacheRoleToPerm = new Hashtable();
 
-    // we use two protection domain caches until we decide how to 
+    // we use two protection domain caches until we decide how to
     // set the codesource in the protection domain of system apps.
     // PD's in protectionDomainCache have the (privileged) codesource
     // of the EJBSecurityManager class. The PD used in pre-dispatch
@@ -159,7 +159,7 @@ public final class EJBSecurityManager
             runAs = deploymentDescriptor.getRunAsIdentity();
 
             // Note: runAs may be null even when runas==true if this EJB
-            // is an MDB. 
+            // is an MDB.
             if (runAs != null) {
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, deploymentDescriptor.getEjbClassName() +
@@ -302,9 +302,9 @@ public final class EJBSecurityManager
                         this.contextId, this.codesource,
                         EJBMethodPermission.class,
                         this.ejbName);
-        
+
         auditManager = this.ejbSFM.getAuditManager();
-        
+
     }
 
     /**
@@ -320,7 +320,7 @@ public final class EJBSecurityManager
     private static void
     convertEJBRoleReferences(EjbDescriptor eDescriptor, String pcid)
             throws PolicyContextException {
-        
+
         PolicyConfiguration pc =
                 getPolicyFactory().getPolicyConfiguration(pcid, false);
         // pc will always has a value which is provided by implementation
@@ -349,23 +349,23 @@ public final class EJBSecurityManager
             }
         }
         if (_logger.isLoggable(Level.FINE)){
-        	_logger.log(Level.FINE,"JACC: Converting role-ref: Going through the list of roles not present in RoleRef elements and creating EJBRoleRefPermissions ");
+            _logger.log(Level.FINE,"JACC: Converting role-ref: Going through the list of roles not present in RoleRef elements and creating EJBRoleRefPermissions ");
         }
         for (Role r : roleset) {
-        	if (_logger.isLoggable(Level.FINE)){
-        		_logger.log(Level.FINE,"JACC: Converting role-ref: Looking at Role =  "+r.getName());
-        	}
-        	if (!role.contains(r)) {
-        		String action = r.getName();
-        		EJBRoleRefPermission ejbrr = new EJBRoleRefPermission(eName, action);
-        		pc.addToRole(action, ejbrr);
-        		if (_logger.isLoggable(Level.FINE)) {
-        			_logger.fine("JACC: Converting role-ref: Role =  " + r.getName() +
-        					" is added as a permission with name(" + ejbrr.getName() +
-        					") and actions (" + ejbrr.getActions() +
-        					")" + "mapped to role (" + action + ")");
-        		}
-        	}
+            if (_logger.isLoggable(Level.FINE)){
+                _logger.log(Level.FINE,"JACC: Converting role-ref: Looking at Role =  "+r.getName());
+            }
+            if (!role.contains(r)) {
+                String action = r.getName();
+                EJBRoleRefPermission ejbrr = new EJBRoleRefPermission(eName, action);
+                pc.addToRole(action, ejbrr);
+                if (_logger.isLoggable(Level.FINE)) {
+                    _logger.fine("JACC: Converting role-ref: Role =  " + r.getName() +
+                            " is added as a permission with name(" + ejbrr.getName() +
+                            ") and actions (" + ejbrr.getActions() +
+                            ")" + "mapped to role (" + action + ")");
+                }
+            }
         }
         /**
          * JACC MR8 add EJBRoleRefPermission for the any authenticated user role '**'
@@ -381,7 +381,7 @@ public final class EJBSecurityManager
                         ") and actions (" + ejbrr.getActions() +
                         ")" + "mapped to role (" + rolename + ")");
             }
-        	
+
         }
     }
 
@@ -390,7 +390,7 @@ public final class EJBSecurityManager
      * and adds them to the corresponding permission cache.
      *
      * @param eDescriptor the ejb descriptor
-     
+
     private void addEJBRoleReferenceToCache(EjbDescriptor eDescriptor) {
 
         String eName = eDescriptor.getName();
@@ -856,7 +856,7 @@ public final class EJBSecurityManager
 
         }
         EJBRoleRefPermission ejbrr = new EJBRoleRefPermission(ejbName, role);
-        
+
         SecurityContext sc;
         if (runAs != null) {
             ComponentInvocation ci = invMgr.getCurrentInvocation();
@@ -943,7 +943,7 @@ public final class EJBSecurityManager
              * avoid leak.
              */
             PermissionCacheFactory.removePermissionCache(uncheckedMethodPermissionCache);
-            uncheckedMethodPermissionCache = null; 
+            uncheckedMethodPermissionCache = null;
             roleMapperFactory.removeAppNameForContext(this.contextId);
 
         } catch (PolicyContextException pce) {
@@ -954,9 +954,9 @@ public final class EJBSecurityManager
         probeProvider.securityManagerDestructionStartedEvent(ejbName);
         ejbSFM.getManager(contextId,ejbName,true);
         probeProvider.securityManagerDestructionEndedEvent(ejbName);
-       
+
         probeProvider.securityManagerDestructionEvent(ejbName);
-       
+
     }
 
     /**
@@ -1152,7 +1152,7 @@ public final class EJBSecurityManager
             PolicyContext.setContextID(null);
             return;
         }
-        
+
         try {
                 AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
                     public Object run() throws Exception {
@@ -1172,6 +1172,6 @@ public final class EJBSecurityManager
                 throw new RuntimeException(cause);
             }
     }
-   
+
 }
 

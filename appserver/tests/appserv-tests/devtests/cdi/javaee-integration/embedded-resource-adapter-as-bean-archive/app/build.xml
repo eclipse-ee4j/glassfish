@@ -38,8 +38,8 @@
    <antcall target="build-ear"/>
  <!--
    <antcall target="ear-common">
-	<param name="appname" value="generic-embedded"/>
-	<param name="application.xml" value="META-INF/application.xml"/>
+    <param name="appname" value="generic-embedded"/>
+    <param name="application.xml" value="META-INF/application.xml"/>
    </antcall>
  -->
   </target>
@@ -51,7 +51,7 @@
      <mkdir dir="${build.classes.dir}/META-INF"/>
      <ear earfile="${assemble.dir}/generic-embeddedApp.ear"
        appxml="META-INF/application.xml">
-            
+
        <fileset dir="${assemble.dir}">
             <include name="*.jar"/>
             <include name="*.war"/>

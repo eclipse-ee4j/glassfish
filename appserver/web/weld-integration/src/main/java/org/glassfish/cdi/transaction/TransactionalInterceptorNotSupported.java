@@ -53,7 +53,7 @@ public class TransactionalInterceptorNotSupported extends TransactionalIntercept
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
-        
+
         setTransactionalTransactionOperationsManger(true);
         try {
             Transaction transaction = null;
@@ -64,12 +64,12 @@ public class TransactionalInterceptorNotSupported extends TransactionalIntercept
                 } catch (Exception exception) {
                     _logger.log(INFO, CDI_JTA_MBNOTSUPPORTEDTX, exception);
                     throw new TransactionalException(
-                        "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED " + 
-                        "called inside a transaction context.  Suspending transaction failed due to " + exception, 
+                        "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED " +
+                        "called inside a transaction context.  Suspending transaction failed due to " + exception,
                         exception);
                 }
             }
-            
+
             Object proceed = null;
             try {
                 proceed = proceed(ctx);
@@ -79,13 +79,13 @@ public class TransactionalInterceptorNotSupported extends TransactionalIntercept
                         getTransactionManager().resume(transaction);
                     } catch (Exception exception) {
                         throw new TransactionalException(
-                            "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED " + 
-                            "encountered exception during resume " + exception, 
+                            "Managed bean with Transactional annotation and TxType of NOT_SUPPORTED " +
+                            "encountered exception during resume " + exception,
                             exception);
                     }
                 }
             }
-            
+
             return proceed;
 
         } finally {

@@ -60,7 +60,7 @@ public class Department implements java.io.Serializable {
 
     // ===========================================================
     // getters and setters for the association fields
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="department")   
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="department")
     public Set<Employee> getEmployees() {
         return employees;
     }

@@ -31,6 +31,6 @@ import org.junit.Test;
         isTextPresent("GlassFish");
         markCheckbox("acceptTOU");
         pressButton("submitButton");
-    }            
+    }
 }*/
 

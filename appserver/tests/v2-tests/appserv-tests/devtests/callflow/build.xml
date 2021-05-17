@@ -37,9 +37,9 @@
         </delete>
         <record name="callflow.output" action="start" />
         <antcall target="setup"/>
-        <ant dir="simpleServlet" target="all"/>  
-        <ant dir="simpleJsp" target="all"/>  
-	<antcall target="report"/> 
+        <ant dir="simpleServlet" target="all"/>
+        <ant dir="simpleJsp" target="all"/>
+    <antcall target="report"/>
         <antcall target="unsetup"/>
     </target>
 
@@ -67,9 +67,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the callflow tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the callflow tests)
+    </echo>
     </target>
 </project>

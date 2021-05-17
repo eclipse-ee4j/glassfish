@@ -38,19 +38,19 @@ public class EmbeddedDecorator implements PopulatorPostProcessor {
 //        // inhabitantsParser.replace(WebEntityResolver.class, EmbeddedWebEntityResolver.class);
 //    }
 
-	@Override
-	public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
-		
-		if (WebArchivist.class.getCanonicalName().equals(descriptorImpl.getImplementation())) {
-			descriptorImpl.setImplementation(EmbeddedWebArchivist.class.getCanonicalName());
-			// use the fully qualified string class name for WebEntityResolver to avoid dependency on web-glue:	
-		} else if ("org.glassfish.web.WebEntityResolver".equals(descriptorImpl.getImplementation())) {
-			descriptorImpl.setImplementation(EmbeddedWebEntityResolver.class.getCanonicalName());
-		}
-		
-	
-		
-		return descriptorImpl;
-	}
+    @Override
+    public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
+
+        if (WebArchivist.class.getCanonicalName().equals(descriptorImpl.getImplementation())) {
+            descriptorImpl.setImplementation(EmbeddedWebArchivist.class.getCanonicalName());
+            // use the fully qualified string class name for WebEntityResolver to avoid dependency on web-glue:
+        } else if ("org.glassfish.web.WebEntityResolver".equals(descriptorImpl.getImplementation())) {
+            descriptorImpl.setImplementation(EmbeddedWebEntityResolver.class.getCanonicalName());
+        }
+
+
+
+        return descriptorImpl;
+    }
 
 }

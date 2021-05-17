@@ -112,7 +112,7 @@ public class DeleteApplicationRefCommand implements AdminCommand, AdminCommandSe
     ServerEnvironment env;
 
     private List<String> matchedVersions;
-        
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
@@ -144,7 +144,7 @@ public class DeleteApplicationRefCommand implements AdminCommand, AdminCommandSe
         return DeploymentCommandUtils.getAccessChecksForExistingApp(
                 domain, applications, target, matchedVersions, "update", "delete");
     }
-    
+
     /**
      * Entry point from the framework into the command execution
      * @param context context for the command.
@@ -152,7 +152,7 @@ public class DeleteApplicationRefCommand implements AdminCommand, AdminCommandSe
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         final Logger logger = context.getLogger();
-        
+
         UndeployCommandParameters commandParams =
             new UndeployCommandParameters();
 

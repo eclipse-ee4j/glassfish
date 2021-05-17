@@ -29,7 +29,7 @@ public interface StatsProvider {
      * @return statistics
      */
     public Object getStatsObject();
-    
+
     /**
      * Set object, from which <tt>StatsProvider</tt> can get statistics directly
      * without listening emitting events.

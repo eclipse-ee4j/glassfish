@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * Extended that {@link Mapper} that prevent the WebContainer to unregister
  * the current {@link Mapper} configuration.
- * 
+ *
  * @author Jeanfrancois Arcand
  */
 @Service
@@ -40,14 +40,14 @@ public class V3Mapper extends ContextMapper {
 
 
     public V3Mapper() {
-    }   
-    
-    
+    }
+
+
     public V3Mapper(Logger logger) {
         super(logger);
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
@@ -58,10 +58,10 @@ public class V3Mapper extends ContextMapper {
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "Wrapper-Host: {0} contextPath {1} wrapper {2} path {3} jspWildcard {4}",
                     new Object[]{hostName, contextPath, wrapper, path, jspWildCard});
-        }                          
+        }
     }
-    
-    
+
+
     /**
      * {@inheritDoc}
      */
@@ -78,34 +78,34 @@ public class V3Mapper extends ContextMapper {
         super.addHost(name, aliases, host);
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void addContext(String hostName, String path, Object context,
             String[] welcomeResources, NamingContext resources) {
-        
+
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "Context-Host: {0} path {1} context {2} port {3}",
                     new Object[]{hostName, path, context, getPort()});
         }
-        
+
         // Prevent any admin related artifacts from being registered on a
         // non-admin listener, and vice versa
         if (ADMIN_LISTENER.equals(getId()) && !ADMIN_VS.equals(hostName) ||
             !ADMIN_LISTENER.equals(getId()) && ADMIN_VS.equals(hostName)) {
             return;
         }
-        
+
         // The WebContainer is registering new Context. In that case, we must
-        // clean all the previously added information, specially the 
+        // clean all the previously added information, specially the
         // MappingData.wrapper info as this information cannot apply
         // to this Container.
         if (adapter != null && "org.apache.catalina.connector.CoyoteAdapter".equals(adapter.getClass().getName())) {
             removeContext(hostName, path);
         }
-        
+
         super.addContext(hostName, path, context, welcomeResources, resources);
     }
 }

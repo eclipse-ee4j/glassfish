@@ -23,14 +23,14 @@ import java.lang.annotation.ElementType;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
- * Instances encapsulate all information necessary for an AnnotationHandler 
- * to process an annotation. In particular, instances of this class provide 
+ * Instances encapsulate all information necessary for an AnnotationHandler
+ * to process an annotation. In particular, instances of this class provide
  * access to :
  *
  * <p>
- * <li> the Annotation instance 
+ * <li> the Annotation instance
  * <li> the ProcessingContext of the tool
- * <li> the AnnotatedElement which is a reference to the annotation element 
+ * <li> the AnnotatedElement which is a reference to the annotation element
  * (Type, Method...).
  * </p>
  *
@@ -43,29 +43,29 @@ public class AnnotationInfo {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AnnotationInfo.class);
 
-    // the annotated element 
+    // the annotated element
     final private AnnotatedElement annotatedElement;
 
-    // the annotation   
+    // the annotation
     final private Annotation annotation;
-    
+
     // the processing context
     final private ProcessingContext context;
-    
+
     // the element type
     final private ElementType type;
 
     /**
-     * Creates a new instance of AnnotationInfo with all the information 
+     * Creates a new instance of AnnotationInfo with all the information
      * necessary to process an annotation.
      *
      * @param context the annotation processor processing context
      * @param element the annotated element
-     * @param annotation the annotation 
+     * @param annotation the annotation
      */
-    public AnnotationInfo(ProcessingContext context, AnnotatedElement element, 
+    public AnnotationInfo(ProcessingContext context, AnnotatedElement element,
             Annotation annotation, ElementType type) {
-        
+
         this.context = context;
         this.annotatedElement = element;
         this.annotation = annotation;
@@ -93,7 +93,7 @@ public class AnnotationInfo {
     public ProcessingContext getProcessingContext() {
         return context;
     }
-    
+
     /**
      * @return the annotated element ElementType
      */
@@ -102,6 +102,6 @@ public class AnnotationInfo {
     }
 
     public String toString() {
-        return localStrings.getLocalString("annotatedinfo.string", "annotation [{0}] on annotated element [{1}] of type [{2}]", annotation, annotatedElement, type); 
+        return localStrings.getLocalString("annotatedinfo.string", "annotation [{0}] on annotated element [{1}] of type [{2}]", annotation, annotatedElement, type);
     }
 }

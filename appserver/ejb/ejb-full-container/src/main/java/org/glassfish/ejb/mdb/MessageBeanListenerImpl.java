@@ -32,7 +32,7 @@ public class MessageBeanListenerImpl implements MessageBeanListener {
     private MessageBeanContainer container_;
     private ResourceHandle resourceHandle_;
 
-    MessageBeanListenerImpl(MessageBeanContainer container, 
+    MessageBeanListenerImpl(MessageBeanContainer container,
                             ResourceHandle handle) {
         container_ = container;
 
@@ -52,7 +52,7 @@ public class MessageBeanListenerImpl implements MessageBeanListener {
         container_.onEnteringContainer();   //Notify Callflow Agent
         container_.beforeMessageDelivery(method, MessageDeliveryType.Message, txImported, resourceHandle_);
     }
-    
+
     public Object deliverMessage(Object[] params) throws Throwable {
         return container_.deliverMessage(params);
     }

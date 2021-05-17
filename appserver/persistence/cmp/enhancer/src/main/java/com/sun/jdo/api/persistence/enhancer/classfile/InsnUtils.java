@@ -17,7 +17,7 @@
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
 /**
- * InsnUtils provides a set of static methods which serve to 
+ * InsnUtils provides a set of static methods which serve to
  * select vm instructions during code annotation.
  */
 
@@ -25,7 +25,7 @@ public
 class InsnUtils implements VMConstants {
 
   /**
-   * Return the best instruction for loading the specified integer 
+   * Return the best instruction for loading the specified integer
    * constant onto the stack - hopefully use short form
    */
   public static Insn integerConstant(int i, ConstantPool pool) {

@@ -28,7 +28,7 @@ import org.glassfish.cditest.user.api.model.User;
  * <p>
  * Client-side implementation of {@link User}.
  * </p>
- * 
+ *
  * @author chaoslayer
  */
 public class UserImpl implements User
@@ -55,7 +55,7 @@ public class UserImpl implements User
      * <p>
      * Get the username used for login
      * </p>
-     * 
+     *
      * @return the value of username
      */
     public String getUsername()
@@ -67,7 +67,7 @@ public class UserImpl implements User
      * <p>
      * Set the username
      * </p>
-     * 
+     *
      * @param username
      *            new value of username
      */
@@ -80,12 +80,12 @@ public class UserImpl implements User
      * <p>
      * Get the gender for the user
      * </p>
-     * 
+     *
      * <p>
      * A gender is much better suited to our needs here as the pure biological
      * sex is.
      * </p>
-     * 
+     *
      * @return the value of gender
      */
     public Gender getGender()
@@ -97,12 +97,12 @@ public class UserImpl implements User
      * <p>
      * Set the gender for the user
      * </p>
-     * 
+     *
      * <p>
      * A gender is much better suited to our needs here as the pure biological
      * sex is.
      * </p>
-     * 
+     *
      * @param gender
      *            new value of gender
      */
@@ -113,7 +113,7 @@ public class UserImpl implements User
 
     /**
      * Get the value of firstName
-     * 
+     *
      * @return the value of firstName
      */
     public String getFirstName()
@@ -123,7 +123,7 @@ public class UserImpl implements User
 
     /**
      * Set the value of firstName
-     * 
+     *
      * @param firstName
      *            new value of firstName
      */
@@ -134,7 +134,7 @@ public class UserImpl implements User
 
     /**
      * Get the value of lastName
-     * 
+     *
      * @return the value of lastName
      */
     public String getLastName()
@@ -144,7 +144,7 @@ public class UserImpl implements User
 
     /**
      * Set the value of lastName
-     * 
+     *
      * @param lastName
      *            new value of lastName
      */
@@ -155,7 +155,7 @@ public class UserImpl implements User
 
     /**
      * Get the value of emailAddress
-     * 
+     *
      * @return the value of emailAddress
      */
     public String getEmailAddress()
@@ -165,7 +165,7 @@ public class UserImpl implements User
 
     /**
      * Set the value of emailAddress
-     * 
+     *
      * @param emailAddress
      *            new value of emailAddress
      */
@@ -176,7 +176,7 @@ public class UserImpl implements User
 
     /**
      * String representation of the object data
-     * 
+     *
      * @return The object data as String
      */
     @Override

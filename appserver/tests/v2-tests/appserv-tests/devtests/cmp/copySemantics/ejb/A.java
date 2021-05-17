@@ -24,8 +24,8 @@ import java.util.*;
  */
 
 public interface A extends jakarta.ejb.EJBObject {
-    
+
     public void test() throws java.rmi.RemoteException;
-    
+
 }
 

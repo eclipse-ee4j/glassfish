@@ -208,7 +208,7 @@ public class LocalOSGiShellCommand extends CLICommand {
         if(cmd == null) {
             throw new CommandException("Remote command 'osgi' is not available.");
         }
-        
+
         programOpts.setEcho(echo);       // restore echo flag, saved in validate
         try {
             if (encoding != null) {
@@ -267,10 +267,10 @@ public class LocalOSGiShellCommand extends CLICommand {
 
     /**
      * Get the command completion.
-     * 
+     *
      * TODO: make this non-static!
      * TODO: ask remote for dynamically added commands
-     * 
+     *
      * @return The command completer
      */
     private Completer getCommandCompleter() {
@@ -344,7 +344,7 @@ public class LocalOSGiShellCommand extends CLICommand {
 
         return new NullCompleter();
     }
-    
+
 
     /**
      * Read commands from the specified BufferedReader
@@ -456,16 +456,16 @@ public class LocalOSGiShellCommand extends CLICommand {
         }
         return rc;
     }
-    
+
     private static void atomicReplace(ServiceLocator locator, ProgramOptions options) {
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
-        
+
         config.addUnbindFilter(BuilderHelper.createContractFilter(ProgramOptions.class.getName()));
         ActiveDescriptor<ProgramOptions> desc = BuilderHelper.createConstantDescriptor(
                 options, null, ProgramOptions.class);
         config.addActiveDescriptor(desc);
-        
+
         config.commit();
     }
 

@@ -53,13 +53,13 @@ import static org.glassfish.api.admin.AdminCommandState.State.REVERTED;
 @AccessRequired(resource="jobs/job/$jobID", action="attach")
 public class AttachCommand implements AdminCommand, AdminCommandListener {
 
-    
+
     public static final String COMMAND_NAME = "attach";
     protected final static LocalStringManagerImpl strings = new LocalStringManagerImpl(AttachCommand.class);
 
     protected AdminCommandEventBroker eventBroker;
     protected Job attached;
-    
+
     @Inject
     JobManagerService registry;
 
@@ -94,7 +94,7 @@ public class AttachCommand implements AdminCommand, AdminCommandListener {
         if (name == null || name.startsWith("client.")) { //Skip nonsence or own events
             return;
         }
-        if (AdminCommandStateImpl.EVENT_STATE_CHANGED.equals(name) && 
+        if (AdminCommandStateImpl.EVENT_STATE_CHANGED.equals(name) &&
                 (((Job) event).getState().equals(COMPLETED) || ((Job) event).getState().equals(REVERTED))) {
             synchronized (attached) {
                 attached.notifyAll();

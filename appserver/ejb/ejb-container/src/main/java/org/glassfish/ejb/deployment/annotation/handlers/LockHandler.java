@@ -46,7 +46,7 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @AnnotationHandlerFor(Lock.class)
-public class LockHandler extends AbstractAttributeHandler 
+public class LockHandler extends AbstractAttributeHandler
         implements PostProcessor<EjbContext> {
 
     public LockHandler() {

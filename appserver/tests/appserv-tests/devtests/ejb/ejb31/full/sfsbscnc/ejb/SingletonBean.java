@@ -39,9 +39,9 @@ public class SingletonBean implements RemoteAsync {
     }
 
     public void startTest() {
-	System.out.println("in SingletonBean::startTest()");
-	// reset state
-	return;
+    System.out.println("in SingletonBean::startTest()");
+    // reset state
+    return;
     }
 
     @PreDestroy

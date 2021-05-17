@@ -65,11 +65,11 @@ class CoordinatorTerm implements CompletionHandler {
     private boolean         completed = false;
     private boolean         completing = false;
 
-	/*
-		Logger to log transaction messages
-	*/ 
-	
-	static Logger _logger = LogDomains.getLogger(CoordinatorTerm.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+
+    static Logger _logger = LogDomains.getLogger(CoordinatorTerm.class, LogDomains.TRANSACTION_LOGGER);
 
     /**Default CoordinatorTerm constructor.
      *
@@ -162,8 +162,8 @@ class CoordinatorTerm implements CompletionHandler {
         // If there is no Coordinator reference, raise an exception.
 
         if( coordinator == null ) {
-			String msg = LogFormatter.getLocalizedMessage(_logger,
-									  "jts.no_coordinator_available");
+            String msg = LogFormatter.getLocalizedMessage(_logger,
+                                      "jts.no_coordinator_available");
             LogicErrorException exc = new LogicErrorException(msg);
             throw exc;
         }
@@ -311,27 +311,27 @@ class CoordinatorTerm implements CompletionHandler {
 
                 if( prepareResult == Vote.VoteCommit )
                     try {
-			
-			if(_logger.isLoggable(Level.FINE))
-			{
-				_logger.logp(Level.FINE,"CoordinatorTerm","commit()",
-						"Before invoking coordinator.commit() :"+"GTID is: "+
-						((TopCoordinator)coordinator).superInfo.globalTID.toString());
-				
-			}
+
+            if(_logger.isLoggable(Level.FINE))
+            {
+                _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
+                        "Before invoking coordinator.commit() :"+"GTID is: "+
+                        ((TopCoordinator)coordinator).superInfo.globalTID.toString());
+
+            }
                         coordinator.commit();
                     } catch( NotPrepared exc ) {
                         prepareResult = Vote.VoteRollback;
                     }
 
                 if( prepareResult == Vote.VoteRollback ) {
-					if(_logger.isLoggable(Level.FINE))
-					{
-						 _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
-						 		"Before invoking coordinator.rollback :"+
-								"GTID is : "+
-								((TopCoordinator)coordinator).superInfo.globalTID.toString());
-					}
+                    if(_logger.isLoggable(Level.FINE))
+                    {
+                         _logger.logp(Level.FINE,"CoordinatorTerm","commit()",
+                                 "Before invoking coordinator.rollback :"+
+                                "GTID is : "+
+                                ((TopCoordinator)coordinator).superInfo.globalTID.toString());
+                    }
                     coordinator.rollback(true);
                     status = Status.StatusRolledBack;
                 }
@@ -449,9 +449,9 @@ class CoordinatorTerm implements CompletionHandler {
         // If there is no Coordinator reference, raise an exception.
 
         if( coordinator == null ) {
-			 String msg = LogFormatter.getLocalizedMessage(_logger,
-			 							"jts.no_coordinator_available");
-			 						   
+             String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.no_coordinator_available");
+
             LogicErrorException exc = new LogicErrorException(msg);
             throw exc;
         }

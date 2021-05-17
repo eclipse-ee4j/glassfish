@@ -35,7 +35,7 @@ public class NewQualifierTestServlet extends HttpServlet {
 
     @Inject
     TestRequestScopedBean trsb;
-    
+
     @Inject
     TestRequestScopedBean anotherRefToRequestScopedBean;
 
@@ -46,7 +46,7 @@ public class NewQualifierTestServlet extends HttpServlet {
     @Inject
     @New
     Instance<TestRequestScopedBean> newRequestScopedBeanProgrammaticLookup;
-    
+
     @Inject
     @New(TestRequestScopedBean.class)
     Instance<TestRequestScopedBean> newRequestScopedBeanProgrammaticLookup2;
@@ -66,19 +66,19 @@ public class NewQualifierTestServlet extends HttpServlet {
         if (!(trsb.getInstantiationCount() == 3))
             msg += "Request scoped bean created more than the expected number of times";
 
-        if (!areInjectecedInstancesEqual(trsb, anotherRefToRequestScopedBean)) 
+        if (!areInjectecedInstancesEqual(trsb, anotherRefToRequestScopedBean))
             msg += "Two references to the same request scoped bean are not equal";
-        
+
         if (areInjectecedInstancesEqual(trsb, newRequestScopedBean))
             msg += "Request scoped Bean injected with @New qualifier must not be equal to the normal Request scoped bean";
 
         if (!testIsClientProxy(trsb, TestRequestScopedBean.class))
             msg += "Request scoped beans must be injected as a client proxy";
-        
-        if(newRequestScopedBeanProgrammaticLookup.get() == null) 
+
+        if(newRequestScopedBeanProgrammaticLookup.get() == null)
             msg += "A new instance of Request Scoped Bean obtained through programmatic lookup failed";
-        
-        if(newRequestScopedBeanProgrammaticLookup2.get() == null) 
+
+        if(newRequestScopedBeanProgrammaticLookup2.get() == null)
             msg += "A new(complex type specification scenario) instance of Request Scoped Bean obtained through programmatic lookup failed";
 
         writer.write(msg + "\n");

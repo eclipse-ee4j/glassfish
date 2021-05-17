@@ -28,7 +28,7 @@ public class ProbeClientAnnotationHandlerManager {
     private static ProbeClientAnnotationHandlerManager _me = new ProbeClientAnnotationHandlerManager();
 
     private Collection<ProbeClientAnnotationHandler> handlers = new ArrayList<ProbeClientAnnotationHandler>();
-    
+
     public static ProbeClientAnnotationHandlerManager getInstance() {
         return _me;
     }

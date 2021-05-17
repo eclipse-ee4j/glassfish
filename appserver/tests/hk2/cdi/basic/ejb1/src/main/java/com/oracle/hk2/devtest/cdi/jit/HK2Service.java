@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * This will be an HK2 service that is generated with the
  * JIT resolver
- * 
+ *
  * @author jwells
  *
  */

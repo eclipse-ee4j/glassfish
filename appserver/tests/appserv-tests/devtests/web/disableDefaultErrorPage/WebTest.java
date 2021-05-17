@@ -42,7 +42,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish IT 11423");
 
@@ -66,7 +66,7 @@ public class WebTest {
         stat.printSummary();
     }
 
-    private void doTest() throws Exception {         
+    private void doTest() throws Exception {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/test" + " HTTP/1.0\n";

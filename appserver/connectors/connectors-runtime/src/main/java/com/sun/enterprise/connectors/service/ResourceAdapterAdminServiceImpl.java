@@ -56,7 +56,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
              th.setDaemon(true);
              return th;
            }
-    });   
+    });
 
     /**
      * Default constructor
@@ -245,14 +245,14 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     }
 
     /**
-     * Updates the connector descriptor of the connector module, with the 
+     * Updates the connector descriptor of the connector module, with the
      * contents of a resource adapter config if specified.
-     * 
-     * This modified ConnectorDescriptor is then bound to JNDI so that ACC 
+     *
+     * This modified ConnectorDescriptor is then bound to JNDI so that ACC
      * clients while configuring a non-system RAR could get the correct merged
      * configuration. Any updates to resource-adapter config while an ACC client
-     * is in use is not transmitted to the client dynamically. All such changes 
-     * would be visible on ACC client restart. 
+     * is in use is not transmitted to the client dynamically. All such changes
+     * would be visible on ACC client restart.
      */
 
     private void updateRAConfigInDescriptor(ConnectorDescriptor connectorDescriptor,
@@ -475,10 +475,10 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     }
 
     /**
-	 * Delete the resource adapter configuration to the connector registry
-	 * @param rarName resource-adapter-name
+     * Delete the resource adapter configuration to the connector registry
+     * @param rarName resource-adapter-name
      * @throws ConnectorRuntimeException when unable to remove RA Config.
-	 */
+     */
     public void deleteResourceAdapterConfig(String rarName) throws ConnectorRuntimeException {
         if (rarName != null) {
             _registry.removeResourceAdapterConfig(rarName);
@@ -487,16 +487,16 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     }
 
     /**
-	 * The ActiveResourceAdapter object which abstract the rar module is
-	 * recreated in the connector container/registry. All the pools and
-	 * resources are killed. But the infrastructure to create the pools and and
-	 * resources is untouched. Only the actual pool is killed.
-	 *
-	 * @param moduleName
-	 *                     rar module Name.
-	 * @throws ConnectorRuntimeException
-	 *                      if recreation fails.
-	 */
+     * The ActiveResourceAdapter object which abstract the rar module is
+     * recreated in the connector container/registry. All the pools and
+     * resources are killed. But the infrastructure to create the pools and and
+     * resources is untouched. Only the actual pool is killed.
+     *
+     * @param moduleName
+     *                     rar module Name.
+     * @throws ConnectorRuntimeException
+     *                      if recreation fails.
+     */
 
     public void reCreateActiveResourceAdapter(String moduleName)
             throws ConnectorRuntimeException {
@@ -608,7 +608,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
             this.moduleName = moduleName;
         }
         public void run(){
-            stopActiveResourceAdapter(moduleName);     
+            stopActiveResourceAdapter(moduleName);
         }
     }
 }

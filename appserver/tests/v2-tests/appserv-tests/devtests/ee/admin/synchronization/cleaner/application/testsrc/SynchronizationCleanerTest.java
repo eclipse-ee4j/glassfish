@@ -27,9 +27,9 @@ import junit.framework.TestSuite;
  * @author Nazrul Islam
  */
 public class SynchronizationCleanerTest extends TestCase {
-   
+
     public SynchronizationCleanerTest(String name) {
-        super(name);        
+        super(name);
     }
 
     protected void setUp() {
@@ -68,15 +68,15 @@ public class SynchronizationCleanerTest extends TestCase {
             fail(ex.toString());
         }
     }
-    
+
     /*
     public static TestSuite suite() {
         //To run all tests
         return new TestSuite(SynchronizationMementoTest.class);
         //To run a subset of the tests
         TestSuite suite = new TestSuite();
-        suite.addTest(new SynchronizationMementoTest("testEmptySync"));       
-        suite.addTest(new SynchronizationMementoTest("testEmptySync2"));       
+        suite.addTest(new SynchronizationMementoTest("testEmptySync"));
+        suite.addTest(new SynchronizationMementoTest("testEmptySync2"));
         return suite;
     }
     public static void main(String args[]) {

@@ -91,8 +91,8 @@ public abstract class J2EEManagedObjectImplBase extends AMXImplBase {
     {
         return mMeta;
     }
-    
-    
+
+
     public ObjectName getCorrespondingConfig()
     {
         return metadata().getCorrespondingConfig();
@@ -104,17 +104,17 @@ public abstract class J2EEManagedObjectImplBase extends AMXImplBase {
         final Domain domain = InjectedValues.getInstance().getHabitat().getService(Domain.class);
         return domain;
     }
-    
+
     /**
         JSR 77 requires an ancestor hierarchy via properties; this is in addition
         to the basic AMX requirements.
      */
     @Override
-		protected  ObjectName
-	preRegisterModifyName(
-		final MBeanServer	server,
-		final ObjectName	nameIn )
-	{
+        protected  ObjectName
+    preRegisterModifyName(
+        final MBeanServer    server,
+        final ObjectName    nameIn )
+    {
         final String props = getExtraObjectNameProps(server,nameIn);
         if ( props == null || props.length() == 0)
         {
@@ -122,10 +122,10 @@ public abstract class J2EEManagedObjectImplBase extends AMXImplBase {
         }
 
         return JMXUtil.newObjectName( nameIn.toString() + "," + props );
-	}
+    }
 
     /** types that require a J2EEApplication ancestor, even if null */
-    private static final Set<String> REQUIRES_J2EE_APP	=
+    private static final Set<String> REQUIRES_J2EE_APP    =
         SetUtil.newUnmodifiableStringSet(
             WEB_MODULE,
             RESOURCE_ADAPTER_MODULE,
@@ -217,18 +217,18 @@ public abstract class J2EEManagedObjectImplBase extends AMXImplBase {
         return getAncestorByType(serverType);
     }
 
-    private static final Set<String> DEPLOYED_TYPES	= SetUtil.newUnmodifiableStringSet(
+    private static final Set<String> DEPLOYED_TYPES    = SetUtil.newUnmodifiableStringSet(
         J2EE_APPLICATION,
         WEB_MODULE,
         EJB_MODULE,
         APP_CLIENT_MODULE,
         RESOURCE_ADAPTER_MODULE
         );
-     
+
     public String[] getdeployedObjects() {
         return getChildrenAsStrings( DEPLOYED_TYPES );
     }
-    
+
     public int getstate()
     {
         return StateManageable.STATE_STOPPED;
@@ -248,7 +248,7 @@ public abstract class J2EEManagedObjectImplBase extends AMXImplBase {
         {
             throw new IllegalArgumentException( "Must specify at least one child" );
         }
-        
+
         final Set<String> types = SetUtil.newStringSet(args);
         return getChildrenAsStrings(types);
     }

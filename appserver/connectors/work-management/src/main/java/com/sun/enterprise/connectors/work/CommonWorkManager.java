@@ -51,13 +51,13 @@ public final class CommonWorkManager implements WorkManager {
     private ThreadPool tp;
 
     private static final Logger logger = LogFacade.getLogger();
-    
+
     private WorkManagementProbeProvider probeProvider = null;
     private WorkManagementStatsProvider statsProvider = null;
     private String dottedNamesHierarchy;
 
     private ConnectorRuntime runtime;
-	private String raName ;
+    private String raName ;
     private ClassLoader rarClassLoader;
 
     @LogMessageInfo(
@@ -68,7 +68,7 @@ public final class CommonWorkManager implements WorkManager {
             action = "Check the thread-pool-id property in Resource Adapter Config.",
             publish = true)
     private static final String RAR_THREAD_POOL_NOT_FOUND = "AS-RAR-05001";
-    
+
     @LogMessageInfo(
             message = "Failed to get the default thread-pool for resource adapter [ {0} ].",
             comment = "Failed to find the default thread pool.",
@@ -77,7 +77,7 @@ public final class CommonWorkManager implements WorkManager {
             action = "Check the thread-pool-id property in Resource Adapter Config.",
             publish = true)
     private static final String RAR_DEFAULT_THREAD_POOL_NOT_FOUND = "AS-RAR-05002";
-    
+
     /**
      * Private constructor.
      *
@@ -130,7 +130,7 @@ public final class CommonWorkManager implements WorkManager {
 
         if(ConnectorsUtil.belongsToSystemRA(raName)){
             if(!ConnectorsUtil.isJMSRA(raName)){
-                return ;    
+                return ;
             }
         }
         probeProvider = new WorkManagementProbeProvider();

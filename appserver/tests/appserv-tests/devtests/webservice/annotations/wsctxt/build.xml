@@ -56,12 +56,12 @@
       </antcall>
     </target>
 
-    
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
         <antcall target="undeploy-client"/>
     </target>
-  
+
 
     <target name="assemble-client" depends="init-common">
       <mkdir dir="${build.classes.dir}/webclient/WEB-INF/classes"/>
@@ -78,7 +78,7 @@
       <copy file="client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
       <jar destfile="${assemble.dir}/wsclient.war" basedir="${build.classes.dir}/webclient" includes="**"/>
     </target>
- 
+
      <target name="deploy-client" depends="init-common">
       <property name="client.war" value="${assemble.dir}/wsclient.war"/>
       <echo message="Deploying ${wsdl.war} from ${basedir}." level="verbose"/>

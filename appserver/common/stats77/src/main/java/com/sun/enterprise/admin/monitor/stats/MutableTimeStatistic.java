@@ -31,10 +31,10 @@ package com.sun.enterprise.admin.monitor.stats;
  * @version $Revision: 1.2 $
  */
 public interface MutableTimeStatistic extends MutableStatistic {
-    
+
     /**
-     * Increments the count for number of times an operation is called by 1 and 
-     * processes the given parameter in a certain manner. 
+     * Increments the count for number of times an operation is called by 1 and
+     * processes the given parameter in a certain manner.
      */
     public void incrementCount(long currentExecutionTimeMillis);
 }

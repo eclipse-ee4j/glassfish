@@ -28,10 +28,10 @@ public class RequiresNewTransactionInterceptor  {
     public static boolean aroundInvokeCalled = false;
     public static int aroundInvokeInvocationCount = 0;
     public static String errorMessage = "";
-    
+
     @Inject
     TestDependentBean tb;
-    
+
     @AroundInvoke
     public Object manageTransaction(InvocationContext ctx) throws Exception {
         System.out.println("RequiresNewTransactionInterceptor::AroundInvoke");

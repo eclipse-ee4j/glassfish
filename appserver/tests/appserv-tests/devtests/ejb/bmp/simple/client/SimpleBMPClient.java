@@ -35,19 +35,19 @@ public class SimpleBMPClient {
     {
         try {
             stat.addDescription("Testing bmp simple app.");
-	    InitialContext ic = new InitialContext();
+        InitialContext ic = new InitialContext();
             Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
-	    SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
+        SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
-            
+
             int id= (int) System.currentTimeMillis();
-	    System.out.println("Starting test for id: " + id);
-	    SimpleBMP simpleBMP = simpleBMPHome.create(id);
-	    simpleBMP.foo();
-            
+        System.out.println("Starting test for id: " + id);
+        SimpleBMP simpleBMP = simpleBMPHome.create(id);
+        simpleBMP.foo();
+
             SimpleBMP bean = simpleBMPHome.findByPrimaryKey(new Integer(id));
-	    simpleBMP.foo();
-	    System.out.println("Done for id: " + id);
+        simpleBMP.foo();
+        System.out.println("Done for id: " + id);
             stat.addStatus("bmp simple", stat.PASS);
 
         } catch(Exception e) {

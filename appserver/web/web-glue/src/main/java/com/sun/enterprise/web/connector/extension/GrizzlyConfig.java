@@ -40,8 +40,8 @@ import java.util.logging.Logger;
  * This class track monitoring or Grizzly, using JMX to invoke Grizzly main
  * classes.
  *
- * @author Jeanfrancois Arcand 
- */ 
+ * @author Jeanfrancois Arcand
+ */
 public class GrizzlyConfig implements MonitoringLevelListener{
 
     private static final Logger logger = LogFacade.getLogger();
@@ -52,12 +52,12 @@ public class GrizzlyConfig implements MonitoringLevelListener{
      * Is monitoring already started.
      */
     private boolean isMonitoringEnabled = false;
-    
+
     /**
      * The JMX domain
      */
     private String domain;
-    
+
 
     /**
      * The port used to lookup Grizzly's Selector
@@ -70,17 +70,17 @@ public class GrizzlyConfig implements MonitoringLevelListener{
      */
     private static ArrayList<GrizzlyConfig>
             grizzlyConfigList = new ArrayList<GrizzlyConfig>();
-    
-  
+
+
     /**
      * This server context's default services.
      */
     private ServiceLocator services = null;
-    
+
 
     // --------------------------------------------------------------- //
-   
-    
+
+
     /**
      * Creates the monitoring helper.
      */
@@ -98,16 +98,16 @@ public class GrizzlyConfig implements MonitoringLevelListener{
         unregisterMonitoringLevelEvents();
         grizzlyConfigList.remove(this);
     }
-    
+
     public void initConfig(){
         initMonitoringLevel();
     }
-    
-    
+
+
     private void initMonitoringLevel() {
         try{
             Config cfg = services.getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
-            
+
             MonitoringLevel monitoringLevel = MonitoringLevel.OFF; // default per DTD
 
             if (cfg.getMonitoringService() != null) {
@@ -118,13 +118,13 @@ public class GrizzlyConfig implements MonitoringLevelListener{
                                                     levels.getHttpService());
                 }
             }
-        
+
             if(MonitoringLevel.OFF.equals(monitoringLevel)) {
                 isMonitoringEnabled = false;
             } else {
                 isMonitoringEnabled = true;
-            } 
-            
+            }
+
             String methodToInvoke = isMonitoringEnabled ? "enableMonitoring" :
                 "disableMonitoring";
             invokeGrizzly(methodToInvoke);
@@ -133,9 +133,9 @@ public class GrizzlyConfig implements MonitoringLevelListener{
             msg = MessageFormat.format(msg, Integer.valueOf(port));
             logger.log(Level.WARNING, msg, ex);
         }
-    } 
-    
-    
+    }
+
+
     public void registerMonitoringLevelEvents() {
         MonitoringRegistry monitoringRegistry = services.getService(MonitoringRegistry.class);
         if (monitoringRegistry!=null) {
@@ -144,7 +144,7 @@ public class GrizzlyConfig implements MonitoringLevelListener{
         }
     }
 
-    
+
     private void unregisterMonitoringLevelEvents() {
         MonitoringRegistry monitoringRegistry = services.getService(MonitoringRegistry.class);
         if (monitoringRegistry!=null) {
@@ -152,12 +152,12 @@ public class GrizzlyConfig implements MonitoringLevelListener{
         }
     }
 
-    
+
     public void setLevel(MonitoringLevel level) {
         // deprecated, ignore
     }
-    
-    
+
+
     public void changeLevel(MonitoringLevel from, MonitoringLevel to,
                             MonitoredObjectType type) {
         if (MonitoredObjectType.HTTP_LISTENER.equals(type)) {
@@ -166,26 +166,26 @@ public class GrizzlyConfig implements MonitoringLevelListener{
             } else {
                 isMonitoringEnabled = true;
             }
-        }            
+        }
         String methodToInvoke = isMonitoringEnabled ? "enableMonitoring" :
             "disabledMonitoring";
-        invokeGrizzly(methodToInvoke);        
+        invokeGrizzly(methodToInvoke);
     }
-    
-    
-    public void changeLevel(MonitoringLevel from, MonitoringLevel to, 
-			    Stats handback) {
+
+
+    public void changeLevel(MonitoringLevel from, MonitoringLevel to,
+                Stats handback) {
         // deprecated, ignore
     }
 
-    
-    protected final void invokeGrizzly(String methodToInvoke) {  
+
+    protected final void invokeGrizzly(String methodToInvoke) {
         invokeGrizzly(methodToInvoke,null,null);
-    }   
-     
-    
-    protected final void invokeGrizzly(String methodToInvoke, 
-                                       Object[] objects, String[] signature) {  
+    }
+
+
+    protected final void invokeGrizzly(String methodToInvoke,
+                                       Object[] objects, String[] signature) {
         try{
             String onStr = domain + ":type=Selector,name=http" + port;
             ObjectName objectName = new ObjectName(onStr);
@@ -193,7 +193,7 @@ public class GrizzlyConfig implements MonitoringLevelListener{
                 logger.log(Level.FINE, LogFacade.INVOKE_GRIZZLY,
                         new Object[] {methodToInvoke, objectName});
             }
-            
+
         } catch ( Exception ex ){
             String msg = rb.getString(LogFacade.INVOKE_MBEAN_EXCEPTION);
             msg = MessageFormat.format(msg, methodToInvoke);
@@ -202,29 +202,29 @@ public class GrizzlyConfig implements MonitoringLevelListener{
         }
     }
 
-    
+
     /**
      * Enable CallFlow gathering mechanism.
      */
     public final void setEnableCallFlow(boolean enableCallFlow){
         String methodToInvoke = enableCallFlow ? "enableMonitoring" :
             "disabledMonitoring";
-        invokeGrizzly(methodToInvoke);        
+        invokeGrizzly(methodToInvoke);
     }
 
-    
+
     /**
      * Return the list of all instance of this class.
      */
     public static ArrayList<GrizzlyConfig> getGrizzlyConfigInstances(){
         return grizzlyConfigList;
     }
-    
-    
+
+
     /**
      * Return the port this configuration belongs.
      */
     public int getPort(){
         return port;
-    }   
+    }
 }

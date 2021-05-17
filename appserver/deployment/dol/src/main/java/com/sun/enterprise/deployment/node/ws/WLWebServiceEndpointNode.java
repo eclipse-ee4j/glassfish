@@ -92,7 +92,7 @@ public class WLWebServiceEndpointNode extends DeploymentDescriptorNode {
         String elementName = element.getQName();
         DeploymentDescriptorNode node = null;
         if (UNSUPPORTED_TAGS.contains(element.getQName())) {
-            node = new WLUnSupportedNode(element);            
+            node = new WLUnSupportedNode(element);
         } else if (WLWebServicesTagNames.WSDL.equals(elementName)) {
             node = new WSDLNode(descriptor);
             node.setParentNode(this);
@@ -147,7 +147,7 @@ public class WLWebServiceEndpointNode extends DeploymentDescriptorNode {
         if (descriptor.getWsdlExposed() != null) {
             new WSDLNode(descriptor).writeDescriptor(wseNode, descriptor);
         }
-        
+
         if (descriptor.getStreamAttachments() != null) {
             appendTextChild(wseNode,
                     WLWebServicesTagNames.STREAM_ATTACHMENTS,
@@ -300,5 +300,5 @@ public class WLWebServiceEndpointNode extends DeploymentDescriptorNode {
         }
 
     }
-    
+
 }

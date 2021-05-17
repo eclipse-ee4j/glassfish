@@ -35,9 +35,9 @@
       <antcall  target="clean-common"/>
       <delete dir="${basedir}/docroot" />
       <delete dir="${basedir}/lib" />
-      
+
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -45,11 +45,11 @@
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-	<antcall target="compile-common">
+    <antcall target="compile-common">
             <param name="src" value="servlet"/>
-	</antcall>
+    </antcall>
 
-	 </target>
+     </target>
 
     <!-- ================================================================ -->
     <!-- Target to create the ejb application jar file -->
@@ -57,43 +57,43 @@
 
      <target name="package-ejb-jar" >
 
-	 <antcall target="package-ejbjar-common">
+     <antcall target="package-ejbjar-common">
 
-           <param name="ejbjar.classes" 
+           <param name="ejbjar.classes"
               value="**/ProductEJB.class,**/Product.class, **/ProductHome.class,productSchema.dbschema,**/ProductEJB_JDOState.mapping" />
 
-	  <param name="ejb-jar.xml" value="${ejb-jar.xml}" />
-	  <param name="sun-ejb-jar.xml" value="${sun-ejb-jar.xml}" />
-	  <param name="ejbjar.files" value="${build.classes.dir}" />
+      <param name="ejb-jar.xml" value="${ejb-jar.xml}" />
+      <param name="sun-ejb-jar.xml" value="${sun-ejb-jar.xml}" />
+      <param name="ejbjar.files" value="${build.classes.dir}" />
           <param name="ejb.jar" value="${assemble.dir}/j2eeguide_productEjb.jar"/>
 
-	</antcall>
+    </antcall>
     </target>
     <target name="package-webclient-war" >
 
-	 <antcall target="webclient-war-common">
+     <antcall target="webclient-war-common">
             <param name="hasWebclient" value="true"/>
             <param name="war.classes"
-	      value="**/Servlet.class" />
+          value="**/Servlet.class" />
             <param name="war.file" value="${assemble.dir}/productWebStuff.war"/>
-	</antcall>
+    </antcall>
 
     </target>
 
     <target name="package-appclient" >
       <mkdir dir="${assemble.dir}"/>
 
-	 <antcall target="package-appclientjar-common">
-	    <param name="appclientjar.classes"
+     <antcall target="package-appclientjar-common">
+        <param name="appclientjar.classes"
               value="**/ProductClient.class, **/ProductHome.class,**/Product.class" />
-	    <param name="application-client.xml"
-		value="${application-client.xml}" />
-	    <param name="sun-application-client.xml"
-		value="${sun-application-client.xml}" />
+        <param name="application-client.xml"
+        value="${application-client.xml}" />
+        <param name="sun-application-client.xml"
+        value="${sun-application-client.xml}" />
             <param name="appclient.jar" value="${assemble.dir}/${appname}AppClient.jar"/>
-	   <param name="appclientjar.files" value="${build.classes.dir}" />
+       <param name="appclientjar.files" value="${build.classes.dir}" />
 
-	 </antcall>
+     </antcall>
     </target>
 
      <target name="package-ear">
@@ -134,14 +134,14 @@
         <copy file="${basedir}/descriptor/index.html" todir="${basedir}/docroot" />
         <copy file="${basedir}/ejb/ProductEJB_JDOState.mapping" todir="${build.classes.dir}/j2eeguide/product" />
 
-	<antcall target="package-ejb-jar" />
-	<antcall target="package-webclient-war" />
-	<antcall target="package-appclient" />
-	<antcall target="package-ear" />
+    <antcall target="package-ejb-jar" />
+    <antcall target="package-webclient-war" />
+    <antcall target="package-appclient" />
+    <antcall target="package-ear" />
 
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/j2eeguide_product_derby.sql"/>
@@ -160,18 +160,18 @@
           <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
         </antcall>
     </target>
- 
+
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
            <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_j2eeguide_product_derby.sql"/>
         </antcall>
-    </target>   
+    </target>
 
 
 
@@ -180,12 +180,12 @@
         <antcall target="execute-ejb-sql-common">
            <param name="sql.file" value="sql/delete_tables.sql"/>
         </antcall>
-    </target>   
+    </target>
 -->
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant all
         </echo>
     </target>

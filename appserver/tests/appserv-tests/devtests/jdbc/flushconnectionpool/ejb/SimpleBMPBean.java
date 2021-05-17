@@ -52,8 +52,8 @@ public class SimpleBMPBean implements EntityBean {
 
     /**
      * Acquire 4 connections, closing them at the end of the loop.
-     * Cache the first connection, and before acquiring the last connection, 
-     * do a flush connection pool. The 5th connection got after the 
+     * Cache the first connection, and before acquiring the last connection,
+     * do a flush connection pool. The 5th connection got after the
      * flush should be different from the first connection got.
      *
      * @return boolean
@@ -69,12 +69,12 @@ public class SimpleBMPBean implements EntityBean {
         for (int i = 0; i < 5; i++) {
             Connection conn = null;
             try {
-		//Do a flush and then get a connection for the last iteration
-		if(i ==4) {
-		    if(!flushConnectionPool()) {
-		        break;
-		    }
-		}	    
+        //Do a flush and then get a connection for the last iteration
+        if(i ==4) {
+            if(!flushConnectionPool()) {
+                break;
+            }
+        }
                 conn = ds.getConnection();
                 System.out.println("********i=" + i + "conn=" + ds.getConnection(conn));
 
@@ -112,44 +112,44 @@ public class SimpleBMPBean implements EntityBean {
         ds = this.ds;
 
         boolean passed = true;
-	Connection con = null;
-	try {
+    Connection con = null;
+    try {
             con = ds.getConnection();
-	} catch(Exception ex) {
-	    passed = false;
-	}
+    } catch(Exception ex) {
+        passed = false;
+    }
         return passed;
     }
 
     private boolean flushConnectionPool() throws Exception {
         ServiceLocator habitat = Globals.getDefaultHabitat();
-	GlassFish gf = habitat.getService(GlassFish.class);
-	CommandRunner runner = gf.getCommandRunner();
-	CommandResult res = runner.run("flush-connection-pool", poolName);
-	System.out.println("res= " + res.getOutput());
-	if(res.getExitStatus() == CommandResult.ExitStatus.SUCCESS) {
+    GlassFish gf = habitat.getService(GlassFish.class);
+    CommandRunner runner = gf.getCommandRunner();
+    CommandResult res = runner.run("flush-connection-pool", poolName);
+    System.out.println("res= " + res.getOutput());
+    if(res.getExitStatus() == CommandResult.ExitStatus.SUCCESS) {
             return true;
-	}
-	return false;
+    }
+    return false;
     }
 
     private boolean amxFlushConnectionPool() throws Exception {
         final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
-	boolean result = false;
+    boolean result = false;
 
         final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
         final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName =
-	                new ObjectName("amx:pp=/ext,type=connector-runtime-api-provider");
+                    new ObjectName("amx:pp=/ext,type=connector-runtime-api-provider");
 
-	String[] params = {poolName};
-	String[] signature = {String.class.getName()};
+    String[] params = {poolName};
+    String[] signature = {String.class.getName()};
         Map<String,Object> flushStatus = (Map<String,Object>) connection.invoke(objectName, "flushConnectionPool", params, signature);
-	if(flushStatus != null) {
-	    result = (Boolean) flushStatus.get("FlushConnectionPoolKey");
-	}
+    if(flushStatus != null) {
+        result = (Boolean) flushStatus.get("FlushConnectionPoolKey");
+    }
         return result;
     }
 

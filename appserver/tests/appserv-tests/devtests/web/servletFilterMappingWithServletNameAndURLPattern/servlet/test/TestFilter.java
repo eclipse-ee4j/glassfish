@@ -26,7 +26,7 @@ public class TestFilter implements Filter {
     private AtomicInteger count;
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        count = new AtomicInteger();    
+        count = new AtomicInteger();
     }
 
     public void doFilter (ServletRequest request,

@@ -16,22 +16,22 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.annotation.WebServlet; 
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 @WebServlet(urlPatterns={"/hello"})
 public class HelloWorld extends HttpServlet {
 
-  
+
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
-        
+
         PrintWriter pw = res.getWriter();
         try {
-			pw.println("Hello World !<br>");
-  		} catch(Exception e) {
-        	e.printStackTrace();
+            pw.println("Hello World !<br>");
+          } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }

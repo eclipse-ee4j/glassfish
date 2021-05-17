@@ -35,7 +35,7 @@ public class TestDecorationOfBeansFromProducerMethodsTestServlet extends HttpSer
     @Inject
     @ProducedAtRuntime
     TestBeanInterface tb;
-    
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
@@ -49,7 +49,7 @@ public class TestDecorationOfBeansFromProducerMethodsTestServlet extends HttpSer
         tb.m1();
         if (!TestBeanDecorator.decoratorCalled)
             msg += "decorator for beans from producer methods not called";
-        
+
         writer.write(msg + "\n");
     }
 

@@ -18,11 +18,11 @@
 -->
 
 <console-config id="jts">
-        <integration-point 
+        <integration-point
                 id="jts_node"
-                type="org.glassfish.admingui:navNode" 
+                type="org.glassfish.admingui:navNode"
                 priority="800"
-                parentId="#{configNameId}" 
+                parentId="#{configNameId}"
                 content="pluginTreeNodeJts.jsf"
         />
 

@@ -61,7 +61,7 @@ import org.glassfish.jersey.media.sse.EventOutput;
  * This is the base class for all composite resources. It provides all of the basic configuration and utilities needed
  * by composites. For top-level resources, the <code>@Path</code> and <code>@Service</code> annotations are still
  * required, though, in order for the resource to be located and configured properly.
- * 
+ *
  * @author jdlee
  */
 @Produces(Constants.MEDIA_TYPE_JSON)
@@ -145,7 +145,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     /**
      * Every resource that returns a collection will need to return the URI for each item in the colleciton. This method
      * handles the creation of that URI, ensuring a correct and consistent URI pattern.
-     * 
+     *
      * @param name
      * @return
      */
@@ -204,7 +204,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a delete <code>AdminCommand</code> with no parameters.
-     * 
+     *
      * @param command
      * @return
      */
@@ -214,7 +214,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a delete <code>AdminCommand</code> with the specified parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @return
@@ -225,7 +225,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a delete <code>AdminCommand</code> with the specified parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @return
@@ -236,7 +236,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a writing <code>AdminCommand</code> with no parameters.
-     * 
+     *
      * @param command
      * @return
      */
@@ -246,7 +246,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a writing <code>AdminCommand</code> with the specified parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @return
@@ -257,7 +257,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a writing <code>AdminCommand</code> with the specified parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @return
@@ -268,7 +268,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a read-only <code>AdminCommand</code> with the specified parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @return
@@ -279,7 +279,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute a read-only <code>AdminCommand</code> with no parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @return
@@ -290,7 +290,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Execute an <code>AdminCommand</code> with the specified parameters.
-     * 
+     *
      * @param command
      * @param parameters
      * @param status
@@ -559,7 +559,7 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     /**
      * Convenience method for getting a path parameter. Equivalent to uriInfo.getPathParameters().getFirst(name)
-     * 
+     *
      * @param name
      * @return
      */

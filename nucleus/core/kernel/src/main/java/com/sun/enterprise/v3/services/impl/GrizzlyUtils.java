@@ -18,14 +18,14 @@ package com.sun.enterprise.v3.services.impl;
 
 /**
  * Set of Grizzly network utilities
- * 
+ *
  * @author Alexey Stashok
  */
 public class GrizzlyUtils {
     /**
      * Reads bytes to the <code>WorkerThread</code> associated <code>ByteBuffer</code>s.
      * Could be used to read both raw and secured data.
-     * 
+     *
      * @param key <code>SelectionKey</code>
      * @param timeout read timeout
      * @return number of read bytes

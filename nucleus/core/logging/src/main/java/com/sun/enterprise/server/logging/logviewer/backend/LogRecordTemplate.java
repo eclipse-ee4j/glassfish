@@ -23,22 +23,22 @@ import javax.management.AttributeList;
  * back to the Admin Tool LogViewer Front end. It contains the metadata
  * describing the structure of the results.
  *
- * @AUTHOR: Hemanth Puttaswamy 
+ * @AUTHOR: Hemanth Puttaswamy
  *
  */
 public class LogRecordTemplate {
-    private static AttributeList template = 
+    private static AttributeList template =
         new AttributeList( );
 
-    private static Attribute templateAttribute; 
+    private static Attribute templateAttribute;
 
     static {
-        template.add( new Attribute( "FIELD0", "Record Number" ) ); 
-        template.add( new Attribute( "FIELD1", "Logged DateTime" ) ); 
-        template.add( new Attribute( "FIELD2", "Logged Level" ) ); 
-        template.add( new Attribute( "FIELD3", "Product Name" ) ); 
-        template.add( new Attribute( "FIELD4", "Logger Name" ) ); 
-        template.add( new Attribute( "FIELD5", "Name Value Pairs" ) ); 
+        template.add( new Attribute( "FIELD0", "Record Number" ) );
+        template.add( new Attribute( "FIELD1", "Logged DateTime" ) );
+        template.add( new Attribute( "FIELD2", "Logged Level" ) );
+        template.add( new Attribute( "FIELD3", "Product Name" ) );
+        template.add( new Attribute( "FIELD4", "Logger Name" ) );
+        template.add( new Attribute( "FIELD5", "Name Value Pairs" ) );
         template.add( new Attribute( "FIELD6", "Message" ) );
 
         templateAttribute = new Attribute( "Header", template );

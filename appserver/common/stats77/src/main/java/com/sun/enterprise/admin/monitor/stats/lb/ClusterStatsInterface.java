@@ -16,29 +16,29 @@
 
 package com.sun.enterprise.admin.monitor.stats.lb;
 
-// 
+//
 // This interface has all of the bean info accessor methods.
-// 
+//
 
 public interface ClusterStatsInterface {
-	public java.lang.String getId();
+    public java.lang.String getId();
 
-	public void setInstanceStats(com.sun.enterprise.admin.monitor.stats.lb.InstanceStats[] value);
+    public void setInstanceStats(com.sun.enterprise.admin.monitor.stats.lb.InstanceStats[] value);
 
-	public com.sun.enterprise.admin.monitor.stats.lb.InstanceStats[] getInstanceStats();
+    public com.sun.enterprise.admin.monitor.stats.lb.InstanceStats[] getInstanceStats();
 
-	public void setInstanceStats(int index, com.sun.enterprise.admin.monitor.stats.lb.InstanceStats value);
+    public void setInstanceStats(int index, com.sun.enterprise.admin.monitor.stats.lb.InstanceStats value);
 
-	public com.sun.enterprise.admin.monitor.stats.lb.InstanceStats getInstanceStats(int index);
+    public com.sun.enterprise.admin.monitor.stats.lb.InstanceStats getInstanceStats(int index);
 
-	public int sizeInstanceStats();
+    public int sizeInstanceStats();
 
-	public java.util.List fetchInstanceStatsList();
+    public java.util.List fetchInstanceStatsList();
 
-	public int addInstanceStats(com.sun.enterprise.admin.monitor.stats.lb.InstanceStats value);
+    public int addInstanceStats(com.sun.enterprise.admin.monitor.stats.lb.InstanceStats value);
 
-	public int removeInstanceStats(com.sun.enterprise.admin.monitor.stats.lb.InstanceStats value);
+    public int removeInstanceStats(com.sun.enterprise.admin.monitor.stats.lb.InstanceStats value);
 
-	public void setId(java.lang.String value);
+    public void setId(java.lang.String value);
 
 }

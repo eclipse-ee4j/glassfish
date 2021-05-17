@@ -38,15 +38,15 @@ import org.glassfish.hk2.api.PerLookup;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE? 
-        path="unset-web-context-param", 
+        opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE?
+        path="unset-web-context-param",
         description="unset-web-context-param",
         params={
             @RestParam(name="id", value="$parent")
         })
 })
 public class UnsetWebContextParamCommand extends WebModuleConfigCommand {
-    
+
     @Param(name="name")
     private String name;
 

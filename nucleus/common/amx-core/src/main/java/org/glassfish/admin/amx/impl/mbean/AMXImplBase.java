@@ -312,7 +312,7 @@ public class AMXImplBase extends MBeanImplBase
     and finally by calling getAttributeManually(), which a subclass
     is expected to override.
 
-    @param name	name of the Attribute
+    @param name    name of the Attribute
     @return value of the Attribute
      */
     public final Object getAttribute(final String name)
@@ -377,7 +377,7 @@ public class AMXImplBase extends MBeanImplBase
     call getAttribute() for each name so that each may be processed
     appropriately; some Attributes may be in this MBean itself.
 
-    @param names	array of Attribute names
+    @param names    array of Attribute names
     @return AttributeList of Attributes successfully fetched
      */
     public AttributeList getAttributes(String[] names) {
@@ -518,7 +518,7 @@ public class AMXImplBase extends MBeanImplBase
 
     /**
     Subclasses should override this to handle getAttribute( attrName ). It will
-    be called if no appropriate getter is found.	*/
+    be called if no appropriate getter is found.    */
     protected Object getAttributeManually(final String attributeName)
             throws AttributeNotFoundException, ReflectionException, MBeanException {
         throw new AttributeNotFoundException(attributeName);
@@ -566,7 +566,7 @@ public class AMXImplBase extends MBeanImplBase
     and finally by calling setAttributeManually(), which a subclass
     is expected to override.
 
-    @param attr	the Attribute
+    @param attr    the Attribute
      */
     protected void setAttributeInternal(final Attribute attr)
             throws AttributeNotFoundException, InvalidAttributeValueException,
@@ -682,7 +682,7 @@ public class AMXImplBase extends MBeanImplBase
     /**
     Find a setXXX() method that matches the Attribute.
 
-    @param attr	an Attribute for which a matching setter should be located
+    @param attr    an Attribute for which a matching setter should be located
     @return a Method or null if not found
      */
     protected final Method findSetter(final Attribute attr) {
@@ -859,7 +859,7 @@ public class AMXImplBase extends MBeanImplBase
             throws Exception {
         final ObjectName nameFromSuper = super.preRegister(server, nameIn);
 
-        //mConnectionSource	= new MBeanServerConnectionSource( server );
+        //mConnectionSource    = new MBeanServerConnectionSource( server );
 
         mSelfObjectName = preRegisterModifyName(server, nameFromSuper);
         mSelfObjectName = preRegisterHook(server, mSelfObjectName);
@@ -889,7 +889,7 @@ public class AMXImplBase extends MBeanImplBase
         return info;
     }
 
-    /** Important:  must be synchronized so that preDeregisterHook cannot be called prior to 
+    /** Important:  must be synchronized so that preDeregisterHook cannot be called prior to
     existing postRegisterHook()
      */
     protected synchronized void postRegisterHook(final Boolean registrationSucceeded) {
@@ -946,7 +946,7 @@ public class AMXImplBase extends MBeanImplBase
     }
 
     protected ObjectName registerChild(final Object mbean, final ObjectName childObjectName) {
-        try {            
+        try {
             final ObjectName objectName = getMBeanServer().registerMBean(mbean, childObjectName).getObjectName();
 
             return objectName;

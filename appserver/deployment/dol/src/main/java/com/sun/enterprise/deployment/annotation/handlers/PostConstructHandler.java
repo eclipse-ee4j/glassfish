@@ -30,16 +30,16 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * This handler is responsible for handling jakarta.annotation.PostConstruct 
+ * This handler is responsible for handling jakarta.annotation.PostConstruct
  *
  */
 @Service
 @AnnotationHandlerFor(PostConstruct.class)
 public class PostConstructHandler extends AbstractResourceHandler {
-    
+
     public PostConstructHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             ResourceContainerContext[] rcContexts)
             throws AnnotationProcessorException {

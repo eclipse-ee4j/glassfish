@@ -34,7 +34,7 @@ public class AppClientValidator extends ApplicationValidator implements AppClien
             accept(appClientDesc);
 
             // Visit all injectables first.  In some cases, basic type
-            // information has to be derived from target inject method or 
+            // information has to be derived from target inject method or
             // inject field.
             for(InjectionCapable injectable : appClientDesc.getInjectableResources(appClientDesc)) {
                 accept(injectable);

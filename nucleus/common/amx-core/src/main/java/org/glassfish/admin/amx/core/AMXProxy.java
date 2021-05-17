@@ -58,7 +58,7 @@ The same convention is followed for {@link #childrenSet}, etc / {@link #getChild
 <b>Not authoritative&mdash;</b> <em>proxy interfaces should not be considered authoritative, meaning that an underlying MBean
 implementation determines what the MBean actually provides, possibly ignoring
 the proxy interface</em> (this is the case with config MBeans, which derive their metadata from the ConfigBean
-<code>@Configured</code> interface).  
+<code>@Configured</code> interface).
 Therefore, it is possible for the proxy interface to completely misrepresent the actual MBean functionality,
 should the interface get out of sync with the actual MBean.
 Only at runtime would errors between the interface and the MBean would emerge.
@@ -66,7 +66,7 @@ Only at runtime would errors between the interface and the MBean would emerge.
 
 <b>Methods in sub-interfaces of AMXProxy&mdash;</b> To mininimize issues with tracking
 implementation changes over time (eg addition or removal of attributes),
-sub-interfaces of {@code AMXProxy} might choose to <em>omit</em> 
+sub-interfaces of {@code AMXProxy} might choose to <em>omit</em>
 getter/setter methods for attributes, and instead manifest the <i>containment relationships</i> (children),
 which form the core of usability of navigating the hierarchy.
 The methods {@link #attributeNames} and {@link #attributesMap} can be used to generically
@@ -128,7 +128,7 @@ public interface AMXProxy extends AMX_SPI
      */
     public Map<String, AMXProxy> childrenMap(final String type);
 
-    /** 
+    /**
     Get all children of the same type.
     The Map is keyed by the name as found in the ObjectName.
     @param intf the proxy interface, type is deduced from it
@@ -190,10 +190,10 @@ public interface AMXProxy extends AMX_SPI
 
     /** additional capabilities, including direct JMX access */
     public Extra extra();
-    
+
     /** Invoke an operation by name, no arguments.  */
     public Object invokeOp( String operationName );
-    
+
     /** Invoke an operation by name, JMX style params and signature. */
     public Object invokeOp( String operationName, final Object[] params, final String[] signature);
 }

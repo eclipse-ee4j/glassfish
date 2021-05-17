@@ -54,12 +54,12 @@ public class TransactionCallBackTest extends ConfigPersistence {
     public ServiceLocator getBaseServiceLocator() {
         return habitat;
     }
-    
+
     @Override
     public ServiceLocator getHabitat() {
-    	return getBaseServiceLocator();
+        return getBaseServiceLocator();
     }
-    
+
     public void doTest() throws TransactionFailure {
         ConfigBean serviceBean = (ConfigBean) ConfigBean.unwrap(habitat.<NetworkListeners>getService(NetworkListeners.class));
         Map<String, String> configChanges = new HashMap<String, String>();
@@ -90,5 +90,5 @@ public class TransactionCallBackTest extends ConfigPersistence {
 
     public boolean assertResult(String s) {
         return s.contains("Aleksey") && s.contains("localhost");
-    }    
+    }
 }

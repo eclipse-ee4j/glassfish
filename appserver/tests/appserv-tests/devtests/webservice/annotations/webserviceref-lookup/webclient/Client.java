@@ -27,14 +27,14 @@ import jakarta.xml.ws.soap.*;
 public class Client extends HttpServlet {
 
         @jakarta.xml.ws.WebServiceRef(name="foo/bar" )
-        @Addressing 
+        @Addressing
         SubtractNumbersService service;
 
         @jakarta.xml.ws.WebServiceRef(lookup="java:comp/env/foo/bar")
         SubtractNumbersService service2;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

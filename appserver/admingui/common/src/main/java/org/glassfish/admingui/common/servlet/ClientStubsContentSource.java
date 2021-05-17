@@ -34,7 +34,7 @@ import org.glassfish.admingui.common.util.RestUtil;
  * @author andriy.zhdanov
  */
 public class ClientStubsContentSource  implements DownloadServlet.ContentSource {
-    
+
      /**
      *  <p> This method returns a unique string used to identify this
      *      {@link DownloadServlet#ContentSource}.  This string must be
@@ -61,7 +61,7 @@ public class ClientStubsContentSource  implements DownloadServlet.ContentSource 
         HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
         String appName = request.getParameter("appName");
         String restUrl = request.getParameter("restUrl");
-        
+
         // Create the tmpFile
         InputStream tmpFile = null;
         try {

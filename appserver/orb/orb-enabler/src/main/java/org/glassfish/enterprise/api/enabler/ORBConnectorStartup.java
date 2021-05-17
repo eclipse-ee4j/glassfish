@@ -79,8 +79,8 @@ public class ORBConnectorStartup implements PostConstruct {
 
     public void postConstruct()
     {
-        setORBSystemProperties();    
-        initializeLazyListener();        
+        setORBSystemProperties();
+        initializeLazyListener();
     }
 
 /**

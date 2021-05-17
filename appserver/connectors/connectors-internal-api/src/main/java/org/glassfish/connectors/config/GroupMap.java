@@ -51,7 +51,7 @@ public interface GroupMap extends ConfigBeanProxy {
     /**
      * Gets the value of the MappedGroup - a Group that is valid in
      * the application server's security domain
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */

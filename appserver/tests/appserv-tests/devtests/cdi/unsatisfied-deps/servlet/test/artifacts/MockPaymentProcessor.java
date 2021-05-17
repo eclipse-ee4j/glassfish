@@ -18,7 +18,7 @@ package test.artifacts;
 
 import jakarta.enterprise.inject.Alternative;
 
-@Alternative 
+@Alternative
 public class MockPaymentProcessor implements PaymentProcessor{
 
     @Override

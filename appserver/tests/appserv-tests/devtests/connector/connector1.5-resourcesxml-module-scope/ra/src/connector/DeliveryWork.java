@@ -28,7 +28,7 @@ import connector.MyMessageListener;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author    Qingqing Ouyang
  */
 public class DeliveryWork implements Work {
 
@@ -37,7 +37,7 @@ public class DeliveryWork implements Work {
     private String op;
     private boolean keepCount;
     private static int counter = 0;
-    
+
     public DeliveryWork(MessageEndpoint ep, int numOfMessages, String op) {
         this.ep = ep;
         this.num = numOfMessages;
@@ -45,7 +45,7 @@ public class DeliveryWork implements Work {
         this.keepCount = false;
     }
 
-    public DeliveryWork(MessageEndpoint ep, int numOfMessages, 
+    public DeliveryWork(MessageEndpoint ep, int numOfMessages,
             String op, boolean keepCount) {
         this.ep = ep;
         this.num = numOfMessages;
@@ -56,7 +56,7 @@ public class DeliveryWork implements Work {
     public void run() {
 
         debug("ENTER...");
-        
+
         try {
             //Method onMessage = getOnMessageMethod();
             //ep.beforeDelivery(onMessage);
@@ -79,11 +79,11 @@ public class DeliveryWork implements Work {
             }
 
             //ep.afterDelivery();
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         debug("LEAVE...");
     }
 
@@ -94,14 +94,14 @@ public class DeliveryWork implements Work {
     }
 
     private Method getOnMessageMethod() {
-        
+
         Method onMessageMethod = null;
         try {
             Class msgListenerClass = connector.MyMessageListener.class;
             Class[] paramTypes = { java.lang.String.class };
-            onMessageMethod = 
+            onMessageMethod =
                 msgListenerClass.getMethod("onMessage", paramTypes);
-            
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }

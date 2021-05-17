@@ -46,15 +46,15 @@ public final class NonLoginAuthenticator
      * Principal name of nonlogin principal.
      */
     private static final String NONLOGIN_PRINCIPAL_NAME = "nonlogin-principal";
-    
+
     /**
      * A dummy principal that is set to request in authenticate method.
      */
     private final GenericPrincipal NONLOGIN_PRINCIPAL =
-        new GenericPrincipal(NONLOGIN_PRINCIPAL_NAME, (char[]) null, 
+        new GenericPrincipal(NONLOGIN_PRINCIPAL_NAME, (char[]) null,
                             (java.util.List<String>) null);
     //END SJSAS 6202703
-    
+
     /**
      * Descriptive information about this implementation.
      */
@@ -100,7 +100,7 @@ public final class NonLoginAuthenticator
 
         if (debug >= 1)
             log("User authentication is not required");
-        
+
         //START SJSAS 6202703
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
         if (hreq.getUserPrincipal() == null) {

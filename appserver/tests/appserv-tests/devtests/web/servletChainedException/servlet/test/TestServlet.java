@@ -37,7 +37,7 @@ public class TestServlet extends HttpServlet {
         Throwable t = new Throwable("test");
 
         ServletException se1 = new ServletException("test", t);
-        ServletException se2 = new ServletException(t);        
+        ServletException se2 = new ServletException(t);
         if (se1.getCause() == t && se2.getCause() == t) {
             passed = true;
         }

@@ -28,7 +28,7 @@ import java.util.StringTokenizer;
 public class GroupMapper {
 
     private Map<String, ArrayList<String>> groupMappingTable = new HashMap<String, ArrayList<String>>();
-    
+
     public void parse(String mappingStr) {
         StringTokenizer tokenizer = new StringTokenizer(mappingStr, ";");
         while(tokenizer.hasMoreElements()) {
@@ -59,7 +59,7 @@ public class GroupMapper {
             }
         }
     }
-    
+
     public void getMappedGroups(String group, ArrayList<String> result) {
         if (result == null) {
             throw new RuntimeException("result argument cannot be NULL");
@@ -76,7 +76,7 @@ public class GroupMapper {
         }
         addUnique(result, result1);
     }
-    
+
     private void addUnique(ArrayList<String> dest, ArrayList<String> src) {
         for (String str : src) {
             if (!dest.contains(str)) {
@@ -103,7 +103,7 @@ public class GroupMapper {
     }*/
     /**
      * @param args the command line arguments
-     
+
     public static void main(String[] args) {
         // TODO code application logic here
         GroupMapper mapper = new GroupMapper();
@@ -112,7 +112,7 @@ public class GroupMapper {
     }*/
 
     private void getMappedGroups(String group, String str, ArrayList<String> result) {
-       
+
         ArrayList<String> mappedGrps = groupMappingTable.get(str);
         if (mappedGrps == null || mappedGrps.isEmpty()) {
             return;
@@ -133,7 +133,7 @@ public class GroupMapper {
             if (aIndex > 0) {
                 theGroup = str.substring(0, aIndex);
             } else {
-                theGroup = str;        
+                theGroup = str;
             }
             if (theGroup.equals(mappedGroup)) {
                 throw new RuntimeException("Illegal Mapping: Identity Mapping of group '" + theGroup + "' to '" + theGroup + "'");

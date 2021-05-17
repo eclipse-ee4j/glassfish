@@ -44,8 +44,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 @ExecuteOn(value={RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_post-unregister-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="_post-unregister-instance",
         description="_post-unregister-instance")
 })
 public class PostUnregisterInstanceCommand implements AdminCommand {

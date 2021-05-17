@@ -36,11 +36,11 @@ public interface SystemPropertyBag extends ConfigBeanProxy {
      * property.
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
-     * 
+     *
      * Objects of the following type(s) are allowed in the list {@link SystemProperty }
      */
     @Element("system-property")

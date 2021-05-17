@@ -128,7 +128,7 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
                 // generate a valid gms multicastport. Either heartbeatport was not set or was set to a value that is now invalid in v3.1.
                 // port range in v2 was quite large and outside the IANA recommended range being followed by v3.1.
                 cluster.setGmsMulticastPort(generateHeartbeatPort());
-                
+
             }
 
             //gms-bind-interface is an attribute of cluster in 3.1
@@ -198,7 +198,7 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
                     // catch RuntimeException hk2 ValidationException. if v2 value is not valid for v3, just rely on v3 default
                 }
                 gms.setVsProtocolTimeoutInMillis(null);
-            } // else null for server-config           
+            } // else null for server-config
 
             Property prop = gms.getProperty("failure-detection-tcp-retransmit-timeout");
             if (prop != null && prop.getValue() != null ) {

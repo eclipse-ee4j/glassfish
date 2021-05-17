@@ -43,7 +43,7 @@ public class RestrictedContentAdapter extends HttpHandler {
     protected final static String IF_MODIFIED_SINCE = "If-Modified-Since";
     private final static String LINE_SEP = System.getProperty("line.separator");
     private final static String BROKEN_PIPE = "Broken pipe";
-    
+
     protected final static Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     private enum State {
@@ -236,11 +236,11 @@ public class RestrictedContentAdapter extends HttpHandler {
                     return;
                 }
 
-                
+
             }
             sc.process(relativeURIString, gReq, gResp);
 
-            
+
 //            final int status = gResp.getStatus();
 //            if (status != HttpServletResponse.SC_OK) {
 //                logger.fine(logPrefix() + "Could not serve content for "
@@ -274,7 +274,7 @@ public class RestrictedContentAdapter extends HttpHandler {
         final Throwable cause = ioex.getCause();
         return (cause != null && (cause instanceof IOException) && (cause.getMessage()).contains(BROKEN_PIPE));
     }
-    
+
     protected boolean returnIfClientCacheIsCurrent(final String relativeURIString,
             final Request gReq,
             final long contentTimestamp) {

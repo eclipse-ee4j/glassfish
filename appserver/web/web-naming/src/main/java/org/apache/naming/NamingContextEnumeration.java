@@ -30,7 +30,7 @@ import javax.naming.NameClassPair;
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:04 $
  */
 
-public class NamingContextEnumeration 
+public class NamingContextEnumeration
     implements NamingEnumeration<NameClassPair> {
 
 

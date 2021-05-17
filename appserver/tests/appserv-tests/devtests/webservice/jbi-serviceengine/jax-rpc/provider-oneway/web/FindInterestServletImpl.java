@@ -21,15 +21,15 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import javax.naming.*;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.namespace.QName;
 import jakarta.servlet.SingleThreadModel;
 
-public class FindInterestServletImpl implements 
-			SingleThreadModel, ServiceLifecycle {
+public class FindInterestServletImpl implements
+            SingleThreadModel, ServiceLifecycle {
 
     public FindInterestServletImpl() {
         System.out.println("FindInterestServletImpl() instantiated");
@@ -44,6 +44,6 @@ public class FindInterestServletImpl implements
     }
 
     public void calculateInterest(double balance, double period) {
-	System.out.println("calculateInterest invoked from servlet endpoint " + (0.2*balance*period));
+    System.out.println("calculateInterest invoked from servlet endpoint " + (0.2*balance*period));
     }
 }

@@ -39,10 +39,10 @@ import java.util.HashSet;
 @Stateful
 @TransactionManagement(TransactionManagementType.BEAN)
 
-@EJBs( 
- { @EJB(name="ejb/TypeLevelSless1", beanName="SlessEJB", 
+@EJBs(
+ { @EJB(name="ejb/TypeLevelSless1", beanName="SlessEJB",
        beanInterface=Sless.class),
-   @EJB(name="ejb/TypeLevelSless2", beanName="SlessEJB2", 
+   @EJB(name="ejb/TypeLevelSless2", beanName="SlessEJB2",
        beanInterface=Sless.class) ,
    @EJB(name="ejb/SfulEJB2", beanInterface=Sful2.class)
  })
@@ -51,7 +51,7 @@ import java.util.HashSet;
 @EJB(name="ejb/TypeLevelSless3", beanInterface=SlessSub.class)
 @Remote({Sful.class})
 // ejb is not required to put business interface in implements clause
-public class SfulEJB 
+public class SfulEJB
 {
 
     private @Resource SessionContext sc;
@@ -64,7 +64,7 @@ public class SfulEJB
     private @EJB(beanName="SlessEJB") void setSless4(Sless sless) {
         sless4 = sless;
     }
-    
+
     private Sless sless5;
     @EJB(beanName="SlessEJB2") void setSless5(Sless sless) {
         sless5 = sless;
@@ -173,7 +173,7 @@ public class SfulEJB
     public void foo(int a, String b) {
     }
 
-    private void testSlessRefs(Sless s1, Sless s2, SlessSub s3) 
+    private void testSlessRefs(Sless s1, Sless s2, SlessSub s3)
         throws Exception {
 
         String sless1Id = s1.getId();
@@ -223,7 +223,7 @@ public class SfulEJB
         s3.roundTrip2(c);
 
         s3.hello3();
- 
+
     }
 
     @PostConstruct
@@ -247,7 +247,7 @@ public class SfulEJB
     }
 
     @Remove(retainIfException=true)
-    public void removeRetainIfException(boolean throwException) 
+    public void removeRetainIfException(boolean throwException)
         throws Exception {
 
         System.out.println("In SfulEJB " + state + " removeRetainIfException");
@@ -258,10 +258,10 @@ public class SfulEJB
     }
 
     @Remove
-    public void removeNotRetainIfException(boolean throwException) 
+    public void removeNotRetainIfException(boolean throwException)
         throws Exception {
 
-        System.out.println("In SfulEJB " + state + 
+        System.out.println("In SfulEJB " + state +
                            "removeNotRetainIfException");
         System.out.println("throwException = " + throwException);
         if( throwException ) {
@@ -272,7 +272,7 @@ public class SfulEJB
     @Remove
     public void removeMethodThrowSysException(boolean throwException) {
 
-        System.out.println("In SfulEJB " + state + 
+        System.out.println("In SfulEJB " + state +
                            "removeMethodThrowSysException");
         System.out.println("throwException = " + throwException);
         if( throwException ) {
@@ -299,7 +299,7 @@ public class SfulEJB
             SfulEJB2.beforeCompletionCalled &&
             SfulEJB2.afterCompletionCalled ) {
             System.out.println("Got expected SessionSynch behavior for " +
-                               "removeRetainIfException(true)");                               
+                               "removeRetainIfException(true)");
         } else {
             throw new EJBException("SessionSynch failure for " +
                                    "removeRetainIfException(true)");
@@ -320,13 +320,13 @@ public class SfulEJB
             !SfulEJB2.beforeCompletionCalled &&
             !SfulEJB2.afterCompletionCalled ) {
             System.out.println("Got expected SessionSynch behavior for " +
-                               "removeRetainIfException(false)");         
+                               "removeRetainIfException(false)");
         } else {
             throw new EJBException("SessionSynch failure for " +
                                    "removeRetainIfException(true)");
         }
 
-        
+
 
 
 

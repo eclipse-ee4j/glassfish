@@ -44,14 +44,14 @@ public class ContractFinder {
      */
     public static Set<TypeElement> find(TypeElement d) {
         LinkedHashSet<TypeElement> retVal = new LinkedHashSet<TypeElement>();
-        
+
         for (Map.Entry<String, TypeElement> entry : new ContractFinder().check(d).result.entrySet()) {
             retVal.add(entry.getValue());
         }
-        
+
         return retVal;
     }
-    
+
     /**
      * Converts the Name from the Element to a String
      * @param name

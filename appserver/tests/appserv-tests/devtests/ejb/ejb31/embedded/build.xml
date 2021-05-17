@@ -91,7 +91,7 @@
         <!-- These tests require Full Profile -->
         <antcall target="modulewithappname"/>
         <antcall target="twomodules"/>
-        <antcall target="twomoduleswithlibs"/> 
+        <antcall target="twomoduleswithlibs"/>
         <antcall target="ejbandwar"/>
         <!-- These 2 tests will stop domain to run -->
         <antcall target="mdb"/>
@@ -118,7 +118,7 @@
 
     <target name="timertest">
         <record name="timertest.output" action="start" />
-	<echo>Running timertest target ${timer.test.type} </echo>
+    <echo>Running timertest target ${timer.test.type} </echo>
             <ant dir="timertest" target="${timer.test.type}"/>
         <record name="timertest.output" action="stop" />
     </target>
@@ -190,9 +190,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ejb31-embedded tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the ejb-ejb31-embedded tests)
+    </echo>
     </target>
 </project>

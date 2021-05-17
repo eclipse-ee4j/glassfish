@@ -30,20 +30,20 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  */
 
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
-        new SimpleReporterAdapter("appserv-tests");    
+        new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
         stat.addDescription("webservices-filter-url-handling");
         Client client = new Client();
         client.doTest(args);
-        stat.printSummary("webservices-filter-url-handling");        
+        stat.printSummary("webservices-filter-url-handling");
     }
 
     public void doTest(String[] args) {
         try {
-            String webURL = args[0];            
+            String webURL = args[0];
             URL url = new URL(args[0] + "//");
             System.out.println("Invoking " + url.toExternalForm());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -59,7 +59,7 @@ public class Client {
             if (HttpURLConnection.HTTP_INTERNAL_ERROR == responseCode) {
                 // server not started
                 System.out.println("Error, server is down ?");
-                stat.addStatus("webservice filter url handling", stat.FAIL);        
+                stat.addStatus("webservice filter url handling", stat.FAIL);
                 return;
             }
             if (HttpURLConnection.HTTP_OK == responseCode) {
@@ -68,23 +68,23 @@ public class Client {
                 int length = connection.getContentLength();
                 System.out.println("Content-length " + length);
                 if (length==-1) {
-                    stat.addStatus("webservice filter url handling", stat.FAIL);                                        
+                    stat.addStatus("webservice filter url handling", stat.FAIL);
                 } else {
-                    stat.addStatus("webservice filter url handling", stat.PASS);                                        
+                    stat.addStatus("webservice filter url handling", stat.PASS);
                 }
-                stat.addStatus("webservice filter url handling", stat.FAIL);                        
+                stat.addStatus("webservice filter url handling", stat.FAIL);
             } else {
                 System.out.println("ERROR - Unknow return code " + responseCode);
                 Map map = connection.getHeaderFields();
                 for (Iterator itr=map.keySet().iterator();itr.hasNext();) {
                     String header = (String) itr.next();
                     System.out.println("Header " + header + "-->" + map.get(header));
-                }   
-                stat.addStatus("webservice filter url handling", stat.FAIL);        
+                }
+                stat.addStatus("webservice filter url handling", stat.FAIL);
             }
         } catch(Exception e) {
             System.out.println("Errror - exception " + e.getMessage());
-            stat.addStatus("webservice filter url handling", stat.FAIL);        
+            stat.addStatus("webservice filter url handling", stat.FAIL);
         }
-    }    
+    }
 }

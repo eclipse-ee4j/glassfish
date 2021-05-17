@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Coyote implementation of the buffered reader.
- * 
+ *
  * @author Remy Maucherat
  */
 public class CoyoteReader
@@ -70,8 +70,8 @@ public class CoyoteReader
         throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-    
-    
+
+
     // -------------------------------------------------------- Package Methods
 
 

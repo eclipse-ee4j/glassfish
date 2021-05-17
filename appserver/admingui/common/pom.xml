@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-common</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console Common</name>
     <description>This bundle contains common code that may be shared across plugins.</description>
 
@@ -51,12 +51,12 @@
             </plugin>
         </plugins>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>common-util</artifactId>
-            <version>${project.version}</version>            
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.authentication</groupId>

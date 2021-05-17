@@ -24,57 +24,57 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class handles a name-value property 
+ * This class handles a name-value property
  *
  * @author Jerome Dochez
  */
 public class NameValuePairNode extends DeploymentDescriptorNode {
-    
+
    /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(TagNames.NAME_VALUE_PAIR_NAME, "setName");
         table.put(TagNames.NAME_VALUE_PAIR_VALUE, "setValue");
         return table;
-    }    
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, NameValuePairDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, NameValuePairDescriptor descriptor) {
         Node envEntryNode = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_NAME, 
+        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_NAME,
                         descriptor.getName());
-        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_VALUE, 
-                        descriptor.getValue());        
+        appendTextChild(envEntryNode, TagNames.NAME_VALUE_PAIR_VALUE,
+                        descriptor.getValue());
         return envEntryNode;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param iterator on the descriptors to write
      * @return the DOM tree top node
      */
     public void writeDescriptor(Node parent, String nodeName, Iterator props) {
-	if (props==null) 
-	    return;
-	    
-	while(props.hasNext()) {
-	    NameValuePairDescriptor aProp = (NameValuePairDescriptor) props.next();
-	    writeDescriptor(parent, nodeName, aProp);
-	}
+    if (props==null)
+        return;
+
+    while(props.hasNext()) {
+        NameValuePairDescriptor aProp = (NameValuePairDescriptor) props.next();
+        writeDescriptor(parent, nodeName, aProp);
+    }
     }
 }

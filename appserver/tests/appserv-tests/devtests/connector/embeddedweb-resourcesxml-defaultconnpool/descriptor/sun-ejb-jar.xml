@@ -29,20 +29,20 @@
         <res-ref-name>jdbc/SimpleBank</res-ref-name>
         <jndi-name>java:app/jdbc/ejb-subclassing</jndi-name>
       </resource-ref>
-      <is-read-only-bean>false</is-read-only-bean> 
-      <commit-option>B</commit-option> 
-     <bean-pool> 
-         <steady-pool-size>0</steady-pool-size> 
-         <resize-quantity>1</resize-quantity> 
-         <max-pool-size>10</max-pool-size> 
-         <pool-idle-timeout-in-seconds>3600</pool-idle-timeout-in-seconds> 
-      </bean-pool> 
-      <bean-cache> 
-          <max-cache-size>100</max-cache-size> 
-        <cache-idle-timeout-in-seconds>60</cache-idle-timeout-in-seconds> 
-        <removal-timeout-in-seconds>3600</removal-timeout-in-seconds> 
-        <victim-selection-policy>LRU</victim-selection-policy> 
-      </bean-cache> 
+      <is-read-only-bean>false</is-read-only-bean>
+      <commit-option>B</commit-option>
+     <bean-pool>
+         <steady-pool-size>0</steady-pool-size>
+         <resize-quantity>1</resize-quantity>
+         <max-pool-size>10</max-pool-size>
+         <pool-idle-timeout-in-seconds>3600</pool-idle-timeout-in-seconds>
+      </bean-pool>
+      <bean-cache>
+          <max-cache-size>100</max-cache-size>
+        <cache-idle-timeout-in-seconds>60</cache-idle-timeout-in-seconds>
+        <removal-timeout-in-seconds>3600</removal-timeout-in-seconds>
+        <victim-selection-policy>LRU</victim-selection-policy>
+      </bean-cache>
     </ejb>
     <ejb>
       <ejb-name>CustomerCheckingEJB</ejb-name>
@@ -51,20 +51,20 @@
         <res-ref-name>jdbc/SimpleBank</res-ref-name>
         <jndi-name>java:app/jdbc/ejb-subclassing</jndi-name>
       </resource-ref>
-      <is-read-only-bean>false</is-read-only-bean> 
-      <commit-option>B</commit-option> 
-     <bean-pool> 
-         <steady-pool-size>0</steady-pool-size> 
-         <resize-quantity>1</resize-quantity> 
-         <max-pool-size>10</max-pool-size> 
+      <is-read-only-bean>false</is-read-only-bean>
+      <commit-option>B</commit-option>
+     <bean-pool>
+         <steady-pool-size>0</steady-pool-size>
+         <resize-quantity>1</resize-quantity>
+         <max-pool-size>10</max-pool-size>
         <pool-idle-timeout-in-seconds>3600</pool-idle-timeout-in-seconds>
-      </bean-pool> 
-      <bean-cache> 
+      </bean-pool>
+      <bean-cache>
           <max-cache-size>100</max-cache-size>
           <cache-idle-timeout-in-seconds>60</cache-idle-timeout-in-seconds>
           <removal-timeout-in-seconds>3600</removal-timeout-in-seconds>
           <victim-selection-policy>LRU</victim-selection-policy>
-      </bean-cache> 
+      </bean-cache>
     </ejb>
   </enterprise-beans>
 </sun-ejb-jar>

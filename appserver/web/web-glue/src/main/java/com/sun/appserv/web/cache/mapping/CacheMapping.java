@@ -18,38 +18,38 @@ package com.sun.appserv.web.cache.mapping;
 
 import com.sun.appserv.web.cache.CacheHelper;
 
-/** CacheMapping represents a cache target specified via servlet-name or a 
- *  url-pattern, a timeout, allowed methods, a set of key fields to be used to 
- *  construct the key into the cache, and a set of constraints on the field 
- *  values. 
+/** CacheMapping represents a cache target specified via servlet-name or a
+ *  url-pattern, a timeout, allowed methods, a set of key fields to be used to
+ *  construct the key into the cache, and a set of constraints on the field
+ *  values.
  */
 public class CacheMapping {
     private String helperNameRef;
-    private String servletName; 
-    private String urlPattern; 
+    private String servletName;
+    private String urlPattern;
 
-    // timeout specified value or via Field 
+    // timeout specified value or via Field
     private int timeout = CacheHelper.TIMEOUT_VALUE_NOT_SET;
-    private Field timeoutField = null; 
+    private Field timeoutField = null;
 
     // a field to force caching engine to refresh entry
-    private Field refreshField = null; 
+    private Field refreshField = null;
 
-    // set of standard HTTP methods eligible for caching 
+    // set of standard HTTP methods eligible for caching
     private String methods[] = new String[0];
 
-    // components of the key to be used to access the cache. 
-    private Field keyFields[] = new Field[0]; 
+    // components of the key to be used to access the cache.
+    private Field keyFields[] = new Field[0];
 
-    // additional cache constraints 
-    private ConstraintField constraintFields[] = new ConstraintField[0]; 
+    // additional cache constraints
+    private ConstraintField constraintFields[] = new ConstraintField[0];
 
     /** default cache mapping
      */
     public CacheMapping() {
     }
 
-    // public config getters and setters 
+    // public config getters and setters
 
     /**
      * set the helper name ref associated with this cache mapping
@@ -108,7 +108,7 @@ public class CacheMapping {
         if (methods == null)
             return;
 
-        this.methods = methods; 
+        this.methods = methods;
     }
 
     /** add an allowable HTTP method
@@ -125,7 +125,7 @@ public class CacheMapping {
 
         methods = results;
     }
-    
+
     /** add a key field
      * @param field key Field to add
      */
@@ -148,7 +148,7 @@ public class CacheMapping {
         if (field == null)
             return;
 
-        ConstraintField results[] = 
+        ConstraintField results[] =
                 new ConstraintField[constraintFields.length + 1];
 
         for (int i = 0; i < constraintFields.length; i++)
@@ -201,7 +201,7 @@ public class CacheMapping {
     }
 
     /**
-     * get the timeout 
+     * get the timeout
      * @return timeout value configured
      */
     public int getTimeout() {
@@ -209,7 +209,7 @@ public class CacheMapping {
     }
 
     /**
-     * get the timeout field 
+     * get the timeout field
      * @return timeout field configured
      */
     public Field getTimeoutField() {

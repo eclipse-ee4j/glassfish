@@ -19,7 +19,7 @@ package com.sun.enterprise.connectors.util;
 import com.sun.enterprise.deployment.*;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 
-/** Interface class of managed connection factory parser methods. 
+/** Interface class of managed connection factory parser methods.
  *  @author Srikanth P
  */
 public interface MCFConfigParser extends ConnectorConfigParser {
@@ -28,8 +28,8 @@ public interface MCFConfigParser extends ConnectorConfigParser {
      *  Obtains the connection definition names of a given rar.
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @return Array of connection definiton names as strings
-     *  @throws ConnectorRuntimeException If rar is not exploded or 
-     *                                    incorrect ra.xml 
+     *  @throws ConnectorRuntimeException If rar is not exploded or
+     *                                    incorrect ra.xml
      */
     public String[] getConnectionDefinitionNames(ConnectorDescriptor desc)
                       throws ConnectorRuntimeException;

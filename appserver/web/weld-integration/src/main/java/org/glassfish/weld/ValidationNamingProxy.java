@@ -47,7 +47,7 @@ import jakarta.validation.ValidatorFactory;
 @Service
 @Named("ValidationNamingProxy")
 public class ValidationNamingProxy implements NamedNamingObjectProxy {
-    
+
     static final String VALIDATOR_CONTEXT = "java:comp/Validator";
     static final String VALIDATOR_FACTORY_CONTEXT = "java:comp/ValidatorFactory";
 
@@ -62,7 +62,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
 
     @Inject
     private WeldDeployer weldDeployer;
-    
+
 
     /**
      * get and create an instance of a bean from the beanManager
@@ -101,9 +101,9 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
                 if (validatorFactory != null) {
                     return validatorFactory;
                 }
-                
+
                 throw new NamingException("Error retrieving " + name);
-                
+
             } catch (Throwable t) {
                 NamingException ne = new NamingException("Error retrieving " + name);
                 ne.initCause(t);
@@ -117,7 +117,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
                 if (validator != null) {
                     return validator;
                 }
-                
+
                 throw new NamingException("Error retrieving " + name);
 
             } catch (Throwable t) {

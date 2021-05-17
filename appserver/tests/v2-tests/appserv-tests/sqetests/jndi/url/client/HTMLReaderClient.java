@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class HTMLReaderClient {
 
-   private static SimpleReporterAdapter stat = 
+   private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
    public static void main(String[] args) {
@@ -36,8 +36,8 @@ public class HTMLReaderClient {
            Object objref = initial.lookup("java:comp/env/ejb/SimpleHTMLReader");
 
            System.out.println("getting home...");
-           HTMLReaderHome home = 
-               (HTMLReaderHome)PortableRemoteObject.narrow(objref, 
+           HTMLReaderHome home =
+               (HTMLReaderHome)PortableRemoteObject.narrow(objref,
                                             HTMLReaderHome.class);
 
            System.out.println("creating bean...");
@@ -55,5 +55,5 @@ public class HTMLReaderClient {
        }
        stat.printSummary("urlID");
        System.exit(0);
-   } 
-} 
+   }
+}

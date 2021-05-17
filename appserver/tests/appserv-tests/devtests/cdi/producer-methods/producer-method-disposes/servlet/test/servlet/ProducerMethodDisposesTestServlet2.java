@@ -43,7 +43,7 @@ public class ProducerMethodDisposesTestServlet2 extends HttpServlet {
             msg += "Disposer method for preferred not called";
         if (!(BeanSetup.disposeCalledForTestQualifierError.trim().length() == 0))
             msg += BeanSetup.disposeCalledForTestQualifierError;
-        
+
         writer.write(msg + "\n");
     }
 

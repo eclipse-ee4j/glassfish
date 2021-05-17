@@ -57,7 +57,7 @@ public class PersistenceUnitLoader {
 
     private static Logger logger = LogDomains.getLogger(PersistenceUnitLoader.class, LogDomains.PERSISTENCE_LOGGER);
 
-    private static final StringManager localStrings = StringManager.getManager(PersistenceUnitLoader.class);    
+    private static final StringManager localStrings = StringManager.getManager(PersistenceUnitLoader.class);
 
     private static Map<String, String> integrationProperties;
 

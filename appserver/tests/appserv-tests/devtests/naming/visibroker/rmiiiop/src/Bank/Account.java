@@ -21,4 +21,4 @@ public interface Account extends java.rmi.Remote {
   float getBalance () throws java.rmi.RemoteException;
   void setBalance (float bal) throws java.rmi.RemoteException;
 }
-  
+

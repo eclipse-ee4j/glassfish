@@ -40,16 +40,16 @@ public class CacheBean {
        @PostConstruct
        private void init() {
               System.out.println("In Cache:init()");
-	      me = sesCtx.getBusinessObject(CacheBean.class);
-	      me.runAsync();
-	      try {
-		System.out.println("Blocking 2 secs in init");
-		Thread.sleep(1500);
-		System.out.println("Waking up from sleep in init...");
-	    } catch(Exception e) {
-		e.printStackTrace();
-	    }
-	      finishedInit = true;
+          me = sesCtx.getBusinessObject(CacheBean.class);
+          me.runAsync();
+          try {
+        System.out.println("Blocking 2 secs in init");
+        Thread.sleep(1500);
+        System.out.println("Waking up from sleep in init...");
+        } catch(Exception e) {
+        e.printStackTrace();
+        }
+          finishedInit = true;
        }
 
     @Asynchronous
@@ -57,55 +57,55 @@ public class CacheBean {
 
     public int checkCache() {
 
-	if( failure ) {
-	    throw new EJBException(failureMsg);
-	}
+    if( failure ) {
+        throw new EJBException(failureMsg);
+    }
 
-	int refreshes = refreshCount.intValue();
-	if( refreshes == 0 ) {
-	    throw new EJBException("no refreshes");
-	}
+    int refreshes = refreshCount.intValue();
+    if( refreshes == 0 ) {
+        throw new EJBException("no refreshes");
+    }
 
-	System.out.println("Successful cache check total refreshes = " + refreshes);
-	return refreshes;
+    System.out.println("Successful cache check total refreshes = " + refreshes);
+    return refreshes;
     }
 
        @Schedule(second="*/1", minute="*", hour="*", persistent=false)
        private void refresh() {
-	   int count = refreshCount.incrementAndGet();
-	   System.out.println("In Cache:refresh() num refreshes = " + count);
+       int count = refreshCount.incrementAndGet();
+       System.out.println("In Cache:refresh() num refreshes = " + count);
        }
 
        @PreDestroy
        private void destroy() {
-	   shutdown = true;
+       shutdown = true;
               System.out.println("In Cache:destroy()");
        }
 
     @Asynchronous
     public void runAsync() {
 
-	if( !finishedInit ) {
-	    failure = true;
-	    failureMsg = "Async called before init finished";
-	}
-
-	System.out.println("In Singleton::run()");
-
-	while(!shutdown) {
-
-	    try {
-		System.out.println("Going to sleep...");
-		Thread.sleep(5000);
-		System.out.println("Waking up from sleep...");
-	    } catch(Exception e) {
-		e.printStackTrace();
-	    }
-	}
-
-	System.out.println("Exiting Cache::run() due to shutdown");
-	return;
+    if( !finishedInit ) {
+        failure = true;
+        failureMsg = "Async called before init finished";
     }
-       
+
+    System.out.println("In Singleton::run()");
+
+    while(!shutdown) {
+
+        try {
+        System.out.println("Going to sleep...");
+        Thread.sleep(5000);
+        System.out.println("Waking up from sleep...");
+        } catch(Exception e) {
+        e.printStackTrace();
+        }
+    }
+
+    System.out.println("Exiting Cache::run() due to shutdown");
+    return;
+    }
+
 
 }

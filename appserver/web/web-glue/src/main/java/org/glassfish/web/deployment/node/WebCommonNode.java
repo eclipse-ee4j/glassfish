@@ -48,46 +48,46 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
     protected WebCommonNode()  {
         super();
 
-        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class);                          
-        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);     
-        registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);     
+        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
         JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), 
-                                                            ResourceRefNode.class, "addResourceReferenceDescriptor");   
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), 
-                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");               
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
+                                                            ResourceRefNode.class, "addResourceReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
+                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class, "addMessageDestinationReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_CONTEXT_REF), EntityManagerReferenceNode.class, "addEntityManagerReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.ROLE), 
-                                                            SecurityRoleNode.class, "addRole");            
-        registerElementHandler(new XMLElement(WebTagNames.SERVLET), ServletNode.class);       
-        registerElementHandler(new XMLElement(WebTagNames.SERVLET_MAPPING), ServletMappingNode.class);               
+        registerElementHandler(new XMLElement(TagNames.ROLE),
+                                                            SecurityRoleNode.class, "addRole");
+        registerElementHandler(new XMLElement(WebTagNames.SERVLET), ServletNode.class);
+        registerElementHandler(new XMLElement(WebTagNames.SERVLET_MAPPING), ServletMappingNode.class);
         registerElementHandler(new XMLElement(WebTagNames.SESSION_CONFIG), SessionConfigNode.class);
-        registerElementHandler(new XMLElement(WebTagNames.MIME_MAPPING), 
+        registerElementHandler(new XMLElement(WebTagNames.MIME_MAPPING),
                                                             MimeMappingNode.class, "addMimeMapping");
-        registerElementHandler(new XMLElement(WebTagNames.CONTEXT_PARAM), 
-                                                            InitParamNode.class, "addContextParameter");        
-        registerElementHandler(new XMLElement(WebTagNames.SECURITY_CONSTRAINT),         
-                                                            SecurityConstraintNode.class, "addSecurityConstraint");                
-        registerElementHandler(new XMLElement(WebTagNames.FILTER), 
+        registerElementHandler(new XMLElement(WebTagNames.CONTEXT_PARAM),
+                                                            InitParamNode.class, "addContextParameter");
+        registerElementHandler(new XMLElement(WebTagNames.SECURITY_CONSTRAINT),
+                                                            SecurityConstraintNode.class, "addSecurityConstraint");
+        registerElementHandler(new XMLElement(WebTagNames.FILTER),
                                                             FilterNode.class, "addServletFilter");
-        registerElementHandler(new XMLElement(WebTagNames.FILTER_MAPPING), 
-                                                            FilterMappingNode.class, "addServletFilterMapping");            
-        registerElementHandler(new XMLElement(WebTagNames.LISTENER), 
-                                                            ListenerNode.class, "addAppListenerDescriptor");                    
-        registerElementHandler(new XMLElement(WebTagNames.ERROR_PAGE), 
-                                                            ErrorPageNode.class, "addErrorPageDescriptor");            
-        registerElementHandler(new XMLElement(WebTagNames.LOGIN_CONFIG), 
-                                                            LoginConfigNode.class);                    
+        registerElementHandler(new XMLElement(WebTagNames.FILTER_MAPPING),
+                                                            FilterMappingNode.class, "addServletFilterMapping");
+        registerElementHandler(new XMLElement(WebTagNames.LISTENER),
+                                                            ListenerNode.class, "addAppListenerDescriptor");
+        registerElementHandler(new XMLElement(WebTagNames.ERROR_PAGE),
+                                                            ErrorPageNode.class, "addErrorPageDescriptor");
+        registerElementHandler(new XMLElement(WebTagNames.LOGIN_CONFIG),
+                                                            LoginConfigNode.class);
         // for backward compatibility, from Servlet 2.4 the taglib element is in jsp-config
-        registerElementHandler(new XMLElement(WebTagNames.TAGLIB),         
-                                                            TagLibNode.class);                      
-        registerElementHandler(new XMLElement(WebTagNames.JSPCONFIG),         
-                                                            JspConfigNode.class);                      
+        registerElementHandler(new XMLElement(WebTagNames.TAGLIB),
+                                                            TagLibNode.class);
+        registerElementHandler(new XMLElement(WebTagNames.JSPCONFIG),
+                                                            JspConfigNode.class);
         registerElementHandler(new XMLElement(WebTagNames.LOCALE_ENCODING_MAPPING),
                                                             LocaleEncodingMappingNode.class, "addLocaleEncodingMappingDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION),
@@ -102,16 +102,16 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.ADMINISTERED_OBJECT), AdministeredObjectDefinitionNode.class, "addResourceDescriptor");
     }
-    
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param newDescriptor the new descriptor
-     */    
+     */
     public void addDescriptor(Object  newDescriptor) {
         Logger logger = DOLUtils.getDefaultLogger();
-        if (newDescriptor instanceof EjbReference) {            
+        if (newDescriptor instanceof EjbReference) {
             descriptor.addEjbReferenceDescriptor(
                         (EjbReference) newDescriptor);
         } else  if (newDescriptor instanceof EnvironmentProperty) {
@@ -125,7 +125,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
             }
             descriptor.addWebComponentDescriptor((WebComponentDescriptor) newDescriptor);
         } else if (newDescriptor instanceof TagLibConfigurationDescriptor) {
-            // for backward compatibility with 2.2 and 2.3 specs, we need to be able 
+            // for backward compatibility with 2.2 and 2.3 specs, we need to be able
             // to read tag lib under web-app. Starting with 2.4, the tag moved under jsp-config
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Adding taglib component " + newDescriptor);
@@ -163,33 +163,33 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         } else {
             super.addDescriptor(newDescriptor);
         }
-    }       
-    
+    }
+
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
-     */    
-    public void setElementValue(XMLElement element, String value) {    
+     */
+    public void setElementValue(XMLElement element, String value) {
         if (WebTagNames.WELCOME_FILE.equals(element.getQName())) {
             descriptor.addWelcomeFile(value);
         } else {
             super.setElementValue(element, value);
         }
-    }       
-    
+    }
+
     /**
      * add a servelt mapping for one of the servlet of this bundle
-     * 
+     *
      * @param servletName the servlet the mapping applies to
      * @param urlPattern the url pattern mapping
      */
     void addServletMapping(String servletName, String urlPattern) {
         if (servletMappings==null) {
             servletMappings = new HashMap<String, Vector<String>>();
-        } 
+        }
         if (servletMappings.containsKey(servletName)) {
             ((Vector<String>) servletMappings.get(servletName)).add(urlPattern);
         } else {
@@ -198,15 +198,15 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
             servletMappings.put(servletName, mappings);
         }
     }
-    
-    /** 
+
+    /**
      * receives notification of the end of an XML element by the Parser
-     * 
+     *
      * @param element the xml tag identification
      * @return true if this node is done processing the XML sub tree
      */
     public boolean endElement(XMLElement element) {
-        if (WebTagNames.DISTRIBUTABLE.equals(element.getQName())) {       
+        if (WebTagNames.DISTRIBUTABLE.equals(element.getQName())) {
             descriptor.setDistributable(true);
             return false;
         } else {
@@ -221,8 +221,8 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
                             servlet.addUrlPattern(mapping.next());
                         }
                     } else {
-                        throw new RuntimeException("There is no web component by the name of " + servletName + " here.");                    
-                    } 
+                        throw new RuntimeException("There is no web component by the name of " + servletName + " here.");
+                    }
                 }
             }
             return allDone;
@@ -235,32 +235,32 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
      * @param parent node for the DOM tree
      * @param webBundleDesc descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, 
+     */
+    public Node writeDescriptor(Node parent,
         T webBundleDesc) {
-        Node jarNode = super.writeDescriptor(parent, webBundleDesc);             
+        Node jarNode = super.writeDescriptor(parent, webBundleDesc);
         if (webBundleDesc.isDistributable()) {
-            appendChild(jarNode, WebTagNames.DISTRIBUTABLE);        
+            appendChild(jarNode, WebTagNames.DISTRIBUTABLE);
         }
-        
+
         // context-param*
         addInitParam(jarNode, WebTagNames.CONTEXT_PARAM, webBundleDesc.getContextParametersSet());
-        
+
         // filter*
         FilterNode filterNode = new FilterNode();
         for (Enumeration filters = webBundleDesc.getServletFilters().elements();filters.hasMoreElements();) {
-            filterNode.writeDescriptor(jarNode, WebTagNames.FILTER, 
+            filterNode.writeDescriptor(jarNode, WebTagNames.FILTER,
                                                      (ServletFilterDescriptor) filters.nextElement());
         }
-        
+
         // filter-mapping*
         FilterMappingNode filterMappingNode = new FilterMappingNode();
         for (Enumeration mappings = webBundleDesc.getServletFilterMappings().elements();
               mappings.hasMoreElements();) {
-            filterMappingNode.writeDescriptor(jarNode, WebTagNames.FILTER_MAPPING, 
+            filterMappingNode.writeDescriptor(jarNode, WebTagNames.FILTER_MAPPING,
                                                      (ServletFilterMappingDescriptor) mappings.nextElement());
-        }        
-        
+        }
+
         // listener*
         Vector appListeners = webBundleDesc.getAppListenerDescriptors();
         if (!appListeners.isEmpty()) {
@@ -270,7 +270,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
                         (AppListenerDescriptorImpl) e.nextElement());
             }
         }
-        
+
         Set servlets = webBundleDesc.getWebComponentDescriptors();
         if (!servlets.isEmpty()) {
             // servlet*
@@ -280,34 +280,34 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
                 servletNode.writeDescriptor(jarNode, aServlet);
             }
 
-            // servlet-mapping*        
+            // servlet-mapping*
             for (Iterator servletsIterator = servlets.iterator(); servletsIterator.hasNext();) {
-                WebComponentDescriptor aServlet = (WebComponentDescriptor) servletsIterator.next();                
+                WebComponentDescriptor aServlet = (WebComponentDescriptor) servletsIterator.next();
                 for (Iterator patterns = aServlet.getUrlPatternsSet().iterator();patterns.hasNext();) {
                     String pattern = (String) patterns.next();
                     Node mappingNode= appendChild(jarNode, WebTagNames.SERVLET_MAPPING);
                     appendTextChild(mappingNode, WebTagNames.SERVLET_NAME, aServlet.getCanonicalName());
-                    
+
                     // If URL Pattern does not start with "/" then
-                    // prepend it (for 1.2 Web apps)                    
+                    // prepend it (for 1.2 Web apps)
                     if (webBundleDesc.getSpecVersion().equals("2.2")) {
-                        if (!pattern.startsWith("/") 
+                        if (!pattern.startsWith("/")
                             && !pattern.startsWith("*.")) {
                             pattern = "/" + pattern;
-                        }                    
+                        }
                     }
                     appendTextChild(mappingNode, WebTagNames.URL_PATTERN, pattern);
                 }
             }
         }
-        
+
         // mime-mapping*
         MimeMappingNode mimeNode = new MimeMappingNode();
         for (Enumeration e = webBundleDesc.getMimeMappings();e.hasMoreElements();) {
             MimeMappingDescriptor mimeMapping = (MimeMappingDescriptor) e.nextElement();
             mimeNode.writeDescriptor(jarNode, WebTagNames.MIME_MAPPING, mimeMapping);
         }
-        
+
         // welcome-file-list?
         Enumeration welcomeFiles = webBundleDesc.getWelcomeFiles();
         if (welcomeFiles.hasMoreElements()) {
@@ -317,25 +317,25 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
                                 (String) welcomeFiles.nextElement());
             }
         }
-        
+
         // error-page*
         Enumeration errorPages = webBundleDesc.getErrorPageDescriptors();
         if (errorPages.hasMoreElements()) {
             ErrorPageNode errorPageNode = new ErrorPageNode();
             while (errorPages.hasMoreElements()) {
-                errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, 
+                errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE,
                                 (ErrorPageDescriptor) errorPages.nextElement());
             }
         }
-        
+
         // jsp-config *
-	JspConfigDescriptorImpl jspConf = webBundleDesc.getJspConfigDescriptor();
-	if(jspConf != null) {
-	    JspConfigNode ln = new JspConfigNode();
-	    ln.writeDescriptor(jarNode, 
-				WebTagNames.JSPCONFIG,
-				jspConf);
-	}
+    JspConfigDescriptorImpl jspConf = webBundleDesc.getJspConfigDescriptor();
+    if(jspConf != null) {
+        JspConfigNode ln = new JspConfigNode();
+        ln.writeDescriptor(jarNode,
+                WebTagNames.JSPCONFIG,
+                jspConf);
+    }
 
         // security-constraint*
         Enumeration securityConstraints = webBundleDesc.getSecurityConstraints();
@@ -353,14 +353,14 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
             LoginConfigNode lcn = new LoginConfigNode();
             lcn.writeDescriptor(jarNode, WebTagNames.LOGIN_CONFIG, lci);
         }
-        
+
         // security-role*
         Enumeration roles = webBundleDesc.getSecurityRoles();
         if (roles.hasMoreElements()) {
             SecurityRoleNode srNode = new SecurityRoleNode();
             while (roles.hasMoreElements()) {
                 SecurityRoleDescriptor role = (SecurityRoleDescriptor) roles.nextElement();
-                srNode.writeDescriptor(jarNode, WebTagNames.ROLE, role);            
+                srNode.writeDescriptor(jarNode, WebTagNames.ROLE, role);
             }
         }
 
@@ -375,19 +375,19 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
 
         // resource-ref*
         writeResourceRefDescriptors(jarNode, webBundleDesc.getResourceReferenceDescriptors().iterator());
-                
+
         // resource-env-ref*
-        writeResourceEnvRefDescriptors(jarNode, webBundleDesc.getResourceEnvReferenceDescriptors().iterator());        
+        writeResourceEnvRefDescriptors(jarNode, webBundleDesc.getResourceEnvReferenceDescriptors().iterator());
 
         // message-destination-ref*
         writeMessageDestinationRefDescriptors(jarNode, webBundleDesc.getMessageDestinationReferenceDescriptors().iterator());
-        
+
         // persistence-context-ref*
         writeEntityManagerReferenceDescriptors(jarNode, webBundleDesc.getEntityManagerReferenceDescriptors().iterator());
-        
+
         // persistence-unit-ref*
         writeEntityManagerFactoryReferenceDescriptors(jarNode, webBundleDesc.getEntityManagerFactoryReferenceDescriptors().iterator());
-        
+
         // post-construct
         writeLifeCycleCallbackDescriptors(jarNode, TagNames.POST_CONSTRUCT, webBundleDesc.getPostConstructDescriptors());
 
@@ -414,12 +414,12 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         if (webBundleDesc.getSessionConfig() != null) {
             SessionConfigNode scNode = new SessionConfigNode();
             scNode.writeDescriptor(jarNode, WebTagNames.SESSION_CONFIG,
-                    (SessionConfigDescriptor)webBundleDesc.getSessionConfig());            
+                    (SessionConfigDescriptor)webBundleDesc.getSessionConfig());
         }
 
         return jarNode;
     }
-   
+
     static void addInitParam(Node parentNode, String nodeName, Set initParams) {
         if (!initParams.isEmpty()) {
             InitParamNode initParamNode = new InitParamNode();
@@ -427,9 +427,9 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
                 EnvironmentProperty ep = (EnvironmentProperty) e.next();
                 initParamNode.writeDescriptor(parentNode, nodeName, ep);
             }
-        }    
+        }
     }
-    
+
     static void addInitParam(Node parentNode, String nodeName, Enumeration initParams) {
         InitParamNode initParamNode = new InitParamNode();
         while (initParams.hasMoreElements()) {
@@ -437,12 +437,12 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
             initParamNode.writeDescriptor(parentNode, nodeName, ep);
         }
     }
-    
+
     /**
      * @return the default spec version level this node complies to
      */
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-    
+
 }

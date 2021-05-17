@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;  
+import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -34,7 +34,7 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedWebTest {
@@ -45,7 +45,7 @@ public class EmbeddedWebTest {
     static String contextRoot = "test";
     static File root;
     static WebContainerConfig config;
-    
+
     @BeforeClass
     public static void setupServer() throws Exception {
 
@@ -56,7 +56,7 @@ public class EmbeddedWebTest {
         System.out.println("Starting Web "+embedded);
         root = new File("target/classes");
         configure();
-        
+
     }
 
     private static void configure() throws Exception {
@@ -99,12 +99,12 @@ public class EmbeddedWebTest {
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
 
         VirtualServer vs = embedded.getVirtualServer(virtualServerId);
-        Assert.assertEquals(virtualServerId,vs.getID());                     
+        Assert.assertEquals(virtualServerId,vs.getID());
 
         Context context = (Context) embedded.createContext(root);
         //embedded.addContext(context, contextRoot);
         virtualServer.addContext(context, contextRoot);
- 
+
         URL servlet = new URL("http://localhost:"+newPort+"/"+contextRoot+"/hello");
         URLConnection yc = servlet.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
@@ -118,7 +118,7 @@ public class EmbeddedWebTest {
         Assert.assertEquals("Hello World!", sb.toString());
 
         System.out.println("Removing web listener "+testListener.getId());
-        embedded.removeWebListener(testListener);                       
+        embedded.removeWebListener(testListener);
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after deletion " + listenerList.size());
@@ -128,7 +128,7 @@ public class EmbeddedWebTest {
 
         virtualServer.removeContext(context);
 
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -139,5 +139,5 @@ public class EmbeddedWebTest {
             glassfish = null;
         }
     }
-    
+
 }

@@ -32,7 +32,7 @@
     <url-pattern>/simpleservlet</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-	<welcome-file>hello.jsp</welcome-file>
+    <welcome-file>hello.jsp</welcome-file>
     </welcome-file-list>
   <security-constraint>
         <web-resource-collection>
@@ -60,6 +60,6 @@
         <description/>
         <role-name>role1</role-name>
     </security-role>
-  
+
 </web-app>
 

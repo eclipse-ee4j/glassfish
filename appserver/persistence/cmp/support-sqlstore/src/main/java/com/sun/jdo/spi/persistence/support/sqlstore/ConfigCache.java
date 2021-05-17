@@ -20,7 +20,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
  * Interface to access SQLStore config information.
  *
  * @author Marina Vatkina
- */ 
+ */
 public interface ConfigCache {
 
     /**
@@ -43,8 +43,8 @@ public interface ConfigCache {
 
     /**
      * Sets VersionConsistencyCache field.
-     *   
+     *
      * @param vcCache the VersionConsistencyCache instance.
-     */  
+     */
     void setVersionConsistencyCache(VersionConsistencyCache vcCache);
 }

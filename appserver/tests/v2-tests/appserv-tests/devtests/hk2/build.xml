@@ -37,15 +37,15 @@
 
     <target name="all">
 
-	<antcall target="setup"/>
-	<antcall target="test-all"/>
-	<antcall target="unsetup"/>
+    <antcall target="setup"/>
+    <antcall target="test-all"/>
+    <antcall target="unsetup"/>
         <antcall target="report"/>
     </target>
 
     <target name="setup">
 
-	<antcall target="start-database"/>
+    <antcall target="start-database"/>
         <ant target="startDomain"/>
         <ant target="clean-result"/>
 
@@ -72,7 +72,7 @@
         <echo message="Stopping app server instance"/>
         <ant target="stopDomain"/>
 
-	<antcall target="stop-database"/>
+    <antcall target="stop-database"/>
 
         <record name="hk2.output" action="stop" />
 
@@ -80,17 +80,17 @@
 
     <target name="start-database" depends="init-common">
         <echo message="Starting database --dbport ${db.port}"/>
-	<!-- spawn is added to prevent a hang on Windows -->
-	<exec spawn="true" executable="${ASADMIN}" failonerror="false">
+    <!-- spawn is added to prevent a hang on Windows -->
+    <exec spawn="true" executable="${ASADMIN}" failonerror="false">
           <arg line="start-database --dbport ${db.port}"/>
-	</exec>
+    </exec>
     </target>
 
     <target name="stop-database" depends="init-common">
         <echo message="Stopping database --dbport ${db.port}"/>
-	<exec executable="${ASADMIN}" failonerror="false">
+    <exec executable="${ASADMIN}" failonerror="false">
           <arg line="stop-database  --dbport ${db.port}"/>
-	</exec>
+    </exec>
     </target>
 
     <target name="report-result" depends="init-common">
@@ -112,23 +112,23 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb tests)
+    <echo>
+        Usage:
+            ant all (Executes all the ejb tests)
             ant orb_integration (Executes all ejb-related orb integration tests
 
-			ant allowedmethods (Executes the ejb allowedmethods tests)
-			ant bmp (Executes the ejb bmp tests)
-			ant ejbc (Executes the ejb ejbc tests)
-			ant jms (Executes the ejb jms tests)
-			ant mdb (Executes the ejb mdb tests)
-			ant stubs (Executes the ejb stubs tests)
-			ant timer (Executes the ejb timer tests)
-			ant txprop (Executes the ejb txprop tests)
-			ant sfsb (Executes the ejb sfsb tests)
-			ant stress (Executes the ejb stress tests)
-			ant ejb30 (Executes the ejb30 tests)
-			ant ejb31 (Executes the ejb31 tests)
-	</echo>
+            ant allowedmethods (Executes the ejb allowedmethods tests)
+            ant bmp (Executes the ejb bmp tests)
+            ant ejbc (Executes the ejb ejbc tests)
+            ant jms (Executes the ejb jms tests)
+            ant mdb (Executes the ejb mdb tests)
+            ant stubs (Executes the ejb stubs tests)
+            ant timer (Executes the ejb timer tests)
+            ant txprop (Executes the ejb txprop tests)
+            ant sfsb (Executes the ejb sfsb tests)
+            ant stress (Executes the ejb stress tests)
+            ant ejb30 (Executes the ejb30 tests)
+            ant ejb31 (Executes the ejb31 tests)
+    </echo>
     </target>
 </project>

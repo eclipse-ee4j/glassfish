@@ -51,7 +51,7 @@ public class Ejb3MessageDispatcher implements EjbMessageDispatcher {
         if (logger.isLoggable(FINE)) {
             logger.log(FINE, WEBSERVICE_DISPATCHER_INFO, new Object[] { req.getMethod(), req.getRequestURI(), req.getQueryString() });
         }
-        
+
         String method = req.getMethod();
         try {
             switch (method) {

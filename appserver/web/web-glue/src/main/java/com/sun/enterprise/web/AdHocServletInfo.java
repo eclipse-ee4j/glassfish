@@ -27,7 +27,7 @@ import java.util.Map;
  * @author Tim Quinn
  */
 public interface AdHocServletInfo {
-    
+
     /**
      * Returns the class type of the servlet that should be created to process
      * requests.  Note that the class must represent a subclass of HttpServlet.
@@ -35,7 +35,7 @@ public interface AdHocServletInfo {
      * @return The servlet class
      */
     public Class getServletClass();
-    
+
     /**
      * Returns the name of the servlet that the container should assign when it
      * adds a servlet to a web module.
@@ -43,7 +43,7 @@ public interface AdHocServletInfo {
      * @return The servlet name
      */
     public String getServletName();
-    
+
     /**
      * Returns a Map containing name and value pairs to be used in preparing
      * the init params in the servlet's ServletConfig object.
@@ -51,5 +51,5 @@ public interface AdHocServletInfo {
      * @return Map containing the servlet init parameters
      */
     public Map<String,String> getServletInitParams();
-    
+
 }

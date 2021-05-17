@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
 import javax.naming.InitialContext;
 
 public class FooHandler extends GenericHandler {
-  
+
     public void destroy() {
         System.out.println("In FooHandler::destroy()");
     }
@@ -40,17 +40,17 @@ public class FooHandler extends GenericHandler {
         System.out.println("In FooHandler::handleFault()");
         return true;
     }
-        
+
     public boolean handleRequest(MessageContext context) {
         System.out.println("In FooHandler::handleRequest()");
         return true;
     }
-        
+
     public boolean handleResponse(MessageContext context) {
         System.out.println("In FooHandler::handleResponse()");
         return true;
-    } 
-        
+    }
+
     public void init(HandlerInfo config) {
         System.out.println("In FooHandler::init()");
         try {
@@ -60,9 +60,9 @@ public class FooHandler extends GenericHandler {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        
+
         System.out.println("Handler init params = " +
                            config.getHandlerConfig());
-    } 
-   
+    }
+
 }

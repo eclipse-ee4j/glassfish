@@ -101,7 +101,7 @@ class ReadListenerImpl implements ReadListener {
     public void onError(final Throwable t) {
         System.out.println("--> onError: " + t);
         t.printStackTrace();
-        
+
         try {
             wc.close();
         } catch (Exception ex) {

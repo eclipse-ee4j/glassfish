@@ -70,7 +70,7 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility
 
     Other features might also be added dynamically, see {@link #getFeatureNames}.
 
-    @param key	the feature name to query
+    @param key    the feature name to query
      */
     public boolean supportsFeature(String key);
 

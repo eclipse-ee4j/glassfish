@@ -108,9 +108,9 @@ public interface ResourceAdapterConfig extends ConfigBeanProxy, Resource, Proper
      *              {@link String }
      */
     public void setResourceAdapterName(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+        Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

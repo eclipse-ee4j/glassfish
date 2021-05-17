@@ -68,12 +68,12 @@ public class BaseTestGrizzlyConfig {
         File dir = new File(name);
         dir.mkdirs();
         dir.deleteOnExit();
-        
+
         FileWriter writer;
         try {
             final File file = new File(dir, "index.html");
             file.deleteOnExit();
-            
+
             writer = new FileWriter(file);
             try {
                 writer.write("<html><body>You've found the server on port " + listener.getPort() + "</body></html>");
@@ -84,7 +84,7 @@ public class BaseTestGrizzlyConfig {
         } catch (IOException e) {
             Assert.fail(e.getMessage());
         }
-        
+
         final List<HttpServerFilter> httpServerFilters = listener.getFilters(HttpServerFilter.class);
 
         for (HttpServerFilter httpServerFilter : httpServerFilters) {

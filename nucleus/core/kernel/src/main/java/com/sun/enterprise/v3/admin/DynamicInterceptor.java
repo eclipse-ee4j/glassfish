@@ -76,7 +76,7 @@ public class DynamicInterceptor implements MBeanServer
 
         //create a  ReplicationInfo instance
         DynamicInterceptor.ReplicationInfo result = new DynamicInterceptor.ReplicationInfo();
-        
+
         // if this is for create Mbean
         if(objectName == null) {
             result.addInstance("server");
@@ -142,8 +142,8 @@ public class DynamicInterceptor implements MBeanServer
         }
 
         // If its an MBean corresponding to a JSR77 managed object
-        if(isJSR77(oName, objectName)) {            
-            if(objectName.getKeyProperty("j2eeType") != null && 
+        if(isJSR77(oName, objectName)) {
+            if(objectName.getKeyProperty("j2eeType") != null &&
                     objectName.getKeyProperty("j2eeType").equals("J2EEDomain")) {
                 result.addInstance("server");
             } else if (objectName.getKeyProperty("j2eeType") != null &&
@@ -151,7 +151,7 @@ public class DynamicInterceptor implements MBeanServer
                 String targetInstance = objectName.getKeyProperty("name");
                 if(MbeanService.getInstance().isValidServer(targetInstance)) {
                     result.addInstance("server");
-                    result.addInstance(targetInstance);                    
+                    result.addInstance(targetInstance);
                 }
             } else {
                 String targetInstance = objectName.getKeyProperty("J2EEServer");
@@ -195,9 +195,9 @@ public class DynamicInterceptor implements MBeanServer
          if((MbeanService.getInstance().isDas())) {
             result.addInstance("server");
             return result;
-        } 
+        }
         // What abouut JVM
-        
+
         return result;
     }
 
@@ -260,7 +260,7 @@ public class DynamicInterceptor implements MBeanServer
             }
             return instanceConnections.get(instanceName);
         }
-    
+
     }
 
     /**
@@ -279,13 +279,13 @@ public class DynamicInterceptor implements MBeanServer
             throws ReflectionException, InstanceNotFoundException, MBeanException {
         if(objectName == null)
             throw new InstanceNotFoundException();
-        DynamicInterceptor.ReplicationInfo result = getInstance(objectName); 
+        DynamicInterceptor.ReplicationInfo result = getInstance(objectName);
         Object returnValue = null;
         try {
             for(String svr : result.getInstances()) {
                 if("server".equals(svr)) {
                     returnValue = getDelegateMBeanServer().invoke( objectName, operationName, params, signature );
-                } else {                    
+                } else {
                     returnValue = getInstanceConnection(svr).invoke(objectName, operationName, params, signature);
                 }
             }
@@ -294,7 +294,7 @@ public class DynamicInterceptor implements MBeanServer
         }
         return returnValue;
     }
-    
+
     public final Object getAttribute(final ObjectName objectName, final String attributeName)
             throws InstanceNotFoundException, AttributeNotFoundException, MBeanException, ReflectionException {
         if(objectName == null)
@@ -308,7 +308,7 @@ public class DynamicInterceptor implements MBeanServer
             throw new ReflectionException(ioex);
         }
     }
-    
+
     public void setAttribute(final ObjectName objectName, final Attribute attribute) throws
             InstanceNotFoundException, AttributeNotFoundException, MBeanException,
             ReflectionException, InvalidAttributeValueException {
@@ -366,7 +366,7 @@ public class DynamicInterceptor implements MBeanServer
         }
         return ret;
     }
-    
+
     public final ObjectInstance registerMBean(final Object obj, final ObjectName objectName)
             throws NotCompliantMBeanException, MBeanRegistrationException, InstanceAlreadyExistsException {
         return getDelegateMBeanServer().registerMBean( obj, objectName );
@@ -442,7 +442,7 @@ public class DynamicInterceptor implements MBeanServer
             return false;
         try {
             List<String> instance = getInstance(objectName).getInstances();
-            
+
             for(String instanceName : instance) {
                 if(instanceName.equals(System.getProperty("com.sun.aas.instanceName"))) {
                     return getDelegateMBeanServer().isRegistered( objectName );
@@ -586,7 +586,7 @@ public class DynamicInterceptor implements MBeanServer
     public final String getDefaultDomain() {
         return getDelegateMBeanServer().getDefaultDomain();
     }
-    
+
     public final ObjectInstance getObjectInstance(ObjectName objectName) throws InstanceNotFoundException {
         if(objectName == null)
             throw new InstanceNotFoundException();
@@ -602,23 +602,23 @@ public class DynamicInterceptor implements MBeanServer
             throw new InstanceNotFoundException(ioex.getLocalizedMessage());
         }
     }
-    
+
     public final Object instantiate( final String str) throws ReflectionException, MBeanException {
         return getDelegateMBeanServer().instantiate(str);
     }
-    
+
     public final Object instantiate( final String str, final ObjectName objectName)
             throws ReflectionException, MBeanException, InstanceNotFoundException {
         if(objectName == null)
             throw new InstanceNotFoundException();
         return getDelegateMBeanServer().instantiate(str, objectName);
     }
-    
+
     public final Object instantiate( final String str, final Object[] obj, final String[] str2)
             throws ReflectionException, MBeanException {
         return getDelegateMBeanServer().instantiate(str, obj, str2);
     }
-    
+
     public final Object instantiate( final String str, final ObjectName objectName, final Object[] obj,
                                      final String[] str3)
             throws ReflectionException, MBeanException, InstanceNotFoundException {
@@ -720,7 +720,7 @@ public class DynamicInterceptor implements MBeanServer
             throw new InstanceNotFoundException(ioex.getLocalizedMessage());
         }
     }
-      
+
     public final void removeNotificationListener( final ObjectName objectName,
                                                   final NotificationListener notificationListener,
                                                   final NotificationFilter notificationFilter, final Object obj)
@@ -746,7 +746,7 @@ public class DynamicInterceptor implements MBeanServer
             throw new InstanceNotFoundException(ioex.getLocalizedMessage());
         }
     }
-    
+
     public final void removeNotificationListener( final ObjectName objectName, final ObjectName objectName1,
                                                   final NotificationFilter    notificationFilter, final Object obj)
             throws InstanceNotFoundException, ListenerNotFoundException {
@@ -776,17 +776,17 @@ public class DynamicInterceptor implements MBeanServer
             throw new InstanceNotFoundException();
         return getDelegateMBeanServer().getClassLoader( objectName );
     }
-    
+
     public final ClassLoader getClassLoaderFor( final ObjectName objectName) throws InstanceNotFoundException {
         if(objectName == null)
             throw new InstanceNotFoundException();
         return getDelegateMBeanServer().getClassLoaderFor( objectName );
     }
-    
+
     public final ClassLoaderRepository getClassLoaderRepository() {
-    	return getDelegateMBeanServer().getClassLoaderRepository();
+        return getDelegateMBeanServer().getClassLoaderRepository();
     }
-    
+
     public final String[] getDomains() {
         return getDelegateMBeanServer().getDomains();
     }
@@ -803,7 +803,7 @@ public class DynamicInterceptor implements MBeanServer
         return oName.startsWith(SERVER_PREFIX);
     }
 
-    private boolean isJSR77(String oName, ObjectName o) {        
+    private boolean isJSR77(String oName, ObjectName o) {
         if(o.getKeyProperty("j2eeType") !=null) {
             return true;
         } else if(oName.startsWith(JSR77_PREFIX)) {

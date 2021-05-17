@@ -32,7 +32,7 @@ public class WebTest{
 
     private static final SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
-    
+
     private String host;
     private String port;
     private String contextRoot;
@@ -53,7 +53,7 @@ public class WebTest{
         try {
             webTest.doTest(webTest.port, 200);
             webTest.doTest(webTest.adminPort, 202);
-            // Sleep long enough for the admin console to have been 
+            // Sleep long enough for the admin console to have been
             // installed and deployed
             Thread.currentThread().sleep(60000);
             webTest.doTest(webTest.adminPort, 404);

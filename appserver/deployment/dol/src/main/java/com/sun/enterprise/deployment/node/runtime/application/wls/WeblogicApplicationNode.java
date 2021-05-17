@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * This node is responsible for handling all WebLogic runtime information for 
+ * This node is responsible for handling all WebLogic runtime information for
  * application.
  */
 public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
@@ -58,12 +58,12 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
     public WeblogicApplicationNode(Application descriptor) {
         super(descriptor);
     }
-    
+
     /** Creates new WeblogicApplicationNode */
     public WeblogicApplicationNode() {
-        super(null);    
+        super(null);
     }
-    
+
     /**
      * Initialize the child handlers
      */
@@ -98,15 +98,15 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
      */
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.WLS_APPLICATION_RUNTIME_TAG);
-    }    
-    
-    /** 
+    }
+
+    /**
      * @return the DOCTYPE that should be written to the XML file
      */
     public String getDocType() {
         return null;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */
@@ -120,16 +120,16 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
     public List<String> getSystemIDs() {
         return systemIDs;
     }
-    
+
    /**
     * @return the application instance to associate with this XMLNode
-    */    
-    public Application getDescriptor() {    
-	return descriptor;               
+    */
+    public Application getDescriptor() {
+    return descriptor;
     }
-    
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance 
+     * Adds  a new DOL descriptor instance to the descriptor instance
      * associated with this XMLNode
      *
      * @param descriptor the new descriptor
@@ -153,15 +153,15 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
                     TagNames.WLS_APPLICATION_NAMESPACE);
         root.setAttributeNS(TagNames.XMLNS,
                             TagNames.XMLNS_XSI,
-                            TagNames.W3C_XML_SCHEMA_INSTANCE);    
+                            TagNames.W3C_XML_SCHEMA_INSTANCE);
         root.setAttributeNS(TagNames.W3C_XML_SCHEMA_INSTANCE,
                             TagNames.SCHEMA_LOCATION_TAG,
                             TagNames.WLS_APPLICATION_SCHEMA_LOCATION);
-        root.setAttribute(TagNames.VERSION, getSpecVersion());        
+        root.setAttribute(TagNames.VERSION, getSpecVersion());
 
         writeSubDescriptors(root, nodeName, application);
 
         return root;
-        
+
     }
 }

@@ -366,7 +366,7 @@ public final class MonitorTest
         final Set<MonitoringStats> all = getAllMonitoringStats();
         assert (all.size() >= 10) : "Monitoring is not turned on";
 
-        //final Set	all	= getQueryMgr().queryInterfaceSet( com.sun.appserv.management.monitor.HTTPServiceVirtualServerMonitor.class.getName(), null );
+        //final Set    all    = getQueryMgr().queryInterfaceSet( com.sun.appserv.management.monitor.HTTPServiceVirtualServerMonitor.class.getName(), null );
 
         testAll(Util.toObjectNames(all), "checkAllStats");
 
@@ -456,7 +456,7 @@ public final class MonitorTest
         testAll(Util.toObjectNames(all), "checkStatsClassSuppliesAllStatistics");
 
         printElapsed("testStatsClassSuppliesAllStatistics", all.size(), start );
-	}
+    }
 }
 
 

@@ -20,35 +20,35 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * This class holds information about a web server virtual 
+ * This class holds information about a web server virtual
  * engine configuration
  *
  * @author Jerome Dochez
  */
 public class VirtualServerInfo {
-    
+
     /**
      * Holds value of property host.
      */
     private String host;
-    
+
     /**
      * Holds value of property port.
      */
     private int port;
-    
+
     /**
      * Holds value of property protocol.
      */
     private String protocol;
-    
+
     /** Creates a new instance of VirtualServerInfo */
     public VirtualServerInfo(String protocol, String host, int port) {
         this.protocol = protocol;
         this.host = host;
         this.port = port;
     }
-    
+
     /**
      * Getter for property serverName.
      * @return Value of property serverName.
@@ -56,7 +56,7 @@ public class VirtualServerInfo {
     public String getHost() {
         return this.host;
     }
-    
+
     /**
      * Getter for property port.
      * @return value of property port.
@@ -64,7 +64,7 @@ public class VirtualServerInfo {
     public int getPort() {
        return this.port;
     }
-    
+
     /**
      * Getter for property protocol.
      * @return Value of property protocol.
@@ -72,7 +72,7 @@ public class VirtualServerInfo {
     public String getProtocol() {
         return this.protocol;
     }
-    
+
     /**
      * @return the web server root URL
      */

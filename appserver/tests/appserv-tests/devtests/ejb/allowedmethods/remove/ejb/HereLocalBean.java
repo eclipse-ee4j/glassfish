@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.allowedmethods.remove;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -33,21 +33,21 @@ public class HereLocalBean implements SessionBean {
     public HereLocalBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In HereLocalBean::ejbCreate !!");
+    System.out.println("In HereLocalBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+    this.sc = sc;
     }
 
     public void test() {
-	System.out.println("In HereLocalBean::test !!");
+    System.out.println("In HereLocalBean::test !!");
     }
 
     public void ejbRemove()
         throws RemoteException
     {
-	System.out.println("In HereLocalBean::ejbRemove !!");
+    System.out.println("In HereLocalBean::ejbRemove !!");
     }
 
     public void ejbActivate() {}

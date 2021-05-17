@@ -20,38 +20,38 @@
 
 <!ENTITY commonBuild SYSTEM "./../../config/common.xml">
 ]>
- 
+
 <project name="statelesshello" default="all" basedir=".">
 
- 	&commonBuild;
+     &commonBuild;
     <property name="archivedir" value="${build}/archives"/>
 
         <property name="testName" value="StatelessHelloEjb"/>
-	<target name="prepare" depends="init">
-		<property name="portable.jar" value="${archivedir}/statelesshelloejb-portable.jar"/>
-		<property name="all.jar" value="${archivedir}/statelesshelloejb.jar"/>
-		<property name="deployplan.jar" value="${archivedir}/statelesshelloejb-plan.jar"/>
-		<mkdir dir="${build}" />
-		<mkdir dir="${archivedir}" />
-	</target>
-	
-	<target name="compile" depends="prepare">
-		<javac srcdir="statelesshello" destdir="${build}">
+    <target name="prepare" depends="init">
+        <property name="portable.jar" value="${archivedir}/statelesshelloejb-portable.jar"/>
+        <property name="all.jar" value="${archivedir}/statelesshelloejb.jar"/>
+        <property name="deployplan.jar" value="${archivedir}/statelesshelloejb-plan.jar"/>
+        <mkdir dir="${build}" />
+        <mkdir dir="${archivedir}" />
+    </target>
+
+    <target name="compile" depends="prepare">
+        <javac srcdir="statelesshello" destdir="${build}">
                     <classpath refid="gfv3.classpath"/>
-	        </javac>		
-	</target>
-	
-	<target name="assemble" depends="compile">
-		<mkdir dir="${build}/META-INF"/>
-		<copy file="ejb-jar.xml" todir="${build}/META-INF"/>
-		<jar destfile="${portable.jar}" basedir="${build}" excludes="**/archives/**"/>
-		<copy file="sun-ejb-jar.xml" todir="${build}/META-INF" failonerror="false"/>
-		<jar destfile="${all.jar}" basedir="${build}" excludes="**/archives/**"/>
-		<jar destfile="${deployplan.jar}">
-			<fileset dir="${basedir}" includes="sun-ejb-jar.xml" excludes="**/archives/**"/>
-		</jar>
-	</target>
-	
+            </javac>
+    </target>
+
+    <target name="assemble" depends="compile">
+        <mkdir dir="${build}/META-INF"/>
+        <copy file="ejb-jar.xml" todir="${build}/META-INF"/>
+        <jar destfile="${portable.jar}" basedir="${build}" excludes="**/archives/**"/>
+        <copy file="sun-ejb-jar.xml" todir="${build}/META-INF" failonerror="false"/>
+        <jar destfile="${all.jar}" basedir="${build}" excludes="**/archives/**"/>
+        <jar destfile="${deployplan.jar}">
+            <fileset dir="${basedir}" includes="sun-ejb-jar.xml" excludes="**/archives/**"/>
+        </jar>
+    </target>
+
     <target name="deploy.asadmin" depends="prepare">
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="--retrieve ${archivedir} --name ${testName} ${all.jar}"/>
@@ -160,7 +160,7 @@
         <javaWithResult
             fork="true"
             failonerror="false"
-            jvm="${JAVA}"	
+            jvm="${JAVA}"
             classname="standaloneclient.HelloClient"
             output="${build}/${log.id}.output.log"
             resultproperty="result">
@@ -171,7 +171,7 @@
             <classpath>
                 <path refid="gfv3.classpath"/>
                 <path location="${build}"/>
-		<path location="${archivedir}/StatelessHelloEjbClient.jar"/>
+        <path location="${archivedir}/StatelessHelloEjbClient.jar"/>
             </classpath>
 
             <arg line="${arg.list}"/>
@@ -181,8 +181,8 @@
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
         </antcall>
-	</target>
-			
+    </target>
+
     <target name="private-all">
         <antcall target="assemble"/>
         <antcall target="deploy.asadmin"/>

@@ -27,8 +27,8 @@ public class AddressBean implements Serializable {
 
     public AddressBean() { }
 
-    public AddressBean(String street, String city, 
-        String state, String zip) { 
+    public AddressBean(String street, String city,
+        String state, String zip) {
 
         this.street = street;
         this.city = city;

@@ -89,7 +89,7 @@ public abstract class Generator {
                 Method m2 = (Method)e.nextElement();
 
                 // m1 and m2 are duplicates if they have the same signature
-                // (name and same parameters). 
+                // (name and same parameters).
                 if ( !m1.getName().equals(m2.getName()) )
                     continue;
 
@@ -107,7 +107,7 @@ public abstract class Generator {
                 }
                 if ( parmsDup ) {
                     dup = true;
-                    // Select which of the duplicate methods to generate 
+                    // Select which of the duplicate methods to generate
                     // code for: choose the one that is lower in the
                     // inheritance hierarchy: this ensures that the generated
                     // method will compile.
@@ -143,9 +143,9 @@ public abstract class Generator {
                 String ejbIntfClzName  = ejbIntfClz.getName();
                 Class methodToCheckClz = methodToCheck.getDeclaringClass();
                 if( !methodToCheckClz.getName().equals(ejbIntfClzName) ) {
-                    String[] logParams = { next.toString(), 
+                    String[] logParams = { next.toString(),
                                            methodToCheck.toString() };
-                    _logger.log(Level.WARNING, 
+                    _logger.log(Level.WARNING,
                                 "ejb.illegal_ejb_interface_override",
                                 logParams);
                 }
@@ -154,68 +154,68 @@ public abstract class Generator {
             }
         }
 
-	return isEJBIntfMethod;
+    return isEJBIntfMethod;
     }
 
 
     private boolean methodCompare(Method factoryMethod, Method homeMethod) {
 
-	if(! factoryMethod.getName().equals(homeMethod.getName())) {
-	    return false;
+    if(! factoryMethod.getName().equals(homeMethod.getName())) {
+        return false;
         }
 
-	Class[] factoryParamTypes = factoryMethod.getParameterTypes();
-	Class[] beanParamTypes = homeMethod.getParameterTypes();
-	if (factoryParamTypes.length != beanParamTypes.length) {
-	    return false;
+    Class[] factoryParamTypes = factoryMethod.getParameterTypes();
+    Class[] beanParamTypes = homeMethod.getParameterTypes();
+    if (factoryParamTypes.length != beanParamTypes.length) {
+        return false;
         }
-	for(int i = 0; i < factoryParamTypes.length; i++) {
-	    if (factoryParamTypes[i] != beanParamTypes[i]) {
-		return false;
+    for(int i = 0; i < factoryParamTypes.length; i++) {
+        if (factoryParamTypes[i] != beanParamTypes[i]) {
+        return false;
             }
         }
 
-	// NOTE : Exceptions and return types are not part of equality check
+    // NOTE : Exceptions and return types are not part of equality check
 
-	return true;
+    return true;
 
     }
 
     protected String getUniqueClassName(DeploymentContext context, String origName,
                                         String origSuffix,
-					Vector existingClassNames)
+                    Vector existingClassNames)
     {
-	String newClassName = null;
-	boolean foundUniqueName = false;
-	int count = 0;
-	while ( !foundUniqueName ) {
-	    String suffix = origSuffix;
-	    if ( count > 0 ) {
-		suffix = origSuffix + count;
+    String newClassName = null;
+    boolean foundUniqueName = false;
+    int count = 0;
+    while ( !foundUniqueName ) {
+        String suffix = origSuffix;
+        if ( count > 0 ) {
+        suffix = origSuffix + count;
             }
-	    newClassName = origName + suffix;
-	    if ( !existingClassNames.contains(newClassName) ) {
-		foundUniqueName = true;
+        newClassName = origName + suffix;
+        if ( !existingClassNames.contains(newClassName) ) {
+        foundUniqueName = true;
                 existingClassNames.add(newClassName);
             }
-	    else {
-		count++;
+        else {
+        count++;
             }
-	}
-	return newClassName;
+    }
+    return newClassName;
     }
 
 
     protected String getTxAttribute(EjbDescriptor dd, Method method)
     {
-	// The TX_* strings returned MUST match the TX_* constants in 
-	// com.sun.ejb.Container.
+    // The TX_* strings returned MUST match the TX_* constants in
+    // com.sun.ejb.Container.
         if ( dd instanceof EjbSessionDescriptor
-	     && ((EjbSessionDescriptor)dd).getTransactionType().equals("Bean") )
-	    return "TX_BEAN_MANAGED";
+         && ((EjbSessionDescriptor)dd).getTransactionType().equals("Bean") )
+        return "TX_BEAN_MANAGED";
 
         String txAttr = null;
-	MethodDescriptor mdesc = new MethodDescriptor(method, ejbClassSymbol);
+    MethodDescriptor mdesc = new MethodDescriptor(method, ejbClassSymbol);
         ContainerTransaction ct = dd.getContainerTransactionFor(mdesc);
         if ( ct != null ) {
             String attr = ct.getTransactionAttribute();
@@ -236,37 +236,37 @@ public abstract class Generator {
         if ( txAttr == null ) {
             throw new RuntimeException("Transaction Attribute not found for method "+method);
         }
-	return txAttr;
-    } 
+    return txAttr;
+    }
 
     protected String getSecurityAttribute(EjbDescriptor dd, Method m)
     {
-	// The SEC_* strings returned MUST match the SEC_* constants in 
-	// com.sun.ejb.Container.
+    // The SEC_* strings returned MUST match the SEC_* constants in
+    // com.sun.ejb.Container.
 
-	MethodDescriptor thisMethodDesc = new MethodDescriptor(m, ejbClassSymbol);
+    MethodDescriptor thisMethodDesc = new MethodDescriptor(m, ejbClassSymbol);
 
-	Set unchecked = dd.getUncheckedMethodDescriptors();
-	if ( unchecked != null ) {
-	    Iterator i = unchecked.iterator();
-	    while ( i.hasNext() ) {
-		MethodDescriptor md = (MethodDescriptor)i.next();
-		if ( thisMethodDesc.equals(md) )
-		    return "SEC_UNCHECKED";
-	    }
-	}
+    Set unchecked = dd.getUncheckedMethodDescriptors();
+    if ( unchecked != null ) {
+        Iterator i = unchecked.iterator();
+        while ( i.hasNext() ) {
+        MethodDescriptor md = (MethodDescriptor)i.next();
+        if ( thisMethodDesc.equals(md) )
+            return "SEC_UNCHECKED";
+        }
+    }
 
-	Set excluded = dd.getExcludedMethodDescriptors();
-	if ( excluded != null ) {
-	    Iterator i = excluded.iterator();
-	    while ( i.hasNext() ) {
-		MethodDescriptor md = (MethodDescriptor)i.next();
-		if ( thisMethodDesc.equals(md) )
-		    return "SEC_EXCLUDED";
-	    }
-	}
+    Set excluded = dd.getExcludedMethodDescriptors();
+    if ( excluded != null ) {
+        Iterator i = excluded.iterator();
+        while ( i.hasNext() ) {
+        MethodDescriptor md = (MethodDescriptor)i.next();
+        if ( thisMethodDesc.equals(md) )
+            return "SEC_EXCLUDED";
+        }
+    }
 
-	return "SEC_CHECKED";
-    } 
+    return "SEC_CHECKED";
+    }
 
 }

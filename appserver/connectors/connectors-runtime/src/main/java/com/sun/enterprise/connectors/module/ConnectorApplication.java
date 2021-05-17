@@ -142,7 +142,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
 /*
     public void undeployApplicationScopedResources() {
         Collection<Resource> resources = filterConnectorResources(asrManager.getResources(applicationName));
-        asrManager.undeployResources(resources);    
+        asrManager.undeployResources(resources);
     }
 */
 
@@ -263,7 +263,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      * event listener to listen to </code>resource-adapter undeploy validation</code> and
      * to validate the undeployment. Undeployment will fail, if resources are found
      * and --cascade is not set.
-     * @param event Event 
+     * @param event Event
      */
     public void event(Event event) {
         if (Deployment.UNDEPLOYMENT_VALIDATION.equals(event.type())) {

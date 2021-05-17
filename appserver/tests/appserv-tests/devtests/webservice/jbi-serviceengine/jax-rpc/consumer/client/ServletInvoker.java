@@ -48,7 +48,7 @@ public class ServletInvoker {
         try {
             int code = invokeServlet(url);
             report(code);
-	} catch (Exception e) {
+    } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -65,9 +65,9 @@ public class ServletInvoker {
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.indexOf("So the RESULT OF FindInterest SERVICE IS") != -1)
-		found1 = true;
+        found1 = true;
             if(line.indexOf("[105.0]") != -1)
-		found2 = true;
+        found2 = true;
         }
         return code;
     }

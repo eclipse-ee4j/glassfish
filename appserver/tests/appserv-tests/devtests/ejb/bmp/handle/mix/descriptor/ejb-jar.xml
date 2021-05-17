@@ -325,7 +325,7 @@
         <method-params />
       </method>
 
-  <!-- methods for Student EJB -->      
+  <!-- methods for Student EJB -->
 
       <method>
         <ejb-name>HandleStudentBean</ejb-name>
@@ -666,6 +666,6 @@
       <trans-attribute>NotSupported</trans-attribute>
     </container-transaction>
   </assembly-descriptor>
-      
+
 </ejb-jar>
 

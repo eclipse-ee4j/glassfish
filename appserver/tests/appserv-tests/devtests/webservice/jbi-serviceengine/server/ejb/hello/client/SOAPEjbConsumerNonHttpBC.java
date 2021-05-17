@@ -28,16 +28,16 @@ public class SOAPEjbConsumerNonHttpBC {
 
         private static SimpleReporterAdapter stat =
                 new SimpleReporterAdapter("appserv-tests");
-	private static String testId = "jbi-serviceengine/server/ejb/hello";
+    private static String testId = "jbi-serviceengine/server/ejb/hello";
 
         @WebServiceRef
         static HelloEJBService service;
 
         public static void main(String[] args) {
-	    stat.addDescription(testId);
+        stat.addDescription(testId);
             SOAPEjbConsumerNonHttpBC client = new SOAPEjbConsumerNonHttpBC();
             client.doTest(args);
-	    stat.printSummary(testId);
+        stat.printSummary(testId);
        }
 
        public void doTest(String[] args) {
@@ -50,11 +50,11 @@ public class SOAPEjbConsumerNonHttpBC {
                       endpointURI);
                 System.out.println(" After setting endpoint address URI");
                 String ret = port.sayHello("Appserver Tester !");
-		if(ret.indexOf("WebSvcTest-Hello") == -1) {
+        if(ret.indexOf("WebSvcTest-Hello") == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(testId, stat.FAIL);
                     return;
-		}
+        }
                 System.out.println(ret);
                 stat.addStatus(testId, stat.PASS);
             } catch(Exception e) {

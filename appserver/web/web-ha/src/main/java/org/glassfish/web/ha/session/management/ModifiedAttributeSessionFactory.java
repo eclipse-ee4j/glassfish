@@ -31,17 +31,17 @@ import org.apache.catalina.Session;
  * @author Rajiv Mordani
  */
 public class ModifiedAttributeSessionFactory implements SessionFactory {
-    
+
     /** Creates a new instance of ModifiedAttributeSessionFactory */
     public ModifiedAttributeSessionFactory() {
     }
-    
-    /** 
-     * create a new session 
+
+    /**
+     * create a new session
      * @param mgr
-     */        
+     */
     public Session createSession(Manager mgr) {
         return new ModifiedAttributeHASession(mgr);
-    }    
-    
+    }
+
 }

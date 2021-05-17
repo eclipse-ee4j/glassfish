@@ -30,7 +30,7 @@ import org.junit.Test;
 
 @Ignore
 public class ContextViewTest {
-  
+
 
 //  @BeforeClass
 //  public static void setUpBeforeClass() throws Exception {
@@ -53,16 +53,16 @@ public class ContextViewTest {
 //      view.put("foo", foo, propModes);
 //    }
 //
-//    public String getFoo() { 
-//      return view.get("foo"); 
+//    public String getFoo() {
+//      return view.get("foo");
 //    };
 //
 //    public void setLongValue(long value) {
 //      view.put("long value", value, propModes);
 //    }
 //
-//    public long getLongValue() { 
-//      return (Long) view.get("long value"); 
+//    public long getLongValue() {
+//      return (Long) view.get("long value");
 //    }
 //
 //  }

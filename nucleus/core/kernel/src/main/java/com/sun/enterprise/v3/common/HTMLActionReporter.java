@@ -33,11 +33,11 @@ import java.util.Properties;
 @Service(name = "html")
 @PerLookup
 public class HTMLActionReporter extends ActionReporter {
-    
+
     /** Creates a new instance of HTMLActionReporter */
     public HTMLActionReporter() {
     }
-    
+
     @Override
     public void writeReport(OutputStream os) throws IOException {
         PrintWriter writer = new PrintWriter(os);
@@ -59,7 +59,7 @@ public class HTMLActionReporter extends ActionReporter {
             writer.println("There are " + subActions.size() + " sub operations");
         }
         writer.print("</body></html>");
-        writer.flush();        
+        writer.flush();
     }
 
     private void write(int level, MessagePart part, PrintWriter writer) {
@@ -78,7 +78,7 @@ public class HTMLActionReporter extends ActionReporter {
             write(level+1, child, writer);
         }
     }
-    
+
     private void write(Properties props, PrintWriter writer) {
         if (props==null || props.size()==0) {
             return;
@@ -91,6 +91,6 @@ public class HTMLActionReporter extends ActionReporter {
             writer.println("</tr>");
         }
         writer.println("</table>");
-        
+
     }
 }

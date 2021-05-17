@@ -40,7 +40,7 @@ public final class LogUtils {
     public static Logger getLogger() {
         return LOGGER;
     }
-    
+
     @LogMessageInfo(
             message = "Initialize SOAP/TCP protocol for port: {0}",
             comment = "{0} - port number",

@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+    </exec>
   </target>
 
   <target name="build" depends="init-common, clean">
@@ -61,7 +61,7 @@
 
   <target name="gen-portable" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -cp . -mapping mapping.xml ${features} config.xml"/>
     </antcall>
   </target>
@@ -70,7 +70,7 @@
   <!-- NO feature flags as mapping file should contain enough info -->
   <target name="gen-non-portable" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen:both -cp . -f:wsi mapping.config.xml"/>
     </antcall>
   </target>

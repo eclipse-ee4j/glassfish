@@ -33,16 +33,16 @@ import org.glassfish.api.invocation.InvocationManager;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-/** 
+/**
  * This is a proxy invocation handler for web service ejb invocations.
  * A single instance of this invocation handler is used for all
  * web service invocations to a particular ejb endpoint, so it must support
  * concurrent use.
  *
  * @author Kenneth Saks
- */    
+ */
 
-public final class WebServiceInvocationHandler extends EJBLocalRemoteObject 
+public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
     implements InvocationHandler {
 
     private WebServiceEndpoint endpoint_;
@@ -56,7 +56,7 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
         new LocalStringManagerImpl(WebServiceInvocationHandler.class);
 
 
-    public WebServiceInvocationHandler(Class ejbClass, 
+    public WebServiceInvocationHandler(Class ejbClass,
                                        WebServiceEndpoint endpoint,
                                        Class serviceEndpointIntfClass,
                                        EjbContainerUtil contUtil,
@@ -69,7 +69,7 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
         invocationInfoMap_ = invocationInfoMap;
     }
 
-    public Object invoke(Object proxy, Method method, Object[] args) 
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
         try {
         container.onEnteringContainer();
@@ -79,7 +79,7 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
         Class methodClass = method.getDeclaringClass();
         if( methodClass == java.lang.Object.class )  {
             return InvocationHandlerUtil.
-                invokeJavaObjectMethod(this, method, args);    
+                invokeJavaObjectMethod(this, method, args);
         }
 
         Object returnValue = null;
@@ -88,8 +88,8 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
 
         try {
             inv.ejbObject = this;
-            
-            // things can become hairy here. This handler may have been created 
+
+            // things can become hairy here. This handler may have been created
             // with a dummy SEI to satisfy the EJB container. In such cases, we must
             // find the right method object on the SIB.
             if (endpoint_.getServiceEndpointInterface().equals(ejbClass_.getName())) {
@@ -110,39 +110,39 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
 
             inv.transactionAttribute = inv.invocationInfo.txAttr;
 
-	        // special handling of jaxrpc endpoints (identfied by mapping file)
+            // special handling of jaxrpc endpoints (identfied by mapping file)
             if(endpoint_.getWebService().hasMappingFile()) {
-		
-		        if( hasHandlers_ ) {
-		            // Handler performed method authorization already
-		        } else {
 
-		            boolean authorized = container.authorize(inv);
-		            if( !authorized ) {
-			            throw new AccessLocalException
-			                ("Client not authorized to access " + inv.method);
-		            }
-		        }
-	        } else if ( hasHandlers_ ) {
+                if( hasHandlers_ ) {
+                    // Handler performed method authorization already
+                } else {
 
-		        // jaxws enpoint
-		        // authorization was done in security pipe
-                // Now that application handlers have run, do 
-                // another method lookup and compare the results 
-                // with the original one. This ensures that the 
+                    boolean authorized = container.authorize(inv);
+                    if( !authorized ) {
+                        throw new AccessLocalException
+                            ("Client not authorized to access " + inv.method);
+                    }
+                }
+            } else if ( hasHandlers_ ) {
+
+                // jaxws enpoint
+                // authorization was done in security pipe
+                // Now that application handlers have run, do
+                // another method lookup and compare the results
+                // with the original one. This ensures that the
                 // application handlers have not changed
                 // which method is invoked.
 
                 Method methodBefore = inv.getWebServiceMethod();
-                
+
                 if (methodBefore != null && !methodBefore.equals(inv.method)) {
                     inv.exception = new UnmarshalException
-			    (localStrings.getLocalString
-			    ("enterprise.webservice.postHandlerMethodMismatch",
-			    "Original Method {0} does not match post-handler method {1}",
-			    new Object[] { methodBefore, inv.method }));
-		        throw inv.exception;
-		        }
+                (localStrings.getLocalString
+                ("enterprise.webservice.postHandlerMethodMismatch",
+                "Original Method {0} does not match post-handler method {1}",
+                new Object[] { methodBefore, inv.method }));
+                throw inv.exception;
+                }
             }
 
 
@@ -168,7 +168,7 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
         } catch(Throwable c) {
             inv.exception = c;
         } finally {
-            
+
             if( inv.ejb != null ) {
                 // Do post invoke tx processing so that a commit failure
                 // will be visible to web service client.
@@ -177,7 +177,7 @@ public final class WebServiceInvocationHandler extends EJBLocalRemoteObject
         }
         if (inv.exception != null) {
             if(inv.exception instanceof java.lang.RuntimeException) {
-                throw (java.lang.RuntimeException)inv.exception; 
+                throw (java.lang.RuntimeException)inv.exception;
             } else if (inv.exception instanceof Exception) {
                 throw inv.exception;
             } else {

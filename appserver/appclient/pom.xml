@@ -26,7 +26,7 @@
     </parent>
     <artifactId>appclient</artifactId>
     <packaging>pom</packaging>
-    <name>App Client Modules</name>  
+    <name>App Client Modules</name>
     <modules>
         <module>server</module>
         <module>client</module>

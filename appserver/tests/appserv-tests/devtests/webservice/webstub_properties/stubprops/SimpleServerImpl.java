@@ -25,36 +25,36 @@ package stubprops;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 
 /**
  *
  * @author dochez
  */
 public class SimpleServerImpl implements SessionBean {
-    
+
     SessionContext sc;
-    
+
     /** Creates a new instance of SimpleServerImpl */
     public SimpleServerImpl() {
     }
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In GoogleEJB::ejbCreate !!");
-}    
-    
+    System.out.println("In GoogleEJB::ejbCreate !!");
+}
+
     public String sayHello(String who) throws RemoteException {
         return "hello" + who;
-    }    
-    
+    }
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

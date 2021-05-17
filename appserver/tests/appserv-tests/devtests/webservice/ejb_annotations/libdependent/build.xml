@@ -69,8 +69,8 @@
         <param name="wsimport.args"
                value="-keep  -Xendorsed -d ${build.classes.dir}/client http://${http.host}:${http.port}/HelloImplService/HelloImpl?WSDL"/>
       </antcall>
-      <javac verbose="true" srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${env.S1AS_HOME}/modules/webservices-api-osgi.jar:${env.S1AS_HOME}/modules/jaxb-osgi.jar:${env.S1AS_HOME}/modules/jaxb-api-osgi.jar" 
+      <javac verbose="true" srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/modules/webservices-osgi.jar:${env.S1AS_HOME}/modules/webservices-api-osgi.jar:${env.S1AS_HOME}/modules/jaxb-osgi.jar:${env.S1AS_HOME}/modules/jaxb-api-osgi.jar"
             includes="client/**"/>
     </target>
 
@@ -86,7 +86,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>
-    
+
     <target name="runclient">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>

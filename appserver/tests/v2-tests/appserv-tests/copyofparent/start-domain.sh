@@ -24,7 +24,7 @@ do
     then
         AS_ADMIN_USER=`echo $x |cut -d'=' -f2`
     fi
-   
+
     if [ $varval = "admin.password" ];
     then
         AS_ADMIN_PASSWORD=`echo $x |cut -d'=' -f2`

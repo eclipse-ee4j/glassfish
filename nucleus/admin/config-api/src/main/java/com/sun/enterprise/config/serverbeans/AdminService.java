@@ -43,7 +43,7 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the type property. An instance can either be of type das Domain Administration Server in SE/EE or
      * the PE instance das-and-server same as das server Any non-DAS instance in SE/EE. Not valid for PE.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "server")
@@ -59,7 +59,7 @@ public interface AdminService extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the systemJmxConnectorName property. The name of the internal jmx connector
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute

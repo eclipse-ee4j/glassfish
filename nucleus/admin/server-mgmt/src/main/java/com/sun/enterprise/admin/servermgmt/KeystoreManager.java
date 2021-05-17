@@ -182,16 +182,16 @@ public class KeystoreManager {
      final PEFileLayout layout = getFileLayout(config);
      //import the newly created certificate into the asadmin truststore
      final File asadminTruststore = AsadminTruststore.getAsadminTruststore();
-    
+
      if (!asadminTruststore.exists()) {
      newTruststore = true;
      }
-    
+
      //The keystore alias name is the repository name. We want to avoid alias
      //name conflicts since multiple domains are likely to live on the same
      //machine.
      String aliasName = layout.getRepositoryDir().getAbsolutePath();
-    
+
      //first delete the alias in case it already exists. This can happen for
      //example if a domain is created, deleted, and re-created again.
      String[] keytoolCmd = new String[] {
@@ -199,7 +199,7 @@ public class KeystoreManager {
      "-keystore", asadminTruststore.getAbsolutePath(),
      "-alias", aliasName,
      };
-    
+
      final String[] input = {AsadminTruststore.getAsadminTruststorePassword(),
      AsadminTruststore.getAsadminTruststorePassword()}; // twice in case we are creating
      KeytoolExecutor p = new KeytoolExecutor(keytoolCmd, 30, input);
@@ -208,7 +208,7 @@ public class KeystoreManager {
      } catch (RepositoryException ex) {
      //ignore all exceptions. The alias most likely does not exist.
      }
-    
+
      keytoolCmd = new String[] {
      "-import",
      "-noprompt",
@@ -216,10 +216,10 @@ public class KeystoreManager {
      "-alias", aliasName, //alias is the domain name
      "-file", certFile.getAbsolutePath(),
      };
-    
+
      p = new KeytoolExecutor(keytoolCmd, 30, input);
      p.execute("trustStoreNotCreated", asadminTruststore);
-    
+
      //If this is a newly created truststore, lock it down.
      if (newTruststore) {
      try {

@@ -50,7 +50,7 @@
               level="verbose"/>
         <mkdir dir="${src}"/>
         <javac srcdir="${src}"
-               destdir="${build.classes.dir}"                       
+               destdir="${build.classes.dir}"
                debug="on"
                failonerror="true">
              <classpath refid="pamclient.class.path"/>
@@ -98,7 +98,7 @@
             <arg value="${password}"/>
 
     </java>
-        
+
     </target>
 
     <target name="undeploy" depends="init-common">
@@ -117,7 +117,7 @@
 
     <target name="usage">
         <antcall target="undeploy-war-common"/>
-                                                     
+
     </target>
 
     <target name="restart">

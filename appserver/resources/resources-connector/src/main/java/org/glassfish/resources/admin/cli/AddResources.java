@@ -39,7 +39,7 @@ import java.util.logging.Logger;
 
 /**
  * Create add-resources Command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @ExecuteOn(RuntimeType.ALL)
@@ -48,26 +48,26 @@ import java.util.logging.Logger;
 @I18n("add.resources")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="add-resources", 
+        opType=RestEndpoint.OpType.POST,
+        path="add-resources",
         description="add-resources")
 })
 public class AddResources implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AddResources.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AddResources.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(name="xml_file_name", primary=true)
     private File xmlFile;
-    
+
     @Inject
     private Domain domain;
 
     @Inject
     private ResourceFactory resourceFactory;
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -76,15 +76,15 @@ public class AddResources implements AdminCommand {
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        
+
         // Check if the path xmlFile exists
         if (!xmlFile.exists()) {
-            report.setMessage(localStrings.getLocalString("FileNotFound", 
+            report.setMessage(localStrings.getLocalString("FileNotFound",
                 "The system cannot find the path specified: {0}", xmlFile.getName()));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
         try {
             final ArrayList results = ResourcesManager.createResources(
                     domain.getResources(), xmlFile, target, resourceFactory);
@@ -104,12 +104,12 @@ public class AddResources implements AdminCommand {
             report.setActionExitCode(
                     (isSuccess)?ActionReport.ExitCode.SUCCESS:ActionReport.ExitCode.FAILURE);
             if (!isSuccess)
-                report.setMessage(localStrings.getLocalString("add.resources.failed", 
+                report.setMessage(localStrings.getLocalString("add.resources.failed",
                                                 "add-resources <{0}> failed", xmlFile.getName()));
-                
+
         } catch (Exception ex) {
             Logger.getLogger(AddResources.class.getName()).log(Level.SEVERE, "Something went wrong in add-resources", ex);
-            report.setMessage(localStrings.getLocalString("add.resources.failed", 
+            report.setMessage(localStrings.getLocalString("add.resources.failed",
                                                 "add-resources <{0}> failed", xmlFile.getName()));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             //Need to fix, doesn't show the error from exception, though it writes in the log

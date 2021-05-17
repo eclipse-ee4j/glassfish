@@ -56,27 +56,27 @@ public class SimpleServlet extends HttpServlet {
         SimpleBMP bean = simpleBMPHome.create();
 
         if ( bean.test1() ) {
-	    System.out.println("Autocommit : test1 : PASS");
-	    out.println("TEST:PASS");
-	} else {
-	    System.out.println("Autocommit : test1 : FAIL");
+        System.out.println("Autocommit : test1 : PASS");
+        out.println("TEST:PASS");
+    } else {
+        System.out.println("Autocommit : test1 : FAIL");
             out.println("TEST:FAIL");
-	}
-	if ( bean.test2() ) {
-	    System.out.println("Autocommit : test2 : PASS");
-	    out.println("TEST:PASS");
-	} else {
-	    System.out.println("Autocommit : test2 : FAIL");
+    }
+    if ( bean.test2() ) {
+        System.out.println("Autocommit : test2 : PASS");
+        out.println("TEST:PASS");
+    } else {
+        System.out.println("Autocommit : test2 : FAIL");
             out.println("TEST:FAIL");
-	}
+    }
 
-	} catch(NamingException ne) {
-	    ne.printStackTrace();
-	} catch(CreateException e) {
-	    e.printStackTrace();
+    } catch(NamingException ne) {
+        ne.printStackTrace();
+    } catch(CreateException e) {
+        e.printStackTrace();
         } finally {
-	    out.println("END_OF_TEST");
-	    out.flush();
-	}
+        out.println("END_OF_TEST");
+        out.flush();
+    }
     }
 }

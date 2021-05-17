@@ -35,7 +35,7 @@ import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
 import org.glassfish.admin.amx.util.ExceptionUtil;
 
-/** 
+/**
 Basic AMXProxy tests that verify connectivity and ability to
 traverse the AMXProxy hierarchy and fetch all attributes.
  */
@@ -88,7 +88,7 @@ public final class AMXCoreTests extends AMXTestBase
                     {
                         warning( "MBean valid()=false during testing, ignoring: " + amx.objectName() );
                     }
-                    
+
                     throw e;
                 }
             }
@@ -99,7 +99,7 @@ public final class AMXCoreTests extends AMXTestBase
            t.printStackTrace();
         }
     }
-    
+
     /** IF THIS TEST FAILS, DO NOT REMOVE, just comment it out if the need mandates, but only temporarily */
     @Test
     public void testAMXComplianceMonitorFailureCount()
@@ -107,7 +107,7 @@ public final class AMXCoreTests extends AMXTestBase
         try
         {
         final Map<ObjectName, List<String>> failures = getDomainRootProxy().getComplianceFailures();
-        
+
         assert failures.size() == 0 :
             "Server indicates that there are non-compliant AMX MBean validator failures, failure count = " + failures.size() + "\n" + failures;
         }
@@ -117,7 +117,7 @@ public final class AMXCoreTests extends AMXTestBase
             t.printStackTrace();
         }
      }
-     
+
     @Test
     public void testDemo()
     {

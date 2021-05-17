@@ -38,7 +38,7 @@
       <delete file="${sun-cmp-mappings.xml}"/>
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -46,39 +46,39 @@
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-	<antcall target="compile-common">
+    <antcall target="compile-common">
             <param name="src" value="servlet"/>
         </antcall>
     </target>
 
     <target name="package-team-jar" >
 
-         <antcall target="package-ejbjar-common"> 
-   
+         <antcall target="package-ejbjar-common">
+
             <param name="dbschema" value="${basedir}/ejb/team/RosterSchema.dbschema" />
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="team/Local*.class, team/League*.class, team/Player*.class, team/Team*.class, util/*.class, RosterSchema.dbschema" />
 
           <param name="ejb-jar.xml" value="${ejb-jar-team.xml}" />
           <param name="sun-ejb-jar.xml" value="${sun-ejb-jar-team.xml}" />
           <param name="ejbjar.files" value="${build.classes.dir}" />
           <param name="ejb.jar" value="${assemble.dir}/team-ejb.jar" />
-  
+
         </antcall>
     </target>
 
     <target name="package-roster-jar" >
 
-         <antcall target="package-ejbjar-common"> 
-   
-            <param name="ejbjar.classes" 
+         <antcall target="package-ejbjar-common">
+
+            <param name="ejbjar.classes"
               value="team/Local*.class, team/League.class, team/LeagueHome.class, team/Player.class, team/PlayerHome.class, team/Team.class, team/TeamHome.class,,util/*.class,roster/*.class" />
 
           <param name="ejb-jar.xml" value="${ejb-jar-roster.xml}" />
           <param name="sun-ejb-jar.xml" value="${sun-ejb-jar-roster.xml}" />
           <param name="ejbjar.files" value="${build.classes.dir}" />
           <param name="ejb.jar" value="${assemble.dir}/roster-ejb.jar" />
-  
+
         </antcall>
     </target>
 
@@ -86,17 +86,17 @@
 
          <antcall target="webclient-war-common">
             <param name="hasWebclient" value="true"/>
-	    <param name="war.classes"
+        <param name="war.classes"
               value="**/RosterServlet.class" />
-	</antcall>
- 
+    </antcall>
+
     </target>
 
     <target name="package-appclient" >
       <mkdir dir="${assemble.dir}"/>
 
          <antcall target="package-appclientjar-common">
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/RosterClient.class, **/Roster.class, **/RosterHome.class, util/*.class" />
             <param name="application-client.xml"
                 value="${application-client.xml}" />
@@ -117,15 +117,15 @@
 
       <property name="TEMPDIR" value="${assemble.dir}/TEMPDIR" />
 
-	<copy file="${basedir}/descriptor/INDEX.LIST" todir="${TEMPDIR}/META-INF" failonerror="false"/>
+    <copy file="${basedir}/descriptor/INDEX.LIST" todir="${TEMPDIR}/META-INF" failonerror="false"/>
 
       <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
-	<fileset dir="${assemble.dir}">
-	  <include name="*.jar"/>
-	  <include name="*.war"/>
-	</fileset>
+    <fileset dir="${assemble.dir}">
+      <include name="*.jar"/>
+      <include name="*.war"/>
+    </fileset>
 
-	<fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
+    <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
       </ear>
     </target>
 
@@ -141,16 +141,16 @@
         <antcall target="package-ear" />
 
 
-    </target> 
+    </target>
 
 
-    
-    <target name="deploy" 
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common">
-		<param name="extra-params"
-	      value="--uniquetablenames=true --dropandcreatetables=true"/>
-	</antcall>
+        <param name="extra-params"
+          value="--uniquetablenames=true --dropandcreatetables=true"/>
+    </antcall>
     </target>
 
    <target name="create-resources" depends="init-common">
@@ -164,19 +164,19 @@
           <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
         </antcall>
     </target>
- 
+
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant all
         </echo>
     </target>

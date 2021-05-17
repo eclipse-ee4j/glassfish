@@ -38,7 +38,7 @@ import org.glassfish.hk2.classmodel.reflect.Types;
  * @author Jerome Dochez
  */
 public class DirectoryScanner extends JavaEEScanner implements Scanner {
-    
+
     File directory;
     Set<String> entries = new HashSet<String>();
     ClassLoader classLoader = null;
@@ -50,15 +50,15 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
         this.directory = directory;
         this.classLoader = classLoader;
         init(directory);
-    }       
-    
+    }
+
     private void init(File directory) throws java.io.IOException {
         init(directory, directory);
         initTypes(directory);
-    } 
-    
+    }
+
     private void init(File top, File directory) throws java.io.IOException {
-        
+
         File[] dirFiles = directory.listFiles(new FileFilter() {
                 public boolean accept(File pathname) {
                     return pathname.getAbsolutePath().endsWith(".class");
@@ -69,7 +69,7 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
                 entries.add(file.getPath().substring(top.getPath().length() + 1));
             }
         }
-        
+
         File[] subDirs = directory.listFiles(new FileFilter() {
                 public boolean accept(File pathname) {
                     return pathname.isDirectory();
@@ -81,7 +81,7 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
             }
         }
     }
-    
+
     protected Set<String> getEntries() {
         return entries;
     }
@@ -106,21 +106,21 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
     }
 
     public Set<Class> getElements() {
-        
-        
+
+
         Set<Class> elements = new HashSet<Class>();
         if (getClassLoader()==null) {
             AnnotationUtils.getLogger().severe("Class loader null");
             return elements;
-        }        
+        }
         for (String fileName : entries) {
             // convert to a class name...
             String className = fileName.replace(File.separatorChar, '.');
             className = className.substring(0, className.length()-6);
             System.out.println("Getting " + className);
-            try {                
+            try {
                 elements.add(classLoader.loadClass(className));
-                
+
             } catch(Throwable cnfe) {
                 AnnotationUtils.getLogger().severe("cannot load " + className + " reason : " + cnfe.getMessage());
             }

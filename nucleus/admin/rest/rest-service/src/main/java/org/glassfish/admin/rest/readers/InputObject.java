@@ -70,7 +70,7 @@ public abstract class InputObject extends ProviderUtil {
 
     /**
      * Get the double value associated with a key.
-     * 
+     *
      * @param key A key string.
      * @return The numeric value.
      * @throws InputException if the key is not found or if the value is not a Number object and cannot be converted to a
@@ -111,7 +111,7 @@ public abstract class InputObject extends ProviderUtil {
 
     /**
      * Get value associated with a key.
-     * 
+     *
      * @param key A key string.
      * @return An object which is the value, or null if there is no value.
      */
@@ -132,7 +132,7 @@ public abstract class InputObject extends ProviderUtil {
 
     /**
      * Determine if the InputObject contains a specific key.
-     * 
+     *
      * @param key A key string.
      * @return true if the key exists in the InputObject.
      */
@@ -142,7 +142,7 @@ public abstract class InputObject extends ProviderUtil {
 
     /**
      * Determine if the value associated with the key is null or if there is no value.
-     * 
+     *
      * @param key A key string.
      * @return true if there is no value associated with the key or if the value is null.
      */
@@ -184,7 +184,7 @@ public abstract class InputObject extends ProviderUtil {
 
     /**
      * Try to convert a string into a number, boolean, or null. If the string can't be converted, return the string.
-     * 
+     *
      * @param s A String.
      * @return A simple JSON value.
      */
@@ -249,7 +249,7 @@ public abstract class InputObject extends ProviderUtil {
      * Put a key/value pair in this object, but only if the key and the value are both non-null, and only if there is not
      * already a member with that name. If the value is null, then the key will be removed from this object if it is
      * present.
-     * 
+     *
      * @param key
      * @param value. It should be of one of these types: Boolean, Double, Integer, Long, String, or null.
      * @return this.
@@ -284,7 +284,7 @@ public abstract class InputObject extends ProviderUtil {
 
     /**
      * Throw an exception if the object is an NaN or infinite number.
-     * 
+     *
      * @param o The object to verify.
      * @throws InputException If o is a non-finite number.
      */

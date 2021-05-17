@@ -30,8 +30,8 @@ import org.glassfish.deployment.common.Descriptor;
 
 public interface DDGenerator {
 
-	public void setApplicationDirectory(String applicationDirectory);
-	public void setDescriptor(Descriptor descriptor);
-	public void generate();
+    public void setApplicationDirectory(String applicationDirectory);
+    public void setDescriptor(Descriptor descriptor);
+    public void generate();
 
 }

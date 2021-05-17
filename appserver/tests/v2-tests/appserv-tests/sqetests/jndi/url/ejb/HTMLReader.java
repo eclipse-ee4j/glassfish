@@ -20,8 +20,8 @@ import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface HTMLReader extends EJBObject {
- 
-   public StringBuffer getContents() 
+
+   public StringBuffer getContents()
       throws RemoteException, HTTPResponseException;
 
 }

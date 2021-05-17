@@ -24,7 +24,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -53,23 +53,23 @@ public class SecurityTest extends BaseSeleniumTestClass {
             }
             sleep(1000);
             int beforeCount = getTableRowCount("propertyForm:basicTable");
-            
+
             gotoDasPage();
             clickAndWait("treeForm:tree:configurations:"+  configName +":security:security_link");
-            
+
             if (!driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:securityManagerProp:sun_checkbox380")).isSelected()){
                 clickByIdAction("propertyForm:propertySheet:propertSectionTextField:securityManagerProp:sun_checkbox380");
             }
             clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
             assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-            
+
             gotoDasPage();
             clickAndWait("treeForm:tree:configurations:"+  configName +":jvmSettings:jvmSettings_link");
             clickAndWait("propertyForm:javaConfigTab:jvmOptions");
             sleep(1000);
             int afterCount = getTableRowCount("propertyForm:basicTable");
             assertEquals(afterCount, beforeCount+1);
-            
+
 //            //delete security attribute if needed
 //            emptyCount = getTableRowCountByValue("propertyForm:basicTable", "-Djava.security.manager", "col3:col1St", false);
 //            if (emptyCount != 0 ){
@@ -92,7 +92,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
         createConfig("new-config");
         for (String configName : list) {
             createRealm(configName, realmName, contextName);
-            
+
             //delete the related realm
             String clickId = getTableRowByValue("propertyForm:realmsTable", realmName, "col1")+"col0:select";
             clickByIdAction(clickId);
@@ -111,7 +111,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
         createConfig("new-config");
         for (String configName : list) {
             addUserToRealm(configName, "file", userId, password);
-            
+
             //delete the added User for File Realm
             String clickId = getTableRowByValue("propertyForm:users", userId, "col1")+"col0:select";
             clickByIdAction(clickId);
@@ -144,7 +144,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
             setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
 
             clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", auditModuleName, "col1");
             assertEquals(auditModuleName, getText(prefix + "col1:link"));
 
@@ -188,7 +188,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
             setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", propDescription);
 
             clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", providerName, "col1");
             assertEquals(providerName, getText(prefix + "col1:link"));
 
@@ -234,7 +234,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
             setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
 
             clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", providerName, "col1");
             assertEquals(providerName, getText(prefix + "col1:authlayer"));
 
@@ -243,9 +243,9 @@ public class SecurityTest extends BaseSeleniumTestClass {
 
             assertEquals(className, getValue("propertyForm:propertySheet:providerConfSection:ClassNameProp:ClassName", "value"));
             assertTableRowCount("propertyForm:basicTable", count);
-            
+
             clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
-            
+
             //delete security attribute if needed
             int emptyCount = getTableRowCountByValue("propertyForm:configs", providerName, "col1:authlayer", true);
             if (emptyCount != 0 ){
@@ -320,9 +320,9 @@ public class SecurityTest extends BaseSeleniumTestClass {
 //            selenium.click("form:propertyContentPage:topButtons:disableSecureAdminButton");
 //            closeAlertAndGetItsText();
 //            sleep(10000);
-//        } 
+//        }
 //    }
-    
+
 //    //Need to be finished in the future
 //    @Test
 //    public void testRedirectAfterLogin() {
@@ -355,7 +355,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
             clickAndWait("propertyForm:configs:topActionsGroup1:newButton");
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:NameProp:Name", configName);
             clickAndWait("propertyForm:propertyContentPage:topButtons:okButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", configName, "col1");
             assertEquals(configName, getText(prefix + "col1:link"));
         }
@@ -366,7 +366,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:configurations:configurations_link");
         deleteRow("propertyForm:configs:topActionsGroup1:button1", "propertyForm:configs", configName);
     }
-    
+
     public void createRealm(String configName, String realmName, String contextName) {
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:" + configName + ":security:realms:realms_link");
@@ -377,16 +377,16 @@ public class SecurityTest extends BaseSeleniumTestClass {
         setFieldValue("form1:fileSection:jaax:jaax", contextName);
         setFieldValue("form1:fileSection:keyFile:keyFile", "${com.sun.aas.instanceRoot}/config/testfile");
         clickAndWait("form1:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:realmsTable", realmName, "col1");
         assertEquals(realmName, getText(prefix + "col1:link"));
-            
+
     }
 
     public void addUserToRealm(String configName, String realmName, String userName, String password) {
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:" + configName + ":security:realms:realms_link");
-        
+
         String prefix = getTableRowByValue("propertyForm:realmsTable", realmName, "col1");
         assertEquals(realmName, getText(prefix + "col1:link"));
 
@@ -400,7 +400,7 @@ public class SecurityTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:newPasswordProp:NewPassword", password);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:confirmPasswordProp:ConfirmPassword", password);
         clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         String prefix1 = getTableRowByValue("propertyForm:users", userName, "col1");
         assertEquals(userName, getText(prefix1 + "col1:link"));
 
@@ -408,13 +408,13 @@ public class SecurityTest extends BaseSeleniumTestClass {
 
     public void deleteUserFromRealm(String configName, String realmName, String userName) {
         clickAndWait("treeForm:tree:configurations:" + configName + ":security:realms:realms_link");
-        
+
         String prefix = getTableRowByValue("propertyForm:realmsTable", realmName, "col1");
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
 
         clickAndWait("form1:propertyContentPage:manageUsersButton");
-        
+
       //delete security attribute if needed
       int emptyCount = getTableRowCountByValue("propertyForm:users", userName, "col1:link", true);
       if (emptyCount != 0 ){

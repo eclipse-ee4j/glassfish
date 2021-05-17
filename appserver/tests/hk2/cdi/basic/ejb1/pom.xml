@@ -30,7 +30,7 @@
     <artifactId>ejb1</artifactId>
 
     <name>HK2 CDI Basic Test EJB1</name>
-    
+
     <build>
       <plugins>
           <plugin>

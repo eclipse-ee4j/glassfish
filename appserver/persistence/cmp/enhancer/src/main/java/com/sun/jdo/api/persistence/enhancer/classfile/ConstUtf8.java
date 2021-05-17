@@ -25,7 +25,7 @@ import java.io.*;
 public class ConstUtf8 extends ConstBasic {
   /* The tag associated with ConstClass entries */
   public static final int MyTag = CONSTANTUtf8;
- 
+
   /* The unicode string of interest */
   private String stringValue;
 

@@ -25,5 +25,5 @@ public interface Hello {
 
         @WebMethod
         @Oneway
-	public void sayHello(String who);
+    public void sayHello(String who);
 }

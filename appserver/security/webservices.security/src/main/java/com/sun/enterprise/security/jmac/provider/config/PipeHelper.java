@@ -84,7 +84,7 @@ public class PipeHelper extends ConfigHelper {
     private  AppServerAuditManager auditManager = null;
             //AuditManagerFactory.getAuditManagerInstance();
 
-    protected static final LocalStringManagerImpl localStrings = 
+    protected static final LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(PipeConstants.class);
 
     private boolean isEjbEndpoint;
@@ -96,8 +96,8 @@ public class PipeHelper extends ConfigHelper {
     public PipeHelper(String layer, Map map, CallbackHandler cbh) {
         init(layer, getAppCtxt(map), map, cbh);
 
-	this.isEjbEndpoint = processSunDeploymentDescriptor();
-	this.seiModel = (SEIModel) map.get(PipeConstants.SEI_MODEL);
+    this.isEjbEndpoint = processSunDeploymentDescriptor();
+    this.seiModel = (SEIModel) map.get(PipeConstants.SEI_MODEL);
         WSBinding binding = (WSBinding)map.get(PipeConstants.BINDING);
         if (binding == null) {
             WSEndpoint endPoint = (WSEndpoint)map.get(PipeConstants.ENDPOINT);
@@ -119,29 +119,29 @@ public class PipeHelper extends ConfigHelper {
     @Override
     public ClientAuthContext getClientAuthContext(MessageInfo info, Subject s)
             throws AuthException {
-	ClientAuthConfig c = (ClientAuthConfig)getAuthConfig(false);
-	if (c != null) {
+    ClientAuthConfig c = (ClientAuthConfig)getAuthConfig(false);
+    if (c != null) {
             addModel(info, map);
-	    return c.getAuthContext(c.getAuthContextID(info),s,map);
-	}
-	return null;
+        return c.getAuthContext(c.getAuthContextID(info),s,map);
+    }
+    return null;
     }
 
     @Override
-    public ServerAuthContext getServerAuthContext(MessageInfo info, Subject s) 
+    public ServerAuthContext getServerAuthContext(MessageInfo info, Subject s)
     throws AuthException {
-	ServerAuthConfig c = (ServerAuthConfig)getAuthConfig(true);
-	if (c != null) {
+    ServerAuthConfig c = (ServerAuthConfig)getAuthConfig(true);
+    if (c != null) {
             addModel(info, map);
             addPolicy(info,map);
-	    return c.getAuthContext(c.getAuthContextID(info),s,map);
-	}
-	return null;
+        return c.getAuthContext(c.getAuthContextID(info),s,map);
+    }
+    return null;
     }
 
     public static Subject getClientSubject() {
 
-	Subject s = null;
+    Subject s = null;
 
         if ((SecurityServicesUtil.getInstance() == null) || SecurityServicesUtil.getInstance().isACC()) {
             ClientSecurityContext sc = ClientSecurityContext.getCurrent();
@@ -161,42 +161,42 @@ public class PipeHelper extends ConfigHelper {
             }
         }
 
-	if (s == null) {
-	    s = new Subject();
-	}
-
-	return s;
+    if (s == null) {
+        s = new Subject();
     }
 
-    public void getSessionToken(Map m, 
-				MessageInfo info, 
-				Subject s) throws AuthException {
-	ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);    
-	if (c != null) {
-	    m.putAll(map);
+    return s;
+    }
+
+    public void getSessionToken(Map m,
+                MessageInfo info,
+                Subject s) throws AuthException {
+    ClientAuthConfig c = (ClientAuthConfig) getAuthConfig(false);
+    if (c != null) {
+        m.putAll(map);
             addModel(info, map);
-	    c.getAuthContext(c.getAuthContextID(info),s,m);
-	}
+        c.getAuthContext(c.getAuthContextID(info),s,m);
+    }
     }
 
     public void authorize(Packet request) throws Exception {
 
-	// SecurityContext constructor should set initiator to
-	// unathenticated if Subject is null or empty
-	Subject s = (Subject) request.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
+    // SecurityContext constructor should set initiator to
+    // unathenticated if Subject is null or empty
+    Subject s = (Subject) request.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
 
         if (s == null || (s.getPrincipals().isEmpty() && s.getPublicCredentials().isEmpty())) {
             SecurityContext.setUnauthenticatedContext();
         } else {
-	    SecurityContext sC = new SecurityContext(s);
+        SecurityContext sC = new SecurityContext(s);
             SecurityContext.setCurrent(sC);
         }
 
-	// we should try to replace this endpoint specific
-	// authorization check with a generic web service message check
-	// and move the endpoint specific check down stream
-        
-	if (isEjbEndpoint) {
+    // we should try to replace this endpoint specific
+    // authorization check with a generic web service message check
+    // and move the endpoint specific check down stream
+
+    if (isEjbEndpoint) {
             if (invManager == null){
                 throw new RuntimeException(localStrings.getLocalString("enterprise.webservice.noEjbInvocationManager",
                         "Cannot validate request : invocation manager null for EJB WebService"));
@@ -266,18 +266,18 @@ public class PipeHelper extends ConfigHelper {
             }
         }
     }
-	
+
     public void auditInvocation(Packet request, AuthStatus status) {
 
-	if (auditManager.isAuditOn()) {
-	    String uri = null;
-	    if (!isEjbEndpoint && request != null &&
+    if (auditManager.isAuditOn()) {
+        String uri = null;
+        if (!isEjbEndpoint && request != null &&
                     request.supports(MessageContext.SERVLET_REQUEST)) {
                 HttpServletRequest httpServletRequest =
                     (HttpServletRequest)request.get(
                     MessageContext.SERVLET_REQUEST);
                 uri = httpServletRequest.getRequestURI();
-	    } 
+        }
             String endpointName = null;
             if (map != null) {
                 WebServiceEndpoint endpoint = (WebServiceEndpoint)
@@ -289,81 +289,81 @@ public class PipeHelper extends ConfigHelper {
             if (endpointName == null) {
                 endpointName = "(no endpoint)";
             }
-            
+
             if (isEjbEndpoint) {
                 auditManager.ejbAsWebServiceInvocation(
                     endpointName, AuthStatus.SUCCESS.equals(status));
             } else {
                 auditManager.webServiceInvocation(
-                    ((uri==null) ? "(no uri)" : uri), 
+                    ((uri==null) ? "(no uri)" : uri),
                     endpointName, AuthStatus.SUCCESS.equals(status));
             }
-	}
+    }
     }
 
-    public Object getModelName() { 
- 	WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
- 	return (wsdlModel == null ? "unknown" : wsdlModel.getName());
+    public Object getModelName() {
+     WSDLPort wsdlModel = (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
+     return (wsdlModel == null ? "unknown" : wsdlModel.getName());
     }
 
     @Deprecated // should be unused, but left for compilation
     public void  addModelAndPolicy(Packet request) {
     }
-  
+
     // always returns response with embedded fault
     //public static Packet makeFaultResponse(Packet response, Throwable t) {
     public Packet makeFaultResponse(Packet response, Throwable t) {
-	// wrap throwable in WebServiceException, if necessary
-	if (!(t instanceof WebServiceException)) {
-	    t = (Throwable) new WebServiceException(t);
-	}
- 	if (response == null) {
- 	    response = new Packet();
-  	} 
-	// try to create fault in provided response packet, if an exception
-	// is thrown, create new packet, and create fault in it.
-	try {
-	    return response.createResponse(Messages.create(t, this.soapVersion));
-	} catch (Exception e) {
-	    response = new Packet();
-	}
- 	return response.createResponse(Messages.create(t, this.soapVersion));
+    // wrap throwable in WebServiceException, if necessary
+    if (!(t instanceof WebServiceException)) {
+        t = (Throwable) new WebServiceException(t);
     }
-    
-    public boolean isTwoWay(boolean twoWayIsDefault, Packet request) { 
- 	boolean twoWay = twoWayIsDefault;
- 	Message m = request.getMessage();
- 	if (m != null) {
-	    WSDLPort wsdlModel =
-		(WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
-	    if (wsdlModel != null) {
-		twoWay = (m.isOneWay(wsdlModel) ? false : true);
-	    }
-	}
- 	return twoWay;
+     if (response == null) {
+         response = new Packet();
+      }
+    // try to create fault in provided response packet, if an exception
+    // is thrown, create new packet, and create fault in it.
+    try {
+        return response.createResponse(Messages.create(t, this.soapVersion));
+    } catch (Exception e) {
+        response = new Packet();
     }
- 
+     return response.createResponse(Messages.create(t, this.soapVersion));
+    }
+
+    public boolean isTwoWay(boolean twoWayIsDefault, Packet request) {
+     boolean twoWay = twoWayIsDefault;
+     Message m = request.getMessage();
+     if (m != null) {
+        WSDLPort wsdlModel =
+        (WSDLPort) getProperty(PipeConstants.WSDL_MODEL);
+        if (wsdlModel != null) {
+        twoWay = (m.isOneWay(wsdlModel) ? false : true);
+        }
+    }
+     return twoWay;
+    }
+
     // returns empty response if request is determined to be one-way
-    public Packet getFaultResponse(Packet request, Packet response, 
-	Throwable t) {
-	boolean twoWay = true;
-	try {
-	    twoWay = isTwoWay(true,request);
-	} catch (Exception e) {
-	    // exception is consumed, and twoWay is assumed
- 	} 
-	if (twoWay) {
-	    return makeFaultResponse(response,t);
- 	} else {
-	    return new Packet();
-	}
+    public Packet getFaultResponse(Packet request, Packet response,
+    Throwable t) {
+    boolean twoWay = true;
+    try {
+        twoWay = isTwoWay(true,request);
+    } catch (Exception e) {
+        // exception is consumed, and twoWay is assumed
+     }
+    if (twoWay) {
+        return makeFaultResponse(response,t);
+     } else {
+        return new Packet();
     }
- 
+    }
+
     @Override
     public void disable() {
-	listenerWrapper.disableWithRefCount();
+    listenerWrapper.disableWithRefCount();
     }
-    
+
     @Override
     protected HandlerContext getHandlerContext(Map map) {
         String realmName = null;
@@ -390,41 +390,41 @@ public class PipeHelper extends ConfigHelper {
 
     private boolean processSunDeploymentDescriptor() {
 
-	if (factory == null) {
-	    return false;
-	}
+    if (factory == null) {
+        return false;
+    }
 
-	MessageSecurityBindingDescriptor binding =
-	    AuthMessagePolicy.getMessageSecurityBinding
-	    (PipeConstants.SOAP_LAYER,map);
+    MessageSecurityBindingDescriptor binding =
+        AuthMessagePolicy.getMessageSecurityBinding
+        (PipeConstants.SOAP_LAYER,map);
 
-	if (binding != null) {
-	    if (!hasExactMatchAuthProvider()) {
-		String jmacProviderRegisID = factory.registerConfigProvider(
+    if (binding != null) {
+        if (!hasExactMatchAuthProvider()) {
+        String jmacProviderRegisID = factory.registerConfigProvider(
                     new GFServerConfigProvider(null, null),
                     layer, appCtxt,
                     "GF AuthConfigProvider bound by Sun Specific Descriptor");
                 this.setJmacProviderRegisID(jmacProviderRegisID);
-	    }
-	}
+        }
+    }
 
-	WebServiceEndpoint e = (WebServiceEndpoint)
-	    map.get(PipeConstants.SERVICE_ENDPOINT);
+    WebServiceEndpoint e = (WebServiceEndpoint)
+        map.get(PipeConstants.SERVICE_ENDPOINT);
 
-	return (e == null ? false : e.implementedByEjbComponent());
+    return (e == null ? false : e.implementedByEjbComponent());
     }
 
     private static String getAppCtxt(Map map) {
 
         String rvalue;
-        WebServiceEndpoint wse = 
+        WebServiceEndpoint wse =
             (WebServiceEndpoint) map.get(PipeConstants.SERVICE_ENDPOINT);
         // endpoint
         if (wse != null) {
             rvalue = getServerName(wse) + " " + getEndpointURI(wse);
         // client reference
         } else {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor) 
+            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor)
                 map.get(PipeConstants.SERVICE_REF);
 
             rvalue = getClientModuleID(srd) + " " + getRefName(srd,map);
@@ -434,7 +434,7 @@ public class PipeHelper extends ConfigHelper {
 
     private static String getServerName(WebServiceEndpoint wse) {
         //XXX FIX ME: need to lookup real hostname
-        String hostname = "localhost"; 
+        String hostname = "localhost";
         return hostname;
     }
 
@@ -445,7 +445,7 @@ public class PipeHelper extends ConfigHelper {
             name = srd.getName();
         }
         if (name == null) {
-            EndpointAddress ea = 
+            EndpointAddress ea =
                 (EndpointAddress) map.get(PipeConstants.ENDPOINT_ADDRESS);
             if (ea != null) {
                 URL url = ea.getURL();
@@ -505,11 +505,11 @@ public class PipeHelper extends ConfigHelper {
                     rvalue = a.getRegistrationName();
                 } else if (md != null) {
                     rvalue = FileUtils.makeFriendlyFilename(md.getArchiveUri());
-                } 
+                }
             } else if (md != null) {
                 rvalue = FileUtils.makeFriendlyFilename(md.getArchiveUri());
             }
-        } 
+        }
 
         return rvalue;
     }
@@ -528,9 +528,9 @@ public class PipeHelper extends ConfigHelper {
         }
     }
 
-    private String ejbName() { 
-	WebServiceEndpoint wSE = (WebServiceEndpoint) 
-	    getProperty(PipeConstants.SERVICE_ENDPOINT);
-	return (wSE == null ? "unknown" : wSE.getEjbComponentImpl().getName());
+    private String ejbName() {
+    WebServiceEndpoint wSE = (WebServiceEndpoint)
+        getProperty(PipeConstants.SERVICE_ENDPOINT);
+    return (wSE == null ? "unknown" : wSE.getEjbComponentImpl().getName());
     }
 }

@@ -65,7 +65,7 @@ public class StlesNonTimeoutEJB implements StlesNonTimeout {
                 errors.add(info);
             }
         }
-        
+
         if (ts.size() != expected_infos.size()) {
             printTimerInfos(ts);
             throw new EJBException("timerSvc.getAllTimers().size() = "

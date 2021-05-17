@@ -110,7 +110,7 @@ public interface GlassFish {
 
     /**
      * Get the current status of GlassFish.
-     * 
+     *
      * @return Status of GlassFish
      */
     Status getStatus() throws GlassFishException;

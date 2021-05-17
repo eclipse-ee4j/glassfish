@@ -35,7 +35,7 @@ import java.util.Arrays;
 /**
  * Test Servlet that prints out the name of the authenticated caller and whether
  * this caller is in any of the roles {foo, bar, kaz}
- * 
+ *
  *
  */
 @DeclareRoles({ "foo", "bar", "kaz" })
@@ -43,7 +43,7 @@ import java.util.Arrays;
 public class Servlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Inject
     private SecurityContext securityContext;
 
@@ -78,21 +78,21 @@ public class Servlet extends HttpServlet {
         response.getWriter().write("web user has role \"foo\": " + request.isUserInRole("foo") + "\n");
         response.getWriter().write("web user has role \"bar\": " + request.isUserInRole("bar") + "\n");
         response.getWriter().write("web user has role \"kaz\": " + request.isUserInRole("kaz") + "\n");
-        
+
         String contextName = null;
         if (securityContext.getCallerPrincipal() != null) {
             contextName = securityContext.getCallerPrincipal().getName();
         }
-        
+
         response.getWriter().write("context username: " + contextName + "\n");
 
-        
+
         response.getWriter().write("context user has role \"foo\": " + securityContext.isCallerInRole("foo") + "\n");
         response.getWriter().write("context user has role \"bar\": " + securityContext.isCallerInRole("bar") + "\n");
         response.getWriter().write("context user has role \"kaz\": " + securityContext.isCallerInRole("kaz") + "\n");
-        
+
         response.getWriter().write("has access " + securityContext.hasAccessToWebResource("/protectedServlet") + "\n");
-        
+
         response.getWriter().write("All declared roles of user " + ((SecurityContextImpl)securityContext).getAllDeclaredCallerRoles() + "\n");
         String invListStr = (String)request.getAttribute("methodInvList");
         response.getWriter().write("OrderingList: " + invListStr);

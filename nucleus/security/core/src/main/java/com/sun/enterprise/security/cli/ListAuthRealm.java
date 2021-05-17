@@ -46,8 +46,8 @@ import org.glassfish.config.support.TargetType;
 
 /**
  * List Auth Realms Command
- * Usage: list-auth-realms [--terse=false] [--echo=false] [--interactive=true] 
- *        [--host localhost] [--port 4848|4849] [--secure | -s] 
+ * Usage: list-auth-realms [--terse=false] [--echo=false] [--interactive=true]
+ *        [--host localhost] [--port 4848|4849] [--secure | -s]
  *        [--user admin_user] [--passwordfile file_name] [target(Default server)]
  *
  * @author Nandini Ektare
@@ -62,14 +62,14 @@ import org.glassfish.config.support.TargetType;
 CommandTarget.CLUSTER, CommandTarget.CONFIG,CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-auth-realms", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-auth-realms",
         description="List Auth Realms")
 })
 public class ListAuthRealm implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(ListAuthRealm.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(ListAuthRealm.class);
 
     @Param(name = "target", primary=true, optional = true, defaultValue =
     SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
@@ -85,7 +85,7 @@ public class ListAuthRealm implements AdminCommand, AdminCommandSecurity.Preauth
 
     @AccessRequired.To("read")
     private SecurityService securityService;
-            
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         config = CLIUtil.chooseConfig(domain, target, context.getActionReport());
@@ -96,7 +96,7 @@ public class ListAuthRealm implements AdminCommand, AdminCommandSecurity.Preauth
         return true;
     }
 
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -104,7 +104,7 @@ public class ListAuthRealm implements AdminCommand, AdminCommandSecurity.Preauth
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
 //        Enumeration realms = Realm.getRealmNames();

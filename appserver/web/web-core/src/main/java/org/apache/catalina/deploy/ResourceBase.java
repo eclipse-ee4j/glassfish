@@ -98,7 +98,7 @@ public class ResourceBase implements Serializable {
         properties.put(name, value);
     }
 
-    /** 
+    /**
      * remove a configured property.
      */
     public void removeProperty(String name) {
@@ -111,8 +111,8 @@ public class ResourceBase implements Serializable {
     public Iterator<String> listProperties() {
         return properties.keySet().iterator();
     }
-    
-    
+
+
     // -------------------------------------------------------- Package Methods
 
 

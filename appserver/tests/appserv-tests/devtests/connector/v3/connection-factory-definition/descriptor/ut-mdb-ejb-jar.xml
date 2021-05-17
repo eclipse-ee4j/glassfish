@@ -18,8 +18,8 @@
 -->
 
 <ejb-jar xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         metadata-complete="false" version="3.2" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         metadata-complete="false" version="3.2"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd">
   <module-name>connection-factory-definition-ejb</module-name>
   <enterprise-beans>
@@ -42,7 +42,7 @@
           <value>foo</value>
         </property>
       </connection-factory>
-      
+
       <connection-factory>
         <description>module-scope resource defined in EJB DD</description>
         <name>java:module/env/MDB_ConnectionFactory</name>
@@ -56,7 +56,7 @@
           <value>foo</value>
         </property>
       </connection-factory>
-      
+
       <connection-factory>
         <description>component-scope resource defined in EJB DD</description>
         <name>java:comp/env/MDB_ConnectionFactory</name>
@@ -67,8 +67,8 @@
           <value>foo</value>
         </property>
       </connection-factory>
-      
+
     </message-driven>
   </enterprise-beans>
-  
+
 </ejb-jar>

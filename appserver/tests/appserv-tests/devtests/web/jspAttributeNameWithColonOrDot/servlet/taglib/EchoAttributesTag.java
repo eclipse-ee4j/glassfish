@@ -25,9 +25,9 @@ import jakarta.servlet.jsp.tagext.TagSupport;
 import jakarta.servlet.jsp.tagext.DynamicAttributes;
 
 /**
- * SimpleTag handler that echoes all its attributes 
+ * SimpleTag handler that echoes all its attributes
  */
-public class EchoAttributesTag 
+public class EchoAttributesTag
     extends TagSupport
     implements DynamicAttributes
 {
@@ -50,16 +50,16 @@ public class EchoAttributesTag
                     out.print(",");
                 }
             }
-	} catch (IOException ioe) {
-	    throw new JspException(ioe.toString(), ioe);
-	}
-      
+    } catch (IOException ioe) {
+        throw new JspException(ioe.toString(), ioe);
+    }
+
 
         return EVAL_PAGE;
     }
 
     public void setDynamicAttribute(String uri, String localName,
-                                    Object value) 
+                                    Object value)
             throws JspException
     {
         keys.add(localName);

@@ -34,16 +34,16 @@ public class WSDLConfig {
      * @param wsdl    the WSDL file location
      * @param pkg     the package name where the SEI and its implementations are present
      */
-    
+
     public WSDLConfig(String wsName, String wsdl, String pkg) {
         this.webServiceName = wsName;
         this.wsdlLocation = wsdl;
         this.packageName = pkg;
     }
-    
+
     public String getWebServiceName() { return this.webServiceName; }
-    
+
     public String getWsdlLocation() { return this.wsdlLocation; }
-    
+
     public String getPackageName() { return this.packageName; }
 }

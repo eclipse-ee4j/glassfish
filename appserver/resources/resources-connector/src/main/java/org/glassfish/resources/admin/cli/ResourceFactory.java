@@ -29,7 +29,7 @@ import jakarta.inject.Provider;
 /**
  *
  * @author PRASHANTH ABBAGANI
- * 
+ *
  * Factory class which returns the appropriate ResourceManager
  */
 @Service(name="resource-factory")
@@ -54,5 +54,5 @@ public class ResourceFactory {
 
         return resourceManager;
     }
-    
+
 }

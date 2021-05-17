@@ -28,7 +28,7 @@ import com.sun.enterprise.security.web.GlassFishSingleSignOn;
  * @author lwhite
  */
 public interface SSOFactory {
-    
+
     /**
      * Creates a SingleSignOn valve
      * @param virtualServerName name of virtual server

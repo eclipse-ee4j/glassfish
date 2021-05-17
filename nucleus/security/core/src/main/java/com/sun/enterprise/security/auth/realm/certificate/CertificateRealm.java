@@ -155,7 +155,7 @@ public final class CertificateRealm extends IASRealm
     {
         return AUTH_TYPE;
     }
-    
+
 
     /**
      * Returns the name of all the groups that this user belongs to.
@@ -198,7 +198,7 @@ public final class CertificateRealm extends IASRealm
      */
     public void authenticate(Subject subject, X500Principal principal)
     {
-        
+
         String name = principal.getName();
 
         if (_logger.isLoggable(Level.FINEST)) {
@@ -207,25 +207,25 @@ public final class CertificateRealm extends IASRealm
         }
 
         if (defaultGroups != null) {
-	    Set<Principal> principalSet = subject.getPrincipals();
-	    Enumeration<String> e = defaultGroups.elements();
-	    while (e.hasMoreElements()) {
-		principalSet.add(new Group(e.nextElement()));
-	    }
-	}
+        Set<Principal> principalSet = subject.getPrincipals();
+        Enumeration<String> e = defaultGroups.elements();
+        while (e.hasMoreElements()) {
+        principalSet.add(new Group(e.nextElement()));
+        }
+    }
         if (!subject.getPrincipals().isEmpty()) {
             DistinguishedPrincipalCredential dpc = new DistinguishedPrincipalCredential(principal);
             subject.getPublicCredentials().add(dpc);
         }
-        
-        SecurityContext securityContext =
-	    new SecurityContext(name, subject);
 
-	SecurityContext.setCurrent(securityContext);
+        SecurityContext securityContext =
+        new SecurityContext(name, subject);
+
+    SecurityContext.setCurrent(securityContext);
         /*AppServSecurityContext secContext = Util.getDefaultHabitat().getByContract(AppServSecurityContext.class);
         AppServSecurityContext securityContext = secContext.newInstance(name, subject);
         securityContext.setCurrentSecurityContext(securityContext);*/
-        
+
     }
 
     /**
@@ -255,7 +255,7 @@ public final class CertificateRealm extends IASRealm
          * Set the fully qualified module name. The module name consists
          * of the application name (if not a singleton) followed by a '#'
          * and the name of the module.
-         * 
+         *
          */
         public void setModuleID(String moduleID) {
             this.moduleID = moduleID;

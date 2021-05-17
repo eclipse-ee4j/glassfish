@@ -24,7 +24,7 @@ import jakarta.annotation.*;
 @Interceptors(InterceptorA.class)
 public class SlessEJB extends BaseBean implements Sless {
     public String sayHello() {
-	    return "Hello";
+        return "Hello";
     }
 
     @AroundInvoke

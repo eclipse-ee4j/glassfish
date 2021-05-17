@@ -45,7 +45,7 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 /**
  * This implementation of the ArchiveFactory interface
- * is capable of creating the right abstraction of the Archive 
+ * is capable of creating the right abstraction of the Archive
  * interface depending on the protocol used in the URL.
  *
  * @author Jerome Dochez
@@ -65,7 +65,7 @@ public class ArchiveFactory {
     public WritableArchive createArchive(File path) throws java.io.IOException {
         try {
             /*
-             *Use the expanded constructor so illegal characters (such as embedded blanks) in the path 
+             *Use the expanded constructor so illegal characters (such as embedded blanks) in the path
              *will be encoded.
              */
             return createArchive(prepareArchiveURI(path));
@@ -85,7 +85,7 @@ public class ArchiveFactory {
             return null;
         }
     }
-    
+
     public ReadableArchive openArchive(File path) throws java.io.IOException {
         try {
             return openArchive(prepareArchiveURI(path));
@@ -93,19 +93,19 @@ public class ArchiveFactory {
             return null;
         }
     }
-    
+
     /**
-     * Creates a new archivist using the URL as the path. The URL 
+     * Creates a new archivist using the URL as the path. The URL
      * protocol will define the type of desired archive (jar, file, etc)
      * @param path to the archive
      * @return the apropriate archive
      */
     public WritableArchive createArchive(URI path) throws IOException {
-        
+
         String protocol = path.getScheme();
         return createArchive(protocol, path);
     }
-    
+
     public WritableArchive createArchive(String protocol, URI path) throws IOException {
         try {
             WritableArchive archive = habitat.getService(WritableArchive.class, protocol);
@@ -156,13 +156,13 @@ public class ArchiveFactory {
         }
         return openArchive(path);
     }
-    
+
     /**
-     * Opens an existing archivist using the URL as the path. 
-     * The URL protocol will defines the type of desired archive 
-     * (jar, file, memory, etc...) 
+     * Opens an existing archivist using the URL as the path.
+     * The URL protocol will defines the type of desired archive
+     * (jar, file, memory, etc...)
      * @param path url to the existing archive
-     * @return the appropriate archive 
+     * @return the appropriate archive
      */
     public ReadableArchive openArchive(URI path) throws IOException {
 
@@ -191,20 +191,20 @@ public class ArchiveFactory {
             lr.setThrown(e);
             deplLogger.log(lr);
             throw new MalformedURLException("Protocol not supported : " + provider);
-        } 
+        }
     }
-    
+
     /**
      *Create a URI for the jar specified by the path string.
      *<p>
-     *The steps used here correctly encode "illegal" characters - such as embedded blanks - in 
+     *The steps used here correctly encode "illegal" characters - such as embedded blanks - in
      *the path string that otherwise would render the URI unusable.  The URI constructor that
      *accepts just the path string does not perform this encoding.
      *@param path string for the archive
      *@return URI with any necessary encoding of special characters
      */
     static java.net.URI prepareArchiveURI(File path) throws java.net.URISyntaxException, java.io.UnsupportedEncodingException, java.io.IOException {
-       
+
         URI archiveURI = path.toURI();
         URI answer = new URI(archiveURI.getScheme(), null /* authority */, archiveURI.getPath(), null /* query */, null /* fragment */);
         return answer;

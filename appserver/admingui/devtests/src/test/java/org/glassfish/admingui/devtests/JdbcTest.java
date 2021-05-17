@@ -87,7 +87,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
         ClusterTest clusterTest = new ClusterTest();
         standaloneTest.deleteAllStandaloneInstances();
         clusterTest.deleteAllClusters();
-       
+
         clickAndWait("treeForm:tree:resources:JDBC:jdbcResources:jdbcResources_link", TRIGGER_JDBC_RESOURCES);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_JDBC_RESOURCE);
 
@@ -152,7 +152,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
 
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", instanceName);
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", "server");
-	pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
+    pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
 
         clickAndWait("form:propertyContentPage:topButtons:newButton", TRIGGER_JDBC_RESOURCES);
 
@@ -191,7 +191,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
                           TRIGGER_EDIT_JDBC_RESOURCE,
                           jndiName,
                           instanceName);
-                          
+
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", jndiName);
         //Delete the instance
         clickAndWait("treeForm:tree:standaloneTreeNode:standaloneTreeNode_link", instanceTest.TRIGGER_INSTANCES_PAGE);

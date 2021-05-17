@@ -26,17 +26,17 @@ import jakarta.validation.ConstraintValidatorContext;
 /**
  * Implementation for Connection Pool validation.
  * Following validations are done :
- * - Validation of datasource/driver classnames when resource type is not null 
+ * - Validation of datasource/driver classnames when resource type is not null
  * - Max pool size to be always higher than steady pool size
  * - Check if statement wrapping is on when certain features are enabled.
- * 
+ *
  * @author Shalini M
  */
 public class JdbcConnectionPoolValidator
     implements ConstraintValidator<JdbcConnectionPoolConstraint, ResourcePool> {
-    
+
     protected ConnectionPoolErrorMessages poolFaults;
-    
+
     public void initialize(final JdbcConnectionPoolConstraint constraint) {
         this.poolFaults = constraint.value();
     }
@@ -63,7 +63,7 @@ public class JdbcConnectionPoolValidator
                 }
             }
         }
-        
+
         if(poolFaults == ConnectionPoolErrorMessages.STMT_WRAPPING_DISABLED) {
             if(pool instanceof JdbcConnectionPool) {
                 JdbcConnectionPool jdbcPool = (JdbcConnectionPool) pool;

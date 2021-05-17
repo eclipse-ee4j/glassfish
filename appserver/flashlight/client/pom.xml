@@ -28,7 +28,7 @@
     <groupId>org.glassfish.main.flashlight</groupId>
     <artifactId>flashlight-client</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>GlassFish Flashlight Client</name>
 
     <dependencies>

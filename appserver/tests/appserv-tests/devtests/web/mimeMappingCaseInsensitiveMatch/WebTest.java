@@ -40,24 +40,24 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 1607");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             URL url = new URL("http://" + host  + ":" + port
                               + contextRoot + "/foo.HTML");
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.err.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 stat.addStatus(TEST_NAME, stat.FAIL);
@@ -70,7 +70,7 @@ public class WebTest {
                                        + EXPECTED_CONTENT_TYPE
                                        + ", received: " + contentType);
                     stat.addStatus(TEST_NAME, stat.FAIL);
-                } 
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();

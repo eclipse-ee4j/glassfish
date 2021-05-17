@@ -31,16 +31,16 @@ import jakarta.persistence.*;
 @DiscriminatorValue("L")
 @NamedQueries({
 @NamedQuery(
-	name="findWithBudgetLargerThan",
-	query="SELECT OBJECT(project) FROM LargeProject project WHERE project.budget >= :amount"
+    name="findWithBudgetLargerThan",
+    query="SELECT OBJECT(project) FROM LargeProject project WHERE project.budget >= :amount"
 ),
 @NamedQuery(
-	name="constructLProject",
-	query="SELECT new oracle.toplink.essentials.testing.models.cmp3.advanced.LargeProject(project.name) FROM LargeProject project")
+    name="constructLProject",
+    query="SELECT new oracle.toplink.essentials.testing.models.cmp3.advanced.LargeProject(project.name) FROM LargeProject project")
 }
 )
 public class LargeProject extends Project {
-	private double budget;
+    private double budget;
     public LargeProject () {
         super();
     }
@@ -49,11 +49,11 @@ public class LargeProject extends Project {
         this.setName(name);
     }
 
-	public double getBudget() { 
-        return budget; 
+    public double getBudget() {
+        return budget;
     }
-    
-	public void setBudget(double budget) { 
-		this.budget = budget; 
-	}
+
+    public void setBudget(double budget) {
+        this.budget = budget;
+    }
 }

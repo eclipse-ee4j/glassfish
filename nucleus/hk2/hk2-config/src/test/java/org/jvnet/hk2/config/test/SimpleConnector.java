@@ -42,7 +42,7 @@ public interface SimpleConnector extends ConfigBeanProxy {
     public static final int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
     public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
     public static final boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
- 
+
     /**
      * Gets the value of the steadyPoolSize property.
      *
@@ -61,7 +61,7 @@ public interface SimpleConnector extends ConfigBeanProxy {
      * This prevents threads from blocking till the pool is replenished by the
      * background thread. steady-pool-size must be greater than 1 and at most
      * equal to the max-pool-size.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -75,10 +75,10 @@ public interface SimpleConnector extends ConfigBeanProxy {
      *              {@link String }
      */
     void setPort(String value) throws PropertyVetoException;
-    
+
     @Element
     public EjbContainerAvailability getEjbContainerAvailability();
-    
+
     void setEjbContainerAvailability(EjbContainerAvailability v);
 
     @Element

@@ -27,15 +27,15 @@ import com.sun.enterprise.deployment.node.runtime.GFAppClientRuntimeNode;
  * This class is responsible for handling the XML configuration information
  * for the Glassfish Application Client Container
  */
-public class GFAppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {  
+public class GFAppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.GF_APP_CLIENT_JAR_ENTRY;        
+        return DescriptorConstants.GF_APP_CLIENT_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -43,7 +43,7 @@ public class GFAppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorF
      * @param the descriptor for which we need the node
      */
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-   
+
         if (descriptor instanceof ApplicationClientDescriptor) {
             return new GFAppClientRuntimeNode((ApplicationClientDescriptor) descriptor);
         }

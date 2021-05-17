@@ -44,8 +44,8 @@
 
     <target name="report-failure">
             <echo message="Test failed"/>
-    </target>   	
-   
+    </target>
+
    <target name="deploy-test" depends="clean">
     <basename file="${src-name}" property="server" suffix=".java"/>
     <dirname file="${src-name}" property="directory"/>

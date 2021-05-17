@@ -123,17 +123,17 @@ public class MyMessageBean implements MessageDrivenBean,
                   debug("Looked up Datasource\n");
                   debug("Get JDBC connection, auto sign on");
                   dbConnection = ds.getConnection("dbuser","dbpassword");
-                  
+
                   Statement stmt = dbConnection.createStatement();
-                  String query = 
+                  String query =
                   "SELECT id from messages where id = 'QQ'";
                   ResultSet results = stmt.executeQuery(query);
                   results.next();
-                  System.out.println("QQ has balance " + 
+                  System.out.println("QQ has balance " +
                   results.getInt("balance") + " dollars");
                   results.close();
                   stmt.close();
-                  
+
                   System.out.println("Read one account\n");
                 */
 

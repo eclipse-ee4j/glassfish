@@ -30,22 +30,22 @@ public class Client extends HttpServlet {
 
        @WebServiceRef(name="sun-web.serviceref/calculator") CalculatorService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
               throws jakarta.servlet.ServletException {
-	    UserTransaction ut = null;
+        UserTransaction ut = null;
             try {
-		ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
-		ut.begin();
+        ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+        ut.begin();
 
                 System.out.println(" Service is :" + service);
                 Calculator port = service.getCalculatorPort();
                 int ret = port.add(1, 2);
-		ut.commit();
+        ut.commit();
                 PrintWriter out = resp.getWriter();
                 resp.setContentType("text/html");
                 out.println("<html>");
@@ -62,12 +62,12 @@ public class Client extends HttpServlet {
                 out.flush();
                 out.close();
             } catch(Exception e) {
-		try {
-			if(ut != null)
-				ut.rollback();
-		} catch (Exception ex) {
-                	ex.printStackTrace();
-		}
+        try {
+            if(ut != null)
+                ut.rollback();
+        } catch (Exception ex) {
+                    ex.printStackTrace();
+        }
                 e.printStackTrace();
             }
        }

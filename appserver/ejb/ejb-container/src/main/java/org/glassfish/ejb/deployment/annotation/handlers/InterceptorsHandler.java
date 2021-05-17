@@ -53,7 +53,7 @@ import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.Callback
 @Service
 @AnnotationHandlerFor(Interceptors.class)
 public class InterceptorsHandler extends AbstractAttributeHandler {
-    
+
     public InterceptorsHandler() {
     }
 
@@ -66,11 +66,11 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
 
         Interceptors interceptors = (Interceptors) ainfo.getAnnotation();
 
-        
+
         EjbBundleDescriptorImpl ejbBundle =
             ((EjbDescriptor)ejbContexts[0].getDescriptor()).
                 getEjbBundleDescriptor();
-        
+
         // Process each of the interceptor classes.
         for(Class interceptor : interceptors.value()) {
             processInterceptorClass(interceptor, ejbBundle, ainfo);
@@ -80,8 +80,8 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
 
             EjbDescriptor ejbDescriptor = (EjbDescriptor) next.getDescriptor();
 
-            // Create binding information.  
-            InterceptorBindingDescriptor binding = 
+            // Create binding information.
+            InterceptorBindingDescriptor binding =
                 new InterceptorBindingDescriptor();
 
             binding.setEjbName(ejbDescriptor.getName());
@@ -89,10 +89,10 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
             for(Class interceptor : interceptors.value()) {
                 binding.appendInterceptorClass(interceptor.getName());
             }
-            
+
             if(ElementType.METHOD.equals(ainfo.getElementType())) {
                 Method m = (Method) ainfo.getAnnotatedElement();
-                MethodDescriptor md = 
+                MethodDescriptor md =
                     new MethodDescriptor(m, MethodDescriptor.EJB_BEAN);
                 binding.setBusinessMethod(md);
             } else if(ElementType.CONSTRUCTOR.equals(ainfo.getElementType())) {
@@ -109,7 +109,7 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
             // before the binding information processed from the descriptors.
             // Since descriptors are processed first, always place the binding
             // info at the front.  The binding information from the descriptor
-            // is ordered, but there is no prescribed order in which the 
+            // is ordered, but there is no prescribed order in which the
             // annotations are processed, so all that matters is that it's
             // before the descriptor bindings and that the descriptor binding
             // order is preserved.
@@ -122,7 +122,7 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
     private void processInterceptorClass(Class interceptorClass,
             EjbBundleDescriptorImpl ejbBundle, AnnotationInfo ainfo)
         throws AnnotationProcessorException {
-                
+
         Set<LifecycleCallbackDescriptor> aroundInvokeDescriptors =
             new HashSet<LifecycleCallbackDescriptor>();
         Set<LifecycleCallbackDescriptor> aroundTimeoutDescriptors =
@@ -131,7 +131,7 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
             new HashSet<LifecycleCallbackDescriptor>();
         Set<LifecycleCallbackDescriptor> prePassivateDescriptors =
             new HashSet<LifecycleCallbackDescriptor>();
-        
+
         ComponentDefinition cdef = new ComponentDefinition(interceptorClass);
         for(Method m : cdef.getMethods()) {
             if( m.getAnnotation(AroundInvoke.class) != null ) {
@@ -147,7 +147,7 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
                 prePassivateDescriptors.add(getLifecycleCallbackDescriptor(m));
             }
         }
-        
+
         EjbInterceptor interceptor =
             ejbBundle.getInterceptorByClassName(interceptorClass.getName());
         if (interceptor == null) {
@@ -156,20 +156,20 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
             // Add interceptor to the set of all interceptors in the ejb-jar
             ejbBundle.addInterceptor(interceptor);
         }
-        
+
         if (aroundInvokeDescriptors.size() > 0) {
             interceptor.addAroundInvokeDescriptors(aroundInvokeDescriptors);
         }
-        
+
         if (aroundTimeoutDescriptors.size() > 0) {
             interceptor.addAroundTimeoutDescriptors(aroundTimeoutDescriptors);
         }
-        
+
         if (postActivateDescriptors.size() > 0) {
             interceptor.addCallbackDescriptors(CallbackType.POST_ACTIVATE,
                 postActivateDescriptors);
         }
-        
+
         if (prePassivateDescriptors.size() > 0) {
             interceptor.addCallbackDescriptors(CallbackType.PRE_PASSIVATE,
                 prePassivateDescriptors);
@@ -186,8 +186,8 @@ public class InterceptorsHandler extends AbstractAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

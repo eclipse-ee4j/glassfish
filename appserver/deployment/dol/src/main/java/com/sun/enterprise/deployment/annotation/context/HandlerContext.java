@@ -19,12 +19,12 @@ package com.sun.enterprise.deployment.annotation.context;
 import com.sun.enterprise.deployment.types.HandlerChainContainer;
 
 /**
- * Context for the handler 
+ * Context for the handler
  *
  * @author Jerome Dochez
  */
 public interface HandlerContext {
-    
+
     public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass);
-    
+
 }

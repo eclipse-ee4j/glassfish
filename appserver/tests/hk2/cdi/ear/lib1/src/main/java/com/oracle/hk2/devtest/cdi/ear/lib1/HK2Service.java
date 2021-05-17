@@ -29,7 +29,7 @@ public interface HK2Service {
     public final static String EJB2 = "ejb2";
     public final static String WAR1 = "war1";
     public final static String WAR2 = "war2";
-    
+
     public String getComponentName();
 
 }

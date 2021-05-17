@@ -27,8 +27,8 @@ import jakarta.ejb.EJBHome;
  * @author  Harpreet Singh
  */
 public interface RpaHome extends EJBHome{
-    
-    public RpaRemote create(java.lang.String shopperName) 
+
+    public RpaRemote create(java.lang.String shopperName)
         throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

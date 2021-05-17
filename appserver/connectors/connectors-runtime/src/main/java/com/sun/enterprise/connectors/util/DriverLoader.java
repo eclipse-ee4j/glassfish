@@ -79,10 +79,10 @@ public class DriverLoader implements ConnectorConstants {
     private static final String DATABASE_VENDOR_EMBEDDED = "EMBEDDED";
     private static final String DATABASE_VENDOR_30 = "30";
     private static final String DATABASE_VENDOR_40 = "40";
-    
+
     private static final String DATABASE_VENDOR_SQLSERVER = "SQLSERVER";
-    private static final String DBVENDOR_MAPPINGS_ROOT = 
-            System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator + 
+    private static final String DBVENDOR_MAPPINGS_ROOT =
+            System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
             "lib" + File.separator + "install" + File.separator + "databases" +
             File.separator + "dbvendormapping" + File.separator;
     private final static String DS_PROPERTIES = "ds.properties";
@@ -153,11 +153,11 @@ public class DriverLoader implements ConnectorConstants {
         Properties fileProperties = loadFile(mappingFile);
         return fileProperties.getProperty(dbVendor.toUpperCase(Locale.getDefault()));
     }
-    
+
     /**
      * Get equivalent name for the database vendor name. This is useful for
      * introspection as the vendor name for oracle and sun oracle type of jdbc
-     * drivers are the same. 
+     * drivers are the same.
      * @param dbVendor
      * @return
      */
@@ -178,17 +178,17 @@ public class DriverLoader implements ConnectorConstants {
         } else if (dbVendor.equalsIgnoreCase(DATABASE_VENDOR_SUN_SYBASE)) {
             return DATABASE_VENDOR_SYBASE;
         }
-        return null;    
+        return null;
     }
 
     public Set<String> getJdbcDriverClassNames(String dbVendor, String resType) {
         //Do not use introspection by default.
         return getJdbcDriverClassNames(dbVendor, resType, false);
     }
-    
+
     /**
      * Gets a set of driver or datasource classnames for the particular vendor.
-     * Loads the jdbc driver, introspects the jdbc driver jar and gets the 
+     * Loads the jdbc driver, introspects the jdbc driver jar and gets the
      * classnames.
      * Based on whether introspect flag is turned on or off, the classnames are
      * retrieved by introspection or from a pre-defined list.
@@ -214,13 +214,13 @@ public class DriverLoader implements ConnectorConstants {
         if(!introspect) {
             //Get from the pre-populated list. This is done for common dbvendor names
             String implClass = getImplClassNameFromMapping(dbVendor, resType);
-        
+
             if(implClass != null) {
                 allImplClassNames.add(implClass);
                 return allImplClassNames;
             }
         }
-        
+
         List<File> jarFileLocations = getJdbcDriverLocations();
         Set<File> allJars = new HashSet<File>();
         for(File lib : jarFileLocations) {
@@ -239,7 +239,7 @@ public class DriverLoader implements ConnectorConstants {
                 if(vendor != null) {
                     implClassNames = introspectAndLoadJar(file, resType, vendor, dbVendor);
                 }
-                //Found the impl classnames for the particular dbVendor. 
+                //Found the impl classnames for the particular dbVendor.
                 //Hence no need to search in other jar files.
                 if(!implClassNames.isEmpty()) {
                     for(String className : implClassNames) {
@@ -247,12 +247,12 @@ public class DriverLoader implements ConnectorConstants {
                     }
                 }
             }
-        }        
+        }
 
         return allImplClassNames;
     }
 
-    private Set<String> getImplClassesByIteration(File f, String resType, 
+    private Set<String> getImplClassesByIteration(File f, String resType,
             String dbVendor, String origDbVendor) {
         SortedSet<String> implClassNames = new TreeSet<String>();
         String implClass = null;
@@ -283,7 +283,7 @@ public class DriverLoader implements ConnectorConstants {
                             if(logger.isLoggable(Level.FINEST)) {
                                 logger.finest("Driver loader : implClass = " + implClass);
                             }
-                            
+
                         }
                     }
                     if (entry.endsWith(".class")) {
@@ -317,7 +317,7 @@ public class DriverLoader implements ConnectorConstants {
                 }
             }
         }
-        //Could be one or many depending on the connection definition class name 
+        //Could be one or many depending on the connection definition class name
         return implClassNames;
     }
 
@@ -327,15 +327,15 @@ public class DriverLoader implements ConnectorConstants {
      * @param dbVendor
      * @return Set of driver/datasource class implementations based on resType
      */
-    private Set<String> introspectAndLoadJar(File f, String resType, 
+    private Set<String> introspectAndLoadJar(File f, String resType,
             String dbVendor, String origDbVendor) {
 
         if(logger.isLoggable(Level.FINEST)) {
             logger.finest("DriverLoader : introspectAndLoadJar ");
         }
-       
+
         return getImplClassesByIteration(f, resType, dbVendor, origDbVendor);
-                
+
     }
 
     private boolean isNotAbstract(Class cls) {
@@ -387,9 +387,9 @@ public class DriverLoader implements ConnectorConstants {
         }
         return driverClassName;
     }
-    
+
     /**
-     * Check if the classname has been loaded and if it is a Driver or a 
+     * Check if the classname has been loaded and if it is a Driver or a
      * DataSource impl.
      * @param classname
      * @return
@@ -407,10 +407,10 @@ public class DriverLoader implements ConnectorConstants {
             cls = null;
         } catch (Throwable t) {
             cls = null;
-        } 
+        }
         return (isResType(cls, resType));
     }
-    
+
     /**
      * Find if the particular class has any implementations of java.sql.Driver or
      * javax.sql.DataSource or any other resTypes passed.
@@ -441,9 +441,9 @@ public class DriverLoader implements ConnectorConstants {
         return isResType;
     }
 
-    
+
     /**
-     * This method should be executed before driverLoaders are queries for 
+     * This method should be executed before driverLoaders are queries for
      * classloader to load the classname.
      * @param classname
      * @return
@@ -512,7 +512,7 @@ public class DriverLoader implements ConnectorConstants {
             }
         } else {
             //Got from Manifest file.
-            if (vendor.equalsIgnoreCase(dbVendor) || 
+            if (vendor.equalsIgnoreCase(dbVendor) ||
                     vendor.toUpperCase(Locale.getDefault()).indexOf(
                     dbVendor.toUpperCase(Locale.getDefault())) != -1) {
                 isVendorSpecific = true;
@@ -530,7 +530,7 @@ public class DriverLoader implements ConnectorConstants {
     }
 
     private List<File> getJdbcDriverLocations() {
-	List<File> jarFileLocations = new ArrayList<File>();
+    List<File> jarFileLocations = new ArrayList<File>();
         jarFileLocations.add(getLocation(SystemPropertyConstants.DERBY_ROOT_PROPERTY));
         jarFileLocations.add(getLocation(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         jarFileLocations.add(getLocation(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
@@ -538,9 +538,9 @@ public class DriverLoader implements ConnectorConstants {
     }
 
     private File getLocation(String property) {
-        return new File(System.getProperty(property) + File.separator + "lib");    
+        return new File(System.getProperty(property) + File.separator + "lib");
     }
-    
+
     private static class JarFileFilter implements FilenameFilter {
 
         private static final String JAR_EXT = ".jar";
@@ -552,7 +552,7 @@ public class DriverLoader implements ConnectorConstants {
 
     /**
      * Utility method that checks if a classname is vendor specific.
-     * This method is used for jar files that do not have a manifest file to 
+     * This method is used for jar files that do not have a manifest file to
      * look up the classname.
      * @param dbVendor
      * @param className

@@ -44,46 +44,46 @@ import org.glassfish.kernel.KernelLoggerInfo;
 /**
  * Triggers reloads of deployed applications depending on the presence of and
  * timestamp on a .reload file in the application's top-level directory.
- * 
+ *
  * An instance of this class can be reused, its run method invoked repeatedly
- * to check all known apps for their .reload files.  
- * 
+ * to check all known apps for their .reload files.
+ *
  * @author tjquinn
  */
 public class DynamicReloader implements Runnable {
 
     private static final String RELOAD_FILE_NAME = ".reload";
-    
+
     private static class SyncBoolean {
         private boolean b = false;
-        
+
         private SyncBoolean(final boolean initialValue) {
             b = initialValue;
         }
-        
+
         private synchronized void set(final boolean value) {
             b = value;
         }
-        
+
         private synchronized boolean get() {
             return b;
         }
     }
     private final SyncBoolean inProgress;
-    
+
     /** Records info about apps being monitored */
     private Map<String,AppReloadInfo> appReloadInfo;
-    
+
     private AtomicBoolean cancelRequested = new AtomicBoolean(false);
-    
+
     private Applications applications;
-    
+
     private Logger logger = KernelLoggerInfo.getLogger();
-    
+
     private ServiceLocator habitat;
-    
+
     private final Subject kernelSubject;
-    
+
     DynamicReloader(Applications applications, ServiceLocator habitat) throws URISyntaxException {
         this.applications = applications;
         this.habitat = habitat;
@@ -92,10 +92,10 @@ public class DynamicReloader implements Runnable {
         final InternalSystemAdministrator kernelIdentity = habitat.getService(InternalSystemAdministrator.class);
         kernelSubject = kernelIdentity.getSubject();
     }
-    
+
     /**
      * Records reload information about the currently-known applications.
-     * 
+     *
      * @param applications
      */
     private synchronized void initAppReloadInfo(Applications applications) throws URISyntaxException {
@@ -115,7 +115,7 @@ public class DynamicReloader implements Runnable {
              }
          }
     }
-    
+
     public void run() {
         markInProgress();
         try {
@@ -130,11 +130,11 @@ public class DynamicReloader implements Runnable {
     void cancel() {
         cancelRequested.set(true);
     }
-    
+
     void init() {
         cancelRequested.set(false);
     }
-    
+
     private void reloadApps() throws URISyntaxException, IOException {
         List<AppReloadInfo> appsToReload = chooseAppsToReload();
         for (AppReloadInfo appInfo : appsToReload) {
@@ -144,10 +144,10 @@ public class DynamicReloader implements Runnable {
             reloadApp(appInfo);
         }
     }
-    
+
     private synchronized List<AppReloadInfo> chooseAppsToReload() throws URISyntaxException {
         List<AppReloadInfo> result = new ArrayList<AppReloadInfo>();
-        
+
         /*
          * The collectionof AppReloadInfo might not contain entries for all
          * current apps (for example, if an app has been deployed since the
@@ -156,7 +156,7 @@ public class DynamicReloader implements Runnable {
          * it.
          */
         Set<AppReloadInfo> possiblyUndeployedApps = new HashSet<AppReloadInfo>(appReloadInfo.values());
-        
+
         for (ApplicationName m : applications.getModules()) {
             if (m instanceof Application) {
                 Application app = (Application) m;
@@ -173,7 +173,7 @@ public class DynamicReloader implements Runnable {
                 possiblyUndeployedApps.remove(reloadInfo);
             }
         }
-        
+
         /*
          * Remove any apps from the reload info that are no longer present.
          */
@@ -181,7 +181,7 @@ public class DynamicReloader implements Runnable {
             logger.fine("[Reloader] Removing undeployed app " + info.getApplication().getName() + " from reload info");
             appReloadInfo.remove(info.getApplication().getName());
         }
-        
+
 
         return result;
     }
@@ -195,19 +195,19 @@ public class DynamicReloader implements Runnable {
         }
         return result;
     }
-    
+
     private void reloadApp(AppReloadInfo appInfo) throws IOException {
         logger.fine("[Reloader] Reloading " + appInfo.getApplication().getName());
-        
+
         /*
          * Prepare a deploy command and invoke it, taking advantage of the
          * DeployCommand's logic to deal with redeploying an existing app.
-         * 
+         *
          * Note that the redeployinplace internal option tells the undeploy
          * command (which is invoked by the deploy command) to preserve the
          * existing directory, even if the configuration does not indicate that
          * the app is directory-deployed.
-         * 
+         *
          */
         CommandRunnerImpl commandRunner = habitat.getService(CommandRunnerImpl.class);
 
@@ -217,11 +217,11 @@ public class DynamicReloader implements Runnable {
         deployParam.set(DeploymentProperties.NAME, appInfo.getApplication().getName());
         deployParam.set(DeploymentProperties.KEEP_REPOSITORY_DIRECTORY, "true");
         commandRunner.getCommandInvocation("deploy", new XMLActionReporter(), kernelSubject).parameters(deployParam).execute();
-        
-        
+
+
         appInfo.recordLoad();
     }
-    
+
     private void markInProgress() {
         inProgress.set(true);
     }
@@ -232,7 +232,7 @@ public class DynamicReloader implements Runnable {
             inProgress.notifyAll();
         }
     }
-    
+
     public void waitUntilIdle() throws InterruptedException {
         synchronized(inProgress) {
             while (inProgress.get()) {
@@ -240,49 +240,49 @@ public class DynamicReloader implements Runnable {
             }
         }
     }
-    
+
     /**
      * Records information about every application, regardless of whether the
      * app has a .reload file or not.
-     * 
+     *
      * The latestRecordedLoad time records either the object creation time (which should
-     * be about the same as the initial load time of the app during a server 
+     * be about the same as the initial load time of the app during a server
      * restart or after a deployment) or the time at which an app was reloaded.
-     * 
+     *
      * Note that this class uses the fact that lastModified of a non-existing
      * file is 0.
      */
     private final static class AppReloadInfo {
         /** points to the .reload file, whether one exists for this app or not */
         private File reloadFile;
-        
+
         private long latestRecordedLoad;
-        
+
         /** application info */
         private Application app;
-        
+
         private File appDir;
-        
+
         private AppReloadInfo(Application app) throws URISyntaxException {
             this.app = app;
             appDir = new File(new URI(app.getLocation()));
             reloadFile = new File(appDir, RELOAD_FILE_NAME);
             recordLoad();
         }
-        
+
         private Application getApplication() {
             return app;
         }
-        
+
         private boolean needsReload() {
             boolean answer = reloadFile.lastModified() > latestRecordedLoad;
             return answer;
         }
-        
+
         private void recordLoad() {
             latestRecordedLoad = System.currentTimeMillis();
         }
-        
+
         private File getApplicationDirectory() {
             return appDir;
         }

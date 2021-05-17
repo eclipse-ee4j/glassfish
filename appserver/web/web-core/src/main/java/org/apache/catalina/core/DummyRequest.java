@@ -269,7 +269,7 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
     public void setRequestedSessionCookiePath(String cookiePath) {}
     public boolean isUserInRole(String role) { return false; }
     public Principal getUserPrincipal() { return null; }
-    public String getLocalAddr() { return null; }    
+    public String getLocalAddr() { return null; }
     public String getLocalName() { return null; }
     public int getLocalPort() { return -1; }
     public int getRemotePort() { return -1; }
@@ -318,10 +318,10 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
 
     // START SJSAS 6346226
     /**
-     * Gets the jroute id of this request, which may have been 
+     * Gets the jroute id of this request, which may have been
      * sent as a separate <code>JROUTE</code> cookie or appended to the
      * session identifier encoded in the URI (if cookies have been disabled).
-     * 
+     *
      * @return The jroute id of this request, or null if this request does not
      * carry any jroute id
      */
@@ -329,7 +329,7 @@ public class DummyRequest implements HttpRequest, HttpServletRequest {
         return null;
     }
     // END SJSAS 6346226
-    
+
     /**
      * This object does not implement a session ID generator. Provide
      * a dummy implementation so that the default one will be used.

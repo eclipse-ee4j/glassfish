@@ -49,27 +49,27 @@ public class CMPBeanHelper {
         "com.sun.jdo.spi.persistence.support.ejb.ejbc.Bundle", // NOI18N
         CMPBeanHelper.class.getClassLoader());
 
-    /** 
+    /**
      * The lifecycle logger used to log messages from ejbCreate(), ejbRemove()
      * and other lifecycle methods.
      */
     private static Logger cmpLifecycleLogger = LogHelperEntityLifecycle.getLogger();
 
-    /** 
+    /**
      * The finder logger used to log messages from ejbFindXXX and/or ejbSelectXXX
      * methods.
      */
     private static Logger cmpFinderLogger    = LogHelperEntityFinder.getLogger();
 
-    /** 
+    /**
      * The internal logger used to log messages from setters and getter and other
      * generated methods.
      */
     private static Logger cmpInternalLogger  = LogHelperEntityInternal.getLogger();
 
     /**
-     * Called from a CMP bean to log JDOException message 
-     * with the LifecycleLogger. 
+     * Called from a CMP bean to log JDOException message
+     * with the LifecycleLogger.
      *
      * @param key the key for the corresponding Bundle.
      * @param beanName the name of the calling bean.
@@ -78,14 +78,14 @@ public class CMPBeanHelper {
     public static void logJDOExceptionWithLifecycleLogger(
             String key, String beanName, JDOException ex) {
 
-        cmpLifecycleLogger.log(Logger.WARNING, 
-                I18NHelper.getMessage(cmpMessages, key, 
+        cmpLifecycleLogger.log(Logger.WARNING,
+                I18NHelper.getMessage(cmpMessages, key,
                         beanName, findCallingMethodName()), ex);
     }
 
     /**
-     * Called from a CMP bean to log JDOException message 
-     * with the LifecycleLogger. 
+     * Called from a CMP bean to log JDOException message
+     * with the LifecycleLogger.
      *
      * @param key the key for the corresponding Bundle.
      * @param beanName the name of the calling bean.
@@ -93,18 +93,18 @@ public class CMPBeanHelper {
      * @param ex the JDOException.
      */
     public static void logJDOExceptionWithLifecycleLogger(
-            String key, String beanName, String paramList, 
+            String key, String beanName, String paramList,
             JDOException ex) {
 
-        cmpLifecycleLogger.log(Logger.WARNING, 
-                I18NHelper.getMessage(cmpMessages, key, 
-                        beanName, findCallingMethodName(), paramList), 
+        cmpLifecycleLogger.log(Logger.WARNING,
+                I18NHelper.getMessage(cmpMessages, key,
+                        beanName, findCallingMethodName(), paramList),
                 ex);
     }
 
     /**
      * Called from a CMP bean to log JDOException message thrown
-     * from a any getter or setter method, with the InternalLogger. 
+     * from a any getter or setter method, with the InternalLogger.
      *
      * @param beanName the name of the calling bean.
      * @param ex the JDOException.
@@ -112,8 +112,8 @@ public class CMPBeanHelper {
     public static void logJDOExceptionWithInternalLogger(
             String beanName, JDOException ex) {
 
-        cmpInternalLogger.log(Logger.WARNING, 
-                I18NHelper.getMessage(cmpMessages, 
+        cmpInternalLogger.log(Logger.WARNING,
+                I18NHelper.getMessage(cmpMessages,
                 "GEN.generic_method_exception", // NOI18N
                 beanName, findCallingMethodName()), ex);
     }
@@ -123,7 +123,7 @@ public class CMPBeanHelper {
      * from a any finder or selector method, with the FinderLogger.
      *
      * @param beanName the name of the calling bean.
-     * @param params the Object[] of the parameter values for the 
+     * @param params the Object[] of the parameter values for the
      * finder or selector method.
      * @param ex the JDOException.
      */
@@ -134,7 +134,7 @@ public class CMPBeanHelper {
         if (params != null) {
             msg = I18NHelper.getMessage(cmpMessages,
                     "GEN.ejbSSReturnBody_exception", beanName, // NOI18N
-                    findCallingMethodName(), 
+                    findCallingMethodName(),
                     java.util.Arrays.asList(params).toString());
         } else {
             msg = I18NHelper.getMessage(cmpMessages,
@@ -152,12 +152,12 @@ public class CMPBeanHelper {
      * @param beanName the name of the calling bean.
      * @param ex the Exception.
      */
-    public static void logFinderException(int level, String beanName, 
+    public static void logFinderException(int level, String beanName,
             Exception ex) {
 
         if (cmpFinderLogger.isLoggable(level)) {
             cmpFinderLogger.log(level,
-                    I18NHelper.getMessage(cmpMessages, 
+                    I18NHelper.getMessage(cmpMessages,
                             "GEN.generic_method_exception", // NOI18N
                             beanName, findCallingMethodName()), ex);
         }
@@ -165,7 +165,7 @@ public class CMPBeanHelper {
 
     /**
      * Called from a CMP bean to log JDOException message thrown
-     * from a PK setter method, with the InternalLogger. 
+     * from a PK setter method, with the InternalLogger.
      * Returns generated message to the caller to be used for a
      * IllegalStateException.
      *
@@ -177,7 +177,7 @@ public class CMPBeanHelper {
             String beanName, JDOException ex) {
 
         String msg = I18NHelper.getMessage(cmpMessages, "EXC_PKUpdate", // NOI18N
-            beanName, findCallingMethodName()); 
+            beanName, findCallingMethodName());
         if (cmpInternalLogger.isLoggable(Logger.FINE)) {
             cmpInternalLogger.log(Logger.FINE, msg, ex);
         }
@@ -189,14 +189,14 @@ public class CMPBeanHelper {
      * Called from a CMP bean to verify that the PersistenceCapable
      * instance is already persistent. Throws IllegalStateException
      * otherwise.
-     * 
+     *
      * @param pc the PersistenceCapable instance to be checked.
      * @param beanName the name of the caller bean.
      * @throws IllegalStateException if the instance is not persistent.
      */
     public static void assertPersistent(PersistenceCapable pc, String beanName) {
         if (!JDOHelper.isPersistent(pc)) {
-            String msg = I18NHelper.getMessage(cmpMessages, 
+            String msg = I18NHelper.getMessage(cmpMessages,
                 "GEN.cmrgettersetter_exception", beanName, findCallingMethodName()); // NOI18N
 
             cmpInternalLogger.log(Logger.SEVERE, msg);
@@ -206,7 +206,7 @@ public class CMPBeanHelper {
 
     /**
      * Called from a CMP bean to verify that the argument for
-     * a Collection set method is not null. Throws IllegalArgumentException 
+     * a Collection set method is not null. Throws IllegalArgumentException
      * if the argument is null.
      *
      * @param c the Collection to check.
@@ -231,7 +231,7 @@ public class CMPBeanHelper {
      * @param bean the calling bean instance.
      * @throws IllegalStateException if the PersistenceManager is null.
      */
-    public static void assertPersistenceManagerNotNull(PersistenceManager pm, 
+    public static void assertPersistenceManagerNotNull(PersistenceManager pm,
         Object bean) {
         if (pm == null) {
             String msg = I18NHelper.getMessage(cmpMessages,
@@ -250,7 +250,7 @@ public class CMPBeanHelper {
      * @param bean the calling bean instance.
      * @throws IllegalStateException if the PersistenceManager is not null.
      */
-    public static void assertPersistenceManagerIsNull(PersistenceManager pm, 
+    public static void assertPersistenceManagerIsNull(PersistenceManager pm,
         Object bean, StringBuffer buf) {
         if (pm != null) {
             String msg = I18NHelper.getMessage(cmpMessages,
@@ -261,7 +261,7 @@ public class CMPBeanHelper {
 
             if (buf != null && buf.length() > 0) {
                 msg = (new StringBuffer(msg)).append(" ...Last Instance Usage: ").  // NOI18N
-                        append(buf).toString(); 
+                        append(buf).toString();
             }
             cmpInternalLogger.log(Logger.SEVERE, msg);
             throw e;
@@ -295,7 +295,7 @@ public class CMPBeanHelper {
      * @throws DuplicateKeyException.
      */
     public static void handleJDODuplicateObjectIdAsDuplicateKeyException(
-        String beanName, String paramList, JDOException ex) 
+        String beanName, String paramList, JDOException ex)
         throws DuplicateKeyException {
 
         String msg = I18NHelper.getMessage(cmpMessages,
@@ -336,12 +336,12 @@ public class CMPBeanHelper {
      * @throws ObjectNotFoundException.
      */
     public static void handleJDOObjectNotFoundException(
-        Object primaryKey, String beanName, JDOException ex) 
+        Object primaryKey, String beanName, JDOException ex)
         throws ObjectNotFoundException {
 
         String msg = I18NHelper.getMessage(cmpMessages,
             "GEN.findbypk_exception_notfound", beanName, // NOI18N
-            primaryKey.toString()); 
+            primaryKey.toString());
 
         cmpLifecycleLogger.log(Logger.FINER, msg, ex);
         throw new ObjectNotFoundException(msg);
@@ -362,23 +362,23 @@ public class CMPBeanHelper {
         cmpLifecycleLogger.log(Logger.SEVERE, msg);
         throw new EJBException(msg);
     }
- 
-   /**   
+
+   /**
      * Throws EJBException on failed clone of persistence state
      * in read-only beans.
-     *   
+     *
      * @param primaryKey the PrimaryKey instance.
      * @param beanName the name of the calling bean.
      * @param ex the Exception.
      * @throws EJBException.
-     */  
+     */
     public static void handleCloneException(
         Object primaryKey, String beanName, Exception ex) {
- 
+
         String msg = I18NHelper.getMessage(cmpMessages,
             "GEN.clone_exception", beanName, // NOI18N
             primaryKey.toString());
- 
+
         cmpLifecycleLogger.log(Logger.SEVERE, msg, ex);
         throw new EJBException(msg);
     }

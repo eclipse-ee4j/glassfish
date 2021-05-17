@@ -31,7 +31,7 @@ import java.io.File;
 @Contract
 public interface ServerContext {
 
-    /** 
+    /**
      * Get the server command-line arguments
      *
      * @return  the server command-line arguments
@@ -75,7 +75,7 @@ public interface ServerContext {
      */
     public com.sun.enterprise.config.serverbeans.Server getConfigBean();
 
-    /** 
+    /**
      * Get the initial naming context.
      *
      * @return    the initial naming context
@@ -93,7 +93,7 @@ public interface ServerContext {
     /**
      * Returns the shared class loader for this server instance.
      *
-     * @return    the shared class loader 
+     * @return    the shared class loader
      */
     public ClassLoader getSharedClassLoader();
 

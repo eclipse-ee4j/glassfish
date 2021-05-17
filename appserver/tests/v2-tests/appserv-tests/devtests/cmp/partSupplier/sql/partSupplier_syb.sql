@@ -13,7 +13,7 @@ create table PARTS (
 create table SUPPLIERS (
     PARTID INT NOT NULL references PARTS(PARTID),
     SUPPLIERID INT NOT NULL,
-    NAME VARCHAR(15), 
+    NAME VARCHAR(15),
     STATUS INT,
     CITY VARCHAR(50),
     constraint PK_SUPPLIERS primary key(SUPPLIERID, PARTID)

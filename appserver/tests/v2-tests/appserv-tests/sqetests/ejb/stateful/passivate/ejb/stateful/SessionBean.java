@@ -71,10 +71,10 @@ public class SessionBean implements jakarta.ejb.SessionBean {
      * @see jakarta.ejb.SessionBean#ejbActivate()
      */
     public void ejbActivate() {
-        //key is method name and value is true/false       
+        //key is method name and value is true/false
         beanResult.put(new String("activate"),new Boolean(true));
-        System.out.println("---------SFSB Bean "+message+" activated-------");        
-        
+        System.out.println("---------SFSB Bean "+message+" activated-------");
+
     }
 
 
@@ -83,7 +83,7 @@ public class SessionBean implements jakarta.ejb.SessionBean {
      */
     public void ejbPassivate() {
 
-        //key is method name and value is true/false       
+        //key is method name and value is true/false
         beanResult.put(new String("passivate"),new Boolean(true));
         System.out.println("--------SFSB Bean " +message+"  passivated--------");
 
@@ -104,22 +104,22 @@ public class SessionBean implements jakarta.ejb.SessionBean {
      * See section 7.10.3 of the EJB 2.0 specification
      */
     public void ejbCreate() {
-        
+
         message = "Hello World From Stateful EJB";
 
     }
 
     public void ejbCreate(String initialMessage) throws jakarta.ejb.CreateException {
-	    try{
+        try{
         beanResult.put(new String("passivate"),new Boolean(false));
         beanResult.put(new String("activate"),new Boolean(false));
-        message = initialMessage;        
+        message = initialMessage;
         setInstanceFields();
         System.out.println("<STATEFUL>CREATE==========="+message+"==================");
-	    }catch(Exception e){
-		    throw new CreateException(e.getMessage());
-	    }
-        
+        }catch(Exception e){
+            throw new CreateException(e.getMessage());
+        }
+
     }
 
     /**
@@ -138,7 +138,7 @@ public class SessionBean implements jakarta.ejb.SessionBean {
 
         }catch(Throwable e){
             e.printStackTrace();
-	    throw new Exception(e.getMessage());
+        throw new Exception(e.getMessage());
         }
 
     }
@@ -147,7 +147,7 @@ public class SessionBean implements jakarta.ejb.SessionBean {
         throw new RuntimeException("<STATEFUL> ####Expected### Exception!!! Runtime exception");
     }*/
    public void badMethod(){
-	   System.out.println("modified method");
+       System.out.println("modified method");
     }
 
     public String getMessage() {
@@ -179,7 +179,7 @@ public class SessionBean implements jakarta.ejb.SessionBean {
         boolean retResult=true;
         try{
             int txStatus=userTx.getStatus();
-            System.out.println("Tx Status"+txStatus);          
+            System.out.println("Tx Status"+txStatus);
             if (txStatus == jakarta.transaction.Status.STATUS_ACTIVE) {
                 System.out.println("committing tx that was left active");
                 userTx.commit();
@@ -189,30 +189,30 @@ public class SessionBean implements jakarta.ejb.SessionBean {
 
         }catch(Throwable e){
             System.out.println("SFSB <"+message+">..Activation FAILED");
-            e.printStackTrace();            
+            e.printStackTrace();
             retResult=false;
-        }        
+        }
         return retResult;
     }
-    
+
     /**
-     *EJBRecorder is a Singleton class so we can't return it from SFSB.Appclient gets a 
-     * NPE.Instead, HashMap result is extracted and returned to calling client.This is 
+     *EJBRecorder is a Singleton class so we can't return it from SFSB.Appclient gets a
+     * NPE.Instead, HashMap result is extracted and returned to calling client.This is
      *SFSB independent (Any instance of SFSB returns same HashMap)
-     
+
      **/
     public HashMap getEJBRecorder(){
         if(ejbRecorder!=null){
             //Now extract all bean results.
             HashMap ejbRecorderResult=new HashMap();
-            ejbRecorderResult=ejbRecorder.getAllBeanResults();            
+            ejbRecorderResult=ejbRecorder.getAllBeanResults();
         return ejbRecorderResult;
         }
-        else 
+        else
             return null;
     }
-    
-   
+
+
 
 }
 

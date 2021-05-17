@@ -26,10 +26,10 @@ import org.glassfish.security.services.api.common.Attribute;
 
 public class AttributeTest {
 
-    
+
     @Test
     public void testAttribute() {
-        
+
         String attName = "test";
         Attribute att = new AttributeImpl(attName);
         att.addValue("value1");
@@ -43,7 +43,7 @@ public class AttributeTest {
 
     @Test
     public void testAttributeNullValue() {
-        
+
         String attName = "testnull";
         Attribute att = new AttributeImpl(attName);
         att.addValue(null);
@@ -51,11 +51,11 @@ public class AttributeTest {
         Set<String> vs = att.getValues();
         Assert.assertTrue(vs.isEmpty());
     }
-    
-    
+
+
     @Test
     public void testAttributeNullValue1() {
-        
+
         String attName = "testnull1";
         Attribute att = new AttributeImpl(attName);
         att.addValue(null);
@@ -63,12 +63,12 @@ public class AttributeTest {
 
         Set<String> vs = att.getValues();
         Assert.assertEquals(1, att.getValueCount());
-        Assert.assertTrue(vs.contains("value1"));        
+        Assert.assertTrue(vs.contains("value1"));
     }
 
     @Test
     public void testAttributeEmptyValue() {
-        
+
         String attName = "testEmpty";
         Attribute att = new AttributeImpl(attName);
         att.addValue("");

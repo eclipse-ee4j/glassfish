@@ -77,7 +77,7 @@ public final class ApplicationFilterFactory {
      */
     public ApplicationFilterChain createFilterChain
         (ServletRequest request, Wrapper wrapper, Servlet servlet) {
-        
+
         // If there is no servlet to execute, return null
         if (servlet == null)
             return (null);
@@ -127,7 +127,7 @@ public final class ApplicationFilterFactory {
         int n = 0;
 
         // Add the relevant path-mapped filters to this filter chain
-        Iterator<FilterMap> i = filterMaps.iterator(); 
+        Iterator<FilterMap> i = filterMaps.iterator();
         while (i.hasNext()) {
             FilterMap filterMap = i.next();
             if (!filterMap.getDispatcherTypes().contains(dispatcher)) {
@@ -138,7 +138,7 @@ public final class ApplicationFilterFactory {
                 continue;
             */
             // START SJSWS 6324431
-            if (!matchFiltersURL(filterMap, requestPath, 
+            if (!matchFiltersURL(filterMap, requestPath,
                                  context.isCaseSensitiveMapping()))
                 continue;
             // END SJSWS 6324431
@@ -159,7 +159,7 @@ public final class ApplicationFilterFactory {
         }
 
         // Add filters that match on servlet name second
-        i = filterMaps.iterator(); 
+        i = filterMaps.iterator();
         while (i.hasNext()) {
             FilterMap filterMap = i.next();
             if (!filterMap.getDispatcherTypes().contains(dispatcher)) {
@@ -231,7 +231,7 @@ public final class ApplicationFilterFactory {
         if (testPath.equals("/*"))
             return (true);
         if (testPath.endsWith("/*")) {
-            if (testPath.regionMatches(0, requestPath, 0, 
+            if (testPath.regionMatches(0, requestPath, 0,
                                        testPath.length() - 2)) {
                 if (requestPath.length() == (testPath.length() - 2)) {
                     return (true);
@@ -246,9 +246,9 @@ public final class ApplicationFilterFactory {
         if (testPath.startsWith("*.")) {
             int slash = requestPath.lastIndexOf('/');
             int period = requestPath.lastIndexOf('.');
-            if ((slash >= 0) && (period > slash) 
+            if ((slash >= 0) && (period > slash)
                 && (period != requestPath.length() - 1)
-                && ((requestPath.length() - period) 
+                && ((requestPath.length() - period)
                     == (testPath.length() - 1))) {
                 return (testPath.regionMatches(2, requestPath, period + 1,
                                                testPath.length() - 2));
@@ -269,7 +269,7 @@ public final class ApplicationFilterFactory {
      * @param filterMap Filter mapping being checked
      * @param servletName Servlet name being checked
      */
-    private boolean matchFiltersServlet(FilterMap filterMap, 
+    private boolean matchFiltersServlet(FilterMap filterMap,
                                         String servletName) {
 
         if (servletName == null) {

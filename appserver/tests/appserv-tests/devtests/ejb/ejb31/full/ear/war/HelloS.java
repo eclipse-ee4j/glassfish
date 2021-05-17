@@ -34,7 +34,7 @@ public class HelloS {
 
     @PreDestroy
     private void destroy() {
-	System.out.println("HelloS::destroy()");
+    System.out.println("HelloS::destroy()");
     }
 
 }

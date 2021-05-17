@@ -51,7 +51,7 @@ public class ProcessManager {
             timeout = num;
         }
     }
-    
+
     public final void setEnvironment(String[] env) {
         this.env = env;
     }

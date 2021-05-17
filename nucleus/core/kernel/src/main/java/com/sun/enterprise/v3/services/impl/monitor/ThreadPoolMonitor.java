@@ -98,7 +98,7 @@ public class ThreadPoolMonitor implements ThreadPoolProbe {
                 monitoringId, threadPool.getConfig().getPoolName(),
                 Thread.currentThread().getId());
     }
-    
+
     @Override
     public void onTaskCompleteEvent(AbstractThreadPool threadPool, Runnable task) {
         grizzlyMonitoring.getThreadPoolProbeProvider().threadReturnedToPoolEvent(

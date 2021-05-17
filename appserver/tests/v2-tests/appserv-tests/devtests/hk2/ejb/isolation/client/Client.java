@@ -27,7 +27,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.oracle.hk2devtest.isolation1.Isolation1;
 
 public class Client {
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     @EJB(lookup="java:app/env/forappclient")
@@ -39,18 +39,18 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("hk2-ejb-isolationID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
             Context ic = new InitialContext();
-                
+
             System.out.println("Looking up ejb ref " + isolation1);
-            // create EJB using factory from container 
+            // create EJB using factory from container
             // Object objref = ic.lookup("java:comp/env/ejb/foo");
 
             stat.addStatus("ejbclient main", stat.PASS);
@@ -59,8 +59,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("ejbclient main" , stat.FAIL);
         }
-        
-    	return;
+
+        return;
     }
 
 }

@@ -49,10 +49,10 @@ public class JMSLoggerInfo {
 
     @LogMessageInfo(message = "Addresslist : {0}")
     public static final String ADDRESSLIST = LOGMSG_PREFIX + "-00003";
-    
+
     @LogMessageInfo(message = "End point determines destination name, Res name: {0}, JNDI name: {1} descriptor name : {2}")
     public static final String ENDPOINT_DEST_NAME = LOGMSG_PREFIX + "-00004";
-    
+
     @LogMessageInfo(message = "Successfully set Master broker on JMSRA to {0}")
     public static final String MASTER_BROKER_SUCCESS = LOGMSG_PREFIX + "-00005";
 
@@ -69,7 +69,7 @@ public class JMSLoggerInfo {
             action = "unknown"
     )
     public static final String CLUSTER_BROKER_FAILURE = LOGMSG_PREFIX + "-00008";
-    
+
     @LogMessageInfo(
             message = "Failed to shut down Grizzly NetworkListener : {0}",
             level = "WARNING",
@@ -109,7 +109,7 @@ public class JMSLoggerInfo {
             action = "unknown"
     )
     public static final String CLOSE_CONNECTION_FAILED = LOGMSG_PREFIX + "-00013";
-    
+
     @LogMessageInfo(
             message = "rardeployment.mcfcreation_error {0}",
             level = "WARNING",
@@ -117,7 +117,7 @@ public class JMSLoggerInfo {
             action = "unknown"
     )
     public static final String RARDEPLOYMENT_MCF_ERROR = LOGMSG_PREFIX + "-00014";
-    
+
     @LogMessageInfo(
             message = "Exception while getting configured RMI port : {0}",
             level = "WARNING",
@@ -181,7 +181,7 @@ public class JMSLoggerInfo {
             action = "unknown"
     )
     public static final String LOAD_RESOURCES_ERROR = LOGMSG_PREFIX + "-00022";
-    
+
     @LogMessageInfo(
             message = "Exception in reading mdb-container configuration : [{0}]",
             level = "WARNING",

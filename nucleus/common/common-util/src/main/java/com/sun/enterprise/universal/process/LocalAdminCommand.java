@@ -22,7 +22,7 @@ import java.util.*;
 import org.glassfish.api.admin.ServerEnvironment;
 
 /**
- * Very simple -- run an Asadmin command.  
+ * Very simple -- run an Asadmin command.
  *
  * @author bnevins
  */

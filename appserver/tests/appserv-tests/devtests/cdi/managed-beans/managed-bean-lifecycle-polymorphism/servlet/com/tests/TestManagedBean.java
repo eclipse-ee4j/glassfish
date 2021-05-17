@@ -64,7 +64,7 @@ public class TestManagedBean {
     public String getPostConstructMessage() {
         return postConstructMessage;
     }
-    
+
     public String getPreDestroyMessage() {
         return preDestroyMessage;
     }

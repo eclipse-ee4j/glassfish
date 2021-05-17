@@ -15,7 +15,7 @@
  */
 package servlet;
 
-//Simple TestBean to test CDI. 
+//Simple TestBean to test CDI.
 public class TestBean {
 
 }

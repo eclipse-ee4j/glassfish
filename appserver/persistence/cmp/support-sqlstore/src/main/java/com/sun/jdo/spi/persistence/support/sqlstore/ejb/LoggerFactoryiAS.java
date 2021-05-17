@@ -39,11 +39,11 @@ public class LoggerFactoryiAS extends LoggerFactoryJDK14 {
     public LoggerFactoryiAS() {
     }
 
-    
+
     protected String getDomainRoot() {
         return DOMAIN_ROOT;
     }
-    
+
     /** Create a new Logger.  Create a logger for the named component.
      * The bundle name is passed to allow the implementation
      * to properly find and construct the internationalization bundle.
@@ -55,27 +55,27 @@ public class LoggerFactoryiAS extends LoggerFactoryJDK14 {
      * @param absoluteLoggerName the absolute name of this logger
      * @param bundleName the fully qualified name of the resource bundle
      * @return the logger
-     */  
-    protected LoggerJDK14 createLogger (final String absoluteLoggerName, 
+     */
+    protected LoggerJDK14 createLogger (final String absoluteLoggerName,
                                         final String bundleName) {
-        return (LoggerJDK14) AccessController.doPrivileged ( 
+        return (LoggerJDK14) AccessController.doPrivileged (
             new PrivilegedAction () {
                 public Object run () {
                     LoggerJDK14 result = new LoggerJDK14(absoluteLoggerName, bundleName);
                     //Handlers and Formatters will be set in addLogger().
                     //ServerLogManager.initializeServerLogger(result);
-                    
+
                     return result;
-                } 
-            } 
+                }
+            }
         );
     }
-    
+
     /**
      * This method is a no-op in the Sun ONE Application server.
      */
     protected void configureFileHandler(LoggerJDK14 logger) {
-    }    
+    }
 
 }
 

@@ -37,7 +37,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 public class PrimitiveDataTypeMBeanTest implements RemoteAdminQuicklookTest {
-    
+
     private long start, end;
     MBeanServerConnection mbsc = null;
     private static final String SS_CUSTOM_MBEAN_CLASS = "testmbeans.PrimitiveStandard";
@@ -70,9 +70,9 @@ public class PrimitiveDataTypeMBeanTest implements RemoteAdminQuicklookTest {
         }
         finally {
             end = System.currentTimeMillis();
-        }    
+        }
     }
-    
+
     /** This test tests the PrimitiveStandardMBean
      */
     private void testCreatePrimitiveDataTypeMBean() throws Exception {
@@ -93,56 +93,56 @@ public class PrimitiveDataTypeMBeanTest implements RemoteAdminQuicklookTest {
         }
     }
     ///// Private /////
-    
+
     private Map<String, String> getAttributeMapForPrimitives() {
         final Map<String, String> attributes = new HashMap<String, String> ();
         final Random r = new Random();
         String v  = Boolean.toString(r.nextBoolean());
         String n  = "State";
         attributes.put(n, v);
-        
+
         v = Integer.toString(r.nextInt());
         n = "Rank";
         attributes.put(n, v);
-        
+
         v = Long.toString(r.nextLong());
         n = "Time";
         attributes.put(n, v);
-        
+
         final byte[] bytes = new byte[1];
         r.nextBytes(bytes);
         v = Byte.toString(bytes[0]);
         n = "Length";
         attributes.put(n, v);
-        
+
         /*v = Character.toString((char)r.nextInt());
         n = "ColorCode";
         attributes.put(n, v);*/
-        
+
         v = Float.toString(r.nextFloat());
         n = "AnnualPercentRate";
         attributes.put(n, v);
-        
+
         v = Double.toString(r.nextDouble());
         n = "Temperature";
         attributes.put(n, v);
-        
+
         v = Short.toString((short)r.nextInt());
         n = "Characters";
         attributes.put(n, v);
-        
+
         v = generateA2ZRandomString('a', 'z');
         n = "Name";
         attributes.put(n, v);
-        
+
         v = DateFormat.getDateInstance().format(new Date());
         n = "StartDate";
         attributes.put(n, v);
-        
+
         v = "foo:" + generateA2ZRandomString('a', 'm') + "=" + generateA2ZRandomString('n', 'z');
         n = "ResourceObjectName";
         attributes.put(n, v);
-        
+
         return ( attributes );
     }
     private String generateA2ZRandomString(final int lo, final int hi) {
@@ -178,7 +178,7 @@ public class PrimitiveDataTypeMBeanTest implements RemoteAdminQuicklookTest {
         final Object[] operParams   = new Object[]{ target, name };
         final String[] operSign     = new String[]{ String.class.getName(), String.class.getName() };
         return ( (String) mbsc.invoke(on, oper, operParams, operSign) );
-        
+
     }
     ///// Private /////
 }

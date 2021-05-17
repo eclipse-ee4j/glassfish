@@ -46,8 +46,8 @@ import test.fwk.SomeFwkServiceInterface;
 
 /**
  * A portable extension that supports injection of custom framework
- * services into Beans. 
- * 
+ * services into Beans.
+ *
  * @author Sivakumar Thyagarajan
  */
 public class ServiceFrameworkExtension implements Extension{
@@ -56,7 +56,7 @@ public class ServiceFrameworkExtension implements Extension{
     public static boolean afterBeanDiscoveryCalled = false;
     public static boolean afterProcessBeanCalled = false;
     public static boolean processAnnotatedTypeCalled = false;
-    
+
     /*
      * A map of Framework Service Types to be injected and additional metadata
      * about the FrameworkService to be injected.
@@ -76,27 +76,27 @@ public class ServiceFrameworkExtension implements Extension{
         debug("Process annotated type" + pat.getAnnotatedType().getBaseType());
         processAnnotatedTypeCalled = true;
     }
-    
+
     /**
      * Observer for <code>ProcessInjectionTarget</code> events. This event is
-     * fired for every Java EE component class supporting injection that may be 
-     * instantiated by the container at runtime. Injections points of every 
-     * discovered enabled Java EE component is checked to see if there is a 
-     * request for injection of a framework service. 
+     * fired for every Java EE component class supporting injection that may be
+     * instantiated by the container at runtime. Injections points of every
+     * discovered enabled Java EE component is checked to see if there is a
+     * request for injection of a framework service.
      */
     void afterProcessInjectionTarget(@Observes ProcessInjectionTarget<?> pb){
         debug("AfterProcessInjectionTarget" + pb.getAnnotatedType().getBaseType());
         Set<InjectionPoint> ips = pb.getInjectionTarget().getInjectionPoints();
         discoverServiceInjectionPoints(ips);
     }
-    
+
     /**
      * Observer for <code>ProcessInjectionTarget</code> events. This event is
-     * fired fire an event for each enabled bean, interceptor or decorator 
-     * deployed in a bean archive, before registering the Bean object. 
-     * Injections points of every discovered enabled Java EE component is 
-     * checked to see if there is a request for injection of a framework 
-     * service. 
+     * fired fire an event for each enabled bean, interceptor or decorator
+     * deployed in a bean archive, before registering the Bean object.
+     * Injections points of every discovered enabled Java EE component is
+     * checked to see if there is a request for injection of a framework
+     * service.
      */
     void afterProcessBean(@Observes ProcessBean pb){
         afterProcessBeanCalled = true;
@@ -107,22 +107,22 @@ public class ServiceFrameworkExtension implements Extension{
 
     /*
      * Discover injection points where the framework service is requested
-     * through the <code>FrameworkService</code> qualifier and a map is 
+     * through the <code>FrameworkService</code> qualifier and a map is
      * populated for all framework services that have been requested.
      */
     private void discoverServiceInjectionPoints(Set<InjectionPoint> ips) {
-        for (Iterator<InjectionPoint> iterator = ips.iterator(); 
+        for (Iterator<InjectionPoint> iterator = ips.iterator();
                                                     iterator.hasNext();) {
             InjectionPoint injectionPoint = iterator.next();
             Set<Annotation> qualifs = injectionPoint.getQualifiers();
-            for (Iterator<Annotation> qualifIter = qualifs.iterator(); 
+            for (Iterator<Annotation> qualifIter = qualifs.iterator();
                                                     qualifIter.hasNext();) {
                 Annotation annotation = qualifIter.next();
                 if (annotation.annotationType().equals(FrameworkService.class)){
                     printDebugForInjectionPoint(injectionPoint);
                     //Keep track of service-type and its attributes
                     System.out.println("---- Injection requested for " +
-                    		"framework service type " + injectionPoint.getType()
+                            "framework service type " + injectionPoint.getType()
                             + " and annotated with dynamic="
                             + injectionPoint.getAnnotated()
                                     .getAnnotation(FrameworkService.class)
@@ -134,31 +134,31 @@ public class ServiceFrameworkExtension implements Extension{
                     //Add to list of framework services to be injected
                     Type key = injectionPoint.getType();
                     FrameworkService value = injectionPoint.getAnnotated()
-                    .getAnnotation(FrameworkService.class); 
+                    .getAnnotation(FrameworkService.class);
                     if (!frameworkServicesToBeInjected.containsKey(key)){
                         frameworkServicesToBeInjected.put(key, new HashSet<FrameworkService>());
                     }
                     frameworkServicesToBeInjected.get(key).add(value);
                     System.out.println(frameworkServicesToBeInjected.size());
-                    
+
                 }
             }
         }
     }
 
     /**
-     * Observer for <code>AfterBeanDiscovery</code> events. This 
+     * Observer for <code>AfterBeanDiscovery</code> events. This
      * observer method is used to register <code>Bean</code>s for the framework
-     * services that have been requested to be injected. 
+     * services that have been requested to be injected.
      */
     void afterBeanDiscovery(@Observes AfterBeanDiscovery abd){
         afterBeanDiscoveryCalled = true;
         debug("After Bean Discovery");
-        for (Iterator<Type> iterator = this.frameworkServicesToBeInjected.keySet().iterator(); 
+        for (Iterator<Type> iterator = this.frameworkServicesToBeInjected.keySet().iterator();
                                                 iterator.hasNext();) {
             Type type =  iterator.next();
             //If the injection point's type is not a Class or Interface, we
-            //don't know how to handle this. 
+            //don't know how to handle this.
             if (!(type instanceof Class)) {
                 System.out.println("Unknown type:" + type);
                 abd.addDefinitionError(new UnsupportedOperationException(
@@ -173,10 +173,10 @@ public class ServiceFrameworkExtension implements Extension{
 
     /*
      * Add a <code>Bean</code> for the framework service requested. Instantiate
-     * or discover the bean from the framework service registry, 
+     * or discover the bean from the framework service registry,
      * and return a reference to the service if a dynamic reference is requested.
      */
-    private void addBean(AfterBeanDiscovery abd, final Type type, 
+    private void addBean(AfterBeanDiscovery abd, final Type type,
             final Set<FrameworkService> frameworkServices) {
         for (Iterator<FrameworkService> iterator = frameworkServices.iterator(); iterator
                 .hasNext();) {
@@ -185,7 +185,7 @@ public class ServiceFrameworkExtension implements Extension{
             abd.addBean(new FrameworkServiceBean(type, frameworkService));
         }
     }
-    
+
 
     private final class FrameworkServiceBean implements Bean {
         private final Type type;
@@ -224,7 +224,7 @@ public class ServiceFrameworkExtension implements Extension{
         @Override
         public String getName() {
             return type + "_dynamic_" + frameworkService.dynamic()
-                    + "_criteria_" + frameworkService.serviceCriteria() 
+                    + "_criteria_" + frameworkService.serviceCriteria()
                     + "_waitTimeout" + frameworkService.waitTimeout();
         }
 
@@ -235,7 +235,7 @@ public class ServiceFrameworkExtension implements Extension{
             s.add(new AnnotationLiteral<Any>() {});
             //Add the appropriate parameters to the FrameworkService qualifier
             //as requested in the injection point
-            s.add(new FrameworkServiceQualifierType(frameworkService)); 
+            s.add(new FrameworkServiceQualifierType(frameworkService));
             return s;
         }
 
@@ -272,7 +272,7 @@ public class ServiceFrameworkExtension implements Extension{
      * Represents an annotation type instance of FrameworkService
      * with parameters equal to those specified in the injection point
      */
-    private final class FrameworkServiceQualifierType 
+    private final class FrameworkServiceQualifierType
     extends AnnotationLiteral<FrameworkService> implements FrameworkService {
         private String serviceCriteria = "";
         private boolean dynamic = false;
@@ -298,11 +298,11 @@ public class ServiceFrameworkExtension implements Extension{
             return this.waitTimeout;
         }
     }
-    
+
     private void debug(String string) {
         if(DEBUG_ENABLED)
             System.out.println("MyExtension:: " + string);
-        
+
     }
 
     private void printDebugForInjectionPoint(InjectionPoint injectionPoint) {
@@ -319,5 +319,5 @@ public class ServiceFrameworkExtension implements Extension{
                                                          // point
         }
     }
-    
+
 }

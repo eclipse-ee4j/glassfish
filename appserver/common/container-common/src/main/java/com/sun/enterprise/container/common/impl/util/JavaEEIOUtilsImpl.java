@@ -36,116 +36,116 @@ import java.util.logging.Logger;
 /**
  * A contract that defines a set of methods to serialize / deserialze Java EE
  * objects (even if they are not directly serializable).
- * 
+ *
  * Some of the objects that are expected to be serialized / de-serialized are a)
  * Local EJB references b) EJB Handles c) JNDI (sub) contexts d) (Non
  * serializable) StatefulSessionBeans
- * 
+ *
  * @author Mahesh Kannan
- * 
+ *
  */
 @Service
 public class JavaEEIOUtilsImpl implements JavaEEIOUtils {
 
-	private static Logger _logger = LogDomains.getLogger(
-			JavaEEIOUtilsImpl.class, LogDomains.JNDI_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(
+            JavaEEIOUtilsImpl.class, LogDomains.JNDI_LOGGER);
 
-	@Inject
-	ServiceLocator habitat;
+    @Inject
+    ServiceLocator habitat;
 
-	private Collection<GlassFishOutputStreamHandler> outputHandlers = new HashSet<GlassFishOutputStreamHandler>();
+    private Collection<GlassFishOutputStreamHandler> outputHandlers = new HashSet<GlassFishOutputStreamHandler>();
 
-	private Collection<GlassFishInputStreamHandler> inputHandlers = new HashSet<GlassFishInputStreamHandler>();
+    private Collection<GlassFishInputStreamHandler> inputHandlers = new HashSet<GlassFishInputStreamHandler>();
 
-	public ObjectInputStream createObjectInputStream(InputStream is,
-			boolean resolveObject, ClassLoader loader) throws Exception {
-		return new GlassFishObjectInputStream(inputHandlers, is, loader, resolveObject);
-	}
+    public ObjectInputStream createObjectInputStream(InputStream is,
+            boolean resolveObject, ClassLoader loader) throws Exception {
+        return new GlassFishObjectInputStream(inputHandlers, is, loader, resolveObject);
+    }
 
-	public ObjectOutputStream createObjectOutputStream(OutputStream os,
-			boolean replaceObject) throws IOException {
-		return new GlassFishObjectOutputStream(outputHandlers, os, replaceObject);
-	}
+    public ObjectOutputStream createObjectOutputStream(OutputStream os,
+            boolean replaceObject) throws IOException {
+        return new GlassFishObjectOutputStream(outputHandlers, os, replaceObject);
+    }
 
-	public byte[] serializeObject(Object obj, boolean replaceObject)
-			throws java.io.IOException {
+    public byte[] serializeObject(Object obj, boolean replaceObject)
+            throws java.io.IOException {
 
-		byte[] data = null;
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
-		try {
-			oos = createObjectOutputStream(bos, replaceObject);
+        byte[] data = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        try {
+            oos = createObjectOutputStream(bos, replaceObject);
 
-			oos.writeObject(obj);
-			oos.flush();
-			data = bos.toByteArray();
-		} catch (java.io.NotSerializableException notSerEx) {
-			throw notSerEx;
-		} catch (Exception th) {
-			IOException ioEx = new IOException(th.toString());
-			ioEx.initCause(th);
-			throw ioEx;
-		} finally {
-			if (oos != null) {
-				try {
-					oos.close();
-				} catch (Exception ex) {
-				}
-			}
-			try {
-				bos.close();
-			} catch (Exception ex) {
-			}
-		}
+            oos.writeObject(obj);
+            oos.flush();
+            data = bos.toByteArray();
+        } catch (java.io.NotSerializableException notSerEx) {
+            throw notSerEx;
+        } catch (Exception th) {
+            IOException ioEx = new IOException(th.toString());
+            ioEx.initCause(th);
+            throw ioEx;
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (Exception ex) {
+                }
+            }
+            try {
+                bos.close();
+            } catch (Exception ex) {
+            }
+        }
 
-		return data;
-	}
+        return data;
+    }
 
-	public Object deserializeObject(byte[] data, boolean resolveObject,
-			ClassLoader appClassLoader) throws Exception {
+    public Object deserializeObject(byte[] data, boolean resolveObject,
+            ClassLoader appClassLoader) throws Exception {
 
-		Object obj = null;
-		ByteArrayInputStream bis = null;
-		ObjectInputStream ois = null;
-		try {
-			bis = new ByteArrayInputStream(data);
-			ois = createObjectInputStream(bis, resolveObject, appClassLoader);
-			obj = ois.readObject();
-		} catch (Exception ex) {
-			_logger.log(Level.FINE, "Error during deserialization", ex);
-			throw ex;
-		} finally {
-			try {
-				ois.close();
-			} catch (Exception ex) {
-				_logger.log(Level.FINEST, "Error during ois.close()", ex);
-			}
-			try {
-				bis.close();
-			} catch (Exception ex) {
-				_logger.log(Level.FINEST, "Error during bis.close()", ex);
-			}
-		}
-		return obj;
-	}
+        Object obj = null;
+        ByteArrayInputStream bis = null;
+        ObjectInputStream ois = null;
+        try {
+            bis = new ByteArrayInputStream(data);
+            ois = createObjectInputStream(bis, resolveObject, appClassLoader);
+            obj = ois.readObject();
+        } catch (Exception ex) {
+            _logger.log(Level.FINE, "Error during deserialization", ex);
+            throw ex;
+        } finally {
+            try {
+                ois.close();
+            } catch (Exception ex) {
+                _logger.log(Level.FINEST, "Error during ois.close()", ex);
+            }
+            try {
+                bis.close();
+            } catch (Exception ex) {
+                _logger.log(Level.FINEST, "Error during bis.close()", ex);
+            }
+        }
+        return obj;
+    }
 
-	public void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
-		outputHandlers.add(handler);
+    public void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
+        outputHandlers.add(handler);
 
-	}
+    }
 
-	public void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
-		outputHandlers.remove(handler);
-	}
+    public void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler) {
+        outputHandlers.remove(handler);
+    }
 
-	public void addGlassFishInputStreamHandler(
-			GlassFishInputStreamHandler handler) {
-		inputHandlers.add(handler);
-	}
+    public void addGlassFishInputStreamHandler(
+            GlassFishInputStreamHandler handler) {
+        inputHandlers.add(handler);
+    }
 
-	public void removeGlassFishInputStreamHandler(
-			GlassFishInputStreamHandler handler) {
-		inputHandlers.remove(handler);
-	}
+    public void removeGlassFishInputStreamHandler(
+            GlassFishInputStreamHandler handler) {
+        inputHandlers.remove(handler);
+    }
 
 }

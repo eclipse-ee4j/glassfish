@@ -42,7 +42,7 @@ public class DeployManyMBeans extends LifeCycle
         rnd = new Random();
         int len = 4 + rnd.nextInt(7);
         char[] chars = new char[len];
-        
+
         for(int i = 0; i < len; i++)
         {
             chars[i] = alphabet.charAt(rnd.nextInt(26));
@@ -52,12 +52,12 @@ public class DeployManyMBeans extends LifeCycle
         System.out.println(LocalStrings.get("DeployManyMBeans.NUM_BEANS"));
         System.out.println(LocalStrings.get("foo"));
     }
-    
+
     String testInternal() throws JMException, IOException
     {
         title("DeployManyMBeans");
         title("Stage I -- create " + numIter + " MBeans");
-        
+
         for(int i = 0; i < numIter; i++)
         {
             long msec = System.currentTimeMillis();
@@ -66,13 +66,13 @@ public class DeployManyMBeans extends LifeCycle
             String objname = "user:foo=" + name;
             create(classname, objname, name);
             msec = System.currentTimeMillis() - msec;
-            System.out.println("Created CMB, name: " + name + ", impl class: " 
-                    + classname + ", obj-name: " + objname + ", Time(msec): " 
+            System.out.println("Created CMB, name: " + name + ", impl class: "
+                    + classname + ", obj-name: " + objname + ", Time(msec): "
                     + msec + ", Memory Usage: " + getMemoryInfo());
-        }            
+        }
 
         title("Stage II -- check " + numIter + " MBeans");
-        
+
         List<String> list = list();
         for(int i = 0; i < numIter; i++)
         {
@@ -84,19 +84,19 @@ public class DeployManyMBeans extends LifeCycle
         title("All MBeans were registered OK");
 
         title("Stage III -- delete " + numIter + " MBeans");
-        
+
         if(interactive)
             Console.readLine("Shall I delete all of the MBeans? [y]: ");
-        
+
         for(int i = 0; i < numIter; i++)
         {
             String name = namePrefix + i;
             delete(name);
             System.out.println("Deleted: " + name);
         }
-        
+
         title("Stage IV  -- check deletion of " + numIter + " MBeans");
-        
+
         list = list();
         for(int i = 0; i < numIter; i++)
         {
@@ -107,17 +107,17 @@ public class DeployManyMBeans extends LifeCycle
         }
 
         title("All Done!");
-        
+
         return ( SimpleReporterAdapter.PASS );
     }
 
     private static final String[] classnames = {
-            "testmbeans.OneClassDynamicMBean", 
-            "testmbeans.MicrowaveOvenImpl", 
-            "testmbeans.SimpleStandard", 
-            "testmbeans.PrimitiveStandard", 
+            "testmbeans.OneClassDynamicMBean",
+            "testmbeans.MicrowaveOvenImpl",
+            "testmbeans.SimpleStandard",
+            "testmbeans.PrimitiveStandard",
     };
-    
+
     private int numIter = 500;
     private String namePrefix;
     private String alphabet = "abcdefghijklmnopqrstuvwxyz";

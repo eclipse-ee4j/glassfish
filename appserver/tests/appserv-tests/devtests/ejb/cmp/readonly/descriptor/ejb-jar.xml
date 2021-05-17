@@ -45,7 +45,7 @@
       <security-identity>
         <description></description>
         <use-caller-identity></use-caller-identity>
-      </security-identity>     
+      </security-identity>
       <query>
         <description></description>
         <query-method>
@@ -104,7 +104,7 @@
       <cmp-field>
         <description>no description</description>
         <field-name>name</field-name>
-      </cmp-field>   
+      </cmp-field>
       <primkey-field>studentId</primkey-field>
       <ejb-ref>
         <ejb-ref-name>ejb/ReadOnlyStudent</ejb-ref-name>
@@ -115,7 +115,7 @@
       <security-identity>
         <description></description>
         <use-caller-identity></use-caller-identity>
-      </security-identity>     
+      </security-identity>
       <query>
         <description></description>
         <query-method>
@@ -161,14 +161,14 @@
       <unchecked />
       <method>
         <ejb-name>ReadOnlyStudentBean</ejb-name>
-        <method-name>*</method-name>        
+        <method-name>*</method-name>
       </method>
       <method>
         <ejb-name>StudentBean</ejb-name>
         <method-name>*</method-name>
       </method>
     </method-permission>
-    
+
 <!-- Student EJB -->
     <container-transaction>
       <method>
@@ -181,7 +181,7 @@
         </method-params>
       </method>
       <trans-attribute>Required</trans-attribute>
-    </container-transaction>    
+    </container-transaction>
     <container-transaction>
       <method>
         <ejb-name>ReadOnlyStudentBean</ejb-name>
@@ -199,7 +199,7 @@
         <method-params />
       </method>
       <trans-attribute>Required</trans-attribute>
-    </container-transaction>            
+    </container-transaction>
     <container-transaction>
       <method>
         <ejb-name>ReadOnlyStudentBean</ejb-name>
@@ -210,7 +210,7 @@
         </method-params>
       </method>
       <trans-attribute>Required</trans-attribute>
-    </container-transaction>     
+    </container-transaction>
      <container-transaction>
       <method>
         <ejb-name>StudentBean</ejb-name>
@@ -229,8 +229,8 @@
         <method-name>*</method-name>
       </method>
       <trans-attribute>Required</trans-attribute>
-    </container-transaction>    
+    </container-transaction>
   </assembly-descriptor>
-      
+
 </ejb-jar>
 

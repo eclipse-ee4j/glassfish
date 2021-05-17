@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
  * @author mmares
  */
 public class ReferenceConstrainTest extends ConfigApiTest {
-    
+
 //    private Logger logger = Logger.getLogger(ReferenceConstrainTest.class.getName());
     private ServiceLocator habitat;
 
@@ -53,7 +53,7 @@ public class ReferenceConstrainTest extends ConfigApiTest {
     public ServiceLocator getHabitat() {
         return habitat;
     }
-    
+
     private ConstraintViolationException findConstrViolation(Throwable thr) {
         if (thr == null) {
             return null;
@@ -63,12 +63,12 @@ public class ReferenceConstrainTest extends ConfigApiTest {
         }
         return findConstrViolation(thr.getCause());
     }
-    
+
     @Before
     public void createNewHabitat() {
         this.habitat = Utils.instance.getHabitat(this);
     }
-    
+
     @Test // @Ignore
     public void doChangeToValidPool() throws TransactionFailure {
         Domain domain = habitat.getService(Domain.class);
@@ -95,7 +95,7 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             fail();
         }
     }
-   
+
     @Test
     public void doChangeToInValidPool() throws TransactionFailure {
         Domain domain = habitat.getService(Domain.class);
@@ -125,5 +125,5 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             assertNotNull(cv);
         }
     }
-    
+
 }

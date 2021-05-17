@@ -24,11 +24,11 @@ public class Document {
         this.name = name;
         this.isBlog = blog;
     }
-    
+
     public boolean isBlog(){
         return this.isBlog;
     }
-    
+
     public void update(){
         System.out.println("Document:" + name + " updated.");
     }

@@ -23,11 +23,11 @@
 
 <project name="mdb" default="all" basedir=".">
 
-	&commonBuild;
+    &commonBuild;
 
-	<target name="private-all" if="PE">
-		<ant dir="webclient" target="private-all">
-			<property name="build" value="${build}/webclient"/>
-		</ant>
-	</target>
+    <target name="private-all" if="PE">
+        <ant dir="webclient" target="private-all">
+            <property name="build" value="${build}/webclient"/>
+        </ant>
+    </target>
 </project>

@@ -22,7 +22,7 @@ package org.apache.catalina.ssi;
  * Parses an expression string to return the individual tokens. This is
  * patterned similar to the StreamTokenizer in the JDK but customized for SSI
  * conditional expression parsing.
- * 
+ *
  * @version $Revision: 1.2 $
  * @author Paul Speed
  */

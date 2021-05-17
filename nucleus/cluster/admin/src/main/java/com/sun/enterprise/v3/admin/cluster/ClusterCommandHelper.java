@@ -146,7 +146,7 @@ class ClusterCommandHelper {
         targetServers = optimizeServerListOrder(targetServers);
 
         // Holds responses from the threads running the command
-        ArrayBlockingQueue<CommandRunnable> responseQueue = 
+        ArrayBlockingQueue<CommandRunnable> responseQueue =
                     new ArrayBlockingQueue<CommandRunnable>(nInstances);
 
         // Make the thread pool use the smaller of the number of instances
@@ -187,7 +187,7 @@ class ClusterCommandHelper {
             instanceReport.setActionExitCode(ExitCode.SUCCESS);
             CommandInvocation invocation = runner.getCommandInvocation(
                         command, instanceReport, context.getSubject());
-            invocation.parameters(instanceParameterMap);           
+            invocation.parameters(instanceParameterMap);
 
             msg = command + " " + iname;
             logger.info(msg);
@@ -272,7 +272,7 @@ class ClusterCommandHelper {
         }
 
         report.setActionExitCode(ExitCode.SUCCESS);
-        
+
         if (failureOccurred) {
             report.setResultType(List.class, reportResult.failedServerNames);
         } else {

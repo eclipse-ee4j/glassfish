@@ -31,7 +31,7 @@ import jakarta.inject.Inject;
  */
 @Service
 public class AdminInfo implements ContainerBuilder<EmbeddedAdminContainer> {
-    
+
     @Inject
     EmbeddedAdminContainer ctr;
 

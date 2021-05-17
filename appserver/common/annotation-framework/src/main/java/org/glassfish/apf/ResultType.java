@@ -17,15 +17,15 @@
 package org.glassfish.apf;
 
 /**
- * Defines the result from a single annotation processing, UNPROCESSED mean the 
- * annotation has not been processed by any handler yet, PROCESSED mean that all 
+ * Defines the result from a single annotation processing, UNPROCESSED mean the
+ * annotation has not been processed by any handler yet, PROCESSED mean that all
  * processing had been done and the annotation was fully processed, FAILED
- * indicate an error condition. 
+ * indicate an error condition.
  *
  * @author Jerome Dochez
  */
 public enum ResultType {
-    
+
     /**
      * Annotation has not been processed
      */
@@ -33,9 +33,9 @@ public enum ResultType {
     /**
      * Annotation has been processed successfully
      */
-    PROCESSED, 
+    PROCESSED,
     /**
      * Annotation has been processed unsuccessfully
      */
-    FAILED 
+    FAILED
 };

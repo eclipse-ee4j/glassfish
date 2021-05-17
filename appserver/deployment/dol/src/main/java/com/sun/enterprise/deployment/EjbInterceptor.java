@@ -20,7 +20,7 @@ import jakarta.enterprise.inject.spi.Interceptor;
 
 /**
  * Contains information about 1 ejb interceptor.
- */ 
+ */
 
 public class EjbInterceptor extends InterceptorDescriptor
 {
@@ -30,11 +30,11 @@ public class EjbInterceptor extends InterceptorDescriptor
     private Interceptor interceptor;
 
     public EjbBundleDescriptor getEjbBundleDescriptor() {
-	    return ejbBundleDescriptor;
+        return ejbBundleDescriptor;
     }
 
     public void setEjbBundleDescriptor(EjbBundleDescriptor bundleDescriptor) {
-	    ejbBundleDescriptor = bundleDescriptor;
+        ejbBundleDescriptor = bundleDescriptor;
         super.setBundleDescriptor(bundleDescriptor);
     }
 

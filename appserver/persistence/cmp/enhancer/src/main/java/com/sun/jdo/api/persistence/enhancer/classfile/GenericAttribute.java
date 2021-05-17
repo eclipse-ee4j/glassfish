@@ -52,9 +52,9 @@ public class GenericAttribute extends ClassAttribute {
                 " in length");//NOI18N
     for (int i=0; i<attributeBytes.length; i++) {
       if ((i % 16) == 0) {
-	if (i != 0) 
-	  out.println();
-	out.print(i + " :");//NOI18N
+    if (i != 0)
+      out.println();
+    out.print(i + " :");//NOI18N
       }
       out.print(" " + Integer.toString((attributeBytes[i] & 0xff), 16));//NOI18N
     }

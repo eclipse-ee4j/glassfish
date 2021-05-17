@@ -35,7 +35,7 @@
     <target name="unsetup">
         <antcall target="common-unsetup"/>
         <ant dir="framework-controller" target="unsetup"/>
-    </target> 
+    </target>
 
     <target name="all">
         <delete file="${TestResultFile}"/>

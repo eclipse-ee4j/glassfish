@@ -53,7 +53,7 @@ public class WebTest {
         contextRoot = args[2];
         run = args[3];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for (de)serialization of "
@@ -73,7 +73,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void firstRun() throws Exception {
@@ -84,7 +84,7 @@ public class WebTest {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\r\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -129,7 +129,7 @@ public class WebTest {
         System.out.println(cookie);
         os.write(cookie.getBytes());
         os.write("\r\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         br = new BufferedReader(new InputStreamReader(is));
 

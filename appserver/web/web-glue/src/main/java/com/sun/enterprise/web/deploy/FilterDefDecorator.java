@@ -37,17 +37,17 @@ public class FilterDefDecorator extends FilterDef {
      * parameter name.
      */
     private Map parameters = null;
-                                    
+
     private ServletFilter decoree;
-    
+
     public FilterDefDecorator(ServletFilter decoree){
         this.decoree = decoree;
         Vector initParams = decoree.getInitializationParameters();
-        InitializationParameter initParam; 
+        InitializationParameter initParam;
         for (int i=0; i < initParams.size(); i++){
            initParam = (InitializationParameter)initParams.get(i);
            addInitParameter( initParam.getName(),initParam.getValue() );
-        }  
+        }
     }
 
 
@@ -62,7 +62,7 @@ public class FilterDefDecorator extends FilterDef {
     public String getDisplayName() {
         return decoree.getDisplayName();
     }
-  
+
     public String getFilterClassName() {
         String className = decoree.getClassName();
         if (null == className || className.isEmpty()) {
@@ -92,6 +92,6 @@ public class FilterDefDecorator extends FilterDef {
     public boolean isAsyncSupported() {
         Boolean decoreeAsyncFlag = decoree.isAsyncSupported();
         return (decoreeAsyncFlag == null ? false : decoreeAsyncFlag);
-    }   
+    }
 
 }

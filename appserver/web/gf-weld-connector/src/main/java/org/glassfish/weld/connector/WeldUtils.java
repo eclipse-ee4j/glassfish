@@ -151,12 +151,12 @@ public class WeldUtils {
         if (!archive.exists(META_INF_SERVICES_EXTENSION)) {
           result = isImplicitBeanArchive(context, archive.getURI());
         } else {
-        	
-        	if (archive.exists(META_INF_BEANS_XML)) {
-        		
-        		result = isImplicitBeanArchive(context, archive.getURI());
-        	}
-        	
+
+            if (archive.exists(META_INF_BEANS_XML)) {
+
+                result = isImplicitBeanArchive(context, archive.getURI());
+            }
+
         }
 
         return result;

@@ -27,7 +27,7 @@ class ProcessStreamDrainerWorker implements Runnable
     {
         if(in == null)
             throw new NullPointerException("InputStream argument was null.");
-        
+
         reader = new BufferedInputStream(in);
         redirect = Redirect;
 
@@ -35,17 +35,17 @@ class ProcessStreamDrainerWorker implements Runnable
             sb = new StringBuilder();
         }
     }
-    
+
     public void run()
     {
         if(reader == null)
             return;
-        
+
         try
         {
             int count = 0;
             byte[] buffer = new byte[4096];
-            
+
             while ((count = reader.read(buffer)) != -1)
             {
                 if(redirect != null)
@@ -54,7 +54,7 @@ class ProcessStreamDrainerWorker implements Runnable
                if(sb != null)
                    sb.append(new String(buffer, 0, count));
             }
-        } 
+        }
         catch (IOException e)
         {
         }
@@ -66,7 +66,7 @@ class ProcessStreamDrainerWorker implements Runnable
         else
             return "";
     }
-    
+
     private final   BufferedInputStream reader;
     private final   PrintStream         redirect;
     private         StringBuilder       sb;

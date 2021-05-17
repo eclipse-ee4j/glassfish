@@ -17,7 +17,7 @@
 package test.fwk;
 
 public class SomeFwkServiceImpl implements SomeFwkServiceInterface {
-    
+
     public SomeFwkServiceImpl(String t){
         System.out.println("SomeFrameworkClass:" + t);
     }

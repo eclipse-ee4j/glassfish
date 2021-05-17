@@ -43,8 +43,8 @@ public class ClassMethod extends ClassMember {
 
   /* The attributes associated with the field */
   private AttributeVector methodAttributes;
-  
-  
+
+
   /* public accessors */
 
   /**
@@ -113,9 +113,9 @@ public class ClassMethod extends ClassMember {
   /**
    * Construct a class method object
    */
-  
+
   public ClassMethod(int accFlags, ConstUtf8 name, ConstUtf8 sig,
-		     AttributeVector methodAttrs) {
+             AttributeVector methodAttrs) {
     accessFlags = accFlags;
     methodName = name;
     methodSignature = sig;
@@ -138,7 +138,7 @@ public class ClassMethod extends ClassMember {
     while (e.hasMoreElements()) {
       ClassAttribute attr = (ClassAttribute) e.nextElement();
       if (attr instanceof CodeAttribute)
-	return (CodeAttribute) attr;
+    return (CodeAttribute) attr;
     }
     return null;
   }
@@ -146,16 +146,16 @@ public class ClassMethod extends ClassMember {
   /* package local methods */
 
 
-  static ClassMethod read(DataInputStream data, ConstantPool pool) 
+  static ClassMethod read(DataInputStream data, ConstantPool pool)
     throws IOException {
     int accessFlags = data.readUnsignedShort();
     int nameIndex = data.readUnsignedShort();
     int sigIndex = data.readUnsignedShort();
-    ClassMethod f = 
-      new ClassMethod(accessFlags, 
-		      (ConstUtf8) pool.constantAt(nameIndex),
-		      (ConstUtf8) pool.constantAt(sigIndex),
-		      null);
+    ClassMethod f =
+      new ClassMethod(accessFlags,
+              (ConstUtf8) pool.constantAt(nameIndex),
+              (ConstUtf8) pool.constantAt(sigIndex),
+              null);
 
     f.methodAttributes = AttributeVector.readAttributes(data, pool);
     return f;

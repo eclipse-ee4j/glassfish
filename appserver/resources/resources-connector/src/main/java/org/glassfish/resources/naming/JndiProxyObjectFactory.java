@@ -43,9 +43,9 @@ public class JndiProxyObjectFactory implements ObjectFactory {
      * load the context factory
      */
     private Context loadInitialContext(String factoryClass, Hashtable env) {
-	Object factory = ResourceUtil.loadObject(factoryClass);
+    Object factory = ResourceUtil.loadObject(factoryClass);
         if (factory == null) {
-        	System.err.println("Cannot load external-jndi-resource " +
+            System.err.println("Cannot load external-jndi-resource " +
                                    "factory-class '" + factoryClass + "'");
                 return null;
         } else if (! (factory instanceof
@@ -59,14 +59,14 @@ public class JndiProxyObjectFactory implements ObjectFactory {
 
         Context context = null;
         try {
-        	context = ((InitialContextFactory)factory).getInitialContext(env);
+            context = ((InitialContextFactory)factory).getInitialContext(env);
         } catch (NamingException ne) {
-          	System.err.println("Exception thrown creating initial context " +
+              System.err.println("Exception thrown creating initial context " +
                                    "for external JNDI factory '" +
                                    factoryClass + "' " + ne.getMessage());
         }
 
-	return context;
+    return context;
     }
 
     /**
@@ -79,7 +79,7 @@ public class JndiProxyObjectFactory implements ObjectFactory {
         // name to lookup in the external factory
         String jndiLookupName = "";
         String jndiFactoryClass = null;
- 	    ResourceInfo resourceInfo = null;
+         ResourceInfo resourceInfo = null;
 
         // get the target initial naming context and the lookup name
         Reference ref = (Reference) obj;
@@ -100,19 +100,19 @@ public class JndiProxyObjectFactory implements ObjectFactory {
         }
 
         if (resourceInfo == null) {
-		    throw new NamingException("JndiProxyObjectFactory: no resourceInfo context info");
-	    }
+            throw new NamingException("JndiProxyObjectFactory: no resourceInfo context info");
+        }
 
-	    ProxyRefAddr contextAddr =
+        ProxyRefAddr contextAddr =
                 (ProxyRefAddr)ref.get(resourceInfo.getName());
-	    Hashtable env = null;
-	    if (contextAddr == null ||
+        Hashtable env = null;
+        if (contextAddr == null ||
             jndiFactoryClass == null ||
-	        (env = (Hashtable)(contextAddr.getContent())) == null) {
-		    throw new NamingException("JndiProxyObjectFactory: no info in the " +
+            (env = (Hashtable)(contextAddr.getContent())) == null) {
+            throw new NamingException("JndiProxyObjectFactory: no info in the " +
                     "reference about the target context; contextAddr = " + contextAddr + " " +
                     "env = " + env + " factoryClass = " + jndiFactoryClass);
-	    }
+        }
 
         // Context of the external naming factory
         Context context = contextMap.get(resourceInfo);

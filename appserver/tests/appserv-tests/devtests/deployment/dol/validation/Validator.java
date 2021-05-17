@@ -65,7 +65,7 @@ public class Validator {
         Archivist archivist = null;
 
         ReadableArchive archive = null;
-        
+
         // first read/parse and write out the original valid archive
         try {
             File archiveFile = new File(fileName);
@@ -74,11 +74,11 @@ public class Validator {
             archivist = archivistFactory.getArchivist(archiveType);
             archivist.setHandleRuntimeInfo(true);
             archivist.setArchiveUri(fileName);
-	    archivist.setXMLValidation(true);
-	    archivist.setXMLValidationLevel("full");
+        archivist.setXMLValidation(true);
+        archivist.setXMLValidationLevel("full");
             archivist.setRuntimeXMLValidation(true);
             archivist.setRuntimeXMLValidationLevel("full");
-            log("Reading/parsing the orginal archive: " + 
+            log("Reading/parsing the orginal archive: " +
                 fileName);
             try {
               Descriptor descriptor = archivist.open(archiveFile);
@@ -89,12 +89,12 @@ public class Validator {
                 throw ex;
               }
             }
-            log("Writing out the archive to: " + 
+            log("Writing out the archive to: " +
                 outputFileName);
             archivist.write(archive, outputFileName);
         } catch (Exception e) {
             e.printStackTrace();
-            log("Input archive: [" + fileName + 
+            log("Input archive: [" + fileName +
                 "] is not valid");
             fail();
         } finally {
@@ -119,12 +119,12 @@ public class Validator {
             archivist.setXMLValidationLevel("full");
             archivist.setRuntimeXMLValidation(true);
             archivist.setRuntimeXMLValidationLevel("full");
-            log("Reading/parsing the output archive" + 
+            log("Reading/parsing the output archive" +
                 outputFileName);
             Descriptor descriptor = archivist.open(archiveFile);
         } catch (Exception e) {
             e.printStackTrace();
-            log("The input archive: [" + outputFileName + 
+            log("The input archive: [" + outputFileName +
                 "] is not valid");
             fail();
         }
@@ -134,7 +134,7 @@ public class Validator {
             archivist.write(archive, outputFileName2);
         } catch (Exception e) {
             e.printStackTrace();
-            log("The output archive: [" + outputFileName2 + 
+            log("The output archive: [" + outputFileName2 +
                 "] is not valid");
             fail();
         } finally {
@@ -193,7 +193,7 @@ public class Validator {
     }
 
     private static String getExtension(String file) {
-        String ext = file.substring(file.lastIndexOf("."));        
+        String ext = file.substring(file.lastIndexOf("."));
         return ext;
     }
 
@@ -205,7 +205,7 @@ public class Validator {
             StartupContext startupContext = new StartupContext();
 
             ServiceLocatorUtilities.addOneConstant(serviceLocator, startupContext);
-            ServiceLocatorUtilities.addOneConstant(serviceLocator, 
+            ServiceLocatorUtilities.addOneConstant(serviceLocator,
                 new ProcessEnvironment(ProcessEnvironment.ProcessType.Other));
 
             Globals.setDefaultHabitat(serviceLocator);

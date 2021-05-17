@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class SimpleMessageClient implements Runnable{
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     int id =0;
@@ -84,7 +84,7 @@ public class SimpleMessageClient implements Runnable{
             stat.printSummary("simple stress program");
             System.exit(0);
         }
-         
+
 
     }
 

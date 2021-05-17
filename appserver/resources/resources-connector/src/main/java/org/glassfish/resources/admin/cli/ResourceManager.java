@@ -26,7 +26,7 @@ import java.util.Properties;
 
 /**
  * Contract for all ResourceManagers
- * 
+ *
  * @author Prashanth Abbagani
  */
 @Contract
@@ -37,7 +37,7 @@ public interface ResourceManager {
      * @param resources parent for the resource to be created
      * @param attributes resource configuration
      * @param properties properties
-     * @param target target 
+     * @param target target
      * @return ResourceStatus indicating the status of resource creation
      * @throws Exception when unable to create the resource
      */
@@ -52,7 +52,7 @@ public interface ResourceManager {
      * @param properties properties of the resource
      * @param validate indicate whether config validation is required or not
      * @return Config-Bean equivalent of the resource
-     * @throws Exception when unable to create config-bean-equivalent 
+     * @throws Exception when unable to create config-bean-equivalent
      */
     Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
             throws Exception;

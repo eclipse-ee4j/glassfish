@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -48,22 +48,22 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
     <!-- Create the ORACLE connection pool connection pool and datasource -->
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.resource.type" value="javax.sql.DataSource"/>
         <param name="jdbc.conpool.name" value="jdbc-stress"/>
-	<param name="db.class" value="oracle.jdbc.pool.OracleDataSource"/>
-	<param name="db.user" value="${ora.user}"/>
-	<param name="db.pwd" value="${ora.passwd}"/>
-	<param name="db.url" value="${ora.sid}"/>
+    <param name="db.class" value="oracle.jdbc.pool.OracleDataSource"/>
+    <param name="db.user" value="${ora.user}"/>
+    <param name="db.pwd" value="${ora.passwd}"/>
+    <param name="db.url" value="${ora.sid}"/>
       </antcall>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
@@ -73,7 +73,7 @@
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stress.property.URL=${ora.url}"/>
       </antcall>
-      
+
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stress.property.ServerName=129.158.229.239"/>
@@ -86,22 +86,22 @@
       </antcall>
 
 
-      
-      <antcall target="deploy-common"/> 
+
+      <antcall target="deploy-common"/>
       <echo message="Executing sql from ${sql.file}"/>
       <sql
         src="sql/create_pointbase.sql"
-	driver="oracle.jdbc.driver.OracleDriver"
-	userid="${ora.user}"
-	password="${ora.passwd}"
-	url="${ora.url}"
-	classpath="${classes12.zip}"
-	onerror="continue"
-	print="yes"
+    driver="oracle.jdbc.driver.OracleDriver"
+    userid="${ora.user}"
+    password="${ora.passwd}"
+    url="${ora.url}"
+    classpath="${classes12.zip}"
+    onerror="continue"
+    print="yes"
       />
-      
+
     </target>
-    
+
     <target name="run" depends="init-common">
       <antcall target="runclient-common"/>
     </target>
@@ -110,24 +110,24 @@
       <echo message="Executing sql from ${sql.file}"/>
       <sql
         src="sql/drop_pointbase.sql"
-	driver="oracle.jdbc.driver.OracleDriver"
-	userid="${ora.user}"
-	password="${ora.passwd}"
-	url="${ora.url}"
-	classpath="${classes12.zip}"
-	onerror="continue"
-	print="yes"
+    driver="oracle.jdbc.driver.OracleDriver"
+    userid="${ora.user}"
+    password="${ora.passwd}"
+    url="${ora.url}"
+    classpath="${classes12.zip}"
+    onerror="continue"
+    print="yes"
       />
 
-      <antcall target="undeploy-common"/> 
+      <antcall target="undeploy-common"/>
 
-      <antcall target="delete-jdbc-resource-common"> 
+      <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB-stress"/>
       </antcall>
-      <antcall target="delete-jdbc-connpool-common"> 
+      <antcall target="delete-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-stress"/>
       </antcall>
-    </target>   
+    </target>
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

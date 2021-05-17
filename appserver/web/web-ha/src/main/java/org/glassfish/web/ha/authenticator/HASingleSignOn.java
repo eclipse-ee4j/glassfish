@@ -49,11 +49,11 @@ public class HASingleSignOn extends GlassFishSingleSignOn {
     @Override
     protected void deregister(String ssoId) {
 
-        //S1AS8 6155481 START        
+        //S1AS8 6155481 START
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Deregistering sso id '" + ssoId + "'");
         }
-        //S1AS8 6155481 END 
+        //S1AS8 6155481 END
         // Look up and remove the corresponding SingleSignOnEntry
         SingleSignOnEntry sso = null;
         synchronized (cache) {

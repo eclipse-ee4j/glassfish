@@ -28,7 +28,7 @@ public class Singleton2 {
     public void init() {
         System.out.println("In SingletonBean2::init()");
     }
-    
+
     @PreDestroy
     public void destroy() {
         System.out.println("In SingletonBean2::destroy()");

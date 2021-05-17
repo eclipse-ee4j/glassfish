@@ -23,24 +23,24 @@ package com.sun.jdo.spi.persistence.utility.logging;
  */
 public class LoggerFactoryJDK13 extends AbstractLoggerFactory
 {
-	/** Creates new LoggerFactoryJDK13 */
-	public LoggerFactoryJDK13 ()
-	{
-	}
+    /** Creates new LoggerFactoryJDK13 */
+    public LoggerFactoryJDK13 ()
+    {
+    }
 
-	/** Create a new Logger.  Subclasses are responsible for creating a 
-	 * logger for the named component.  The bundle name and class loader 
-	 * are passed to allow the implementation to properly find and 
-	 * construct the internationalization bundle.
-	 * @param absoluteLoggerName the absolute name of this logger
-	 * @param bundleName the fully qualified name of the resource bundle
-	 * @param loader the class loader used to load the resource bundle, or null
-	 * @return the logger
-	 */
-	protected Logger createLogger (String absoluteLoggerName, 
-		String bundleName, ClassLoader loader)
-	{
-		return new LoggerJDK13(absoluteLoggerName, bundleName, loader);
-	}
+    /** Create a new Logger.  Subclasses are responsible for creating a
+     * logger for the named component.  The bundle name and class loader
+     * are passed to allow the implementation to properly find and
+     * construct the internationalization bundle.
+     * @param absoluteLoggerName the absolute name of this logger
+     * @param bundleName the fully qualified name of the resource bundle
+     * @param loader the class loader used to load the resource bundle, or null
+     * @return the logger
+     */
+    protected Logger createLogger (String absoluteLoggerName,
+        String bundleName, ClassLoader loader)
+    {
+        return new LoggerJDK13(absoluteLoggerName, bundleName, loader);
+    }
 }
 

@@ -47,8 +47,8 @@ import jakarta.inject.Inject;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="disable-monitoring", 
+        opType=RestEndpoint.OpType.POST,
+        path="disable-monitoring",
         description="disable-monitoring")
 })
 public class DisableMonitoring implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -66,7 +66,7 @@ public class DisableMonitoring implements AdminCommand, AdminCommandSecurity.Pre
     @Param(optional=true)
     private String modules;
 
-    final private LocalStringManagerImpl localStrings = 
+    final private LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(DisableMonitoring.class);
 
     @AccessRequired.To("update")
@@ -91,13 +91,13 @@ public class DisableMonitoring implements AdminCommand, AdminCommandSecurity.Pre
             return false;
         }
     }
-    
+
     private void fail(final ActionReport report, final String messageKey,
             final String fallbackMessageText, final Object... args) {
         report.setMessage(localStrings.getLocalString(messageKey, fallbackMessageText, args));
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
 

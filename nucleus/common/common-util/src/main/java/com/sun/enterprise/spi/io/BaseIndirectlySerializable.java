@@ -27,5 +27,5 @@ package com.sun.enterprise.spi.io;
  * @author  Administrator
  */
 public interface BaseIndirectlySerializable {
-    
+
 }

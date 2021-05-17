@@ -27,7 +27,7 @@
 
 <condition property="uber.jar" value="${uber.jar.repo}/repository/org/glassfish/extras/glassfish-embedded-all/3.1-SNAPSHOT/glassfish-embedded-all-3.1-SNAPSHOT.jar">
     <and>
-  	<isset property="uber.mode"/>
+      <isset property="uber.mode"/>
         <not>
           <isset property="uber.jar"/>
         </not>

@@ -26,26 +26,26 @@ public class ServerModule1 extends CommonModule {
 
 /*
     public void initialize(AuthPolicy requestPolicy,
-			AuthPolicy responsePolicy,
-			CallbackHandler handler,
-			Map options) {
+            AuthPolicy responsePolicy,
+            CallbackHandler handler,
+            Map options) {
     }
 
     public void validateRequest(AuthParam param,
-				Subject subject,
-				Map sharedState)
-		throws AuthException {
+                Subject subject,
+                Map sharedState)
+        throws AuthException {
     }
 
     public void secureResponse(AuthParam param,
-				Subject subject,
-				Map sharedState)
-		throws AuthException {
+                Subject subject,
+                Map sharedState)
+        throws AuthException {
     }
 
     public void disposeSubject(Subject subject,
-				Map sharedState)
-		throws AuthException {
+                Map sharedState)
+        throws AuthException {
     }
 */
 }

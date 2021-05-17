@@ -17,8 +17,8 @@
 package org.glassfish.embeddable.web.config;
 
 /**
- * Enumeration of supported transport 
- * 
+ * Enumeration of supported transport
+ *
  * @author Rajiv Mordani
  */
 public enum TransportGuarantee {

@@ -87,10 +87,10 @@ public class FailureInducer {
     private static Hashtable waitTime = new Hashtable();
     private static ResourceBundle messages = ResourceBundle.
         getBundle("com.sun.jts.utils.RecoveryHooks.Messages"/*#Frozen*/);
-	/*
-		Logger to log transaction messages 
-	*/  
-	    static Logger _logger = LogDomains.getLogger(FailureInducer.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+        static Logger _logger = LogDomains.getLogger(FailureInducer.class, LogDomains.TRANSACTION_LOGGER);
     // static initializer
 
     static {
@@ -134,7 +134,7 @@ public class FailureInducer {
     public static void setCrashPoint(Integer crashPoint) {
         // sanity check
         if (crashPoint == null) {
-			_logger.log(Level.SEVERE,"jts.invalid_crash_point");
+            _logger.log(Level.SEVERE,"jts.invalid_crash_point");
             return;
         }
 
@@ -155,7 +155,7 @@ public class FailureInducer {
     public static void setWaitPoint(Integer waitPoint, int waitDuration) {
         // sanity check
         if (waitPoint == null) {
-			_logger.log(Level.SEVERE,"jts.invalid_wait_point");
+            _logger.log(Level.SEVERE,"jts.invalid_wait_point");
             return;
         }
 

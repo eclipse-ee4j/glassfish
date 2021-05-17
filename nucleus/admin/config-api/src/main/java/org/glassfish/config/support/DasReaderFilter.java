@@ -30,7 +30,7 @@ class DasReaderFilter extends ServerReaderFilter {
 
     /**
      * DAS wants ALL elements so just return false!
-     * 
+     *
      * @return
      * @throws XMLStreamException
      */

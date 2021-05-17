@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.*;
  * regression on AS8")
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "programmatic-login";
 
     private static final SimpleReporterAdapter stat =
@@ -47,11 +47,11 @@ public class WebTest {
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for 4862098");
-        
+
         WebTest webTest = new WebTest(args);
-        
+
         try {
-            webTest.invoke();            
+            webTest.invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Throwable t) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -77,5 +77,5 @@ public class WebTest {
                 ", received: " + responseCode);
         }
    }
-  
+
 }

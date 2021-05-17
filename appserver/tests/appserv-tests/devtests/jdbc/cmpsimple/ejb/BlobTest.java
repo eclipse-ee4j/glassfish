@@ -24,8 +24,8 @@ import java.util.*;
  */
 
 public interface BlobTest extends jakarta.ejb.EJBObject {
-    
+
     public String getName() throws java.rmi.RemoteException;
-    
+
 }
 

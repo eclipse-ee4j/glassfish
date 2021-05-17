@@ -21,7 +21,7 @@ import org.glassfish.hk2.api.HK2Exception;
 /**
  * RetryableException indicates that an operation failed to execute property but
  * could be successful in a later attempt
- * 
+ *
  * @author Jerome Dochez
  */
 public class RetryableException extends HK2Exception {
@@ -30,5 +30,5 @@ public class RetryableException extends HK2Exception {
      * For serialization
      */
     private static final long serialVersionUID = -3005924251956145774L;
-    
+
 }

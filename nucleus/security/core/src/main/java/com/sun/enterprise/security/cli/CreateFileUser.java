@@ -53,12 +53,12 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Create File User Command
- * Usage: create-file-user [--terse=false] [--echo=false] [--interactive=true] 
- *        [--host localhost] [--port 4848|4849] [--secure | -s] 
- *        [--user admin_user] [--userpassword admin_passwd] 
- *        [--passwordfile file_name] [--groups user_groups[:user_groups]*] 
- *        [--authrealmname authrealm_name] [--target target(Default server)] 
- *        username 
+ * Usage: create-file-user [--terse=false] [--echo=false] [--interactive=true]
+ *        [--host localhost] [--port 4848|4849] [--secure | -s]
+ *        [--user admin_user] [--userpassword admin_passwd]
+ *        [--passwordfile file_name] [--groups user_groups[:user_groups]*]
+ *        [--authrealmname authrealm_name] [--target target(Default server)]
+ *        username
  *
  * @author Nandini Ektare
  */
@@ -70,17 +70,17 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=AuthRealm.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-user", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-user",
         description="Create",
         params={
             @RestParam(name="authrealmname", value="$parent")
         })
 })
 public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(CreateFileUser.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(CreateFileUser.class);
 
     @Param(name="groups", optional=true, separator=':')
     private List<String> groups = new ArrayList<String>(0); //by default, an empty list is better than a null
@@ -91,7 +91,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
 
     @Param(name="authrealmname", optional=true)
     private String authRealmName;
-    
+
     @Param(name = "target", optional = true, defaultValue =
     SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
@@ -110,15 +110,15 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
 
     @Inject
     private ServerEnvironment se;
-    
+
     @Inject
     private AdminService adminService;
-    
+
     private SecureAdmin secureAdmin = null;
-    
+
     @AccessRequired.To("update")
     private AuthRealm fileAuthRealm;
-    
+
     private SecurityService securityService;
 
     @Override
@@ -133,10 +133,10 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
             final ActionReport report = context.getActionReport();
             report.setMessage(localStrings.getLocalString(
                 "create.file.user.filerealmnotfound",
-                "File realm {0} does not exist", 
+                "File realm {0} does not exist",
                 authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;                                            
+            return false;
         }
         /*
          * The realm might have been defaulted, so capture the actual name.
@@ -144,8 +144,8 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
         authRealmName = fileAuthRealm.getName();
         return true;
     }
-    
-    
+
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -154,25 +154,25 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
-        
-        
+
+
         // Get FileRealm class name, match it with what is expected.
         String fileRealmClassName = fileAuthRealm.getClassname();
 
         // Report error if provided impl is not the one expected
-        if (fileRealmClassName != null && 
+        if (fileRealmClassName != null &&
             !fileRealmClassName.equals(
                 "com.sun.enterprise.security.auth.realm.file.FileRealm")) {
             report.setMessage(
                 localStrings.getLocalString(
                     "create.file.user.realmnotsupported",
-                    "Configured file realm {0} is not supported.", 
+                    "Configured file realm {0} is not supported.",
                     fileRealmClassName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                
+            return;
         }
         // ensure we have the file associated with the authrealm
         String keyFile = null;
@@ -184,10 +184,10 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
         if (keyFile == null) {
             report.setMessage(
                 localStrings.getLocalString("create.file.user.keyfilenotfound",
-                "There is no physical file associated with this file realm {0} ", 
+                "There is no physical file associated with this file realm {0} ",
                 authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                                            
+            return;
         }
         boolean exists = (new File(kf)).exists();
         if (!exists) {
@@ -199,8 +199,8 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
             return;
         }
         // Now get all inputs ready. userid and groups are straightforward but
-        // password is tricky. It is stored in the file passwordfile passed 
-        // through the CLI options. It is stored under the name 
+        // password is tricky. It is stored in the file passwordfile passed
+        // through the CLI options. It is stored under the name
         // AS_ADMIN_USERPASSWORD. Fetch it from there.
         final String password = userpassword; // fetchPassword(report);
         if (password == null) {
@@ -212,7 +212,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
         //Issue 17525 Fix - Check for null passwords for admin-realm if secureadmin is enabled
         secureAdmin = domain.getSecureAdmin();
         if ((SecureAdmin.Util.isEnabled(secureAdmin))
@@ -222,7 +222,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                         "null_empty_password","The admin user password is null or empty"));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
-            }           
+            }
         }
         // now adding user
         try {
@@ -317,9 +317,9 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                     realm.refresh(configName);
                 }
             } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
-                //	    _logger.fine("Realm: "+realmName+" is not configured");
+                //        _logger.fine("Realm: "+realmName+" is not configured");
             } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
-                //	    _logger.fine("Realm: "+realmName+" is not configured");
+                //        _logger.fine("Realm: "+realmName+" is not configured");
             }
         }
     }

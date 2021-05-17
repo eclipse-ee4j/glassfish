@@ -25,43 +25,43 @@ import org.glassfish.deployment.common.Descriptor;
  * @since JDK 1.4
  */
 public class MdbConnectionFactoryDescriptor extends Descriptor {
-    
-    
-    
+
+
+
     private String jndiName;
     private ResourcePrincipal defaultResourcePrincipal;
-    
+
     public MdbConnectionFactoryDescriptor() {
-        
+
     }
-    
+
     /** Getter for property defaultResourcePrincipal.
      * @return Value of property defaultResourcePrincipal.
      */
     public ResourcePrincipal getDefaultResourcePrincipal() {
         return defaultResourcePrincipal;
     }
-    
+
     /** Setter for property defaultResourcePrincipal.
      * @param defaultResourcePrincipal New value of property defaultResourcePrincipal.
      */
     public void setDefaultResourcePrincipal(ResourcePrincipal defaultResourcePrincipal) {
         this.defaultResourcePrincipal = defaultResourcePrincipal;
     }
-    
+
     /** Getter for property jndiName.
      * @return Value of property jndiName.
      */
     public java.lang.String getJndiName() {
         return jndiName;
     }
-    
+
     /** Setter for property jndiName.
      * @param jndiName New value of property jndiName.
      */
     public void setJndiName(java.lang.String jndiName) {
         this.jndiName = jndiName;
     }
-    
+
 }
 

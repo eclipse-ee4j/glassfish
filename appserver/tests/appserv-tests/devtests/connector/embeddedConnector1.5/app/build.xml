@@ -38,8 +38,8 @@
    <antcall target="build-ear"/>
  <!--
    <antcall target="ear-common">
-	<param name="appname" value="generic-embedded"/>
-	<param name="application.xml" value="META-INF/application.xml"/>
+    <param name="appname" value="generic-embedded"/>
+    <param name="application.xml" value="META-INF/application.xml"/>
    </antcall>
  -->
   </target>

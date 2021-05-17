@@ -43,7 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.webservices.connector.LogUtils;
 
-/** 
+/**
  * This node is responsible for loading web services
  * reference information
  *
@@ -77,12 +77,12 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
                 (new XMLElement(TagNames.INJECTION_TARGET),
                         InjectionTargetNode.class, "addInjectionTarget");
     }
-    
+
     /**
-     * all sub-implementation of this class can use a dispatch table 
-     * to map xml element to method name on the descriptor class for 
-     * setting the element value. 
-     *  
+     * all sub-implementation of this class can use a dispatch table
+     * to map xml element to method name on the descriptor class for
+     * setting the element value.
+     *
      * @return map with the element name as a key, the setter method as a value
      */
     @Override
@@ -104,12 +104,12 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     @Override
-    public void setElementValue(XMLElement element, String value) {    
+    public void setElementValue(XMLElement element, String value) {
         String qname = element.getQName();
         if (WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE.equals(qname)) {
             portInfo = getServiceReferenceDescriptor().getPortInfoBySEI(value);
@@ -229,5 +229,5 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
 
 
 
-    
+
 }

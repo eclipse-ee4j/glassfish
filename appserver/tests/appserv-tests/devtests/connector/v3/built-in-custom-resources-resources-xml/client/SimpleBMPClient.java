@@ -30,19 +30,19 @@ public class SimpleBMPClient {
     public static void main(String[] args)
         throws Exception {
 
- 	SimpleReporterAdapter stat = new SimpleReporterAdapter();
+     SimpleReporterAdapter stat = new SimpleReporterAdapter();
 
-	stat.addDescription(testSuite);
+    stat.addDescription(testSuite);
 
     InitialContext ic = new InitialContext();
     Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
-	SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
+    SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
     javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
        try{
     //      InitialContext ic = new InitialContext();
           System.out.println("Appclient lookup  : " +  ic.lookup("java:app/custom/my-properties-xml-file"));
-       }catch(Exception e){ 
+       }catch(Exception e){
            e.printStackTrace();
        }
 

@@ -66,7 +66,7 @@ public interface DasConfig extends ConfigBeanProxy, PropertyBag {
      * Maximum period, in seconds, that a change to the load balancer configuration file takes before it is detected by the
      * load balancer and the file reloaded. A value of 0 indicates that reloading is disabled. Default period is 1 minute
      * (60)
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "2", dataType = Integer.class)
@@ -192,7 +192,7 @@ public interface DasConfig extends ConfigBeanProxy, PropertyBag {
      * specifies if descriptor validation is required or not. full xml will be validated and in case of xml validation
      * errors, deployment will fail parsing xml errors will be reported but deployment process will continue. none no xml
      * validation will be perfomed on the standard or runtime deployment descriptors
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "full")

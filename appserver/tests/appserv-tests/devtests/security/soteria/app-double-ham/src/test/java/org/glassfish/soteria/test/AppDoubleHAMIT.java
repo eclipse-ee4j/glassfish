@@ -45,7 +45,7 @@ public class AppDoubleHAMIT extends ArquillianBase {
     public static void printSummary(){
       stat.printSummary();
     }
-   
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();
@@ -62,7 +62,7 @@ public class AppDoubleHAMIT extends ArquillianBase {
         assertNotAuthenticatedError(
                 responseFromServer("/servlet"));
     }
-    
+
     @Test
     public void testCustomHam() {
         assertNotAuthenticatedError(

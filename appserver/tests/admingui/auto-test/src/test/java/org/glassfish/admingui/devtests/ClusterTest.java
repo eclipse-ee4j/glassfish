@@ -38,8 +38,8 @@ public class ClusterTest extends BaseSeleniumTestClass {
     public static final String ID_CLUSTERS_STOP_BTN = "propertyForm:clustersTable:topActionsGroup1:button3";
     public static final String ID_INSTANCES_START_BTN = "propertyForm:instancesTable:topActionsGroup1:button2";
     public static final String ID_INSTANCES_STOP_BTN = "propertyForm:instancesTable:topActionsGroup1:button3";
-    
-    
+
+
     //Case 1:
     @Test
     public void testClusterCreationAndDeletion() throws Exception {
@@ -52,7 +52,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         } catch (Error e) {
             verificationErrors.append(e.toString());
         }
-        
+
         //start to detete the cluster and verify whether the cluster can be delete successfully
         String msg = deleteCluster(clusterName);
         assertTrue(msg.matches("^Delete the selected clusters and their instances[\\s\\S]$"));
@@ -79,7 +79,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         stopSpecifiedCluster(ID_CLUSTERS_START_BTN, ID_CLUSTERS_TABLE, clusterName);
         assertTrue(getText(prefix + "col3").endsWith("Stopped"));
 
-        
+
         deleteCluster(clusterName);
     }
 
@@ -90,7 +90,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         String instanceName1 = "instanceName" + generateRandomString();
         String instanceName2 = "instanceName" + generateRandomString();
         createCluster(clusterName, instanceName1, instanceName2);
-        
+
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col1:link";
         clickByIdAction(clickId);
         //Start cluster instance
@@ -99,7 +99,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         startTestMigrateEjbTimers();
         //stop cluster instance
         stopClusterInstance(instanceName1);
-        
+
         deleteCluster(clusterName);
     }
 
@@ -110,9 +110,9 @@ public class ClusterTest extends BaseSeleniumTestClass {
         String instanceName1 = "instanceName" + generateRandomString();
         String instanceName2 = "instanceName" + generateRandomString();
         createCluster(clusterName, instanceName1, instanceName2);
-        
+
         startVerifyClusterGeneralInformationPage(clusterName);
-        
+
         deleteCluster(clusterName);
     }
 
@@ -123,39 +123,39 @@ public class ClusterTest extends BaseSeleniumTestClass {
         String instanceName1 = "instanceName" + generateRandomString();
         String instanceName2 = "instanceName" + generateRandomString();
         createCluster(clusterName, instanceName1);
-        
+
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col1:link";
         clickByIdAction(clickId);
         clickByIdAction("propertyForm:clusterTabs:clusterInst");
         //Check whether the instance is already created
         assertEquals(instanceName1, getText(getTableRowByValue(ID_INSTANCES_TABLE, instanceName1, "col1") + "col1:link"));
-        
+
         clickByIdAction("propertyForm:instancesTable:topActionsGroup1:newButton");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:NameTextProp:NameText", instanceName2);
         clickByIdAction("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         //Check whether the instance is already created
         assertEquals(instanceName2, getText(getTableRowByValue(ID_INSTANCES_TABLE, instanceName2, "col1") + "col1:link"));
-        
+
         deleteCluster(clusterName);
     }
-    
+
     //Case 6
     @Test
     public void testProperties() {
         String clusterName = "clusterName" + generateRandomString();
         String instanceName1 = "instanceName" + generateRandomString();
         createCluster(clusterName, instanceName1);
-        
+
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col1:link";
         assertEquals(clusterName, getText(clickId));
-        
+
         // Go to properties tab
         clickByIdAction(clickId);
         clickByIdAction("propertyForm:clusterTabs:clusterProps");
         clickByIdAction("propertyForm:clusterSysPropsPage:topButtons:saveButton");
         assertTrue(driver.findElement(By.className("middle_sun4")).getText().equals("New values successfully saved."));
-        
+
         //Go to cluster properties
         clickByIdAction("propertyForm:clusterTabs:clusterProps:clusterInstanceProps");
         int clusterPropCount = addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
@@ -164,13 +164,13 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(500);
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", "value");
         clickByIdAction("propertyForm:propertyContentPage:topButtons:saveButton");
-        
+
         //verify the property had been saved
         assertTableRowCount("propertyForm:basicTable", clusterPropCount);
-        
+
         deleteCluster(clusterName);
     }
-    
+
     //Case 7
     @Test
     public void testClusterWithJmsOptions() {
@@ -182,13 +182,13 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(1000);
         clickByIdAction("propertyForm:jmsTypePropertySheet:jmsTypeSection:jmsTypeProp:optLocal");
         clickByIdAction("propertyForm:jmsPropertySheet:configureJmsClusterSection:ClusterTypeProp:optConventional");
-        
+
         Select select = new Select(driver.findElement(By.id("propertyForm:jmsPropertySheet:configureJmsClusterSection:ConfigStoreTypeProp:configStoreType")));
         select.selectByVisibleText("Master Broker");
-        
+
         Select select1 = new Select(driver.findElement(By.id("propertyForm:jmsPropertySheet:configureJmsClusterSection:MessageStoreTypeProp:messageStoreType")));
         select1.selectByVisibleText("File");
-        
+
         setFieldValue("propertyForm:jmsPropertySheet:configureJmsClusterSection:PropertiesProp:properties", "prop1=value1:prop2=value2\\:with\\:colons:prop3=value3");
 
         clickByIdAction("propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
@@ -200,14 +200,14 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(500);
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", clusterName + "in2");
         clickByIdAction("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col1:link";
         clickByIdAction(clickId);
         assertEquals(clusterName, getText("propertyForm:propertySheet:propertSectionTextField:clusterNameProp:clusterName"));
-        
+
         deleteCluster(clusterName);
     }
-    
+
     //Case 8
     @Test
     public void testClusterWithEnhancedJmsOptions() {
@@ -219,11 +219,11 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(1000);
         clickByIdAction("propertyForm:jmsTypePropertySheet:jmsTypeSection:jmsTypeProp:optLocal");
         clickByIdAction("propertyForm:jmsPropertySheet:configureJmsClusterSection:ClusterTypeProp:optEnhanced");
-        
+
         setFieldValue("propertyForm:jmsPropertySheet:configureJmsClusterSection:DbVendorProp:dbVendor", "mysql");
         setFieldValue("propertyForm:jmsPropertySheet:configureJmsClusterSection:DbUserProp:dbUser", "root");
         setFieldValue("propertyForm:jmsPropertySheet:configureJmsClusterSection:DbUrlProp:dbUrl", "jdbc:mysql://hostname:portno/dbname?password=xxx");
-        
+
         clickByIdAction("propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         clearByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name");
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", clusterName + "in1");
@@ -233,14 +233,14 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(500);
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", clusterName + "in2");
         clickByIdAction("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col1:link";
         clickByIdAction(clickId);
         assertEquals(clusterName, getText("propertyForm:propertySheet:propertSectionTextField:clusterNameProp:clusterName"));
-        
+
         deleteCluster(clusterName);
     }
-    
+
     //Case 9
     @Test
     public void testClusterWithBadJmsOptions() {
@@ -252,13 +252,13 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(1000);
         clickByIdAction("propertyForm:jmsTypePropertySheet:jmsTypeSection:jmsTypeProp:optLocal");
         clickByIdAction("propertyForm:jmsPropertySheet:configureJmsClusterSection:ClusterTypeProp:optConventional");
-        
+
         Select select = new Select(driver.findElement(By.id("propertyForm:jmsPropertySheet:configureJmsClusterSection:ConfigStoreTypeProp:configStoreType")));
         select.selectByVisibleText("Master Broker");
-        
+
         Select select1 = new Select(driver.findElement(By.id("propertyForm:jmsPropertySheet:configureJmsClusterSection:MessageStoreTypeProp:messageStoreType")));
         select1.selectByVisibleText("JDBC");
-        
+
         clickByIdAction("propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         clearByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name");
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", clusterName + "in1");
@@ -268,7 +268,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sleep(500);
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", clusterName + "in2");
         clickByIdAction("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         assertTrue((driver.findElement(By.className("header_sun4")).getText().indexOf(" An error occurred") != -1));
     }
     //case 10
@@ -317,7 +317,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         String clusterName1 = "clusterName" + generateRandomString();
         createCluster(clusterName);
         createCluster(clusterName1);
-        
+
         //start to delete all cluster
         deleteAllCluster();
 
@@ -327,7 +327,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
             verificationErrors.append(e.toString());
         }
     }
-    
+
     /**
      *  Cluster related methods
      */
@@ -348,7 +348,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         assertTrue(closeAlertAndGetItsText().matches("^Stop the selected clusters[\\s\\S]$"));
         waitForAlertProcess("modalBody");
     }
-    
+
     public void createCluster(String clusterName){
         gotoClusterPage();
         clickByIdAction("propertyForm:clustersTable:topActionsGroup1:newButton");
@@ -358,7 +358,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         String prefix = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1");
         assertEquals(clusterName, getText(prefix + "col1:link"));
     }
-    
+
     public void createCluster(String clusterName, String instanceName){
         gotoClusterPage();
         clickByIdAction("propertyForm:clustersTable:topActionsGroup1:newButton");
@@ -369,7 +369,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", instanceName);
         clickByIdAction("propertyForm:propertyContentPage:topButtons:newButton");
     }
-    
+
     public void createCluster(String clusterName, String instanceName, String instanceName1){
         gotoClusterPage();
         clickByIdAction("propertyForm:clustersTable:topActionsGroup1:newButton");
@@ -385,7 +385,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         sendKeysByIdAction("propertyForm:basicTable:rowGroup1:0:col2:name", instanceName1);
         clickByIdAction("propertyForm:propertyContentPage:topButtons:newButton");
     }
-    
+
     private String deleteCluster(String clusterName) {
         gotoClusterPage();
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col0:select";
@@ -395,7 +395,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         waitForAlertProcess("modalBody");
         return alertMsg;
     }
-    
+
     public void deleteAllCluster(){
         gotoClusterPage();
         if (getTableRowCount(ID_CLUSTERS_TABLE) == 0) {
@@ -406,12 +406,12 @@ public class ClusterTest extends BaseSeleniumTestClass {
         closeAlertAndGetItsText();
         waitForAlertProcess("modalBody");
     }
-    
+
     public void gotoClusterPage(){
         driver.get(baseUrl + "common/index.jsf");
         clickByIdAction("treeForm:tree:clusterTreeNode:clusterTreeNode_link");
     }
-    
+
     /**
      * Instance related methods
      */
@@ -423,7 +423,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         closeAlertAndGetItsText();
         waitForAlertProcess("modalBody");
     }
-    
+
     private void stopClusterInstance(String instanceName1) {
         clickByIdAction("propertyForm:clusterTabs:clusterInst");
         String clickId = getTableRowByValue(ID_INSTANCES_TABLE, instanceName1, "col1")+"col0:select";
@@ -435,7 +435,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
     /**
      * Test related methods
      */
-    
+
     private void startTestMigrateEjbTimers() {
         clickByIdAction("propertyForm:clusterTabs:general");
         isElementPresent("propertyForm:migrateTimesButton");
@@ -445,28 +445,28 @@ public class ClusterTest extends BaseSeleniumTestClass {
         isClassPresent("header_sun4");
         assertTrue(driver.findElement(By.className("header_sun4")).getText().indexOf("Migrated 0 timers") != -1);
     }
-    
+
     private void startVerifyClusterGeneralInformationPage(String clusterName) {
         String clickId = getTableRowByValue(ID_CLUSTERS_TABLE, clusterName, "col1")+"col1:link";
         clickByIdAction(clickId);
-        
+
         assertEquals(clusterName, getText("propertyForm:propertySheet:propertSectionTextField:clusterNameProp:clusterName"));
         assertEquals(clusterName + "-config", getText("propertyForm:propertySheet:propertSectionTextField:configNameProp:configlink"));
-        
-        
+
+
         clickByIdAction("propertyForm:propertySheet:propertSectionTextField:configNameProp:configlink");
         clickByIdAction("treeForm:tree:clusterTreeNode:clusterTreeNode_link");
         clickByIdAction(clickId);
-        
+
         assertEquals("2 instances are stopped", getText("propertyForm:propertySheet:propertSectionTextField:instanceStatusProp:instanceStatusStopped"));
-        
+
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:gmsMulticastPort:gmsMulticastPort", "12345");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:gmsMulticastAddress:gmsMulticastAddress", "123.234.456.88");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:GmsBindInterfaceAddress:GmsBindInterfaceAddress", "${ABCDE}");
         clickByIdAction("propertyForm:propertySheet:propertSectionTextField:gmsEnabledProp:gmscb");
-        
+
         clickByIdAction("propertyForm:propertyContentPage:topButtons:saveButton");
-        
+
         //ensure value is saved correctly
         assertEquals("12345", getValue("propertyForm:propertySheet:propertSectionTextField:gmsMulticastPort:gmsMulticastPort","value"));
         assertEquals("123.234.456.88", getValue("propertyForm:propertySheet:propertSectionTextField:gmsMulticastAddress:gmsMulticastAddress","value"));

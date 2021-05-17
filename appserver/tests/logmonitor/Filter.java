@@ -188,8 +188,8 @@ public class Filter {
         boolean isGfHome = true;
         String gfHome = "";
 
-        if (args.length < 2 || args[0]==null || args[1] ==null || ("${glassfish_home}").equals(args[0]) || ("${options}").equals(args[1]) 
-				|| ("").equals(args[0]) || ("").equals(args[1]) ) {
+        if (args.length < 2 || args[0]==null || args[1] ==null || ("${glassfish_home}").equals(args[0]) || ("${options}").equals(args[1])
+                || ("").equals(args[0]) || ("").equals(args[1]) ) {
             System.out.println("Missing Inputs...\n");
             System.out.println("Usage: java Filter <glassfish home> <missingId/masterId>\n");
             System.out.println("Help: missingId for generate list of Ids which has diagnostic info missing.\n");
@@ -211,11 +211,11 @@ public class Filter {
                 masterIds = true;
             }
 
-			if (!masterIds && !missingIds) {
-				System.out.println("Missing Inputs...<missingId/masterId> value is missing as second argument.");
-			} else
+            if (!masterIds && !missingIds) {
+                System.out.println("Missing Inputs...<missingId/masterId> value is missing as second argument.");
+            } else
             if (!isGfHome) {
-                System.out.println("Missing Inputs...<glassfish home> value is not proper as first argument.");                
+                System.out.println("Missing Inputs...<glassfish home> value is not proper as first argument.");
             } else {
 
                 FilenameFilter fnm = new FilenameFilter() {
@@ -232,7 +232,7 @@ public class Filter {
                         new Filter().readFileToGetMessageIds(myFile);
                     }
                     new Filter().writeKeyToFile(myMessageIds, "master-list-message-ids.txt");
-                }                
+                }
 
                 if (missingIds) {
                     for (File myFile : myCollection) {

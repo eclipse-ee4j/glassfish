@@ -29,17 +29,17 @@ public class TC2SlsbWithUnsynchPC implements Tester{
     @PersistenceContext(unitName="lib/unsyncpc_txscope_synctype_mismatch-par.jar#em",
             synchronization = SynchronizationType.UNSYNCHRONIZED)
     EntityManager em;
-    
-    @EJB(beanName = "SlsbWithSynchPC") 
+
+    @EJB(beanName = "SlsbWithSynchPC")
     Finder finder;
-    
+
     @Override
     public boolean doTest() {
         try {
-            //FIXME: a workaround to initiate JavaEETransactionImpl.txEntityManagerMap, 
+            //FIXME: a workaround to initiate JavaEETransactionImpl.txEntityManagerMap,
             //so that the current PC will be associated with the current TX.
             em.find(Person.class, "Tom");
-            
+
             System.out.println("I am in TC2SlsbWithUnsynchPC.doTest");
             //expect exception thrown from finder.findPerson
             finder.findPerson("Tom");
@@ -56,6 +56,6 @@ public class TC2SlsbWithUnsynchPC implements Tester{
             return false;
         }
     }
-    
+
 
 }

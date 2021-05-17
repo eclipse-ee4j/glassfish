@@ -63,7 +63,7 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
         table.put(EjbTagNames.TIMER_INFO,  "setInfo");
         table.put(EjbTagNames.TIMER_TIMEZONE, "setTimezone");
 
-        
+
         return table;
     }
 
@@ -135,7 +135,7 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
 
         methodNode.writeJavaMethodDescriptor(timerNode, EjbTagNames.TIMEOUT_METHOD,
                  desc.getTimeoutMethod());
-        
+
         appendTextChild(timerNode, EjbTagNames.TIMER_PERSISTENT,
             Boolean.toString(desc.getPersistent()));
 

@@ -34,44 +34,44 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
  * @author Jerome Dochez
  */
 public class EndpointImpl implements Endpoint {
-    
+
     public final static String NAME = "MONITORING_ENDPOINT";
     public final static String MESSAGE_ID = "MONITORING_MESSAGE_ID";
     public final static String REQUEST_TRACE = "MONITORING_REQUEST_MESSAGE_TRACE";
-    
+
     final String endpointSelector;
     final EndpointType type;
     WebServiceEndpoint endpointDesc;
     List<MessageListener> listeners = new ArrayList<MessageListener>();
-    
+
     /** Creates a new instance of EndpointImpl */
     EndpointImpl(String endpointSelector, EndpointType type) {
         this.endpointSelector = endpointSelector;
         this.type = type;
     }
-    
-    /** 
+
+    /**
      * @return the endpoint URL as a string. This is the URL
      * web service clients use to invoke the endpoint.
      */
-    public String getEndpointSelector() {        
+    public String getEndpointSelector() {
         return endpointSelector;
     }
-        
+
     /**
      * @return the endpoint type
      */
     public EndpointType getEndpointType() {
         return type;
     }
-    
+
     /**
-     * Returns the Transport type 
+     * Returns the Transport type
      */
     public TransportType getTransport() {
         return TransportType.HTTP;
     }
-    
+
     /**
      * registers a new SOAPMessageListener for this endpoint
      * @param  newListener instance to register.
@@ -79,7 +79,7 @@ public class EndpointImpl implements Endpoint {
     public void addListener(MessageListener newListener) {
         listeners.add(newListener);
     }
-    
+
     /**
      * unregiters a SOAPMessageListener for this endpoint
      * @param  listener instance to unregister.
@@ -87,31 +87,31 @@ public class EndpointImpl implements Endpoint {
     public void removeListener(MessageListener listener) {
         listeners.remove(listener);
     }
-    
-    /** 
+
+    /**
      * Returns true if this endpoint has listeners registered
      * @return true if at least one listener is registered
      */
     public boolean hasListeners() {
         return !listeners.isEmpty();
     }
-    
+
     /**
-     * Return the deployment descriptors associated with this 
+     * Return the deployment descriptors associated with this
      * endpoint.
      */
     public WebServiceEndpoint getDescriptor() {
         return endpointDesc;
     }
-    
+
     /**
      * Set the WebServiceEndpoint DOL descriptor
      */
     public void setDescriptor(WebServiceEndpoint endpointDesc) {
-        
+
         if (endpointDesc!=null) {
-            endpointDesc.addExtraAttribute(EndpointImpl.NAME, this);        
+            endpointDesc.addExtraAttribute(EndpointImpl.NAME, this);
         }
         this.endpointDesc = endpointDesc;
-    }    
+    }
 }

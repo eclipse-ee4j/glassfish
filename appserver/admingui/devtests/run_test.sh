@@ -45,7 +45,7 @@ test_run(){
   ${S1AS_HOME}/bin/asadmin --passwordfile ${APS_HOME}/password.txt enable-secure-admin
   ${S1AS_HOME}/bin/asadmin restart-domain
   cd ${APS_HOME}/../../admingui/devtests/
-  export DISPLAY=127.0.0.1:1	
+  export DISPLAY=127.0.0.1:1
   mvn -DsecureAdmin=true -Dpasswordfile=${APS_HOME}/password.txt test | tee ${TEST_RUN_LOG}
   ${S1AS_HOME}/bin/asadmin stop-domain
   rm -rf ${APS_HOME}/password.txt

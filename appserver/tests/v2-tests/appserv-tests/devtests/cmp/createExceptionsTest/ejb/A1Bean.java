@@ -20,64 +20,64 @@ import jakarta.ejb.*;
 import javax.naming.*;
 
 /**
- * 1.1 bean. 
+ * 1.1 bean.
  * @author mvatkina
  */
 
 
 public class A1Bean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: A1Bean ejbRemove");
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
@@ -94,11 +94,11 @@ public class A1Bean implements jakarta.ejb.EntityBean {
         this.name = name;
         return null;
     }
-    
-    public void ejbPostCreate(java.lang.String name) throws jakarta.ejb.CreateException { 
+
+    public void ejbPostCreate(java.lang.String name) throws jakarta.ejb.CreateException {
         throw new jakarta.ejb.CreateException("A1Bean.ejbPostCreate");
     }
-    
+
     /** This ejbCreate/ejbPostCreate combination tests CreateException
      * thrown from either ejbCreate (if b is false) or ejbPostCreate.
      * Executed in a non-transactional context to test both options.
@@ -106,7 +106,7 @@ public class A1Bean implements jakarta.ejb.EntityBean {
     public java.lang.String ejbCreate(java.lang.String name, boolean b)  throws jakarta.ejb.CreateException {
         if (b) {
              this.name = name;
-        } else { 
+        } else {
              throw new jakarta.ejb.CreateException("A1Bean.ejbCreate");
         }
         return null;
@@ -122,7 +122,7 @@ public class A1Bean implements jakarta.ejb.EntityBean {
      * reset prior to call to ejbCreate.
      */
     public java.lang.String ejbCreate(int i)  throws jakarta.ejb.CreateException {
-        if (this.name != null) { 
+        if (this.name != null) {
              throw new java.lang.IllegalStateException("A1Bean.ejbCreate not reset");
         }
 

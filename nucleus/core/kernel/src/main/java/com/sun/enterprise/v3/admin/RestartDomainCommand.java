@@ -44,8 +44,8 @@ import org.glassfish.hk2.api.PerLookup;
 @I18n("restart.domain.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="restart-domain", 
+        opType=RestEndpoint.OpType.POST,
+        path="restart-domain",
         description="restart-domain")
 })
 @AccessRequired(resource="domain", action={"stop","start"})

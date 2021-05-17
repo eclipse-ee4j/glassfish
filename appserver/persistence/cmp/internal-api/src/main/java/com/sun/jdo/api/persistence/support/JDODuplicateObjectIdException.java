@@ -33,7 +33,7 @@ public class JDODuplicateObjectIdException extends JDOUserException
     /**
      * Creates a new <code>JDODuplicateObjectIdException</code> without detail message.
      */
-    public JDODuplicateObjectIdException() 
+    public JDODuplicateObjectIdException()
     {
     }
 
@@ -41,18 +41,18 @@ public class JDODuplicateObjectIdException extends JDOUserException
      * Constructs a new <code>JDODuplicateObjectIdException</code> with the specified detail message.
      * @param msg the detail message.
      */
-    public JDODuplicateObjectIdException(String msg) 
+    public JDODuplicateObjectIdException(String msg)
     {
         super(msg);
     }
-    
+
     /**
       * Constructs a new <code>JDODuplicateObjectIdException</code> with the specified detail message
       * and nested Exception.
       * @param msg the detail message.
       * @param nested the nested <code>Exception</code>.
       */
-    public JDODuplicateObjectIdException(String msg, Exception nested) 
+    public JDODuplicateObjectIdException(String msg, Exception nested)
     {
         super(msg, nested);
     }
@@ -65,7 +65,7 @@ public class JDODuplicateObjectIdException extends JDOUserException
     public JDODuplicateObjectIdException(String msg, Object[] failed) {
         super(msg, failed);
     }
- 
+
     /** Constructs a new <code>JDODuplicateObjectIdException</code> with the specified detail message,
      * nested exception, and failed object array.
      * @param msg the detail message.

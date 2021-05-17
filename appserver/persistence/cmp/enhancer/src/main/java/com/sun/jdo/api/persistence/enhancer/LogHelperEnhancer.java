@@ -24,21 +24,21 @@ import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
  * @author  Piali Nag
  */
 public class LogHelperEnhancer {
-    
+
     /** The component name for this component
      */
     protected static final String componentName = "enhancer"; // NOI18N
-    
+
     /** The class loader for this component
      */
-    protected static final ClassLoader loader = 
+    protected static final ClassLoader loader =
         LogHelperEnhancer.class.getClassLoader();
-    
+
     /** The bundle name for this component
      */
-    protected static final String bundleName = 
+    protected static final String bundleName =
         "com.sun.jdo.api.persistence.enhancer.Bundle"; // NOI18N
-    
+
     /** Return the logger for the enhancer component
      */
     public static Logger getLogger() {

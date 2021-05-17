@@ -48,10 +48,10 @@ public class Client {
     private QueueSender queueSender;
     */
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         boolean doJms = false; // TODO (args.length == 1) && (args[0].equalsIgnoreCase("jms"));
 
         stat.addDescription("ejb-timer-timertests");
@@ -63,18 +63,18 @@ public class Client {
         TimerStuff foo = new Client().doFooTest("ejbs/Foo_BMT", doJms);
 
 
-	/** TODO
+    /** TODO
         new Client().doMessageDrivenTest("jms/TimerMDBQueue_CMT", foo, doJms);
         new Client().doMessageDrivenTest("jms/TimerMDBQueue_BMT", foo, doJms);
-	**/
+    **/
 
-	new Client().doStatefulTest("ejbs/Stateful_CMT", foo,doJms);
-	new Client().doStatefulTest("ejbs/Stateful_BMT", foo, doJms);
+    new Client().doStatefulTest("ejbs/Stateful_CMT", foo,doJms);
+    new Client().doStatefulTest("ejbs/Stateful_BMT", foo, doJms);
 
         new Client().doBarTest("ejbtimer/Bar_CMT", doJms);
 
         try {
-	     ((Foo) foo).remove();
+         ((Foo) foo).remove();
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -95,16 +95,16 @@ public class Client {
 
     public void doMessageDrivenTest(String jndiName, TimerStuff foo,
                                     boolean jms) {
-	/**
+    /**
         if( jms ) { return; }
 
         try {
 System.out.println("********PG-> in doMessageDrivenTest() for jndiName = " + jndiName );
-           
+
             setup();
 System.out.println("********PG-> in doMessageDrivenTest() after setup");
             Context ic = new InitialContext();
-	     Queue messageDrivenDest = (Queue) ic.lookup("java:comp/env/" + jndiName);
+         Queue messageDrivenDest = (Queue) ic.lookup("java:comp/env/" + jndiName);
 
             System.out.println("Doing message driven tests for" + jndiName);
 
@@ -122,7 +122,7 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
             long sleepTime = 30000;
             System.out.println("Sleeping for " + sleepTime / 1000 + " seconds");
             Thread.sleep(sleepTime);
-            
+
             // at this point, all foo timers should have been cancelled
             // by the message bean.
             foo.assertNoTimers();
@@ -136,12 +136,12 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
         } finally {
             cleanup();
         }
-	**/
+    **/
     }
 
     public void doBarTest(String jndiName, boolean jms) {
         try {
-	    Object barObjref = context.lookup(jndiName);
+        Object barObjref = context.lookup(jndiName);
 
             System.out.println("doBarTest(): Doing bar timer test for " + jndiName);
 
@@ -168,7 +168,7 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
             System.out.println("doBarTest(): Bar after find " );
             }
             if (jms) {
-                doJmsTest(bar);    
+                doJmsTest(bar);
             } else {
                 doTest(bar);
                 ((EJBObject)bar).remove();
@@ -185,21 +185,21 @@ System.out.println("********PG-> in doMessageDrivenTest() after setup");
     }
 
     public void setup() throws Exception {
-	/**
+    /**
 //PG->        context = new InitialContext();
-        
-        TopicConnectionFactory topicConFactory = 
+
+        TopicConnectionFactory topicConFactory =
             (TopicConnectionFactory) context.lookup
                 ("java:comp/env/jms/MyTopicConnectionFactory");
-                
+
 System.out.println("********PG-> setup(): after  lookup");
         topicCon = topicConFactory.createTopicConnection();
 
 System.out.println("********PG-> setup(): after  createTopicConnection");
-        topicSession = 
+        topicSession =
             topicCon.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 System.out.println("********PG-> setup(): after  createTopicSession");
-            
+
         // Producer will be specified when actual msg is published.
         topicPublisher = topicSession.createPublisher(null);
 System.out.println("********PG-> setup(): after createPublisher");
@@ -207,25 +207,25 @@ System.out.println("********PG-> setup(): after createPublisher");
         topicCon.start();
         System.out.println("********PG-> setup(): after start");
 
-        QueueConnectionFactory queueConFactory = 
+        QueueConnectionFactory queueConFactory =
             (QueueConnectionFactory) context.lookup
             ("java:comp/env/jms/MyQueueConnectionFactory");
 
         queueCon = queueConFactory.createQueueConnection();
 
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         // Producer will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(null);        
+        queueSender = queueSession.createSender(null);
 
         queueCon.start();
-	**/
+    **/
 
     }
 
     public void cleanup() {
-	/**
+    /**
         try {
             if( topicCon != null ) {
                 topicCon.close();
@@ -239,7 +239,7 @@ System.out.println("********PG-> setup(): after createPublisher");
         **/
     }
     /**
-    public void publishMsgs(Topic topic, Message msg, int num) 
+    public void publishMsgs(Topic topic, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Publishing message " + i + " to " + topic);
@@ -247,7 +247,7 @@ System.out.println("********PG-> setup(): after createPublisher");
         }
     }
 
-    public void sendMsgs(Queue queue, Message msg, int num) 
+    public void sendMsgs(Queue queue, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Publishing message " + i + " to " + queue);
@@ -327,37 +327,37 @@ System.out.println("********PG-> setup(): after createPublisher");
 
         System.out.println("doTest(): creating the timerhandle");
         TimerHandle timerHandle = timerStuff.createTimer(1, 1);
-        
+
         //
         System.out.println("doTest(): creating the timerhandle2");
         TimerHandle timerHandle2 = timerStuff.createTimer(10000, 10000);
-        
+
         //
         System.out.println("doTest(): creating the timerhandle3");
         TimerHandle timerHandle3 = timerStuff.createTimer(new Date());
-        
+
         //
         System.out.println("doTest(): creating the timerhandle4");
         TimerHandle timerHandle4 = timerStuff.createTimer(new Date(new Date().getTime() + 2000));
-        
+
         //
         System.out.println("doTest(): creating the timerhandle5");
         TimerHandle timerHandle5 = timerStuff.createTimer(new Date(new Date().getTime() + 20000), 10000);
 
         System.out.println("doTest(): creating the createTimerAndRollback");
         timerStuff.createTimerAndRollback(20000);
-        
+
         //
         System.out.println("doTest(): creating the createTimerAndCancel");
         timerStuff.createTimerAndCancel(20000);
-        
+
         // @@@ reevaluate double cancel logic
         //timerStuff.createTimerAndCancelAndCancel(20000);
-        
+
         //
         System.out.println("doTest(): creating the createTimerAndCancelAndRollback");
         timerStuff.createTimerAndCancelAndRollback(20000);
-        
+
         //
         System.out.println("doTest(): creating the cancelTimer(timerhandle2)");
         timerStuff.cancelTimer(timerHandle2);
@@ -368,18 +368,18 @@ System.out.println("********PG-> setup(): after createPublisher");
         timerStuff.cancelTimerAndRollback(timerHandle5);
         // @@@ reevaluate double cancel logic
         //timerStuff.cancelTimerAndCancelAndRollback(timerHandle6);
-        
-        TimerHandle timerHandle7 = 
+
+        TimerHandle timerHandle7 =
             timerStuff.createTimer(1, 1, "cancelTimer");
-        TimerHandle timerHandle8 = 
+        TimerHandle timerHandle8 =
             timerStuff.createTimer(1, 1, "cancelTimerAndRollback");
-        TimerHandle timerHandle9 =         
+        TimerHandle timerHandle9 =
             timerStuff.createTimer(1, "cancelTimerAndRollback");
 
         TimerHandle timerHandle11 = timerStuff.getTimeRemainingTest1(20);
         timerStuff.getTimeRemainingTest2(20, timerHandle11);
         timerStuff.getTimeRemainingTest2(20, timerHandle);
-        
+
         TimerHandle timerHandle12 = timerStuff.getNextTimeoutTest1(20);
         timerStuff.getNextTimeoutTest2(20, timerHandle12);
         timerStuff.getNextTimeoutTest2(20, timerHandle);
@@ -430,7 +430,7 @@ System.out.println("********PG-> setup(): after createPublisher");
 
     }
 
-    public void doEntityTests(BarHome barHome) 
+    public void doEntityTests(BarHome barHome)
         throws Exception {
         TimerStuff bar1 = barHome.create(new Long(1), "1");
         TimerHandle timerHandle1 = bar1.createTimer(100000000);
@@ -454,7 +454,7 @@ System.out.println("********PG-> setup(): after createPublisher");
         info = bar5.getInfo(timerHandle5);
         System.out.println("Info = " + info);
         barHome.remove(((EJBObject)bar5).getPrimaryKey());
-        // At this point timer should not exist since we removed its 
+        // At this point timer should not exist since we removed its
         // timed object
         try {
             info = bar5.getInfoNoError(timerHandle5);

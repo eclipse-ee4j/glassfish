@@ -83,11 +83,11 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
     private boolean   completed = false;
     private boolean   setAsTerminator = false;
 
-	/*
-		Logger to log transaction messages
-	*/
-	
-	static Logger _logger = LogDomains.getLogger(CoordinatorResourceImpl.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+
+    static Logger _logger = LogDomains.getLogger(CoordinatorResourceImpl.class, LogDomains.TRANSACTION_LOGGER);
     /**Normal constructor.
      * <p>
      * Sets up the CoordinatorResourceImpl with the Coordinator reference and the
@@ -301,13 +301,13 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
             // Look up the Coordinator for the transaction.
 
             // GDH: First of all make sure it has been recovered if necessary
-	    if(_logger.isLoggable(Level.FINE))
-	    {
-			_logger.logp(Level.FINE,"CoordinatorResourceImpl","commit()",
-					"Before invoking RecoveryManager.waitForRecovery():"+
-					"GTID is: "+ globalTID.toString());
+        if(_logger.isLoggable(Level.FINE))
+        {
+            _logger.logp(Level.FINE,"CoordinatorResourceImpl","commit()",
+                    "Before invoking RecoveryManager.waitForRecovery():"+
+                    "GTID is: "+ globalTID.toString());
 
-	    }
+        }
             RecoveryManager.waitForRecovery();
 
             TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
@@ -406,12 +406,12 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
             // Look up the Coordinator for the transaction.
 
             // GDH: First of all make sure it has been recovered if necessary
-	    if(_logger.isLoggable(Level.FINE))
-	    {
-			_logger.logp(Level.FINE,"CoordinatorResourceImpl","commit_one_phase()",
-					"Before invoking RecoveryManager.waitForRecovery(): "+
-					"GTID is: " + globalTID.toString());
-	    }
+        if(_logger.isLoggable(Level.FINE))
+        {
+            _logger.logp(Level.FINE,"CoordinatorResourceImpl","commit_one_phase()",
+                    "Before invoking RecoveryManager.waitForRecovery(): "+
+                    "GTID is: " + globalTID.toString());
+        }
             RecoveryManager.waitForRecovery();
 
             TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
@@ -564,13 +564,13 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
                  // Look up the Coordinator for the transaction.
 
                  // GDH: First of all make sure it has been recovered if necessary
-	    	if(_logger.isLoggable(Level.FINE))
-	    	{
-				_logger.logp(Level.FINE,"CoordinatorResourceImpl","rollback()",
-						"Before invoking RecoveryManager.waitForRecovery(): "+
-						"GTID is : "+ globalTID.toString()); 
-			
-	    	}
+            if(_logger.isLoggable(Level.FINE))
+            {
+                _logger.logp(Level.FINE,"CoordinatorResourceImpl","rollback()",
+                        "Before invoking RecoveryManager.waitForRecovery(): "+
+                        "GTID is : "+ globalTID.toString());
+
+            }
                  RecoveryManager.waitForRecovery();
 
                  TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
@@ -858,26 +858,26 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
                     //thisRef = (CoordinatorResource) this;
                 }
             } catch( ServantAlreadyActive saexc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorResource_object_error",saexc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_CoordinatorResource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
-						
+                _logger.log(Level.SEVERE,
+                        "jts.create_CoordinatorResource_object_error",saexc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_CoordinatorResource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
+
             } catch( ServantNotActive snexc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorResource_object_error",snexc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_CoordinatorResource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
-						
+                _logger.log(Level.SEVERE,
+                        "jts.create_CoordinatorResource_object_error",snexc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_CoordinatorResource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
+
             } catch( Exception exc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorResource_object_error",exc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_CoordinatorResource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
-						
+                _logger.log(Level.SEVERE,
+                        "jts.create_CoordinatorResource_object_error",exc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_CoordinatorResource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
+
             }
         }
 
@@ -919,8 +919,8 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
                 }
             }
         } catch( Exception exc ) {
-			 _logger.log(Level.WARNING,"jts.object_destroy_error","CoordinatorResource");
-				
+             _logger.log(Level.WARNING,"jts.object_destroy_error","CoordinatorResource");
+
         }
 
         globalTID = null;

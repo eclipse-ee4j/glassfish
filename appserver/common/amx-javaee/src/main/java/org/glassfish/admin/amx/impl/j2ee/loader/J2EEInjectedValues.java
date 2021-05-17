@@ -33,7 +33,7 @@ public final class J2EEInjectedValues extends InjectedValues
     @Inject
     private ApplicationRegistry mAppsRegistry;
     public ApplicationRegistry getApplicationRegistry() { return mAppsRegistry; }
-    
+
     @Inject
     ArchivistFactory mArchivistFactory;
     public ArchivistFactory getArchivistFactory() { return mArchivistFactory; }
@@ -42,7 +42,7 @@ public final class J2EEInjectedValues extends InjectedValues
     {
         return getDefaultServices().getService(J2EEInjectedValues.class);
     }
-    
+
     public J2EEInjectedValues()
     {
     }

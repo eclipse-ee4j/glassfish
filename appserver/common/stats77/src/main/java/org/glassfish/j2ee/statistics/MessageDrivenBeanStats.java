@@ -17,11 +17,11 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies the statistics provided by a message driven bean. 
+ * Specifies the statistics provided by a message driven bean.
  */
 public interface MessageDrivenBeanStats extends EJBStats {
     /**
-     * Number of messages received. 
+     * Number of messages received.
      */
     CountStatistic getMessageCount();
 }

@@ -22,16 +22,16 @@ import java.sql.SQLException;
 
 /**
  * Provide custom implementation of connection validation for jdbc40 drivers.
- * 
- * Provides a custom connection validation 
- * mechanism for JDBC40 JDBC drivers if custom-validation is chosen as the 
+ *
+ * Provides a custom connection validation
+ * mechanism for JDBC40 JDBC drivers if custom-validation is chosen as the
  * connection-validation-method.
- * 
+ *
  * @author Shalini M
  */
 public class JDBC40ConnectionValidation implements ConnectionValidation {
 
-    
+
     /**
      * Check for validity of <code>java.sql.Connection</code>
      *
@@ -44,7 +44,7 @@ public class JDBC40ConnectionValidation implements ConnectionValidation {
             isValid = con.isValid(0);
         } catch (SQLException sqle) {
             isValid = false;
-        } 
+        }
         return isValid;
     }
 }

@@ -27,7 +27,7 @@ public class MyListener implements ServletContextListener {
      * @param sce The servlet context event
      */
     public void contextInitialized(ServletContextEvent sce) {
-        sce.getServletContext().setInitParameter("aaa", "bbb"); 
+        sce.getServletContext().setInitParameter("aaa", "bbb");
     }
 
     /**

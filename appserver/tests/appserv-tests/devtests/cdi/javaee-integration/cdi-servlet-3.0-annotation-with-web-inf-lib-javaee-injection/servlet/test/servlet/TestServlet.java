@@ -50,7 +50,7 @@ import test.beans.wbinflib.TestBeanInWebInfLib;
 public class TestServlet extends HttpServlet {
 
     /* Normal injection of Beans */
-    @Inject 
+    @Inject
     private transient org.jboss.logging.Logger log;
     @Inject BeanManager bm_at_inj;
 
@@ -63,17 +63,17 @@ public class TestServlet extends HttpServlet {
 
     private @Resource
     UserTransaction utx;
-    
+
     @Inject @Preferred
     TestBeanInterface tbi;
-    
+
     /* Injection of Beans from WEB-INF/lib */
     @Inject TestBeanInWebInfLib tbiwil;
-    
+
     /* Test lookup of BeanManager*/
     BeanManager bm_lookup;
 
-    
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
@@ -101,16 +101,16 @@ public class TestServlet extends HttpServlet {
         //via BeanManager of WAR
         Set warBeans = bm_at_inj.getBeans(TestBean.class,new AnnotationLiteral<Any>() {});
         if (warBeans.size() != 1) msg += "TestBean in WAR is not available via the WAR BeanManager";
-        
+
         Set webinfLibBeans = bm_at_inj.getBeans(TestBeanInWebInfLib.class,new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 1) msg += "TestBean in WEB-INF/lib is not available via the WAR BeanManager";
         System.out.println("Test Bean from WEB-INF/lib via BeanManager:" + webinfLibBeans);
-        
+
         //Test injection into WEB-INF/lib beans
         msg += tbiwil.testInjection();
-        
+
         msg += testEMInjection(req);
-        
+
         writer.write("initParams: " + msg + "\n");
     }
 
@@ -133,7 +133,7 @@ public class TestServlet extends HttpServlet {
             } else if ("llquery".equals(testcase)) {
                 status = jt.lazyLoadingByQuery("Carla");
             } else if ("llinj".equals(testcase)){
-                status = ((tbi != null) && 
+                status = ((tbi != null) &&
                         (tbi.testDatasourceInjection().trim().length()==0));
             }
             if (status) {

@@ -63,9 +63,9 @@ public class DbConnectionDetailsServlet extends HttpServlet{
             try {
                 stmt = ds.getConnection().createStatement();
 
-	        DatabaseMetaData dbMetadata = stmt.getConnection().getMetaData();
+            DatabaseMetaData dbMetadata = stmt.getConnection().getMetaData();
 
-	        writer.println(dbMetadata.getURL());
+            writer.println(dbMetadata.getURL());
                 writer.println(dbMetadata.getUserName());
                 writer.println(userCredentials.get(dbMetadata.getUserName()));
             } catch (Exception ex) {

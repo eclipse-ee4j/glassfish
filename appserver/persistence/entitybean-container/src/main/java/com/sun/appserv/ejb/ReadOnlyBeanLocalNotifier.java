@@ -22,9 +22,9 @@ package com.sun.appserv.ejb;
  * @author Mahesh Kannan
  */
 public interface ReadOnlyBeanLocalNotifier {
-    
+
     /**
-     * This method would be used by the user to manually force the 
+     * This method would be used by the user to manually force the
      *  refresh of read only beans for an application. After this method
      *  the next access to the bean, identified by the primary key, will
      *  cause a ejbLoad() to be called on the bean
@@ -34,8 +34,8 @@ public interface ReadOnlyBeanLocalNotifier {
     public void refresh(Object primaryKey);
 
     /**
-     * This method forces *all* primary keys for a read-only bean 
-     * to be marked as needing a refresh.  
+     * This method forces *all* primary keys for a read-only bean
+     * to be marked as needing a refresh.
      */
     public void refreshAll();
 

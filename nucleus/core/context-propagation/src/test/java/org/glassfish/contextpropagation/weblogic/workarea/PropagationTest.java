@@ -44,7 +44,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 @Ignore
-public class PropagationTest {  
+public class PropagationTest {
 //  public static WorkContextMap wcMap;
 //
 //  @BeforeClass
@@ -77,7 +77,7 @@ public class PropagationTest {
 //          Iterator<?> it = map.iterator();
 //          while (it.hasNext()) {
 //            add(it.next());
-//          }          
+//          }
 //        }};
 //      }
 //    }.startJoinAndCheckForFailures();

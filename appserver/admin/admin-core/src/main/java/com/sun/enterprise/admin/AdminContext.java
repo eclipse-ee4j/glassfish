@@ -57,7 +57,7 @@ public interface AdminContext {
      * @param ctx the config context to use for administration
      */
     //public void setAdminConfigContext(ConfigContext ctx);
-    
+
     /**
      * Get MBeanServer in use for admin, runtime and monitoring MBeans.
      */
@@ -92,25 +92,25 @@ public interface AdminContext {
     public void setServerName(String serverName);
 
     /**
-     * Get Admin MBeanRegistry xml file location 
+     * Get Admin MBeanRegistry xml file location
      */
     public URL getAdminMBeanRegistryURL();
 
 
     /**
-     * Get Admin MBeanRegistry xml file location 
+     * Get Admin MBeanRegistry xml file location
      * @param url  URL of the Registry file
      */
     public void setAdminMBeanRegistryURL(URL url);
 
     /**
-     * Get Admin MBeanRegistry xml file location 
+     * Get Admin MBeanRegistry xml file location
      */
     public URL getRuntimeMBeanRegistryURL();
 
 
     /**
-     * Get Runtime MBeanRegistry xml file location 
+     * Get Runtime MBeanRegistry xml file location
      * @param url  URL of the Registry file
      */
     public void setRuntimeMBeanRegistryURL(URL url);

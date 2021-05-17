@@ -71,7 +71,7 @@
             <param name="operand.props" value="SOAPDefaultTestClientAuthModule"/>
         </antcall>
 
-	<antcall target="enable-wss-message-security-provider">
+    <antcall target="enable-wss-message-security-provider">
             <param name="wss.server.provider.name" value="SOAPDefaultTestServerAuthModule"/>
             <param name="wss.client.provider.name" value="SOAPDefaultTestClientAuthModule"/>
         </antcall>
@@ -117,7 +117,7 @@
             <param name="operand.props" value="SOAPDefaultTestClientAuthModule"/>
         </antcall>
 
-	<antcall target="disable-wss-message-security-provider"/>
+    <antcall target="disable-wss-message-security-provider"/>
 
         <!-- may not be able to delete this file in PC environment -->
         <delete file="${env.S1AS_HOME}/lib/test-${appname}-provider.jar" failonerror="false"/>
@@ -135,7 +135,7 @@
     </target>
 
     <target name="compile-client">
-        <mkdir dir="${build.classes.dir}/client"/> 
+        <mkdir dir="${build.classes.dir}/client"/>
         <antcall target="wsimport">
             <param name="wsimport.args"
                 value="-keep -d ${build.classes.dir}/client http://${http.host}:${http.port}/JmacSoapDefaultEjbService/HelloEjb?WSDL"/>
@@ -157,7 +157,7 @@
 
     <target name="build-server" depends="compile-server">
         <mkdir dir="${assemble.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/> 
+        <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/ejbws"/>
@@ -170,16 +170,16 @@
             <fileset dir="${build.classes.dir}/servletws"/>
         </jar>
 
-        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/> 
-        <jar jarfile="${assemble.dir}/${appname}App.ear"> 
+        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+        <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
                <include name="*.jar"/>
                <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-	       <include name="META-INF/sun-application.xml"/>
+           <include name="META-INF/sun-application.xml"/>
             </fileset>
-        </jar>   
+        </jar>
     </target>
 
     <target name="build-client" depends="compile-client">
@@ -187,11 +187,11 @@
 
         <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
         <antcall target="package-appclientjar-common">
-            <param name="appclientjar.files" 
+            <param name="appclientjar.files"
                 value="${build.classes.dir}/client"/>
-            <param name="appclient.jar" 
+            <param name="appclient.jar"
                 value="${assemble.dir}/${appname}-client.jar"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
                 value="com/sun/**/*.class"/>
         </antcall>
     </target>

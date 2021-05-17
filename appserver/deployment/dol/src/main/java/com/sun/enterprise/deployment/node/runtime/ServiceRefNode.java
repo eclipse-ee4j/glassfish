@@ -38,7 +38,7 @@ import java.util.logging.Level;
  * service references
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class ServiceRefNode extends DeploymentDescriptorNode {
 
@@ -53,39 +53,39 @@ public class ServiceRefNode extends DeploymentDescriptorNode {
             (new XMLElement(WebServicesTagNames.CALL_PROPERTY),
              NameValuePairNode.class, "addCallProperty");
     }
-    
+
     public void addDescriptor(Object desc) {
         if( desc instanceof ServiceRefPortInfo ) {
             ServiceRefPortInfo newPortInfo = (ServiceRefPortInfo) desc;
             ServiceReferenceDescriptor serviceRef =
                 (ServiceReferenceDescriptor) getDescriptor();
             serviceRef.addRuntimePortInfo(newPortInfo);
-        } 
+        }
     }
 
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         return descriptor;
-    }   
-    
+    }
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.SERVICE_IMPL_CLASS, 
+        table.put(WebServicesTagNames.SERVICE_IMPL_CLASS,
                   "setServiceImplClassName");
         return table;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -122,9 +122,9 @@ public class ServiceRefNode extends DeploymentDescriptorNode {
         } else {
             super.setElementValue(element, value);
         }
-        
+
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -132,10 +132,10 @@ public class ServiceRefNode extends DeploymentDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
                                 ServiceReferenceDescriptor serviceRef) {
-        Node serviceRefNode = 
+        Node serviceRefNode =
             super.writeDescriptor(parent, nodeName, serviceRef);
 
         appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_NAME,
@@ -172,7 +172,7 @@ public class ServiceRefNode extends DeploymentDescriptorNode {
             Node serviceNameNode = appendChild
                 (serviceRefNode, WebServicesTagNames.SERVICE_QNAME);
             QName serviceName = serviceRef.getServiceName();
-            appendTextChild(serviceNameNode, 
+            appendTextChild(serviceNameNode,
                             WebServicesTagNames.NAMESPACE_URI,
                             serviceName.getNamespaceURI());
             appendTextChild(serviceNameNode,
@@ -181,34 +181,34 @@ public class ServiceRefNode extends DeploymentDescriptorNode {
         }
 
         return serviceRefNode;
-    }  
-    
+    }
+
     /**
      * writes all the runtime information for service references
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the J2EE component containing service references
-     */        
-    public static void writeServiceReferences(Node parent, 
+     */
+    public static void writeServiceReferences(Node parent,
                                               JndiNameEnvironment descriptor) {
-        Iterator serviceRefs = 
+        Iterator serviceRefs =
             descriptor.getServiceReferenceDescriptors().iterator();
         if (serviceRefs.hasNext()) {
             ServiceRefNode serviceRefNode = new ServiceRefNode();
             while (serviceRefs.hasNext()) {
-                ServiceReferenceDescriptor next = 
+                ServiceReferenceDescriptor next =
                     (ServiceReferenceDescriptor) serviceRefs.next();
-                // Only write runtime service-ref entry if there IS 
+                // Only write runtime service-ref entry if there IS
                 // some runtime info...
                 if( next.hasServiceImplClassName() ||
                     !next.getPortsInfo().isEmpty() ||
-                    !next.getCallProperties().isEmpty() || 
+                    !next.getCallProperties().isEmpty() ||
                     next.hasWsdlOverride()) {
                     serviceRefNode.writeDescriptor
                         (parent, WebServicesTagNames.SERVICE_REF, next);
                 }
             }
-        }       
+        }
     }
-    
+
 }

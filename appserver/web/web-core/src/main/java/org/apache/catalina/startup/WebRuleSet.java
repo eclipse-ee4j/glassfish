@@ -47,23 +47,23 @@ public class WebRuleSet extends RuleSetBase {
      * The matching pattern prefix to use for recognizing our elements.
      */
     protected String prefix = null;
-    
-    
+
+
     /**
      * The <code>SetSessionConfig</code> rule used to parse the web.xml
      */
     protected SetSessionConfig sessionConfig;
-    
-    
+
+
     /**
      * The <code>SetLoginConfig</code> rule used to parse the web.xml
      */
     protected SetLoginConfig loginConfig;
 
-    
+
     /**
      * The <code>SetJspConfig</code> rule used to parse the web.xml
-     */    
+     */
     protected SetJspConfig jspConfig;
 
 
@@ -112,7 +112,7 @@ public class WebRuleSet extends RuleSetBase {
         sessionConfig = new SetSessionConfig(digester);
         jspConfig = new SetJspConfig(digester);
         loginConfig = new SetLoginConfig(digester);
-        
+
         digester.addRule(prefix + "web-app",
                          new SetPublicIdRule(digester, "setPublicId"));
 
@@ -237,16 +237,16 @@ public class WebRuleSet extends RuleSetBase {
 
          digester.addCallMethod(prefix + "web-app/listener/listener-class",
                                 "addApplicationListener", 0);
-         
+
         digester.addRule(prefix + "web-app/jsp-config",
                          jspConfig);
-        
+
         digester.addCallMethod(prefix + "web-app/jsp-config/jsp-property-group/url-pattern",
                                "addJspMapping", 0);
 
         digester.addCallMethod(prefix + "web-app/listener/listener-class",
                                "addApplicationListener", 0);
-        
+
         digester.addRule(prefix + "web-app/login-config",
                          loginConfig);
 
@@ -398,7 +398,7 @@ public class WebRuleSet extends RuleSetBase {
 
         digester.addRule(prefix + "web-app/session-config",
                          sessionConfig);
-        
+
         digester.addCallMethod(prefix + "web-app/session-config/session-timeout",
                                "setSessionTimeout", 1,
                                new Class[] { Integer.TYPE });
@@ -446,7 +446,7 @@ public class WebRuleSet extends RuleSetBase {
 
 
 /**
- * Rule to check that the <code>login-config</code> is occuring 
+ * Rule to check that the <code>login-config</code> is occuring
  * only 1 time within the web.xml
  */
 final class SetLoginConfig extends Rule {
@@ -467,7 +467,7 @@ final class SetLoginConfig extends Rule {
 
 
 /**
- * Rule to check that the <code>jsp-config</code> is occuring 
+ * Rule to check that the <code>jsp-config</code> is occuring
  * only 1 time within the web.xml
  */
 final class SetJspConfig extends Rule {
@@ -488,7 +488,7 @@ final class SetJspConfig extends Rule {
 
 
 /**
- * Rule to check that the <code>jsp-config</code> is occuring 
+ * Rule to check that the <code>jsp-config</code> is occuring
  * only 1 time within the web.xml
  */
 final class SetSessionConfig extends Rule {

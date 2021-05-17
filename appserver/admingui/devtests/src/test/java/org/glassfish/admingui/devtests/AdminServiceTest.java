@@ -40,7 +40,7 @@ public class AdminServiceTest extends BaseSeleniumTestClass {
         assertEquals(address, getFieldValue("form1:propertySheet:propertySheetSection:AddressProp:Address"));
         assertTableRowCount("form1:basicTable", count);
     }
-    
+
     @Test
     public void testSsl() {
         final String nickname = "nickname"+generateRandomString();
@@ -79,7 +79,7 @@ public class AdminServiceTest extends BaseSeleniumTestClass {
 //        assertTrue(selenium.isTextPresent("SSL_RSA_WITH_RC4_128_MD5 SSL_RSA_WITH_RC4_128_SHA TLS_RSA_WITH_AES_128_CBC_SHA TLS_RSA_WITH_AES_256_CBC_SHA SSL_RSA_WITH_3DES_EDE_CBC_SHA __________________________________"));
 //        assertTrue(selenium.isTextPresent("TLS_DHE_RSA_WITH_AES_128_CBC_SHA TLS_DHE_RSA_WITH_AES_256_CBC_SHA SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA TLS_DHE_DSS_WITH_AES_128_CBC_SHA TLS_DHE_DSS_WITH_AES_256_CBC_SHA SSL_DHE_DSS_WITH_3DES_EDE_CBC_SHA ______________________________________"));
 //        assertTrue(selenium.isTextPresent("SSL_RSA_WITH_DES_CBC_SHA SSL_DHE_RSA_WITH_DES_CBC_SHA SSL_DHE_DSS_WITH_DES_CBC_SHA SSL_RSA_EXPORT_WITH_RC4_40_MD5 SSL_RSA_EXPORT_WITH_DES40_CBC_SHA SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA __________________________________________"));
-        
+
          } finally {
              securityTest.enableSecureAdministration(false);
          }

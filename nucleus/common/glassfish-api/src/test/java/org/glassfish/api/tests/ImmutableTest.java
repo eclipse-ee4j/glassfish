@@ -32,9 +32,9 @@ public class ImmutableTest {
 
         Assert.assertNotSame(evt1, evt3);
         Assert.assertEquals(evt1, evt2);
-        
+
         Assert.assertTrue(evt1==evt2);
         Assert.assertFalse(evt1==evt3);
     }
-    
+
 }

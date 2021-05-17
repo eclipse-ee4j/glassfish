@@ -77,7 +77,7 @@ public interface Response {
 
     /**
      * Set the application commit flag.
-     * 
+     *
      * @param appCommitted The new application committed flag value
      */
     public void setAppCommitted(boolean appCommitted);
@@ -149,7 +149,7 @@ public interface Response {
 
     /**
      * Set the suspended flag.
-     * 
+     *
      * @param suspended The new suspended flag value
      */
     public void setSuspended(boolean suspended);
@@ -252,17 +252,17 @@ public interface Response {
      */
     public void resetBuffer();
 
-    
+
     /**
      * Reset the data buffer and the using Writer/Stream flags but not any
      * status or header information.
      */
     public void resetBuffer(boolean resetWriterStreamFlags);
-    
-    
+
+
     /**
      * Send an acknowledgment of a request.
-     * 
+     *
      * @exception IOException if an input/output error occurs
      */
     public void sendAcknowledgement()

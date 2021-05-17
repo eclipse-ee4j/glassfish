@@ -27,7 +27,7 @@ import java.util.Properties;
  * Generic cache interface
  */
 public interface Cache {
-    
+
     /**
      * initialize the cache
      * @param maxEntries maximum number of entries expected in the cache
@@ -35,7 +35,7 @@ public interface Cache {
      * @param props opaque list of properties for a given cache implementation
      * @throws a generic Exception if the initialization failed
      */
-    public void init(int maxEntries, 
+    public void init(int maxEntries,
                          float loadFactor, Properties props) throws Exception;
 
     /**
@@ -52,7 +52,7 @@ public interface Cache {
      */
     public void addCacheListener(CacheListener listener);
 
-    /** 
+    /**
      * get the index of the item given a key
      * @param key of the entry
      * @return the index to be used in the cache
@@ -81,7 +81,7 @@ public interface Cache {
      * @returns true if there is an item stored at the key; false if not.
      */
     public boolean contains(Object key);
-    
+
     /**
      * get an Iterator for the keys stored in the cache
      * @returns an Iterator
@@ -166,16 +166,16 @@ public interface Cache {
 
     /**
      * wait for a refresh on the object associated with the key
-     * @param index index of the entry. The index must be obtained via 
+     * @param index index of the entry. The index must be obtained via
      * one of the <code>getIndex()</code> methods.
-     * @returns <code>true</code> on successful notification, or 
+     * @returns <code>true</code> on successful notification, or
      * <code>false</code> if there is no thread refreshing this entry.
      */
     public boolean waitRefresh(int index);
 
     /**
      * notify threads waiting for a refresh on the object associated with the key
-     * @param index index of the entry. The index must be obtained via 
+     * @param index index of the entry. The index must be obtained via
      * one of the <code>getIndex()</code> methods.
      */
     public void notifyRefresh(int index);

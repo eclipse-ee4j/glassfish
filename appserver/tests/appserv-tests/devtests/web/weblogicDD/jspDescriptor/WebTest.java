@@ -35,12 +35,12 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for jsp-descriptor in weblogic.xml");
         WebTest webTest = new WebTest(args);
         webTest.doTest("/test.jsp");
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest(String path) {
@@ -83,7 +83,7 @@ public class WebTest {
                 // Test 3.  Make sure that spaces are trimmed.
                 testName = "wl jsp desc: compress-html-template";
                 String line = input.readLine();
-                
+
                 if (line.equals("pass!")) {
                     stat.addStatus(testName, stat.PASS);
                 } else {

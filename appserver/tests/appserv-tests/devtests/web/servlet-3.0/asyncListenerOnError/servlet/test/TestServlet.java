@@ -29,7 +29,7 @@ public class TestServlet extends HttpServlet implements AsyncListener {
         if (!req.isAsyncSupported()) {
             throw new ServletException("Async not supported when it should");
         }
- 
+
         if (!req.getDispatcherType().equals(DispatcherType.ASYNC)) {
             // Container-initiated dispatch
             final AsyncContext ac = req.startAsync();

@@ -53,7 +53,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for serving JSP and static " +
                             "resources from JAR inside WEB-INF/lib");
@@ -62,7 +62,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invokeJspServlet();
             invokeDefaultServlet("/abc.txt", 200, EXPECTED_RESPONSE);
             invokeDefaultServlet("/folder", new int[] { 301, 302 }, contextRoot + "/folder/");

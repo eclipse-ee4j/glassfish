@@ -30,7 +30,7 @@ import java.io.*;
 public
 class ZipFileRegistry {
   /* A mapping of file name to ZipFile */
-  private static Hashtable zipFileMap = new Hashtable(11); 
+  private static Hashtable zipFileMap = new Hashtable(11);
 
   /**
    * Return a zip file which may already be open
@@ -59,5 +59,5 @@ class ZipFileRegistry {
   public static Enumeration zipFiles() {
     return zipFileMap.elements();
   }
-  
+
 }

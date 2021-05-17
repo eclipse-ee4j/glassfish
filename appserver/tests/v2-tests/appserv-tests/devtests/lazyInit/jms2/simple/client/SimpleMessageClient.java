@@ -21,7 +21,7 @@ import javax.naming.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class SimpleMessageClient {
-    
+
         Context                 jndiContext = null;
         QueueConnectionFactory  queueConnectionFactory = null;
         QueueConnection  queueConnection = null;
@@ -35,48 +35,48 @@ public class SimpleMessageClient {
         public static final String  QUEUE = "jms/SampleQueue";
         final int               NUM_MSGS = 3;
         private static boolean  allDone=false;
-        
-        private static SimpleReporterAdapter stat = 
+
+        private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-        
+
         public static void main(String[] args) {
-            
+
             stat.addDescription("This is to test simple "+
             "message driven bean sample.");
             SimpleMessageClient client=new SimpleMessageClient();
             client.setup();
             client.sendMessage();
             client.recvMessage();
-            client.printReport();           
-                        
+            client.printReport();
+
         }
-        
-        public Object jndiLookup(String name) 
+
+        public Object jndiLookup(String name)
         throws NamingException {
         Object    obj = null;
         if (jndiContext == null) {
             try {
-                jndiContext = new InitialContext();            
+                jndiContext = new InitialContext();
             } catch (NamingException e) {
                 System.err.println("Could not create JNDI API " +
-                    "context: " + e.toString());                
+                    "context: " + e.toString());
                 throw e;
             }
         }
         try {
            obj = jndiContext.lookup(name);
-        } catch (NamingException e) {            
-            System.err.println("JNDI API lookup failed: " + 
+        } catch (NamingException e) {
+            System.err.println("JNDI API lookup failed: " +
                 e.toString());
             throw e;
         }
         return obj;
     }
-        
+
         public void setup(){
             try{
-            queueConnectionFactory=(QueueConnectionFactory)jndiLookup(QUEUECONFAC);                                
-            queue = (Queue)jndiLookup(QUEUE);                                  
+            queueConnectionFactory=(QueueConnectionFactory)jndiLookup(QUEUECONFAC);
+            queue = (Queue)jndiLookup(QUEUE);
             stat.addStatus("simple mdb jndiLookup", stat.PASS);
             }catch(Throwable e)
             {
@@ -84,21 +84,21 @@ public class SimpleMessageClient {
                 System.out.println("Problem in looking up connection factories");
                 e.printStackTrace();
             }
-            
-        }
-        
-        
 
-        
+        }
+
+
+
+
         public SimpleMessageClient(){}
-        
-        
+
+
         public void sendMessage(){
             try {
-            queueConnectionFactory=(QueueConnectionFactory)jndiLookup(QUEUECONFAC);                    
-            
-            queue = (Queue)jndiLookup(QUEUE);                                  
-       
+            queueConnectionFactory=(QueueConnectionFactory)jndiLookup(QUEUECONFAC);
+
+            queue = (Queue)jndiLookup(QUEUE);
+
 
             queueConnection =
                 queueConnectionFactory.createQueueConnection();
@@ -110,42 +110,42 @@ public class SimpleMessageClient {
             message.setJMSDeliveryMode(DeliveryMode.PERSISTENT);
             //System.out.println("Created durable queue subscriber,persistent delivery mode");
 
-            for (int i = 0; i < NUM_MSGS; i++) {                
+            for (int i = 0; i < NUM_MSGS; i++) {
                 message.setText(MSG_TEXT + (i + 1));
                 if(i==(NUM_MSGS-1))
                     message.setStringProperty("MESSAGE_NUM","LAST");
                 System.out.println("Sending message: " + message.getText());
-                queueSender.send(message);                              
+                queueSender.send(message);
                 Thread.sleep(1000);
             }
-            System.out.println("Sent 3 messages,now sleeping");          
+            System.out.println("Sent 3 messages,now sleeping");
         } catch (Throwable e) {
             System.out.println("Exception occurred: " + e.toString());
             stat.addStatus("simple mdb main", stat.FAIL);
         } finally {
             System.out.println("In finally block of send message");
-	    if (queueConnection !=null){
-	    try{
-	    queueConnection.close();
-	    }catch(JMSException ex){
-	    ex.printStackTrace();
-	    }
-	    }
-           
-            stat.addStatus("simple mdb sendmessage", stat.PASS);                     
+        if (queueConnection !=null){
+        try{
+        queueConnection.close();
+        }catch(JMSException ex){
+        ex.printStackTrace();
+        }
+        }
+
+            stat.addStatus("simple mdb sendmessage", stat.PASS);
         } // finally
-    }          
-        
+    }
+
         public static void printReport(){
             if(allDone)
-            stat.printSummary("simpleMdbID");            
+            stat.printSummary("simpleMdbID");
            else
                 System.out.println("MessageStream from server not finished");
-        }    
-        
-    
-    
-    
+        }
+
+
+
+
     public void recvMessage(){
         QueueConnection connect=null;
         /*
@@ -159,15 +159,15 @@ public class SimpleMessageClient {
          * Close connection.
          */
         System.out.println("********************************");
-	System.out.println("inside recvMessage of jms2 appclient");
+    System.out.println("inside recvMessage of jms2 appclient");
         try {
             connect = queueConnectionFactory.createQueueConnection();
             QueueSession session = connect.createQueueSession(false,0);
-            receiver=session.createReceiver(queue);  
+            receiver=session.createReceiver(queue);
             System.out.println("Started Receiver");
             connect.start();
             int msgcount=1;
-            while (true) {                
+            while (true) {
                 Message m = receiver.receive(10000);
                 System.out.println("Bingo!. got a ack msg back from server");
                 msgcount++;
@@ -180,7 +180,7 @@ public class SimpleMessageClient {
                         String props=message.getStringProperty("MESSAGE_NUM");
                     } else {
                         break;
-                        
+
                     }
                 }
                 if(msgcount>=3){
@@ -193,7 +193,7 @@ public class SimpleMessageClient {
             System.out.println("Messages from Queue finished**");
             System.out.println("******************");
         } catch (JMSException e) {
-            System.out.println("Exception occurred: " + 
+            System.out.println("Exception occurred: " +
                 e.toString());
             stat.addStatus("simple jms2 recvmessage", stat.FAIL);
         } catch(Throwable e){

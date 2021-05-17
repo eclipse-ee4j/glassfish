@@ -82,8 +82,8 @@ public interface Host extends Container {
 
 
     /**
-     * Return the value of the auto deploy flag.  If true, it indicates that 
-     * this host's child webapps should be discovered and automatically 
+     * Return the value of the auto deploy flag.  If true, it indicates that
+     * this host's child webapps should be discovered and automatically
      * deployed dynamically.
      */
     public boolean getAutoDeploy();
@@ -91,15 +91,15 @@ public interface Host extends Container {
 
     /**
      * Set the auto deploy flag value for this host.
-     * 
+     *
      * @param autoDeploy The new auto deploy flag
      */
     public void setAutoDeploy(boolean autoDeploy);
 
 
     /**
-     * Return the value of the deploy on startup flag.  If true, it indicates 
-     * that this host's child webapps should be discovered and automatically 
+     * Return the value of the deploy on startup flag.  If true, it indicates
+     * that this host's child webapps should be discovered and automatically
      * deployed.
      */
     public boolean getDeployOnStartup();
@@ -107,7 +107,7 @@ public interface Host extends Container {
 
     /**
      * Set the deploy on startup flag value for this host.
-     * 
+     *
      * @param deployOnStartup The new deploy on startup flag
      */
     public void setDeployOnStartup(boolean deployOnStartup);

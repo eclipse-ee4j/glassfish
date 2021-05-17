@@ -35,7 +35,7 @@ public class HelloServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-	System.out.println("In HelloServlet::init");
+    System.out.println("In HelloServlet::init");
     }
 
     @EJB SingletonBean sb;
@@ -46,13 +46,13 @@ public class HelloServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 
-	resp.setContentType("text/html");
+    resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
-	System.out.println("In HelloServlet::doGet");
+    System.out.println("In HelloServlet::doGet");
 
 
-	try {
+    try {
 
             sb.hello();
 
@@ -80,18 +80,18 @@ public class HelloServlet extends HttpServlet {
             }
 
 
-	} catch(RuntimeException e) {
-	    throw e;
-	} catch(Exception e) {
-	    throw new RuntimeException(e);
+    } catch(RuntimeException e) {
+        throw e;
+    } catch(Exception e) {
+        throw new RuntimeException(e);
        }
 
 
-	out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
+    out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
-            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" ); 
+            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" );
             out.println("</BODY> </HTML> ");
 
     }

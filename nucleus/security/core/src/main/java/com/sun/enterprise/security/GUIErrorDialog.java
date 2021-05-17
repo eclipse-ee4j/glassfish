@@ -19,7 +19,7 @@
  * An error dialog box used for FailedLogin
  *
  * @author Harpreet Singh
- * @version 
+ * @version
  */
 
 package com.sun.enterprise.security;
@@ -30,10 +30,10 @@ public class GUIErrorDialog extends javax.swing.JDialog {
     String message;
     /** Creates new form GUIErrorDialog */
     public GUIErrorDialog (String message){
-	super (new JFrame (), true);
-	this.message = message;
-	initComponents ();
-	pack ();
+    super (new JFrame (), true);
+    this.message = message;
+    initComponents ();
+    pack ();
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -41,9 +41,9 @@ public class GUIErrorDialog extends javax.swing.JDialog {
     private void initComponents() {
         okButton = new javax.swing.JButton();
         errorLbl = new javax.swing.JLabel();
-	okButton.setAlignmentX (CENTER_ALIGNMENT);
-	errorLbl.setAlignmentX (CENTER_ALIGNMENT);
-	getContentPane().setLayout (new javax.swing.BoxLayout (getContentPane (),BoxLayout.Y_AXIS));
+    okButton.setAlignmentX (CENTER_ALIGNMENT);
+    errorLbl.setAlignmentX (CENTER_ALIGNMENT);
+    getContentPane().setLayout (new javax.swing.BoxLayout (getContentPane (),BoxLayout.Y_AXIS));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
@@ -52,18 +52,18 @@ public class GUIErrorDialog extends javax.swing.JDialog {
         okButton.setActionCommand("okButton");
         okButton.setText("OK");
         okButton.addActionListener (new ActionListener (){
-		public void actionPerformed (ActionEvent e){
-		    dispose ();
-		}
-	    });
-	super.addWindowListener (new WindowAdapter (){
-		public void windowClosing (WindowEvent we){
-		    dispose ();
-		}
-	    });
+        public void actionPerformed (ActionEvent e){
+            dispose ();
+        }
+        });
+    super.addWindowListener (new WindowAdapter (){
+        public void windowClosing (WindowEvent we){
+            dispose ();
+        }
+        });
         errorLbl.setText("Error : "+message);
-	getContentPane().add (errorLbl);
-	getContentPane().add (okButton);
+    getContentPane().add (errorLbl);
+    getContentPane().add (okButton);
     }
 
     /** Closes the dialog */

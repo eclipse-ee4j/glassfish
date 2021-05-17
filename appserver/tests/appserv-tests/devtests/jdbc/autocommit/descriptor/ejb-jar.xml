@@ -53,7 +53,7 @@
         <method-name>*</method-name>
       </method>
       <trans-attribute>Required</trans-attribute>
-    </container-transaction>  
+    </container-transaction>
     <container-transaction>
       <method>
         <ejb-name>SimpleBMPEJB</ejb-name>
@@ -62,6 +62,6 @@
       <trans-attribute>NotSupported</trans-attribute>
     </container-transaction>
   </assembly-descriptor>
-      
+
 </ejb-jar>
 

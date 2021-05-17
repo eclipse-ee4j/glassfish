@@ -41,7 +41,7 @@ public class ServletTest extends HttpServlet {
     }
 
     public void doGet (HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {    
+            throws ServletException, IOException {
         doPost (req,res);
     }
 }

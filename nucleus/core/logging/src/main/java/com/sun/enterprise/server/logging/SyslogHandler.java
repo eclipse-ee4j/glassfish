@@ -54,7 +54,7 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
     private BooleanLatch done = new BooleanLatch();
     private BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<LogRecord>(5000);
     private SimpleFormatter simpleFormatter = new SimpleFormatter();
-    
+
 
     public void postConstruct() {
 
@@ -64,7 +64,7 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
         Object obj = TranslatedConfigView.getTranslatedValue(manager.getProperty(cname + ".useSystemLogging"));
         // Added below 2 lines of code to avoid NPE as per the bug http://java.net/jira/browse/GLASSFISH-16162
         if(obj==null)
-            return;                
+            return;
         String systemLogging = obj.toString();
         if (systemLogging.equals("false"))
             return;
@@ -73,10 +73,10 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
         try {
             sysLogger = new Syslog("localhost");  //for now only write to this host
         } catch ( java.net.UnknownHostException e) {
-		        LogFacade.LOGGING_LOGGER.log(Level.SEVERE, LogFacade.ERROR_INIT_SYSLOG, e);
-		        return;
-		    }
-        
+                LogFacade.LOGGING_LOGGER.log(Level.SEVERE, LogFacade.ERROR_INIT_SYSLOG, e);
+                return;
+            }
+
         // start the Queue consummer thread.
         pump = new Thread() {
             public void run() {
@@ -92,7 +92,7 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
         pump.start();
 
     }
-    
+
     public void preDestroy() {
         if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
             LogFacade.LOGGING_LOGGER.fine("SysLog Logger handler killed");
@@ -119,22 +119,22 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
 
         if (level.equals(Level.SEVERE)) {
             syslogLevel = Syslog.CRIT;
-            logLevel = "CRIT";            
+            logLevel = "CRIT";
         } else if (level.equals(Level.WARNING)){
             syslogLevel = Syslog.WARNING;
             logLevel = "WARNING";
         } else if(level.intValue() <= Level.FINE.intValue())   {
             syslogLevel = Syslog.DEBUG;
             logLevel = "DEBUG";
-        } 
-        
+        }
+
         //format the message
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd HH:mm:ss");
         sb.append(formatter.format(millisec));
         sb.append(" [ ");
         sb.append(logLevel);
-        sb.append(" glassfish ] ");        
+        sb.append(" glassfish ] ");
         String formattedMsg = simpleFormatter.formatMessage(record);
         sb.append(formattedMsg);
          //send message
@@ -150,7 +150,7 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
     public void publish( LogRecord record ) {
         if (pump == null)
             return;
-            
+
         try {
             pendingRecords.add(record);
         } catch(IllegalStateException e) {
@@ -168,7 +168,7 @@ public class SyslogHandler extends Handler implements PostConstruct, PreDestroy 
     }
 
     public void flush() {
-        
+
     }
 }
 

@@ -21,15 +21,15 @@ import jakarta.enterprise.context.RequestScoped;
 @RequestScoped
 public class TestRequestScopedBean {
     private static int instantiationCount = 0;
-    
+
     public TestRequestScopedBean(){
         instantiationCount++;
     }
-    
+
     public int getInstantiationCount(){
         System.out.println("Instances of TestRequestScopedBean=" + instantiationCount);
         return this.instantiationCount;
     }
 
-    
+
 }

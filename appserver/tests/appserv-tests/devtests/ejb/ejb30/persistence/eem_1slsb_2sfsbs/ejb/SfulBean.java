@@ -34,27 +34,27 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.ejb.EJBException;
 
 @Stateful
-@EJB(name="ejb/SfulBean", 
+@EJB(name="ejb/SfulBean",
         beanInterface=com.sun.s1asdev.ejb.ejb30.persistence.eem_1slsb_2sfsbs.SfulDelegate.class)
 
 public class SfulBean
     implements Sful {
 
     private String name;
-    
+
     private @EJB SfulDelegate delegate;
 
     private @EJB Sless sless;
-    
+
     private @PersistenceContext(unitName="lib/ejb-ejb30-persistence-eem_1slsb_2sfsbs-par1.jar#em",
-                type=PersistenceContextType.EXTENDED) 
+                type=PersistenceContextType.EXTENDED)
             EntityManager extendedEM;
- 
+
     public void setName(String name) {
         this.name = name;
         try {
             String lookupName = "java:comp/env/ejb/SfulBean";
-            
+
             InitialContext initCtx = new InitialContext();
             delegate = (SfulDelegate) initCtx.lookup(lookupName);
         } catch (Exception ex) {
@@ -64,7 +64,7 @@ public class SfulBean
 
     public Map<String, Boolean> doTests() {
         Person person = new Person(name);
-        
+
         String delegateName = "delgname_" + name;
         String delegateData= "delgdata: " + name;
 
@@ -101,7 +101,7 @@ public class SfulBean
             peerOpStatus = true;
         }
         map.put("peerFoundMe (-ve test)", peerOpStatus);
-        
+
         map.put("delegateRemovedMe",
                 delegate.remove(name));
 
@@ -115,7 +115,7 @@ public class SfulBean
 
         map.put("iCannotFindMe (-ve test)",
             (find(name) == null));
-        
+
         map.put("removedDelegate",
             removePerson(delegateName));
 
@@ -126,7 +126,7 @@ public class SfulBean
             peerOpStatus = true;
         }
         map.put("peerCannotfindDelegate (-ve test)", peerOpStatus);
-        
+
         String peerName = "_peer_name_" + name;
         String peerData = "_peer_data_" + name;
 
@@ -164,5 +164,5 @@ public class SfulBean
         }
         return removed;
     }
-    
+
 }

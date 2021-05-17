@@ -27,12 +27,12 @@ import jakarta.resource.spi.LazyEnlistableConnectionManager;
  * @author Aditya Gore
  */
 public class LazyEnlistableConnectionManagerImpl extends ConnectionManagerImpl
-        implements LazyEnlistableConnectionManager 
+        implements LazyEnlistableConnectionManager
 {
     public LazyEnlistableConnectionManagerImpl( PoolInfo poolInfo, ResourceInfo resourceInfo ) {
         super( poolInfo, resourceInfo );
     }
-    
+
     public void lazyEnlist( jakarta.resource.spi.ManagedConnection mc ) throws ResourceException {
         ConnectorRuntime.getRuntime().getPoolManager().lazyEnlist( mc );
     }

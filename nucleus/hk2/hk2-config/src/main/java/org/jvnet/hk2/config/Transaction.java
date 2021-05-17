@@ -31,11 +31,11 @@ public class Transaction {
     final LinkedList<Transactor> participants = new LinkedList<Transactor>();
 
     /**
-	 * Enlists a new participant in this transaction
+     * Enlists a new participant in this transaction
      *
      * @param t new participant to this transaction
-	 * 
-	 */
+     *
+     */
     synchronized void addParticipant(Transactor t) {
         // add participants first so the lastly created elements are processed before the parent
         // is modified, this is especially important when sub elements have key attributes the parent
@@ -43,9 +43,9 @@ public class Transaction {
           participants.addFirst(t);
     }
 
-	/**
-	 * Rollbacks all participants to this transaction. 
-	 */
+    /**
+     * Rollbacks all participants to this transaction.
+     */
     public synchronized void rollback() {
         for (Transactor t : participants) {
             t.abort(this);
@@ -59,7 +59,7 @@ public class Transaction {
      * {@link #commit()} method will succeed.
      *
      * @return true if the participants changes are valid, false otherwise
-     * @throws TransactionFailure if the changes are not valid 
+     * @throws TransactionFailure if the changes are not valid
      */
     public boolean canCommit() throws TransactionFailure {
         for (Transactor t : participants) {
@@ -70,15 +70,15 @@ public class Transaction {
         return true;
     }
 
-	/**
-	 * Commits all participants to this transaction
-	 * 
-	 * @return list of PropertyChangeEvent for the changes that were applied to the 
-	 * participants during the transaction.
+    /**
+     * Commits all participants to this transaction
+     *
+     * @return list of PropertyChangeEvent for the changes that were applied to the
+     * participants during the transaction.
      * @throws RetryableException if the transaction cannot commit at this time but
      * could succeed later.
      * @throws TransactionFailure if the transaction commit failed.
-	 */
+     */
     public synchronized List<PropertyChangeEvent> commit()
             throws RetryableException, TransactionFailure {
 

@@ -41,8 +41,8 @@ public class TestServlet extends HttpServlet {
     @Inject TestBeanInWebInfLib tbiwil;
 
     BeanManager bm1;
-    
-    @Inject 
+
+    @Inject
     private transient org.jboss.logging.Logger log;
 
     public void service(HttpServletRequest req, HttpServletResponse res)
@@ -72,14 +72,14 @@ public class TestServlet extends HttpServlet {
         //via BeanManager of WAR
         Set warBeans = bm.getBeans(TestBean.class,new AnnotationLiteral<Any>() {});
         if (warBeans.size() != 1) msg += "TestBean in WAR is not available via the WAR BeanManager";
-        
+
         Set webinfLibBeans = bm.getBeans(TestBeanInWebInfLib.class,new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 1) msg += "TestBean in WEB-INF/lib is not available via the WAR BeanManager";
         System.out.println("Test Bean from WEB-INF/lib via BeanManager:" + webinfLibBeans);
-        
+
         //Test injection into WEB-INF/lib beans
         msg += tbiwil.testInjection();
-        
+
         writer.write("initParams: " + msg + "\n");
     }
 }

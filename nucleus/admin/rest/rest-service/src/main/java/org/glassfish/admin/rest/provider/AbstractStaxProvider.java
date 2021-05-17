@@ -125,7 +125,7 @@ public abstract class AbstractStaxProvider<T> extends BaseProvider<T> {
 
     /**
      * Marshalling implementation here.
-     * 
+     *
      * @param proxy object to marshal
      * @param wr STaX for marshaling
      * @throws XMLStreamException

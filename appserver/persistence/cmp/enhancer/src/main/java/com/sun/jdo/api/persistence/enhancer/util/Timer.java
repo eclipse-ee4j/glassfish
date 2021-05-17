@@ -70,10 +70,10 @@ public final class Timer {
 
     // method call stack
     private final ArrayList calls = new ArrayList(16);
-    
+
     public Timer()
     {
-        
+
     }
 
     public Timer(PrintWriter out)
@@ -84,7 +84,7 @@ public final class Timer {
     public final synchronized void push(String name) {
         push(name, name);
     }
-    
+
     public final synchronized void push(String name, String message) {
         // get time
         final long now = System.currentTimeMillis();
@@ -143,7 +143,7 @@ public final class Timer {
         b.append(s);
         return b.toString();
     }
-    
+
     public final synchronized void print()
     {
         out.println("Timer : printing accumulated times ...");
@@ -160,7 +160,7 @@ public final class Timer {
                                 return (obj != null && compare(this, obj) == 0);
                             }
                         });
-        
+
         out.println("Timer :  total s    self s  #calls  name");
         DecimalFormat nf = new DecimalFormat();
         nf.setMaximumFractionDigits(2);

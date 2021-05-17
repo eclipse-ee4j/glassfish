@@ -27,7 +27,7 @@
 
     <artifactId>glassfish-grizzly-container</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>GlassFish Grizzly adapter container implementation</name>
 
     <developers>

@@ -63,7 +63,7 @@ public class ConstDouble extends ConstValue {
   /* package local methods */
 
   /**
-   * Construct a ConstDouble object 
+   * Construct a ConstDouble object
    */
   ConstDouble (double f) {
     doubleValue = f;

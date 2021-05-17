@@ -27,7 +27,7 @@ import java.util.Iterator;
  * Default implementation of DescriptorVisitor interface for convenience
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 
 public class DefaultDOLVisitor implements DescriptorVisitor {

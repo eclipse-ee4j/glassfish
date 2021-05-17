@@ -75,7 +75,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
     /**
      * Sets the cluster name
-     * 
+     *
      * @param value cluster name
      * @throws PropertyVetoException if a listener vetoes the change
      */
@@ -294,7 +294,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
@@ -324,7 +324,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
     /**
      * Returns the cluster configuration reference
-     * 
+     *
      * @return the config-ref attribute
      */
     @DuckTyped
@@ -411,8 +411,8 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             ArrayList<Server> instances = new ArrayList<Server>();
             for (ServerRef sRef : cluster.getServerRef()) {
                 Server svr = domain.getServerNamed(sRef.getRef());
-                // the instance's domain.xml only has its own server 
-                // element and not other server elements in the cluster 
+                // the instance's domain.xml only has its own server
+                // element and not other server elements in the cluster
                 if (svr != null) {
                     instances.add(domain.getServerNamed(sRef.getRef()));
                 }

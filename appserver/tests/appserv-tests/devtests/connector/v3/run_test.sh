@@ -18,7 +18,7 @@
 list_test_ids(){
   echo connector_all connector_group_1 connector_group_2 connector_group_3 connector_group_4
 }
- 
+
 test_run(){
   #test functions goes here, maven test or ant test etc.
   export HUDSON=true
@@ -45,16 +45,16 @@ run_test_id(){
 }
 
 get_test_target(){
-	case ${1} in
-		connector_all )
-			TARGET=all
-			export TARGET;;
+    case ${1} in
+        connector_all )
+            TARGET=all
+            export TARGET;;
   * )
     TARGET=$1
     export TARGET;;
-	esac
+    esac
 }
- 
+
 OPT=${1}
 TEST_ID=${2}
 source `dirname ${0}`/../../../../common_test.sh

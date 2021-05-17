@@ -65,10 +65,10 @@ import com.sun.jts.utils.LogFormatter;
 //------------------------------------------------------------------------------
 
 public class ControlImpl extends JControlPOA implements Control {
-    
+
     private static POA poa = null;
     private Control thisRef = null;
-    
+
     protected boolean         temporary = false;
     protected boolean         inSuspended = false;
     protected Status          tranState = Status.StatusActive;
@@ -81,17 +81,17 @@ public class ControlImpl extends JControlPOA implements Control {
     protected Long            localTID = null;
     protected boolean         representsRemote = false;
     protected PropagationContext cachedContext = null;
-    
+
     // Transaction checking values
-    
+
     protected int outgoing = 0;
     protected int association = 0;
-    
+
     /**
      * Logger to log transaction messages
      */
     static Logger _logger = LogDomains.getLogger(Configuration.class, LogDomains.TRANSACTION_LOGGER);
-    
+
     /**Default ControlImpl constructor.
      *
      * @param
@@ -101,16 +101,16 @@ public class ControlImpl extends JControlPOA implements Control {
      * @see
      */
     ControlImpl() {
-        
+
         tranState = Status.StatusActive;
-        
+
         // Add the Control object to the set of
         // suspended ones for this process.
         inSuspended = true;
         CurrentTransaction.addSuspended(this);
-        
+
     }
-    
+
     /**Creates and initialises a new ControlImpl, given the TerminatorImpl and
      * CoordinatorImpl objects, and the corresponding global and local identifiers.
      *
@@ -127,27 +127,27 @@ public class ControlImpl extends JControlPOA implements Control {
     CoordinatorImpl coord,
     GlobalTID       globalTID,
     Long            localTID ) {
-        
-        
+
+
         // Set up the instance variables.
-        
+
         this.term = term;
         this.coord = coord;
         this.globalTID = globalTID;
         this.localTID = localTID;
         tranState = Status.StatusActive;
-        
+
         // Add the Control object to the set of suspended ones for this process.
-        
+
         inSuspended = true;
         CurrentTransaction.addSuspended(this);
-        
+
         // pass this control obj to the terminator to cleanup properly (Ram J)
         if (term != null) {
             term.setControl(this);
         }
     }
-    
+
     /**Creates and initialises a new ControlImpl, given a Control object.
      * This constructor is used to create a local ControlImpl when a remote factory
      * has been used to create the Control object.
@@ -163,32 +163,32 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     ControlImpl( Control ref )
     throws Unavailable {
-        
+
         // Set up the instance variables.
-        
+
         thisRef = ref;
         representsRemote = true;
         coordRef = ref.get_coordinator();
         termRef = ref.get_terminator();
-        
+
         // Get a PropagationContext from the Coordinator, which will contain the
         // global TID for the transaction.
-        
+
         try {
             cachedContext = coordRef.get_txcontext();
             globalTID = new GlobalTID(cachedContext.current.otid);
         } catch( Throwable exc ) {
         }
-        
+
         tranState = Status.StatusActive;
-        
+
         // Don't add the Control object to the set of suspended ones for this process,
         // as we may never get the opportunity to remove it.
-        
+
         //$ CurrentTransaction.addSuspended(this);
-        
+
     }
-    
+
     /**Cleans up the state of the object.
      *
      * @param
@@ -198,19 +198,19 @@ public class ControlImpl extends JControlPOA implements Control {
      * @see
      */
     synchronized public void doFinalize() {
-        
+
         // Ensure that this object does not appear in the suspended set.
-        
+
         if( inSuspended )
             CurrentTransaction.removeSuspended(this);
         inSuspended = false;
-        
+
         // If there is a Terminator reference, destroy the Terminator.
-        
+
         if( term != null ) term.destroy();
-        
+
         // Remove the reference from the map.
-        
+
         /* TN - do not nullify the references yet
         thisRef = null;
         coord = null;
@@ -221,9 +221,9 @@ public class ControlImpl extends JControlPOA implements Control {
         globalTID = null;
         localTID = null;
          */
-        
+
     }
-    
+
     /**Returns the identifier that globally represents the transaction
      *
      * @param
@@ -235,7 +235,7 @@ public class ControlImpl extends JControlPOA implements Control {
     public GlobalTID getGlobalTID() {
         return globalTID;
     }
-    
+
     /**Returns the identifier that globally represents the transaction, and a
      * value that indicates the state of the transaction.
      *
@@ -250,28 +250,28 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     synchronized public otid_t getGlobalTID( StatusHolder status )
     throws SystemException {
-        
+
         otid_t result = null;
-        
+
         // Return the transaction state.
-        
+
         if( status != null )
             status.value = tranState;
-        
+
         // If the object is asked for its OMGtid and has none, raise an exception.
-        
+
         if( globalTID == null ) {
-            
+
             INTERNAL exc = new INTERNAL(MinorCode.NoGlobalTID,
             CompletionStatus.COMPLETED_NO);
             throw exc;
         }
         else
             result = globalTID.realTID;
-        
+
         return result;
     }
-    
+
     /**Returns the identifier that locally represents the transaction, and a value
      * that indicates the state of the transaction.
      * <p>
@@ -289,16 +289,16 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     synchronized public long getLocalTID( StatusHolder status )
     throws SystemException {
-        
+
         long result = 0;
-        
+
         // Return the transaction state.
-        
+
         if( status != null )
             status.value = tranState;
-        
+
         // If the internal id has not been defined, raise an exception.
-        
+
         if( localTID == null ) {
             INTERNAL exc = new INTERNAL(MinorCode.NoGlobalTID,
             CompletionStatus.COMPLETED_NO);
@@ -306,11 +306,11 @@ public class ControlImpl extends JControlPOA implements Control {
         } else {
             result = localTID.longValue();
         }
-        
+
         return result;
     }
-    
-    
+
+
     /**Returns a reference to the stacked ControlImpl if there is one, otherwise
      * returns a NULL reference.
      * <p>
@@ -327,23 +327,23 @@ public class ControlImpl extends JControlPOA implements Control {
      * @see
      */
     synchronized ControlImpl popControl( StatusHolder status ) {
-        
+
         ControlImpl result = null;
-        
+
         // Return the transaction state.
-        
+
         if( status != null )
             status.value = tranState;
-        
+
         // Get the value of the stacked Control object.
         // Remove the stacked Control object (if any).
-        
+
         result = stacked;
         stacked = null;
-        
+
         return result;
     }
-    
+
     /**Stacks the given ControlImpl on the target of the operation, so that it can
      * later be restored, and returns a value that indicates the state of the
      * transaction.
@@ -363,29 +363,29 @@ public class ControlImpl extends JControlPOA implements Control {
     synchronized void pushControl( ControlImpl  control,
     StatusHolder status )
     throws SystemException {
-        
+
         if( tranState == Status.StatusActive ) {
-            
+
             // If a Control object is already stacked on this one, raise an exception.
-            
+
             if( stacked != null ) {
                 INTERNAL exc = new INTERNAL(MinorCode.AlreadyStacked,
                 CompletionStatus.COMPLETED_NO);
                 throw exc;
             }
-            
+
             // Make the stacked Control object the given one.
-            
+
             else
                 stacked = control;
         }
-        
+
         // Return the transaction state.
-        
+
         if( status != null )
             status.value = tranState;
     }
-    
+
     /**Returns the Terminator object for the transaction.
      * We raise the Unavailable exception when there is no Terminator.
      * If the transaction has been completed, an appropriate exception is raised.
@@ -402,75 +402,75 @@ public class ControlImpl extends JControlPOA implements Control {
      *
      * @see
      */
-    
+
     synchronized public Terminator get_terminator()
     throws Unavailable, SystemException {
-        
+
         Terminator result = termRef;
-        
+
         // If the transaction has been completed, then raise an exception.
         // Raise either TRANSACTION_ROLLEDBACK or INVALID_TRANSACTION depending on
         // whether the transaction has aborted.
-        
+
         if( tranState == Status.StatusCommitted ) {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed,
             CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         if( tranState == Status.StatusRolledBack ) {
             TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         // If there is no Terminator reference, but a local Terminator, then get its
         // reference and remember it.
-        
+
         if( termRef == null && term != null ) {
             termRef = term.object();
             result = termRef;
         }
-        
+
         // If there is no reference available, throw the Unavailable exception.
-        
+
         if( result == null ) {
             Unavailable exc = new Unavailable();
             throw exc;
         }
-        
+
         return result;
     }
-    
+
     synchronized public Terminator get_localTerminator()
     throws Unavailable, SystemException {
-        
+
         Terminator result = (Terminator) term;
-        
+
         // If the transaction has been completed, then raise an exception.
         // Raise either TRANSACTION_ROLLEDBACK or INVALID_TRANSACTION depending on
         // whether the transaction has aborted.
-        
+
         if( tranState == Status.StatusCommitted ) {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed,
             CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         if( tranState == Status.StatusRolledBack ) {
             TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         // If there is no reference available, throw the Unavailable exception.
-        
+
         if (result == null) {
             Unavailable exc = new Unavailable();
             throw exc;
         }
-        
+
         return result;
     }
-    
+
     /**
      * Returns the Coordinator for the transaction.
      * If the transaction has been completed, an appropriate exception is raised.
@@ -489,42 +489,42 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     synchronized public Coordinator get_coordinator()
     throws Unavailable, SystemException {
-        
+
         Coordinator result = coordRef;
-        
+
         // If the transaction has been completed, then raise an exception.
         // Raise either TRANSACTION_ROLLEDBACK or INVALID_TRANSACTION depending on
         // whether the transaction has aborted.
-        
+
         if( tranState == Status.StatusCommitted ) {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed,
             CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         if( tranState == Status.StatusRolledBack ) {
             TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         // If there is no Coordinator reference, but a local Coordinator, then get its
         // reference and remember it.
-        
+
         if( coordRef == null && coord != null ) {
             coordRef = coord.object();
             result = coordRef;
         }
-        
+
         // If there is no reference available, throw the Unavailable exception.
-        
+
         if( result == null ) {
             Unavailable exc = new Unavailable();
             throw exc;
         }
-        
+
         return result;
     }
-    
+
     /**
      * Returns the Coordinator for the transaction.
      * If the transaction has been completed, an appropriate exception is raised.
@@ -543,34 +543,34 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     synchronized public Coordinator get_localCoordinator()
     throws Unavailable, SystemException {
-        
+
         Coordinator result = (Coordinator) coord;
-        
+
         // If the transaction has been completed, then raise an exception.
         // Raise either TRANSACTION_ROLLEDBACK or INVALID_TRANSACTION depending on
         // whether the transaction has aborted.
-        
+
         if( tranState == Status.StatusCommitted ) {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed,
             CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         if( tranState == Status.StatusRolledBack ) {
             TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
             throw exc;
         }
-        
+
         // If there is no reference available, throw the Unavailable exception.
-        
+
         if( result == null ) {
             Unavailable exc = new Unavailable();
             throw exc;
         }
-        
+
         return result;
     }
-    
+
     /**This operation returns a value indicating that asynchonrous requests issued
      * within the context of the current ControlImpl instance have not yet
      * completed.
@@ -581,13 +581,13 @@ public class ControlImpl extends JControlPOA implements Control {
      *
      * @see
      */
-    
+
     synchronized boolean isOutgoing() {
         boolean result = (outgoing != 0);
         return result;
     }
-    
-    
+
+
     /**This operation returns a value which indicates that this ControlImpl instance
      * is associated with one or more threads.
      *
@@ -601,7 +601,7 @@ public class ControlImpl extends JControlPOA implements Control {
         boolean result = (association != 0);
         return result;
     }
-    
+
     /**This operation returns the number of thread associations
      *
      * @param
@@ -614,7 +614,7 @@ public class ControlImpl extends JControlPOA implements Control {
         int result = association;
         return result;
     }
-    
+
     /**Increment the thread association count.
      *
      * @param
@@ -626,7 +626,7 @@ public class ControlImpl extends JControlPOA implements Control {
     synchronized void incrementAssociation() {
         association++;
     }
-    
+
     /**Decrement the thread association count.
      *
      * @param
@@ -640,7 +640,7 @@ public class ControlImpl extends JControlPOA implements Control {
         if( result ) association--;
         return result;
     }
-    
+
     /**Increment the incomplete asynchronous request counter.
      *
      * @param
@@ -652,7 +652,7 @@ public class ControlImpl extends JControlPOA implements Control {
     synchronized void incrementOutgoing() {
         outgoing++;
     }
-    
+
     /**Decrement the incomplete asynchronous request counter.
      *
      * @param
@@ -666,7 +666,7 @@ public class ControlImpl extends JControlPOA implements Control {
         if( result ) outgoing--;
         return result;
     }
-    
+
     /**Returns the state of the transaction as the Control object knows it.
      *
      * @param
@@ -679,7 +679,7 @@ public class ControlImpl extends JControlPOA implements Control {
         Status result = tranState;
         return result;
     }
-    
+
     /**Sets the state of the transaction as the Control object knows it.
      * No checking is done to verify the state change is valid.
      *
@@ -692,8 +692,8 @@ public class ControlImpl extends JControlPOA implements Control {
     synchronized public void setTranState( Status newState ) {
         tranState = newState;
     }
-    
-    
+
+
     /**Locates the first stacked ancestor which has not aborted.  If there is no
      * such ancestor the operation returns null.
      *
@@ -705,44 +705,44 @@ public class ControlImpl extends JControlPOA implements Control {
      * @see
      */
     synchronized ControlImpl popAborted() {
-        
+
         // Start with this object's stacked Control.
-        
+
         ControlImpl result = stacked;
         boolean validTID = false;
         StatusHolder outStatus = new StatusHolder();
         while( result != null && !validTID ) {
-            
+
             // Get the local transaction identifier for the stacked Control object,
             // and ask the RecoveryManager if it represents a valid transaction.
-            
+
             Long localTID = null;
             try {
-                localTID = result.getLocalTID(outStatus); 
+                localTID = result.getLocalTID(outStatus);
                 validTID = RecoveryManager.validLocalTID(localTID);
             } catch( Throwable exc ) {}
-            
+
             // If the transaction identifier is not valid, then the transaction must have
             // rolled back, so discard it and get its stacked Control object, if any.
-            
+
             if( !validTID ) {
-                
+
                 // Get the stacked Control object from the one that represents a rolled
                 // back transaction, and try to resume that one instead.
-                
+
                 ControlImpl stacked = result.popControl(outStatus);
                 result.destroy();
-                
+
                 // Discard the rolled-back Control object and continue until a valid one, or
                 // no stacked Control is found.
-                
+
                 result = stacked;
             }
         }
-        
+
         return result;
     }
-    
+
     /**Determines whether the ControlImpl object represents a remote Control object
      * or a local one.
      *
@@ -752,12 +752,12 @@ public class ControlImpl extends JControlPOA implements Control {
      *
      * @see
      */
-    
+
     synchronized boolean representsRemoteControl() {
         boolean result = representsRemote;
         return result;
     }
-    
+
     /**Returns the transaction context for the Coordinator.
      *
      * @param
@@ -771,10 +771,10 @@ public class ControlImpl extends JControlPOA implements Control {
     synchronized PropagationContext getTXContext()
     throws Unavailable {
         PropagationContext result = null;
-        
+
         // If the ControlImpl represents a remote transaction, then use the cached
         // context, or get one from the Coordinator if there is no cached context.
-        
+
         if( representsRemote ) {
             if( cachedContext == null )
                 try {
@@ -785,15 +785,15 @@ public class ControlImpl extends JControlPOA implements Control {
                 }
             result = cachedContext;
         }
-        
+
         // For local transactions, get the context from the Coordinator.
-        
+
         else
             result = coord.get_txcontext();
-        
+
         return result;
     }
-    
+
     /**Dumps the state of the object.
      *
      * @param
@@ -804,7 +804,7 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     void dump() {
     }
-    
+
     /**Returns the CORBA Object which represents this object.
      *
      * @param
@@ -817,7 +817,7 @@ public class ControlImpl extends JControlPOA implements Control {
         if( thisRef == null ) {
             if( poa == null )
                 poa = Configuration.getPOA("transient"/*#Frozen*/);
-            
+
             try {
                 poa.activate_object(this);
                 thisRef = ControlHelper.narrow(poa.servant_to_reference(this));
@@ -838,10 +838,10 @@ public class ControlImpl extends JControlPOA implements Control {
                 throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
-        
+
         return thisRef;
     }
-    
+
     /**Returns the ControlImpl which serves the given object.
      *
      * @param  The CORBA Object.
@@ -852,14 +852,14 @@ public class ControlImpl extends JControlPOA implements Control {
      */
     synchronized public static final ControlImpl servant( JControl control ) {
         ControlImpl result = null;
-        
+
         // GDH we will not be able to obtain the
         // servant from our local POA for a proxy control object.
         // so return null
         if ( control != null && Configuration.getProxyChecker().isProxy(control)) {
             return result;
         }
-        
+
         if( control instanceof ControlImpl ) {
             result = (ControlImpl)control;
         } else if( poa != null )
@@ -869,12 +869,12 @@ public class ControlImpl extends JControlPOA implements Control {
                     result.thisRef = control;
             } catch( Exception exc ) {
                 _logger.log(Level.WARNING,"jts.cannot_locate_servant","Control");
-                
+
             }
-        
+
         return result;
     }
-    
+
     /**Destroys the ControlImpl object.
      *
      * @param
@@ -896,15 +896,15 @@ public class ControlImpl extends JControlPOA implements Control {
                     thisRef = null;
                 } catch( Exception exc ) {
                     _logger.log(Level.WARNING,"jts.object_destroy_error","Control");
-                    
-                    
+
+
                 }
         }
-        
+
         doFinalize();
-        
+
     }
-    
+
     /**Added to prevent null delegate problem.
      *
      * @param
@@ -924,56 +924,56 @@ public class ControlImpl extends JControlPOA implements Control {
     public int hashCode() {
         return System.identityHashCode(this);
     }
-    
+
     /*
      * These methods are there to satisy the compiler. At some point
      * when we move towards a tie based model, the org.omg.Corba.Object
      * interface method implementation below shall be discarded.
      */
-    
+
     public org.omg.CORBA.Object _duplicate() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public void _release() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public boolean _is_a(String repository_id) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public boolean _is_equivalent(org.omg.CORBA.Object that) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public boolean _non_existent() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public int _hash(int maximum) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public Request _request(String operation) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public Request _create_request(Context ctx,
     String operation,
     NVList arg_list,
     NamedValue result) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public Request _create_request(Context ctx,
     String operation,
     NVList arg_list,
@@ -981,28 +981,28 @@ public class ControlImpl extends JControlPOA implements Control {
     ExceptionList exceptions,
     ContextList contexts) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public org.omg.CORBA.Object _get_interface_def() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public org.omg.CORBA.Policy _get_policy(int policy_type) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public org.omg.CORBA.DomainManager[] _get_domain_managers() {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
-    
+
     public org.omg.CORBA.Object _set_policy_override(
     org.omg.CORBA.Policy[] policies,
     org.omg.CORBA.SetOverrideType set_add) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
-        
+
     }
 }

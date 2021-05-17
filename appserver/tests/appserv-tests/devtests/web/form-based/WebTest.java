@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest
 {
-    
+
     private static final String TEST_NAME = "form-based";
     private static final String JSESSIONID = "JSESSIONID";
     private static final String FILTER_REQUEST = "FILTER-REQUEST:";
@@ -52,7 +52,7 @@ public class WebTest
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Standalone jsr115  war test");
         WebTest webTest = new WebTest(args);
 
@@ -92,7 +92,7 @@ public class WebTest
             System.out.print(get);
             os.write(get.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -111,7 +111,7 @@ public class WebTest
             close(is);
             close(br);
         }
- 
+
         if (cookie == null) {
             throw new Exception("Missing Set-Cookie response header");
         }
@@ -141,7 +141,7 @@ public class WebTest
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -188,7 +188,7 @@ public class WebTest
             System.out.println(sendCookie);
             os.write(sendCookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 

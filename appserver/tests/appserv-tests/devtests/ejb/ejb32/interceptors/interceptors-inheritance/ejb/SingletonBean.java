@@ -33,11 +33,11 @@ public class SingletonBean implements Snglt {
         System.out.println("In SingletonBean::init()");
         sful.hello();
     }
-    
+
     public String hello() {
-	System.out.println("In SingletonBean::hello()");
+    System.out.println("In SingletonBean::hello()");
         sful.remove();
-	return "hello, world!\n";
+    return "hello, world!\n";
     }
 
     @PreDestroy

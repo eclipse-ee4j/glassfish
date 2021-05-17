@@ -74,7 +74,7 @@ class BackupFilenameManager {
             throw new BackupWarningException("backup-res.NoBackupFiles", dir);
         }
         return zipFiles.get(zipFiles.lastKey()).zip;
-	}
+    }
 
     /**
      * Returns backup files to be recycled, which are the oldest backups
@@ -171,8 +171,8 @@ class BackupFilenameManager {
             return time > 0;
         }
 
-        private File	zip;
-        private int		num = -1;
+        private File    zip;
+        private int        num = -1;
     }
 
     ///////////////////////////////////////////////////////////////////////////

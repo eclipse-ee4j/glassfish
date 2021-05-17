@@ -21,7 +21,7 @@ package com.sun.enterprise.deployment.interfaces;
  * @author Jeorme Dochez
  */
 public interface PropertyManagerFactory {
-    
+
     public PropertyManager getPropertyManager();
-    
+
 }

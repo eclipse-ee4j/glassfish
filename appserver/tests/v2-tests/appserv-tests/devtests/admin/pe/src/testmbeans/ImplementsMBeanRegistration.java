@@ -35,7 +35,7 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
 {
         buildDynamicMBeanInfo();
     }
-    
+
     /**
      * Gets the value of the specified attribute of the DynamicMBean.
      * @param attributeName The attribute name
@@ -46,16 +46,16 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
             ReflectionException  {
 
         if (attributeName.equals("Name")) {
-            
+
             //TODO return value of Name attribute
-            
+
             return null;
         }
-        
+
         throw new AttributeNotFoundException("Unknown Attribute "
             + attributeName);
     }
-    
+
     /**
      * Sets the value of the specified attribute of the DynamicMBean.
      * @param attribute The attribute to set
@@ -67,14 +67,14 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
             ReflectionException  {
 
         if (attribute.getName().equals("Name")) {
-            
+
             //TODO set value of Name attribute
-            
-        } else 
+
+        } else
             throw new AttributeNotFoundException("Unknown Attribute "
             + attribute.getName());
     }
-    
+
     /**
      * Allows an operation to be invoked on the DynamicMBean.
      */
@@ -87,7 +87,7 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
             new IllegalArgumentException("Unknown Operation " +
             operationName));
     }
-    
+
     /**
      * Create the MBeanInfoConstructors.
      * WARNING : if you add constructors to ImplementsMBeanRegistration class,
@@ -97,14 +97,14 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
     private MBeanConstructorInfo[] createConstructors() {
         return super.createConstructors(getClass());
     }
-    
+
     /**
      * you shouldn't update the following code.
      */
     public MBeanInfo getMBeanInfo() {
         return dMBeanInfo;
     }
-    
+
     /**
      * Build the private dMBeanInfo field,
      * which represents the management interface exposed by the MBean,
@@ -135,11 +135,11 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
             getNotificationInfo());
     }
     // </editor-fold>
-    
+
     public  MBeanNotificationInfo[] getNotificationInfo() {
         return new MBeanNotificationInfo[] {};
     }
-    
+
     private MBeanInfo dMBeanInfo;
 
     /**
@@ -193,7 +193,7 @@ public class ImplementsMBeanRegistration extends ImplementsMBeanRegistrationDyna
     public void postDeregister() {
         //TODO postDeregister implementation;
     }
-    
-    
+
+
     private ObjectName myName;
 }

@@ -26,7 +26,7 @@
     </parent>
     <artifactId>embedded</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Embedded modules</name>  
+    <name>GlassFish Embedded modules</name>
     <modules>
         <module>all</module>
         <module>nucleus</module>

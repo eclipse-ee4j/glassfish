@@ -21,7 +21,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 /**
  * Implementation for the user-defined constraint annotation @JavaClassName
- * 
+ *
  * @author Nandini Ektare
  */
 public class JavaClassNameValidator implements ConstraintValidator<JavaClassName, String> {

@@ -65,5 +65,5 @@ public class JSSEImplementation extends SSLImplementation {
     public SSLSupport getSSLSupport(SSLEngine sslEngine) {
         return factory.getSSLSupport(sslEngine);
     }
-    // END SJSAS 6439313    
+    // END SJSAS 6439313
 }

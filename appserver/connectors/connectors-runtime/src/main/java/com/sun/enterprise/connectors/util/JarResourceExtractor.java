@@ -28,7 +28,7 @@ import java.util.logging.Level;
 /**
  * JarResourceExtractor: JarResourceExtractor maps all resources included in a Zip or Jar file.
  * Additionaly, it provides a method to extract one as a blob.
- * 
+ *
  * @author Sivakumar Thyagarajan
  */
 
@@ -37,21 +37,21 @@ public final class JarResourceExtractor {
 
     //resourceName as String Vs contents as byte[]
     private Hashtable htJarContents = new Hashtable();
-    
+
     /**
      * creates a JarResourceExtractor. It extracts all resources from a Jar into an
      * internal hashtable, keyed by resource names.
-     * 
+     *
      * @param jarFileName
      *            a jar or zip file
      */
     public JarResourceExtractor(String jarFileName) {
         init(jarFileName);
     }
-    
+
     /**
      * Extracts a jar resource as a blob.
-     * 
+     *
      * @param name
      *            a resource name.
      */
@@ -61,7 +61,7 @@ public final class JarResourceExtractor {
         }
         return (byte[]) htJarContents.get(name);
     }
-    
+
     /** initializes internal hash tables with Jar file resources. */
     private void init(String jarFileName) {
         ZipInputStream zis = null;
@@ -80,9 +80,9 @@ public final class JarResourceExtractor {
                 }catch(Exception e){}
             }
         }
-        
+
     }
-    
+
     /**
      * @throws FileNotFoundException
      * @throws IOException
@@ -96,7 +96,7 @@ public final class JarResourceExtractor {
             extractZipEntryContents(ze, zis);
         }
     }
-    
+
     /**
      * @param zis
      * @throws IOException
@@ -133,19 +133,19 @@ public final class JarResourceExtractor {
                 }
             }
     }
-    
+
     private byte[] getZipEntryContents(ZipEntry ze, ZipInputStream zis) throws IOException{
         int size = (int) ze.getSize();
-        
+
         byte[] b = null;
         // -1 means unknown size.
         if (size != -1) {
             //got a proper size, read 'size' bytes
             b = new byte[(int) size];
-            
+
             int rb = 0;
             int chunk = 0;
-            
+
             while (((int) size - rb) > 0) {
                 chunk = zis.read(b, rb, (int) size - rb);
                 if (chunk == -1) {
@@ -169,7 +169,7 @@ public final class JarResourceExtractor {
                 b[i] = btArr[i].byteValue();
             }
         }
-        
+
         return b;
     }
 }

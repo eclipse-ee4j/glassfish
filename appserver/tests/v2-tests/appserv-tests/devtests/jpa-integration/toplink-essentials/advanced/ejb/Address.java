@@ -32,22 +32,22 @@ import static jakarta.persistence.CascadeType.*;
 @Entity
 @Table(name="CMP3_ADDRESS")
 @NamedNativeQuery(
-    name="findAllSQLAddresses", 
+    name="findAllSQLAddresses",
     query="select * from CMP3_ADDRESS",
     resultClass=oracle.toplink.essentials.testing.models.cmp3.advanced.Address.class
 )
 @NamedQuery(
-    name="findAllAddressesByPostalCode", 
+    name="findAllAddressesByPostalCode",
     query="SELECT OBJECT(address) FROM Address address WHERE address.postalCode = :postalcode"
 )
 public class Address implements Serializable {
-	private Integer id;
-	private String street;
-	private String city;
+    private Integer id;
+    private String street;
+    private String city;
     private String province;
     private String postalCode;
     private String country;
-	private Collection<Employee> employees;
+    private Collection<Employee> employees;
 
     public Address() {
         city = "";
@@ -67,65 +67,65 @@ public class Address implements Serializable {
         this.employees = new Vector<Employee>();
     }
 
-	@Id
+    @Id
     @GeneratedValue(strategy=SEQUENCE, generator="ADDRESS_SEQUENCE_GENERATOR")
-	@SequenceGenerator(name="ADDRESS_SEQUENCE_GENERATOR", sequenceName="ADDRESS_SEQ", allocationSize=25)
-	@Column(name="ADDRESS_ID")
-	public Integer getId() { 
-        return id; 
-    }
-    
-	public void setId(Integer id) { 
-        this.id = id; 
+    @SequenceGenerator(name="ADDRESS_SEQUENCE_GENERATOR", sequenceName="ADDRESS_SEQ", allocationSize=25)
+    @Column(name="ADDRESS_ID")
+    public Integer getId() {
+        return id;
     }
 
-	public String getStreet() { 
-        return street; 
-    }
-    
-	public void setStreet(String street) { 
-        this.street = street; 
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-	public String getCity() { 
-        return city; 
-    }
-    
-	public void setCity(String city) { 
-        this.city = city; 
+    public String getStreet() {
+        return street;
     }
 
-	public String getProvince() { 
-        return province; 
-    }
-        
-	public void setProvince(String province) { 
-        this.province = province; 
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-	@Column(name="P_CODE")
-	public String getPostalCode() { 
-        return postalCode; 
-    }
-    
-	public void setPostalCode(String postalCode) { 
-        this.postalCode = postalCode; 
+    public String getCity() {
+        return city;
     }
 
-	public String getCountry() { 
-        return country; 
+    public void setCity(String city) {
+        this.city = city;
     }
-    
-	public void setCountry(String country) { 
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    @Column(name="P_CODE")
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
         this.country = country;
     }
-    
-	@OneToMany(cascade=ALL, mappedBy="address")
-	public Collection<Employee> getEmployees() { 
-        return employees; 
+
+    @OneToMany(cascade=ALL, mappedBy="address")
+    public Collection<Employee> getEmployees() {
+        return employees;
     }
-    
+
     public void setEmployees(Collection<Employee> employees) {
-		this.employees = employees;
-	}
+        this.employees = employees;
+    }
 }

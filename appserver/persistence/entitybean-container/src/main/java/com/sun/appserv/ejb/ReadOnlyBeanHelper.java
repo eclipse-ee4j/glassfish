@@ -44,7 +44,7 @@ public class ReadOnlyBeanHelper {
         try {
             Context ctx = new InitialContext();
             Object obj = ctx.lookup(ejbName);
-            ReadOnlyEJBHome home = (ReadOnlyEJBHome) 
+            ReadOnlyEJBHome home = (ReadOnlyEJBHome)
                     PortableRemoteObject.narrow(obj, ReadOnlyEJBHome.class);
             ReadOnlyBeanNotifier roNotifier = new ReadOnlyBeanNotifierImpl();
             roNotifier.setHome(home);
@@ -62,7 +62,7 @@ public class ReadOnlyBeanHelper {
     {
         try {
             Context ctx = new InitialContext();
-            ReadOnlyEJBLocalHome home = 
+            ReadOnlyEJBLocalHome home =
                 (ReadOnlyEJBLocalHome) ctx.lookup(ejbName);
             return home.getReadOnlyBeanLocalNotifier();
         } catch (Exception ex) {

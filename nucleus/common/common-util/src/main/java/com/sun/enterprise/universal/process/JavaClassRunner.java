@@ -43,7 +43,7 @@ public class JavaClassRunner {
         }
 
         if(sysprops != null)
-            for(String sysprop : sysprops) 
+            for(String sysprop : sysprops)
                 cmdline.add(sysprop);
 
         cmdline.add(classname);

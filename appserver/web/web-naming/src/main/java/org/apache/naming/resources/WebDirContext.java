@@ -109,7 +109,7 @@ public class WebDirContext extends FileDirContext {
 
     /**
      * Retrieves the named object.
-     * 
+     *
      * @param name the name of the object to look up
      * @return the object bound to name
      * @exception NamingException if a naming exception is encountered
@@ -120,7 +120,7 @@ public class WebDirContext extends FileDirContext {
         Object result = null;
         File file = file(name);
         JarFileEntry jfEntry = null;
-        
+
         if (file == null) {
             jfEntry = lookupFromJars(name);
             if (jfEntry == null) {
@@ -143,22 +143,22 @@ public class WebDirContext extends FileDirContext {
         } else if (jfEntry != null) {
             result = new JarResource(jfEntry.jarFile, jfEntry.jarEntry);
         }
-        
+
         return result;
-        
+
     }
 
 
     /**
-     * Enumerates the names bound in the named context, along with the class 
-     * names of objects bound to them. The contents of any subcontexts are 
+     * Enumerates the names bound in the named context, along with the class
+     * names of objects bound to them. The contents of any subcontexts are
      * not included.
      * <p>
-     * If a binding is added to or removed from this context, its effect on 
+     * If a binding is added to or removed from this context, its effect on
      * an enumeration previously returned is undefined.
-     * 
+     *
      * @param name the name of the context to list
-     * @return an enumeration of the names and class names of the bindings in 
+     * @return an enumeration of the names and class names of the bindings in
      * this context. Each element of the enumeration is of type NameClassPair.
      * @exception NamingException if a naming exception is encountered
      */
@@ -190,15 +190,15 @@ public class WebDirContext extends FileDirContext {
 
 
     /**
-     * Enumerates the names bound in the named context, along with the 
-     * objects bound to them. The contents of any subcontexts are not 
+     * Enumerates the names bound in the named context, along with the
+     * objects bound to them. The contents of any subcontexts are not
      * included.
      * <p>
-     * If a binding is added to or removed from this context, its effect on 
+     * If a binding is added to or removed from this context, its effect on
      * an enumeration previously returned is undefined.
-     * 
+     *
      * @param name the name of the context to list
-     * @return an enumeration of the bindings in this context. 
+     * @return an enumeration of the bindings in this context.
      * Each element of the enumeration is of type Binding.
      * @exception NamingException if a naming exception is encountered
      */
@@ -236,14 +236,14 @@ public class WebDirContext extends FileDirContext {
 
 
     /**
-     * Retrieves selected attributes associated with a named object. 
-     * See the class description regarding attribute models, attribute type 
+     * Retrieves selected attributes associated with a named object.
+     * See the class description regarding attribute models, attribute type
      * names, and operational attributes.
-     * 
+     *
      * @return the requested attributes; never null
      * @param name the name of the object from which to retrieve attributes
-     * @param attrIds the identifiers of the attributes to retrieve. null 
-     * indicates that all attributes should be retrieved; an empty array 
+     * @param attrIds the identifiers of the attributes to retrieve. null
+     * indicates that all attributes should be retrieved; an empty array
      * indicates that none should be retrieved
      * @exception NamingException if a naming exception is encountered
      */
@@ -411,14 +411,14 @@ public class WebDirContext extends FileDirContext {
 
 
     // ------------------------------------- JarResource Inner Class
-    
+
     /**
      * This specialized resource implementation avoids opening the InputStream
      * to the jar entry right away (which would put a lock on the jar file).
      */
     protected static class JarResource extends Resource {
-        
-        
+
+
         // -------------------------------------------------------- Constructor
 
 
@@ -426,29 +426,29 @@ public class WebDirContext extends FileDirContext {
             this.jarFile = jarFile;
             this.jarEntry = jarEntry;
         }
-        
-        
+
+
         // --------------------------------------------------- Member Variables
-        
-        
+
+
         /**
          * Associated JarFile object.
          */
         protected JarFile jarFile;
-        
+
 
         /**
          * Associated JarEntry object.
          */
         protected JarEntry jarEntry;
-        
+
 
         // --------------------------------------------------- Resource Methods
-        
-        
+
+
         /**
          * Content accessor.
-         * 
+         *
          * @return InputStream
          */
         public InputStream streamContent()
@@ -460,16 +460,16 @@ public class WebDirContext extends FileDirContext {
             }
             return super.streamContent();
         }
-        
-        
+
+
     }
 
     // ------------------------------------- JarResourceAttributes Inner Class
 
 
     /**
-     * This specialized resource attribute implementation does some lazy 
-     * reading (to speed up simple checks, like checking the last modified 
+     * This specialized resource attribute implementation does some lazy
+     * reading (to speed up simple checks, like checking the last modified
      * date).
      */
     protected static class JarResourceAttributes extends ResourceAttributes {
@@ -483,19 +483,19 @@ public class WebDirContext extends FileDirContext {
             getCreation();
             getLastModified();
         }
-        
+
         // --------------------------------------------------- Member Variables
-        
-        
+
+
         protected transient JarEntry jarEntry;
-        
-        
+
+
         protected boolean accessed = false;
-        
-        
+
+
         // ----------------------------------------- ResourceAttributes Methods
-        
-        
+
+
         /**
          * Is collection.
          */
@@ -506,11 +506,11 @@ public class WebDirContext extends FileDirContext {
             }
             return super.isCollection();
         }
-        
-        
+
+
         /**
          * Get content length.
-         * 
+         *
          * @return content length value
          */
         public long getContentLength() {
@@ -519,11 +519,11 @@ public class WebDirContext extends FileDirContext {
             contentLength = jarEntry.getSize();
             return contentLength;
         }
-        
-        
+
+
         /**
          * Get creation time.
-         * 
+         *
          * @return creation time value
          */
         public long getCreation() {
@@ -532,11 +532,11 @@ public class WebDirContext extends FileDirContext {
             creation = getLastModified();
             return creation;
         }
-        
-        
+
+
         /**
          * Get creation date.
-         * 
+         *
          * @return Creation date value
          */
         public Date getCreationDate() {
@@ -545,11 +545,11 @@ public class WebDirContext extends FileDirContext {
             }
             return super.getCreationDate();
         }
-        
-        
+
+
         /**
          * Get last modified time.
-         * 
+         *
          * @return lastModified time value
          */
         public long getLastModified() {
@@ -558,11 +558,11 @@ public class WebDirContext extends FileDirContext {
             lastModified = jarEntry.getTime();
             return lastModified;
         }
-        
-        
+
+
         /**
          * Get lastModified date.
-         * 
+         *
          * @return LastModified date value
          */
         public Date getLastModifiedDate() {
@@ -571,11 +571,11 @@ public class WebDirContext extends FileDirContext {
             }
             return super.getLastModifiedDate();
         }
-        
-        
+
+
         /**
          * Get name.
-         * 
+         *
          * @return Name value
          */
         public String getName() {
@@ -583,11 +583,11 @@ public class WebDirContext extends FileDirContext {
                 name = jarEntry.getName();
             return name;
         }
-        
-        
+
+
         /**
          * Get resource type.
-         * 
+         *
          * @return String resource type
          */
         public String getResourceType() {
@@ -597,8 +597,8 @@ public class WebDirContext extends FileDirContext {
             }
             return super.getResourceType();
         }
-        
-        
+
+
         /**
          * Get canonical path.
          *

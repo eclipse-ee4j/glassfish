@@ -89,7 +89,7 @@ public class EmbeddedTest {
         }
 
         server.addContainer(ContainerBuilder.Type.all);
-    }    
+    }
 
     @Test
     public void testWeb() throws Exception {

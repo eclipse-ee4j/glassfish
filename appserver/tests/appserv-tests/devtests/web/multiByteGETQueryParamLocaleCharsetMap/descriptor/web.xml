@@ -22,12 +22,12 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
-     
+
     <servlet>
         <servlet-name>TestServlet</servlet-name>
         <servlet-class>TestServlet</servlet-class>
-    </servlet>  
-    
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>
         <url-pattern>/TestServlet</url-pattern>

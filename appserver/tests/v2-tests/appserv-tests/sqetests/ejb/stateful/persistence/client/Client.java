@@ -49,16 +49,16 @@ public class Client {
 
   private String url;
   private TraderHome home;
-	private String testId = null;
+    private String testId = null;
 
   public Client(String url)
   throws NamingException {
-      
+
       this.url       = url;
-      
+
  //     home = lookupHome();
   }
-  
+
   public Client () throws javax.naming.NamingException{
 //      home = lookupHome();
   }
@@ -73,27 +73,27 @@ public class Client {
    */
   public static void main(String[] args) {
     log("\nBeginning statefulSession.Client...\n");
-	try{
-	Client client = new Client();
-	client.run();
-	}catch(NamingException ne){
-	}
+    try{
+    Client client = new Client();
+    client.run();
+    }catch(NamingException ne){
+    }
 }
 
-	public void run(){
+    public void run(){
 
-	testId = "stateful-persistence::Sample Standalone-ejb-jar";
-  stat.addDescription("This is to test the persistence sample deploed as an standalone ejb-jar."); 
+    testId = "stateful-persistence::Sample Standalone-ejb-jar";
+  stat.addDescription("This is to test the persistence sample deploed as an standalone ejb-jar.");
 
     try {
-	home = lookupHome();
+    home = lookupHome();
     } catch (NamingException ne) {
-	stat.addStatus(testId, stat.FAIL);
+    stat.addStatus(testId, stat.FAIL);
     }
 
     try {
       example();
-	stat.addStatus(testId, stat.PASS);
+    stat.addStatus(testId, stat.PASS);
     } catch (Exception e) {
       log("There was an exception while creating and using the Trader.");
       log("This indicates that there was a problem communicating with the server: "+e);
@@ -111,7 +111,7 @@ public class Client {
   public void example()
     throws CreateException, RemoteException,RemoveException,ProcessingErrorException
   {
-    String customerName = "Matt"; 
+    String customerName = "Matt";
 
     // Create a Trader
     log("Creating trader\n");
@@ -157,7 +157,7 @@ public class Client {
 
 
     Context ctx = null;
-   
+
     try {
                 // Initialize the Context with JNDI specific properties
                 ctx = new InitialContext();

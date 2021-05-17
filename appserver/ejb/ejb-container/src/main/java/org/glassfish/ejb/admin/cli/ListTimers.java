@@ -51,8 +51,8 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType(value={CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-timers", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-timers",
         description="List Timers")
 })
 public class ListTimers implements AdminCommand {

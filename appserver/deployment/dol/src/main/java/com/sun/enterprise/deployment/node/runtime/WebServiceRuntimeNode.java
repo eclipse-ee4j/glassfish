@@ -31,10 +31,10 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 /**
- * This node is responsible for handling WebService runtime info 
+ * This node is responsible for handling WebService runtime info
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
 
@@ -46,7 +46,7 @@ public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -76,7 +76,7 @@ public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
             super.setElementValue(element, value);
         }
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -84,38 +84,38 @@ public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
                                 WebService webService) {
-        Node webServiceNode = 
+        Node webServiceNode =
             super.writeDescriptor(parent, nodeName, webService);
 
-        appendTextChild(webServiceNode, 
+        appendTextChild(webServiceNode,
                         WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
                         webService.getName());
 
         if( webService.hasClientPublishUrl() ) {
             URL url = webService.getClientPublishUrl();
-            appendTextChild(webServiceNode, 
+            appendTextChild(webServiceNode,
                             WebServicesTagNames.CLIENT_WSDL_PUBLISH_URL,
                             url.toExternalForm());
         }
 
         return webServiceNode;
-    }  
-    
+    }
+
     /**
      * writes all the runtime information for the web services for a given
      * bundle descriptor
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the bundle descriptor
-     */        
+     */
     public void writeWebServiceRuntimeInfo(Node parent,
                                            BundleDescriptor bundle) {
         WebServicesDescriptor webServices = bundle.getWebServices();
         if( webServices != null ) {
-            for(Iterator iter = webServices.getWebServices().iterator(); 
+            for(Iterator iter = webServices.getWebServices().iterator();
                 iter.hasNext();) {
                 WebService next = (WebService) iter.next();
                 if( next.hasClientPublishUrl() ) {
@@ -125,5 +125,5 @@ public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
             }
         }
     }
-    
+
 }

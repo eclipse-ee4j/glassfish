@@ -36,72 +36,72 @@ public class OS
     private OS()
     {
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isWindows()
     {
         return File.separatorChar == '\\';
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isUNIX()
     {
         return File.separatorChar == '/';
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isUnix()
     {
         // convenience method...
         return isUNIX();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isSun()
     {
         return isName("sun");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isSolaris10()
     {
         return isSun() && isVersion("5.10");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isSunSparc()
     {
         return isName("sun") && isArch("sparc");
     }
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isSunX86()
     {
         return isName("sun") && isArch("x86");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isLinux()
     {
         return isName("linux");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isDarwin()
     {
         return isName("Mac OS X");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isWindowsForSure()
     {
         return isName("windows") && isWindows();
@@ -109,70 +109,70 @@ public class OS
     ///////////////////////////////////////////////////////////////////////////
     //  There are 10 known Linux versions!
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isDebianLinux()
     {
         return isLinux() && new File("/etc/debian_version").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isFedoraLinux()
     {
         return isLinux() && new File("/etc/fedora-release").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isGentooLinux()
     {
         return isLinux() && new File("/etc/gentoo-release").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isKnoppixLinux()
     {
         return isLinux() && new File("/etc/knoppix_version").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isMandrakeLinux()
     {
         return isLinux() && new File("/etc/mandrake-release").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isMandrivaLinux()
     {
         return isLinux() && new File("/etc/mandriva-release").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isRedHatLinux()
     {
         return isLinux() && new File("/etc/redhat-release").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isSlackwareLinux()
     {
         return isLinux() && new File("/etc/slackware-version").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isSuSELinux()
     {
         return isLinux() && new File("/etc/SuSE-release").exists();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static boolean isUbuntuLinux()
     {
         return isLinux() && new File("/etc/lsb-release").exists();
@@ -184,64 +184,64 @@ public class OS
     {
         return isName("AIX");
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private static boolean isArch(String name)
     {
         String archname = System.getProperty("os.arch");
-        
+
         if(archname == null || archname.length() <= 0)
             return false;
-        
+
         // case insensitive compare...
         archname= archname.toLowerCase(Locale.getDefault());
         name= name.toLowerCase(Locale.getDefault());
-        
+
         if(archname.indexOf(name) >= 0)
             return true;
-        
+
         return false;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private static boolean isName(String name)
     {
         String osname = System.getProperty("os.name");
-        
+
         if(osname == null || osname.length() <= 0)
             return false;
-        
+
         // case insensitive compare...
-        osname	= osname.toLowerCase(Locale.getDefault());
-        name	= name.toLowerCase(Locale.getDefault());
-        
+        osname    = osname.toLowerCase(Locale.getDefault());
+        name    = name.toLowerCase(Locale.getDefault());
+
         if(osname.indexOf(name) >= 0)
             return true;
-        
+
         return false;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private static boolean isVersion(String version)
     {
         String osversion = System.getProperty("os.version");
-        
+
         if(osversion == null || osversion.length() <= 0 || version == null || version.length() <= 0 )
             return false;
-        
+
         if(osversion.equals(version))
             return true;
-        
+
         return false;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static final String WINDOWS_BATCH_FILE_EXTENSION = ".bat";
-    
+
     /**
      * @param args the command line arguments
      */

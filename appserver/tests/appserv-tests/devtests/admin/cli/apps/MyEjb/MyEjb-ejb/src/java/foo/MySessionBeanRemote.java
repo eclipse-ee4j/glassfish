@@ -31,5 +31,5 @@ import jakarta.ejb.Remote;
 public interface MySessionBeanRemote {
 
     String getMessage();
-    
+
 }

@@ -96,13 +96,13 @@ public class ConfigParser {
     public DomDocument parse(URL source, DomDocument document, Dom parent) {
         InputStream inputStream = null;
         try {
-            
+
             inputStream = source.openStream();
         }
         catch (IOException e) {
             throw new ConfigurationException("Failed to open "+source,e);
         }
-        
+
         try {
             parse(xif.createXMLStreamReader(new StreamSource(inputStream)), document, parent);
             return document;
@@ -175,7 +175,7 @@ public class ConfigParser {
      * This is the entry point for recursively parsing inside a configuration tree.
      * Since not every element is global, you don't always want to infer the model
      * just from the element name (as is the case with {@link #handleElement(XMLStreamReader, DomDocument, Dom)}.
-     * 
+     *
      * @param in
      *      pre-condition:  'in' is at the start element.
      *      post-condition: 'in' is at the end element.
@@ -224,11 +224,11 @@ public class ConfigParser {
 
         if(!children.isEmpty())
             dom.setChildren(children);
-        
+
         dom.register();
 
         dom.initializationCompleted();
-        
+
         return dom;
     }
 

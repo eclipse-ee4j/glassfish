@@ -30,7 +30,7 @@ import org.glassfish.embeddable.web.config.SecurityConfig;
  */
 // TODO: Add support for configuring environment entries
 public interface Context extends ServletContext {
-    
+
     /**
      * Adds the given <tt>Valve</tt> to this <tt>Context</tt>.
      *
@@ -40,7 +40,7 @@ public interface Context extends ServletContext {
 
     /**
      * Registers the given listener with this <tt>Context</tt>.
-     * 
+     *
      * <p>The given listener must be an instance of one or more of the
      * following interfaces:
      * <ul>
@@ -65,7 +65,7 @@ public interface Context extends ServletContext {
     /**
      * Instantiates a listener from the given class and registers it with
      * this <tt>Context</tt>.
-     * 
+     *
      * <p>The given listener must be an instance of one or more of the
      * following interfaces:
      * <ul>
@@ -98,7 +98,7 @@ public interface Context extends ServletContext {
      * Checks whether directory listings are enabled or disabled on this
      * <tt>Context</tt>.
      *
-     * @return true if directory listings are enabled on this 
+     * @return true if directory listings are enabled on this
      * <tt>Context</tt>, false otherwise
      */
     public boolean isDirectoryListing();
@@ -120,19 +120,19 @@ public interface Context extends ServletContext {
      * @return the security configuration for this context
      */
     public SecurityConfig getSecurityConfig();
-    
+
     /**
      * Set the location of the default web xml that will be used.
      *
      * @param defaultWebXml the defaultWebXml path to be used
      */
     public void setDefaultWebXml(String defaultWebXml);
-    
+
     /**
      * Return the context path for this Context.
      */
     public String getPath();
-        
+
     /**
      * Set the context path for this Context.
      */

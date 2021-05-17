@@ -23,25 +23,25 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
 
     @EJB private static Stles bean;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
 
         stat.addDescription("ejb31-timer-reschedule_after_failures");
 
 
         try {
             System.out.println("Creating timers for reschedule_after_failures timer test");
-            bean.createTimers(); 
+            bean.createTimers();
             System.out.println("Waiting some time for timers to fail and be rescheduled for reschedule_after_failures timer test");
             Thread.sleep(24000);
             System.out.println("Verifying timers for reschedule_after_failures timer test");
-            bean.verifyTimers(); 
+            bean.verifyTimers();
             stat.addStatus("reschedule_after_failures: ", stat.PASS );
 
         } catch(Exception e) {

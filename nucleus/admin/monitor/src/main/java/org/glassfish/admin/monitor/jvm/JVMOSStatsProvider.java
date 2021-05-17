@@ -29,7 +29,7 @@ import org.glassfish.gmbal.ManagedObject;
 
 /* jvm.operating-system */
 // v2 mbean: com.sun.appserv:name=operating-system,type=operating-system,category=monitor,server=server
-// v3 mbean: 
+// v3 mbean:
 @AMXMetadata(type = "operating-system-mon", group = "monitoring")
 @ManagedObject
 @Description("JVM Operating System Statistics")

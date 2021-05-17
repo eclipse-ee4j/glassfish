@@ -45,7 +45,7 @@ public class WebTest {
         contextRoot = args[2];
         run = args[3];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for Issue 6442");
@@ -63,7 +63,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     /**
@@ -72,7 +72,7 @@ public class WebTest {
      * at its contextDestroyed() method and will attempt to access the
      * ServletContext attribute that was added by the servlet.
      * If the attribute is present, the ServletContextListener will write
-     * the word "SUCCESS" to /tmp/mytest. Otherwise, it will write FAIL to 
+     * the word "SUCCESS" to /tmp/mytest. Otherwise, it will write FAIL to
      * that file.
      */
     public void firstRun() throws Exception {

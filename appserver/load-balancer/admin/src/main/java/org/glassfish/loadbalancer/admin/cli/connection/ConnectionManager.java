@@ -56,7 +56,7 @@ public class ConnectionManager {
     /**
      * creates a connection to the loadbalancer
      * @param contextRoot context root that will be used in constructing the URL
-     * @throws java.io.IOException 
+     * @throws java.io.IOException
      * @return either HTTP or HTTPS connection to the load balancer.
      */
     public HttpURLConnection getConnection(String contextRoot) throws IOException {
@@ -70,7 +70,7 @@ public class ConnectionManager {
     /**
      * creates a connection to the loadbalancer
      * @param contextRoot context root that will be used in constructing the URL
-     * @throws java.io.IOException 
+     * @throws java.io.IOException
      * @return either HTTP or HTTPS connection to the load balancer.
      */
     private HttpURLConnection getNonSecureConnection(String contextRoot) throws IOException {
@@ -101,7 +101,7 @@ public class ConnectionManager {
     /**
      * creates a connection to the loadbalancer
      * @param contextRoot context root that will be used in constructing the URL
-     * @throws java.io.IOException 
+     * @throws java.io.IOException
      * @return HTTPS connection to the load balancer.
      */
     private HttpsURLConnection getSecureConnection(String contextRoot) throws IOException {

@@ -32,9 +32,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-/** 
+/**
  * A Stats interface to represent the statistical data exposed by an
- * HTTP Listener. 
+ * HTTP Listener.
  *
  * For v3 Prelude, following stats will be available
  * errorCount, maxTime, processingTime, and requestCount
@@ -100,7 +100,7 @@ public class HTTPListenerStatsImpl implements MonitorContract {
         }
 
         //report.setMessage(String.format(displayFormat, "ec", "mt", "pt", "rc"));
-        report.setMessage(String.format(displayFormat, 
+        report.setMessage(String.format(displayFormat,
             errorCount, maxTime, processingTime, requestCount));
         report.setActionExitCode(ExitCode.SUCCESS);
         return report;

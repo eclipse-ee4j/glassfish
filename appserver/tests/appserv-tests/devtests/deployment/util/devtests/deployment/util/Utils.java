@@ -34,7 +34,7 @@ import java.util.Properties;
 /**
  * Utilities to create a configured Habitat and cache them
  *
- * Shamelessly copied from nucleus/tests/util 
+ * Shamelessly copied from nucleus/tests/util
  *
  * @author Jerome Dochez
  */

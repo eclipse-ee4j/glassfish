@@ -46,7 +46,7 @@ public class WebTest {
         port = Integer.parseInt(args[1]);
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for request-character-encoding, response-character-encoding in web.xml and parameter-encoding in glassfish-web.xml");
         WebTest webTest = new WebTest(args);
@@ -91,12 +91,12 @@ public class WebTest {
             String line = httpResponse.getBody(charset).trim();
             System.out.println("--> line = " + line);
             if (!JCHARSET_RESPONSE.equals(charset)) {
-                throw new Exception("Wrong Content-Type charset. Expected: " + 
+                throw new Exception("Wrong Content-Type charset. Expected: " +
                     JCHARSET_RESPONSE + ", received: " + charset);
             }
-            
+
             if  (!EXPECTED_RESPONSE.equals(line)) {
-                throw new Exception("Wrong response. Expected: " + 
+                throw new Exception("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + line);
             }
         }
@@ -124,12 +124,12 @@ public class WebTest {
             String line = httpResponse.getBody(charset).trim();
             System.out.println("--> line = " + line);
             if (!JCHARSET_RESPONSE.equals(charset)) {
-                throw new Exception("Wrong Content-Type charset. Expected: " + 
+                throw new Exception("Wrong Content-Type charset. Expected: " +
                     JCHARSET_RESPONSE + ", received: " + charset);
             }
-            
+
             if  (!EXPECTED_RESPONSE.equals(line)) {
-                throw new Exception("Wrong response. Expected: " + 
+                throw new Exception("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + line);
             }
         }

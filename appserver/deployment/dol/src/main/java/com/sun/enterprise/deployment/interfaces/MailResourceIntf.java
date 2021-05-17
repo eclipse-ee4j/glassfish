@@ -15,37 +15,37 @@
  */
 
  package com.sun.enterprise.deployment.interfaces;
- 
+
  import java.util.Set;
- 
- public interface MailResourceIntf { 
-	
+
+ public interface MailResourceIntf {
+
     public String getName();
-	
-	public String getDescription();
-	
-	public boolean isEnabled();
-	
-	public Set getProperties();
-	
+
+    public String getDescription();
+
+    public boolean isEnabled();
+
+    public Set getProperties();
+
     public int getType();
-    
+
     public String getResType();
-    
+
     public String getFactoryClass() ;
 
     public String getStoreProtocol();
-      
+
     public String getStoreProtocolClass();
-    
+
     public String getTransportProtocol();
-    
+
     public String getTransportProtocolClass();
-    
+
     public String getMailHost();
-    
+
     public String getUsername();
-    
+
     public String getMailFrom();
 
     public boolean isDebug();

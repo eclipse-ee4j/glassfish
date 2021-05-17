@@ -31,7 +31,7 @@ public class SecurityPermission extends Descriptor {
 
     public SecurityPermission(String description,String permissionSpec ){
         super.setDescription(description);
-       	this.permissionSpec = permissionSpec;
+           this.permissionSpec = permissionSpec;
     }
 
     /** get permission
@@ -46,4 +46,4 @@ public class SecurityPermission extends Descriptor {
         this.permissionSpec=permissionSpec;
     }
 
-}	
+}

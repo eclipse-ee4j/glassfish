@@ -34,7 +34,7 @@ import org.junit.Test;
 public class ViewImplTest {
 //  static ViewImpl view;
 //  static SimpleMap sm;
-//  
+//
 //  @BeforeClass
 //  public static void setupClass() {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());

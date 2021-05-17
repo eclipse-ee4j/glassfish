@@ -26,7 +26,7 @@ public class SimpleBVServletTestNG {
 
     private static final String TEST_NAME =
         "bv-servlet-simple";
-   
+
     private String strContextRoot="simple-bv-servlet";
 
     static String result = "";
@@ -36,9 +36,9 @@ public class SimpleBVServletTestNG {
     public SimpleBVServletTestNG() {
         result = null;
     }
-    
-    
-           
+
+
+
     /*
      *If two asserts are mentioned in one method, then last assert is taken in
      *to account.
@@ -50,7 +50,7 @@ public class SimpleBVServletTestNG {
     @Test(groups ={ "pulse"} ) // test method
     //public void webtest(String host, String port, String contextroot) throws Exception{
     public void test_BV_10() throws Exception{
-        
+
         try{
 
             String testurl = "http://" + host + ":" + port + "/" + strContextRoot + "/test/bv_10";
@@ -68,7 +68,7 @@ public class SimpleBVServletTestNG {
             boolean result = false;
             String testLine = null;
             String[] regexesToFind = {
-		"(?s)(?m).*Obtained ValidatorFactory: org.hibernate.validator.(internal.)*engine.ValidatorFactoryImpl.*",
+        "(?s)(?m).*Obtained ValidatorFactory: org.hibernate.validator.(internal.)*engine.ValidatorFactoryImpl.*",
                 "(?s)(?m).*case1: No ConstraintViolations found.*",
                 "(?s)(?m).*case2: caught IllegalArgumentException.*",
                 "(?s)(?m).*case3: ConstraintViolation: message: must not be null propertyPath: listOfString.*",
@@ -85,7 +85,7 @@ public class SimpleBVServletTestNG {
                 rspContent.append(line);
                 rspContent.append("\n ");
 
-                // for each line in the input, loop through each of the 
+                // for each line in the input, loop through each of the
                 // elements of regexesToFind.  At least one must match.
                 boolean found = false;
                 for (i = 0; i < len; i++) {
@@ -94,16 +94,16 @@ public class SimpleBVServletTestNG {
                     }
                 }
             }
- 
+
            System.out.println("Response: " + rspContent.toString());
-            
+
             boolean foundMissingRegexMatch = false;
             String errorMessage = null;
             for (i = 0; i < len; i++) {
                 if (null == regexesFound[i] ||
                     Boolean.FALSE == regexesFound[i]) {
                     foundMissingRegexMatch = true;
-                    errorMessage = "Unable to find match for regex " + 
+                    errorMessage = "Unable to find match for regex " +
                             regexesToFind[i] + " in output from request to " + testurl;
                     System.out.println("Response content: ");
                     System.out.println(rspContent.toString());

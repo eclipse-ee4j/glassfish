@@ -32,17 +32,17 @@ import jakarta.servlet.http.HttpServletRequest;
  * Note that the methods inherited from BaseAuditModule are repeated here
  * so developers see the whole API available to their custom AuditModule
  * implementations by looking just at this one abstract class.
- * 
+ *
  * @author  Harpreet Singh
  * @version
  */
 public abstract class AuditModule extends BaseAuditModule {
 
     /**
-     * Invoked post web authorization request. 
+     * Invoked post web authorization request.
      * @param user the username for whom the authorization was performed
      * @param req the HttpRequest object for the web request
-     * @param type the permission type, hasUserDataPermission 
+     * @param type the permission type, hasUserDataPermission
      * or hasResourcePermission.
      * @param success the status of the web authorization request
      */
@@ -58,7 +58,7 @@ public abstract class AuditModule extends BaseAuditModule {
      */
     public void ejbInvocation(String user, String ejb, String method, boolean success) {
     }
-    
+
     /**
      * Invoked during validation of the web service request
      * @param uri The URL representation of the web service endpoint
@@ -67,7 +67,7 @@ public abstract class AuditModule extends BaseAuditModule {
      */
     public void webServiceInvocation(String uri, String endpoint, boolean success) {
     }
-    
+
     /**
      * Invoked during validation of the web service request
      * @param endpoint The representation of the web service endpoint

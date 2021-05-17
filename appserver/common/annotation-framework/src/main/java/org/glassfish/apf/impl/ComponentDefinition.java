@@ -78,19 +78,19 @@ public class ComponentDefinition implements ComponentInfo {
                 if (!Factory.isSkipAnnotationProcessing(parent.getName())) {
                     classes.add(0, parent);
                 }
-            } 
+            }
         }
     }
 
     /**
-     * In P.148 of "The Java Langugage Specification 2/e", 
+     * In P.148 of "The Java Langugage Specification 2/e",
      * Constructors, static initializers, and instance initializers are not
      * members and therefore not inherited.
      */
     private void initializeConstructors() {
         for (Class cl : classes) {
             for (Constructor constr : cl.getConstructors()) {
-                constructors.add(constr);           
+                constructors.add(constr);
             }
         }
     }
@@ -98,7 +98,7 @@ public class ComponentDefinition implements ComponentInfo {
     private void initializeFields() {
         for (Class cl : classes) {
             for (Field f : cl.getDeclaredFields()) {
-                fields.add(f);           
+                fields.add(f);
             }
         }
     }
@@ -127,7 +127,7 @@ public class ComponentDefinition implements ComponentInfo {
             classPackage = m.getDeclaringClass().getPackage();
         }
 
-        public int hashCode() { 
+        public int hashCode() {
 
             return hashCode;
         }
@@ -151,7 +151,7 @@ public class ComponentDefinition implements ComponentInfo {
                 boolean isPackageProtected2 = !Modifier.isPublic(modifiers2) &&
                         !Modifier.isProtected(modifiers2) &&
                         !Modifier.isPrivate(modifiers2);
-                boolean isSamePackage = 
+                boolean isSamePackage =
                         (classPackage == null && mk2.classPackage == null) ||
                         (classPackage != null && mk2.classPackage != null &&
                             classPackage.getName().equals(

@@ -40,8 +40,8 @@ import org.glassfish.hk2.api.PerLookup;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_get-targets", 
+        opType=RestEndpoint.OpType.GET,
+        path="_get-targets",
         description="_get-targets")
 })
 @AccessRequired(resource={DeploymentCommandUtils.CLUSTERS_RESOURCE_NAME,DeploymentCommandUtils.SERVERS_RESOURCE_NAME}, action="read")
@@ -50,16 +50,16 @@ public class GetTargetsCommand implements AdminCommand {
     @Param(optional=true, primary=true)
     String appName = null;
 
-    @Inject 
+    @Inject
     Domain domain;
 
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         ActionReport.MessagePart part = report.getTopMessagePart();
 
-        
+
         List<String> targets = null;
 
         if (appName == null || appName.equals("*")) {

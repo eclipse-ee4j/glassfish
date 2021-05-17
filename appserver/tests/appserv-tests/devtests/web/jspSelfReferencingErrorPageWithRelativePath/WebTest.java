@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription(
             "Unit test for detecting self-referencing error page");
@@ -48,8 +48,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -58,7 +58,7 @@ public class WebTest {
     }
 
     public void invokeJsp() throws Exception {
-     
+
         String url = "http://" + host + ":" + port + contextRoot
             + "/jsp/test.jsp";
         HttpURLConnection conn = (HttpURLConnection)
@@ -70,6 +70,6 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         } else {
             stat.addStatus(TEST_NAME, stat.PASS);
-        }    
+        }
     }
 }

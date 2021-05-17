@@ -56,7 +56,7 @@ public class Util {
             earSupport = true;
         } catch (ClassNotFoundException ignore) {
         }
-        
+
         SingletonProvider.initialize(earSupport ? new ACLSingletonProvider() : new TCCLSingletonProvider());
     }
 

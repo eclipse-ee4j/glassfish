@@ -402,7 +402,7 @@ public class StandardService
                     break;
                 }
             }
-           
+
             if (j < 0)
                 return;
 
@@ -420,7 +420,7 @@ public class StandardService
             // START SJSAS 6231069
             /*connectors[j].setContainer(null);
             connector.setService(null);*/
-            // END SJSAS 6231069           
+            // END SJSAS 6231069
             int k = 0;
             Connector results[] = new Connector[connectors.length - 1];
             for (int i = 0; i < connectors.length; i++) {
@@ -510,9 +510,9 @@ public class StandardService
                 log.log(Level.INFO, LogFacade.SERVICE_STARTED);
             }
         }
-        
+
         if( ! initialized )
-            init(); 
+            init();
 
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
@@ -621,16 +621,16 @@ public class StandardService
                 String msg = MessageFormat.format(rb.getString(LogFacade.ERROR_REGISTER_SERVICE_EXCEPTION), neutralizeForLog(domain));
                 log.log(Level.SEVERE, msg, e);
             }
-            
-            
+
+
         }
         if( server==null ) {
-            // Register with the server 
+            // Register with the server
             // HACK: ServerFactory should be removed...
-            
+
             ServerFactory.getServer().addService(this);
         }
-               
+
 
         // Initialize our defined Connectors
         synchronized (connectorsMonitor) {
@@ -639,7 +639,7 @@ public class StandardService
                 }
         }
     }
-    
+
     public void destroy() throws LifecycleException {
         if( started ) stop();
         // unregister should be here probably

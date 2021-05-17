@@ -25,8 +25,8 @@ import java.util.*;
 
 public interface A2Local extends jakarta.ejb.EJBLocalObject {
 
-    public void setName(String name); 
- 
-    public void setNameWithFlush(String name); 
- 
+    public void setName(String name);
+
+    public void setNameWithFlush(String name);
+
 }

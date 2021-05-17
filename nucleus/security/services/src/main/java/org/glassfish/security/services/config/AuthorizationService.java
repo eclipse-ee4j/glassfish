@@ -23,5 +23,5 @@ import org.jvnet.hk2.config.Configured;
 @Configured
 public interface AuthorizationService extends SecurityConfiguration {
 
-    
+
 }

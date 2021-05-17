@@ -143,8 +143,8 @@ public abstract class GenericCrudCommand implements CommandModelProvider, PostCo
         targetMethod = null;
         methodlookup: for (Method m : parentType.getMethods()) {
             if (m.getName().equals(methodName)) {
-                // Make sure that this method is annotated with an annotation 
-                // that is annotated with InhabitantAnnotation (such as @Create). 
+                // Make sure that this method is annotated with an annotation
+                // that is annotated with InhabitantAnnotation (such as @Create).
                 // This makes sure that we have found the method we are looking for
                 // in case there is a like-named method that is not annotated.
                 for (Annotation a : m.getAnnotations()) {
@@ -188,7 +188,7 @@ public abstract class GenericCrudCommand implements CommandModelProvider, PostCo
 
     /**
      * we need to have access to the injector instance that has all the parameters context
-     * 
+     *
      * @param injector the original command injector
      */
     // todo : would be lovely to replace this with some smart injection...

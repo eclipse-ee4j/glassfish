@@ -85,15 +85,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the openissues tests)
-		ant clean (cleans all the openissues tests)
-		ant build (builds all the openissues tests)
-		ant setup (sets up all resources for openissues tests)
-		ant deploy (deploys all the openissues apps)
-		ant run (Executes all the openissues tests)
-		ant undeploy (undeploys all the  openissues apps)
-		ant unsetup (unsets all resources for openissues tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the openissues tests)
+        ant clean (cleans all the openissues tests)
+        ant build (builds all the openissues tests)
+        ant setup (sets up all resources for openissues tests)
+        ant deploy (deploys all the openissues apps)
+        ant run (Executes all the openissues tests)
+        ant undeploy (undeploys all the  openissues apps)
+        ant unsetup (unsets all resources for openissues tests)
+    </echo>
     </target>
 </project>

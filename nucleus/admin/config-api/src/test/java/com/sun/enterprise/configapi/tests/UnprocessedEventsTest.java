@@ -86,14 +86,14 @@ public class UnprocessedEventsTest  extends ConfigApiTest
             // ensure events are delivered.
             transactions.waitForDrain();
             assertNotNull(unprocessed);
-            
+
             ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
                 public Object run(NetworkListener param) {
                     param.setPort("8080");
                     return null;
                 }
             }, listener);
-                        
+
             assertEquals(listener.getPort(), "8080");
 
             // ensure events are delivered.
@@ -112,7 +112,7 @@ public class UnprocessedEventsTest  extends ConfigApiTest
 
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
         assertEquals("Array size", propertyChangeEvents.length, 1 );
-        
+
         final UnprocessedChangeEvent unp = new UnprocessedChangeEvent(
             propertyChangeEvents[0], "Java NIO port listener cannot reconfigure its port dynamically" );
         unprocessed = new UnprocessedChangeEvents( unp );

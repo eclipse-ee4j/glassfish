@@ -22,14 +22,14 @@ import org.xml.sax.helpers.NamespaceSupport;
  * This class represents a XML element in an XML file
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class XMLElement extends java.lang.Object {
 
     private String qName;
     private String prefix=null;
     private NamespaceSupport namespaces=null;
-    
+
     /** Creates new XMLElement */
     public XMLElement(String qName) {
         this(qName, null);
@@ -45,15 +45,15 @@ public class XMLElement extends java.lang.Object {
         // can be null
         namespaces = namespaceSupport;
     }
-    
+
     public String getQName() {
         return qName;
     }
-    
+
     public String toString() {
         return qName;
     }
-    
+
     public String getPrefix() {
         return prefix;
     }
@@ -63,7 +63,7 @@ public class XMLElement extends java.lang.Object {
      * of this XML element.
      */
     public String getPrefixURIMapping(String prefixToResolve) {
-        return ( (namespaces != null) && (prefixToResolve != null) ) ? 
+        return ( (namespaces != null) && (prefixToResolve != null) ) ?
             namespaces.getURI(prefixToResolve) : null;
     }
 

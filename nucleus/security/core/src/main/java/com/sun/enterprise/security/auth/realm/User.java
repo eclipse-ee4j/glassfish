@@ -31,8 +31,8 @@ import java.util.Enumeration;
  * example, realms could use X.509 public key certificates, shared
  * passphrases, encrypted passwords, smart cards, or biometric data
  * to figure out if the user's credentials are valid.
- * 
- * <P> Users typically have attributes that identify privileges 
+ *
+ * <P> Users typically have attributes that identify privileges
  * granted/possesed by the user.
  *
  * @author Harish Prabandham
@@ -50,7 +50,7 @@ public interface User extends Principal {
      *
      * @param name string identifying the attribute.
      * @return value of that attribute, or null if no value
-     *	has been defined
+     *    has been defined
      */
     Object getAttribute (String name);
 
@@ -59,5 +59,5 @@ public interface User extends Principal {
      * Returns an enumeration of the keys for the attributes
      * supported for this user.
      */
-    Enumeration	getAttributeNames ();
+    Enumeration    getAttributeNames ();
 }

@@ -20,11 +20,11 @@ import jakarta.ejb.Stateful;
 
 @Stateful
 public class HelloNoInterfaceLocalViewSfulEJB {
-    
+
     private String message;
     public void setState(String msg){
         this.message = msg;
-        
+
     }
     public String getState() {
         return this.message;

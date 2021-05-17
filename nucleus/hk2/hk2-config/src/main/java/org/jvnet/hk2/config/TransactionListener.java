@@ -39,7 +39,7 @@ public interface TransactionListener {
     /**
      * Nofication of unprocessed events by ConfigListener, usually requiring a server
      * restart.
-     * 
+     *
      * @param changes
      */
     public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes);

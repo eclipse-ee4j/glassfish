@@ -41,7 +41,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * web service endpoints.
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
 
@@ -59,7 +59,7 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
             new XMLElement(WebServicesTagNames.MESSAGE_SECURITY_BINDING),
             MessageSecurityBindingNode.class, "setMessageSecurityBinding");
 
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), 
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
                                RuntimeNameValuePairNode.class, "addProperty");
     }
 
@@ -70,14 +70,14 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
+     */
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.ENDPOINT_ADDRESS_URI, 
+        table.put(WebServicesTagNames.ENDPOINT_ADDRESS_URI,
                   "setEndpointAddressUri");
         table.put(WebServicesTagNames.TIE_CLASS, "setTieClassName");
         table.put(WebServicesTagNames.SERVLET_IMPL_CLASS,
@@ -87,15 +87,15 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
         table.put(WebServicesTagNames.LOCAL_PART, "setServiceLocalPart");
         table.put(RuntimeTagNames.AUTH_METHOD, "setAuthMethod");
         table.put(RuntimeTagNames.REALM, "setRealm");
-        table.put(WebServicesTagNames.TRANSPORT_GUARANTEE, 
+        table.put(WebServicesTagNames.TRANSPORT_GUARANTEE,
                   "setTransportGuarantee");
 
         return table;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -106,7 +106,7 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
             (element.getQName())) {
             Object parentDesc = getParentNode().getDescriptor();
             if (parentDesc instanceof EjbDescriptor) {
-                EjbBundleDescriptor bundle = 
+                EjbBundleDescriptor bundle =
                     ((EjbDescriptor) parentDesc).getEjbBundleDescriptor();
                 if (bundle != null) {
                     WebServicesDescriptor webServices = bundle.getWebServices();
@@ -124,7 +124,7 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
             }
         } else super.setElementValue(element, value);
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -132,24 +132,24 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
                                 WebServiceEndpoint endpoint) {
-        Node endpointNode = 
+        Node endpointNode =
             super.writeDescriptor(parent, nodeName, endpoint);
 
         appendTextChild(endpointNode, WebServicesTagNames.PORT_COMPONENT_NAME,
                         endpoint.getEndpointName());
         appendTextChild(endpointNode, WebServicesTagNames.ENDPOINT_ADDRESS_URI,
                         endpoint.getEndpointAddressUri());
-        
+
         // login config only makes sense for ejbs.  For web components,
         // this info is described in web application itself.
         if( endpoint.implementedByEjbComponent() &&
             endpoint.hasAuthMethod() ) {
-            Node loginConfigNode = appendChild(endpointNode, 
+            Node loginConfigNode = appendChild(endpointNode,
                                                RuntimeTagNames.LOGIN_CONFIG);
-            
+
             appendTextChild(loginConfigNode, RuntimeTagNames.AUTH_METHOD,
                             endpoint.getAuthMethod());
             appendTextChild(loginConfigNode, RuntimeTagNames.REALM,
@@ -157,10 +157,10 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
         }
 
         // message-security-binding
-        MessageSecurityBindingDescriptor messageSecBindingDesc = 
+        MessageSecurityBindingDescriptor messageSecBindingDesc =
             endpoint.getMessageSecurityBinding();
         if (messageSecBindingDesc != null) {
-            MessageSecurityBindingNode messageSecBindingNode = 
+            MessageSecurityBindingNode messageSecBindingNode =
                 new MessageSecurityBindingNode();
             messageSecBindingNode.writeDescriptor(endpointNode, WebServicesTagNames.MESSAGE_SECURITY_BINDING, messageSecBindingDesc);
         }
@@ -172,7 +172,7 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
         if( serviceName != null ) {
             Node serviceQnameNode = appendChild
                 (endpointNode, WebServicesTagNames.SERVICE_QNAME);
-                                                
+
             appendTextChild(serviceQnameNode, WebServicesTagNames.NAMESPACE_URI,
                             serviceName.getNamespaceURI());
             appendTextChild(serviceQnameNode, WebServicesTagNames.LOCAL_PART,
@@ -181,14 +181,14 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
 
         appendTextChild(endpointNode, WebServicesTagNames.TIE_CLASS,
                         endpoint.getTieClassName());
-        
+
         if( endpoint.implementedByWebComponent() &&
             (endpoint.getServletImplClass() != null) ) {
-            appendTextChild(endpointNode, 
+            appendTextChild(endpointNode,
                             WebServicesTagNames.SERVLET_IMPL_CLASS,
                             endpoint.getServletImplClass());
         }
-        
+
         //debugging-enabled?
         appendTextChild(endpointNode, WebServicesTagNames.DEBUGGING_ENABLED,
                         endpoint.getDebugging());
@@ -196,31 +196,31 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
         //property*
         Iterator properties = endpoint.getProperties();
         if (properties!=null) {
-            RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();        
+            RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();
             while (properties.hasNext()) {
                 NameValuePairDescriptor aProp = (NameValuePairDescriptor) properties.next();
                 propNode.writeDescriptor(endpointNode, RuntimeTagNames.PROPERTY, aProp);
             }
-	    }
-                            
+        }
+
         return endpointNode;
     }
-    
+
     /**
      * writes all the runtime information for web service endpoints for
      * a given ejb
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the ejb endpoint
-     */        
+     */
     public void writeWebServiceEndpointInfo(Node parent, EjbDescriptor ejb) {
-                                            
+
         EjbBundleDescriptor bundle = ejb.getEjbBundleDescriptor();
         WebServicesDescriptor webServices = bundle.getWebServices();
         Collection endpoints = webServices.getEndpointsImplementedBy(ejb);
         for(Iterator iter = endpoints.iterator(); iter.hasNext();) {
             WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
-            writeDescriptor(parent, WebServicesTagNames.WEB_SERVICE_ENDPOINT, 
+            writeDescriptor(parent, WebServicesTagNames.WEB_SERVICE_ENDPOINT,
                             next);
         }
     }
@@ -228,21 +228,21 @@ public class WebServiceEndpointRuntimeNode extends DeploymentDescriptorNode {
     /**
      * writes all the runtime information for web service endpoints for
      * a given web component
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the web component
-     */        
+     */
     public void writeWebServiceEndpointInfo
         (Node parent, WebComponentDescriptor webComp) {
-        
+
         WebBundleDescriptor bundle = webComp.getWebBundleDescriptor();
         WebServicesDescriptor webServices = bundle.getWebServices();
         Collection endpoints = webServices.getEndpointsImplementedBy(webComp);
         for(Iterator iter = endpoints.iterator(); iter.hasNext();) {
             WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
-            writeDescriptor(parent, WebServicesTagNames.WEB_SERVICE_ENDPOINT, 
+            writeDescriptor(parent, WebServicesTagNames.WEB_SERVICE_ENDPOINT,
                             next);
         }
     }
-    
+
 }

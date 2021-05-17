@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -54,35 +54,35 @@
     <target name="build-jars">
         <!-- package ourselves to include persistence.xml -->
         <mkdir dir="${assemble.dir}"/>
-        <jar jarfile="${assemble.dir}/${appname}-ejb1.jar" 
-             basedir="${build.classes.dir}" 
+        <jar jarfile="${assemble.dir}/${appname}-ejb1.jar"
+             basedir="${build.classes.dir}"
              update="true"
              includes ="**/*Ejb.class">
              <metainf dir="descriptor">
                   <include name="ejb-jar.xml"/>
-             </metainf> 
+             </metainf>
         </jar>
-        <jar jarfile="${assemble.dir}/${appname}-pu1.jar" 
-             basedir="${build.classes.dir}" 
+        <jar jarfile="${assemble.dir}/${appname}-pu1.jar"
+             basedir="${build.classes.dir}"
              update="true"
              includes ="**/SimpleEntity.class,**/SimpleRelated.class">
              <metainf dir="descriptor">
                   <include name="persistence.xml"/>
-             </metainf> 
+             </metainf>
         </jar>
-        <jar jarfile="${assemble.dir}/${appname}-base.jar" 
-             basedir="${build.classes.dir}" 
+        <jar jarfile="${assemble.dir}/${appname}-base.jar"
+             basedir="${build.classes.dir}"
              update="true"
              includes ="**/SimpleBase.class,**/SimpleInterface.class">
         </jar>
-        <jar jarfile="${assemble.dir}/${appname}-ejb2.jar" 
-             basedir="${build.classes.dir}" 
+        <jar jarfile="${assemble.dir}/${appname}-ejb2.jar"
+             basedir="${build.classes.dir}"
              update="true"
              includes ="**/SingletonBean.class">
         </jar>
         <delete dir="${build.classes.dir}/org"/>
-    </target> 
-    
+    </target>
+
     <target name="create-dirs">
         <!-- package ourselves to include persistence.xml -->
         <mkdir dir="${assemble.dir}/${appname}-ejb1/classes"/>
@@ -97,16 +97,16 @@
         <mkdir dir="${assemble.dir}/${appname}-ejb2/classes"/>
         <unzip src="${assemble.dir}/${appname}-ejb2.jar" dest="${assemble.dir}/${appname}-ejb2/classes"/>
 
-    </target> 
-    
+    </target>
+
     <target name="run" depends="init-common">
         <antcall target="run_se_jars"/>
         <antcall target="run_se_dirs"/>
     </target>
- 
+
     <target name="run_se_jars" depends="init-common">
        <echo message="Running with ${embedded.classpath} in classpath"/>
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/${appname}-ejb1.jar:${assemble.dir}/${appname}-ejb2.jar:${assemble.dir}/${appname}-base.jar:${assemble.dir}/${appname}-pu1.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
@@ -122,7 +122,7 @@
 
     <target name="run_se_dirs" depends="init-common">
        <echo message="Running with ${embedded.classpath} in classpath"/>
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/${appname}-ejb2/classes:${assemble.dir}/${appname}-ejb1/classes:${assemble.dir}/${appname}-base/classes:${assemble.dir}/${appname}-pu1:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">

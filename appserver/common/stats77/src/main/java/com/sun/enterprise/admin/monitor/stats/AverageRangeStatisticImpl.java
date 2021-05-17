@@ -30,18 +30,18 @@ import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
  *
  * @author  lwhite
  */
-public class AverageRangeStatisticImpl implements 
-	AverageRangeStatistic /*BoundedRangeStatistic*/ {
-    
+public class AverageRangeStatisticImpl implements
+    AverageRangeStatistic /*BoundedRangeStatistic*/ {
+
     private BoundedRangeStatisticImpl boundedRangeStatistic = null;
     private long                                numberOfSamples;
-    private long                                runningTotal;    
-    
-    
-	/**
+    private long                                runningTotal;
+
+
+    /**
      * Constructs an immutable instance of AverageRangeStatisticImpl.
      * @param curVal    The current value of this statistic
-     * @param highMark  The highest value of this statistic, since measurement 
+     * @param highMark  The highest value of this statistic, since measurement
      *                  started
      * @param lowMark   The lowest value of this statistic, since measurement
      *                  started
@@ -54,35 +54,35 @@ public class AverageRangeStatisticImpl implements
      * @param sampleTime Time at which the last measurement was done.
      * @param numberOfSamples number of samples at present
      * @param runningTotal running total of sampled data at present
-     **/    
-	public AverageRangeStatisticImpl(long curVal, long highMark, long lowMark,
+     **/
+    public AverageRangeStatisticImpl(long curVal, long highMark, long lowMark,
                                      long upper, long lower, String name,
                                      String unit, String desc, long startTime,
                                      long sampleTime, long numberOfSamples,
                                      long runningTotal) {
-                                         
+
         boundedRangeStatistic = new BoundedRangeStatisticImpl(curVal, highMark, lowMark,
                                      upper, lower, name,
                                      unit, desc, startTime,
-                                     sampleTime);                                 
-                                         
+                                     sampleTime);
+
         this.numberOfSamples = numberOfSamples;
         this.runningTotal = runningTotal;
-    } 
-        
-	/**
+    }
+
+    /**
      * Constructs an immutable instance of AverageRangeStatisticImpl.
      * @param stats a BoundedRangeStatisticImpl
      * @param numberOfSamples number of samples at present
      * @param runningTotal running total of sampled data at present
-     **/    
-	public AverageRangeStatisticImpl(BoundedRangeStatisticImpl stats, 
-                long numberOfSamples, long runningTotal) {                                         
-        boundedRangeStatistic = stats;                                                                          
+     **/
+    public AverageRangeStatisticImpl(BoundedRangeStatisticImpl stats,
+                long numberOfSamples, long runningTotal) {
+        boundedRangeStatistic = stats;
         this.numberOfSamples = numberOfSamples;
         this.runningTotal = runningTotal;
-    }         
-   
+    }
+
     public long getCurrent() {
         return boundedRangeStatistic.getCurrent();
     }
@@ -124,13 +124,13 @@ public class AverageRangeStatisticImpl implements
         return boundedRangeStatistic.getUpperBound();
     }
      */
-        
+
     public long getAverage() {
         if(numberOfSamples == 0) {
             return -1;
         } else {
             return runningTotal / numberOfSamples;
-        }        
+        }
     }
     /** This is a hack. This method allows us to internatinalize the descriptions.
         See bug Id: 5045413
@@ -138,5 +138,5 @@ public class AverageRangeStatisticImpl implements
     public void setDescription(final String desc) {
         this.boundedRangeStatistic.setDescription(desc);
     }
-    
+
 }

@@ -19,7 +19,7 @@ package devtests.deployment.util;
 import org.glassfish.apf.ErrorHandler;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.impl.AnnotationUtils;
-                                                                                
+
 /**
  * Standalone Implementation of ErrorHandler.
  *
@@ -33,8 +33,8 @@ public class StandaloneErrorHandler implements ErrorHandler {
     /**
      * Receive notication of a fine error message
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing 
-     */ 
+     * @throws any exception to stop the annotation processing
+     */
     public void fine(AnnotationProcessorException ape) throws
             AnnotationProcessorException {
         AnnotationUtils.getLogger().fine("Fine : " + ape);

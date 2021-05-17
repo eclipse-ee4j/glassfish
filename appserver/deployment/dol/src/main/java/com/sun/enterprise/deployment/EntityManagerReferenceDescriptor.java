@@ -25,11 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An object representing an component environment reference 
+ * An object representing an component environment reference
  * to an EntityManager
  *
 */
-public class EntityManagerReferenceDescriptor extends 
+public class EntityManagerReferenceDescriptor extends
     EnvironmentProperty implements EntityManagerReference {
 
     private String unitName = null;
@@ -39,7 +39,7 @@ public class EntityManagerReferenceDescriptor extends
 
     private Map<String, String> properties = new HashMap<String,String>();
 
-    public EntityManagerReferenceDescriptor(String name, 
+    public EntityManagerReferenceDescriptor(String name,
                                             String unitName,
                                             PersistenceContextType type) {
         super(name, "", "");
@@ -51,7 +51,7 @@ public class EntityManagerReferenceDescriptor extends
     public EntityManagerReferenceDescriptor() {}
 
     public void setUnitName(String unitName) {
-        
+
         this.unitName = unitName;
     }
 
@@ -100,7 +100,7 @@ public class EntityManagerReferenceDescriptor extends
 
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle)
     {
-	this.referringBundle = referringBundle;
+    this.referringBundle = referringBundle;
     }
 
     @Override
@@ -114,8 +114,8 @@ public class EntityManagerReferenceDescriptor extends
 
     public BundleDescriptor getReferringBundleDescriptor()
     {
-	return referringBundle;
-    }  
+    return referringBundle;
+    }
 
     public boolean isConflict(EntityManagerReferenceDescriptor other) {
         return getName().equals(other.getName()) &&

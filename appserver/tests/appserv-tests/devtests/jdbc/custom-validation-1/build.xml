@@ -21,9 +21,9 @@
         <!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
         <!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
-	<!ENTITY run SYSTEM "./../../../config/run.xml">
-	<!ENTITY jdbcxml SYSTEM "./../JdbcCommon.xml">
-	<!ENTITY jdbcProps SYSTEM "./../JdbcCommon.properties">
+    <!ENTITY run SYSTEM "./../../../config/run.xml">
+    <!ENTITY jdbcxml SYSTEM "./../JdbcCommon.xml">
+    <!ENTITY jdbcProps SYSTEM "./../JdbcCommon.properties">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -61,8 +61,8 @@
             <param name="appclientjar.classes"
                    value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class"/>
         </antcall>
-	<jar jarfile="${custom-validator-jar}" update="true">
-		<fileset dir="${build.classes.dir}" casesensitive="yes">
+    <jar jarfile="${custom-validator-jar}" update="true">
+        <fileset dir="${build.classes.dir}" casesensitive="yes">
               <include name="**/MyValidator.class"/>
           </fileset>
       </jar>
@@ -85,8 +85,8 @@
             <param name="appclient.application.args" value="1"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="2"/>
@@ -103,7 +103,7 @@
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
-		    value="${resources.dottedname.prefix}.jdbc-connection-pool.${poolname}.validation_classname=com.sun.s1asdev.jdbc.customval.validator.MyValidator"/>
+            value="${resources.dottedname.prefix}.jdbc-connection-pool.${poolname}.validation_classname=com.sun.s1asdev.jdbc.customval.validator.MyValidator"/>
         </antcall>
 
         <antcall target="asadmin-common">
@@ -116,8 +116,8 @@
             <param name="appclient.application.args" value="3"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="4"/>
@@ -131,9 +131,9 @@
     <target name="undeploy" depends="init-common">
         <antcall target="delete-jdbc-stuff"/>
         <antcall target="undeploy-common"/>
-	<delete file="${env.S1AS_HOME}/lib/myvalidator.jar"/>
-	<delete file="${custom-validator-jar}"/>
-	<antcall target="restart-server"/>
+    <delete file="${env.S1AS_HOME}/lib/myvalidator.jar"/>
+    <delete file="${custom-validator-jar}"/>
+    <antcall target="restart-server"/>
     </target>
 
     <target name="usage">

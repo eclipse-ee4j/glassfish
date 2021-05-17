@@ -22,13 +22,13 @@ package com.sun.enterprise.deployment.web;
 public interface ResourceReference extends ContextParameter {
     public static String CONTAINER_AUTHORIZATION = "Container";
     public static String APPLICATION_AUTHORIZATION = "Application";
-    
-	/** return the fully qualified classname of the datasource factory 
-	* - e.g. javax.sql.DataSource. */
+
+    /** return the fully qualified classname of the datasource factory
+    * - e.g. javax.sql.DataSource. */
     public String getType();
     public void setType(String type);
     public void setDescription(String description);
-    
+
     public String getAuthorization();
     public void setAuthorization(String authorization);
 }

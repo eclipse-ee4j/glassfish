@@ -19,7 +19,7 @@ package com.sun.s1peqe.selfmanagement.tmonitor.action;
 import javax.management.*;
 import java.io.*;
 
-public class StringDiffer implements NotificationListener, 
+public class StringDiffer implements NotificationListener,
     com.sun.s1peqe.selfmanagement.tmonitor.action.StringDifferMBean {
         private final String JMX_MONITOR_STRING_DIFFERS = "jmx.monitor.string.differs";
         public StringDiffer() {

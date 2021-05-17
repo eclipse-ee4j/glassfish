@@ -43,7 +43,7 @@ public final class Debug {
     public static void print(Throwable t, String msg) {
         if (debuggingOn) {
             System.err.println("Received throwable with Message: "+t.getMessage());
-            if (msg != null) 
+            if (msg != null)
                 System.err.print(msg);
             t.printStackTrace();
         }

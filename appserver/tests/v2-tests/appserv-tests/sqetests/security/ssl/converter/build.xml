@@ -37,7 +37,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -49,34 +49,34 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
 
     <target name="run" depends="set-appserver-version">
-         <antcall target="run-win"/> 
-         <antcall target="run-unix"/> 
+         <antcall target="run-win"/>
+         <antcall target="run-unix"/>
     </target>
     <target name="run-win" depends="set-appserver-version" if="isWindows">
-         <antcall target="runclient-local-win"/> 
-         <antcall target="runclient-local-ee-win"/> 
+         <antcall target="runclient-local-win"/>
+         <antcall target="runclient-local-ee-win"/>
     </target>
 
     <target name="runclient-local-win" depends="init-common" unless="isEE">
-	<echo message="Test is running on Platform Edition!"/>
+    <echo message="Test is running on Platform Edition!"/>
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/cacerts.jks&quot; -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-  	<!-- dummy user added as appclient throwing login window -->	
-	<arg value="-textauth"/>
+      <!-- dummy user added as appclient throwing login window -->
+    <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-	<arg line="-xml &quot;${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml&quot;"/>
+    <arg line="-xml &quot;${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml&quot;"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -87,20 +87,20 @@
     </target>
 
     <target name="runclient-local-ee-win" depends="init-common" if="isEE">
-	<echo message="Test is running on Standard/Enterprise Edition!"/>
-	<antcall target="get-certdb-to-jks">
-	</antcall>
+    <echo message="Test is running on Standard/Enterprise Edition!"/>
+    <antcall target="get-certdb-to-jks">
+    </antcall>
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=&quot;${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks&quot;" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-  	<!-- dummy user added as appclient throwing login window -->	
-	<arg value="-textauth"/>
+      <!-- dummy user added as appclient throwing login window -->
+    <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-	<arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+    <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -109,25 +109,25 @@
         <param name="test.count" value="1"/>
       </antcall>
     </target>
-    
+
     <target name="run-unix" depends="set-appserver-version" if="isUnix">
-         <antcall target="runclient-local-unix"/> 
-         <antcall target="runclient-local-ee-unix"/> 
+         <antcall target="runclient-local-unix"/>
+         <antcall target="runclient-local-ee-unix"/>
     </target>
 
     <target name="runclient-local-unix" depends="init-common" unless="isEE">
-	<echo message="Test is running on Platform Edition!"/>
+    <echo message="Test is running on Platform Edition!"/>
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks  -Djavax.net.ssl.trustStorePassword=${master.password}" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-  	<!-- dummy user added as appclient throwing login window -->	
-	<arg value="-textauth"/>
+      <!-- dummy user added as appclient throwing login window -->
+    <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-	<arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+    <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -139,20 +139,20 @@
     </target>
 
     <target name="runclient-local-ee-unix" depends="init-common" if="isEE">
-	<echo message="Test is running on Standard/Enterprise Edition!"/>
-	<antcall target="get-certdb-to-jks">
-	</antcall>
+    <echo message="Test is running on Standard/Enterprise Edition!"/>
+    <antcall target="get-certdb-to-jks">
+    </antcall>
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-  	<!-- dummy user added as appclient throwing login window -->	
-	<arg value="-textauth"/>
+      <!-- dummy user added as appclient throwing login window -->
+    <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
         <arg value="temp"/>
-	<arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+    <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
       </exec>
       <!-- confirming report generation... -->
       <antcall target="checkReporting-common">
@@ -165,7 +165,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
   <!-- =============================================== -->
     <!-- Target to run the standalone client without ACC -->
@@ -184,7 +184,7 @@
         <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks"/>
         <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
         <jvmarg value="-Djavax.net.ssl.trustStorePassword=${master.password}"/>
-	<jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
+    <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
@@ -201,12 +201,12 @@
       <exec executable="${env.S1AS_HOME}/lib/certutil" output="${admin.domain.dir}/${admin.domain}/config/certdb.rfc">
         <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
         <arg line="-L -n ${cert.nickname}"/>
-	<arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
+    <arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
       </exec>
       <antcall target="import-cert-jks">
-	 <param name="cert.alias" value="${cert.nickname}"/>
-	 <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
-	 <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
+     <param name="cert.alias" value="${cert.nickname}"/>
+     <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+     <param name="cert.file" value="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
       </antcall>
 </target>
 
@@ -229,16 +229,16 @@
 
 <!-- get the appserver edition -->
 <target name="set-appserver-version" depends="init-common">
-	<!--
-	<exec executable="${ASADMIN}" output="as_version.txt">
-		<arg line="version"/>
-		<arg line="${as.props}"/>
-	</exec>
-	<loadfile property="Version" srcFile="as_version.txt" failonerror="false"/>
-	<echo message="Got the version=${Version}"/>
-	-->
-	<!-- use the following workaround to find the appserver edition until I figureout the above parse method -->
-	<available file="${admin.domain.dir}/${admin.domain}/config/cert8.db" type="file" property="isEE"/>
+    <!--
+    <exec executable="${ASADMIN}" output="as_version.txt">
+        <arg line="version"/>
+        <arg line="${as.props}"/>
+    </exec>
+    <loadfile property="Version" srcFile="as_version.txt" failonerror="false"/>
+    <echo message="Got the version=${Version}"/>
+    -->
+    <!-- use the following workaround to find the appserver edition until I figureout the above parse method -->
+    <available file="${admin.domain.dir}/${admin.domain}/config/cert8.db" type="file" property="isEE"/>
 </target>
 
 </project>

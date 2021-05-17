@@ -31,7 +31,7 @@ import java.util.List;
  * This node handles all the role mapping information for weblogic-application.xml
  *
  * @author  Sudarsan Sridhar
- * @version 
+ * @version
  */
 public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
 
@@ -43,11 +43,11 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
         return new SecurityRoleAssignment();
     }
 
-    
+
     /**
      * receives notification of the value for a particular tag
-     *                                               
-     * @param element the xml element                
+     *
+     * @param element the xml element
      * @param value it's associated value
      */
     public void setElementValue(XMLElement element, String value) {
@@ -67,7 +67,7 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
      */
@@ -112,7 +112,7 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
             // security-role-assignment*
             SecurityRoleAssignment[]securityRoleAssignments =
                 webBundleDescriptor.getSunDescriptor().getSecurityRoleAssignments();
-            for (SecurityRoleAssignment securityRoleAssignment : 
+            for (SecurityRoleAssignment securityRoleAssignment :
                     securityRoleAssignments) {
                 writeDescriptor(parent, nodeName, securityRoleAssignment);
             }

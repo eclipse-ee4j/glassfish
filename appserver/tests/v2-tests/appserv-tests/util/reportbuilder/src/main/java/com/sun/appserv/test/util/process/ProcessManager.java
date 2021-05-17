@@ -238,7 +238,7 @@ public class ProcessManager {
             try {
                 for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                     sb.append(line).append('\n');
-                    
+
                     if(echo)
                         System.out.println(line);
                 }

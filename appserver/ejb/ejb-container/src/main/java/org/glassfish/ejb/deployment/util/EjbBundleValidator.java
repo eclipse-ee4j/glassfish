@@ -65,7 +65,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * @author Jerome Dochez
  */
 public class EjbBundleValidator extends ComponentValidator implements EjbBundleVisitor, EjbVisitor {
-    
+
     protected EjbBundleDescriptorImpl ejbBundleDescriptor=null;
     protected EjbDescriptor ejb = null;
     private static LocalStringManagerImpl localStrings =
@@ -78,7 +78,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                 "but you have configuration at [{1}].",
         level = "WARNING")
     private static final String REDUNDANT_PASSIVATION_CALLBACK_METADATA = "AS-EJB-00048";
-    
+
     @Override
     public void accept (BundleDescriptor descriptor) {
         this.bundleDescriptor = descriptor;
@@ -103,7 +103,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
             // Ejb-jar level dependencies
 
             // Visit all injectables first.  In some cases, basic type
-            // information has to be derived from target inject method or 
+            // information has to be derived from target inject method or
             // inject field.
             for(InjectionCapable injectable : ejbBundle.getInjectableResources(ejbBundle)) {
                 accept(injectable);
@@ -122,40 +122,40 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         if (bundleDescriptor.getEjbs().size() == 0) {
             throw new IllegalArgumentException(localStrings.getLocalString(
                 "enterprise.deployment.util.no_ejb_in_ejb_jar",
-                "Invalid ejb jar {0}: it contains zero ejb. A valid ejb jar requires at least one session/entity/message driven bean.", 
-                new Object[] {bundleDescriptor.getModuleDescriptor().getArchiveUri()})); 
+                "Invalid ejb jar {0}: it contains zero ejb. A valid ejb jar requires at least one session/entity/message driven bean.",
+                new Object[] {bundleDescriptor.getModuleDescriptor().getArchiveUri()}));
         }
 
-	    if (!bundleDescriptor.areResourceReferencesValid()) {
+        if (!bundleDescriptor.areResourceReferencesValid()) {
             throw new RuntimeException("Incorrectly resolved role references");
-        }         
+        }
 
         this.ejbBundleDescriptor = bundleDescriptor;
 
         // Now that we have a classloader, we have to check for any
         // interceptor bindings that were specified in .xml to use
         // the syntax that refers to all overloaded methods with a
-        // given name.  
+        // given name.
         handleOverloadedInterceptorMethodBindings(bundleDescriptor);
 
-        InterceptorBindingTranslator bindingTranslator = 
+        InterceptorBindingTranslator bindingTranslator =
             new InterceptorBindingTranslator(bundleDescriptor);
 
         for(Iterator<EjbDescriptor> iter = bundleDescriptor.getEjbs().iterator(); iter.hasNext();) {
             EjbDescriptor ejb0 = iter.next();
-            if(ejb0.isRemoteInterfacesSupported() && 
+            if(ejb0.isRemoteInterfacesSupported() &&
                 (ejb0.getRemoteClassName() == null || ejb0.getRemoteClassName().trim().isEmpty())) {
                 throw new IllegalArgumentException(localStrings.getLocalString(
-                        "enterprise.deployment.util.componentInterfaceMissing", 
+                        "enterprise.deployment.util.componentInterfaceMissing",
                         "{0} Component interface is missing in EJB [{1}]", "Remote", ejb0.getName()));
             }
-            if(ejb0.isLocalInterfacesSupported() && 
+            if(ejb0.isLocalInterfacesSupported() &&
                 (ejb0.getLocalClassName() == null || ejb0.getLocalClassName().trim().isEmpty())) {
                 throw new IllegalArgumentException(localStrings.getLocalString(
-                        "enterprise.deployment.util.componentInterfaceMissing", 
+                        "enterprise.deployment.util.componentInterfaceMissing",
                         "{0} Component interface is missing in EJB [{1}]", "Local", ejb0.getName()));
             }
-            
+
             if(!EjbEntityDescriptor.TYPE.equals(ejb0.getType())) {
                 ejb0.applyInterceptors(bindingTranslator);
             }
@@ -174,14 +174,14 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
         ClassLoader cl = bundleDesc.getClassLoader();
 
-        List<InterceptorBindingDescriptor> newBindings = 
+        List<InterceptorBindingDescriptor> newBindings =
             new LinkedList<InterceptorBindingDescriptor>();
 
         for(InterceptorBindingDescriptor next : origBindings) {
 
             if( next.getNeedsOverloadResolution() ) {
 
-                MethodDescriptor overloadedMethodDesc = 
+                MethodDescriptor overloadedMethodDesc =
                     next.getBusinessMethod();
                 String methodName = overloadedMethodDesc.getName();
                 // For method-specific interceptors, there must be an ejb-name.
@@ -189,7 +189,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                 EjbDescriptor ejbDesc = bundleDesc.getEjbByName(ejbName);
                 Class ejbClass = null;
-           
+
                 try {
                     ejbClass = cl.loadClass(ejbDesc.getEjbClassName());
                 } catch(Exception e) {
@@ -212,11 +212,11 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
                         MethodDescriptor newMethodDesc = new MethodDescriptor
                             (ejbClassMethod, MethodDescriptor.EJB_BEAN);
-                        
+
                         newInterceptorBinding.setEjbName(ejbName);
                         newInterceptorBinding.setBusinessMethod
                             (newMethodDesc);
-                        for(String interceptorClass : 
+                        for(String interceptorClass :
                                 next.getInterceptorClasses()) {
                             newInterceptorBinding.appendInterceptorClass
                                 (interceptorClass);
@@ -227,19 +227,19 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                             (next.getExcludeDefaultInterceptors());
                         newInterceptorBinding.setExcludeClassInterceptors
                             (next.getExcludeClassInterceptors());
-                        
+
                         newBindings.add(newInterceptorBinding);
 
                     }
 
                 }
-                
+
                 // We didn't find a method with this name in class methods,
                 // check if it's a constructor
                 if (!isMethod && methodName.equals(ejbClass.getSimpleName())) {
                     // Constructor - will resolve via implicit comparison
                     newBindings.add(next);
-                    continue;                   
+                    continue;
                 }
 
             } else {
@@ -261,7 +261,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
     public void accept(EjbDescriptor ejb) {
         // all the DummyEjbDescriptor which stored partial information from
         // xml should already be resolved to actual ejb descriptors.
-        // if not, this means there is a referencing error in the user 
+        // if not, this means there is a referencing error in the user
         // application
         if (ejb instanceof DummyEjbDescriptor) {
             throw new IllegalArgumentException(localStrings.getLocalString(
@@ -274,7 +274,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         setDOLDefault(ejb);
         computeRuntimeDefault(ejb);
         checkDependsOn(ejb);
-        
+
         validateConcurrencyMetadata(ejb);
         validateStatefulTimeout(ejb);
         validatePassivationConfiguration(ejb);
@@ -288,14 +288,14 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                 return;
             }
 
-            // Perform 2.x style TimedObject processing if the class 
-            // hasn't already been identified as a timed object.  
+            // Perform 2.x style TimedObject processing if the class
+            // hasn't already been identified as a timed object.
             AnnotationTypesProvider provider = Globals.getDefaultHabitat().getService(AnnotationTypesProvider.class, "EJB");
             if (provider == null) {
                 throw new RuntimeException("Cannot find AnnotationTypesProvider named 'EJB'");
             }
 
-            if( ejb.getEjbTimeoutMethod() == null && 
+            if( ejb.getEjbTimeoutMethod() == null &&
                     provider.getType("jakarta.ejb.TimedObject").isAssignableFrom(ejbClass) ) {
                 MethodDescriptor timedObjectMethod =
                         new MethodDescriptor("ejbTimeout",
@@ -311,7 +311,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                 // timeout method can have any access type and be anywhere
                 // in the bean class hierarchy.
                 MethodDescriptor timeoutMethodDescOrig = ejb.getEjbTimeoutMethod();
-                MethodDescriptor timeoutMethodDesc = 
+                MethodDescriptor timeoutMethodDesc =
                         processTimeoutMethod(ejb, timeoutMethodDescOrig, provider, ejbClass);
                 ejb.setEjbTimeoutMethod(timeoutMethodDesc);
             }
@@ -342,8 +342,8 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
             re.initCause(e);
             throw re;
         }
-        /* It is possible to have an MDB class not implementing message-listener-type. 
-        
+        /* It is possible to have an MDB class not implementing message-listener-type.
+
         if(ejb instanceof EjbMessageBeanDescriptor){
             EjbMessageBeanDescriptor msgBeanDescriptor = (EjbMessageBeanDescriptor)ejb;
             String messageListenerType = msgBeanDescriptor.getMessageListenerType();
@@ -429,8 +429,8 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
                 accept(fd);
             }
         }
-    }    
-        
+    }
+
     public void accept(WebService webService) {
     }
 
@@ -529,7 +529,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         }
     }
 
-    
+
     private void checkDependsOn(EjbDescriptor ejb) {
 
         if( ejb instanceof EjbSessionDescriptor ) {
@@ -602,7 +602,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
     protected Application getApplication() {
         return application;
     }
-     
+
     /**
      * @return the bundleDescriptor we are validating
      */
@@ -652,7 +652,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         if( intfName != null ) {
             String jndiName = getDefaultEjbJndiName(intfName);
             ejb.setJndiName(jndiName);
-        } 
+        }
 
         if (!ejb.getUsesCallerIdentity()) {
             computeRunAsPrincipalDefault(
@@ -660,8 +660,8 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         }
     }
 
-    private MethodDescriptor processTimeoutMethod(EjbDescriptor ejb, 
-            MethodDescriptor timeoutMethodDescOrig, AnnotationTypesProvider provider, 
+    private MethodDescriptor processTimeoutMethod(EjbDescriptor ejb,
+            MethodDescriptor timeoutMethodDescOrig, AnnotationTypesProvider provider,
             Class ejbClass) throws ClassNotFoundException {
         Method m = timeoutMethodDescOrig.getDeclaredMethod(ejb);
         if (m == null) {
@@ -680,8 +680,8 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
 
         if (m == null) {
             throw new RuntimeException("Class " + ejbClass.getName() +
-                    " does not define timeout method " + 
-                    timeoutMethodDescOrig.getFormattedString());        
+                    " does not define timeout method " +
+                    timeoutMethodDescOrig.getFormattedString());
         }
         return new MethodDescriptor(m, MethodDescriptor.TIMER_METHOD);
     }

@@ -24,7 +24,7 @@
 ]>
 
 <project name="nonacc" basedir="." default="usage">
-    
+
     &commonSetup;
     &commonBuild;
     &testProperties;
@@ -60,24 +60,24 @@
       <antcall target="setup-sql"/>
       <java classname="com.sun.s1asdev.jdbc.nonacc.SimpleJdbcClient" fork="true">
         <arg value="jdbc/nonacc"/>
-      
+
         <sysproperty key="org.omg.CORBA.ORBInitialHost" value="localhost"/>
         <sysproperty key="org.omg.CORBA.ORBInitialPort" value="3700"/>
-        
+
         <classpath>
           <pathelement location="${build.classes.dir}"/>
 <!--          <pathelement path="${s1astest.classpath}"/>-->
-<!--	  <pathelement location="${env.S1AS_HOME}/lib/install/applications/jmsra/imqjmsra.jar"/>-->
-	  <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar"/>
+<!--      <pathelement location="${env.S1AS_HOME}/lib/install/applications/jmsra/imqjmsra.jar"/>-->
+      <pathelement location="${env.S1AS_HOME}/lib/gf-client.jar"/>
           <pathelement location="${assemble.dir}"/>
           <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
         </classpath>
       </java>
     </target>
-    
+
     <target name="usage">
     </target>
-    
+
     <target name="setup-sql" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create.sql"/>

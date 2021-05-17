@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  * This class represents the types
  * byte, short int, long and char
  *
@@ -42,7 +42,7 @@ public class IntegralType
 
     /**
      * Converts the specified value into a value of this numeric type.
-     * E.g. an Integer is converted into a Long, if this represents 
+     * E.g. an Integer is converted into a Long, if this represents
      * the numeric type long.
      * @param value value to be converted
      * @return converted value
@@ -64,9 +64,9 @@ public class IntegralType
 
         return ret;
     }
-    
+
     /**
-     * Returns -value. 
+     * Returns -value.
      * @param value value to be negated
      * @return -value
      */

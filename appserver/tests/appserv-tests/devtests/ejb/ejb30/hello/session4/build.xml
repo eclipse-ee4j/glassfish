@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -46,35 +46,35 @@
 
     <target name="build" depends="compile">
         <antcall target="ejb-jar-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/Sful*.class,**/Sless*.class"/>
         </antcall>
         <antcall target="appclient-jar-common">
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/Client.class,**/Sful.class,**/Sful2.class,**/Sless.class"/>
         </antcall>
         <echo message="appclient.jar=${assemble.dir}/${appname}-client.jar"/>
         <jar jarfile="${assemble.dir}/${appname}-client.jar" update="yes">
-            <zipfileset src="${env.APS_HOME}/lib/reporter.jar" 
+            <zipfileset src="${env.APS_HOME}/lib/reporter.jar"
                         excludes="META-INF/**"/>
         </jar>
-    </target> 
+    </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-jar-common"/>
 <!-- Don't deploy client in order to test that dynamic byte code
-generation is working.  
+generation is working.
         <antcall target="deploy-client-common"/>
 -->
 
     </target>
 
     <target name="run" depends="init-common">
-        <echo message="appclient -client ${assemble.dir}/${appname}-clientClient.jar -name ${appname}Client -textauth -user j2ee -password j2ee -xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml ${appclient.application.args}"/>   
+        <echo message="appclient -client ${assemble.dir}/${appname}-clientClient.jar -name ${appname}Client -textauth -user j2ee -password j2ee -xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml ${appclient.application.args}"/>
         <exec executable="${APPCLIENT}" failonerror="false">
 <!-- Don't deploy client in order to test that dynamic byte code
-generation is working.  
+generation is working.
             <arg line="-client
                  ${assemble.dir}/${appname}-clientClient.jar"/>
 -->
@@ -87,15 +87,15 @@ generation is working.
             <arg line="${appclient.application.args}"/>
         </exec>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-jar-common"/>
 <!-- Don't deploy client in order to test that dynamic byte code
-generation is working.  
+generation is working.
         <antcall target="undeploy-client-common"/>
 -->
 
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

@@ -19,6 +19,6 @@ package com.sun.enterprise.deployment.web;
     /** Objects exhibiting this interface represent an abstract user or group
     * that may access the web application. */
 public interface SecurityRole extends WebDescriptor {
-    
+
 }
 

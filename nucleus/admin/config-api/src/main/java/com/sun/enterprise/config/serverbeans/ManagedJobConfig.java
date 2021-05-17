@@ -29,7 +29,7 @@ import java.beans.PropertyVetoException;
 /**
  * This config bean will define parameters for Managed jobs A Managed job is a commands which is annotated with
  * either @ManagedJob,@Progress or running with --detach
- * 
+ *
  * @author Bhakti Mehta
  */
 @Configured
@@ -37,7 +37,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
 
     /**
      * Gets the value of inMemoryRetentionPeriod property
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "1h")
@@ -54,7 +54,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
 
     /**
      * Gets the value of jobRetentionPeriod
-     * 
+     *
      * @return
      */
     @Attribute(defaultValue = "24h")
@@ -71,7 +71,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
 
     /**
      * Gets the value of persistingEnabled property
-     * 
+     *
      * @return
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
@@ -86,7 +86,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
 
     /**
      * Gets the value of pollInterval property
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "20m")
@@ -103,7 +103,7 @@ public interface ManagedJobConfig extends DomainExtension, PropertyBag, Payload 
 
     /**
      * Gets the value of initialDelay
-     * 
+     *
      * @return
      */
     @Attribute(defaultValue = "20m")

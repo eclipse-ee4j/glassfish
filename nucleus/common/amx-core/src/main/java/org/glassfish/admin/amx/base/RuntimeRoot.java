@@ -33,19 +33,19 @@ import org.glassfish.external.arc.Taxonomy;
 @AMXMBeanMetadata(type="runtime",singleton=true, globalSingleton=true)
 public interface RuntimeRoot extends AMXProxy, Utility, Singleton
 {
-    /** 
+    /**
      * The key to store the module name in the deployment descriptor map.
      * @see getDeploymentConfigurations
      */
     public static final String MODULE_NAME_KEY = "module-name";
-    /** 
-     * The key to store the deployment descriptor path in the deployment 
+    /**
+     * The key to store the deployment descriptor path in the deployment
      * descriptor map.
      * @see getDeploymentConfigurations
      */
     public static final String DD_PATH_KEY =  "dd-path";
-    /** 
-     * The key to store the deployment descriptor content in the deployment 
+    /**
+     * The key to store the deployment descriptor content in the deployment
      * descriptor map.
      * @see getDeploymentConfigurations
      */
@@ -57,13 +57,13 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
     public void restartDomain();
 
-    /** 
-     * Return a list of deployment descriptor maps for the specified 
+    /**
+     * Return a list of deployment descriptor maps for the specified
      * application.
-     * In each map: 
-     * a. The module name is stored by the MODULE_NAME_KEY. 
+     * In each map:
+     * a. The module name is stored by the MODULE_NAME_KEY.
      * b. The path of the deployment descriptor is stored by the DD_PATH_KEY.
-     * c. The content of the deployment descriptor is stored by the 
+     * c. The content of the deployment descriptor is stored by the
      *    DD_CONTENT_KEY.
      * @param the application name
      * @return the list of deployment descriptor maps
@@ -89,7 +89,7 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
      * Return the context root of a specified module.
      * @param applicationName the application name
      * @param moduleName the module name
-     * @return the context root of a specified module 
+     * @return the context root of a specified module
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     public String getContextRoot(
@@ -118,16 +118,16 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
     @ManagedAttribute
     @Description("Return the available JMXServiceURLs in no particular order")
     public String[] getJMXServiceURLs();
-    
-    
+
+
     /** Which: all | summary | memory| class | thread  log */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return a summary report of the specified type")
     public String getJVMReport( @Param(name = "which")String which);
-    
+
     @ManagedAttribute
     public Map<String,ServerRuntime>   getServerRuntime();
-    
+
     @ManagedAttribute
     @Description("Whether the server was started with --debug")
     public boolean isStartedInDebugMode();

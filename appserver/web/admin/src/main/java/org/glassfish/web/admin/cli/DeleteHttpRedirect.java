@@ -58,12 +58,12 @@ import org.glassfish.api.admin.*;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-http-redirect", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-http-redirect",
         description="delete-http-redirect"),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-http-redirect", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-http-redirect",
         description="delete-http-redirect")
 })
 public class DeleteHttpRedirect implements AdminCommand {

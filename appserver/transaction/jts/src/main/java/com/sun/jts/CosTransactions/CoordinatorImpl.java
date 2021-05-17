@@ -115,10 +115,10 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
     /**OMG Coordinator operation required of all subclasses.
      */
     public abstract int hash_top_level_tran();
-	/*
-		Logger to log transaction messages
-	*/
-	static Logger _logger = LogDomains.getLogger(CoordinatorImpl.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+    static Logger _logger = LogDomains.getLogger(CoordinatorImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     /**OMG Coordinator operation required of all subclasses.
      *
@@ -339,9 +339,9 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
                 thisRef = CoordinatorHelper.narrow(poa.servant_to_reference(this));
             } catch( Exception exc ) {
                 _logger.log(Level.SEVERE,"jts.create_coordinator_object_error",exc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-						    			"jts.create_coordinator_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                        "jts.create_coordinator_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -363,7 +363,7 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
                     if( result.thisRef == null )
                         result.thisRef = jcoord;
                 } catch( Exception exc ) {
-					_logger.log(Level.WARNING,"jts.cannot_locate_servant","Coordinator");
+                    _logger.log(Level.WARNING,"jts.cannot_locate_servant","Coordinator");
                 }
         }
 
@@ -378,7 +378,7 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
                 poa.deactivate_object(poa.reference_to_id(thisRef));
                 thisRef = null;
             } catch( Exception exc ) {
-				_logger.log(Level.WARNING,"jts.object_destroy_error","Coordinator"); 
+                _logger.log(Level.WARNING,"jts.object_destroy_error","Coordinator");
             }
     }
 
@@ -417,18 +417,18 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result,
-				   ExceptionList exceptions,
-				   ContextList contexts) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result,
+                   ExceptionList exceptions,
+                   ContextList contexts) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 

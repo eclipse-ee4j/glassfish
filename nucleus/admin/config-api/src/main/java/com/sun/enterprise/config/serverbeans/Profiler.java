@@ -42,7 +42,7 @@ import jakarta.validation.constraints.Pattern;
  *
  * The adminstrative graphical interfaces, could list multiple supported profilers (incomplete at this point) and will
  * populate server.xml appropriately.
- * 
+ *
  */
 
 /* @XmlType(name = "", propOrder = {

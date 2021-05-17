@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This handler is responsible for handling the 
+ * This handler is responsible for handling the
  * jakarta.persistence.PersistenceUnits annotation.
  *
  */
@@ -37,7 +37,7 @@ import java.util.List;
 @AnnotationHandlerFor(PersistenceUnits.class)
 public class EntityManagerFactoryReferencesHandler
     extends EntityManagerFactoryReferenceHandler {
-    
+
     public EntityManagerFactoryReferencesHandler() {
     }
 
@@ -46,7 +46,7 @@ public class EntityManagerFactoryReferencesHandler
             throws AnnotationProcessorException {
 
         PersistenceUnits annotation = (PersistenceUnits) ainfo.getAnnotation();
-        
+
         PersistenceUnit[] emfRefAnnotations = annotation.value();
         List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
 

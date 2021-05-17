@@ -29,13 +29,13 @@ import test.ejb.HelloNoInterfaceLocalViewSlessEJB;
 @SessionScoped
 public class TestBean implements TestBeanInterface, Serializable{
     public static boolean testBeanInvoked = false;
-    
+
     @Inject
     HelloNoInterfaceLocalViewSfulEJB sfulEJB;
 
     @Inject
     HelloNoInterfaceLocalViewSlessEJB slessEJB;
-    
+
     @Override
     public void setState(String s) {
         testBeanInvoked = true;

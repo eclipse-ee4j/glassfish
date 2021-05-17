@@ -80,32 +80,32 @@ import org.omg.CORBA.Policy;
 
 /**
  * This class implements the RemoteReferenceFactory interface for the
- * RMI/IIOP ORB with POA (Portable Object Adapter). 
+ * RMI/IIOP ORB with POA (Portable Object Adapter).
  * There is one instance of the POARemoteReferenceFactory for each
  * EJB type.
- * 
- * It also implements the preinvoke/postinvoke APIs in the 
+ *
+ * It also implements the preinvoke/postinvoke APIs in the
  * POA's ServantLocator interface, which are called before/after
  * every invocation (local or remote).
  * It creates a RMI-IIOP-POA object reference (a stub) for every EJBObject
  * and EJBHome in the EJB container.
- * 
+ *
  * @author Kenneth Saks
  */
 
-public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject 
-			implements RemoteReferenceFactory, ServantLocator
+public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
+            implements RemoteReferenceFactory, ServantLocator
 {
     static final int PASS_BY_VALUE_ID = 0;
     static final int PASS_BY_REFERENCE_ID = 1;
 
-    static final int OTS_POLICY_TYPE = SUNVMCID.value + 123; 
-    static final int CSIv2_POLICY_TYPE = SUNVMCID.value + 124; 
-    static final int REQUEST_DISPATCH_POLICY_TYPE = SUNVMCID.value + 125; 
-    static final int SFSB_VERSION_POLICY_TYPE = SUNVMCID.value + 126; 
-    
+    static final int OTS_POLICY_TYPE = SUNVMCID.value + 123;
+    static final int CSIv2_POLICY_TYPE = SUNVMCID.value + 124;
+    static final int REQUEST_DISPATCH_POLICY_TYPE = SUNVMCID.value + 125;
+    static final int SFSB_VERSION_POLICY_TYPE = SUNVMCID.value + 126;
+
     private static final java.util.logging.Logger logger =
-		java.util.logging.Logger.getLogger(LogDomains.CORBA_LOGGER);
+        java.util.logging.Logger.getLogger(LogDomains.CORBA_LOGGER);
     private static final int GET_TIE_EXCEPTION_CODE = 9999;
 
     private EjbContainerFacade container;
@@ -125,7 +125,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     private String ejbObjectRepositoryId;
 
     private String remoteBusinessIntf;
-    
+
     // true if remote home view.  false if remote business view.
     // Used when getting target object for an invocation.
     private boolean isRemoteHomeView;
@@ -133,9 +133,9 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     private String poaId_EJBHome;
     private String poaId_EJBObject;
 
-    // The EJB key format with field-name(size in bytes): 
+    // The EJB key format with field-name(size in bytes):
     // -----------------------------------------
-    // | EJB ID(8) | INSTANCEKEY | INSTANCEKEY | 
+    // | EJB ID(8) | INSTANCEKEY | INSTANCEKEY |
     // |           | LENGTH(4)   |   (unknown) |
     // -----------------------------------------
     // The following are the offsets for the fields in the EJB key.
@@ -144,8 +144,8 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     private static final int INSTANCEKEY_OFFSET = 12;
 
     POARemoteReferenceFactory(EjbContainerFacade container, POAProtocolMgr protocolMgr,
-			      ORB orb, boolean remoteHomeView, String id) {
-    
+                  ORB orb, boolean remoteHomeView, String id) {
+
         this.protocolMgr = protocolMgr;
         this.orb = orb;
         this.poaId_EJBHome   = id + "-EJBHome";
@@ -172,11 +172,11 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
         // independent of whether we have generated static RMI-IIOP stubs.
 
         PresentationManager.ClassData cData = presentationMgr.getClassData(c);
-        String[] typeIds = cData.getTypeIds();  
+        String[] typeIds = cData.getTypeIds();
 
-	    if (logger.isLoggable(Level.FINE)) {
-	        logger.log(Level.FINE, ".getRepositoryId: {0}", typeIds[0]);
-	    }
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, ".getRepositoryId: {0}", typeIds[0]);
+        }
 
         // Repository id is always 1st element in array.
         return typeIds[0];
@@ -186,11 +186,11 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     @Override
     public void setRepositoryIds(Class homeIntf, Class remoteIntf)
     {
-        PresentationManager.StubFactoryFactory sff = 
+        PresentationManager.StubFactoryFactory sff =
             ORB.getStubFactoryFactory();
 
         // Home
-        ejbHomeStubFactory = 
+        ejbHomeStubFactory =
             sff.createStubFactory( homeIntf.getName(), false,
                                    "", null, appClassLoader);
         String[] ejbHomeTypeIds = ejbHomeStubFactory.getTypeIds();
@@ -221,7 +221,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
         if( !isRemoteHomeView ) {
             remoteBusinessIntf = remoteIntf.getName();
         }
-            
+
     }
 
     @Override
@@ -239,48 +239,48 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, ".createReferenceFactory->: {0} {1}",
                     new Object[]{poaId, repoid});
-	    }
+        }
 
-	    ReferenceFactoryManager rfm =
-	        (ReferenceFactoryManager) orb.resolve_initial_references(
+        ReferenceFactoryManager rfm =
+            (ReferenceFactoryManager) orb.resolve_initial_references(
                     ORBConstants.REFERENCE_FACTORY_MANAGER) ;
 
-	    List<Policy> policies = new ArrayList<Policy>();
+        List<Policy> policies = new ArrayList<Policy>();
 
-	    // Servant caching for local RMI-IIOP invocation performance
+        // Servant caching for local RMI-IIOP invocation performance
             policies.add(ServantCachingPolicy.getPolicy());
 
-	    // OTS Policy
-	    policies.add(new OTSPolicyImpl());
+        // OTS Policy
+        policies.add(new OTSPolicyImpl());
 
-	    if (logger.isLoggable(Level.FINE)) {
-	        logger.log(Level.FINE, ".createReferenceFactory: {0} {1}: {2}",
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE, ".createReferenceFactory: {0} {1}: {2}",
                     new Object[]{poaId, repoid, ejbDescriptor});
 
-	    }
+        }
 
-	    // CSIv2 Policy
-	    policies.add(new CSIv2Policy(ejbDescriptor));
+        // CSIv2 Policy
+        policies.add(new CSIv2Policy(ejbDescriptor));
 
-	    String threadPoolName = container.getUseThreadPoolId();
-	    int threadPoolNumericID = 0;
-	    boolean usePassByReference = container.getPassByReference();
+        String threadPoolName = container.getUseThreadPoolId();
+        int threadPoolNumericID = 0;
+        boolean usePassByReference = container.getPassByReference();
 
-	    if (usePassByReference) {
-	        policies.add(new CopyObjectPolicy(PASS_BY_REFERENCE_ID));
-	    }
+        if (usePassByReference) {
+            policies.add(new CopyObjectPolicy(PASS_BY_REFERENCE_ID));
+        }
 
-	    if (threadPoolName != null) {
-	        ThreadPoolManager threadPoolManager
-		        = S1ASThreadPoolManager.getThreadPoolManager();
-	        try {
-		        threadPoolNumericID = threadPoolManager.getThreadPoolNumericId(
-		        threadPoolName);
-		        policies.add(new RequestPartitioningPolicy(threadPoolNumericID));
-	        } catch (Exception ex) {
+        if (threadPoolName != null) {
+            ThreadPoolManager threadPoolManager
+                = S1ASThreadPoolManager.getThreadPoolManager();
+            try {
+                threadPoolNumericID = threadPoolManager.getThreadPoolNumericId(
+                threadPoolName);
+                policies.add(new RequestPartitioningPolicy(threadPoolNumericID));
+            } catch (Exception ex) {
                 logger.log(Level.WARNING, "Not using threadpool-request-partitioning...", ex);
-	        }
-	    }
+            }
+        }
 
             /** TODO
             logger.log(Level.INFO, "POARemoteRefFactory checking if SFSBVersionPolicy need to be added");
@@ -307,32 +307,32 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
                     new Object[]{usePassByReference, usePassByReference});
             }
 
-	    // DisableClearTextIIOP policy which sets IIOP Profile port to 0
-	    // if EJB allows only SSL invocations
-	    if ( ejbDescriptor.allMechanismsRequireSSL() ) {
-	        if (logger.isLoggable(Level.FINE)) {
+        // DisableClearTextIIOP policy which sets IIOP Profile port to 0
+        // if EJB allows only SSL invocations
+        if ( ejbDescriptor.allMechanismsRequireSSL() ) {
+            if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.WARNING,
                         ".createReferenceFactory: {0} {1}: adding ZeroPortPolicy",
                         new Object[]{poaId, repoid});
-	        }
-	        policies.add(ZeroPortPolicy.getPolicy());
-	    }
+            }
+            policies.add(ZeroPortPolicy.getPolicy());
+        }
 
 
-	    if (logger.isLoggable(Level.FINE)) {
-	        logger.log(Level.FINE, 
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.FINE,
                     ".createReferenceFactory: {0} {1}: policies: {2}",
                     new Object[]{poaId, repoid, policies});
-	    }
+        }
 
-	    ReferenceFactory rf = rfm.create( poaId, repoid, policies, this ) ;
-	    return rf ;
+        ReferenceFactory rf = rfm.create( poaId, repoid, policies, this ) ;
+        return rf ;
         } finally {
-	    if (logger.isLoggable(Level.FINE)) {
-	        logger.log(Level.WARNING, 
+        if (logger.isLoggable(Level.FINE)) {
+            logger.log(Level.WARNING,
                     ".createReferenceFactory<-: {0} {1}",
                     new Object[]{poaId, repoid});
-	    }
+        }
         }
     }
 
@@ -340,16 +340,16 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     @Override
     public java.rmi.Remote createRemoteReference(byte[] instanceKey)
     {
-	    return createRef(instanceKey, ejbObjectReferenceFactory,
-	        ejbObjectStubFactory, ejbObjectRepositoryId );
+        return createRef(instanceKey, ejbObjectReferenceFactory,
+            ejbObjectStubFactory, ejbObjectRepositoryId );
     }
 
 
     @Override
     public Remote createHomeReference(byte[] homeKey)
     {
-	    return createRef(homeKey, ejbHomeReferenceFactory,
-	        ejbHomeStubFactory, ejbHomeRepositoryId ) ;
+        return createRef(homeKey, ejbHomeReferenceFactory,
+            ejbHomeStubFactory, ejbHomeRepositoryId ) ;
     }
 
     private void setClassLoader() {
@@ -358,7 +358,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
         if (sman == null) {
             cl = this.getClass().getClassLoader() ;
         } else {
-            cl = AccessController.doPrivileged( 
+            cl = AccessController.doPrivileged(
                 new PrivilegedAction<ClassLoader>() {
                     @Override
                     public ClassLoader run() {
@@ -371,13 +371,13 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
         Wrapper._setClassLoader( cl ) ;
     }
 
-    private Remote createRef(byte[] instanceKey, ReferenceFactory rf, 
+    private Remote createRef(byte[] instanceKey, ReferenceFactory rf,
         PresentationManager.StubFactory stubFactory, String repoid )
     {
         try {
             PresentationManager.StubFactory stubFact = stubFactory;
             org.omg.CORBA.Object ref = _createRef(rf, instanceKey,repoid);
-                
+
             // Set the ClassLoader to the ClassLoader for this class,
             // which is loaded by the OSGi bundle ClassLoader for the
             // orb-iiop bundle, which depends on (among others) the
@@ -400,8 +400,8 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
     }
 
     // NOTE: The repoid is only needed for logging.
-    private org.omg.CORBA.Object _createRef( ReferenceFactory rf, 
-	    byte[] instanceKey, String repoid ) throws Exception {
+    private org.omg.CORBA.Object _createRef( ReferenceFactory rf,
+        byte[] instanceKey, String repoid ) throws Exception {
 
         if ( logger.isLoggable(Level.FINE) ) {
             logger.log(Level.FINE,
@@ -412,12 +412,12 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
         // Create the ejbKey using EJB's unique id + instanceKey
         byte[] ejbKey =  createEJBKey(ejbDescriptor.getUniqueId(),
                                      instanceKey);
-        
+
         org.omg.CORBA.Object obj = rf.createReference( ejbKey ) ;
 
         return obj;
     }
-   
+
     private byte[] createEJBKey(long ejbId, byte[] instanceKey)
     {
         byte[] ejbkey = new byte[INSTANCEKEY_OFFSET+instanceKey.length];
@@ -453,7 +453,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
      * This is the implementation of ServantLocator.preinvoke()
      * It is called from the POA before every remote invocation.
      * Return a POA Servant (which is the RMI/IIOP Tie for EJBObject/EJBHome).
-     * @param ejbKey 
+     * @param ejbKey
      * @param cookieHolder
      */
     @Override
@@ -475,19 +475,19 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
             while ( servant == null ) {
                 // get the EJBObject / EJBHome
                 Remote targetObj =
-                container.getTargetObject(instanceKey, 
+                container.getTargetObject(instanceKey,
                     (isRemoteHomeView ? null : remoteBusinessIntf));
 
-                // This could be null in rare cases for sfsbs and entity 
+                // This could be null in rare cases for sfsbs and entity
                 // beans.  It would be preferable to push the retry logic
-                // within the sfsb container and entity container 
+                // within the sfsb container and entity container
                 // implementations of getTargetObject, but for now let's keep
                 // the looping logic the same as it has always been.
                 if( targetObj != null ) {
                     // get the Tie which is the POA Servant
                     //fix for bug 6484935
                     @SuppressWarnings("unchecked")
-                    Tie tie = (Tie)AccessController.doPrivileged( 
+                    Tie tie = (Tie)AccessController.doPrivileged(
                         new PrivilegedAction() {
                         @Override
                             public Tie run()  {
@@ -502,11 +502,11 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
         } catch (NoSuchObjectLocalException e) {
             logger.log(Level.SEVERE,"iiop.gettie_exception", e);
             throw new OBJECT_NOT_EXIST( GET_TIE_EXCEPTION_CODE,
-					CompletionStatus.COMPLETED_NO);
+                    CompletionStatus.COMPLETED_NO);
         } catch (RuntimeException e) {
             logger.log(Level.SEVERE,"iiop.runtime_exception", e);
-	        throw e;
-	    }
+            throw e;
+        }
 
         return servant;
     }
@@ -547,21 +547,21 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
 
     @Override
     public boolean hasSameContainerID(org.omg.CORBA.Object obj)
-	throws Exception
+    throws Exception
     {
-	boolean result = false;
-	try {
-	    IOR ior = (orb).getIOR(obj, false);
-	    java.util.Iterator iter = ior.iterator();
+    boolean result = false;
+    try {
+        IOR ior = (orb).getIOR(obj, false);
+        java.util.Iterator iter = ior.iterator();
 
-	    byte[] oid = null;
-	    if (iter.hasNext()) {
+        byte[] oid = null;
+        if (iter.hasNext()) {
                 TaggedProfile profile = (TaggedProfile) iter.next();
                 ObjectKey objKey = profile.getObjectKey();
                 oid = objKey.getId().getId();
-	    }
+        }
 
-	    if ((oid != null) && (oid.length > INSTANCEKEY_OFFSET)) {
+        if ((oid != null) && (oid.length > INSTANCEKEY_OFFSET)) {
                 long cid = Utility.bytesToLong(oid, EJBID_OFFSET);
                 // To be really sure that is indeed a ref generated
                 //  by our container we do the following checks
@@ -582,7 +582,7 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
                         .append(cid);
                     logger.log(Level.FINE, sbuf.toString());
                 }
-	    } else {
+        } else {
                 if (logger.isLoggable(Level.FINE)) {
                     if (oid == null) {
                         logger.log(Level.FINE,
@@ -594,13 +594,13 @@ public final class POARemoteReferenceFactory extends org.omg.CORBA.LocalObject
                             new Object[]{oid.length, INSTANCEKEY_OFFSET});
                     }
                 }
-	    }
-	} catch (Exception ex) {
-	    logger.log(Level.FINE, "Exception while checking for same containerID", ex);
-	    throw ex;
-	}
+        }
+    } catch (Exception ex) {
+        logger.log(Level.FINE, "Exception while checking for same containerID", ex);
+        throw ex;
+    }
 
-	return result;
+    return result;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {

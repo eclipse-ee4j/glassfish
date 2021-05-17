@@ -60,7 +60,7 @@ public class ContextMapPropagatorTest {
 //  ContextMap cm;
 //  SimpleMap sm;
 //  //@Mocked(realClassName="org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter")
-//  final WireAdapter adapter = new DefaultWireAdapter();   
+//  final WireAdapter adapter = new DefaultWireAdapter();
 //  Entry defaultEntry, rmiEntry, soapEntry;
 //  final OutputStream out = new ByteArrayOutputStream();
 //
@@ -112,7 +112,7 @@ public class ContextMapPropagatorTest {
 //  }
 //
 //  protected Entry setupLocation() {
-//    final Entry locationEntry = new Entry(new Location(new ViewImpl(Location.KEY)) {}, 
+//    final Entry locationEntry = new Entry(new Location(new ViewImpl(Location.KEY)) {},
 //        Location.PROP_MODES, ContextType.VIEW_CAPABLE).init(true, false);
 //    sm.put(Location.KEY, locationEntry);
 //    return locationEntry;
@@ -194,7 +194,7 @@ public class ContextMapPropagatorTest {
 //        assertNotNull(newCM.get("default"));
 //        assertNull(newCM.get("soap")); // Does not have the PropagationMode.THREAD
 //        assertNull(newCM.get("rmi")); // Does not have the PropagationMode.THREAD
-//      }      
+//      }
 //    }.startJoinAndCheckForFailures();
 //  }
 //

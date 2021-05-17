@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+    </exec>
   </target>
 
   <target name="compile" depends="">
@@ -53,11 +53,11 @@
   <target name="wscompile-appclient" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d output -s output -classpath . -mapping SignatureMapping_appclient.xml -Xprintstacktrace -Xdebugmodel:appclient.model.txt wscompile_config_appclient.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/signature">
-       <fileset dir="output/signature" 
+       <fileset dir="output/signature"
         includes="SignatureTestService.class, SignatureTest.class, MyDateValueType.class, MySecondDateValueType.class"/>
     </copy>
 <!--
@@ -70,7 +70,7 @@
       <param name="src" value="signatureejb"/>
     </antcall>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-define -classpath ${build.classes.dir} -mapping SignatureMapping_ejb.xml -Xprintstacktrace -Xdebugmodel:ejb.model.txt wscompile_config_ejb.xml"/>
     </antcall>
   </target>
@@ -78,24 +78,24 @@
   <target name="assemble" depends="init-common, compile">
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="SignatureTestService.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="SignatureMapping_appclient.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="SignatureMapping_appclient.xml"/>
     <antcall target="appclient-jar-common">
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="SignatureMapping_appclient.xml,META-INF/wsdl/**,signature/*.class" />
 
     </antcall>
-    <copy todir="${build.classes.dir}" 
-	 file="SignatureMapping_ejb.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="SignatureMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
-      <param name="ejbjar.classes" 
+      <param name="ejbjar.classes"
              value="SignatureMapping_ejb.xml,META-INF/wsdl/**,signatureejb/*.class" />
 
     </antcall>
     <antcall target="ear-common" />
-  </target> 
+  </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -114,19 +114,19 @@
 
     <target name="run" depends="init-common">
       <exec executable="${APPCLIENT}" failonerror="false">
-          <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>      
+          <arg line="-client ${assemble.dir}/${appname}AppClient.jar"/>
           <arg line="http://${http.host}:${http.port}/signatureejb/SignatureTest"/>
       </exec>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes the WebServices test)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes the WebServices test)
+    </echo>
     </target>
 </project>

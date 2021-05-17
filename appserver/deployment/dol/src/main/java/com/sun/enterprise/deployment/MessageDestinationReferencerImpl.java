@@ -29,13 +29,13 @@ import java.util.Collection;
  * Shared implementation for deployment descriptor entities that can refer
  * to a message destination.  Each MessageDestinationReferencer has an
  * owner.  The owner can either be a MessageDestinationReference
- * or a MessageDrivenBean. 
+ * or a MessageDrivenBean.
  *
  * @author Kenneth Saks
  *
 */
 
-public class MessageDestinationReferencerImpl implements 
+public class MessageDestinationReferencerImpl implements
     MessageDestinationReferencer, Serializable {
 
     // holds the name of the message destination link.
@@ -49,11 +49,11 @@ public class MessageDestinationReferencerImpl implements
     private EjbMessageBeanDescriptor ownerMsgBean = null;
 
     public MessageDestinationReferencerImpl(MessageDestinationReferencerImpl other) {
-	//super(other);
-	messageDestinationLinkName = other.messageDestinationLinkName; // immutable String
-	messageDestination = other.messageDestination; // copy as-is
-	ownerMsgDestRef = other.ownerMsgDestRef; // copy as-is
-	ownerMsgBean = other.ownerMsgBean; // copy as-is
+    //super(other);
+    messageDestinationLinkName = other.messageDestinationLinkName; // immutable String
+    messageDestination = other.messageDestination; // copy as-is
+    ownerMsgDestRef = other.ownerMsgDestRef; // copy as-is
+    ownerMsgBean = other.ownerMsgBean; // copy as-is
     }
 
     public MessageDestinationReferencerImpl(Descriptor desc) {
@@ -68,14 +68,14 @@ public class MessageDestinationReferencerImpl implements
 
     /**
      * True if the owner is a message destination reference.
-     */ 
+     */
     public boolean ownedByMessageDestinationRef() {
         return (ownerMsgDestRef != null);
     }
 
     /**
      * Get the descriptor for the message destination reference owner.
-     */ 
+     */
     public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner
         () {
         return ownerMsgDestRef;
@@ -83,7 +83,7 @@ public class MessageDestinationReferencerImpl implements
 
     /**
      * True if the owner is a message-driven bean.
-     */ 
+     */
     public boolean ownedByMessageBean() {
         return (ownerMsgBean != null);
     }
@@ -91,7 +91,7 @@ public class MessageDestinationReferencerImpl implements
 
     /**
      * Get the descriptor for the message-driven bean owner.
-     */ 
+     */
     public EjbMessageBeanDescriptor getMessageBeanOwner() {
         return ownerMsgBean;
     }
@@ -101,61 +101,61 @@ public class MessageDestinationReferencerImpl implements
      * object.
      */
     public boolean isLinkedToMessageDestination() {
-	return (messageDestination != null);
+    return (messageDestination != null);
     }
-    
+
     private BundleDescriptor getBundleDescriptor() {
         return ownedByMessageDestinationRef() ?
             ownerMsgDestRef.getReferringBundleDescriptor() :
             ownerMsgBean.getEjbBundleDescriptor();
     }
 
-    /** 
-     * @return the link name of the message destination to which I refer 
-     * NOTE that this "link name" is potentially different from the actual 
-     * name of the target message destination, since the message destination 
+    /**
+     * @return the link name of the message destination to which I refer
+     * NOTE that this "link name" is potentially different from the actual
+     * name of the target message destination, since the message destination
      * could be defined in a different module.
      */
     public String getMessageDestinationLinkName() {
         return messageDestinationLinkName;
     }
 
-    /** 
+    /**
      * Sets the name of the message destination to which I refer.
-     * NOTE : Does *NOT* attempt to resolve link name.  Use 
+     * NOTE : Does *NOT* attempt to resolve link name.  Use
      * alternate version of setMessageDestinationLinkName or resolveLink
      * if link resolution is required.
      */
     public void setMessageDestinationLinkName(String linkName) {
         setMessageDestinationLinkName(linkName, false);
-    }    
+    }
 
 
-    /** 
+    /**
      * Sets the name of the message destination to which I refer.
      * @param resolve if true,  *try* to resolve link to the target message
-     * destination.  
+     * destination.
      *
-     * @return MessageDestination to which link was resolved, or null if 
+     * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
     public MessageDestinationDescriptor setMessageDestinationLinkName
         (String linkName, boolean resolve) {
-                                                            
+
         messageDestinationLinkName = linkName;
-        MessageDestinationDescriptor msgDest = null;        
+        MessageDestinationDescriptor msgDest = null;
 
         if( resolve ) {
             msgDest = resolveLinkName();
         }
         return msgDest;
-    }    
+    }
 
-    /** 
+    /**
      * Try to resolve the current link name value to a MessageDestination
      * object.
      *
-     * @return MessageDestination to which link was resolved, or null if 
+     * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
     public MessageDestinationDescriptor resolveLinkName() {
@@ -173,7 +173,7 @@ public class MessageDestinationReferencerImpl implements
             }
             BundleDescriptor targetBundle = null;
             String msgDestName = linkName;
-            
+
             if( app != null ) {
 
                 // explicit reference to another module
@@ -189,8 +189,8 @@ public class MessageDestinationReferencerImpl implements
                     // that any message destinations that are referred to
                     // from outside the defining module without an explicit
                     // reference have names that are unique within all the
-                    // message destinations in the .ear.  There is no 
-                    // required search ordering.  
+                    // message destinations in the .ear.  There is no
+                    // required search ordering.
                     if( !bundleDescriptor.hasMessageDestinationByName
                           (msgDestName) ) {
                         Set modules = app.getBundleDescriptors();
@@ -235,13 +235,13 @@ public class MessageDestinationReferencerImpl implements
 
         return msgDest;
     }
-        
-    /** 
+
+    /**
      * @return the message destination to which I refer. Can be NULL.
     */
     public MessageDestinationDescriptor getMessageDestination() {
-	return messageDestination;
-    }  
+    return messageDestination;
+    }
 
     /**
      * @param messageDestiation the message destination to which I refer.
@@ -253,10 +253,10 @@ public class MessageDestinationReferencerImpl implements
         if( newMsgDest != null ) {
             newMsgDest.addReferencer(this);
 
-            // Keep message destination link name in synch with message 
+            // Keep message destination link name in synch with message
             // destination object.
             BundleDescriptor bundleDescriptor = getBundleDescriptor();
-            BundleDescriptor targetBundleDescriptor = 
+            BundleDescriptor targetBundleDescriptor =
                 newMsgDest.getBundleDescriptor();
             String linkName = newMsgDest.getName();
             if( bundleDescriptor != targetBundleDescriptor ) {

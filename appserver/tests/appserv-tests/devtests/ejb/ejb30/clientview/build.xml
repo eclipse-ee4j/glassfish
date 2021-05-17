@@ -60,9 +60,9 @@
 
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ejb30-clientview tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the ejb-ejb30-clientview tests)
+    </echo>
     </target>
 </project>

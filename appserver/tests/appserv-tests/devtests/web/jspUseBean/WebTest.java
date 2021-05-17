@@ -21,11 +21,11 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static final String TEST_NAME = "jsp-use-bean";
 
     private static boolean pass = false;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -34,14 +34,14 @@ public class WebTest {
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Test useBean optimization behavior");
 
         String host = args[0];
         String portS = args[1];
         String contextRoot = args[2];
         int port = new Integer(portS).intValue();
-        
+
         try {
             goGet(host, port, contextRoot + "/test.jsp" );
             stat.addStatus(TEST_NAME, pass? stat.PASS: stat.FAIL);
@@ -78,10 +78,10 @@ public class WebTest {
                 int index = line.indexOf("PASS");
                 if (index >= 0) {
                     pass = true;
-                } 
+                }
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         } finally {
             try {

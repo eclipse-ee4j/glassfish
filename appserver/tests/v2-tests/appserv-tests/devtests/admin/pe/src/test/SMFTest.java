@@ -35,7 +35,7 @@ import javax.management.MBeanServerConnection;
 public class SMFTest implements RemoteAdminQuicklookTest {
     private final static String CONFIG_FILE="smftest.properties";
     //look at this file first
-    
+
     private long start, end;
     public SMFTest() throws Exception {
         setProperties();
@@ -47,10 +47,10 @@ public class SMFTest implements RemoteAdminQuicklookTest {
     }
 
     public void setMBeanServerConnection(final MBeanServerConnection c) {
-	}
+    }
 
     public String getName() {
-	    return ( this.getClass().getName() );
+        return ( this.getClass().getName() );
     }
 
     public String test() {
@@ -67,7 +67,7 @@ public class SMFTest implements RemoteAdminQuicklookTest {
         finally {
             end = System.currentTimeMillis();
         }
-        
+
     }
     private void setProperties() throws Exception {
         final Properties additional = new Properties();
@@ -82,12 +82,12 @@ public class SMFTest implements RemoteAdminQuicklookTest {
         final String OS_VERS = "5.10";
         System.out.println(System.getProperty("os.name"));
         System.out.println(System.getProperty("os.version"));
-        final boolean ok = OS_NAME.equals(System.getProperty("os.name")) && 
+        final boolean ok = OS_NAME.equals(System.getProperty("os.name")) &&
                            OS_VERS.equals(System.getProperty("os.version"));
         if (!ok)
             throw new RuntimeException("Runs only on Solaris 10");
     }
-    
+
     private void createSMFService() {
         final ServiceHandler smfsh = new SMFServiceHandler();
         final SMFService ss = new SMFService();

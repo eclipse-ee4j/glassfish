@@ -60,7 +60,7 @@ public class CoffeeBean implements SessionBean {
             IndexedRecord iRec = rf.createIndexedRecord("InputRecord");
             Record oRec = ix.execute(iSpec, iRec);
             Iterator iterator = ((IndexedRecord)oRec).iterator();
-            while(iterator.hasNext()) {   
+            while(iterator.hasNext()) {
                 Object obj = iterator.next();
                 if(obj instanceof Integer) {
                     count = ((Integer)obj).intValue();
@@ -99,11 +99,11 @@ public class CoffeeBean implements SessionBean {
     private Connection getCCIConnection() {
         Connection con = null;
 
-	System.out.println("<========== IN get cci Connection ===========>");
+    System.out.println("<========== IN get cci Connection ===========>");
         try {
             ConnectionSpec spec = new CciConnectionSpec("DBUSER", "DBPASSWORD");
-	System.out.println("<========== Created ISpec ===========>");
-	System.out.println("CF value : " + cf);
+    System.out.println("<========== Created ISpec ===========>");
+    System.out.println("CF value : " + cf);
             con = cf.getConnection(spec);
         } catch (ResourceException ex) {
             ex.printStackTrace();
@@ -123,4 +123,4 @@ public class CoffeeBean implements SessionBean {
     public void ejbActivate() {}
     public void ejbPassivate() {}
 
-} 
+}

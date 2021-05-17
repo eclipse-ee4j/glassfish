@@ -29,14 +29,14 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 final class TargetInfo {
 
     private boolean isDas = false;
-    
+
     private String configName = null;
-    
+
     public TargetInfo(Domain domain, String target) {
-        
+
         Server dasServer = domain.getServerNamed(
                 SystemPropertyConstants.DAS_SERVER_NAME);
-        
+
         if (target != null && target.equals(SystemPropertyConstants.DAS_SERVER_NAME)) {
             isDas = true;
         } else if (dasServer != null && dasServer.getConfigRef().equals(target)) {
@@ -59,10 +59,10 @@ final class TargetInfo {
                     com.sun.enterprise.config.serverbeans.Cluster cluster = domain.getClusterNamed(target);
                     if (cluster != null) {
                         configName = cluster.getConfigRef();
-                    } 
+                    }
                 }
-            }                    
-        }        
+            }
+        }
     }
 
     /**
@@ -78,5 +78,5 @@ final class TargetInfo {
     String getConfigName() {
         return configName;
     }
-    
+
 }

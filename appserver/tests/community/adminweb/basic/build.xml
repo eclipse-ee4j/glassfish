@@ -19,7 +19,7 @@
 
 <project name="adminweb" default="usage" basedir=".">
     <property file="build.properties"/>
-    
+
  <description>Builds, tests, and runs the GlassFish Admin GUI</description>
 <!-- <import file="nbproject/build-impl.xml"/>-->
 
@@ -44,13 +44,13 @@
 <path id="path2testng">
     <pathelement location="../lib/testng-5.0-jdk15.jar"/>
 </path>
-      
-    
+
+
 
 <path id="class.path">
     <fileset dir="${install.dir}/lib">
         <include name="**/*.jar"/>
-    </fileset>      
+    </fileset>
     <pathelement location="classes"/>
 </path>
 
@@ -60,7 +60,7 @@
     </fileset>-->
     <fileset dir="../../lib">
         <include name="**/*.jar"/>
-    </fileset>    
+    </fileset>
     <pathelement location="./classes/test"/>
 </path>
 
@@ -68,7 +68,7 @@
 <taskdef name="testng"
          classpathref="path2testng"
          classname="org.testng.TestNGAntTask"/>
-         
+
 
 <!-- Generate the TestNG report -->
 <target name="report">
@@ -97,26 +97,26 @@
 
 <target name="start">
   <echo message="Starting Selenium Server"/>
-  <java jar="../../lib/selenium/selenium-server.jar" fork="true">  
+  <java jar="../../lib/selenium/selenium-server.jar" fork="true">
       <arg line="-interactive"/>
   </java>
-      
+
 </target>
 
-<target  name="run">    
-    
-    <echo message="=============Starting Selenium TestNG test at \n ${basedir}  ============"/>  
-  
+<target  name="run">
+
+    <echo message="=============Starting Selenium TestNG test at \n ${basedir}  ============"/>
+
     <mkdir dir="../test-output"/>
     <testng outputdir="../test-output"
             classpathref="test.classpath" groups="">
          <classfileset dir="classes/test" includes="**/SeleniumTest.class"/>
         <!--<xmlfileset dir="../../../" includes="testng.xml"/>-->
     </testng>
-    
+
     <!--<antcall target="-post-test-run"/>    -->
-    
-</target>    
+
+</target>
 
 <target name="stop">
         <get taskname="selenium-shutdown"
@@ -134,11 +134,11 @@
 <target name="_start-selenium">
  <java jar="../lib/selenium/${selenium-srvr-jar}" fork="true" spawn="true" />
  <antcall target="_run-ua-tests" />
- <get dest="${testreportdir}/results.txt" 
+ <get dest="${testreportdir}/results.txt"
         src="${selenium-srvr-loc}/selenium-server/driver/?cmd=shutDown" />
 </target>
 
 
-    
+
 
 </project>

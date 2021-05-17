@@ -31,7 +31,7 @@ public class SomeManagedBean3 extends BaseBean {
     @Resource ORB orb;
 
     public void foo() {
-	System.out.println("In SomeManagedBean3::foo() ");
+    System.out.println("In SomeManagedBean3::foo() ");
         if (orb == null) throw new RuntimeException("SomeManagedBean3: ORB is null");
     }
 

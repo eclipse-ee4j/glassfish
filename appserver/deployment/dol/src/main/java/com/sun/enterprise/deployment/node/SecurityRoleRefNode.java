@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
  * This class handles the DD xml security-role-ref tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class SecurityRoleRefNode extends DeploymentDescriptorNode<RoleReference> {
 
@@ -49,7 +49,7 @@ public class SecurityRoleRefNode extends DeploymentDescriptorNode<RoleReference>
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(TagNames.ROLE_NAME, "setName");
-        table.put(TagNames.ROLE_LINK, "setValue");            
+        table.put(TagNames.ROLE_LINK, "setValue");
         return table;
     }
 
@@ -57,10 +57,10 @@ public class SecurityRoleRefNode extends DeploymentDescriptorNode<RoleReference>
     public Node writeDescriptor(Node parent, String nodeName, RoleReference roleRef) {
         Node subNode = super.writeDescriptor(parent, nodeName, roleRef);
 
-        writeLocalizedDescriptions(subNode, roleRef);        
+        writeLocalizedDescriptions(subNode, roleRef);
 
-        appendTextChild(subNode, TagNames.ROLE_NAME, roleRef.getName());                   
-        appendTextChild(subNode, TagNames.ROLE_LINK, roleRef.getValue());                  
+        appendTextChild(subNode, TagNames.ROLE_NAME, roleRef.getName());
+        appendTextChild(subNode, TagNames.ROLE_LINK, roleRef.getValue());
         return subNode;
     }
 }

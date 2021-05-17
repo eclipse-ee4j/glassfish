@@ -28,7 +28,7 @@ public class CodeAttribute extends ClassAttribute {
     public final static String expectedAttrName = "Code";//NOI18N
 
   /* The java class file contents defining this code attribute.
-     If non-null, this must be disassembled before the remaining 
+     If non-null, this must be disassembled before the remaining
      fields of this instance may be accessed. */
   private byte theDataBytes[];
 
@@ -146,23 +146,23 @@ public class CodeAttribute extends ClassAttribute {
    * Constructs a CodeAttribute object for construction from scratch
    */
   public CodeAttribute(ConstUtf8 attrName,
-		       int maxStack, int maxLocals,
-		       Insn code, 
-		       ExceptionTable excTable,
-		       AttributeVector codeAttrs) {
+               int maxStack, int maxLocals,
+               Insn code,
+               ExceptionTable excTable,
+               AttributeVector codeAttrs) {
     this(attrName, maxStack, maxLocals, code, null, /* byteCodes */
-	 excTable, codeAttrs, null /* CodeEnv */ );
+     excTable, codeAttrs, null /* CodeEnv */ );
   }
 
   /**
-   * Constructs a CodeAttribute object 
+   * Constructs a CodeAttribute object
    */
   public CodeAttribute(ConstUtf8 attrName,
-		       int maxStack, int maxLocals,
-		       Insn code, byte[] codeBytes,
-		       ExceptionTable excTable,
-		       AttributeVector codeAttrs,
-		       CodeEnv codeEnv) {
+               int maxStack, int maxLocals,
+               Insn code, byte[] codeBytes,
+               ExceptionTable excTable,
+               AttributeVector codeAttrs,
+               CodeEnv codeEnv) {
     super(attrName);
     this.maxStack = maxStack;
     this.maxLocals = maxLocals;
@@ -188,7 +188,7 @@ public class CodeAttribute extends ClassAttribute {
 
 
   static CodeAttribute read(ConstUtf8 attrName,
-			    DataInputStream data, ConstantPool pool)
+                DataInputStream data, ConstantPool pool)
     throws IOException {
     int maxStack = data.readUnsignedShort();
     int maxLocals = data.readUnsignedShort();
@@ -199,23 +199,23 @@ public class CodeAttribute extends ClassAttribute {
     CodeEnv codeEnv = new CodeEnv(pool);
 
     ExceptionTable excTable = ExceptionTable.read(data, codeEnv);
-    
-    AttributeVector codeAttrs = 
+
+    AttributeVector codeAttrs =
       AttributeVector.readAttributes(data, codeEnv);
 
     return new CodeAttribute(attrName, maxStack, maxLocals, code, codeBytes,
-			     excTable, codeAttrs, codeEnv);
-  } 
+                 excTable, codeAttrs, codeEnv);
+  }
 
-  /* This version reads the attribute into a byte array for later 
+  /* This version reads the attribute into a byte array for later
      consumption */
   static CodeAttribute read(ConstUtf8 attrName, int attrLength,
-			    DataInputStream data, ConstantPool pool)
+                DataInputStream data, ConstantPool pool)
     throws IOException {
     byte dataBytes[] = new byte[attrLength];
     data.readFully(dataBytes);
     return new CodeAttribute(attrName, dataBytes, new CodeEnv(pool));
-  } 
+  }
 
   void write(DataOutputStream out) throws IOException {
     out.writeShort(attrName().getIndex());
@@ -257,8 +257,8 @@ public class CodeAttribute extends ClassAttribute {
       ClassPrint.spaces(out, indent);
       out.println("Instructions:");//NOI18N
       while (insn != null) {
-	insn.print(out, indent+2);
-	insn = insn.next();
+    insn.print(out, indent+2);
+    insn = insn.next();
       }
     }
   }
@@ -293,9 +293,9 @@ public class CodeAttribute extends ClassAttribute {
 
       /* First, create instructions */
       while (insnEnv.more()) {
-	Insn newInsn = Insn.read(insnEnv);
-	currInsn.setNext(newInsn);
-	currInsn = newInsn;
+    Insn newInsn = Insn.read(insnEnv);
+    currInsn.setNext(newInsn);
+    currInsn = newInsn;
       }
 
       /* Now, insert targets */
@@ -303,22 +303,22 @@ public class CodeAttribute extends ClassAttribute {
       currInsn = theCode;
       Insn prevInsn = null;
       while (currInsn != null) {
-	int off = currInsn.offset();
+    int off = currInsn.offset();
 
-	/* We always insert a target a 0 to start so ignore that one */
-	if (off > 0) {
-	  targ = codeEnv.findTarget(off);
-	  if (targ != null)
-	    prevInsn.setNext(targ);
-	}
-	prevInsn = currInsn;
-	currInsn = currInsn.next();
+    /* We always insert a target a 0 to start so ignore that one */
+    if (off > 0) {
+      targ = codeEnv.findTarget(off);
+      if (targ != null)
+        prevInsn.setNext(targ);
+    }
+    prevInsn = currInsn;
+    currInsn = currInsn.next();
       }
 
       /* And follow up with a final target if needed */
       targ = codeEnv.findTarget(insnEnv.currentPC());
       if (targ != null)
-	prevInsn.setNext(targ);
+    prevInsn.setNext(targ);
     }
   }
 
@@ -336,8 +336,8 @@ public class CodeAttribute extends ClassAttribute {
       Insn insn = theCode;
       int index = 0;
       while (insn != null) {
-	index = insn.store(theCodeBytes, index);
-	insn = insn.next();
+    index = insn.store(theCodeBytes, index);
+    insn = insn.next();
       }
     }
   }
@@ -347,18 +347,18 @@ public class CodeAttribute extends ClassAttribute {
   private void makeValid() {
     if (theDataBytes != null) {
       DataInputStream dis = new DataInputStream(
-		new ByteArrayInputStream(theDataBytes));
+        new ByteArrayInputStream(theDataBytes));
       try {
-	maxStack = dis.readUnsignedShort();
-	maxLocals = dis.readUnsignedShort();
-	int codeLength = dis.readInt();
-	theCodeBytes = new byte[codeLength];
-	dis.readFully(theCodeBytes);
-	exceptionTable = ExceptionTable.read(dis, codeEnv);
-	codeAttributes = AttributeVector.readAttributes(dis, codeEnv);
+    maxStack = dis.readUnsignedShort();
+    maxLocals = dis.readUnsignedShort();
+    int codeLength = dis.readInt();
+    theCodeBytes = new byte[codeLength];
+    dis.readFully(theCodeBytes);
+    exceptionTable = ExceptionTable.read(dis, codeEnv);
+    codeAttributes = AttributeVector.readAttributes(dis, codeEnv);
       } catch (java.io.IOException ioe) {
           ClassFormatError cfe = new ClassFormatError(
-		"IOException while reading code attribute");//NOI18N
+        "IOException while reading code attribute");//NOI18N
           cfe.initCause(ioe);
           throw cfe;
       }

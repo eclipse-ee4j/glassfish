@@ -27,7 +27,7 @@ public class EarLibClassLoader extends ASURLClassLoader
 {
 
     public EarLibClassLoader(URL[] urls, ClassLoader classLoader) {
-        super(classLoader); 
+        super(classLoader);
 
         for (URL url : urls) {
             addURL(url);

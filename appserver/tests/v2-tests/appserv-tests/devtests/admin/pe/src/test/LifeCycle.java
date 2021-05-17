@@ -24,48 +24,48 @@ import javax.management.MBeanInfo;
 import javax.management.ObjectName;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import static com.sun.enterprise.admin.mbeans.custom.CustomMBeanConstants.*;
-public abstract class LifeCycle implements RemoteAdminQuicklookTest 
+public abstract class LifeCycle implements RemoteAdminQuicklookTest
 {
     abstract String testInternal() throws JMException, IOException;
 
     ////////////////////////////////////////////////////////////////////////////
     ////////////// RemoteAdminQuicklookTest  Impl Methods   ////////////////////
     ////////////////////////////////////////////////////////////////////////////
-    
-    public long getExecutionTime() 
+
+    public long getExecutionTime()
     {
         return ( end - start ) ;
     }
 
     ////////////////////////////////////////////////////////////////////////////
 
-    public String getName() 
+    public String getName()
     {
         return ( getClass().getName() );
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    
-    public void setMBeanServerConnection(MBeanServerConnection c) 
+
+    public void setMBeanServerConnection(MBeanServerConnection c)
     {
         mbsc = c;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    
-    public String test() 
+
+    public String test()
     {
-        try 
+        try
         {
             start = System.currentTimeMillis();
             return (testInternal());
-        } 
-        catch(final Exception e) 
+        }
+        catch(final Exception e)
         {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        finally 
+        finally
         {
             end = System.currentTimeMillis();
         }
@@ -73,18 +73,18 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
     ////////////////////////////////////////////////////////////////////////////
     ///////////////   Tool Methods      ////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
-    
+
     String create(String className, String objectName, String name) throws JMException, IOException
     {
         Map<String, String> params = new HashMap<String, String>();
         Map<String, String> attribs = new HashMap<String, String>();
         params.put(IMPL_CLASS_NAME_KEY, className);
-        
+
         if(ok(objectName))
             params.put(OBJECT_NAME_KEY, objectName);
         if(ok(name))
             params.put(NAME_KEY, name);
-        
+
         final ObjectName on         = new ObjectName(BACKEND_MBEAN_ON);
         final String oper           = "createMBean";
         final Object[] operParams   = new Object[]{ null, params, attribs };
@@ -115,7 +115,7 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     String delete(String name) throws JMException, IOException
     {
         final ObjectName on         = new ObjectName(BACKEND_MBEAN_ON);
@@ -139,7 +139,7 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
             String s = jit.getMemoryInfo();
             BufferedReader r = new BufferedReader(new StringReader(s));
             String line;
-            
+
             while((line = r.readLine()) != null)
             {
                 if(line.equals("Heap Memory Usage:"))
@@ -150,13 +150,13 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
                     break;
                 }
             }
-            
+
         }
         catch(Exception e)
         {
             // ignore...
         }
-   
+
         return new MemoryUsage(heap, nonHeap);
    }
 
@@ -166,17 +166,17 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
     {
         int len = s.length();
         int sub = (starsLength - 10 - len) / 2;
-        
+
         if(sub < 5)
             sub = 5;
-        
+
         System.out.println(stars);
         System.out.println(stars.substring(0, sub) + "     " + s + "     " + stars.substring(0, sub));
         System.out.println(stars);
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     private int parseMemoryUsage(BufferedReader r)
     {
         /*
@@ -189,7 +189,7 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
          **/
         String searchString = "Memory that Java Virtual Machine uses at this time: ";
         String line;
-        
+
         try
         {
             while((line = r.readLine()) != null)
@@ -209,20 +209,20 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
             return -1;
         }
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
-    
+
     private static int parseNumber(String num)
     {
         String fixed = "";
         for(int i = 0; i < num.length(); i++)
         {
             char c = num.charAt(i);
-            
+
             if(Character.isDigit(c))
                 fixed += c;
         }
-        
+
         try
         {
             return new Integer(fixed);
@@ -232,16 +232,16 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
             return -1;
         }
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
-    
+
     private boolean  ok(String s)
     {
         return s != null && s.length() > 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     private MBeanServerConnection mbsc;
     private long start, end;
     private final int starsLength = stars.length();
@@ -249,7 +249,7 @@ public abstract class LifeCycle implements RemoteAdminQuicklookTest
     private static final String BACKEND_MBEAN_ON = "com.sun.appserv:category=config,type=applications";
 
     ////////////////////////////////////////////////////////////////////////////
-    
+
     class MemoryUsage
     {
         MemoryUsage(int Heap, int NonHeap)

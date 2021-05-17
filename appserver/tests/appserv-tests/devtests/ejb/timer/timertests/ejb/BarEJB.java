@@ -19,9 +19,9 @@ package com.sun.s1asdev.ejb.timer.timertests;
 import java.rmi.RemoteException;
 import jakarta.ejb.*;
 
-public abstract class BarEJB 
-    extends TimerStuffImpl 
-    implements EntityBean, TimedObject 
+public abstract class BarEJB
+    extends TimerStuffImpl
+    implements EntityBean, TimedObject
 {
 
     private EJBContext context_;
@@ -32,7 +32,7 @@ public abstract class BarEJB
 
     // primary key
 
-    public abstract Long getId();      
+    public abstract Long getId();
     public abstract void setId(Long timerId);
 
     public abstract String getValue2();
@@ -66,7 +66,7 @@ public abstract class BarEJB
 
     }
 
-    public BarPrimaryKey ejbCreate(Long id, String value2) 
+    public BarPrimaryKey ejbCreate(Long id, String value2)
         throws CreateException {
         String methodName = "ejbCreate";
         System.out.println("In BarEJB::ejbCreate");
@@ -80,7 +80,7 @@ public abstract class BarEJB
         return new BarPrimaryKey(id, value2);
     }
 
-    public BarPrimaryKey ejbCreateWithTimer(Long id, String value2) 
+    public BarPrimaryKey ejbCreateWithTimer(Long id, String value2)
         throws CreateException {
         String methodName = "ejbCreateWithTimer";
         System.out.println("In BarEJB::ejbCreateWithTimer");
@@ -92,7 +92,7 @@ public abstract class BarEJB
         setValue2(value2);
         return new BarPrimaryKey(id, value2);
     }
-    
+
     public void ejbPostCreate(Long id, String value2) throws CreateException {
         String methodName = "ejbPostCreate";
         System.out.println("In BarEJB::ejbPostCreate");
@@ -113,7 +113,7 @@ public abstract class BarEJB
             TimerService timerService = context_.getTimerService();
             Timer timer = timerService.createTimer
                 (1, 1, methodName + id);
-                                                         
+
         } catch(Exception e) {
             e.printStackTrace();
             throw new CreateException(e.getMessage());
@@ -139,7 +139,7 @@ public abstract class BarEJB
         context_ = null;
     }
 
-    public void ejbHomeNewTimerAndRemoveBean(Long id, String value2) 
+    public void ejbHomeNewTimerAndRemoveBean(Long id, String value2)
         throws RemoteException {
         String methodName = "ejbHomeNewTimerAndRemoveBean";
         checkCallerSecurityAccess(methodName, true);
@@ -155,7 +155,7 @@ public abstract class BarEJB
         }
     }
 
-    public void ejbHomeNewTimerAndRemoveBeanAndRollback(Long id, String value2) 
+    public void ejbHomeNewTimerAndRemoveBeanAndRollback(Long id, String value2)
         throws RemoteException {
         getTimerService("ejbHomeNewTimerAndRemoveBeanAndRollback", true);
         doTimerStuff("ejbHomeNewTimerAndRemoveBeanAndRollback", false);
@@ -170,7 +170,7 @@ public abstract class BarEJB
         }
     }
 
-    public void ejbHomeNixBeanAndRollback(Bar b) 
+    public void ejbHomeNixBeanAndRollback(Bar b)
         throws RemoteException {
         getTimerService("ejbHomeNixBeanAndRollback", true);
         doTimerStuff("ejbHomeNixBeanAndRollback", false);
@@ -192,7 +192,7 @@ public abstract class BarEJB
         doTimerStuff(methodName, true);
         cleanup();
     }
-    
+
     public void ejbLoad() {
         String methodName = "ejbLoad";
         System.out.println("In BarEJB::ejbLoad");
@@ -201,7 +201,7 @@ public abstract class BarEJB
         getTimerService(methodName, true);
         doTimerStuff(methodName, true);
     }
-    
+
     public void ejbStore() {
         String methodName = "ejbStore";
         System.out.println("In BarEJB::ejbStore");
@@ -210,7 +210,7 @@ public abstract class BarEJB
         getTimerService(methodName, true);
         doTimerStuff(methodName, true);
     }
-    
+
     public void ejbPassivate() {
         String methodName = "ejbPassivate";
         checkCallerSecurityAccess(methodName, false);
@@ -218,7 +218,7 @@ public abstract class BarEJB
         getTimerService(methodName, true);
         doTimerStuff(methodName, false);
     }
-    
+
     public void ejbActivate() {
         String methodName = "ejbActivate";
         checkCallerSecurityAccess(methodName, false);

@@ -23,7 +23,7 @@
   <enterprise-beans>
       <session>
         <ejb-name>SingletonBean</ejb-name>
-      
+
         <env-entry>
          <env-entry-name>java:app/enventryforappclient</env-entry-name>
          <env-entry-type>java.lang.String</env-entry-type>

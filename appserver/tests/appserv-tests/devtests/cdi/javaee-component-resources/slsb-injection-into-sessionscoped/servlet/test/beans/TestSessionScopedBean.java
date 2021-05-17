@@ -32,11 +32,11 @@ public class TestSessionScopedBean implements Serializable{
 
     public TestSessionScopedBean() {
     }
-    
+
     public boolean testSLSBAccess(){
         if (statelessSessionBean != null)
             return statelessSessionBean.statelessMethod1();
         else return false;
     }
-    
+
 }

@@ -29,11 +29,11 @@ import org.w3c.dom.Node;
 
 import java.util.Map;
 
-/** 
+/**
  * This node handles the login-config xml tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class LoginConfigNode extends DeploymentDescriptorNode<LoginConfigurationImpl> {
 
@@ -52,31 +52,31 @@ public class LoginConfigNode extends DeploymentDescriptorNode<LoginConfiguration
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map<String, String> getDispatchTable() {    
+    protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.AUTH_METHOD, "setAuthenticationMethod");
-        table.put(WebTagNames.REALM_NAME, "setRealmName");                
+        table.put(WebTagNames.REALM_NAME, "setRealmName");
         table.put(WebTagNames.FORM_LOGIN_PAGE, "setFormLoginPage");
-        table.put(WebTagNames.FORM_ERROR_PAGE, "setFormErrorPage");                        
+        table.put(WebTagNames.FORM_ERROR_PAGE, "setFormErrorPage");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, LoginConfigurationImpl descriptor) {               
-        Node myNode = appendChild(parent, nodeName);    
+    public Node writeDescriptor(Node parent, String nodeName, LoginConfigurationImpl descriptor) {
+        Node myNode = appendChild(parent, nodeName);
         appendTextChild(myNode, WebTagNames.AUTH_METHOD, descriptor.getAuthenticationMethod());
         appendTextChild(myNode, WebTagNames.REALM_NAME, descriptor.getRealmName());
         String loginPage = descriptor.getFormLoginPage();

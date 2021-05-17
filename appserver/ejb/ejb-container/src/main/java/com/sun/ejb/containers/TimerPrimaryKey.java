@@ -35,20 +35,20 @@ public class TimerPrimaryKey implements Serializable
 
     public boolean equals(Object other)
     {
-	if ( other instanceof TimerPrimaryKey ) {
+    if ( other instanceof TimerPrimaryKey ) {
             TimerPrimaryKey tpk = (TimerPrimaryKey) other;
-	    return (tpk.timerId.equals(timerId));
+        return (tpk.timerId.equals(timerId));
         }
-	return false;
+    return false;
     }
 
     public int hashCode()
     {
-	return timerId.hashCode();
+    return timerId.hashCode();
     }
 
     public String toString()
     {
-	return timerId;
+    return timerId;
     }
 }

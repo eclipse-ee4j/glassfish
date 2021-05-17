@@ -46,8 +46,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 @ExecuteOn(RuntimeType.INSTANCE)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_stop-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="_stop-instance",
         description="_stop-instance")
 })
 public class StopInstanceInstanceCommand extends StopServer implements AdminCommand {

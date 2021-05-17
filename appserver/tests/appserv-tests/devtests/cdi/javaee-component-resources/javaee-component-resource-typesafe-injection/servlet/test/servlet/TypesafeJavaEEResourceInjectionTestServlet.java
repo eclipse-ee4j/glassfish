@@ -36,27 +36,27 @@ public class TypesafeJavaEEResourceInjectionTestServlet extends HttpServlet {
     @Inject
     @Preferred
     TestBeanInterface tb;
-    
+
     @Inject @TestDatabase
     DataSource ds;
-        
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
-        
+
         if (ds == null)
             msg += "typesafe Injection of datasource into a servlet failed";
 
         if (tb == null)
             msg += "Injection of request scoped bean failed";
-        
+
         if (tb.testDatasourceInjection().trim().length() != 0)
             msg += tb.testDatasourceInjection();
 
-        
+
 
         writer.write(msg + "\n");
     }

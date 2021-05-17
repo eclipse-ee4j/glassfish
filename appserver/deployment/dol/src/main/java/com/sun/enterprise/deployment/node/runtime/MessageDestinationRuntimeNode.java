@@ -32,34 +32,34 @@ import java.util.Map;
  * message-destination tag.
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
 
     private MessageDestinationDescriptor descriptor;
-    
+
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         return descriptor;
-    }   
-    
+    }
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -67,7 +67,7 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
         if (RuntimeTagNames.MESSAGE_DESTINATION_NAME.equals(element.getQName())) {
             // this is a hack but not much choice
             Object parentDesc = getParentNode().getDescriptor();
-            
+
             if (parentDesc instanceof BundleDescriptor) {
                 try {
                     descriptor = ((BundleDescriptor) parentDesc).
@@ -75,14 +75,14 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
                 } catch (IllegalArgumentException iae) {
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
-            } 
+            }
         } else if (RuntimeTagNames.JNDI_NAME.equals(element.getQName())) {
             if (descriptor != null) {
                 descriptor.setJndiName(value);
-            } 
+            }
         } else super.setElementValue(element, value);
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -90,19 +90,19 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, MessageDestinationDescriptor msgDest) {          
+     */
+    public Node writeDescriptor(Node parent, String nodeName, MessageDestinationDescriptor msgDest) {
         String jndiName  = msgDest.getJndiName();
         Node msgDestNode = null;
         if( (jndiName != null) && (jndiName.length() > 0) ) {
             msgDestNode = super.writeDescriptor(parent, nodeName, msgDest);
-            appendTextChild(msgDestNode, 
-                            RuntimeTagNames.MESSAGE_DESTINATION_NAME, 
+            appendTextChild(msgDestNode,
+                            RuntimeTagNames.MESSAGE_DESTINATION_NAME,
                             msgDest.getName());
-            appendTextChild(msgDestNode, RuntimeTagNames.JNDI_NAME, 
+            appendTextChild(msgDestNode, RuntimeTagNames.JNDI_NAME,
                             msgDest.getJndiName());
         }
         return msgDestNode;
-    }  
-    
+    }
+
 }

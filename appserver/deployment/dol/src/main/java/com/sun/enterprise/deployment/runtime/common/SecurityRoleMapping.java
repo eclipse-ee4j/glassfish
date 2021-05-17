@@ -35,7 +35,7 @@ import java.util.List;
 public class SecurityRoleMapping extends RuntimeDescriptor {
 
     private String roleName = null; //mandatory element
-    private List<PrincipalNameDescriptor> principals = 
+    private List<PrincipalNameDescriptor> principals =
                         new ArrayList<PrincipalNameDescriptor>();
     private List<String> groups = new ArrayList<String>();
 
@@ -48,7 +48,7 @@ public class SecurityRoleMapping extends RuntimeDescriptor {
     }
 
     public List<PrincipalNameDescriptor> getPrincipalNames() {
-        return principals; 
+        return principals;
     }
 
     public void addPrincipalName(PrincipalNameDescriptor p) {
@@ -64,8 +64,8 @@ public class SecurityRoleMapping extends RuntimeDescriptor {
     }
 
     /**
-     *@deprecated 
-     *This method needs to be removed once the custom principal is fully 
+     *@deprecated
+     *This method needs to be removed once the custom principal is fully
      *supported. We keep it for now for backward compatiblity in API.  Note
      *that this method only returns the name of the principals, not their
      *class-names.  Use with caution!

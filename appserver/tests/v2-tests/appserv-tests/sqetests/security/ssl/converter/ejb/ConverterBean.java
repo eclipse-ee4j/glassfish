@@ -71,7 +71,7 @@ public class ConverterBean implements SessionBean {
      * Loads the state of the bean from secondary storage. Required by EJB spec.
      */
     public void ejbActivate() {}
-    
+
     /**
      * Keeps the state of the bean to secondary storage. Required by EJB spec.
      */

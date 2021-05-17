@@ -43,8 +43,8 @@ import org.jvnet.hk2.component.*;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_create-node-implicit", 
+        opType=RestEndpoint.OpType.POST,
+        path="_create-node-implicit",
         description="_create-node-implicit")
 })
 public class CreateNodeImplicitCommand implements AdminCommand {
@@ -89,7 +89,7 @@ public class CreateNodeImplicitCommand implements AdminCommand {
         ci.parameters(map);
         ci.execute();
 
-        
+
     }
 
 }

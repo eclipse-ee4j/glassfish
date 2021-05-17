@@ -32,20 +32,20 @@ class CRC32 {
     int bufIndex = 0;
     crc = crc ^ 0xffffffff;
     while (len >= 8) {
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
       len -= 8;
     }
 
     if (len != 0)
       do {
-	crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
+    crc = CRCTable[(crc ^ ((int) buf[bufIndex++])) & 0xff] ^ (crc >>> 8);
       } while ((--len) > 0);
     return crc ^ 0xffffffff;
   }

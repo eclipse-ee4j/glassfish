@@ -29,12 +29,12 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface MonitoringRuntimeDataRegistry {
-    
+
     public void add (String name, TreeNode node);
     /*
     public void remove (String name);
     */
-    
+
     /**
      * @param name of the top node in the registry
      * @return TreeNode

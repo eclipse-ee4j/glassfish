@@ -21,6 +21,6 @@ package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 public interface SlessRemoteBusiness2 extends CommonRemoteLocalBusinessSuper
 {
     public void foo();
-    
+
     public void bar();
 }

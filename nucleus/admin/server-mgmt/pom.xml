@@ -92,7 +92,7 @@
             </resource>
         </resources>
         <plugins>
-            <!-- XXX: no maven plugin for jakarta xml binding impl exists, so we have to stick with Ant and attach source 
+            <!-- XXX: no maven plugin for jakarta xml binding impl exists, so we have to stick with Ant and attach source
                 root to the build ourselves... -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>

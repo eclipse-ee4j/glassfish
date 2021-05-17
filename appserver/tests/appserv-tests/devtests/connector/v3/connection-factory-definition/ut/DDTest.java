@@ -47,23 +47,23 @@ public class DDTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     public void testApplicationDD() throws Exception{
-        
+
         String tcName = "connection-factory-definition-application-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-application.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The application.xml not found: "+ddFile,ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             ApplicationDeploymentDescriptorFile ddReader = new ApplicationDeploymentDescriptorFile();
             Application application = (Application) ddReader.read( ddIS);
-            
+
             Set<ResourceDescriptor> actualCFDDs = application.getResourceDescriptors(JavaEEResourceType.CFD);
 
-            Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = 
+            Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs =
                     new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
             ConnectionFactoryDefinitionDescriptor desc;
 
@@ -77,7 +77,7 @@ public class DDTest extends TestCase {
             desc.setMinPoolSize(4);
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
-            
+
             desc = new ConnectionFactoryDefinitionDescriptor();
             desc.setName("java:app/env/ConnectionFactory");
             desc.setInterfaceName("jakarta.resource.cci.ConnectionFactory");
@@ -89,7 +89,7 @@ public class DDTest extends TestCase {
 
             TestUtil.compareCFDD(expectedCFDDs, actualCFDDs);
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -103,18 +103,18 @@ public class DDTest extends TestCase {
     }
 
     public void testSessionEJBDD() throws Exception{
-        
+
         String tcName = "connection-factory-definition-Session-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-session-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-session-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
-            
+
             for(EjbDescriptor ejbDescriptor : ejbBundle.getEjbs()){
                 ejbDescriptor.getResourceDescriptors(JavaEEResourceType.CFD);
                 if(ejbDescriptor.getName().equals("HelloStatefulEJB")){
@@ -125,9 +125,9 @@ public class DDTest extends TestCase {
                     fail("Unknown EJB descriptor: "+ejbDescriptor.getName());
                 }
             }
-            
+
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -139,7 +139,7 @@ public class DDTest extends TestCase {
 
         return;
     }
-    
+
     private void testStatefulSessionEJBDD(EjbDescriptor ejb) throws Exception{
         ConnectionFactoryDefinitionDescriptor desc;
         Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
@@ -154,7 +154,7 @@ public class DDTest extends TestCase {
         desc.setMinPoolSize(4);
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in EJB DD");
         desc.setName("java:module/env/StatefulEJB_ConnectionFactory");
@@ -175,9 +175,9 @@ public class DDTest extends TestCase {
         expectedCFDDs.put(desc.getName(), desc);
 
         TestUtil.compareCFDD(expectedCFDDs, ejb.getResourceDescriptors(JavaEEResourceType.CFD));
-        
+
     }
-    
+
     private void testStatelessSessionEJBDD(EjbDescriptor ejb) throws Exception{
         ConnectionFactoryDefinitionDescriptor desc;
         Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
@@ -192,7 +192,7 @@ public class DDTest extends TestCase {
         desc.setMinPoolSize(4);
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in EJB DD");
         desc.setName("java:module/env/HelloEJB_ConnectionFactory");
@@ -213,18 +213,18 @@ public class DDTest extends TestCase {
         expectedCFDDs.put(desc.getName(), desc);
 
         TestUtil.compareCFDD(expectedCFDDs, ejb.getResourceDescriptors(JavaEEResourceType.CFD));
-        
+
     }
-    
+
     public void testEntityEJBDD() throws Exception{
-        
+
         String tcName = "connection-factory-definition-Entity-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-entity-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-entity-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
@@ -243,7 +243,7 @@ public class DDTest extends TestCase {
                 desc.setMinPoolSize(4);
                 desc.addProperty("testName", "foo");
                 expectedCFDDs.put(desc.getName(), desc);
-                
+
                 desc = new ConnectionFactoryDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/Entity_ConnectionFactory");
@@ -267,7 +267,7 @@ public class DDTest extends TestCase {
             }
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -281,14 +281,14 @@ public class DDTest extends TestCase {
     }
 
     public void testMDBEJBDD() throws Exception{
-        
+
         String tcName = "connection-factory-definition-MDB-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-mdb-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-mdb-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
@@ -307,7 +307,7 @@ public class DDTest extends TestCase {
                 desc.setMinPoolSize(4);
                 desc.addProperty("testName", "foo");
                 expectedCFDDs.put(desc.getName(), desc);
-                
+
                 desc = new ConnectionFactoryDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/MDB_ConnectionFactory");
@@ -331,7 +331,7 @@ public class DDTest extends TestCase {
             }
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -345,14 +345,14 @@ public class DDTest extends TestCase {
     }
 
     public void testInterceptorEJBDD() throws Exception{
-        
+
         String tcName = "connection-factory-definition-Interceptor-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-interceptor-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-interceptor-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
@@ -371,7 +371,7 @@ public class DDTest extends TestCase {
                 desc.setMinPoolSize(4);
                 desc.addProperty("testName", "foo");
                 expectedCFDDs.put(desc.getName(), desc);
-                
+
                 desc = new ConnectionFactoryDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/Interceptor_ConnectionFactory");
@@ -395,7 +395,7 @@ public class DDTest extends TestCase {
             }
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -409,18 +409,18 @@ public class DDTest extends TestCase {
     }
 
     public void testWebDD() throws Exception{
-        
+
         String tcName = "connection-factory-definition-Web-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-web.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-web.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             WebDeploymentDescriptorFile ddReader = new WebDeploymentDescriptorFile();
             WebBundleDescriptor webBundle =  ddReader.read( ddIS);
-            
+
             ConnectionFactoryDefinitionDescriptor desc;
             Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
 
@@ -434,7 +434,7 @@ public class DDTest extends TestCase {
             desc.setMinPoolSize(4);
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
-            
+
             desc = new ConnectionFactoryDefinitionDescriptor();
             desc.setDescription("application-scope resource defined in Web DD");
             desc.setName("java:app/env/ConnectionFactory");
@@ -457,7 +457,7 @@ public class DDTest extends TestCase {
             TestUtil.compareCFDD(expectedCFDDs, webBundle.getResourceDescriptors(JavaEEResourceType.CFD));
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;

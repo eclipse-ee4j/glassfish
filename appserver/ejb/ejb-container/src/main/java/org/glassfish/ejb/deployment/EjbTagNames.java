@@ -17,8 +17,8 @@
 package org.glassfish.ejb.deployment;
 
 import com.sun.enterprise.deployment.xml.TagNames;
- 
-/** 
+
+/**
  * The XML tag names for the ejb-jar dtd
  * @author Danny Coward
  */
@@ -89,7 +89,7 @@ public interface EjbTagNames extends TagNames {
     String CONCURRENT_LOCK = "lock";
     String CONCURRENT_ACCESS_TIMEOUT = "access-timeout";
 
-    // message-driven 
+    // message-driven
     String ACTIVATION_CONFIG = "activation-config";
     String ACTIVATION_CONFIG_PROPERTY = "activation-config-property";
     String ACTIVATION_CONFIG_PROPERTY_NAME = "activation-config-property-name";

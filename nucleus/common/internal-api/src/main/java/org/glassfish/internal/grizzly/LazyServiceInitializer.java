@@ -23,9 +23,9 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * This interface is meant for all services that wish to be initialized lazily.
  * Such services are expected to implement this interface and those
- * implementatons should be available to HK2 for lookup. 
- * 
- * 
+ * implementatons should be available to HK2 for lookup.
+ *
+ *
  * @author Vijay Ramachandran
 */
 @Contract
@@ -46,7 +46,7 @@ public interface LazyServiceInitializer {
 
     /**
      * Upon successful ACCEPT of every request on this port, the service
-     * is called upon to handle the request. The service is provided the 
+     * is called upon to handle the request. The service is provided the
      * channel itself. The service can setup connection, its characteristics,
      * decide on blocking/non-blocking modes etc. The service is expected to
      * return control back to the listener ASAP without consuming this thread

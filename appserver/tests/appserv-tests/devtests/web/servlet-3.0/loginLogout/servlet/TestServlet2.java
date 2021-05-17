@@ -42,6 +42,6 @@ public class TestServlet2 extends HttpServlet {
             b.append(req.isUserInRole("javaee") + "\n");
             PrintWriter writer = res.getWriter();
             writer.write(b.toString());
-        } 
+        }
     }
 }

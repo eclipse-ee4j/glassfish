@@ -24,7 +24,7 @@ import javax.xml.stream.util.StreamReaderDelegate;
 
 /**
  * {@link XMLStreamReader} wrapper that cuts off sub-trees.
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 abstract class XMLStreamReaderFilter extends StreamReaderDelegate {
@@ -47,7 +47,7 @@ abstract class XMLStreamReaderFilter extends StreamReaderDelegate {
     public int nextTag() throws XMLStreamException {
         while (true) {
             // Fix for issue 9127
-            // The following call to super.nextTag() is replaced with thisNextTag() 
+            // The following call to super.nextTag() is replaced with thisNextTag()
             int r = thisNextTag();
             if (r != START_ELEMENT || !filterOut())
                 return r;
@@ -57,8 +57,8 @@ abstract class XMLStreamReaderFilter extends StreamReaderDelegate {
 
     // Fix for issue 9127
     // This method is a modified version of the super.nextTag()
-    // In addition to all other event types skipped in super.nextTag() in search for 
-    // START_ELEMENT this method also includes DTD eventType in the skip-list 
+    // In addition to all other event types skipped in super.nextTag() in search for
+    // START_ELEMENT this method also includes DTD eventType in the skip-list
     private int thisNextTag() throws XMLStreamException {
         int eventType = super.next();
         while ((eventType == XMLStreamConstants.CHARACTERS && isWhiteSpace()) // skip whitespace

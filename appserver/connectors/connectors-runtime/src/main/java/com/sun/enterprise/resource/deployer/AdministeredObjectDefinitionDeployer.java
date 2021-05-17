@@ -58,7 +58,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
-    
+
     public void deployResource(Object resource) throws Exception {
 
         final AdministeredObjectDefinitionDescriptor desc = (AdministeredObjectDefinitionDescriptor) resource;
@@ -71,7 +71,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
         //deploy resource
         MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(desc, resourceName);
         getDeployer(adminObjectResource).deployResource(adminObjectResource);
-        
+
     }
 
     /**
@@ -90,7 +90,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
      * {@inheritDoc}
      */
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
-                                          com.sun.enterprise.config.serverbeans.Application newApp, 
+                                          com.sun.enterprise.config.serverbeans.Application newApp,
                                           Resource resource,
                                           Resources allResources)
     throws ResourceConflictException {
@@ -158,7 +158,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     }
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
- 
+
         public ConfigBeanProxy deepCopy(ConfigBeanProxy parent) {
             throw new UnsupportedOperationException();
         }
@@ -173,7 +173,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
 
         public <T extends ConfigBeanProxy> T createChild(Class<T> tClass) throws TransactionFailure {
             return null;
-        }        
+        }
     }
 
     class AdministeredObjectProperty extends FakeConfigBean implements Property {

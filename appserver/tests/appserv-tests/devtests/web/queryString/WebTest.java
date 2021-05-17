@@ -35,12 +35,12 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         goGet(host, port, "TEST", contextRoot + "/ServletTest" );
         stat.printSummary(TEST_NAME);
     }
 
-    private static void goGet(String host, int port, 
+    private static void goGet(String host, int port,
                               String result, String contextPath) {
 
         try{
@@ -48,13 +48,13 @@ public class WebTest {
             Socket s = new Socket(host, port);
             s.setSoTimeout(5000);
             OutputStream os = s.getOutputStream();
-            
+
             contextPath += "?url=" + contextPath;
             System.out.println(("GET " + contextPath + " HTTP/1.1\n"));
             os.write(("GET " + contextPath + " HTTP/1.1\n").getBytes());
             os.write("Host: localhost\n".getBytes());
             os.write("\n".getBytes());
-            
+
             InputStream is = s.getInputStream();
             System.out.println("Time: " + (System.currentTimeMillis() - time));
             BufferedReader bis = new BufferedReader(new InputStreamReader(is));
@@ -64,16 +64,16 @@ public class WebTest {
             while ((line = bis.readLine()) != null) {
                 index = line.indexOf(result);
                 System.out.println("[Server response]" + line);
-                
+
                 int pos = line.indexOf("Location");
                 if (pos != -1){
                    contextPath = line.substring(pos + "Location:".length()).trim();
                    bis.close();
                    is.close();
-                   break; 
+                   break;
                 }
             }
-               
+
             s = new Socket(host, port);
             os = s.getOutputStream();
             System.out.println(("GET " + contextPath + " HTTP/1.1\n"));
@@ -85,21 +85,21 @@ public class WebTest {
             while ((line = bis.readLine()) != null) {
                 index = line.indexOf(result);
                 System.out.println("[Redirect response]" + line);
-               
+
                 if (index != -1) {
                     index = line.indexOf(":");
                     String status = line.substring(index+1);
-                    
+
                     if (status.equalsIgnoreCase("PASS")){
                         stat.addStatus(TEST_NAME, stat.PASS);
                     } else {
-                        stat.addStatus(TEST_NAME, stat.FAIL);                       
+                        stat.addStatus(TEST_NAME, stat.FAIL);
                     }
                     count++;
-                } 
+                }
             }
         } catch( Exception ex){
-           ex.printStackTrace();   
+           ex.printStackTrace();
            stat.addStatus("TEST_NAME", stat.FAIL);
         }
    }

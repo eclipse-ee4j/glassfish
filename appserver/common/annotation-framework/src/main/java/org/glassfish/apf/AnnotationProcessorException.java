@@ -19,23 +19,23 @@ package org.glassfish.apf;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
- * Exception that denotes a warning or error condition in the 
+ * Exception that denotes a warning or error condition in the
  * annotation procesing tool
  *
  * @author Jerome Dochez
  */
 public class AnnotationProcessorException extends Exception {
-    
+
     final private String message;
-    
+
     transient final private AnnotationInfo locator; // TODO if this class is meant for serialization, make sure all its constituents are serializable.
-    
+
     boolean isFatal = false;
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AnnotationProcessorException.class);
 
 
-    /** 
+    /**
      * Creats a new annotation exception
      * @param message describing the exception cause
      */
@@ -43,18 +43,18 @@ public class AnnotationProcessorException extends Exception {
         this.message = message;
         this.locator = null;
     }
-    
+
     /**
-     * Creates a new annotation exception 
+     * Creates a new annotation exception
      * @param message describing the exception cause
-     * @param locator gives information about the annotation and 
+     * @param locator gives information about the annotation and
      * the annotated element which caused the exception
      */
     public AnnotationProcessorException(String message, AnnotationInfo locator) {
         this.message = message;
         this.locator = locator;
     }
-    
+
     /**
      * Return a meaningful string explaining the exception cause
      * @return the exception reason
@@ -62,16 +62,16 @@ public class AnnotationProcessorException extends Exception {
     public String getMessage() {
         return message;
     }
-    
+
     /**
-     * Return information about the annotation and annotated element 
+     * Return information about the annotation and annotated element
      * which caused the exception or null if it is not available.
-     * @return the annotation info instance 
+     * @return the annotation info instance
      */
     public AnnotationInfo getLocator() {
         return locator;
     }
-    
+
     /**
      * @return a meaningful description
      */
@@ -82,7 +82,7 @@ public class AnnotationProcessorException extends Exception {
             return localStrings.getLocalString("annotationprocessorexception.with.locator", "{0}. Related annotation information: {1}", message, locator);
         }
     }
-    
+
     /**
      *
      * @return true if this exception was considered by the sender as being
@@ -91,13 +91,13 @@ public class AnnotationProcessorException extends Exception {
     public boolean isFatal(){
         return isFatal;
     }
-   
+
     /**
-     * Sets wether is exception is considered as fatal to the annotation 
+     * Sets wether is exception is considered as fatal to the annotation
      * processing.
      * @param true if the annotation processing should stop
      */
      public void setFatal(boolean fatal){
          this.isFatal = fatal;
-     }      
+     }
 }

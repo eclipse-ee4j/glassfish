@@ -45,7 +45,7 @@ public interface MdbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      * Gets the value of the steadyPoolSize property.
      * Minimum and initial number of message driven beans in pool.
      * An integer in the range [0, max-pool-size].
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -85,7 +85,7 @@ public interface MdbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
     /**
      * Gets the value of the maxPoolSize property.
      * maximum size, pool can grow to. A non-negative integer.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -121,8 +121,8 @@ public interface MdbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *              {@link String }
      */
     void setIdleTimeoutInSeconds(String value) throws PropertyVetoException;
-    
-    
+
+
     /**
        Properties.
      */

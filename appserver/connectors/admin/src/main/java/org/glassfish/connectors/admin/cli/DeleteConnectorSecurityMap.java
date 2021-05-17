@@ -121,7 +121,7 @@ public class DeleteConnectorSecurityMap extends ConnectorSecurityMap implements 
             report.setFailureCause(tfe);
             return;
         }
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 

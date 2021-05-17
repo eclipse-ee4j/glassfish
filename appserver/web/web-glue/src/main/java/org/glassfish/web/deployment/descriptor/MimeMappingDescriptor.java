@@ -28,51 +28,51 @@ import java.io.Serializable;
 public class MimeMappingDescriptor implements MimeMapping, Serializable {
     private String extension;
     private String mimeType;
-    
+
     /** copy constructor */
     public MimeMappingDescriptor(MimeMappingDescriptor other) {
-	// super(other);
-	extension = other.extension;
-	mimeType = other.mimeType;
+    // super(other);
+    extension = other.extension;
+    mimeType = other.mimeType;
     }
 
     /** Construct the mapping for the given extension to the given mime type. */
     public MimeMappingDescriptor(String extension, String mimeType) {
-	this.extension = extension;
-	this.mimeType = mimeType;
+    this.extension = extension;
+    this.mimeType = mimeType;
     }
-    
+
     /* Default constructor. */
     public MimeMappingDescriptor() {
     }
 
     /** Return the filename extension for this mapping. */
     public String getExtension() {
-	if (this.extension == null) {
-	    this.extension = "";
-	}
-	return this.extension;
+    if (this.extension == null) {
+        this.extension = "";
     }
-    
+    return this.extension;
+    }
+
     /** Set the filename extension for this mapping. */
     public void setExtension(String extension) {
-	this.extension = extension;
+    this.extension = extension;
     }
-    
+
     /** Get the mime type for this mapping. */
     public String getMimeType() {
-	if (this.mimeType == null) {
-	    this.mimeType = "";
-	}
-	return this.mimeType;
+    if (this.mimeType == null) {
+        this.mimeType = "";
+    }
+    return this.mimeType;
     }
     /** Set the mime type for this mapping. */
     public void setMimeType(String mimeType) {
-	this.mimeType = mimeType;
+    this.mimeType = mimeType;
     }
     /** My pretty format. */
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("MimeMapping: ").append(this.getExtension()).append("@").append(this.getMimeType());
+    toStringBuffer.append("MimeMapping: ").append(this.getExtension()).append("@").append(this.getMimeType());
     }
 
 }

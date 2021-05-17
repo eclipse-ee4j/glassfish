@@ -29,17 +29,17 @@ import com.sun.enterprise.deployment.util.ComponentVisitor;
 
 /**
  * This class is responsible for visiting DOL ejb related descriptors
- * 
+ *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface EjbVisitor extends ComponentVisitor {
-    
+
     /**
      * visits an ejb descriptor
      * @param ejb descriptor
      */
     public void accept(EjbDescriptor ejb);
-    
+
 }
 

@@ -289,7 +289,7 @@ public class AppClientContainer {
         this.builder = builder;
     }
 
-    public void prepare(final Instrumentation inst) throws NamingException, 
+    public void prepare(final Instrumentation inst) throws NamingException,
             IOException, InstantiationException, IllegalAccessException,
             InjectionException, ClassNotFoundException, SAXException,
             NoSuchMethodException, UserError {
@@ -301,14 +301,14 @@ public class AppClientContainer {
         clientMainClassSetting = ClientMainClassSetting.set(client.getMainClass());
 
     }
-    
+
     void processPermissions() throws IOException {
         //need to process the permissions files
         if (classLoader instanceof ACCClassLoader) {
             ((ACCClassLoader)classLoader).processDeclaredPermissions();
         }
     }
-    
+
     protected Class loadClass(final String className) throws ClassNotFoundException {
         return Class.forName(className, true, classLoader);
     }
@@ -316,7 +316,7 @@ public class AppClientContainer {
     protected ClassLoader getClassLoader() {
         return classLoader;
     }
-    
+
     /**
      * Gets the ACC ready so the main class can run.
      * This can be followed, immediately or after some time, by either an
@@ -326,7 +326,7 @@ public class AppClientContainer {
      *
      * @throws java.lang.Exception
      */
-    private void completePreparation(final Instrumentation inst) throws 
+    private void completePreparation(final Instrumentation inst) throws
             NamingException, IOException, InstantiationException,
             IllegalAccessException, InjectionException, ClassNotFoundException,
             SAXException, NoSuchMethodException, UserError {
@@ -349,16 +349,16 @@ public class AppClientContainer {
          * be skipped.
          */
         cleanup = Cleanup.arrangeForShutdownCleanup(logger, habitat, desc);
-        
+
         /*
          * Allow pre-destroy handling to work on the main class during clean-up.
          */
-        cleanup.setInjectionManager(injectionManager, 
+        cleanup.setInjectionManager(injectionManager,
                 clientMainClassSetting.clientMainClass);
 
         /*
          * If this app client contains persistence unit refs, then initialize
-         * the PU handling.  
+         * the PU handling.
          */
         Collection<? extends PersistenceUnitDescriptor> referencedPUs = desc.findReferencedPUs();
         if (referencedPUs != null && ! referencedPUs.isEmpty()) {
@@ -489,14 +489,14 @@ public class AppClientContainer {
             logger.fine(sb.toString());
         }
     }
-    
+
     private Method getMainMethod() throws NoSuchMethodException,
            ClassNotFoundException, IOException, SAXException,
            InjectionException, UserError {
-	    // determine the main method using reflection
-	    // verify that it is public static void and takes
-	    // String[] as the only argument
-	    Method result = null;
+        // determine the main method using reflection
+        // verify that it is public static void and takes
+        // String[] as the only argument
+        Method result = null;
 
         result = clientMainClassSetting.getClientMainClass(
                 classLoader,
@@ -507,25 +507,25 @@ public class AppClientContainer {
                 client.getDescriptor(classLoader)).getMethod("main",
                     new Class[] { String[].class } );
 
-	    // check modifiers: public static
-	    int modifiers = result.getModifiers ();
-	    if (!Modifier.isPublic (modifiers) ||
-		!Modifier.isStatic (modifiers))  {
-		    final String err = MessageFormat.format(logger.getResourceBundle().
+        // check modifiers: public static
+        int modifiers = result.getModifiers ();
+        if (!Modifier.isPublic (modifiers) ||
+        !Modifier.isStatic (modifiers))  {
+            final String err = MessageFormat.format(logger.getResourceBundle().
                             getString("appclient.notPublicOrNotStatic"), (Object[]) null);
-	    	    throw new NoSuchMethodException(err);
-	    }
+                throw new NoSuchMethodException(err);
+        }
 
-	    // check return type and exceptions
-	    if (!result.getReturnType().equals (Void.TYPE)) {
+        // check return type and exceptions
+        if (!result.getReturnType().equals (Void.TYPE)) {
                 final String err = MessageFormat.format(logger.getResourceBundle().
                         getString("appclient.notVoid"), (Object[]) null);
                 throw new NoSuchMethodException(err);
-	    }
+        }
         return result;
     }
 
-    
+
     /**
      * Stops the app client container.
      * <p>
@@ -601,7 +601,7 @@ public class AppClientContainer {
                     container,
                     acDesc.getApplication().getAppName(),
                     acDesc.getModuleName());
-            
+
             invocationManager.preInvoke(ci);
             InjectionException injExc = null;
             if ( ! isInjected) {
@@ -620,7 +620,7 @@ public class AppClientContainer {
                         while (t != null && ! isAuthError) {
                             isAuthError = t instanceof org.omg.CORBA.NO_PERMISSION;
                             t = t.getCause();
-                        }                        
+                        }
                         if (isAuthError) {
                             injExc = ie;
                             container.secHelper.clearClientSecurityContext();
@@ -987,7 +987,7 @@ public class AppClientContainer {
                 cleanedUp = true;
             } // End if -- cleanup required
         }
-        
+
         private void cleanupEMFs() {
             try {
                 if (emfs != null) {
@@ -1056,7 +1056,7 @@ public class AppClientContainer {
                         habitat.getServiceHandle(TransactionManager.class);
                 if (inhabitant != null && inhabitant.isActive()) {
                     TransactionManager txmgr = inhabitant.getService();
-                    if (txmgr.getStatus() == Status.STATUS_ACTIVE 
+                    if (txmgr.getStatus() == Status.STATUS_ACTIVE
                             || txmgr.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
                         txmgr.rollback();
                     }

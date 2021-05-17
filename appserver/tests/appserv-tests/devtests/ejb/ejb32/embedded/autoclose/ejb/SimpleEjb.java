@@ -35,5 +35,5 @@ public class SimpleEjb { //implements Simple {
     private void onDestroy() {
         x.add("=====destroyed=====");
     }
-    
+
 }

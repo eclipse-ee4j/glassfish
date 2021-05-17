@@ -93,14 +93,14 @@
 <!--
     <target name="runtest" depends="init-common">
         <antcall target="runwebclient-common">
-	    <param name="testsuite.id" value="connector1.5 (ear based)"/>
-	    </antcall>
+        <param name="testsuite.id" value="connector1.5 (ear based)"/>
+        </antcall>
     </target>
 -->
 
   <target name="runtest" depends="init-common">
     <antcall target="runclient-common">
-	<param name="appname" value="simple-connector-bean-validation" />
+    <param name="appname" value="simple-connector-bean-validation" />
         <param  name="appclient.application.args" value="Standalone-"/>
     </antcall>
   </target>

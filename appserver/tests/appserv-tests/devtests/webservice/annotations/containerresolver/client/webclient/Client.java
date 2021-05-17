@@ -31,8 +31,8 @@ public class Client extends HttpServlet {
        @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/containerresolver-app1/Hello1Service?wsdl") Hello1Service service1;
        @WebServiceRef(wsdlLocation="http://HTTP_HOST:HTTP_PORT/containerresolver-app2/Hello2Service?wsdl") Hello2Service service2;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+        throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

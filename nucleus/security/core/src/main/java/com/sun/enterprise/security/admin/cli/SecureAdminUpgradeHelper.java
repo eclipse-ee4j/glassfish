@@ -46,99 +46,99 @@ import org.jvnet.hk2.config.TransactionFailure;
  * Common logic for formal upgrade (i.e., start-domain --upgrade) and
  * silent upgrade (starting a newer version of GlassFish using an older version's
  * domain.xml).
- * 
+ *
  * @author Tim Quinn
  */
 @Service
 @PerLookup
 public class SecureAdminUpgradeHelper {
-    
+
     protected final static String DAS_CONFIG_NAME = "server-config";
-    
+
     @Inject
     protected Domain domain;
-    
+
     @Inject
     protected ServiceLocator habitat;
-    
+
     @Inject
     protected StartupContext startupContext;
-    
+
     private Transaction t = null;
-    
+
     private SecureAdmin secureAdmin = null;
-    
+
     private TopLevelContext topLevelContext = null;
     private SecureAdminHelper secureAdminHelper = null;
     private SSLUtils sslUtils = null;
-    
+
     private Properties startupArgs = null;
-    
-    
+
+
     final protected Transaction transaction() {
         if (t == null) {
             t = new Transaction();
         }
         return t;
     }
-    
+
     private TopLevelContext topLevelContext() {
         if (topLevelContext == null) {
             topLevelContext = new TopLevelContext(transaction(), domain);
         }
         return topLevelContext;
     }
-    
+
     final protected void commit() throws RetryableException, TransactionFailure {
-        if (t != null) { 
+        if (t != null) {
             t.commit();
         }
     }
-    
+
     final protected void rollback() {
         if (t != null) {
             t.rollback();
         }
     }
-    
+
     final protected String specialAdminIndicator() {
         final UUID uuid = UUID.randomUUID();
         return uuid.toString();
     }
-    
+
     final protected SecureAdmin secureAdmin() throws TransactionFailure {
         if (secureAdmin == null) {
             secureAdmin = domain.getSecureAdmin();
             if (secureAdmin == null) {
-                secureAdmin = /* topLevelContext(). */writableSecureAdmin(); 
+                secureAdmin = /* topLevelContext(). */writableSecureAdmin();
                 secureAdmin.setSpecialAdminIndicator(specialAdminIndicator());
             }
         }
         return secureAdmin;
     }
-    
+
     final protected Domain writableDomain() throws TransactionFailure {
         return topLevelContext().writableDomain();
     }
-    
+
     final protected SecureAdmin writableSecureAdmin() throws TransactionFailure {
         return topLevelContext().writableSecureAdmin();
     }
-    
+
     final protected SecureAdminHelper secureAdminHelper() {
         if (secureAdminHelper == null) {
             secureAdminHelper = habitat.getService(SecureAdminHelper.class);
         }
         return secureAdminHelper;
     }
-    
+
     final protected SSLUtils sslUtils() {
         if (sslUtils == null) {
             sslUtils = habitat.getService(SSLUtils.class);
         }
         return sslUtils;
     }
-    
+
     final protected void ensureSecureAdminReady() throws TransactionFailure, IOException, KeyStoreException {
         if (secureAdmin().getSpecialAdminIndicator().isEmpty()) {
             /*
@@ -167,13 +167,13 @@ public class SecureAdminUpgradeHelper {
         }
         return startupArgs.getProperty(argName);
     }
-    
+
     private void addPrincipalForAlias(final String alias) throws IOException, KeyStoreException, TransactionFailure {
         final SecureAdminPrincipal p = writableSecureAdmin().createChild(SecureAdminPrincipal.class);
         p.setDn(secureAdminHelper().getDN(alias, true));
         writableSecureAdmin().getSecureAdminPrincipal().add(p);
     }
-    
+
     final protected void ensureNonDASConfigsReady() throws TransactionFailure {
         for (Config c : domain.getConfigs().getConfig()) {
             if ( ! c.getName().equals(SecureAdminCommand.DAS_CONFIG_NAME)) {
@@ -183,11 +183,11 @@ public class SecureAdminUpgradeHelper {
             }
         }
     }
-    
+
     final protected void ensureDASConfigReady() {
-        
+
     }
-    
+
     private boolean ensureConfigReady(final Config c) throws TransactionFailure {
         /*
          * See if this config is already set up for secure admin.
@@ -208,7 +208,7 @@ public class SecureAdminUpgradeHelper {
         }
         final EnableSecureAdminCommand enableCmd = new EnableSecureAdminCommand();
         final Config c_w = transaction().enroll(c);
-        ConfigLevelContext configLevelContext = 
+        ConfigLevelContext configLevelContext =
                 new ConfigLevelContext(topLevelContext(), c_w);
         for (Iterator<Work<ConfigLevelContext>> it = enableCmd.perConfigSteps(); it.hasNext();) {
             final Work<ConfigLevelContext> step = it.next();

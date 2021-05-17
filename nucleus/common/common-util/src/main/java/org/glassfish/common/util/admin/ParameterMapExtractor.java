@@ -112,7 +112,7 @@ public class ParameterMapExtractor {
             }
         }
     }
-    
+
     private String singleValue(final Param p, final Object value) {
         if (value.getClass().isAssignableFrom(String.class)) {
             return (String) value;

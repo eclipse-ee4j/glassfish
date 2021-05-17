@@ -146,15 +146,15 @@
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0</jsp-api.version>
         <wasp.version>3.0.1</wasp.version>
-        
+
         <!-- Used for Jakarta XML Web Services -->
         <woodstox.version>6.2.4</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
-  
+
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>2.0.0</jstl-api.version>
         <jstl-impl.version>2.0.0</jstl-impl.version>
-        
+
         <!-- CDI -->
         <cdi-api.version>3.0.0</cdi-api.version>
         <weld.version>4.0.0.Final</weld.version>
@@ -188,7 +188,7 @@
                 <artifactId>jakarta.faces</artifactId>
                 <version>${mojarra.version}</version>
             </dependency>
-            
+
             <!-- Jakarta WebSocket -->
             <dependency>
                 <groupId>jakarta.websocket</groupId>
@@ -202,7 +202,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            
+
             <!-- Jakarta Concurrency -->
             <dependency>
                 <groupId>jakarta.enterprise.concurrent</groupId>
@@ -214,14 +214,14 @@
                 <artifactId>jakarta.enterprise.concurrent</artifactId>
                 <version>${concurrent.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Interceptors -->
             <dependency>
                 <groupId>jakarta.interceptor</groupId>
                 <artifactId>jakarta.interceptor-api</artifactId>
                 <version>${jakarta.interceptor-api.version}</version>
             </dependency>
-            
+
             <!-- Jakarta EE Security + Authentication/Authorization -->
             <dependency>
                 <groupId>jakarta.security.enterprise</groupId>
@@ -254,7 +254,7 @@
                 <artifactId>soteria.spi.bean.decorator.weld</artifactId>
                 <version>${soteria.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Messaging -->
             <dependency>
                 <groupId>jakarta.jms</groupId>
@@ -271,7 +271,7 @@
                 <artifactId>imqjmx</artifactId>
                 <version>4.3</version>
             </dependency>
-            
+
             <!-- Jakarta Persistence -->
             <dependency>
                 <groupId>jakarta.persistence</groupId>
@@ -318,21 +318,21 @@
                 <artifactId>org.eclipse.persistence.asm</artifactId>
                 <version>${eclipselink.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Transactions -->
             <dependency>
                 <groupId>jakarta.transaction</groupId>
                 <artifactId>jakarta.transaction-api</artifactId>
                 <version>${jakarta.transaction-api.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Connectors -->
             <dependency>
                 <groupId>jakarta.resource</groupId>
                 <artifactId>jakarta.resource-api</artifactId>
                 <version>${jakarta.resource-api.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Batch -->
             <dependency>
                 <groupId>jakarta.batch</groupId>
@@ -349,28 +349,28 @@
                 <artifactId>com.ibm.jbatch.spi</artifactId>
                 <version>${com.ibm.jbatch.spi.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Validation -->
             <dependency>
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator-cdi</artifactId>
                 <version>${hibernate-validator.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Expression Language Impl -->
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>jakarta.el</artifactId>
                 <version>${jakarta.el.version}</version>
             </dependency>
-        
+
             <!-- Jakarta Enterprise beans -->
             <dependency>
                 <groupId>jakarta.ejb</groupId>
                 <artifactId>jakarta.ejb-api</artifactId>
                 <version>${jakarta.ejb-api.version}</version>
             </dependency>
-            
+
             <!-- Jakarta JSON -->
             <dependency>
                 <groupId>jakarta.json</groupId>
@@ -397,7 +397,7 @@
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Server Pages -->
             <dependency>
                 <groupId>jakarta.servlet.jsp</groupId>
@@ -409,7 +409,7 @@
                 <artifactId>wasp</artifactId>
                 <version>${wasp.version}</version>
             </dependency>
-            
+
             <!-- Jakarta XML Web Services -->
             <dependency>
                 <!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
@@ -433,7 +433,7 @@
                 <artifactId>stax2-api</artifactId>
                 <version>${stax2-api.version}</version>
             </dependency>
-            
+
             <!-- Jakarta XML Binding -->
             <dependency>
                 <groupId>jakarta.xml.bind</groupId>
@@ -445,7 +445,7 @@
                 <artifactId>jaxb-osgi</artifactId>
                 <version>${jakarta.jaxb-impl.version}</version>
             </dependency>
-            
+
             <!-- Jakarta Standard Tag Library -->
             <dependency>
                 <groupId>jakarta.servlet.jsp.jstl</groupId>
@@ -457,7 +457,7 @@
                 <artifactId>jakarta.servlet.jsp.jstl</artifactId>
                 <version>${jstl-impl.version}</version>
             </dependency>
-            
+
             <!-- CDI -->
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
@@ -496,8 +496,8 @@
                 <artifactId>jboss-classfilewriter</artifactId>
                 <version>${jboss.classfilewriter.version}</version>
             </dependency>
-            
-            
+
+
             <!-- Admin console components -->
             <dependency>
                 <groupId>org.glassfish.jsftemplating</groupId>
@@ -556,15 +556,15 @@
                 <artifactId>dataprovider</artifactId>
                 <version>1.0</version>
             </dependency>
-            
+
             <!-- HK2 -->
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgi-resource-locator</artifactId>
                 <version>${osgi-resource-locator.version}</version>
             </dependency>
-            
-            
+
+
             <!--  Derby - embedded database -->
             <dependency>
                 <groupId>org.glassfish.external</groupId>
@@ -582,8 +582,8 @@
                 <artifactId>schema2beans</artifactId>
                 <version>${schema2beans.version}</version>
             </dependency>
-            
-            
+
+
             <!-- Other -->
             <dependency>
                 <groupId>org.glassfish.ha</groupId>

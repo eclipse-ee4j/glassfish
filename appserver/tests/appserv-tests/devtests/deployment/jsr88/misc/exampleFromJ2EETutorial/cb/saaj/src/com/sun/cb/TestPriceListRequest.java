@@ -26,11 +26,11 @@ public class TestPriceListRequest {
     public static void main(String [] args) {
 
         try {
-            SOAPConnectionFactory scf = 
+            SOAPConnectionFactory scf =
                 SOAPConnectionFactory.newInstance();
             SOAPConnection con = scf.createConnection();
 
-     	    MessageFactory mf = MessageFactory.newInstance();
+             MessageFactory mf = MessageFactory.newInstance();
             SOAPMessage msg = mf.createMessage();
 
             // Access the SOABBody object
@@ -38,14 +38,14 @@ public class TestPriceListRequest {
             SOAPEnvelope envelope = part.getEnvelope();
             SOAPBody body = envelope.getBody();
 
-            // create SOAPBodyElement request 
+            // create SOAPBodyElement request
             Name bodyName = envelope.createName("request-prices",
                 "RequestPrices", "http://sonata.coffeebreak.com");
             SOAPBodyElement requestPrices =
                 body.addBodyElement(bodyName);
-      
+
             Name requestName = envelope.createName("request");
-            SOAPElement request = 
+            SOAPElement request =
                 requestPrices.addChildElement(requestName);
             request.addTextNode("Send updated price list.");
 
@@ -60,9 +60,9 @@ public class TestPriceListRequest {
             // get contents of response
             Vector list = new Vector();
 
-            SOAPBody responseBody = 
+            SOAPBody responseBody =
                 response.getSOAPPart().getEnvelope().getBody();
-            Iterator it1 = responseBody.getChildElements(); 
+            Iterator it1 = responseBody.getChildElements();
             // get price-list element
             while (it1.hasNext()) {
                 SOAPBodyElement bodyEl = (SOAPBodyElement)it1.next();

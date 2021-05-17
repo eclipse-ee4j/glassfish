@@ -25,15 +25,15 @@ import org.glassfish.internal.api.Target;
  * @author tjquinn
  */
 public class CLIUtil {
-    
+
     static Config updateConfigIfNeeded(final Config initConfig,
             final String target,
             final ServiceLocator locator) {
         Target targetUtil = locator.getService(Target.class);
         return updateConfigIfNeeded(initConfig, targetUtil, target);
-        
+
     }
-    
+
     static Config updateConfigIfNeeded(final Config initConfig,
             final Target targetUtil,
             final String target) {
@@ -44,5 +44,5 @@ public class CLIUtil {
         }
         return result;
     }
-    
+
 }

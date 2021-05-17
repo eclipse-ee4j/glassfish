@@ -23,10 +23,10 @@ import jakarta.ejb.Stateless;
 @Stateless
 @Local({MessageLocal1.class})
 public class MessageBean1 implements MessageLocal1 {
-    
+
     //@RolesAllowed("ejbrole")
     public String getMessage() {
         return "Hello from ejb";
     }
-    
+
 }

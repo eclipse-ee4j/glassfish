@@ -49,30 +49,30 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
 
     protected static final Logger _logger = LogUtils.getLogger();
 
-    protected static final LocalStringManagerImpl localStrings = 
+    protected static final LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(CommonServerSecurityTube.class);
     private final boolean isHttpBinding;
     private PipeHelper helper;
-    
+
     // Introduced during Pipe to Tube conversion
     private ServerAuthContext sAC = null;
     private PacketMessageInfo info = null;
     private Subject serverSubject = null;
-    
-    public CommonServerSecurityTube(Map props, final Tube next, 
-			     boolean isHttpBinding) {
+
+    public CommonServerSecurityTube(Map props, final Tube next,
+                 boolean isHttpBinding) {
         super(next);
-	props.put(PipeConstants.SECURITY_PIPE, this);
-	this.helper = new PipeHelper(PipeConstants.SOAP_LAYER,props,null);
+    props.put(PipeConstants.SECURITY_PIPE, this);
+    this.helper = new PipeHelper(PipeConstants.SOAP_LAYER,props,null);
         this.isHttpBinding = isHttpBinding;
-       
-    }    
-    
+
+    }
+
     protected CommonServerSecurityTube(CommonServerSecurityTube that,
             TubeCloner cloner) {
 
         super(that, cloner);
-        // we can share the helper for all pipes so that the remove 
+        // we can share the helper for all pipes so that the remove
         // registration (in server side) can be done properly
         this.helper = that.helper;
         this.isHttpBinding = that.isHttpBinding;
@@ -82,14 +82,14 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
      * This method is called once in server side and at most one in client side.
      */
     public void preDestroy() {
-	helper.disable();
+    helper.disable();
         /**
          Fix for bug 3932/4052
          */
-        next.preDestroy(); 
-    }    
-    
-    
+        next.preDestroy();
+    }
+
+
     @Override
     public NextAction processRequest(Packet request) {
         try {
@@ -174,7 +174,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
                     }
                 } else { //if not authorized
                     // not authorized, construct fault and proceded
-		    response = helper.getFaultResponse(
+            response = helper.getFaultResponse(
                             validatedRequest,info.getResponsePacket(), new Exception("Client Not Authorized"));
                     return doReturnWith(response);
                 }
@@ -196,7 +196,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
             return doThrow(t);
         }
     }
- 
+
     @Override
     public NextAction processResponse(Packet response) {
         try{
@@ -205,11 +205,11 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
                 return doReturnWith(response);
             }
             Packet resp = response;
-	    // secure response, including if it is a fault
-	    if (sAC != null && response.getMessage() != null) {
-		info.setResponsePacket(response);
-		resp = processResponse(info, sAC, serverSubject);
-	    }
+        // secure response, including if it is a fault
+        if (sAC != null && response.getMessage() != null) {
+        info.setResponsePacket(response);
+        resp = processResponse(info, sAC, serverSubject);
+        }
             return doReturnWith(resp);
         }catch(Throwable t){
             if (!(t instanceof WebServiceException)) {
@@ -217,52 +217,52 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
             }
             return doThrow(t);
         }
-         
+
     }
-    
-    
-    // called when secureResponse is to be called 
+
+
+    // called when secureResponse is to be called
     private Packet processResponse(PacketMessageInfo info,
-				   ServerAuthContext sAC,
-				   Subject serverSubject) throws Exception {
-        
+                   ServerAuthContext sAC,
+                   Subject serverSubject) throws Exception {
+
         AuthStatus status;
 
-	try {
-	    status = sAC.secureResponse(info, serverSubject);
-	} catch (Exception e) {
-	    if (e instanceof AuthException) {
-		if (_logger.isLoggable(Level.INFO)) {
-		    _logger.log(Level.INFO, LogUtils.ERROR_RESPONSE_SECURING, e);
-		}
-	    } else {
-		_logger.log(Level.SEVERE, LogUtils.ERROR_RESPONSE_SECURING, e);
-	    }
-    
-	    return helper.makeFaultResponse(info.getResponsePacket(),e);
-	}
-	if (_logger.isLoggable(Level.FINE)) {
-	    _logger.log(Level.FINE,"ws.status_secure_response", status);
-	}
-	return info.getResponsePacket();
+    try {
+        status = sAC.secureResponse(info, serverSubject);
+    } catch (Exception e) {
+        if (e instanceof AuthException) {
+        if (_logger.isLoggable(Level.INFO)) {
+            _logger.log(Level.INFO, LogUtils.ERROR_RESPONSE_SECURING, e);
+        }
+        } else {
+        _logger.log(Level.SEVERE, LogUtils.ERROR_RESPONSE_SECURING, e);
+        }
+
+        return helper.makeFaultResponse(info.getResponsePacket(),e);
+    }
+    if (_logger.isLoggable(Level.FINE)) {
+        _logger.log(Level.FINE,"ws.status_secure_response", status);
+    }
+    return info.getResponsePacket();
 
     }
 
     private static Subject getClientSubject(Packet p) {
-	
-	Subject s = null;
-	
-	if (p != null) {
-	    s =(Subject) 
-		p.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
-	}
-	if (s == null) {	    
-	    s = PipeHelper.getClientSubject();	    
-	    if (p != null) {
-		p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT,s);
-	    }
-	}
-	return s;
+
+    Subject s = null;
+
+    if (p != null) {
+        s =(Subject)
+        p.invocationProperties.get(PipeConstants.CLIENT_SUBJECT);
+    }
+    if (s == null) {
+        s = PipeHelper.getClientSubject();
+        if (p != null) {
+        p.invocationProperties.put(PipeConstants.CLIENT_SUBJECT,s);
+        }
+    }
+    return s;
     }
 
     @Override
@@ -270,7 +270,7 @@ public class CommonServerSecurityTube extends AbstractFilterTubeImpl {
          return new CommonServerSecurityTube(this, cloner);
     }
 
-    
+
 }
 
 

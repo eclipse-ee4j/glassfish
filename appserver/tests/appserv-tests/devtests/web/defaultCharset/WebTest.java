@@ -45,7 +45,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 4921329");
         WebTest webTest = new WebTest(args);
@@ -53,8 +53,8 @@ public class WebTest {
         stat.printSummary("default-charset");
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             System.out.println("default-charset test failed.");
@@ -64,7 +64,7 @@ public class WebTest {
     }
 
     private void invokeJsp() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         System.out.println(("GET " + contextRoot + "/jsp/getRequestCharset.jsp"
@@ -72,7 +72,7 @@ public class WebTest {
         os.write(("GET " + contextRoot + "/jsp/getRequestCharset.jsp"
             + " HTTP/1.0\n").getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;

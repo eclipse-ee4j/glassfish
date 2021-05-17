@@ -55,8 +55,8 @@ import org.glassfish.api.admin.RestEndpoints;
 @ExecuteOn(value={RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_lifecycle", 
+        opType=RestEndpoint.OpType.POST,
+        path="_lifecycle",
         description="_lifecycle")
 })
 public class InstanceLifecycleModuleCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
@@ -86,7 +86,7 @@ public class InstanceLifecycleModuleCommand implements AdminCommand, AdminComman
 
     @Inject
     private Domain domain;
-    
+
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
@@ -94,8 +94,8 @@ public class InstanceLifecycleModuleCommand implements AdminCommand, AdminComman
         return accessChecks;
     }
 
-    
-    
+
+
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

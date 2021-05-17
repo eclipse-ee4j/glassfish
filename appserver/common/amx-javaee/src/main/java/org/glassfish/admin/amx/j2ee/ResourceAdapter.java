@@ -25,7 +25,7 @@ import org.glassfish.admin.amx.annotation.ManagedAttribute;
 @AMXMBeanMetadata(type=J2EETypes.RESOURCE_ADAPTER)
 public interface ResourceAdapter extends J2EEManagedObject
 {
-    /** ObjectName 
+    /** ObjectName
     @ManagedAttribute
     public String getjcaResource();
     */

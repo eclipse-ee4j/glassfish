@@ -31,11 +31,11 @@ import org.w3c.dom.Node;
 * @author Jerome Dochez
 */
 public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
-    
+
     public CacheHelperNode() {
-	
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), 
-                               WebPropertyNode.class, "addWebProperty"); 			       
+
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
+                               WebPropertyNode.class, "addWebProperty");
     }
 
     protected CacheHelper descriptor = null;
@@ -61,18 +61,18 @@ public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
      */
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
-	RuntimeDescriptor descriptor = getDescriptor();
-	if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
-	    descriptor.setAttributeValue(CacheHelper.NAME, value);
-	    return true;
-	} else
-	if (attributeName.getQName().equals(RuntimeTagNames.CLASS_NAME)) {
-	    descriptor.setAttributeValue(CacheHelper.CLASS_NAME, value);
-	    return true;
-	}  
-	return false;
+    RuntimeDescriptor descriptor = getDescriptor();
+    if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
+        descriptor.setAttributeValue(CacheHelper.NAME, value);
+        return true;
+    } else
+    if (attributeName.getQName().equals(RuntimeTagNames.CLASS_NAME)) {
+        descriptor.setAttributeValue(CacheHelper.CLASS_NAME, value);
+        return true;
     }
-    
+    return false;
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -82,21 +82,21 @@ public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, CacheHelper descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, CacheHelper descriptor) {
 
-	Element cacheHelper = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-	
-	// property*
-	WebProperty[] properties = descriptor.getWebProperty();
-	if (properties.length>0) {
-	    WebPropertyNode wpn = new WebPropertyNode();
-	    wpn.writeDescriptor(cacheHelper, RuntimeTagNames.PROPERTY, properties);
-	}
-	
-	// name, class-name attribute
-	setAttribute(cacheHelper, RuntimeTagNames.NAME, (String) descriptor.getAttributeValue(CacheHelper.NAME));
-	setAttribute(cacheHelper, RuntimeTagNames.CLASS_NAME, (String) descriptor.getAttributeValue(CacheHelper.CLASS_NAME));
-	
-	return cacheHelper;
+    Element cacheHelper = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+
+    // property*
+    WebProperty[] properties = descriptor.getWebProperty();
+    if (properties.length>0) {
+        WebPropertyNode wpn = new WebPropertyNode();
+        wpn.writeDescriptor(cacheHelper, RuntimeTagNames.PROPERTY, properties);
+    }
+
+    // name, class-name attribute
+    setAttribute(cacheHelper, RuntimeTagNames.NAME, (String) descriptor.getAttributeValue(CacheHelper.NAME));
+    setAttribute(cacheHelper, RuntimeTagNames.CLASS_NAME, (String) descriptor.getAttributeValue(CacheHelper.CLASS_NAME));
+
+    return cacheHelper;
     }
 }

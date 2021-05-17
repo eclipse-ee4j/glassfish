@@ -18,7 +18,7 @@ package test.ejb.local;
 
 import jakarta.enterprise.inject.Alternative;
 
- 
+
 //marked as Alternative, otherwise there would
 //an ambiguous definition for TestLocalInterface between this
 //super class and the TestLocalEJB
@@ -29,7 +29,7 @@ public @Alternative class TestSuperClass implements TestInterface{
         System.out.println("local bean: m1");
         return true;
     }
-    
+
     public boolean m2DefinedInSuperClass(){
         System.out.println("local: m2");
         return true;

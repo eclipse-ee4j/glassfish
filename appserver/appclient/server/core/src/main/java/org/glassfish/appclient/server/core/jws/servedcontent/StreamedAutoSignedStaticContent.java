@@ -49,25 +49,25 @@ import org.glassfish.grizzly.http.util.MimeType;
  * Most signed JARs served by the Java Web Start support in GlassFish are
  * created on-disk by signing their unsigned counterparts once.  Then the on-disk
  * signed JAR is served when the client asks for the JAR.  The main JAR has to
- * be handled differently to meet the Java Web start security requirements.  
+ * be handled differently to meet the Java Web start security requirements.
  * The signed copy of the main JAR is created on-the-fly by signing the unsigned
  * JAR's contents plus the previously-generated JNLP.  The signed output is
- * sent directly to the HTTP response's output stream rather than creating a 
+ * sent directly to the HTTP response's output stream rather than creating a
  * temporary file.
  * <p>
  * We cannot create the signed main JAR once and for all because the JNLP
  * document which launches the app might change from one invocation to the next,
- * particularly regarding command-line arguments which appear in the JNLP as 
+ * particularly regarding command-line arguments which appear in the JNLP as
  * <argument> elements.
- * 
+ *
  * @author tjquinn
  */
 public class StreamedAutoSignedStaticContent extends AutoSignedContent {
 
     private static final String SIGNED_JNLP_PATH = "JNLP-INF/APPLICATION.JNLP";
-    
+
     private static final Logger logger = Logger.getLogger(AppClientDeployerHelper.ACC_MAIN_LOGGER, AppClientDeployerHelper.LOG_MESSAGE_RESOURCE);
-    
+
     public StreamedAutoSignedStaticContent(final File unsignedFile,
             final String userProvidedAlias,
             final ASJarSigner jarSigner,
@@ -75,7 +75,7 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
             final String appName) throws FileNotFoundException {
         super(unsignedFile, null /* signedFile */, userProvidedAlias, jarSigner, relativeURI, appName);
     }
-    
+
     @Override
     public void process(String relativeURIString, Request gReq, Response gResp) throws IOException {
         logger.log(Level.FINE, "Processing main JAR for {0}", gReq.getRequestURI());
@@ -84,7 +84,7 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
         gResp.setDateHeader(DATE_HEADER_NAME, now);
         gResp.setStatus(HttpStatus.OK_200);
         gResp.setContentType(contentType(unsignedFile()));
-        
+
         /*
          * This is the main JAR, so combine it with the previously-generated
          * and saved main JNLP document.
@@ -106,7 +106,7 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
          * chunk it for us if needed.
          */
         final ZipOutputStream zos = new ZipOutputStream(gResp.getOutputStream());
-        
+
         logger.log(Level.FINE, "Request's session contains cached JNLP");
         final byte[] jnlpContent = (byte[]) jwsObj;
         final Map<String,byte[]> addedContent = new HashMap<String,byte[]>();
@@ -141,8 +141,8 @@ public class StreamedAutoSignedStaticContent extends AutoSignedContent {
     public boolean isAvailable(URI requestURI) throws IOException {
         return true;
     }
-    
-    
+
+
     private String contentType(final File file) {
         final String path = file.getPath();
         String substr;

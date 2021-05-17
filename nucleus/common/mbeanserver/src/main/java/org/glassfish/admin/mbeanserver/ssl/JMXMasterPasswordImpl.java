@@ -40,14 +40,14 @@ import org.jvnet.hk2.annotations.Service;
 public class JMXMasterPasswordImpl implements MasterPassword {
 
     @Inject @Optional IdentityManagement idm;
-    
+
     @Override
-    public PasswordAdapter getMasterPasswordAdapter() 
+    public PasswordAdapter getMasterPasswordAdapter()
             throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
         char pw[] = idm == null ? null : idm.getMasterPassword();
         return new PasswordAdapter(pw);
     }
-    
+
     public char[] getMasterPassword() {
         return idm == null ? null : idm.getMasterPassword();
     }

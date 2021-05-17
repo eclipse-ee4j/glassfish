@@ -41,15 +41,15 @@ final public class TreeDeleteControl extends BasicControl {
      * Constructs a tree delete critical control.
      */
     public TreeDeleteControl() {
-	super(OID, true, null);
+    super(OID, true, null);
     }
 
     /**
      * Constructs a tree delete control.
      *
-     * @param	criticality The control's criticality setting.
+     * @param    criticality The control's criticality setting.
      */
     public TreeDeleteControl(boolean criticality) {
-	super(OID, criticality, null);
+    super(OID, criticality, null);
     }
 }

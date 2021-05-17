@@ -37,15 +37,15 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @author  mvatkina
  */
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
-	    stat.addDescription("ejbflush");
+        stat.addDescription("ejbflush");
 
             Context initial = new InitialContext();
 
@@ -76,38 +76,38 @@ public class Client {
                 System.out.println("A2 OK");
             }
 
-            // Run CMP1.1 test with flush. This test should throw 
+            // Run CMP1.1 test with flush. This test should throw
             // a FlushException.
             try {
                 t.testA1WithFlush();
                 System.out.println("A1 FAILED");
             } catch (test.FlushException e) {
                 System.out.println("A1 OK");
-            } catch (Exception e) {  
+            } catch (Exception e) {
                 System.out.println("A1 FAILED " + e.getMessage());
             }
 
-            // Run CMP1.1 test with flush. This test should throw 
+            // Run CMP1.1 test with flush. This test should throw
             // a FlushException.
             try {
                 t.testA2WithFlush();
                 System.out.println("A2 FAILED");
             } catch (test.FlushException e) {
                 System.out.println("A2 OK");
-            } catch (Exception e) {  
+            } catch (Exception e) {
                 System.out.println("A2 FAILED " + e.getMessage());
             }
 
-	    stat.addStatus("ejbclient ejbflush", stat.PASS);
+        stat.addStatus("ejbclient ejbflush", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient ejbflush", stat.PASS);
+        stat.addStatus("ejbclient ejbflush", stat.PASS);
         }
 
-	  stat.printSummary("ejbflush");
+      stat.printSummary("ejbflush");
     }
-    
+
 }

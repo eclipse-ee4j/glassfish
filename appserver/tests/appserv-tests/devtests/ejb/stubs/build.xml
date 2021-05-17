@@ -33,7 +33,7 @@
         <antcall target="stubser"/>
 
         <antcall target="ejbapp"/>
-        <!-- standaloneclient must be executed right after ejbapp 
+        <!-- standaloneclient must be executed right after ejbapp
              to be able to use the generated stubs from the app client
         -->
         <antcall target="standaloneclient"/>
@@ -92,14 +92,14 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant ejbapp (Executes the ejb-stubs ejbapp test)
-			ant ejbclient (Executes the ejb-stubs ejbclient test)
-			ant appclient (Executes the ejb-stubs appclient test)
-			ant webclient (Executes the ejb-stubs webclient test)
+    <echo>
+        Usage:
+            ant ejbapp (Executes the ejb-stubs ejbapp test)
+            ant ejbclient (Executes the ejb-stubs ejbclient test)
+            ant appclient (Executes the ejb-stubs appclient test)
+            ant webclient (Executes the ejb-stubs webclient test)
                         ant proxy (Executes the ejb-stubs proxy test)
-			ant all (Executes all the ejb-stubs tests)
-	</echo>
+            ant all (Executes all the ejb-stubs tests)
+    </echo>
     </target>
 </project>

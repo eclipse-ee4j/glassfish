@@ -28,7 +28,7 @@ public final class AuthenticationInfo {
 
     /**
      * The only way to construct the instances of this class.
-     * 
+     *
      * @param user the user name for the connection
      * @param password the clear text password for the connection
      */
@@ -39,7 +39,7 @@ public final class AuthenticationInfo {
 
     /**
      * Returns the user name.
-     * 
+     *
      * @return String
      */
     public String getUser() {
@@ -48,7 +48,7 @@ public final class AuthenticationInfo {
 
     /**
      * Returns the password in clear text.
-     * 
+     *
      * @return String
      */
     public char[] getPassword() {

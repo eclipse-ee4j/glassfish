@@ -65,8 +65,8 @@ public interface HttpResponse
 
 
     /**
-     * Special method for adding a session cookie as we should be overriding 
-     * any previous 
+     * Special method for adding a session cookie as we should be overriding
+     * any previous
      * @param cookie
      */
     public void addSessionCookieInternal(final Cookie cookie);

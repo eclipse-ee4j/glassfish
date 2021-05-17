@@ -17,29 +17,29 @@
 package org.glassfish.webservices;
 
 public class Import {
-    
+
     private String namespace;
     private String location;
-    
+
     public Import() {}
-    
+
     public Import(String ns, String loc) {
         this.namespace = ns;
         this.location = loc;
     }
-    
+
     public String getNamespace() {
         return this.namespace;
     }
-    
+
     public String getLocation() {
         return this.location;
     }
-    
+
     public void setLocation(String loc) {
         this.location = loc;
     }
-    
+
     public void setNamespace(String ns) {
         this.namespace = ns;
     }

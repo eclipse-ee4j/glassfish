@@ -36,7 +36,7 @@ import java.util.List;
 @Service
 @AnnotationHandlerFor(Resources.class)
 public class ResourcesHandler extends ResourceHandler {
-    
+
     public ResourcesHandler() {
     }
 
@@ -49,10 +49,10 @@ public class ResourcesHandler extends ResourceHandler {
             throws AnnotationProcessorException {
 
         Resources resourcesAn = (Resources)ainfo.getAnnotation();
-        
+
         Resource[] resourceAns = resourcesAn.value();
         List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
-        
+
         for(Resource res : resourceAns) {
             results.add(processResource(ainfo, rcContexts, res));
         }

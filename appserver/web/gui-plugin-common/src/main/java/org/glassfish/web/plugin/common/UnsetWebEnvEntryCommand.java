@@ -38,8 +38,8 @@ import org.glassfish.hk2.api.PerLookup;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST, // TODO: should be DELETE? 
-        path="unset-web-env-entry", 
+        opType=RestEndpoint.OpType.POST, // TODO: should be DELETE?
+        path="unset-web-env-entry",
         description="unset-web-env-entry",
         params={
             @RestParam(name="id", value="$parent")

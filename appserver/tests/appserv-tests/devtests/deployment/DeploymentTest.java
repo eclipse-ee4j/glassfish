@@ -40,16 +40,16 @@ import org.testng.annotations.Test;
  * @author: tjquinn
  */
 public abstract class DeploymentTest {
-    
+
     /** indicates if the test class has been initialized yet */
     private boolean isInited = false;
-    
+
     /** ant project based on the build.xml in the current directory */
     protected Project project;
-    
+
     /** the build.xml file in the current directory */
     protected File buildFile;
-    
+
     /** Our current message output status. Follows Project.MSG_XXX. */
     private int msgOutputLevel = Project.MSG_INFO;
 
@@ -57,7 +57,7 @@ public abstract class DeploymentTest {
     private PrintStream out;
     private PrintStream err;
     private InputStream in;
-    
+
     /**
      * The Ant logger class. There may be only one logger. It will have
      * the right to use the 'out' PrintStream. The class must implements the
@@ -69,7 +69,7 @@ public abstract class DeploymentTest {
     public DeploymentTest() {
         init();
     }
-    
+
     /**
      *Reports if the class has been initialized or not.
      *@return whether the initialized has occurred or not
@@ -77,7 +77,7 @@ public abstract class DeploymentTest {
     protected boolean isInited() {
         return isInited;
     }
-    
+
     /**
      *Prepare the callable ant environment for the test.
      */
@@ -87,12 +87,12 @@ public abstract class DeploymentTest {
             err = System.err;
             out = System.out;
             in = System.in;
-            
+
             /*
              *Use the build.xml in the current directory.
              */
             buildFile = new File("build.xml");
-            
+
             /*
              *To call into ant, create a new Project and prepare it for use.
              */
@@ -100,19 +100,19 @@ public abstract class DeploymentTest {
 //            msgOutputLevel = Project.MSG_VERBOSE;
             project.addBuildListener(createLogger());
             project.setBasedir(".");
-            
+
             project.init();
-            
+
             /*
              *Set up the project to use the build.xml in the current directory.
              */
             ProjectHelper helper = ProjectHelper.getProjectHelper();
             helper.parse(project, buildFile);
-            
+
             isInited = true;
         }
     }
-    
+
     /**
      *Assembles the required jar, war, ear files, etc.
      */
@@ -126,7 +126,7 @@ public abstract class DeploymentTest {
     protected void deploy() {
         project.executeTarget("deploy.asadmin");
     }
-    
+
     /**
      *Redeploys the application using asadmin.
      *Removes app refs first, then deploys, then creates app refs.
@@ -147,7 +147,7 @@ public abstract class DeploymentTest {
      */
     protected void clean() {
         project.executeTarget("clean");
-    }    
+    }
 
     /**
      *Constructs an ExecTask instance, linked to the current project, for
@@ -160,7 +160,7 @@ public abstract class DeploymentTest {
     protected ExecTask prepareRunExecTask() {
         /*
          This is the ant excerpt imitated by the exec task built by this method:
-         
+
          <exec executable="${APPCLIENT}" resultproperty="result" failonerror="false" output="${build}/${log.id}.output.log">
                     <arg line="-client ${archivedir}/${testName}Client.jar"/>
                 </exec>
@@ -173,7 +173,7 @@ public abstract class DeploymentTest {
         exec.setTaskName("runclient");
         return exec;
     }
-    
+
     /**
      *Prepares a command line argument object for use with the appclient
      *exec task that uses the default set of arguments: the default
@@ -188,7 +188,7 @@ public abstract class DeploymentTest {
         arg.setLine("-client " + archiveDir + "/" + testName + "Client.jar");
         return arg;
     }
-    
+
     /**
      *Default implementation for executing the app client
      */
@@ -197,7 +197,7 @@ public abstract class DeploymentTest {
         prepareRunCommandlineArg(exec);
         exec.execute();
     }
-    
+
     /**
      *Prepares the test environment by cleaning the build directory
      *and assembling the required jar files.
@@ -207,7 +207,7 @@ public abstract class DeploymentTest {
         clean();
         assemble();
     }
-    
+
     /**
      *Cleans up after all tests have run.  In this case, undeploys
      *the application.
@@ -218,7 +218,7 @@ public abstract class DeploymentTest {
     }
 
     // The following is inspired by the code in ant itself.
-    
+
     /**
      * Creates the default build logger for sending build events to the ant
      * log.

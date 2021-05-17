@@ -50,7 +50,7 @@ public abstract class StatementWrapper implements Statement, StatementLeakListen
     static {
         _logger = LogDomains.getLogger(MethodExecutor.class, LogDomains.RSR_LOGGER);
     }
-    
+
     /**
      * Abstract class for wrapping Statement<br>
      *

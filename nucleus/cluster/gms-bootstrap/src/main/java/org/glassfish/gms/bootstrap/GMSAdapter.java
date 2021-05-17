@@ -166,8 +166,8 @@ public interface GMSAdapter {
 
     /**
      * Returns an object that contains the current health of
-     * each instance. 
+     * each instance.
      */
     HealthHistory getHealthHistory();
-    
+
 }

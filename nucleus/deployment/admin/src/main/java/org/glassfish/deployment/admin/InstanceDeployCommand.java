@@ -75,11 +75,11 @@ import org.glassfish.api.admin.RestEndpoints;
 @ExecuteOn(value={RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_deploy", 
+        opType=RestEndpoint.OpType.POST,
+        path="_deploy",
         description="_deploy")
 })
-public class InstanceDeployCommand extends InstanceDeployCommandParameters 
+public class InstanceDeployCommand extends InstanceDeployCommandParameters
         implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(InstanceDeployCommand.class);
@@ -105,7 +105,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
 
     @Inject
     private Domain domain;
-    
+
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
@@ -113,7 +113,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
         return accessChecks;
     }
 
-    
+
     @Override
     public void execute(AdminCommandContext ctxt) {
 
@@ -130,7 +130,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
         if (previousVirtualServers != null) {
             String vs = previousVirtualServers.getProperty(target);
             if (vs != null) {
-                this.virtualservers = vs;  
+                this.virtualservers = vs;
             }
         }
 
@@ -175,7 +175,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
             deploymentContext.getAppProps().putAll(appprops);
 
             processGeneratedContent(generatedcontent, deploymentContext, logger);
-             
+
             Transaction t = null;
             Application application = applications.getApplication(name);
             if (application != null) {
@@ -206,7 +206,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
                     deploymentContext.clean();
                     throw e;
                 }
-            } 
+            }
         } catch (Throwable e) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(e.getMessage());
@@ -292,7 +292,7 @@ public class InstanceDeployCommand extends InstanceDeployCommandParameters
     }
 
     /**
-     * Makes safe copies of the alternate dd, runtime alternate dd for 
+     * Makes safe copies of the alternate dd, runtime alternate dd for
      * loading altdd and runtime altdd during enable application on instance
      * and loading application during instance start up.
      * <p>

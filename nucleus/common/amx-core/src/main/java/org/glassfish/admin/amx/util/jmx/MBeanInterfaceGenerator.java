@@ -116,29 +116,29 @@ public class MBeanInterfaceGenerator
         }
     }
 
-		String
-	getCodeClassname( final String classnameIn )
-	{
-		final String	name	= ClassUtil.getFriendlyClassname( classnameIn );
-        
+        String
+    getCodeClassname( final String classnameIn )
+    {
+        final String    name    = ClassUtil.getFriendlyClassname( classnameIn );
+
         String base = name;
         String extra = "";
-        
+
         final int idx = name.indexOf("[");
         if ( idx > 0 )
         {
             base  = name.substring(0, idx);
             extra = name.substring(idx);
         }
-        
-		if ( typeMayBeAbbreviated( base ) )
-		{
-			base	= ClassUtil.stripPackagePrefix( base );
-		}
-        
-		return base + extra;
-	}
-	
+
+        if ( typeMayBeAbbreviated( base ) )
+        {
+            base    = ClassUtil.stripPackagePrefix( base );
+        }
+
+        return base + extra;
+    }
+
     private Map<String, Integer> countAllTypes(MBeanInfo info)
     {
         final Map<String, Integer> counts = new HashMap<String, Integer>();
@@ -222,7 +222,7 @@ public class MBeanInterfaceGenerator
         if (attrInfos != null)
         {
             Arrays.sort(attrInfos, MBeanAttributeInfoComparator.INSTANCE);
-            
+
             final List<MBeanAttributeInfo> readOnlyAttrInfos  = new ArrayList<MBeanAttributeInfo>();
             final List<MBeanAttributeInfo> writebleAttrInfos  = new ArrayList<MBeanAttributeInfo>();
             for(  final MBeanAttributeInfo ai : attrInfos )
@@ -236,9 +236,9 @@ public class MBeanInterfaceGenerator
                     readOnlyAttrInfos.add(ai);
                 }
             }
-            
-			buf.append( generateAttributes( readOnlyAttrInfos ) );
-			buf.append( generateAttributes( writebleAttrInfos ) );
+
+            buf.append( generateAttributes( readOnlyAttrInfos ) );
+            buf.append( generateAttributes( writebleAttrInfos ) );
         }
         if (operationInfos != null)
         {
@@ -301,10 +301,10 @@ public class MBeanInterfaceGenerator
         {
             buf.append(" ");
         }
-        
+
         return buf.toString();
     }
-    
+
     protected String formMethod(String returnType, String name, String[] params, String[] names)
     {
         final String begin = "public " + padRight( getCodeClassname(returnType), 16) + " " + name + "(";
@@ -322,7 +322,7 @@ public class MBeanInterfaceGenerator
                 buf.append(PARAM_DELIM);
             }
 
-            buf.setLength(buf.length() - PARAM_DELIM.length());	// strip last ","
+            buf.setLength(buf.length() - PARAM_DELIM.length());    // strip last ","
             buf.append(" ");
             paramsString = buf.toString();
         }
@@ -357,7 +357,7 @@ public class MBeanInterfaceGenerator
 
         final String[] typeTemp = new String[1];
         final String[] nameTemp = new String[1];
-        
+
         final MBeanAttributeInfo[] infosArray = new MBeanAttributeInfo[infos.size()];
         infos.toArray( infosArray );
 
@@ -368,7 +368,7 @@ public class MBeanInterfaceGenerator
             String comment = "";
 
             final String javaName = attributeNameToJavaName(attributeName);
-            
+
             if ( info.isReadable() && info.isWritable() )
             {
                 buf.append( NEWLINE  ); // extra blank line before read/write attribute
@@ -385,7 +385,7 @@ public class MBeanInterfaceGenerator
                     }
                 }
                 buf.append(indent(formMethod(type, "get" + javaName, null, null)));
-				buf.append( NEWLINE );
+                buf.append( NEWLINE );
             }
 
             if (info.isWritable())
@@ -570,12 +570,12 @@ public class MBeanInterfaceGenerator
     public String getInterfaceComment(final MBeanInfo info)
     {
         final StringBuilder buf = new StringBuilder();
-        
+
         buf.append( "Implementing class: " + info.getClassName() + NEWLINE);
-        
+
         buf.append( NEWLINE + "Descriptor: " + NEWLINE);
         buf.append( toString(info.getDescriptor()) );
-        
+
         final MBeanNotificationInfo[] notifs = info.getNotifications();
         if ( notifs != null && notifs.length != 0 )
         {
@@ -587,7 +587,7 @@ public class MBeanInterfaceGenerator
         }
 
         final String comment = buf.toString();
-        
+
         return makeJavadocComment(comment);
     }
 

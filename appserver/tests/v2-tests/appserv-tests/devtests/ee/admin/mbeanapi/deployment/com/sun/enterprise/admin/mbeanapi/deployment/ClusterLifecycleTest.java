@@ -25,8 +25,8 @@ public class ClusterLifecycleTest extends BaseTest
     private final Cmd target;
 
     public ClusterLifecycleTest(final String user, final String password,
-            final String host, final int port, final String clusterName, 
-            final String instanceName, final String nodeAgentName, 
+            final String host, final int port, final String clusterName,
+            final String instanceName, final String nodeAgentName,
             final String configName, final Map optional)
     {
         final CmdChainCmd chain = new CmdChainCmd();
@@ -36,21 +36,21 @@ public class ClusterLifecycleTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateClusterCmd createClusterCmd = 
+        final CreateClusterCmd createClusterCmd =
                 cmdFactory.createCreateClusterCmd(
                     clusterName, configName, optional);
 
-        final CreateClusteredInstanceCmd createClusteredInstanceCmd = 
-                cmdFactory.createCreateClusteredInstanceCmd(instanceName, 
+        final CreateClusteredInstanceCmd createClusteredInstanceCmd =
+                cmdFactory.createCreateClusteredInstanceCmd(instanceName,
                         clusterName, nodeAgentName, optional);
 
-        final StartClusterCmd startClusterCmd = 
+        final StartClusterCmd startClusterCmd =
                 cmdFactory.createStartClusterCmd(clusterName);
 
-        final StopClusterCmd stopClusterCmd = 
+        final StopClusterCmd stopClusterCmd =
                 cmdFactory.createStopClusterCmd(clusterName);
 
-        final DeleteClusteredInstanceCmd deleteClusteredInstanceCmd = 
+        final DeleteClusteredInstanceCmd deleteClusteredInstanceCmd =
                 cmdFactory.createDeleteClusteredInstanceCmd(instanceName);
 
         final DeleteClusterCmd deleteClusterCmd = cmdFactory.

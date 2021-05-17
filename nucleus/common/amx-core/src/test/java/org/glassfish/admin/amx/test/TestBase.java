@@ -26,7 +26,7 @@ class TestBase extends junit.framework.TestCase {
         System.setProperty( "com.sun.aas.instanceRoot", "/tmp/amx-test" );
     }
 
-    
+
     protected void
     checkAssertsOn() {
         try {

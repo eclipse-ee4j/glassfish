@@ -48,7 +48,7 @@ import org.jvnet.hk2.config.types.Property;
  * server instance's config.
  * This is a service that is protected. This implements
  * the Contract EmbeddedSecurity
- * 
+ *
  * @author Nithya Subramanian
  */
 
@@ -57,7 +57,7 @@ import org.jvnet.hk2.config.types.Property;
 public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
-    
+
     public void copyConfigFiles(ServiceLocator habitat, File fromInstanceDir, File domainXml) {
         //For security reasons, permit only an embedded server instance to carry out the copy operations
         ServerEnvironment se = habitat.getService(ServerEnvironment.class);
@@ -126,7 +126,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
         }
         File file = new File(fullFilePath);
         return file.getName();
-       
+
     }
 
     public boolean isEmbedded(ServerEnvironment se) {

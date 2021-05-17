@@ -74,7 +74,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 
 public class Application extends CommonResourceBundleDescriptor
-        implements RoleMappingContainer, WritableJndiNameEnvironment, 
+        implements RoleMappingContainer, WritableJndiNameEnvironment,
             EjbReferenceContainer, ResourceEnvReferenceContainer,
             ResourceReferenceContainer, ServiceReferenceContainer,
             MessageDestinationReferenceContainer {
@@ -121,7 +121,7 @@ public class Application extends CommonResourceBundleDescriptor
     // of the Application object
     private String cmpDescriptorsLock = "cmp descriptors lock";
 
-    // flag to indicate that the memory representation of this application 
+    // flag to indicate that the memory representation of this application
     // is not in sync with the disk representation
     private boolean isDirty;
 
@@ -135,7 +135,7 @@ public class Application extends CommonResourceBundleDescriptor
     private String registrationName;
 
     private String appName;
-   
+
     private String archiveName;
 
     private String compatValue;
@@ -144,7 +144,7 @@ public class Application extends CommonResourceBundleDescriptor
 
     // realm associated with this application
     private String realm;
-    
+
     @Inject
     private transient SecurityRoleMapperFactory securityRoleMapperFactory;
 
@@ -155,7 +155,7 @@ public class Application extends CommonResourceBundleDescriptor
      */
     private boolean keepStateResolved;
 
-    // Physical entity manager factory corresponding to the unit name of 
+    // Physical entity manager factory corresponding to the unit name of
     // each application-level persistence unit.  Only available at runtime.
     private transient Map<String, EntityManagerFactory> entityManagerFactories =
             new HashMap<String, EntityManagerFactory>();
@@ -198,11 +198,11 @@ public class Application extends CommonResourceBundleDescriptor
 
     private Set<String> resourceAdapters = new HashSet<String>();
 
-    private Set<ApplicationParam> applicationParams = 
+    private Set<ApplicationParam> applicationParams =
             new HashSet<ApplicationParam>();
 
     private static final ServiceLocator habitat = Globals.getDefaultHabitat();
-    
+
     private Application() {
         super("", localStrings.getLocalString(
                 "enterprise.deployment.application.description",
@@ -227,7 +227,7 @@ public class Application extends CommonResourceBundleDescriptor
         return modules.isEmpty();
     }
 
-	/**
+    /**
      * Creates a new application to hold a standalone module
      *
      * @param name      the application name
@@ -235,10 +235,10 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the application
      */
     public static Application createVirtualApplication(String name, ModuleDescriptor<BundleDescriptor> newModule) {
-    	
+
         // create a new empty application
         Application application = createApplication();
-        
+
         application.setVirtual(true);
         if (name == null && newModule != null && newModule.getDescriptor() != null) {
             name = newModule.getDescriptor().getDisplayName();
@@ -252,24 +252,24 @@ public class Application extends CommonResourceBundleDescriptor
         }
 
         // add the module to it
-		if (newModule != null) {
-			newModule.setStandalone(true);
-			newModule.setArchiveUri(untaggedName);
-			if (newModule.getDescriptor() != null) {
-				newModule.getDescriptor().setApplication(application);
-			}
-			application.addModule(newModule);
-		}
-        
+        if (newModule != null) {
+            newModule.setStandalone(true);
+            newModule.setArchiveUri(untaggedName);
+            if (newModule.getDescriptor() != null) {
+                newModule.getDescriptor().setApplication(application);
+            }
+            application.addModule(newModule);
+        }
+
         return application;
     }
-    
+
     public static Application createApplication() {
         // create a new empty application
         Application retVal = habitat.create(Application.class);
         habitat.inject(retVal);
         habitat.postConstruct(retVal);
-        
+
         return retVal; // new Application();
     }
 
@@ -602,7 +602,7 @@ public class Application extends CommonResourceBundleDescriptor
      */
     public void setRegistrationName(String appId) {
 
-        // at his point we need to swap our RoleMapper, if we have one... 
+        // at his point we need to swap our RoleMapper, if we have one...
         SecurityRoleMapper roleMapper = null;
         try {
             roleMapper = getRoleMapper();
@@ -639,9 +639,9 @@ public class Application extends CommonResourceBundleDescriptor
 
 
     /**
-     * Returns the value of the app-name element in the application.xml if 
-     * it's defined. The default EE app name is the unqualified name of 
-     * the .ear or stand-alone module, minus the file extension. 
+     * Returns the value of the app-name element in the application.xml if
+     * it's defined. The default EE app name is the unqualified name of
+     * the .ear or stand-alone module, minus the file extension.
      *
      * @return the EE app name of this application
      */
@@ -660,7 +660,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Returns the value of the archive-name element in the sun-application.xml
      * When the app-name is not present in application.xml and archive-name is
-     * present in sun-application.xml, the value of archive-name minus file 
+     * present in sun-application.xml, the value of archive-name minus file
      * extension will be used as the default name of the app-name.
      *
      * @return the EE app name of this application
@@ -670,7 +670,7 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
     /**
-     * Sets the archive name using the archive-name element defined 
+     * Sets the archive name using the archive-name element defined
      * in sun-application.xml
      * @param archiveName archiveName to calculate default EE6 app-name
      */
@@ -704,8 +704,8 @@ public class Application extends CommonResourceBundleDescriptor
      * @param initializeInOrder
      */
     public void setInitializeInOrder(boolean initializeInOrder) {
-        this.initializeInOrder = initializeInOrder;   
-    } 
+        this.initializeInOrder = initializeInOrder;
+    }
 
     /**
      * Set the physical entity manager factory for a persistence unit
@@ -1151,7 +1151,7 @@ public class Application extends CommonResourceBundleDescriptor
             for (RootDeploymentDescriptor rd : aModule.getDescriptor().getExtensionsDescriptors()) {
                 if (rd instanceof BundleDescriptor) {
                      if (((BundleDescriptor)rd).getModuleType()== bundleType){
-                         bundleSet.add((BundleDescriptor)rd); 
+                         bundleSet.add((BundleDescriptor)rd);
                      }
                 }
             }
@@ -1170,7 +1170,7 @@ public class Application extends CommonResourceBundleDescriptor
             BundleDescriptor bundleDesc = aModule.getDescriptor();
             if (bundleDesc != null) {
                 bundleSet.add(bundleDesc);
-                for (RootDeploymentDescriptor rd : 
+                for (RootDeploymentDescriptor rd :
                     bundleDesc.getExtensionsDescriptors()) {
                     if (rd instanceof BundleDescriptor) {
                         bundleSet.add((BundleDescriptor)rd);
@@ -1230,8 +1230,8 @@ public class Application extends CommonResourceBundleDescriptor
                 new EjbDescriptor[ejbDesc.size()]);
 
         // The sorting algorithm used by this api is a modified mergesort.
-        // This algorithm offers guaranteed n*log(n) performance, and 
-        // can approach linear performance on nearly sorted lists. 
+        // This algorithm offers guaranteed n*log(n) performance, and
+        // can approach linear performance on nearly sorted lists.
 
         // since ejb name is only unique within a module, add the module uri
         // as the additional piece of information for comparison
@@ -1586,7 +1586,7 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the Set of application paramaters.
      */
     public Set<ApplicationParam> getApplicationParams() {
-        return applicationParams; 
+        return applicationParams;
     }
 
    /**
@@ -1610,7 +1610,7 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
     /**
-     * Returns the resolved keepstate value. 
+     * Returns the resolved keepstate value.
      * @return keepStateResolved
      */
     public boolean getKeepStateResolved() {
@@ -1618,7 +1618,7 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
     /**
-     * Sets the resolved keepstate value.  
+     * Sets the resolved keepstate value.
      * @param keepStateResolved
      */
     public void setKeepStateResolved(String keepStateResolved) {

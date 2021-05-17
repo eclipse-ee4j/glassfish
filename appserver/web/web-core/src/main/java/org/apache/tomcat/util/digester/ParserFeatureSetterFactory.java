@@ -37,7 +37,7 @@ public class ParserFeatureSetterFactory{
     /**
      * <code>true</code> is Xerces is used.
      */
-    private static boolean isXercesUsed; 
+    private static boolean isXercesUsed;
 
     static {
         try{
@@ -58,7 +58,7 @@ public class ParserFeatureSetterFactory{
     public static SAXParser newSAXParser(Properties properties)
             throws ParserConfigurationException,
                    SAXException,
-                   SAXNotRecognizedException, 
+                   SAXNotRecognizedException,
                    SAXNotSupportedException {
 
         if (isXercesUsed){

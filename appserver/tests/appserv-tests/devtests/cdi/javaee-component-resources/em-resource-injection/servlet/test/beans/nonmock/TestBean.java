@@ -30,8 +30,8 @@ import test.beans.artifacts.TestDatabase;
 @Preferred
 public class TestBean implements TestBeanInterface{
     public static boolean testBeanInvoked = false;
-    
-    @Inject //@TestDatabase 
+
+    @Inject //@TestDatabase
     EntityManager emf;
 
     @Override

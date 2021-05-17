@@ -33,8 +33,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
 
@@ -47,7 +47,7 @@ public class Client {
             stat.addStatus("client initSFSB-- wrong number of arguments", stat.FAIL);
             System.out.println("Usage: SyncClientTest provider-url ctxFactory jndi-name <instanceName:string> <get|put> <source:string> <destination dir/file:string>");
              return;
-        } 
+        }
 
         if ( !args[4].equals("get") && !args[4].equals("put") ) {
             stat.addStatus( "client initSFSB-- command can be either put or get. Please retry", stat.FAIL);
@@ -60,11 +60,11 @@ public class Client {
         client.doTest(args);
         System.out.println("[deploymentClient] DONE doTest()...");
         stat.printSummary("synchronization");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest(String[] args) {
 
         initSFSB(args);
@@ -77,7 +77,7 @@ public class Client {
         try {
             Context ic = null;
             Object objref = null;
-            if ((args[0] == null) || (args[1] == null)) { 
+            if ((args[0] == null) || (args[1] == null)) {
                 ic = new InitialContext();
                 objref = ic.lookup("java:comp/env/ejb/apiDeployment");
             } else {
@@ -114,16 +114,16 @@ public class Client {
 
                 }
                 if ( r) {
-                    System.out.println( args[4] + " of " + args[5] + 
+                    System.out.println( args[4] + " of " + args[5] +
                         " to " + args[6] + " passed.");
                     stat.addStatus("Synchronization of application bits", stat.PASS);
                 }
                 else {
-                    System.out.println( args[4] + " of " + args[5] + 
+                    System.out.println( args[4] + " of " + args[5] +
                         " to " + args[6] + " failed.");
                     stat.addStatus("Synchronization of applications bits", stat.FAIL);
                 }
-    
+
         } catch (Exception ex) {
             stat.addStatus("ejbclient accessSFSB", stat.FAIL);
 

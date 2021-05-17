@@ -187,7 +187,7 @@ public class DomainBuilder {
     /**
      * Performs all the domain configurations which includes security, configuration processing, substitution of
      * parameters... etc.
-     * 
+     *
      * @throws DomainException If any exception occurs in configuration.
      */
     public void run() throws RepositoryException, DomainException {
@@ -316,7 +316,7 @@ public class DomainBuilder {
 
     /**
      * Creates the given directory structure.
-     * 
+     *
      * @param dir The directory.
      * @throws RepositoryException If any error occurs in directory creation.
      */

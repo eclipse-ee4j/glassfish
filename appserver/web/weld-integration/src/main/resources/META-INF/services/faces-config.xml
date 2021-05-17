@@ -34,5 +34,5 @@
         <application-factory>org.glassfish.weld.jsf.WeldApplicationFactory</application-factory>
     </factory>
 
-    
+
 </faces-config>

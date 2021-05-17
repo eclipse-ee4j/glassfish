@@ -20,7 +20,7 @@ import jakarta.ws.rs.core.MediaType;
 
 /**
  * REST Interface Constants
- * 
+ *
  * @author Rajeshwar Paitl
  */
 public interface Constants {

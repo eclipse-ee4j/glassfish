@@ -59,9 +59,9 @@ import org.glassfish.admingui.common.util.AppUtil;
 public class ApplicationHandlers {
 
     /**
-     *	<p> This handler returns the list of applications for populating the table.
+     *    <p> This handler returns the list of applications for populating the table.
      *  <p> Input  value: "serverName" -- Type: <code> java.lang.String</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     *    @param    handlerCtx    The HandlerContext.
      */
     @Handler(id = "gf.getDeployedAppsInfo",
         input = {
@@ -268,7 +268,7 @@ public class ApplicationHandlers {
         output = {
             @HandlerOutput(name = "appScopedResExists", type = java.lang.Boolean.class)})
     public static void appScopedResourcesExist(HandlerContext handlerCtx) {
-        String appName = (String) handlerCtx.getInputValue("appName");        
+        String appName = (String) handlerCtx.getInputValue("appName");
         handlerCtx.setOutputValue("appScopedResExists", AppUtil.doesAppContainsResources(appName));
     }
 
@@ -405,7 +405,7 @@ public class ApplicationHandlers {
         output = {
             @HandlerOutput(name = "configName", type = String.class)})
     public static void getConfigName(HandlerContext handlerCtx) {
-        handlerCtx.setOutputValue("configName", 
+        handlerCtx.setOutputValue("configName",
                 TargetUtil.getConfigName((String) handlerCtx.getInputValue("target")));
     }
 
@@ -585,7 +585,7 @@ public class ApplicationHandlers {
         }
         List result = new ArrayList();
         String prefix = (String) GuiUtil.getSessionValue("REST_URL");
-	if (appPropsMap != null) {
+    if (appPropsMap != null) {
             for(Map.Entry<String,String> e : appPropsMap.entrySet()){
                 try{
                     String engines = e.getValue();
@@ -614,8 +614,8 @@ public class ApplicationHandlers {
                 }catch(Exception ex){
                     //skip this app.
                 }
-	    }
-	}
+        }
+    }
         handlerCtx.setOutputValue("result", result);
         handlerCtx.setOutputValue("filters", new ArrayList(filters));
     }
@@ -629,7 +629,7 @@ public class ApplicationHandlers {
             @HandlerOutput(name="URLList", type=List.class)})
 
     public void getTargetURLList(HandlerContext handlerCtx) {
-	String appID = (String)handlerCtx.getInputValue("AppID");
+    String appID = (String)handlerCtx.getInputValue("AppID");
         String contextRoot = (String)handlerCtx.getInputValue("contextRoot");
         String ctxRoot = calContextRoot(contextRoot);
         Set<String> URLs = new TreeSet();
@@ -657,25 +657,25 @@ public class ApplicationHandlers {
             }
         }
 
-	Iterator it = URLs.iterator();
-	String url = null;
+    Iterator it = URLs.iterator();
+    String url = null;
         ArrayList list = new ArrayList();
 
-	while (it.hasNext()) {
-	    url = (String)it.next();
+    while (it.hasNext()) {
+        url = (String)it.next();
             String target = "";
             int i = url.indexOf("@@@");
             if (i >= 0) {
                 target = url.substring(0, i);
-                url = url.substring(i + 3);                
+                url = url.substring(i + 3);
             }
-                
+
             HashMap<String, String> m = new HashMap();
             m.put("url", url + ctxRoot);
             m.put("target", target);
             list.add(m);
-	}
-                
+    }
+
         handlerCtx.setOutputValue("URLList", list);
 
     }
@@ -722,7 +722,7 @@ public class ApplicationHandlers {
         }
         return ctxRoot;
     }
-    
+
 
 
 /********************/
@@ -797,7 +797,7 @@ public class ApplicationHandlers {
                         for (String hostName : hostNames) {
                             if (localHostName != null && hostName.equalsIgnoreCase("localhost"))
                                 hostName = localHostName;
-//                            URLs.add("[" + target + "]  - " + protocol + "://" + hostName + ":" + resolvedPort + "[ " + one + " " + configName 
+//                            URLs.add("[" + target + "]  - " + protocol + "://" + hostName + ":" + resolvedPort + "[ " + one + " " + configName
 //                                    + " " + listener + " " + target + " ]");
                             URLs.add(target + "@@@" + protocol + "://" + hostName + ":" + resolvedPort);
                         }

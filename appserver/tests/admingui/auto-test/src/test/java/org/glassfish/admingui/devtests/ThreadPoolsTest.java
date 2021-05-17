@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -39,13 +39,13 @@ public class ThreadPoolsTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:minThread:minThread", "4");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:timeout:timeout", "1800");
         clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:configs", threadPoolName, "col1");
         assertEquals(threadPoolName, getText(prefix + "col1:link"));
-        
+
         String clickId = prefix + "col1:link";
         clickAndWait(clickId);
-        
+
         assertEquals("8192", getValue("propertyForm:propertySheet:propertSectionTextField:max:max", "value"));
         assertEquals("10", getValue("propertyForm:propertySheet:propertSectionTextField:maxThread:maxThread", "value"));
         assertEquals("4", getValue("propertyForm:propertySheet:propertSectionTextField:minThread:minThread", "value"));

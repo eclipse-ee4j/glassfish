@@ -87,7 +87,7 @@ public class IiopFolbGmsClient implements CallBack {
 
     private void fineLog( String fmt, Object... args ) {
         if(_logger.isLoggable(Level.FINE)) {
-		_logger.log(Level.FINE, fmt, args ) ;
+        _logger.log(Level.FINE, fmt, args ) ;
         }
     }
 
@@ -98,7 +98,7 @@ public class IiopFolbGmsClient implements CallBack {
 
         gmsAdapterService = services.getService(GMSAdapterService.class);
 
-	try {
+    try {
             if (gmsAdapterService == null) {
                 return ;
             }
@@ -140,11 +140,11 @@ public class IiopFolbGmsClient implements CallBack {
                 gis = new GroupInfoServiceNoGMSImpl() ;
             }
 
-	} catch (Throwable t) {
+    } catch (Throwable t) {
             _logger.log(Level.SEVERE, t.getLocalizedMessage(), t);
-	} finally {
+    } finally {
             fineLog( "IiopFolbGmsClient: gmsAdapter {0}", gmsAdapter ) ;
-	}
+    }
     }
 
     public void setORB( ORB orb ) {
@@ -191,15 +191,15 @@ public class IiopFolbGmsClient implements CallBack {
             handleSignal(signal);
         } catch (SignalAcquireException e) {
             _logger.log(Level.SEVERE, e.getLocalizedMessage());
-	} catch (Throwable t) {
-	    _logger.log(Level.SEVERE, t.getLocalizedMessage(), t);
+    } catch (Throwable t) {
+        _logger.log(Level.SEVERE, t.getLocalizedMessage(), t);
         } finally {
-	    try {
-		signal.release();
-	    } catch (SignalReleaseException e) {
-		_logger.log(Level.SEVERE, e.getLocalizedMessage());
-	    }
-	}
+        try {
+        signal.release();
+        } catch (SignalReleaseException e) {
+        _logger.log(Level.SEVERE, e.getLocalizedMessage());
+        }
+    }
     }
 
     ////////////////////////////////////////////////////
@@ -207,89 +207,89 @@ public class IiopFolbGmsClient implements CallBack {
     // Implementation
     //
 
-    private void handleSignal(final Signal signal) 
+    private void handleSignal(final Signal signal)
     {
         fineLog( "IiopFolbGmsClient.handleSignal: signal from: {0}",
             signal.getMemberToken());
         fineLog( "IiopFolbGmsClient.handleSignal: map entryset: {0}",
             signal.getMemberDetails().entrySet());
 
-	if (signal instanceof PlannedShutdownSignal ||
-	    signal instanceof FailureNotificationSignal) {
+    if (signal instanceof PlannedShutdownSignal ||
+        signal instanceof FailureNotificationSignal) {
 
-	    removeMember(signal);
+        removeMember(signal);
 
-	} else if (signal instanceof JoinedAndReadyNotificationSignal) {
+    } else if (signal instanceof JoinedAndReadyNotificationSignal) {
 
-	    addMember(signal);
+        addMember(signal);
 
-	} else {
-	    _logger.log(Level.SEVERE, 
+    } else {
+        _logger.log(Level.SEVERE,
                 "IiopFolbGmsClient.handleSignal: unknown signal: {0}",
                 signal.toString());
-	}
+    }
     }
 
     private void removeMember(final Signal signal)
     {
-	String instanceName = signal.getMemberToken();
-	try {
+    String instanceName = signal.getMemberToken();
+    try {
             fineLog( "IiopFolbGmsClient.removeMember->: {0}",
                 instanceName);
 
-	    synchronized (this) {
-		if (currentMembers.get(instanceName) != null) {
-		    currentMembers.remove(instanceName);
+        synchronized (this) {
+        if (currentMembers.get(instanceName) != null) {
+            currentMembers.remove(instanceName);
 
                     fineLog(
                         "IiopFolbGmsClient.removeMember: {0} removed - notifying listeners",
                         instanceName);
 
-		    gis.notifyObservers();
+            gis.notifyObservers();
 
                     fineLog(
                         "IiopFolbGmsClient.removeMember: {0} - notification complete",
                         instanceName);
-		} else {
+        } else {
                     fineLog(
                         "IiopFolbGmsClient.removeMember: {0} not present: no action",
                         instanceName);
-		}
-	    }
-	} finally {
+        }
+        }
+    } finally {
             fineLog( "IiopFolbGmsClient.removeMember<-: {0}", instanceName);
-	}
+    }
     }
 
     private void addMember(final Signal signal)
     {
-	final String instanceName = signal.getMemberToken();
-	try {
+    final String instanceName = signal.getMemberToken();
+    try {
             fineLog( "IiopFolbGmsClient.addMember->: {0}", instanceName);
 
-	    synchronized (this) {
-		if (currentMembers.get(instanceName) != null) {
+        synchronized (this) {
+        if (currentMembers.get(instanceName) != null) {
                     fineLog( "IiopFolbGmsClient.addMember: {0} already present: no action",
                             instanceName);
-		} else {
-		    ClusterInstanceInfo clusterInstanceInfo = 
+        } else {
+            ClusterInstanceInfo clusterInstanceInfo =
                         getClusterInstanceInfo(instanceName) ;
 
-		    currentMembers.put( clusterInstanceInfo.name(),
+            currentMembers.put( clusterInstanceInfo.name(),
                         clusterInstanceInfo);
 
                     fineLog( "IiopFolbGmsClient.addMember: {0} added - notifying listeners",
                         instanceName);
 
-		    gis.notifyObservers();
+            gis.notifyObservers();
 
                     fineLog( "IiopFolbGmsClient.addMember: {0} - notification complete",
                         instanceName);
-		}
-	    }	
-	} finally {
+        }
+        }
+    } finally {
             fineLog( "IiopFolbGmsClient.addMember<-: {0}", instanceName);
-	}
+    }
     }
 
     private int resolvePort( Server server, IiopListener listener ) {
@@ -457,7 +457,7 @@ public class IiopFolbGmsClient implements CallBack {
 
     class GroupInfoServiceGMSImpl extends GroupInfoServiceBase {
         @Override
-        public List<ClusterInstanceInfo> internalClusterInstanceInfo( 
+        public List<ClusterInstanceInfo> internalClusterInstanceInfo(
             List<String> endpoints) {
 
             fineLog( "internalClusterInstanceInfo: currentMembers {0}",

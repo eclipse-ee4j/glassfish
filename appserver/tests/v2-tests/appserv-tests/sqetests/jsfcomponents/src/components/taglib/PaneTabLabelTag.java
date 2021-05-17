@@ -73,11 +73,11 @@ public class PaneTabLabelTag extends UIComponentTag {
 
     protected String paneTabLabelClass;
     public String getPaneTabLabelClass() {
-	return paneTabLabelClass;
+    return paneTabLabelClass;
     }
 
     public void setPaneTabLabelClass(String newPaneTabLabelClass) {
-	paneTabLabelClass = newPaneTabLabelClass;
+    paneTabLabelClass = newPaneTabLabelClass;
     }
 
     public void release() {
@@ -132,8 +132,8 @@ public class PaneTabLabelTag extends UIComponentTag {
                     createValueBinding(paneTabLabelClass);
                 component.setValueBinding("paneTabLabelClass", vb);
             } else {
-                component.getAttributes().put("paneTabLabelClass", 
-					      paneTabLabelClass);
+                component.getAttributes().put("paneTabLabelClass",
+                          paneTabLabelClass);
             }
         }
 

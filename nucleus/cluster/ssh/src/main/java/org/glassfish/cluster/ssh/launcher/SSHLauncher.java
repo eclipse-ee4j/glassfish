@@ -106,7 +106,7 @@ public class SSHLauncher {
     /**
      * Initialize the SSHLauncher use a Node config object
      * @param node
-     * @param logger 
+     * @param logger
      */
     public void init(Node node, Logger logger) {
         this.logger = logger;
@@ -122,14 +122,14 @@ public class SSHLauncher {
             this.host = node.getNodeHost();
         }
         if (logger.isLoggable(Level.FINE)) {
-	    logger.fine("Connecting to host " + host); 
+        logger.fine("Connecting to host " + host);
         }
 
         //XXX Why do we need this again?  This is already done above and set to host
         String sshHost = connector.getSshHost();
         if (sshHost != null)
             this.host = sshHost;
-        
+
         SshAuth sshAuth = connector.getSshAuth();
         String userName = null;
         if (sshAuth != null) {
@@ -150,14 +150,14 @@ public class SSHLauncher {
 
     /**
      * Initialize the SSHLauncher using a private key file
-     * 
+     *
      * @param userName
      * @param host
      * @param port
      * @param password
      * @param keyFile
      * @param keyPassPhrase
-     * @param logger 
+     * @param logger
      */
     public void init(String userName, String host, int port, String password, String keyFile, String keyPassPhrase, Logger logger) {
         this.port = port == 0 ? 22 : port;
@@ -169,7 +169,7 @@ public class SSHLauncher {
         this.userName = SSHUtil.checkString(userName) == null ?
                     System.getProperty("user.name") : userName;
 
-        
+
         this.rawPassword = password;
         this.password = expandPasswordAlias(password);
         this.rawKeyPassPhrase = keyPassPhrase;
@@ -313,14 +313,14 @@ public class SSHLauncher {
         command = SFTPClient.normalizePath(command);
         return runCommandAsIs(command, os, stdinLines);
     }
-    
+
     /**
-     * Executes a command on the remote system via ssh without normalizing 
+     * Executes a command on the remote system via ssh without normalizing
      * the command line
-     * 
+     *
      * @param command the command to execute
      * @param os stream to receive the output from the command
-     * @param stdinLines optional data to be sent to the process's System.in 
+     * @param stdinLines optional data to be sent to the process's System.in
      *        stream; null if no input should be sent
      * @return
      * @throws IOException
@@ -332,7 +332,7 @@ public class SSHLauncher {
     {
         return runCommandAsIs(commandListToQuotedString(command), os, stdinLines);
     }
-    
+
     private int runCommandAsIs(String command, OutputStream os,
             List<String> stdinLines) throws JSchException, IOException,
                                             InterruptedException
@@ -588,7 +588,7 @@ public class SSHLauncher {
                 if(!generateKeyPair()) {
                     throw new IOException("SSH key pair generation failed. Please generate key manually.");
                 }
-            } else {                
+            } else {
                 throw new IOException("SSH key pair not present. Please generate a key pair manually or specify an existing one and re-run the command.");
             }
         }
@@ -840,7 +840,7 @@ public class SSHLauncher {
         int exit;
 
         try {
-            exit = pm.execute();            
+            exit = pm.execute();
         }
         catch (ProcessManagerException ex) {
             if (logger.isLoggable(Level.FINE)) {
@@ -882,7 +882,7 @@ public class SSHLauncher {
         if (logger.isLoggable(Level.FINER)) {
             logger.finer("Paths = " + paths);
         }
-        
+
         File exe = ProcessUtils.getExe(SSH_KEYGEN);
         if( exe != null){
             return exe.getPath();
@@ -911,11 +911,11 @@ public class SSHLauncher {
             }
             logger.info("Created directory " + f.toString());
         }
-        
+
         if (!f.setReadable(false, false) || !f.setReadable(true)) {
             ret = false;
         }
-        
+
         if (!f.setWritable(false,false) || !f.setWritable(true)) {
             ret = false;
         }
@@ -929,7 +929,7 @@ public class SSHLauncher {
         }
         return ret;
     }
-    
+
     @Override
     public String toString() {
 

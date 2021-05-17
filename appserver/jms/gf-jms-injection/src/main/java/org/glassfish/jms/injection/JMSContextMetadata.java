@@ -146,7 +146,7 @@ public class JMSContextMetadata implements Serializable {
                     return unalisedPwd;
             } catch (Exception e) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, localStrings.getLocalString("decrypt.password.fail", 
+                    logger.log(Level.WARNING, localStrings.getLocalString("decrypt.password.fail",
                                "Failed to unalias password for the reason: {0}."), e.toString());
                 }
             }

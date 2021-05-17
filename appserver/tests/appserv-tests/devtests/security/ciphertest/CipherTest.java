@@ -77,7 +77,7 @@ public class CipherTest {
     }
 
     private static void verbose(String msg) {
-        if( VERBOSE_FLAG) 
+        if( VERBOSE_FLAG)
             System.out.println(msg);
     }
 
@@ -110,7 +110,7 @@ public class CipherTest {
                 serverPort = Integer.parseInt(args[++i]);
             } else if( args[i].intern() == SHOULD_PASS_OPTION.intern() ) {
                 shouldPass = args[++i];
-                
+
                 /*
                  * Workaround for JavaSE bug (6518827) where
                  * arguments of length 0 are not passed in on Windows.
@@ -166,10 +166,10 @@ public class CipherTest {
 
     }
 
-    private static void interactive() 
+    private static void interactive()
         throws IOException {
 
-        BufferedReader reader = 
+        BufferedReader reader =
             new BufferedReader(new InputStreamReader(System.in));
 
         while(true) {
@@ -190,7 +190,7 @@ public class CipherTest {
         }
     }
 
-    private static void nonInteractive(String enabledCipher, 
+    private static void nonInteractive(String enabledCipher,
         String shouldPass, String shouldFail) {
 
 //         if( enabledCipher == null ) {
@@ -207,13 +207,13 @@ public class CipherTest {
            ct.run();
     }
 
-    private static void nonInteractive(String[] enabledCipher, 
+    private static void nonInteractive(String[] enabledCipher,
         String shouldPass, String shouldFail) {
         // TODO
     }
 
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
 
     private int startCipher = -1;
@@ -228,7 +228,7 @@ public class CipherTest {
         ciphers[0] = SUPPORTED_CIPHERS[startCipher];
 
         this.shouldPass = shouldPass;
-        this.shouldFail = shouldFail; 
+        this.shouldFail = shouldFail;
 
     }
 
@@ -237,9 +237,9 @@ public class CipherTest {
             ciphers = new String[1];
             ciphers[0] = cipherName;
         }
- 
+
         this.shouldPass = shouldPass;
-        this.shouldFail = shouldFail; 
+        this.shouldFail = shouldFail;
     }
 
     public void run() {
@@ -274,7 +274,7 @@ public class CipherTest {
             int index = shouldPass.indexOf(thatPassed[i]);
             if( index < 0 ) {
                 // is not in the should pass, test failed
-                System.out.println("Cipher - " + thatPassed[i] + 
+                System.out.println("Cipher - " + thatPassed[i] +
                     " - pased, but should not have. Test failed");
                 stat.addStatus(testId, stat.FAIL);
                 return;
@@ -292,7 +292,7 @@ public class CipherTest {
             int index = shouldPass.indexOf(thatFailed[i]);
             if( index >= 0 ) {
                 // is in the should pass, but did not
-                System.out.println("Cipher - " + thatFailed[i] + 
+                System.out.println("Cipher - " + thatFailed[i] +
                     " - failed, but should have passed. Test failed");
                 stat.addStatus(testId, stat.FAIL);
                 return;
@@ -307,7 +307,7 @@ public class CipherTest {
 
     private  void doSSLTest(String[] enableCiphers) throws IOException {
 
-        SSLSocketFactory sslSocketFactory =  
+        SSLSocketFactory sslSocketFactory =
             (SSLSocketFactory)SSLSocketFactory.getDefault();
 
         SSLSocket secureSocket = (SSLSocket)
@@ -319,7 +319,7 @@ public class CipherTest {
         BufferedWriter buffWriter = new BufferedWriter(
             new OutputStreamWriter(secureSocket.getOutputStream()));
         buffWriter.write(HTTP_GET_REQUEST);
-        buffWriter.newLine(); 
+        buffWriter.newLine();
         buffWriter.newLine();
         buffWriter.flush();
         //buffWriter.close();

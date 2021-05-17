@@ -34,7 +34,7 @@
     <ant dir="src" inheritAll="false" target="all"/>
 
     <jar jarfile="generic-ra.rar" basedir="."
-         includes="generic-ra.jar, META-INF/*.xml, META-INF/services/*" /> 
+         includes="generic-ra.jar, META-INF/*.xml, META-INF/services/*" />
   </target>
 
   <target name="deploy" depends="init-common">

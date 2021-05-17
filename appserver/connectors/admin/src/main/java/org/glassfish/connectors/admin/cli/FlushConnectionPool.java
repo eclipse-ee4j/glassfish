@@ -43,8 +43,8 @@ import jakarta.inject.Inject;
 @I18n("flush.connection.pool")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="flush-connection-pool", 
+        opType=RestEndpoint.OpType.POST,
+        path="flush-connection-pool",
         description="flush-connection-pool")
 })
 public class FlushConnectionPool implements AdminCommand {

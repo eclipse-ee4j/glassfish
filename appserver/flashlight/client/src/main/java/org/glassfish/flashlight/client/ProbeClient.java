@@ -24,25 +24,25 @@ import org.glassfish.external.probe.provider.annotations.ProbeParam;
  *         Date: May 30, 2008
  */
 public class ProbeClient {
-	
-	@ProbeListener("glassfish:ejb:ejb-container:onDeploy")
-	public void fooOnDeploy2(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
-		System.out.println("Got callback: " + param1 + " : " + param2);
-	}
-	@ProbeListener("glassfish:ejb:ejb-container:onDeploy")
-	public void fooOnDeploy1(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
-		System.out.println("Got callback: " + param1 + " : " + param2);
-	}@ProbeListener("glassfish:ejb:ejb-container:onDeploy")
-	public void fooOnDeploy(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
-		System.out.println("Got callback: " + param1 + " : " + param2);
-	}	@ProbeListener("glassfish:ejb:ejb-container:onCreate")
-	public void fooOnCreate(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
-		System.out.println("Got callback: " + param1 + " : " + param2);
-	}	@ProbeListener("glassfish:ejb:ejb-container:onShutdown")
-	public void fooOnShutdown(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
-		System.out.println("Got callback: " + param1 + " : " + param2);
-	}	@ProbeListener("glassfish:ejb:ejb-container:onUndeploy")
-	public void fooOnUnDeploy(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
-		System.out.println("Got callback: " + param1 + " : " + param2);
-	}
+
+    @ProbeListener("glassfish:ejb:ejb-container:onDeploy")
+    public void fooOnDeploy2(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
+        System.out.println("Got callback: " + param1 + " : " + param2);
+    }
+    @ProbeListener("glassfish:ejb:ejb-container:onDeploy")
+    public void fooOnDeploy1(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
+        System.out.println("Got callback: " + param1 + " : " + param2);
+    }@ProbeListener("glassfish:ejb:ejb-container:onDeploy")
+    public void fooOnDeploy(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
+        System.out.println("Got callback: " + param1 + " : " + param2);
+    }    @ProbeListener("glassfish:ejb:ejb-container:onCreate")
+    public void fooOnCreate(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
+        System.out.println("Got callback: " + param1 + " : " + param2);
+    }    @ProbeListener("glassfish:ejb:ejb-container:onShutdown")
+    public void fooOnShutdown(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
+        System.out.println("Got callback: " + param1 + " : " + param2);
+    }    @ProbeListener("glassfish:ejb:ejb-container:onUndeploy")
+    public void fooOnUnDeploy(@ProbeParam("appName") String param1, @ProbeParam("beanName") String param2) {
+        System.out.println("Got callback: " + param1 + " : " + param2);
+    }
 }

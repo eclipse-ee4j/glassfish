@@ -36,26 +36,26 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * This is a utility class to obtain the properties of a 
+ * This is a utility class to obtain the properties of a
  * RA JavaBean housed in a RAR module/deployment dir, without exploding the RAR
  * contents. This method would be used by the admin-gui to configure
  * RA properties during RA deployment to a cluster.
- *  
+ *
  * @author Sivakumar Thyagarajan
  */
 public class RARUtils {
     private final static Logger _logger = LogDomains.getLogger(RARUtils.class, LogDomains.RSR_LOGGER);
-    private static StringManager localStrings = 
+    private static StringManager localStrings =
         StringManager.getManager( RARUtils.class );
 
     /**
      * Finds the properties of a RA JavaBean bundled in a RAR
      * without exploding the RAR
-     * 
+     *
      * @param pathToDeployableUnit a physical,accessible location of the connector module.
-     * [either a RAR for RAR-based deployments or a directory for Directory based deployments] 
+     * [either a RAR for RAR-based deployments or a directory for Directory based deployments]
      * @return A Map that is of <String RAJavaBeanPropertyName, String defaultPropertyValue>
-     * An empty map is returned in the case of a 1.0 RAR 
+     * An empty map is returned in the case of a 1.0 RAR
      */
 /* TODO V3
     public static Map getRABeanProperties (String pathToDeployableUnit) throws ConnectorRuntimeException {
@@ -75,8 +75,8 @@ public class RARUtils {
 
 /*
     private static Map getRABeanPropertiesForRARBasedDeployment(String rarLocation){
-        ConnectorRARClassLoader jarCL = 
-                            (new ConnectorRARClassLoader(rarLocation,  
+        ConnectorRARClassLoader jarCL =
+                            (new ConnectorRARClassLoader(rarLocation,
                              ApplicationServer.getServerContext().getCommonClassLoader()));
         String raClassName = ConnectorDDTransformUtils.
                                     getResourceAdapterClassName(rarLocation);
@@ -86,7 +86,7 @@ public class RARUtils {
            hMap = extractRABeanProps(raClassName, jarCL);
         } catch (ClassNotFoundException e) {
             _logger.info(e.getMessage());
-            _logger.log(Level.FINE, "Error while trying to find class " 
+            _logger.log(Level.FINE, "Error while trying to find class "
                             + raClassName + "in RAR at " + rarLocation, e);
         }
         return hMap;
@@ -103,9 +103,9 @@ public class RARUtils {
             ConnectorDescriptor cd = ConnectorDDTransformUtils.
                                 getConnectorDescriptor(directoryLocation);
             String raClassName = cd.getResourceAdapterClass();
-            
+
             File f = new File(directoryLocation);
-            URLClassLoader ucl = new URLClassLoader(new URL[]{f.toURI().toURL()}, 
+            URLClassLoader ucl = new URLClassLoader(new URL[]{f.toURI().toURL()},
                                   ApplicationServer.getServerContext().getCommonClassLoader());
             hMap = extractRABeanProps(raClassName, ucl);
         } catch (IOException e) {
@@ -131,12 +131,12 @@ public class RARUtils {
 
     /**
      * A valid resource adapter java bean property should either be one of the
-     * following  
+     * following
      * 1. A Java primitive or a primitve wrapper
      * 2. A String
      */
     public static boolean isValidRABeanConfigProperty(Class clz) {
-        return (clz.isPrimitive() || clz.equals(String.class) 
+        return (clz.isPrimitive() || clz.equals(String.class)
                         || isPrimitiveWrapper(clz));
     }
 
@@ -144,8 +144,8 @@ public class RARUtils {
      * Determines if a class is one of the eight java primitive wrapper classes
      */
     private static boolean isPrimitiveWrapper(Class clz) {
-        return (clz.equals(Boolean.class) || clz.equals(Character.class) 
-                 || clz.equals(Byte.class) || clz.equals(Short.class) 
+        return (clz.equals(Boolean.class) || clz.equals(Character.class)
+                 || clz.equals(Byte.class) || clz.equals(Short.class)
                  || clz.equals(Integer.class) || clz.equals(Long.class)
                  || clz.equals(Float.class) || clz.equals(Double.class));
     }
@@ -153,17 +153,17 @@ public class RARUtils {
    /**
      * Prepares the name/value pairs for ActivationSpec. <p>
      * Rule: <p>
-     * 1. The name/value pairs are the union of activation-config on 
-     *    standard DD (message-driven) and runtime DD (mdb-resource-adapter) 
-     * 2. If there are duplicate property settings, the value in runtime 
-     *    activation-config will overwrite the one in the standard 
+     * 1. The name/value pairs are the union of activation-config on
+     *    standard DD (message-driven) and runtime DD (mdb-resource-adapter)
+     * 2. If there are duplicate property settings, the value in runtime
+     *    activation-config will overwrite the one in the standard
      *    activation-config.
      */
     public static Set getMergedActivationConfigProperties(EjbMessageBeanDescriptor msgDesc) {
-        
+
         Set mergedProps = new HashSet();
         Set runtimePropNames = new HashSet();
-        
+
         Set runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
         if(runtimeProps != null){
             Iterator iter = runtimeProps.iterator();
@@ -174,7 +174,7 @@ public class RARUtils {
                 runtimePropNames.add(propName);
             }
         }
-        
+
         Set standardProps = msgDesc.getActivationConfigProperties();
         if(standardProps != null){
             Iterator iter = standardProps.iterator();
@@ -186,9 +186,9 @@ public class RARUtils {
                 mergedProps.add(entry);
             }
         }
-        
+
         return mergedProps;
-        
+
     }
 
     public static Class loadClassFromRar(String rarName, String beanClassName) throws ConnectorRuntimeException{
@@ -299,5 +299,5 @@ public class RARUtils {
         }
     }
 
-    
+
 }

@@ -34,25 +34,25 @@ import com.sun.enterprise.util.StringUtils;
  */
 public class BackupWarningException extends BackupException
 {
-	/**
-	 * Constructs a BackupWarningException with a possibly i18n'd detail message.
-	 * @param s the detail message which is first checked for as a key for an i18n string.  
-	 * If not found it will be used as the message itself.
-	 */	
-	public BackupWarningException(String s)
-	{
-		super(s);
-	}
-	
-	/**
-	 * @param s the detail message which is first checked for as a key for an i18n string.  
-	 * If not found it will be used as the message itself.
-	 * @param o the parameter for the recovered i18n string. I.e. "{0}" will be
-	 * replaced with o.toString().  If there is no i18n string located
-	 * o will be ignored.
-	 */	
-	public BackupWarningException(String s, Object o)
-	{
-		super(s, o);
-	}
+    /**
+     * Constructs a BackupWarningException with a possibly i18n'd detail message.
+     * @param s the detail message which is first checked for as a key for an i18n string.
+     * If not found it will be used as the message itself.
+     */
+    public BackupWarningException(String s)
+    {
+        super(s);
+    }
+
+    /**
+     * @param s the detail message which is first checked for as a key for an i18n string.
+     * If not found it will be used as the message itself.
+     * @param o the parameter for the recovered i18n string. I.e. "{0}" will be
+     * replaced with o.toString().  If there is no i18n string located
+     * o will be ignored.
+     */
+    public BackupWarningException(String s, Object o)
+    {
+        super(s, o);
+    }
 }

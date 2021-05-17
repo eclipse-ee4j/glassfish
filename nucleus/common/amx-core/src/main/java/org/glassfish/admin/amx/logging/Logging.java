@@ -28,29 +28,29 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-	Supports accessing logging information in multiple ways.  The following are supported:
-	<ul>
-	<li>Emission of pseudo real-time JMX Notifications when a
-		log record is created--see {@link LogRecordEmitter}</li>
-	<li>Access to existing log file contents--see {@link LogFileAccess}</li>
-	<li>Querying for log entries--see {@link LogQuery}</li>
-	</ul>
-	@since AS 9.0
+    Supports accessing logging information in multiple ways.  The following are supported:
+    <ul>
+    <li>Emission of pseudo real-time JMX Notifications when a
+        log record is created--see {@link LogRecordEmitter}</li>
+    <li>Access to existing log file contents--see {@link LogFileAccess}</li>
+    <li>Querying for log entries--see {@link LogQuery}</li>
+    </ul>
+    @since AS 9.0
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 @AMXMBeanMetadata(singleton=true, globalSingleton=true, leaf=true)
 public interface Logging
-	extends AMXProxy, LogQuery
+    extends AMXProxy, LogQuery
     // LogFileAccess    not implemented yet
     // LogRecordEmitter    not implemented yet
     // LogAnalyzer    not implemented yet
 {
    /**
-		Sets the log level of the Logger for the specified module.  This operation
-		will not effect a change to the corresponding loggin configuration for that module.
-		
-		@param module	a module name as specified in {@link LogModuleNames}.
-		@param level	a log level
+        Sets the log level of the Logger for the specified module.  This operation
+        will not effect a change to the corresponding loggin configuration for that module.
+
+        @param module    a module name as specified in {@link LogModuleNames}.
+        @param level    a log level
      */
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
     @Description( "Sets the log level of the Logger for the specified module" )
@@ -59,19 +59,19 @@ public interface Logging
         @Param(name="level") final String level );
 
    /**
-   		Gets the log level of the Logger for the specified module, which may or may not
-   		be the same as that found in the configuration.
-		
-   		
-   		@param moduleName a module name as specified in {@link LogModuleNames}
+           Gets the log level of the Logger for the specified module, which may or may not
+           be the same as that found in the configuration.
+
+
+           @param moduleName a module name as specified in {@link LogModuleNames}
     */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     @Description( "Gets the log level of the Logger for the specified module" )
     public String getModuleLogLevel( @Param(name="moduleName") final String moduleName );
 
       /**
-    		Sets the log level of the Logger for the specified module.  This operation
-    		will not effect a change to the corresponding loggin configuration for that module.
+            Sets the log level of the Logger for the specified module.  This operation
+            will not effect a change to the corresponding loggin configuration for that module.
 
         */
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
@@ -95,7 +95,7 @@ public interface Logging
 
 
     /**
-       		Sets the value of one or more of the logging configuration properties .
+               Sets the value of one or more of the logging configuration properties .
 
      */
 
@@ -111,7 +111,7 @@ public interface Logging
         @param level the log level of the log message.
         @param message  the message to be placed in Notif.getMessage()
      */
-     
+
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public void testEmitLogMessage(
          @Param(name="level") final String level,

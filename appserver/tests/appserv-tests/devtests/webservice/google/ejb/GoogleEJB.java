@@ -17,7 +17,7 @@
 package googleejb;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -29,18 +29,18 @@ public class GoogleEJB implements SessionBean {
     private SessionContext sc;
 
     public GoogleEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In GoogleEJB::ejbCreate !!");
+    System.out.println("In GoogleEJB::ejbCreate !!");
     }
 
-    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url) 
-    { 
-        return null; 
+    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url)
+    {
+        return null;
     }
 
-    public String doSpellingSuggestion(java.lang.String key, 
-                                       java.lang.String phrase) 
+    public String doSpellingSuggestion(java.lang.String key,
+                                       java.lang.String phrase)
     {
 
         try {
@@ -53,9 +53,9 @@ public class GoogleEJB implements SessionBean {
         } catch(Exception e) {
             EJBException ejbEx = new EJBException("getCallerPrincipal exception");
             ejbEx.initCause(e);
-            throw ejbEx;          
+            throw ejbEx;
         }
-        
+
         MessageContext msgContext = sc.getMessageContext();
         System.out.println("msgContext = " + msgContext);
 
@@ -68,20 +68,20 @@ public class GoogleEJB implements SessionBean {
 
         return returnValue;
     }
-        
+
     public GoogleSearchResult doGoogleSearch(java.lang.String key, java.lang.String q, int start, int maxResults, boolean filter, java.lang.String restrict, boolean safeSearch, java.lang.String lr, java.lang.String ie, java.lang.String oe) {
         return null;
     }
-    
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 
 }

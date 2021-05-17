@@ -27,7 +27,7 @@ import javax.naming.*;
 /**
  */
 public class LookupBean implements SessionBean {
-    
+
     SessionContext sessionContext_;
 
     BigDecimal yenRate = new BigDecimal("121.6000");
@@ -88,7 +88,7 @@ public class LookupBean implements SessionBean {
      * Loads the state of the bean from secondary storage. Required by EJB spec.
      */
     public void ejbActivate() {}
-    
+
     /**
      * Keeps the state of the bean to secondary storage. Required by EJB spec.
      */

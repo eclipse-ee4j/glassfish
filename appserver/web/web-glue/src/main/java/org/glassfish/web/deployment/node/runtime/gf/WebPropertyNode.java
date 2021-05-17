@@ -55,7 +55,7 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
      */
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
-        RuntimeDescriptor descriptor = 
+        RuntimeDescriptor descriptor =
             (RuntimeDescriptor) getDescriptor();
         if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
             descriptor.setAttributeValue(WebProperty.NAME, value);
@@ -66,7 +66,7 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
         }
         return false;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -76,32 +76,32 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
         WebProperty property) {
-        Element propertyElement = 
+        Element propertyElement =
             (Element) super.writeDescriptor(parent, nodeName, property);
 
         // description?
         appendTextChild(propertyElement, RuntimeTagNames.DESCRIPTION, property.getDescription());
 
-	setAttribute(propertyElement, RuntimeTagNames.NAME, (String) property.getAttributeValue(WebProperty.NAME));
-	setAttribute(propertyElement, RuntimeTagNames.VALUE, (String) property.getAttributeValue(WebProperty.VALUE));
+    setAttribute(propertyElement, RuntimeTagNames.NAME, (String) property.getAttributeValue(WebProperty.NAME));
+    setAttribute(propertyElement, RuntimeTagNames.VALUE, (String) property.getAttributeValue(WebProperty.VALUE));
         return propertyElement;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
      * @param node name for the descriptor
      * @param the array of descriptors to write
-     */    
+     */
     public void writeDescriptor(Node parent, String nodeName, WebProperty[] properties) {
-	if (properties==null) 
-	    return;
-	for (int i=0;i<properties.length;i++) {
-	    writeDescriptor(parent, nodeName, properties[i]);
-	}
+    if (properties==null)
+        return;
+    for (int i=0;i<properties.length;i++) {
+        writeDescriptor(parent, nodeName, properties[i]);
+    }
     }
 }
 

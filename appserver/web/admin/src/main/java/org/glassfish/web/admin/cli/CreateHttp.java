@@ -62,8 +62,8 @@ import java.util.ResourceBundle;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Protocol.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-http", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-http",
         description="Create",
         params={
             @RestParam(name="id", value="$parent")

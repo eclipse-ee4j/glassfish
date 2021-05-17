@@ -75,7 +75,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
         try {
             clientAuthNeed = Boolean.valueOf((String) attributes.get("clientAuthNeed"));
             clientAuthWant = Boolean.valueOf((String) attributes.get("clientAuthWant"));
-            
+
             // SSL protocol variant (e.g., TLS, SSL v3, etc.)
             String protocol = (String) attributes.get("protocol");
             if (protocol == null) {
@@ -92,7 +92,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
              */
             // START SJSAS 6439313
             context = SSLContext.getInstance(protocol);
-            // END SJSAS 6439313 
+            // END SJSAS 6439313
             // Configure SSL session timeout and cache size
             configureSSLSessionContext(context.getServerSessionContext());
             String trustAlgorithm = (String) attributes.get("truststoreAlgorithm");
@@ -264,9 +264,9 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
                 } // while
                 protocol = requestedProtocols.substring(fromIndex);
             }
-            
+
             assert protocol != null;
-            
+
             protocol = protocol.trim();
             if (protocol.length() > 0 && supportedProtocols != null) {
                 /*
@@ -323,7 +323,7 @@ public class JSSE14SocketFactory extends JSSESocketFactory {
         initServerSocket(socket);
         try {
             // Set the timeout to 1ms as all we care about is if it throws an
-            // SSLException on accept. 
+            // SSLException on accept.
             socket.setSoTimeout(1);
             socket.accept();
             // Will never get here - no client can connect to an unbound port

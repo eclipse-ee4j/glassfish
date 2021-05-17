@@ -35,9 +35,9 @@ public class WebFragmentDeploymentDescriptorFile extends DeploymentDescriptorFil
      */
     @Override
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.WEB_FRAGMENT_JAR_ENTRY;        
+        return DescriptorConstants.WEB_FRAGMENT_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -46,7 +46,7 @@ public class WebFragmentDeploymentDescriptorFile extends DeploymentDescriptorFil
      */
     @Override
     public RootXMLNode<WebFragmentDescriptor> getRootXMLNode(WebFragmentDescriptor descriptor) {
-        return new WebFragmentNode();        
+        return new WebFragmentNode();
     }
-    
+
 }

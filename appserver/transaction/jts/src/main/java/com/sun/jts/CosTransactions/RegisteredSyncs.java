@@ -65,9 +65,9 @@ class RegisteredSyncs {
 
     private Vector registered = new Vector();
 
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(RegisteredSyncs.class, LogDomains.TRANSACTION_LOGGER);
 
     /**
@@ -100,25 +100,25 @@ class RegisteredSyncs {
         for (int i = 0; i < registered.size() && result == true; i++) {
             Synchronization sync = (Synchronization) registered.elementAt(i);
             try {
-		 		if(_logger.isLoggable(Level.FINEST))
+                 if(_logger.isLoggable(Level.FINEST))
                 {
-					_logger.logp(Level.FINEST,"RegisterdSyncs","distributeBefore()",
-							"Before invoking before_completion() on synchronization object " + sync);
+                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeBefore()",
+                            "Before invoking before_completion() on synchronization object " + sync);
                 }
 
                 sync.before_completion();
 
-		 		if(_logger.isLoggable(Level.FINEST))
+                 if(_logger.isLoggable(Level.FINEST))
                 {
-					_logger.logp(Level.FINEST,"RegisterdSyncs","distributeBefore()", 
-					 		 "After invoking before_completion() on synchronization object " + sync);
+                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeBefore()",
+                              "After invoking before_completion() on synchronization object " + sync);
                 }
             } catch (RuntimeException rex) {
                 // Exception was logged in SynchronizationImpl
                 throw rex;
             } catch (Throwable exc) {
-				_logger.log(Level.WARNING, "jts.exception_in_synchronization_operation",
-		                new java.lang.Object[] { exc.toString(),"before_completion"});
+                _logger.log(Level.WARNING, "jts.exception_in_synchronization_operation",
+                        new java.lang.Object[] { exc.toString(),"before_completion"});
                 result = false;
             }
         }
@@ -150,19 +150,19 @@ class RegisteredSyncs {
             }
 
             try {
- 				if(_logger.isLoggable(Level.FINEST))
+                 if(_logger.isLoggable(Level.FINEST))
                 {
-					_logger.logp(Level.FINEST,"RegisterdSyncs","distributeAfter()",
-							"Before invoking after_completion() on synchronization object " + sync);
+                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeAfter()",
+                            "Before invoking after_completion() on synchronization object " + sync);
                 }
 
                 sync.after_completion(status);
 
-		 		if(_logger.isLoggable(Level.FINEST))
+                 if(_logger.isLoggable(Level.FINEST))
                 {
-					_logger.logp(Level.FINEST,"RegisterdSyncs","distributeAfter()",
-							"After invoking after_completion() on"+
-							"synchronization object"+ sync);
+                    _logger.logp(Level.FINEST,"RegisterdSyncs","distributeAfter()",
+                            "After invoking after_completion() on"+
+                            "synchronization object"+ sync);
                 }
             } catch (Throwable exc) {
                 // Discard any exceptions at this point.
@@ -174,10 +174,10 @@ class RegisteredSyncs {
                     // subordinate cleans up (i.e, the subordinate would have
                     // called afterCompletions locally before going away).
                 } else {
-					_logger.log(Level.WARNING,
-							"jts.exception_in_synchronization_operation",
-	                        new java.lang.Object[] { exc.toString(),
-							"after_completion"});
+                    _logger.log(Level.WARNING,
+                            "jts.exception_in_synchronization_operation",
+                            new java.lang.Object[] { exc.toString(),
+                            "after_completion"});
                 }
             }
 

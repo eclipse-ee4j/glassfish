@@ -40,9 +40,9 @@ public class MailResourceTest extends BaseTest
     static final String kTransportProtocol      = "smtp";
     static final String kTransportProtocolClass = "com.sun.mail.smtp.SMTPTransport";
 
-    public MailResourceTest(final String user, 
-        final String password, final String host, final int port, 
-        final String jndiName, final String rHost, 
+    public MailResourceTest(final String user,
+        final String password, final String host, final int port,
+        final String jndiName, final String rHost,
         final String rUser, final String rFrom)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -50,11 +50,11 @@ public class MailResourceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateMailResourceCmd createCmd = 
+        final CreateMailResourceCmd createCmd =
                 cmdFactory.createCreateMailResourceCmd(jndiName,
                         rHost, rUser, rFrom, getOptional());
 
-        final DeleteMailResourceCmd deleteCmd = 
+        final DeleteMailResourceCmd deleteCmd =
                 cmdFactory.createDeleteMailResourceCmd(jndiName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -77,14 +77,14 @@ public class MailResourceTest extends BaseTest
     public static void main(String[] args) throws Exception
     {
         new MailResourceTest(
-                "admin", "password", "localhost", 8686, 
+                "admin", "password", "localhost", 8686,
                 kJNDIName, kHost, kUser, kFrom).run();
     }
 
     private Map getOptional()
     {
         final Map optional = new HashMap();
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
             //kObjectType);
         optional.put(MailResourceConfigKeys.DEBUG_KEY, kDebug);
         return optional;

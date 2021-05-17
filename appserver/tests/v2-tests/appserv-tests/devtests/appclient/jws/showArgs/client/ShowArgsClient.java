@@ -36,22 +36,22 @@ import com.sun.s1asdev.deployment.appclient.jws.showArgs.other.Other;
  * @author tjquinn
  */
 public class ShowArgsClient {
-    
+
     private String outFileSpec = null;
     private PrintStream outStream = null;
 
     private String expectedArgsFileSpec = null;
-    
+
     private static String statusFileSpec = null;
-    
+
     private Vector<String> otherArgs = new Vector<String>();
-    
+
     private Map<String,String> optionValues = new HashMap<String,String>();
-    
+
     /** Creates a new instance of ShowArgsClient */
     public ShowArgsClient() {
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -78,9 +78,9 @@ public class ShowArgsClient {
                 }
             }
         }
-        
+
     }
-    
+
     private void run(String[] args) throws FileNotFoundException, IOException {
         System.out.println("Result from invoking method in other.jar: " + Other.hi());
         System.out.println("Command line arguments:");
@@ -89,27 +89,27 @@ public class ShowArgsClient {
         }
         System.out.println();
         prepareArguments(args);
-        
+
         /*
-         *Default is for all output to go to System.out, which will be a 
+         *Default is for all output to go to System.out, which will be a
          *trace file in the Java Web Start directory if Java Web Start tracing is on.
          */
         if (outStream == null) {
             outStream = System.out;
         }
-        
+
         outStream.println("Command line arguments:");
         for (String arg : args) {
             outStream.println(arg);
         }
-        
+
 //        /*
 //         *Make sure the command line argument values for otherArgs agree with
 //         *what is stored in the temporary file.
 //         */
 //        checkActualArgsVsExpected();
-//        
-        
+//
+
         outStream.flush();
     }
 
@@ -128,12 +128,12 @@ public class ShowArgsClient {
             }
             otherArgsAsLine.append(s);
         }
-        
+
         if ( ! otherArgsAsLine.toString().equals(expectedArgValues)) {
             throw new IllegalArgumentException("Actual arguments were " + otherArgsAsLine.toString() + "; expected " + expectedArgValues);
         }
     }
-    
+
     private void prepareArguments(String[] args) throws IllegalArgumentException, FileNotFoundException {
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(0) == '-') {
@@ -151,7 +151,7 @@ public class ShowArgsClient {
         }
 //        statusFileSpec = optionValues.get("statusFile");
 //        expectedArgsFileSpec = optionValues.get("expectedArgsFile");
-        
+
         System.out.println("out = " + outFileSpec);
         if (outFile != null) {
             System.out.println("     which is the file " + outFile.getAbsolutePath());
@@ -160,7 +160,7 @@ public class ShowArgsClient {
 //        System.out.println("expectedArgsFile = " + expectedArgsFileSpec);
 
         System.out.println("Other arguments: " + otherArgs);
-        
+
 //        if (outFileSpec == null || statusFileSpec == null || expectedArgsFileSpec == null) {
 //            throw new IllegalArgumentException("At least one of -out, -statusFile, and -expectedArgsFile is missing and all are required");
 //        }

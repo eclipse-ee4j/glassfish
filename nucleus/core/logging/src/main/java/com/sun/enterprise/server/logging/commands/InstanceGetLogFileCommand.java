@@ -46,8 +46,8 @@ import java.util.Properties;
 @I18n("get.log.file")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_get-log-file", 
+        opType=RestEndpoint.OpType.GET,
+        path="_get-log-file",
         description="_get-log-file")
 })
 public class InstanceGetLogFileCommand implements AdminCommand {

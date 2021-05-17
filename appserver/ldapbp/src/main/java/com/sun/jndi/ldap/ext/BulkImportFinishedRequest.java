@@ -22,7 +22,7 @@ import javax.naming.ldap.*;
 
 /**
  * This class implements the LDAPv3 Extended Request for BulkImportFinished.
- * The BulkImportFinishedRequest mark the end of bulk import operation. 
+ * The BulkImportFinishedRequest mark the end of bulk import operation.
  * <p>
  * The bulk import extended operations allow importing entries
  * remotely with a series of LDAP add operations. When a
@@ -74,7 +74,7 @@ public class BulkImportFinishedRequest implements ExtendedRequest {
 
     /**
      * The BulkImportFinished extended request's assigned object identifier
-     * is  2.16.840.1.113730.3.5.8 
+     * is  2.16.840.1.113730.3.5.8
      */
     public static final String OID = "2.16.840.1.113730.3.5.8";
 
@@ -107,7 +107,7 @@ public class BulkImportFinishedRequest implements ExtendedRequest {
     }
 
     /**
-     * Creates an extended response object that corresponds to the 
+     * Creates an extended response object that corresponds to the
      * LDAP BulkImportFinished extended request.
      */
     public ExtendedResponse createExtendedResponse(String id, byte[] berValue,

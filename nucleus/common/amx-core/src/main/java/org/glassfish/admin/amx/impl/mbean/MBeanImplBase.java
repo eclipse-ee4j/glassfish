@@ -357,8 +357,8 @@ public abstract class MBeanImplBase
         }
 
         // Leave these variables set, they may be desired after unregistration by some subclasses
-        //mServer					= null;
-        //mSelfObjectName			= null;
+        //mServer                    = null;
+        //mSelfObjectName            = null;
     }
 
     protected String getDebugID() {

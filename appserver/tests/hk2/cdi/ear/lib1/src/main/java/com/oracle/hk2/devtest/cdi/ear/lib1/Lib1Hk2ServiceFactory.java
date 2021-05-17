@@ -37,7 +37,7 @@ public class Lib1Hk2ServiceFactory implements Factory<Lib1HK2Service> {
             public String getComponentName() {
                 return HK2Service.LIB1;
             }
-            
+
         };
     }
 

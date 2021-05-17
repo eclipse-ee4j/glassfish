@@ -28,7 +28,7 @@ public class EjbTest extends HttpServlet {
 
     @EJB
     private MessageLocal messageBean;
-    
+
     protected void doGet(HttpServletRequest request,
         HttpServletResponse response) throws ServletException, IOException {
 
@@ -44,5 +44,5 @@ public class EjbTest extends HttpServlet {
         out.println("</html>");
         out.close();
     }
-    
+
 }

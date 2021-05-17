@@ -62,7 +62,7 @@ public class AverageImpl extends AbstractTreeNode implements Average {
     }
 
     /*
-     * 
+     *
      * TBD: Remove reference to getSampleTime -> see comment on getSampleTime
      * method
      */

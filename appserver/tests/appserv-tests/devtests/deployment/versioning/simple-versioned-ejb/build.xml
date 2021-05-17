@@ -37,7 +37,7 @@
     -->
     <property name="versionInfos" value="version-infos.properties"/>
     <property name="testPackage" value="versionedejb"/>
-        
+
     <property name="gfDDFile" value="glassfish-ejb-jar.xml"/>
     <property name="gfDDDir" value="META-INF"/>
 
@@ -68,11 +68,11 @@
           <entry  key="version.identifier" value="${versionExpression}"/>
         </propertyfile>
         <property name="xmlFile" value="${gfDDDir}/${gfDDFile}"/>
-    	<antcall target="generate.xml.identifier"/>
+        <antcall target="generate.xml.identifier"/>
     </target>
 
     <!-- assemble: package the ejb -->
-    <target name="assemble" depends="compile">        
+    <target name="assemble" depends="compile">
         <jar destfile="${archiveFile}" manifest="META-INF/MANIFEST.MF">
             <fileset dir="${classPath}" includes="**/*.class, **/*.properties"/>
             <fileset dir="." includes="META-INF/*.xml"/>

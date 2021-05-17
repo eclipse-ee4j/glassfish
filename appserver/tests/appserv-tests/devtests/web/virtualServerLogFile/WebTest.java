@@ -34,14 +34,14 @@ public class WebTest {
         contextRoot = args[2];
         location = args[3];
     }
-    
+
     public static void main(String[] args) {
         WebTest webTest = new WebTest(args);
         webTest.doTest();
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -49,14 +49,14 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port + contextRoot
                           + "/index.jsp");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200"
                                 + ", received: " + responseCode);
         } else {

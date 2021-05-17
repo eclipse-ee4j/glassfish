@@ -20,7 +20,7 @@
 <!DOCTYPE resources PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Resource Definitions//EN" "http://glassfish.org/dtds/glassfish-resources_1_5.dtd">
 
 <resources>
-	<jdbc-connection-pool datasource-classname="org.apache.derby.jdbc.ClientXADataSource" res-type="javax.sql.DataSource" name="java:app/jdbc/lazy_init_shared_service">
+    <jdbc-connection-pool datasource-classname="org.apache.derby.jdbc.ClientXADataSource" res-type="javax.sql.DataSource" name="java:app/jdbc/lazy_init_shared_service">
         <property name="service-name" value="my-shared-db-service"/>
     </jdbc-connection-pool>
 

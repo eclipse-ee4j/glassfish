@@ -38,15 +38,15 @@ import ejb_endpoint.WSHelloEJB;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
-    
+
     @Resource
     static jakarta.transaction.UserTransaction ut;
-    
+
     public static final int TIME_OUT = 1000 * 60;
-    
+
     private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main(String[] args) {
         stat.addDescription("soaptcp-test");
         String host = "localhost";
@@ -54,12 +54,12 @@ public class Client {
         if (args.length == 1) { // run with appclient?
             args = args[0].split(" ");
         }
-        
+
         if (args.length >= 2) {
             host = args[0];
             port = Integer.parseInt(args[1]);
         }
-        
+
         System.out.println("Connecting to host: " + host + " port: " + port);
         Client client = new Client();
         if (client.doPortUnificationTest(host, port)) {
@@ -72,12 +72,12 @@ public class Client {
 
         stat.printSummary("soaptcp-test");
     }
-    
+
     public void doServletTest() {
         try {
             ServletHelloService svc = new ServletHelloService();
             ServletHello port = svc.getServletHelloPort();
-            
+
             for (int i=0;i<10;i++) {
                 String ret = port.sayServletHello("Appserver Tester !");
                 if(ret.indexOf("WebSvcTest-Servlet-Hello") == -1) {
@@ -93,7 +93,7 @@ public class Client {
             stat.addStatus("SOAP/TCP-Servlet-Endpoint", stat.FAIL);
         }
     }
-    
+
     public void doEjbTest() {
         try {
             WSHelloEJBService svc = new  WSHelloEJBService();
@@ -114,7 +114,7 @@ public class Client {
             stat.addStatus("SOAP/TCP-EJB-Endpoint", stat.FAIL);
         }
     }
-    
+
     public boolean doPortUnificationTest(String host, int port) {
         try {
             Socket s = new Socket("localhost", 8080);
@@ -122,24 +122,24 @@ public class Client {
             final VersionController versionController = VersionController.getInstance();
             final Version framingVersion = versionController.getFramingVersion();
             final Version connectionManagementVersion = versionController.getConnectionManagementVersion();
-            
+
             final OutputStream outputStream = s.getOutputStream();
             outputStream.write(TCPConstants.PROTOCOL_SCHEMA.getBytes("US-ASCII"));
-            
+
             DataInOutUtils.writeInts4(outputStream, framingVersion.getMajor(),
                     framingVersion.getMinor(),
                     connectionManagementVersion.getMajor(),
                     connectionManagementVersion.getMinor());
             outputStream.flush();
-            
+
             final InputStream inputStream = s.getInputStream();
             final int[] versionInfo = new int[4];
-            
+
             DataInOutUtils.readInts4(inputStream, versionInfo, 4);
-            
+
             final Version serverFramingVersion = new Version(versionInfo[0], versionInfo[1]);
             final Version serverConnectionManagementVersion = new Version(versionInfo[2], versionInfo[3]);
-            
+
             final boolean success = versionController.isVersionSupported(serverFramingVersion, serverConnectionManagementVersion);
             if (success) {
                 stat.addStatus("SOAP/TCP-PortUnification", stat.PASS);
@@ -153,7 +153,7 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("SOAP/TCP-PortUnification", stat.FAIL);
         }
-        
+
         return false;
     }
 }

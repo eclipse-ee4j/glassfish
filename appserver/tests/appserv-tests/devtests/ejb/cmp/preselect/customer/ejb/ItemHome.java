@@ -21,9 +21,9 @@ import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 public interface ItemHome extends EJBHome {
-    
+
     public ItemRemote create (String id, String name, double price) throws CreateException, RemoteException;
-    
+
     public ItemRemote findByPrimaryKey (String id)
-        throws FinderException, RemoteException;     
+        throws FinderException, RemoteException;
 }

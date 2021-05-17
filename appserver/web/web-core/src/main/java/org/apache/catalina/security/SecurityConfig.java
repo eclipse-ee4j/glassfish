@@ -35,15 +35,15 @@ public final class SecurityConfig{
 
     private static final Logger log = LogFacade.getLogger();
 
-    
+
     private final static String PACKAGE_ACCESS =  "sun.,"
-                                                + "org.apache.catalina." 
+                                                + "org.apache.catalina."
                                                 + ",org.apache.jasper."
                                                 + ",org.glassfish.grizzly.tcp."
                                                 + ",org.glassfish.grizzly.";
-    
+
     private final static String PACKAGE_DEFINITION= "java.,sun."
-                                                + ",org.apache.catalina." 
+                                                + ",org.apache.catalina."
                                                 + ",org.glassfish.grizzly.tcp."
                                                 + ",org.glassfish.grizzly."
                                                 + ",org.apache.jasper.";
@@ -51,30 +51,30 @@ public final class SecurityConfig{
      * List of protected package from conf/catalina.properties
      */
     private String packageDefinition;
-    
-    
+
+
     /**
      * List of protected package from conf/catalina.properties
      */
-    private String packageAccess; 
-    
-    
+    private String packageAccess;
+
+
     /**
      * Create a single instance of this class.
      */
-    private SecurityConfig(){  
+    private SecurityConfig(){
         try{
             packageDefinition = CatalinaProperties.getProperty("package.definition");
             packageAccess = CatalinaProperties.getProperty("package.access");
         } catch (java.lang.Exception ex){
             if (log.isLoggable(Level.FINE)){
                 log.log(Level.FINE, "Unable to load properties using CatalinaProperties",
-                        ex); 
-            }            
+                        ex);
+            }
         }
     }
-    
-    
+
+
     /**
      * Returns the singleton instance of that class.
      * @return an instance of that class.
@@ -85,21 +85,21 @@ public final class SecurityConfig{
         }
         return singleton;
     }
-    
-    
+
+
     /**
      * Set the security package.access value.
      */
     public void setPackageAccess(){
         // If catalina.properties is missing, protect all by default.
         if (packageAccess == null){
-            setSecurityProperty("package.access", PACKAGE_ACCESS);   
+            setSecurityProperty("package.access", PACKAGE_ACCESS);
         } else {
-            setSecurityProperty("package.access", packageAccess);   
+            setSecurityProperty("package.access", packageAccess);
         }
     }
-    
-    
+
+
     /**
      * Set the security package.definition value.
      */
@@ -111,8 +111,8 @@ public final class SecurityConfig{
             setSecurityProperty("package.definition", packageDefinition);
          }
     }
-     
-     
+
+
     /**
      * Set the proper security property
      * @param properties the package.* property.
@@ -127,11 +127,11 @@ public final class SecurityConfig{
             Security.setProperty(properties,
                 // FIX ME package "javax." was removed to prevent HotSpot
                 // fatal internal errors
-                definition + packageList);      
+                definition + packageList);
         }
     }
-    
-    
+
+
 }
 
 

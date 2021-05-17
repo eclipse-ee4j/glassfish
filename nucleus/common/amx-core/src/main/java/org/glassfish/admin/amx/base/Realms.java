@@ -39,7 +39,7 @@ public interface Realms extends AMXProxy, Utility, Singleton
     public String[] getRealmNames();
     @ManagedAttribute
     public String[] getPredefinedAuthRealmClassNames();
-    
+
     @ManagedAttribute
     public String getDefaultRealmName();
     @ManagedAttribute
@@ -66,7 +66,7 @@ public interface Realms extends AMXProxy, Utility, Singleton
     /** @return true if the realm implementation support User Management (add,remove,update user) */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public boolean supportsUserManagement(final String realmName);
-    
+
     /** @return the username of any user that uses an empty password */
     @ManagedAttribute
     public String getAnonymousUser();

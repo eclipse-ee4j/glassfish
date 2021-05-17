@@ -55,15 +55,15 @@ import org.glassfish.api.admin.*;
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-jmsdest", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-jmsdest",
         description="Create JMS Destination",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-jmsdest", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-jmsdest",
         description="Create JMS Destination",
         params={
             @RestParam(name="target", value="$parent")

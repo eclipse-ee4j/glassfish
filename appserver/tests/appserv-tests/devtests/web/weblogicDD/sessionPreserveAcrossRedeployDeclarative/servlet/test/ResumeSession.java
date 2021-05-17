@@ -27,7 +27,7 @@ public class ResumeSession extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
-        boolean resume = false; 
+        boolean resume = false;
         HttpSession session = req.getSession(false);
         if (session != null) {
             HashMap map = (HashMap) session.getAttribute("map");

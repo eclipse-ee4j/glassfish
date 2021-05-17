@@ -62,8 +62,8 @@ import java.util.HashSet;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_validate-node", 
+        opType=RestEndpoint.OpType.POST,
+        path="_validate-node",
         description="_validate-node")
 })
 public class ValidateNodeCommand implements AdminCommand {
@@ -228,7 +228,7 @@ public class ValidateNodeCommand implements AdminCommand {
         }
         // Don't update an attribute that is considered a match
         excludeFromUpdate.add(propname);
-        
+
     }
 
     private void validatePathSimple(String propname, String value, String configValue)

@@ -27,7 +27,7 @@
       <jndi-name>com.sun.s1asdev.jdbc.simpleora.ejb.SimpleBMPHome</jndi-name>
       <resource-ref>
         <res-ref-name>DataSource</res-ref-name>
-	<jndi-name>jdbc/oracleres</jndi-name>
+    <jndi-name>jdbc/oracleres</jndi-name>
         <default-resource-principal>
             <name>scott</name>
             <password>tiger</password>
@@ -35,7 +35,7 @@
       </resource-ref>
       <resource-ref>
         <res-ref-name>DataSource1</res-ref-name>
-	<jndi-name>jdbc/oracleres</jndi-name>
+    <jndi-name>jdbc/oracleres</jndi-name>
         <default-resource-principal>
             <name>scott</name>
             <password>tiger</password>

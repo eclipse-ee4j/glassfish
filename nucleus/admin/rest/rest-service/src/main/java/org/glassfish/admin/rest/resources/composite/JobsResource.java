@@ -44,7 +44,7 @@ import org.jvnet.hk2.annotations.Service;
  * HTTP/1.1 200 OK { "items": [{ "exitCode": "COMPLETED", "jobId": "1", "jobName": "load-sdp", "jobState": "COMPLETED",
  * "executionDate": "Wed Jan 02 11:36:38 CST 2013", "message": "SDP loaded with name nucleusSDP.", "user": "admin" }],
  * "metadata": [{"id": "http:\/\/localhost:4848\/management\/jobs\/id\/1"}] } </div>
- * 
+ *
  * @author jdlee
  */
 @Service

@@ -34,12 +34,12 @@ public final class JDBCResourceImpl extends J2EEResourceImplBase {
     public String[] getjdbcDataSources() {
         return getChildrenAsStrings( J2EETypes.JDBC_DATA_SOURCE );
     }
-    
+
     @Override
     protected void registerChildren()
     {
         super.registerChildren();
-        
+
         // register a JDBCDataSource as per JSR 77 spec requirements.  We have only one.
         final JDBCDataSourceImpl dataSourceImpl = new JDBCDataSourceImpl( getObjectName(), defaultChildMetadata());
         ObjectName dataSourceON = new ObjectNameBuilder( getMBeanServer(), getObjectName()).buildChildObjectName(J2EETypes.JDBC_DATA_SOURCE, getName() );

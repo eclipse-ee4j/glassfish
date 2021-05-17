@@ -33,28 +33,28 @@ public class Foo2ManagedBean {
 
     @PostConstruct
     private void init() {
-	System.out.println("In Foo2ManagedBean::init() " + this);
+    System.out.println("In Foo2ManagedBean::init() " + this);
     }
-    
+
     public void foo() {
-	System.out.println("In Foo2ManagedBean::foo() ");
-	System.out.println("In Foo2ManagedBean::foo() testing @EJB: " + s.hello());
+    System.out.println("In Foo2ManagedBean::foo() ");
+    System.out.println("In Foo2ManagedBean::foo() testing @EJB: " + s.hello());
     }
 
     public Object getThis() {
-	return this;
+    return this;
     }
 
     @PreDestroy
     private void destroy() {
-	System.out.println("In Foo2ManagedBean::destroy() ");
+    System.out.println("In Foo2ManagedBean::destroy() ");
     }
 
 
     public String toString() {
-	return "Foo2ManagedBean this = " + 
-			   " s = " + s + " , orb = " + orb + 
-	    " , em = " + em;
+    return "Foo2ManagedBean this = " +
+               " s = " + s + " , orb = " + orb +
+        " , em = " + em;
     }
 
 }

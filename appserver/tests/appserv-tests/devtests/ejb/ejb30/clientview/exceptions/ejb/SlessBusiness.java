@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 
-public interface SlessBusiness 
+public interface SlessBusiness
 {
 
     void forceTransactionRequiredException();
@@ -26,6 +26,6 @@ public interface SlessBusiness
     void throwRuntimeAppException() throws RuntimeAppException;
 
     void throwRollbackAppException() throws RollbackAppException;
-    
+
     void denied();
 }

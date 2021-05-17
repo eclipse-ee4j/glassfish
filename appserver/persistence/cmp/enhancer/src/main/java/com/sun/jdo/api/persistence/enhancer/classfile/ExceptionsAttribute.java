@@ -60,7 +60,7 @@ public class ExceptionsAttribute extends ClassAttribute {
   /* package local methods */
 
   static ExceptionsAttribute read(ConstUtf8 attrName,
-				  DataInputStream data, ConstantPool pool)
+                  DataInputStream data, ConstantPool pool)
     throws IOException {
     int nExcepts = data.readUnsignedShort();
     Vector excTable = new Vector();
@@ -68,10 +68,10 @@ public class ExceptionsAttribute extends ClassAttribute {
       int excIndex = data.readUnsignedShort();
       ConstClass exc_class = null;
       if (excIndex != 0)
-	exc_class = (ConstClass) pool.constantAt(excIndex);
+    exc_class = (ConstClass) pool.constantAt(excIndex);
       excTable.addElement(exc_class);
     }
-        
+
     return new ExceptionsAttribute(attrName, excTable);
   }
 
@@ -90,6 +90,6 @@ public class ExceptionsAttribute extends ClassAttribute {
         out.print(" " + ((ConstClass) exceptionTable.elementAt(i)).asString());//NOI18N
     out.println();
   }
-  
+
 }
 

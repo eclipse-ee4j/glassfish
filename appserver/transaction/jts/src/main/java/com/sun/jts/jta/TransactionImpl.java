@@ -56,9 +56,9 @@ public class TransactionImpl implements TransactionInternal {
     private TransactionState tranState = null;
 
     private static TransactionManagerImpl tm = TransactionManagerImpl.getTransactionManagerImpl();
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(TransactionImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     // START 4662745
@@ -169,14 +169,14 @@ public class TransactionImpl implements TransactionInternal {
             status != jakarta.transaction.Status.STATUS_MARKED_ROLLBACK) {
             throw new IllegalStateException();
         }
-	//START IASRI 4706150
-	try{
-	    if(tm.getXAResourceTimeOut() > 0)
-	        res.setTransactionTimeout(tm.getXAResourceTimeOut());
-	}catch(Exception ex){
-	    _logger.log(Level.WARNING,"jts.error_while_setting_xares_txn_timeout",ex);
-	}
-	//END IASRI 4706150
+    //START IASRI 4706150
+    try{
+        if(tm.getXAResourceTimeOut() > 0)
+            res.setTransactionTimeout(tm.getXAResourceTimeOut());
+    }catch(Exception ex){
+        _logger.log(Level.WARNING,"jts.error_while_setting_xares_txn_timeout",ex);
+    }
+    //END IASRI 4706150
         try {
             if (tranState == null) {
                 tranState = new TransactionState(gtid, this);
@@ -189,7 +189,7 @@ public class TransactionImpl implements TransactionInternal {
             }
             return true;
         } catch (XAException ex) {
-			_logger.log(Level.WARNING,"jts.resource_outside_transaction",ex);
+            _logger.log(Level.WARNING,"jts.resource_outside_transaction",ex);
             if (ex.errorCode == XAException.XAER_OUTSIDE) {
                 throw new IllegalStateException();
             }
@@ -251,7 +251,7 @@ public class TransactionImpl implements TransactionInternal {
         } catch (Unavailable ex) {
             return jakarta.transaction.Status.STATUS_NO_TRANSACTION;
         } catch (Exception ex) {
-			_logger.log(Level.WARNING,"jts.unexpected_error_in_getstatus",ex);
+            _logger.log(Level.WARNING,"jts.unexpected_error_in_getstatus",ex);
             throw new SystemException();
         }
     }
@@ -364,12 +364,12 @@ class SynchronizationListener implements Synchronization {
 
     public void beforeCompletion() {
         try {
-	    tranState.beforeCompletion();
-	}catch(XAException xaex){
-	    _logger.log(Level.WARNING,"jts.unexpected_xa_error_in_beforecompletion", new java.lang.Object[] {xaex.errorCode, xaex.getMessage()});
-	    _logger.log(Level.WARNING,"",xaex);
+        tranState.beforeCompletion();
+    }catch(XAException xaex){
+        _logger.log(Level.WARNING,"jts.unexpected_xa_error_in_beforecompletion", new java.lang.Object[] {xaex.errorCode, xaex.getMessage()});
+        _logger.log(Level.WARNING,"",xaex);
         } catch (Exception ex) {
-	    _logger.log(Level.WARNING,"jts.unexpected_error_in_beforecompletion",ex);
+        _logger.log(Level.WARNING,"jts.unexpected_error_in_beforecompletion",ex);
         }
     }
 }

@@ -80,7 +80,7 @@ public class BookstoreMessages_es_MX extends ListResourceBundle {
         { "Catalog", "Volver al Cat" + "\u00e1" + "logo" },
         { "ThankYou", "Gracias por su compra " },
         { "ThankYouParam", "Gracias, {0} por comprar sus libros aqui" },
-        
+
         { "OrderError", "No se pudo completar su pedido debido a escasez de inventario." },
         { "With", "Con" },
         { "Shipping", "Env" + "\u00ed" + "o:" },
@@ -94,46 +94,46 @@ public class BookstoreMessages_es_MX extends ListResourceBundle {
             "Acaba de a" + "\u00f1" + "adir \"{0}\" a su cesta de compras"
         },
         { "ConfirmRemove", "Acaba de sacar \"{0}\" de su cesta de compras" },
-        
+
         {
             "CartItemCount",
-            
+
             "Su cesta de compras contiene " + "{0,choice,0#ning" + "\u00fa" +
             "n articulo|1#un articulo|1< {0} articulos}"
         },
-        
+
         {
             "Newsletters",
             "Suscripci" + "\u00f3" + "n gratuita a nuestro bolet" + "\u00ed" +
             "n:"
         },
-        
+
         { "ThanksMsg", "Gracias. Por favor cliquee aqui para comprar sus libros." },
-        
+
         {
             "DukeFanClub",
             "Desear" + "\u00ed" +
             "a hacerme miembro del Duke Fan Club gratuitamente con mi compra de mas de 100" +
             "\u20a0"
         },
-        
+
         { "UpdateQuantities", "Actualice las cantidades" },
-        
+
         {
             "QuantitiesUpdated",
             "Acaba de actualizar las cantidades en su cesta de compras"
         },
-        
+
         { "Quantities", "Copias del libro en su cesta de compras" },
-        
+
         { "ChooseLocale", "Elija su Idioma en el Mapa" },
-        
+
         { "English", "ingl" + "\u00e9" + "s" },
-        
+
         { "German", "al" + "\u00e9" + "man" },
-        
+
         { "Spanish", "espa" + "\u00f1" + "ol" },
-        
+
         { "French", "franc" + "\u00e9" + "es" },
         { "CustomerInfo", "Incorpore su informaci" + "\u00f3" +
             "n en la forma." },

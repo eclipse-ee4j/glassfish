@@ -44,21 +44,21 @@ public final class MessageBeanContextImpl
     MessageBeanContextImpl(Object ejb, BaseContainer container)
     {
         super(ejb, container);
-    }    
+    }
 
     void setEJBStub(EJBObject ejbStub)
     {
-	throw new RuntimeException("No stubs for Message-driven beans");
+    throw new RuntimeException("No stubs for Message-driven beans");
     }
 
     void setEJBObjectImpl(EJBObjectImpl ejbo)
     {
-	throw new RuntimeException("No EJB Object for Message-driven beans");
+    throw new RuntimeException("No EJB Object for Message-driven beans");
     }
 
     //FIXME later
     EJBObjectImpl getEJBObjectImpl() {
-	    throw new RuntimeException("No EJB Object for Message-driven beans");
+        throw new RuntimeException("No EJB Object for Message-driven beans");
     }
 
     public void setContextCalled() {
@@ -70,26 +70,26 @@ public final class MessageBeanContextImpl
      ******************************************************************/
 
     /**
-     * 
+     *
      */
     public UserTransaction getUserTransaction()
-	throws java.lang.IllegalStateException
+    throws java.lang.IllegalStateException
     {
-	// The state check ensures that an exception is thrown if this
-	// was called from the constructor or setMessageDrivenContext.
-	// The remaining checks are performed by the container.
-	if ( !this.afterSetContext ) {
-	    throw new java.lang.IllegalStateException("Operation not allowed");
+    // The state check ensures that an exception is thrown if this
+    // was called from the constructor or setMessageDrivenContext.
+    // The remaining checks are performed by the container.
+    if ( !this.afterSetContext ) {
+        throw new java.lang.IllegalStateException("Operation not allowed");
         }
 
-	return ((BaseContainer)getContainer()).getUserTransaction();
+    return ((BaseContainer)getContainer()).getUserTransaction();
     }
 
     /*
-     * Doesn't make any sense to get EJBHome object for 
+     * Doesn't make any sense to get EJBHome object for
      * a message-driven ejb.
      */
-    public EJBHome getEJBHome() 
+    public EJBHome getEJBHome()
     {
         RuntimeException exception = new java.lang.IllegalStateException
             ("getEJBHome not allowed for message-driven beans");
@@ -127,10 +127,10 @@ public final class MessageBeanContextImpl
         }
 
         com.sun.enterprise.security.SecurityManager sm = container.getSecurityManager();
-	    return sm.isCallerInRole(roleRef);
+        return sm.isCallerInRole(roleRef);
     }
-    
-    public TimerService getTimerService() 
+
+    public TimerService getTimerService()
         throws java.lang.IllegalStateException {
 
         if( !afterSetContext ) {
@@ -141,7 +141,7 @@ public final class MessageBeanContextImpl
         return new EJBTimerServiceWrapper(timerService, this);
     }
 
-    public void checkTimerServiceMethodAccess() 
+    public void checkTimerServiceMethodAccess()
         throws java.lang.IllegalStateException {
 
         // A message-driven ejb's state transitions past UNINITIALIZED
@@ -150,7 +150,7 @@ public final class MessageBeanContextImpl
             throw new java.lang.IllegalStateException
                 ("EJB Timer Service method calls cannot be called in " +
                  " this context");
-        } 
+        }
     }
 
     final boolean isInState(BeanState value) {

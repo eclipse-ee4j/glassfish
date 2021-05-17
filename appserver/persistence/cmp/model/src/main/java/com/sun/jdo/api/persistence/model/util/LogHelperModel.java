@@ -26,27 +26,27 @@ import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
 import com.sun.jdo.api.persistence.model.Model;
 
-/** 
+/**
  *
  * @author Rochelle Raccah
  * @version %I%
  */
 public class LogHelperModel
-{    
-	/** The component name for this component
-	 */
-	private static final String _componentName = "model"; // NOI18N
+{
+    /** The component name for this component
+     */
+    private static final String _componentName = "model"; // NOI18N
 
-	/** The class loader for this component
-	 */
-	private static final ClassLoader _loader = 
-		LogHelperModel.class.getClassLoader();
+    /** The class loader for this component
+     */
+    private static final ClassLoader _loader =
+        LogHelperModel.class.getClassLoader();
 
-	/** Return the logger for the model component
-	 */
-	public static Logger getLogger ()
-	{
-		return LogHelper.getLogger (_componentName, Model.messageBase, _loader);
-	}
+    /** Return the logger for the model component
+     */
+    public static Logger getLogger ()
+    {
+        return LogHelper.getLogger (_componentName, Model.messageBase, _loader);
+    }
 
 }

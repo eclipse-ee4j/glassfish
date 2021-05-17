@@ -41,8 +41,8 @@ import org.glassfish.hk2.api.PerLookup;
 @I18n("rotate.log")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="rotate-log", 
+        opType=RestEndpoint.OpType.POST,
+        path="rotate-log",
         description="Rotate Log")
 })
 public class RotateLog implements AdminCommand {
@@ -52,7 +52,7 @@ public class RotateLog implements AdminCommand {
 
     @Inject
     Domain domain;
-    
+
     @Inject
     ServerEnvironment env;
 
@@ -63,10 +63,10 @@ public class RotateLog implements AdminCommand {
 
     public void execute(AdminCommandContext context) {
 
-        final ActionReport report = context.getActionReport();        
-        
+        final ActionReport report = context.getActionReport();
+
         gf.rotate();
-        
+
         String msg = LOCAL_STRINGS.getLocalString("rotated.log.message", "Rotated log for server instance {0}.", env.getInstanceName());
         report.setMessage(msg);
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);

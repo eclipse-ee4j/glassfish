@@ -39,7 +39,7 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
+
     <login-config>
         <auth-method>FORM</auth-method>
         <realm-name>file</realm-name>
@@ -47,6 +47,6 @@
             <form-login-page>/loginform.jsp</form-login-page>
             <form-error-page>/loginerror.jsp</form-error-page>
         </form-login-config>
-    </login-config>  
+    </login-config>
 </web-app>
 

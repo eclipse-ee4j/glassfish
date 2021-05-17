@@ -402,7 +402,7 @@
             <pathelement location="${build.class.dir}/../EJB_Embedded/app" />
         </path>
     </target>
-    
+
     <!-- added few messages in order to show testng summary of wsit related tests along with final summary as wsit tests are ran seperately as a workaround for GLASSFISH-21672 -->
     <target name="testng-summary">
         <loadfile srcfile="runtestng.output" property="testng_output">
@@ -420,14 +420,14 @@
                 <tailfilter lines="3" />
             </filterchain>
         </loadfile>
-        
+
         <echo message="              JaxwsFromWsdl Tests" />
         <echo message="${testng1_output}" />
         <echo message="              Jsr109tester Tests" />
         <echo message="${testng2_output}" />
         <echo message="${testng_output}" />
     </target>
-    
+
     <!-- created new target for web-distribution summary as it is different from glassfish distribution summary-->
     <target name="testng-summary_wd">
         <loadfile srcfile="runtestng.output" property="testng_output">
@@ -437,7 +437,7 @@
         </loadfile>
         <echo message="${testng_output}" />
     </target>
-    
+
     <!-- added few messages in order to show testng summary of wsit related tests along with final summary as wsit tests are ran seperately as a workaround for GLASSFISH-21672 -->
     <target name="quicklook-summary">
         <tstamp>
@@ -480,7 +480,7 @@
         <antcall target="quicklook-report" />
         <delete file="version.output" />
     </target>
-    
+
     <target name="quicklook-summary_wd">
         <tstamp>
             <format property="end.timestamp" pattern="EE MM/dd/yyyy HH:mm:ss zz" />

@@ -25,37 +25,37 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * This node handles the principal runtime deployment descriptors 
+ * This node handles the principal runtime deployment descriptors
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class PrincipalNode extends RuntimeDescriptorNode {
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
-    public void setElementValue(XMLElement element, String value) {    
-	RuntimeDescriptor descriptor = (RuntimeDescriptor) getDescriptor();
-	if (descriptor==null) {
-	    throw new RuntimeException("Trying to set values on a null descriptor");
-	}
-	if (element.getQName().equals(RuntimeTagNames.USER_NAME)) {
-	    descriptor.setAttributeValue(Principal.USER_NAME, value);
-	} else
-	if (element.getQName().equals(RuntimeTagNames.PASSWORD)) {
-	    descriptor.setAttributeValue(Principal.PASSWORD, value);
-	} else
-	if (element.getQName().equals(RuntimeTagNames.CREDENTIAL)) {
-	    descriptor.setAttributeValue(Principal.CREDENTIAL, value);
-	} else
-	super.setElementValue(element, value);
-    }	
-	
-    
+    public void setElementValue(XMLElement element, String value) {
+    RuntimeDescriptor descriptor = (RuntimeDescriptor) getDescriptor();
+    if (descriptor==null) {
+        throw new RuntimeException("Trying to set values on a null descriptor");
+    }
+    if (element.getQName().equals(RuntimeTagNames.USER_NAME)) {
+        descriptor.setAttributeValue(Principal.USER_NAME, value);
+    } else
+    if (element.getQName().equals(RuntimeTagNames.PASSWORD)) {
+        descriptor.setAttributeValue(Principal.PASSWORD, value);
+    } else
+    if (element.getQName().equals(RuntimeTagNames.CREDENTIAL)) {
+        descriptor.setAttributeValue(Principal.CREDENTIAL, value);
+    } else
+    super.setElementValue(element, value);
+    }
+
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -63,13 +63,13 @@ public class PrincipalNode extends RuntimeDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, String nodeName, Principal descriptor) {
-	Element principalNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-	appendTextChild(principalNode, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
-	setAttribute(principalNode, RuntimeTagNames.USER_NAME, (String) descriptor.getValue(Principal.USER_NAME));
-	setAttribute(principalNode, RuntimeTagNames.PASSWORD, (String) descriptor.getValue(Principal.PASSWORD));
-	setAttribute(principalNode, RuntimeTagNames.CREDENTIAL, (String) descriptor.getValue(Principal.CREDENTIAL));
-	return principalNode;
+    Element principalNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+    appendTextChild(principalNode, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
+    setAttribute(principalNode, RuntimeTagNames.USER_NAME, (String) descriptor.getValue(Principal.USER_NAME));
+    setAttribute(principalNode, RuntimeTagNames.PASSWORD, (String) descriptor.getValue(Principal.PASSWORD));
+    setAttribute(principalNode, RuntimeTagNames.CREDENTIAL, (String) descriptor.getValue(Principal.CREDENTIAL));
+    return principalNode;
     }
 }

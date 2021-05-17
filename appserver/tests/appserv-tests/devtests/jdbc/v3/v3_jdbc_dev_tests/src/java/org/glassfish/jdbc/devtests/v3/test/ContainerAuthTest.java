@@ -30,7 +30,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 public class ContainerAuthTest implements SimpleTest {
 
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
-    
+
     public Map<String, Boolean> runTest(DataSource ds, PrintWriter out) {
         try {
             if (testContAuthUserPass(ds, out)) {
@@ -52,7 +52,7 @@ public class ContainerAuthTest implements SimpleTest {
         }
 
         HtmlUtil.printHR(out);
-        return resultsMap;                
+        return resultsMap;
     }
 
     /**

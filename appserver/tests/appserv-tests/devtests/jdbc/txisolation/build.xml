@@ -83,7 +83,7 @@
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.${pool.name}.max_connection_usage_count=1"/>
         </antcall>
-       
+
         <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
@@ -177,7 +177,7 @@
          <antcall target="runclient-common">
             <param name="appclient.application.args" value="6"/>
          </antcall>
-        
+
         <antcall target="asadmin-common">
            <param name="admin.command" value="set"/>
            <param name="operand.props"

@@ -100,7 +100,7 @@ public class DeployUtil {
         }
         return targets;
     }
-    
+
     static public List<Map> getRefEndpoints(String name, String ref){
         List endpoints = new ArrayList();
         try{
@@ -163,7 +163,7 @@ public class DeployUtil {
                 return enabled;
             }
         }
-        standalone.add("server");        
+        standalone.add("server");
         List<String> targetList = new ArrayList<String> ();
         try {
             targetList = getApplicationTarget(URLDecoder.decode(appName, "UTF-8"), ref);
@@ -182,7 +182,7 @@ public class DeployUtil {
                 numDisabled++;
             }
         }
-                
+
         int numTargets = targetList.size();
         /*
         if (numEnabled == numTargets){
@@ -194,7 +194,7 @@ public class DeployUtil {
          */
         return (numTargets==0) ?  GuiUtil.getMessage("deploy.noTarget") :
                 GuiUtil.getMessage("deploy.someEnabled", new String[]{""+numEnabled, ""+numTargets });
-        
+
     }
 
 }

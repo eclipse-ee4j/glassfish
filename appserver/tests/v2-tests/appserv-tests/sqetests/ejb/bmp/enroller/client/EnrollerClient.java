@@ -24,7 +24,7 @@ import com.sun.s1peqe.ejb.bmp.enroller.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /**
- * A simple java client will: 
+ * A simple java client will:
  * <ul>
  * <li>Locates the home interface of the enterprise bean
  * <li>Gets a reference to the remote interface
@@ -36,11 +36,11 @@ public class EnrollerClient {
     private SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    public static void main(String[] args) { 
-        EnrollerClient client = new EnrollerClient(); 
+    public static void main(String[] args) {
+        EnrollerClient client = new EnrollerClient();
 
         // run the tests
-        client.runTestClient();   
+        client.runTestClient();
     }
 
     public void runTestClient() {
@@ -59,22 +59,22 @@ public class EnrollerClient {
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleStudent");
-            StudentHome sHome = 
-                (StudentHome) PortableRemoteObject.narrow(objref, 
+            StudentHome sHome =
+                (StudentHome) PortableRemoteObject.narrow(objref,
                                                           StudentHome.class);
 
             Student denise = sHome.create("823", "Denise Smith");
 
             objref = initial.lookup("java:comp/env/ejb/SimpleCourse");
-            CourseHome cHome = 
-                (CourseHome) PortableRemoteObject.narrow(objref, 
+            CourseHome cHome =
+                (CourseHome) PortableRemoteObject.narrow(objref,
                                                          CourseHome.class);
 
             Course power = cHome.create("220", "Power J2EE Programming");
 
             objref = initial.lookup("java:comp/env/ejb/SimpleEnroller");
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
 
             Enroller enroller = eHome.create();
@@ -93,7 +93,7 @@ public class EnrollerClient {
                 System.out.println(courseId + " " + course.getName());
             }
             System.out.println();
- 
+
             Course intro = cHome.findByPrimaryKey("777");
             System.out.println(intro.getName() + ":");
             courses = intro.getStudentIds();
@@ -103,12 +103,12 @@ public class EnrollerClient {
                 Student student = sHome.findByPrimaryKey(studentId);
                 System.out.println(studentId + " " + student.getName());
             }
-          
+
             stat.addStatus("enroller bmp", stat.PASS);
         } catch (Exception ex) {
             stat.addStatus("enroller bmp", stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         }
-    } 
-} 
+    }
+}

@@ -17,7 +17,7 @@
 package com.sun.enterprise.admin.monitor.stats;
 
 /**
- * A Stats interface to represent the statistical data exposed by a Connector 
+ * A Stats interface to represent the statistical data exposed by a Connector
  * Connection Pool.
  * It inherits from the ConnectionPoolStats interface and as of now($Revision: 1.2 $)
  * does not provide any additional methods.
@@ -26,5 +26,5 @@ package com.sun.enterprise.admin.monitor.stats;
  * @version $Revision: 1.2 $
  */
 public interface ConnectorConnectionPoolStats extends ConnectionPoolStats {
-    
+
 }

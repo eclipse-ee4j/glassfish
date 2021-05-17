@@ -39,7 +39,7 @@ public class PackagePrivateConstructorInPortableExtensionTestServlet extends Htt
     @Inject
     @Preferred
     TestBean tb;
-    
+
     @Inject
     BeanManager bm;
 
@@ -64,25 +64,25 @@ public class PackagePrivateConstructorInPortableExtensionTestServlet extends Htt
                     + TransactionInterceptor.aroundInvokeInvocationCount;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
-        
+
         //check if our portable extension was called
         if (!PackagePrivateConstructorExtension.packagePrivateConstructorCalled)
             msg += "Portable Extension package private constructor:  not called";
-        
+
         if (!PackagePrivateConstructorExtension.beforeBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-            		"beforeBeanDiscovery not called";
+                    "beforeBeanDiscovery not called";
 
         if (!PackagePrivateConstructorExtension.afterBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-            		"afterBeanDiscovery not called or injection of BeanManager " +
-            		"in an observer method failed";
-        
+                    "afterBeanDiscovery not called or injection of BeanManager " +
+                    "in an observer method failed";
+
         if (!PackagePrivateConstructorExtension.processAnnotatedTypeCalled)
             msg += "Portable Extension lifecycle observer method: process " +
-            		"annotated type not called";
+                    "annotated type not called";
 
-        if((bm.getBeans(PackagePrivateConstructorExtension.class, new AnnotationLiteral<Any>(){}).iterator().next().getClass()) == null) 
+        if((bm.getBeans(PackagePrivateConstructorExtension.class, new AnnotationLiteral<Any>(){}).iterator().next().getClass()) == null)
             msg += "Portable Extension not available for lookup through BeanManager";
 
         writer.write(msg + "\n");

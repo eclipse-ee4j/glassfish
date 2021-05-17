@@ -36,7 +36,7 @@ final class ServerSentEventApplication {
     private final String path;
     private final ServerSentEventHandlerContextImpl context;
     private final Class<?> clazz;
-    
+
     ServerSentEventApplication(Class<?> clazz, String path) {
         this.clazz = clazz;
         this.path = path;
@@ -54,7 +54,7 @@ final class ServerSentEventApplication {
     void destroyConnection(ServerSentEventConnectionImpl connection) {
         handlers.remove(connection.sseh);
     }
-    
+
     ServerSentEventHandlerContextImpl getHandlerContext() {
         return context;
     }
@@ -62,7 +62,7 @@ final class ServerSentEventApplication {
     Class<?> getHandlerClass() {
         return clazz;
     }
-    
+
     String getPath() {
         return path;
     }

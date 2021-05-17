@@ -23,7 +23,7 @@ import org.glassfish.contextpropagation.View;
 
 /**
  * Entries hold work contexts in the ContextMap as well as related metadata:
- * propagation mode, whether this thread originated the work context, and 
+ * propagation mode, whether this thread originated the work context, and
  * whether all are allowed to read its work context.
  */
 public class Entry {
@@ -49,23 +49,23 @@ public class Entry {
     throw new UnsupportedOperationException("This Entry does not have a View associated to it");
   }
 
-  public static Entry createViewEntryInstance(Object context, 
+  public static Entry createViewEntryInstance(Object context,
       EnumSet<PropagationMode> propModes, final ViewImpl view) {
     return new Entry(context, propModes, ContextType.VIEW_CAPABLE) {
       @Override public View getView() { return view; }
-    }; 
+    };
   }
 
 
   public String getClassName() {
     throw new UnsupportedOperationException("This Entry does not have a class name associated to it.");
   }
-  
-  public static Entry createOpaqueEntryInstance(Object context, 
+
+  public static Entry createOpaqueEntryInstance(Object context,
       EnumSet<PropagationMode> propModes, final String className) {
     return new Entry(context, propModes, ContextType.OPAQUE) {
       @Override public String getClassName() { return className; }
-    }; 
+    };
   }
 
   /**
@@ -78,7 +78,7 @@ public class Entry {
     this.isOriginator = isOriginator;
     this.allowAllToRead = allowAllToRead;
     return this;
-  } 
+  }
 
   private static final String LINE_SEP = System.getProperty("line.separator");
   @Override
@@ -99,11 +99,11 @@ public class Entry {
   }
 
   @SuppressWarnings("unchecked")
-  public <U> U getValue() { 
+  public <U> U getValue() {
     return (U) value;
   }
 
-  public EnumSet<PropagationMode> getPropagationModes() { 
+  public EnumSet<PropagationMode> getPropagationModes() {
     return propagationModes;
   }
 
@@ -124,7 +124,7 @@ public class Entry {
    * can understand them.
    */
   public enum ContextType {
-    ATOMICINTEGER, ATOMICLONG, ASCII_STRING, BIGDECIMAL, BIGINTEGER, BOOLEAN, 
+    ATOMICINTEGER, ATOMICLONG, ASCII_STRING, BIGDECIMAL, BIGINTEGER, BOOLEAN,
     BYTE, CATALOG, CHAR, DOUBLE, FLOAT, INT, LONG, OPAQUE, SERIALIZABLE,
     SHORT, STRING, VIEW_CAPABLE;
     private static ContextType[] byOrdinal = createByOrdinal();
@@ -178,7 +178,7 @@ public class Entry {
         case NumberConstants.BYTE: return BYTE;
         case NumberConstants.LONG: return LONG;
         }
-      case NumberConstants.SHORT_FLOAT: 
+      case NumberConstants.SHORT_FLOAT:
         switch (simpleName.charAt(0)) {
         case NumberConstants.SHORT: return SHORT;
         case NumberConstants.FLOAT: return FLOAT;

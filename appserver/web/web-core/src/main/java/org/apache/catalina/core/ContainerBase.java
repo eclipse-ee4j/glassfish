@@ -171,7 +171,7 @@ public abstract class ContainerBase
 
     /**
      * Flag indicating whether a check to see if the request is secure is
-     * required before adding Pragma and Cache-Control headers when proxy 
+     * required before adding Pragma and Cache-Control headers when proxy
      * caching has been disabled
      */
     protected boolean checkIfRequestIsSecure = false;
@@ -287,7 +287,7 @@ public abstract class ContainerBase
      */
     boolean isNotifyContainerListeners() {
         return notifyContainerListeners;
-    }    
+    }
 
 
     /**
@@ -318,10 +318,10 @@ public abstract class ContainerBase
     /**
      * Get the delay between the invocation of the backgroundProcess method on
      * this container and its children. Child containers will not be invoked
-     * if their delay value is not negative (which would mean they are using 
-     * their own thread). Setting this to a positive value will cause 
-     * a thread to be spawn. After waiting the specified amount of time, 
-     * the thread will invoke the executePeriodic method on this container 
+     * if their delay value is not negative (which would mean they are using
+     * their own thread). Setting this to a positive value will cause
+     * a thread to be spawn. After waiting the specified amount of time,
+     * the thread will invoke the executePeriodic method on this container
      * and all its children.
      */
     public int getBackgroundProcessorDelay() {
@@ -332,8 +332,8 @@ public abstract class ContainerBase
     /**
      * Set the delay between the invocation of the execute method on this
      * container and its children.
-     * 
-     * @param delay The delay in seconds between the invocation of 
+     *
+     * @param delay The delay in seconds between the invocation of
      *              backgroundProcess methods
      */
     public void setBackgroundProcessorDelay(int delay) {
@@ -383,7 +383,7 @@ public abstract class ContainerBase
         Loader oldLoader;
 
         try {
-	    writeLock.lock();
+        writeLock.lock();
 
             // Change components if necessary
             oldLoader = this.loader;
@@ -413,7 +413,7 @@ public abstract class ContainerBase
                 }
             }
         } finally {
-	    writeLock.unlock();
+        writeLock.unlock();
         }
 
         // Report this property change to interested listeners
@@ -471,7 +471,7 @@ public abstract class ContainerBase
                 }
             }
 
-        
+
             // Start the new component if necessary
             if (logger != null)
                 logger.setContainer(this);
@@ -805,8 +805,8 @@ public abstract class ContainerBase
      */
     public void setResources(DirContext resources) throws Exception {
         // Called from StandardContext.setResources()
-        //              <- StandardContext.start() 
-        //              <- ContainerBase.addChildInternal() 
+        //              <- StandardContext.start()
+        //              <- ContainerBase.addChildInternal()
 
         // Change components if necessary
         DirContext oldResources;
@@ -862,7 +862,7 @@ public abstract class ContainerBase
     }
 
     private void addChildInternal(Container child) {
-        
+
         if(log.isLoggable(Level.FINEST))
             log.log(Level.FINEST, "Add child " + child + " " + this);
         synchronized(children) {
@@ -1014,11 +1014,11 @@ public abstract class ContainerBase
                 log.log(Level.SEVERE, LogFacade.CONTAINER_BASE_REMOVE_CHILD_STOP, e);
             }
         }
-        
+
         if (notifyContainerListeners) {
             fireContainerEvent(REMOVE_CHILD_EVENT, child);
         }
-    
+
         // child.setParent(null);
     }
 
@@ -1104,7 +1104,7 @@ public abstract class ContainerBase
             }
             return;
         }
-        
+
         // Notify our interested LifecycleListeners
         lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, null);
 
@@ -1214,23 +1214,23 @@ public abstract class ContainerBase
 
 
     /** Init method, part of the MBean lifecycle.
-     *  If the container was added via JMX, it'll register itself with the 
+     *  If the container was added via JMX, it'll register itself with the
      * parent, using the ObjectName conventions to locate the parent.
-     * 
+     *
      *  If the container was added directly and it doesn't have an ObjectName,
-     * it'll create a name and register itself with the JMX console. On destroy(), 
+     * it'll create a name and register itself with the JMX console. On destroy(),
      * the object will unregister.
-     * 
+     *
      * @throws Exception
      */
     public void init() throws Exception {
         initialized=true;
     }
-    
+
     public ObjectName getParentName() throws MalformedObjectNameException {
         return null;
     }
-    
+
     public void destroy() throws Exception {
         if( started ) {
             stop();
@@ -1265,7 +1265,7 @@ public abstract class ContainerBase
         removeLifecycleListeners();
         // Release realm
         setRealm(null);
-        // END SJSAS 6330332                
+        // END SJSAS 6330332
     }
 
     // ------------------------------------------------------- Pipeline Methods
@@ -1315,7 +1315,7 @@ public abstract class ContainerBase
     public ObjectName[] getValveObjectNames() {
         return ((StandardPipeline)pipeline).getValveObjectNames();
     }
-    
+
     /**
      * <p>Return the Valve instance that has been distinguished as the basic
      * Valve for this Pipeline (if any).
@@ -1353,7 +1353,7 @@ public abstract class ContainerBase
     public synchronized void removeValve(GlassFishValve valve) {
 
         pipeline.removeValve(valve);
- 
+
         if (notifyContainerListeners) {
             fireContainerEvent(REMOVE_VALVE_EVENT, valve);
         }
@@ -1417,7 +1417,7 @@ public abstract class ContainerBase
     }
 
 
-    /**   
+    /**
      * Starts the children of this container.
      */
     protected void startChildren() {
@@ -1498,7 +1498,7 @@ public abstract class ContainerBase
             return oname;
         }
     }
-    
+
     public String getObjectName() {
         if (oname != null) {
             return oname.toString();
@@ -1515,7 +1515,7 @@ public abstract class ContainerBase
             if( parent != null ) {
                 // parent will always be an instanceof StandardEngine unless it is null
                 domain=((StandardEngine)parent).getDomain();
-            } 
+            }
         }
         return domain;
     }
@@ -1553,9 +1553,9 @@ public abstract class ContainerBase
         Container context=null;
         Container host=null;
         Container servlet=null;
-        
+
         StringBuilder suffix=new StringBuilder();
-        
+
         if( container instanceof StandardHost ) {
             host=container;
         } else if( container instanceof StandardContext ) {
@@ -1569,7 +1569,7 @@ public abstract class ContainerBase
         if( context!=null ) {
             String path=((StandardContext)context).getEncodedPath();
             suffix.append(",path=").append((path.equals("")) ? "/" : path);
-        } 
+        }
         if( host!=null ) suffix.append(",host=").append( host.getName() );
         if (servlet != null) {
             String containerName = container.getName();
@@ -1626,7 +1626,7 @@ public abstract class ContainerBase
 
 
     /**
-     * Private thread class to invoke the backgroundProcess method 
+     * Private thread class to invoke the backgroundProcess method
      * of this container and its children after a fixed delay.
      */
     protected class ContainerBackgroundProcessor implements Runnable {
@@ -1640,7 +1640,7 @@ public abstract class ContainerBase
                 }
                 if (!threadDone) {
                     Container parent = (Container) getMappingObject();
-                    ClassLoader cl = 
+                    ClassLoader cl =
                         Thread.currentThread().getContextClassLoader();
                     if (parent.getLoader() != null) {
                         cl = parent.getLoader().getClassLoader();

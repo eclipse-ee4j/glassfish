@@ -39,7 +39,7 @@ public final class ModuleMonitoringLevelsConfigTest
 
         final String[] allNames = new String[ ModuleMonitoringLevelsConfig.ALL_LEVEL_NAMES.size() ];
         ModuleMonitoringLevelsConfig.ALL_LEVEL_NAMES.toArray( allNames );
-        
+
         final AttributeList attrs = Util.getExtra(mml).getAttributes( allNames );
         assert allNames.length == attrs.size();
     }

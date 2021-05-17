@@ -86,7 +86,7 @@ public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploym
             }
         }
     }
-    
+
   /**
    * Return whether this configuration file can be validated.
    * @return whether this configuration file can be validated.

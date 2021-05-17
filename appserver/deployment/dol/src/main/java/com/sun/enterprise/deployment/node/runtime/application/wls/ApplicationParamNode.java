@@ -35,30 +35,30 @@ public class ApplicationParamNode extends DeploymentDescriptorNode {
 
     /**
      * all sub-implementation of this class can use a dispatch table to map
-     * xml element to method name on the descriptor class for setting 
-     * the element value. 
-     *  
+     * xml element to method name on the descriptor class for setting
+     * the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.PARAM_NAME, "setName");
-        table.put(RuntimeTagNames.PARAM_VALUE, "setValue");                
+        table.put(RuntimeTagNames.PARAM_VALUE, "setValue");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, EnvironmentProperty descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName, EnvironmentProperty descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        
-        writeLocalizedDescriptions(myNode, descriptor);        
+
+        writeLocalizedDescriptions(myNode, descriptor);
         appendTextChild(myNode, RuntimeTagNames.PARAM_NAME, descriptor.getName());
         appendTextChild(myNode, RuntimeTagNames.PARAM_VALUE, descriptor.getValue());
         return myNode;
@@ -91,5 +91,5 @@ public class ApplicationParamNode extends DeploymentDescriptorNode {
             }
         }
         return parent;
-    }      
+    }
 }

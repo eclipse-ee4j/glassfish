@@ -38,7 +38,7 @@ public class JSFTest {
         disableCertValidation();
 
         goGet("http://localhost:8080/test/JSFTestServlet", "Created viewRoot");
-        
+
         // test non secure access.
         goGet("http://localhost:8080/test", "BHAVANI", "SHANKAR", "Mr. X");
 

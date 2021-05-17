@@ -41,11 +41,11 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 /**
  * List Message Security Providers Command
- * 
- * Usage: list-message-security-providers [--terse=false] [--echo=false] 
- *        [--interactive=true] [--host localhost] [--port 4848|4849] 
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name] 
- *        [--layer message_layer] [target(Default server)] 
+ *
+ * Usage: list-message-security-providers [--terse=false] [--echo=false]
+ *        [--interactive=true] [--host localhost] [--port 4848|4849]
+ *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
+ *        [--layer message_layer] [target(Default server)]
  *
  * @author Nandini Ektare
  */
@@ -59,14 +59,14 @@ import org.glassfish.config.support.TargetType;
 CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-message-security-providers", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-message-security-providers",
         description="list-message-security-providers")
 })
 public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(ListMessageSecurityProvider.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(ListMessageSecurityProvider.class);
 
     @Param(name = "target", primary=true, optional = true, defaultValue =
         SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
@@ -80,7 +80,7 @@ public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSe
     // auth-layer can only be SOAP | HttpServlet
     @Param(name="layer", acceptableValues="SOAP,HttpServlet", optional=true)
     String authLayer;
-    
+
     @AccessRequired.To("read")
     private SecurityService secService;
 
@@ -93,7 +93,7 @@ public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSe
         secService = config.getSecurityService();
         return true;
     }
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -101,30 +101,30 @@ public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSe
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         secService.getMessageSecurityConfig();
 
         report.getTopMessagePart().setMessage(
             localStrings.getLocalString(
-                "list.message.security.provider.success", 
+                "list.message.security.provider.success",
                 "list-message-security-providers successful"));
         report.getTopMessagePart().setChildrenType("");
-        
+
         for (MessageSecurityConfig msc : secService.getMessageSecurityConfig()) {
             if (authLayer == null) {
                 for (ProviderConfig pc : msc.getProviderConfig()) {
-                    ActionReport.MessagePart part = 
+                    ActionReport.MessagePart part =
                         report.getTopMessagePart().addChild();
-                    part.setMessage(pc.getProviderId());                
+                    part.setMessage(pc.getProviderId());
                 }
             } else {
                 if (msc.getAuthLayer().equals(authLayer)) {
                     for (ProviderConfig pc : msc.getProviderConfig()) {
-                        ActionReport.MessagePart part = 
+                        ActionReport.MessagePart part =
                             report.getTopMessagePart().addChild();
-                        part.setMessage(pc.getProviderId());                                    
+                        part.setMessage(pc.getProviderId());
                     }
                 }
             }

@@ -50,7 +50,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  * Because an EAR can contain multiple clients, this might be run multiple
  * times.  To avoid extra work the class stores a flag that it has done its
  * work in the deployment context's transient app data.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -59,13 +59,13 @@ public class AppClientGroupFacadeGenerator {
 
     private static final String GLASSFISH_APPCLIENT_GROUP_FACADE_CLASS_NAME =
             "org.glassfish.appclient.client.AppClientGroupFacade";
-    
+
     private static final Attributes.Name GLASSFISH_APPCLIENT_GROUP = new Attributes.Name("GlassFish-AppClient-Group");
     private static final String GF_CLIENT_MODULE_NAME = "org.glassfish.main.appclient.gf-client-module";
 
     private static final String GROUP_FACADE_ALREADY_GENERATED = "groupFacadeAlreadyGenerated";
     private static final String PERMISSIONS_XML_PATH = "META-INF/permissions.xml";
-    
+
     private DeploymentContext dc;
     private AppClientDeployerHelper helper;
 
@@ -119,7 +119,7 @@ public class AppClientGroupFacadeGenerator {
 
         try {
             addTopLevelContentToGroupFacade();
-        
+
             /*
              * Pass the EAR's generated/xml directory for where to generated the
              * group facade.  Because the directories are flattened, even if the
@@ -138,14 +138,14 @@ public class AppClientGroupFacadeGenerator {
     private void addTopLevelContentToGroupFacade() throws IOException {
         helper.addClientPolicyFiles(null);
     }
-    
+
     private String earDirUserURIText(final DeploymentContext dc)  {
         final DeployCommandParameters deployParams = dc.getCommandParameters(DeployCommandParameters.class);
         final String appName = deployParams.name();
         try {
             return VersioningUtils.getUntaggedName(appName) + "Client/";
         } catch (VersioningSyntaxException ex) {
-            Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+            Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE).log(Level.SEVERE, null, ex);
         }
         return appName;
@@ -162,7 +162,7 @@ public class AppClientGroupFacadeGenerator {
     }
 
     /**
-     * Generates content for the top-level generated client JAR from the 
+     * Generates content for the top-level generated client JAR from the
      * app clients in this app.
      * <p>
      * Higher-level logic will actually create the client JAR, because the need
@@ -172,7 +172,7 @@ public class AppClientGroupFacadeGenerator {
      * @param appScratchDir
      * @param facadeFileName
      * @param appClientGroupList
-     * @throws IOException 
+     * @throws IOException
      */
     private void generateAndRecordEARFacadeContents(
             final DeploymentContext dc,
@@ -197,10 +197,10 @@ public class AppClientGroupFacadeGenerator {
           manifestOutputStream.close();
         }
         clientArtifactsManager.add(manifestFile, JarFile.MANIFEST_NAME, true /* isTemp */);
-        
+
 
         writeMainClass(clientArtifactsManager);
-        
+
         /*
          * If the EAR contains a permissions file we need to make sure it's added
          * to the group-level generated facade JAR.
@@ -211,7 +211,7 @@ public class AppClientGroupFacadeGenerator {
         }
 
         /*
-         * Higher-level code will copy the files generated here plus other deployers' 
+         * Higher-level code will copy the files generated here plus other deployers'
          * artifacts - such as generated stubs - into the generated client JAR
          * which the app client deployer views as the group facade.
          * Each client's individual facade JARs then refer
@@ -220,19 +220,19 @@ public class AppClientGroupFacadeGenerator {
          * the runtime class path and see the stubs.  (This allows users who
          * did this in v2 to use the same technique.)
          */
-        
+
     }
 
     private File getPermissionsFile() {
         return new File(new File(dc.getSource().getParentArchive().getURI()), PERMISSIONS_XML_PATH);
     }
-    
+
     private void writeMainClass(final ClientArtifactsManager clientArtifactsManager) throws IOException {
         final String mainClassResourceName =
                 GLASSFISH_APPCLIENT_GROUP_FACADE_CLASS_NAME.replace('.', '/') +
                 ".class";
         final File mainClassJAR = new File(
-                AppClientDeployerHelper.getModulesDir(serviceLocator), 
+                AppClientDeployerHelper.getModulesDir(serviceLocator),
                 AppClientDeployerHelper.GF_CLIENT_MODULE_PATH);
         final File mainClassFile = File.createTempFile("main", ".class");
         final OutputStream os = new BufferedOutputStream(new FileOutputStream(mainClassFile));

@@ -25,8 +25,8 @@ import jakarta.ejb.*;
  */
 
 public interface A extends jakarta.ejb.EJBObject {
-    
+
     public void addAll() throws java.rmi.RemoteException;
-    
+
 }
 

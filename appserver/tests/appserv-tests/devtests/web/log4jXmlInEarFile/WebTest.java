@@ -40,7 +40,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for log4j packaged in EAR file");
@@ -53,11 +53,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port + "/mywar/TestServlet");
         System.out.println("Connecting to: " + url.toString());
 
@@ -75,10 +75,10 @@ public class WebTest {
             if (EXPECTED_RESPONSE.equals(line)) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {
-                System.err.println("Wrong response. Expected: " + 
+                System.err.println("Wrong response. Expected: " +
                                    EXPECTED_RESPONSE + ", received: " + line);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
-        }    
+        }
     }
 }

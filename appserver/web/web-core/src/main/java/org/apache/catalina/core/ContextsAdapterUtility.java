@@ -39,7 +39,7 @@ public class ContextsAdapterUtility {
         if (namingContext == null) {
             return null;
         }
-        
+
         return new NamingContextAdapter(namingContext);
     }
 
@@ -59,14 +59,14 @@ public class ContextsAdapterUtility {
         if (grizzlyNamingContext == null) {
             return null;
         }
-        
+
         if (!(grizzlyNamingContext instanceof NamingContextAdapter)) {
             throw new IllegalArgumentException("Unknown NamingContext type: " +
                     grizzlyNamingContext.getClass().getName());
         }
         return ((NamingContextAdapter) grizzlyNamingContext).getJmxNamingContext();
     }
-    
+
     /**
      * Wraps {@link DirContext} and returns corresponding Grizzly
      * {@link org.glassfish.grizzly.http.server.naming.DirContext}.
@@ -79,7 +79,7 @@ public class ContextsAdapterUtility {
         if (dirContext == null) {
             return null;
         }
-        
+
         return new DirContextAdapter(dirContext);
     }
 
@@ -96,11 +96,11 @@ public class ContextsAdapterUtility {
      */
     public static DirContext unwrap(
             final org.glassfish.grizzly.http.server.naming.DirContext grizzlyDirContext) {
-        
+
         if (grizzlyDirContext == null) {
             return null;
         }
-        
+
         if (!(grizzlyDirContext instanceof DirContextAdapter)) {
             throw new IllegalArgumentException("Unknown DirContext type: " +
                     grizzlyDirContext.getClass().getName());
@@ -119,7 +119,7 @@ public class ContextsAdapterUtility {
 
         return resource;
     }
-    
+
     private static class NamingContextAdapter
             implements org.glassfish.grizzly.http.server.naming.DirContext {
         private final Context jmxNamingContext;
@@ -145,7 +145,7 @@ public class ContextsAdapterUtility {
             }
         }
     }
-    
+
     private static class DirContextAdapter
             implements org.glassfish.grizzly.http.server.naming.DirContext {
         private final DirContext jmxDirContext;

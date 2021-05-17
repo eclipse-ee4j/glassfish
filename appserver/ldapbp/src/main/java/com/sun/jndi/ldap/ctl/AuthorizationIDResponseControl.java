@@ -109,14 +109,14 @@ public class AuthorizationIDResponseControl extends BasicControl {
      *                          while decoding the control's value.
      */
     AuthorizationIDResponseControl(String id, boolean criticality,
-	byte[] value) throws IOException {
+    byte[] value) throws IOException {
 
-	super(id, criticality, value);
-	if ((value == null) || (value.length == 0)){
-	    authzId = "";
-	} else {
-	    authzId = new String(value, "UTF8");
-	}
+    super(id, criticality, value);
+    if ((value == null) || (value.length == 0)){
+        authzId = "";
+    } else {
+        authzId = new String(value, "UTF8");
+    }
     }
 
     /**
@@ -126,7 +126,7 @@ public class AuthorizationIDResponseControl extends BasicControl {
      * @return The authorization identity.
      */
     public String getAuthorizationID() {
-	return authzId;
+    return authzId;
     }
 
     /**
@@ -134,13 +134,13 @@ public class AuthorizationIDResponseControl extends BasicControl {
      * encoded value.
      *
      * @return A possibly null byte array representing the ASN.1 BER
-     * 	       encoded value of the LDAP response control. 
+     *            encoded value of the LDAP response control.
      */
     public byte[] getEncodedValue() {
 
-	if (value == null) {
-	    return null;
-	}
+    if (value == null) {
+        return null;
+    }
 
         // return a copy of value
         byte[] retval = new byte[value.length];

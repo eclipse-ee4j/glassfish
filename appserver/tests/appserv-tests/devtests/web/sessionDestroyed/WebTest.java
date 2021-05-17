@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.*;
  * too late according to Servlet Spec").
  */
 public class WebTest {
-    
+
     private static final SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME = "session-destroyed";

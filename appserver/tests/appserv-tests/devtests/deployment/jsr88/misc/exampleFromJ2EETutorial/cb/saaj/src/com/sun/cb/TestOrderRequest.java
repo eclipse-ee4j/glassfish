@@ -23,13 +23,13 @@ import java.util.*;
 import jakarta.xml.soap.*;
 
 public class TestOrderRequest {
-    public static void main(String [] args) {    
+    public static void main(String [] args) {
         try {
             SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
             SOAPConnection con = scf.createConnection();
 
             MessageFactory mf = MessageFactory.newInstance();
-        
+
             SOAPMessage msg = mf.createMessage();
 
             // Access the SOABBody object
@@ -66,7 +66,7 @@ public class TestOrderRequest {
             phoneNumber.addTextNode("908 983-6789");
 
             childName = envelope.createName("email-address");
-            SOAPElement emailAddress = 
+            SOAPElement emailAddress =
                 customer.addChildElement(childName);
             emailAddress.addTextNode("ragnip@aol.com");
 
@@ -89,7 +89,7 @@ public class TestOrderRequest {
             childName = envelope.createName("zip");
             SOAPElement zip = address.addChildElement(childName);
             zip.addTextNode("99999");
-    
+
             // line-item 1
             childName = envelope.createName("line-item");
             SOAPElement lineItem = order.addChildElement(childName);
@@ -123,7 +123,7 @@ public class TestOrderRequest {
             childName = envelope.createName("total");
             SOAPElement total = order.addChildElement(childName);
             total.addTextNode("21.90");
-    
+
             URL endpoint = new URL(
                 URLHelper.getSaajURL() + "/orderCoffee");
             SOAPMessage reply = con.call(msg, endpoint);
@@ -148,7 +148,7 @@ public class TestOrderRequest {
             System.out.println("");
             System.out.println("Confirmation for order #" + id);
             System.out.print("Your order will be shipped on ");
-            System.out.println(shippingDate);    
+            System.out.println(shippingDate);
         } catch(Exception e) {
             e.printStackTrace();
         }

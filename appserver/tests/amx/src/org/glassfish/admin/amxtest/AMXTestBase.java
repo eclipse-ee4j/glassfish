@@ -108,7 +108,7 @@ public class AMXTestBase
         return all;
     }
 
-    
+
     protected Set<AMX>
     getAllAMX() {
         return getTestUtil().getAllAMX();
@@ -134,7 +134,7 @@ public class AMXTestBase
    private void changeAllLevels( final ModuleMonitoringLevelsConfig config, final String value )
    {
         final Set<String> names = ModuleMonitoringLevelsConfig.ALL_LEVEL_NAMES;
-        
+
         final AttributeList attrs = new AttributeList();
         for( final String name : names )
         {
@@ -146,7 +146,7 @@ public class AMXTestBase
            // ignore
         }
    }
-   
+
     /**
      Ensure that monitoring is enabled so that unit tests don't miss anything
      */

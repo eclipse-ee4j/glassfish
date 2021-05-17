@@ -23,7 +23,7 @@ import javax.management.ObjectName;
 import java.io.IOException;
 
 /**
-Convenience base class for listening to 
+Convenience base class for listening to
 {@link MBeanServerNotification} notifications.
 A class extending this class must implement {@link #mbeanRegistered}
 and {@link #mbeanUnregistered}.

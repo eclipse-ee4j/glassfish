@@ -39,7 +39,7 @@ public class WebTest {
     private static SimpleReporterAdapter stat
         = new SimpleReporterAdapter("appserv-tests");
 
-    private static final String EXPECTED_LOCATION = 
+    private static final String EXPECTED_LOCATION =
         "https://lbhost:8888/jsp/redirect/target.jsp";
 
     private static final String TEST_NAME =
@@ -55,7 +55,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6269102");
         WebTest webTest = new WebTest(args);
@@ -64,8 +64,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             testRemoteAddress();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -83,7 +83,7 @@ public class WebTest {
     }
 
     private void testRemoteAddress() throws Exception {
-         
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/sendRedirect.jsp "
@@ -93,7 +93,7 @@ public class WebTest {
         os.write("Proxy-keysize: 512\n".getBytes());
         os.write("Proxy-ip: 123.456.789\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;

@@ -23,7 +23,7 @@ import org.glassfish.admin.rest.utils.JsonUtil;
 
 /**
  * Used to return a standard REST response body that contains a single entity
- * 
+ *
  * @author tmoreau
  */
 public class RestModelResponseBody<T extends RestModel> extends ResponseBody {

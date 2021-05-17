@@ -32,34 +32,34 @@ import org.glassfish.appclient.client.acc.callbackhandler.CallbackGUIBindings.Me
  * caller provides and passes them all to a JOptionPane, which displays all the
  * components and accepts the user's ending action (such as OK, Cancel, etc.).
  * <p>
- * Normally the caller passes a ConfirmationCallback to tell what kind of 
- * responses should be expected and accepted from the user (OK/Cancel, Yes/No, 
- * Yes/No/Cancel, etc.).  If the caller does not provide one this handler 
- * uses a default ConfirmationCallback with "OK" as the only choice.  
- * In such a case the user has no option to cancel, although he or she can 
+ * Normally the caller passes a ConfirmationCallback to tell what kind of
+ * responses should be expected and accepted from the user (OK/Cancel, Yes/No,
+ * Yes/No/Cancel, etc.).  If the caller does not provide one this handler
+ * uses a default ConfirmationCallback with "OK" as the only choice.
+ * In such a case the user has no option to cancel, although he or she can
  * always simply close the option dialog box.
  * <p>
  * The dialog box includes a system-selected icon based on the message type
  * specified when the JOptionPane is created.  The message type for the dialog
- * box (INFORMATION, WARNING, ERROR) is computed by choosing the most severe 
- * message type from ConfirmationCallbacks or TextOutputCallbacks passed by the 
+ * box (INFORMATION, WARNING, ERROR) is computed by choosing the most severe
+ * message type from ConfirmationCallbacks or TextOutputCallbacks passed by the
  * caller.
  * <p>
  * Whenever the user dismisses the dialog box, whether by choosing one of the
  * confirmation choices (such as OK or Cancel) or by closing the window, the
- * handler updates each of the callbacks as appropriate with information from 
- * the corresponding U/I components.  The caller should provide a 
+ * handler updates each of the callbacks as appropriate with information from
+ * the corresponding U/I components.  The caller should provide a
  * ConfirmationCallback if it needs to distinguish among the possible responses
  * from the user.
  * <p>
- * Each type of callback is associated with a corresponding type of 
- * callback-to-U/I binding.  Each binding creates a JComponent, 
+ * Each type of callback is associated with a corresponding type of
+ * callback-to-U/I binding.  Each binding creates a JComponent,
  * specific to its type of callback, that displays information from the callback
  * or collects information from the user, perhaps using a prompt or initial
  * value from the callback.  Each type of binding also implements the finish
  * method which updates the corresponding callback, if appropriate, with
  * data from the U/I component.
- * 
+ *
  * @author tjquinn
  */
 public class DefaultGUICallbackHandler implements javax.security.auth.callback.CallbackHandler {
@@ -68,12 +68,12 @@ public class DefaultGUICallbackHandler implements javax.security.auth.callback.C
     private CallbackGUIBindings.Confirmation confirmationCallbackGUIBinding = null;
 
     /* most severe message type found among the callbacks with a message type,
-     * such as ConfirmationCallback and TextOutputCallback 
+     * such as ConfirmationCallback and TextOutputCallback
      */
     private MessageType messageType;
 
     private LocalStringsImpl localStrings = new LocalStringsImpl(DefaultGUICallbackHandler.class);
-    
+
     /**
      * Handles the caller-requested callbacks.
      * @param callbacks the Callback objects to be processed
@@ -81,7 +81,7 @@ public class DefaultGUICallbackHandler implements javax.security.auth.callback.C
      * @throws UnsupportedCallbackException if this handler does not support the
      * specified callback
      */
-    public void handle(Callback[] callbacks) 
+    public void handle(Callback[] callbacks)
             throws IOException, UnsupportedCallbackException {
         new GUILoginDialog(localStrings.get("dialog.user"), callbacks);
 //        messageType = MessageType.PLAIN;

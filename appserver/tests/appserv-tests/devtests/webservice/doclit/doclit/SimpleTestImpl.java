@@ -15,7 +15,7 @@
  */
 
 /*
- * @(#)SimpleTestImpl.java	1.3 02/04/05
+ * @(#)SimpleTestImpl.java    1.3 02/04/05
  */
 
 package doclit;

@@ -24,10 +24,10 @@
 
     <parent>
         <groupId>org.glassfish.main</groupId>
-    	<artifactId>batch-dev-tests</artifactId>
+        <artifactId>batch-dev-tests</artifactId>
         <version>6.1.1-SNAPSHOT</version>
     </parent>
     <artifactId>batch-tests-utils</artifactId>
     <packaging>jar</packaging>
-    
+
 </project>

@@ -20,15 +20,15 @@ import javax.management.*;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
-                                                                                                                                               
-public class TimerOccurrence implements NotificationListener, 
+
+public class TimerOccurrence implements NotificationListener,
     com.sun.s1peqe.selfmanagement.ttimer.action.TimerOccurrenceMBean {
-    
+
     private final String JMX_TIMER = "timer";
     private static final int TIMER_NO_OF_OCCURRENCES = 3;
     protected static int incOccurrences = 0;
 
-    public TimerOccurrence(){ 
+    public TimerOccurrence(){
         new NotifThread(this, TIMER_NO_OF_OCCURRENCES).start();
     }
     public int getNumberOfOccurrences() {
@@ -54,7 +54,7 @@ class NotifThread extends Thread {
         this.expectedOccurrences = n;
         this.timerMBean = t;
     }
-   
+
     public void run() {
         try {
             System.out.println("Now going to sleep for 40 secs...");

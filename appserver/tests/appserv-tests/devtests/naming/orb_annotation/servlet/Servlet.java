@@ -31,54 +31,54 @@ public class Servlet extends HttpServlet {
 
     private @Resource(shareable=false) ORB unshareableOrb;
     private @Resource ORB shareableOrb;
-    
+
     public void  init( ServletConfig config) throws ServletException {
-        
+
         super.init(config);
         System.out.println("In webclient::servlet... init()");
     }
-    
+
     public void service ( HttpServletRequest req , HttpServletResponse resp ) throws ServletException, IOException {
-                 
+
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        
+
         try {
 
             InitialContext ic = new InitialContext();
 
-	    //out.println("doing shareable orb test");
+        //out.println("doing shareable orb test");
             //out.println("ORB = " + shareableOrb);
             POA poa = (POA) shareableOrb.resolve_initial_references("RootPOA");
             //out.println("POA = " + poa);
 
-	    //out.println("doing unshareable orb test");
+        //out.println("doing unshareable orb test");
             //out.println("ORB = " + unshareableOrb);
             POA poa1 = (POA) unshareableOrb.resolve_initial_references("RootPOA");
             //out.println("POA = " + poa1);
 
             out.println("<HTML> <HEAD> <TITLE> ORB Annotation Test  Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>ORB Annotation Test Servlet </FONT> </CENTER> <p> " );
-            out.println("<FONT size=+1 color=red> doing unshareable orb test :  </FONT> " + "<br>" ); 
-            out.println("<FONT size=+1 color=red> ORB = " + unshareableOrb + "</FONT> "  + "<br>" ); 
-            out.println("<FONT size=+1 color=red> POA =  </FONT> " + poa1 + "<br>" ); 
+            out.println("<FONT size=+1 color=red> doing unshareable orb test :  </FONT> " + "<br>" );
+            out.println("<FONT size=+1 color=red> ORB = " + unshareableOrb + "</FONT> "  + "<br>" );
+            out.println("<FONT size=+1 color=red> POA =  </FONT> " + poa1 + "<br>" );
 
-out.println("<FONT size=+1 color=red> doing shareable orb test :  </FONT> " + "<br>" ); 
-            out.println("<FONT size=+1 color=red> ORB = " + shareableOrb + "</FONT> "  + "<br>" ); 
-            out.println("<FONT size=+1 color=red> POA =  </FONT> " + poa + "<br>" ); 
+out.println("<FONT size=+1 color=red> doing shareable orb test :  </FONT> " + "<br>" );
+            out.println("<FONT size=+1 color=red> ORB = " + shareableOrb + "</FONT> "  + "<br>" );
+            out.println("<FONT size=+1 color=red> POA =  </FONT> " + poa + "<br>" );
             out.println("</BODY> </HTML> ");
-            
+
         }catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("webclient servlet test failed");
             throw new ServletException(ex);
-        } 
+        }
     }
 
-    
-    
+
+
     public void  destroy() {
         System.out.println("in webclient::servlet destroy");
     }
-    
+
 }

@@ -76,46 +76,46 @@ public class ResponseControlFactory extends ControlFactory {
      *            error condition while attempting to create the LDAP control,
      *            and no other control factories are to be tried.
      */
-    public Control getControlInstance(Control ctl) 
-	throws NamingException {
+    public Control getControlInstance(Control ctl)
+    throws NamingException {
 
-	String id = ctl.getID();
-	Control newCtl = null;
+    String id = ctl.getID();
+    Control newCtl = null;
 
-	try {
-	    if (id.equals(SortResponseControl.OID)) {
-		newCtl = new SortResponseControl(id, ctl.isCritical(),
-		    ctl.getEncodedValue());
+    try {
+        if (id.equals(SortResponseControl.OID)) {
+        newCtl = new SortResponseControl(id, ctl.isCritical(),
+            ctl.getEncodedValue());
 
-	    } else if (id.equals(VirtualListViewResponseControl.OID)) {
+        } else if (id.equals(VirtualListViewResponseControl.OID)) {
                 newCtl = new VirtualListViewResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+            ctl.isCritical(), ctl.getEncodedValue());
 
-	    } else if (id.equals(PagedResultsResponseControl.OID)) {
-		newCtl = new PagedResultsResponseControl(id, ctl.isCritical(),
-		    ctl.getEncodedValue());
+        } else if (id.equals(PagedResultsResponseControl.OID)) {
+        newCtl = new PagedResultsResponseControl(id, ctl.isCritical(),
+            ctl.getEncodedValue());
 
-	    } else if (id.equals(DirSyncResponseControl.OID)) {
-		newCtl = new DirSyncResponseControl(id, ctl.isCritical(),
-		    ctl.getEncodedValue());
+        } else if (id.equals(DirSyncResponseControl.OID)) {
+        newCtl = new DirSyncResponseControl(id, ctl.isCritical(),
+            ctl.getEncodedValue());
 
-	    } else if (id.equals(PasswordExpiredResponseControl.OID)) {
+        } else if (id.equals(PasswordExpiredResponseControl.OID)) {
                 newCtl = new PasswordExpiredResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+            ctl.isCritical(), ctl.getEncodedValue());
 
             } else if (id.equals(PasswordExpiringResponseControl.OID)) {
                 newCtl = new PasswordExpiringResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+            ctl.isCritical(), ctl.getEncodedValue());
 
             } else if (id.equals(AuthorizationIDResponseControl.OID)) {
-		newCtl = new AuthorizationIDResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+        newCtl = new AuthorizationIDResponseControl(id,
+            ctl.isCritical(), ctl.getEncodedValue());
             }
-	} catch (IOException e) {
-	    NamingException ne = new NamingException();
-	    ne.setRootCause(e);
-	    throw ne;
-	}
-	return newCtl;
+    } catch (IOException e) {
+        NamingException ne = new NamingException();
+        ne.setRootCause(e);
+        throw ne;
+    }
+    return newCtl;
     }
 }

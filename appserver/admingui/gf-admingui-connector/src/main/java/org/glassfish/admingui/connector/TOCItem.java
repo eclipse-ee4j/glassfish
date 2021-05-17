@@ -24,34 +24,34 @@ import java.util.List;
 
 
 /**
- *  <p>	This class is configured via XML (i.e. a console-config.xml file).
- *  	This is done via the HK2 <code>ConfigParser</code>.</p>
+ *  <p>    This class is configured via XML (i.e. a console-config.xml file).
+ *      This is done via the HK2 <code>ConfigParser</code>.</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen    (ken.paulsen@sun.com)
  */
 @Configured(name="tocitem")
 public class TOCItem {
 
     /**
-     *	<p> Accessor for child {@link TOCItem}s.</p>
+     *    <p> Accessor for child {@link TOCItem}s.</p>
      */
     public List<TOCItem> getTOCItems() {
-	return this.tocItems;
+    return this.tocItems;
     }
 
     /**
-     *	<p> {@link IntegrationPoint}s setter.</p>
+     *    <p> {@link IntegrationPoint}s setter.</p>
      */
     @Element("tocitem")
     public void setTOCItems(List<TOCItem> tocItems) {
-	this.tocItems = tocItems;
+    this.tocItems = tocItems;
     }
 
     /**
      *
      */
     public boolean isExpand() {
-	return this.expand;
+    return this.expand;
     }
 
     /**
@@ -59,14 +59,14 @@ public class TOCItem {
      */
     @Attribute(required=true)
     void setExpand(boolean expand) {
-	this.expand = expand;
+    this.expand = expand;
     }
 
     /**
      *
      */
     public String getTarget() {
-	return this.target;
+    return this.target;
     }
 
     /**
@@ -74,35 +74,35 @@ public class TOCItem {
      */
     @Attribute(required=true)
     void setTarget(String target) {
-	this.target = target;
+    this.target = target;
     }
 
     /**
-     *	<p> This method returns the path to the target HTML page, starting
-     *	    with the moduleId.  It does not add anything before the module id,
-     *	    and does not have a leading '/' character.  It does append ".html"
-     *	    to the end of the target.</p>
+     *    <p> This method returns the path to the target HTML page, starting
+     *        with the moduleId.  It does not add anything before the module id,
+     *        and does not have a leading '/' character.  It does append ".html"
+     *        to the end of the target.</p>
      */
     public String getTargetPath() {
-	return this.targetPath;
+    return this.targetPath;
     }
 
     /**
-     *	<p> Sets the target path.  If the "target" is <code>foo</code>, the
-     *	    target path should look something like:
-     *	    <code>moduleId/en/help/foo.html</code></p>.  This value is NOT
-     *	    automatically set, it must be calculated and set during
-     *	    initialization code.</p>
+     *    <p> Sets the target path.  If the "target" is <code>foo</code>, the
+     *        target path should look something like:
+     *        <code>moduleId/en/help/foo.html</code></p>.  This value is NOT
+     *        automatically set, it must be calculated and set during
+     *        initialization code.</p>
      */
     public void setTargetPath(String targetPath) {
-	this.targetPath = targetPath;
+    this.targetPath = targetPath;
     }
 
     /**
      *
      */
     public String getText() {
-	return this.text;
+    return this.text;
     }
 
     /**
@@ -110,32 +110,32 @@ public class TOCItem {
      */
     @Attribute(required=true)
     void setText(String text) {
-	this.text = text;
+    this.text = text;
     }
 
     /**
-     *	<p> This method provides the "equals" functionality for TOCItem.  The
-     *	    behavior of equals ONLY compares the <code>target</code> value.
-     *	    The <code>text</code> and <code>expand</code> values are not used
-     *	    to test for equality.</p>
+     *    <p> This method provides the "equals" functionality for TOCItem.  The
+     *        behavior of equals ONLY compares the <code>target</code> value.
+     *        The <code>text</code> and <code>expand</code> values are not used
+     *        to test for equality.</p>
      */
     @Override
     public boolean equals(Object obj) {
-	boolean result = false;
-	if (obj instanceof TOCItem) {
-	    result = ((TOCItem) obj).getTarget().equals(getTarget());
-	}
-	return result;
+    boolean result = false;
+    if (obj instanceof TOCItem) {
+        result = ((TOCItem) obj).getTarget().equals(getTarget());
+    }
+    return result;
     }
 
     /**
-     *	<p> This method is overriden to help ensure consistency for equals()
-     *	    comparisons.  As such it simply returns the hashCode of the String
-     *	    (target) that is used in the equals comparison.</p>
+     *    <p> This method is overriden to help ensure consistency for equals()
+     *        comparisons.  As such it simply returns the hashCode of the String
+     *        (target) that is used in the equals comparison.</p>
      */
     @Override
     public int hashCode() {
-	return getTarget().hashCode();
+    return getTarget().hashCode();
     }
 
     @Override

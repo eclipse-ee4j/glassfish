@@ -30,7 +30,7 @@ import jakarta.security.auth.message.module.ServerAuthModule;
 /**
  * This class functions as a kind of factory-factory for {@link ServerAuthConfig} instances, which are by themselves factories
  * for {@link ServerAuthContext} instances, which are delegates for the actual {@link ServerAuthModule} (SAM) that we're after.
- * 
+ *
  */
 public class TestAuthConfigProvider implements AuthConfigProvider {
 
@@ -45,7 +45,7 @@ public class TestAuthConfigProvider implements AuthConfigProvider {
 
     /**
      * Constructor with signature and implementation that's required by API.
-     * 
+     *
      * @param properties
      * @param factory
      */
@@ -85,7 +85,7 @@ public class TestAuthConfigProvider implements AuthConfigProvider {
      * Creates a default callback handler via the system property "authconfigprovider.client.callbackhandler", as seemingly
      * required by the API (API uses wording "may" create default handler). TODO: Isn't
      * "authconfigprovider.client.callbackhandler" JBoss specific?
-     * 
+     *
      * @return
      * @throws AuthException
      */

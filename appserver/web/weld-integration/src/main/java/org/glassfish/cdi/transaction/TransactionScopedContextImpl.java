@@ -43,10 +43,10 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
 
 /**
  * The Context implementation for obtaining contextual instances of {@link TransactionScoped} beans.
- * 
+ *
  * <p/>
  * The contextual instances are destroyed when the transaction completes.
- * 
+ *
  * <p/>
  * Any attempt to call a method on a {@link TransactionScoped} bean when a transaction is not active will result in a
  * {@Link jakarta.enterprise.context.ContextNotActiveException}.
@@ -95,7 +95,7 @@ public class TransactionScopedContextImpl implements Context {
         return getContextualInstance(getContextualId(contextual), getTransactionSynchronizationRegistry());
     }
 
-    
+
     /**
      * Determines if this context object is active.
      *
@@ -110,7 +110,7 @@ public class TransactionScopedContextImpl implements Context {
             return true;
         } catch (ContextNotActiveException ignore) {
         }
-        
+
         return false;
     }
 
@@ -119,7 +119,7 @@ public class TransactionScopedContextImpl implements Context {
             PassivationCapable passivationCapable = (PassivationCapable) contextual;
             return passivationCapable.getId();
         }
-        
+
         return contextual;
     }
 
@@ -127,7 +127,7 @@ public class TransactionScopedContextImpl implements Context {
         TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<>(contextual, creationalContext, this);
         transactionSynchronizationRegistry.putResource(contextualId, transactionScopedBean);
         transactionSynchronizationRegistry.registerInterposedSynchronization(transactionScopedBean);
-        
+
         // Adding TransactionScopedBean as Set, per transactionSynchronizationRegistry, which is unique per transaction
         // Setting synchronizedSet so that even is there are multiple transaction for an app its safe
         Set<TransactionScopedBean<?>> transactionScopedBeanSet = beansPerTransaction.get(transactionSynchronizationRegistry);
@@ -135,15 +135,15 @@ public class TransactionScopedContextImpl implements Context {
             transactionScopedBeanSet = synchronizedSet(transactionScopedBeanSet);
         } else {
             transactionScopedBeanSet = synchronizedSet(new HashSet<>());
-            
+
             // Fire this event only for the first initialization of context and not for every TransactionScopedBean in a Transaction
             TransactionScopedCDIUtil.fireEvent(TransactionScopedCDIUtil.INITIALIZED_EVENT);
-            
+
             // Adding transactionScopedBeanSet in Map for the first time for this transactionSynchronizationRegistry key
             beansPerTransaction.put(transactionSynchronizationRegistry, transactionScopedBeanSet);
         }
         transactionScopedBeanSet.add(transactionScopedBean);
-        
+
         // Not updating entry in main Map with new TransactionScopedBeans as it should happen by reference
         return transactionScopedBean.getContextualInstance();
     }
@@ -154,28 +154,28 @@ public class TransactionScopedContextImpl implements Context {
         if (transactionScopedBean != null) {
             return transactionScopedBean.getContextualInstance();
         }
-        
+
         return null;
     }
 
     private TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
         TransactionSynchronizationRegistry transactionSynchronizationRegistry;
         try {
-            transactionSynchronizationRegistry = (TransactionSynchronizationRegistry) 
+            transactionSynchronizationRegistry = (TransactionSynchronizationRegistry)
                     new InitialContext().lookup(TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME);
         } catch (NamingException ne) {
             throw new ContextNotActiveException("Could not get TransactionSynchronizationRegistry", ne);
         }
 
         int status = transactionSynchronizationRegistry.getTransactionStatus();
-        if (status == STATUS_ACTIVE || 
-                status == STATUS_MARKED_ROLLBACK || 
-                status == STATUS_PREPARED || 
-                status == STATUS_UNKNOWN || 
-                status == STATUS_PREPARING || 
-                status == STATUS_COMMITTING || 
+        if (status == STATUS_ACTIVE ||
+                status == STATUS_MARKED_ROLLBACK ||
+                status == STATUS_PREPARED ||
+                status == STATUS_UNKNOWN ||
+                status == STATUS_PREPARING ||
+                status == STATUS_COMMITTING ||
                 status == STATUS_ROLLING_BACK) {
-            
+
             return transactionSynchronizationRegistry;
         }
 

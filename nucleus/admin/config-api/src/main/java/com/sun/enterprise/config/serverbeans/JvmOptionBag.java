@@ -38,7 +38,7 @@ public interface JvmOptionBag extends ConfigBeanProxy {
      * misconfiguring the JVM by specifying -Xmx that is smaller than -Xms. Sun's JVM for example, bails out with
      * <code> Incompatible minimum and maximum heap sizes specified</code> when that happens. It's generally better to do
      * some basic validations in those cases and that's when this method may be useful.
-     * 
+     *
      * @return an integer specifying the actual max heap memory (-Xmx) configured. If it's specified as -Xmx2g, then 2*1024
      * i.e. 2048 is returned. Returns -1 if no -Xmx is specified.
      */
@@ -47,7 +47,7 @@ public interface JvmOptionBag extends ConfigBeanProxy {
 
     /**
      * see #getXmxMegs
-     * 
+     *
      * @return integer specifying -Xms in megabytes, or -1
      */
     @DuckTyped

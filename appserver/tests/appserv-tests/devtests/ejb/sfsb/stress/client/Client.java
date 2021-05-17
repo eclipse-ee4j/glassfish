@@ -34,8 +34,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private static final int    MAX_SFSBS = 40;
@@ -50,13 +50,13 @@ public class Client {
         client.doTest();
         System.out.println("[stressClient] DONE doTest()...");
         stat.printSummary("stress");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
-        initSFSBList();     //create SFSBs 
+        initSFSBList();     //create SFSBs
         accessSFSB();       //access the SFBS
 
     }
@@ -92,7 +92,7 @@ public class Client {
             for (int i=0; i < MAX_SFSBS; i++) {
                 StressSFSB sfsb = (StressSFSB) sfsbList.get(i);
                 String sfsbName = "SFSB_"+i;
-                
+
 
                 passed = sfsb.doWork((long) 2000);
 

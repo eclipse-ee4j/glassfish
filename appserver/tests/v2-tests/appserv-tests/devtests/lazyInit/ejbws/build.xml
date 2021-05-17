@@ -31,7 +31,7 @@
     &commonlazyinit;
     &testproperties;
 
-    <target name="all" 
+    <target name="all"
     depends="pre-start, build, setup, deploy, run, undeploy, unsetup"/>
     <target name="run-test" depends="clean, build, deploy, run, undeploy"/>
 
@@ -41,7 +41,7 @@
 
     <target name="setup"/>
     <target name="unsetup"/>
- 
+
     <target name="compile" depends="init-common,clean-common, generate-artifacts">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -52,18 +52,18 @@
     </target>
 
     <target name="generate-artifacts">
-	<antcall target="import-wsdl">
-	    <param name="mapping.file"
-		value="${ejb-mapping.xml}"/>
-	    <param name="config-wsdl.file"
-		value="config/config-ejb.xml"/>
-	</antcall>
-	<antcall target="import-wsdl">
-	    <param name="mapping.file"
-		value="${client-mapping.xml}"/>
-	    <param name="config-wsdl.file"
-		value="config/config-client.xml"/>
-	</antcall>
+    <antcall target="import-wsdl">
+        <param name="mapping.file"
+        value="${ejb-mapping.xml}"/>
+        <param name="config-wsdl.file"
+        value="config/config-ejb.xml"/>
+    </antcall>
+    <antcall target="import-wsdl">
+        <param name="mapping.file"
+        value="${client-mapping.xml}"/>
+        <param name="config-wsdl.file"
+        value="config/config-client.xml"/>
+    </antcall>
     </target>
     <target name="ws-package-appclientjar-common">
         <mkdir dir="${assemble.dir}"/>
@@ -124,13 +124,13 @@
    </target>
 
     <target name="build" depends="init-common,compile">
-	<antcall target="ws-package-ejb-jar-common">
-            <param name="ejbjar.classes" 
+    <antcall target="ws-package-ejb-jar-common">
+            <param name="ejbjar.classes"
               value="com/sun/s1peqe/webservices/ejb/taxcal/*.class" />
             <param name="ejbjar.files" value="${build.classes.dir}"/>
             <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
-	</antcall>
-	<antcall target="ws-package-appclientjar-common">
+    </antcall>
+    <antcall target="ws-package-appclientjar-common">
             <param name="appclientjar.classes"
               value="com/sun/s1peqe/webservices/ejb/taxcal/client/*.class" />
             <param name="appclientjar.files"
@@ -140,18 +140,18 @@
         </antcall>
 
         <antcall target="ear-common"/>
-    </target> 
+    </target>
 
     <target name="deploy"
             depends="init-common, reconfig-common">
         <antcall target="deploy-common"/>
     </target>
-  
+
     <target name="run" depends="init-common">
         <antcall target="restart-server"/>
-        <property name="statetax-ejb-endpoint-url" 
+        <property name="statetax-ejb-endpoint-url"
             value="http://${http.host}:${http.port}/statetaxejb"/>
-        <property name="fedtax-ejb-endpoint-url" 
+        <property name="fedtax-ejb-endpoint-url"
             value="http://${http.host}:${http.port}/fedtaxejb"/>
 
         <echo message="property statetax-ejb-endpoint-url is set to: ${statetax-ejb-endpoint-url}"/>
@@ -162,17 +162,17 @@
             value="${statetax-ejb-endpoint-url} ${fedtax-ejb-endpoint-url}"/>
         </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
     </target>
 
-  <!-- 
-  ======================================================= 
+  <!--
+  =======================================================
   User Defined specific targets
   =======================================================
   -->

@@ -21,40 +21,40 @@ import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import java.util.Set;
 
 /**
- * This type defines the behaviour of a J2EE Component containing 
+ * This type defines the behaviour of a J2EE Component containing
  * message destination references.
  *
  * @author  Kennneth Saks
- * @version 
+ * @version
  */
 public interface MessageDestinationReferenceContainer {
-    
+
     /**
      * Add a message destination reference to myself
-     * 
+     *
      * @param the new message destination ref
      */
     public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference);
-    
+
     /**
      * Return a message destination reference by the same name or throw an IllegalArgumentException.
      *
      * @param the message destination reference name
      */
     public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
-    
+
    /**
     * Return the set of message destination references declared.
     */
     public Set getMessageDestinationReferenceDescriptors();
 
-    /**  
+    /**
      * Removes the specified message destination reference from the receiver.
-     *   
+     *
      * @param ref MessageDestinationReferenceDescriptor to remove.
      *
      */
     public void removeMessageDestinationReferenceDescriptor
-        (MessageDestinationReferenceDescriptor msgDestRef);   
+        (MessageDestinationReferenceDescriptor msgDestRef);
 }
 

@@ -58,7 +58,7 @@ public class BaseAdminConsoleTest {
     private volatile MBeanServerConnection mMBeanServerConnection;
     private volatile DomainRoot mDomainRoot;
     private static final String FILE_SEP = System.getProperty("file.separator");
-    private static final String CONSOLE_DIR_PATH = FILE_SEP + "lib" + FILE_SEP + 
+    private static final String CONSOLE_DIR_PATH = FILE_SEP + "lib" + FILE_SEP +
             "install" + FILE_SEP + "applications" + FILE_SEP + "__admingui";
     private static final String GLASSFISH_DIR = FILE_SEP + ".." + FILE_SEP +"glassfish";
 
@@ -236,7 +236,7 @@ public class BaseAdminConsoleTest {
 
         final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
         final MBeanServerConnection conn = jmxConn.getMBeanServerConnection();
-        conn.getDomains();	// sanity check
+        conn.getDomains();    // sanity check
         return conn;
     }
 }

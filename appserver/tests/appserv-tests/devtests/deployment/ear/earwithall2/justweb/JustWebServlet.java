@@ -52,7 +52,7 @@ public class JustWebServlet extends HttpServlet
     }
     catch (Exception ex) {
         ex.printStackTrace();
-    }        
+    }
 
     System.out.println("JustWebServlet.service()... JustBean created.");
     System.out.println("USERNAME = " + getInitParameter("USERNAME"));

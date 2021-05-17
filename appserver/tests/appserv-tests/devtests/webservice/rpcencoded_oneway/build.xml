@@ -30,9 +30,9 @@
     &testproperties;
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+    </exec>
   </target>
 
 <!-- NOTE. the simple mapping test and full mapping test can
@@ -43,9 +43,9 @@
 -->
 
   <target name="all" depends="simple-mapping, full-mapping"/>
-  <target name="simple-mapping" 
+  <target name="simple-mapping"
           depends="build-simple-mapping,deploy,assemble-client, run,undeploy"/>
-  <target name="full-mapping" 
+  <target name="full-mapping"
           depends="build-full-mapping,deploy,run,undeploy"/>
 
   <target name="compile" depends="">
@@ -77,32 +77,32 @@
       <param name="hasWebclient" value="yes"/>
     </antcall>
     <antcall target="ear-common" />
-  </target> 
-  
+  </target>
+
   <target name="assemble-client" depends="init-common">
     <antcall target="compile-common">
         <param name="src" value="client"/>
-    </antcall>    
+    </antcall>
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="SimpleTest.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="NoMetadata.SimpleTest.xml"/> 
+    <copy todir="${build.classes.dir}"
+     file="NoMetadata.SimpleTest.xml"/>
     <unjar src="${env.APS_HOME}/lib/reporter.jar"
         dest="${build.classes.dir}"/>
     <antcall target="appclient-jar-common">
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="NoMetadata.SimpleTest.xml,META-INF/wsdl/**,rpcencoded/*.class,com/**" />
-    </antcall>  
+    </antcall>
     <move file="${assemble.dir}/${appname}-client.jar" toFile="${assemble.dir}/${appname}AppClient.jar"/>
   </target>
-  
+
     <target name="run" depends="init-common">
         <antcall target="runclient-common">
           <param name="appclient.application.args" value="http://${http.host}:${http.port}//RPCEncodedOneway/Hello"/>
         </antcall>
-    </target>  
+    </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -116,19 +116,19 @@
       <delete file ="/tmp/debugModel.txt"/>
       <delete file ="/tmp/debugModel.model"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
   <target name="wscompile" depends="init-common">
     <mkdir dir="vo_output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d vo_output -classpath . wscompile_config.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/rpcencoded">
-       <fileset dir="vo_output/rpcencoded" 
+       <fileset dir="vo_output/rpcencoded"
                 includes="Hello.class"/>
     </copy>
     <delete dir="vo_output"/>
@@ -139,23 +139,23 @@
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
       <!-- use model -->
-<!-- 
-      <param name="wscompile.command" 
-       value="-gen -cp . -keep -d output -Xdebugmodel:onewayModel.txt -model ${mappingfile.name} wscompile_config.xml"/> 
+<!--
+      <param name="wscompile.command"
+       value="-gen -cp . -keep -d output -Xdebugmodel:onewayModel.txt -model ${mappingfile.name} wscompile_config.xml"/>
 -->
 
       <!-- use mapping -->
-      <param name="wscompile.command" 
-       value="-import -cp . -keep -d output -Xdebugmodel:onewayModel.txt -mapping ${mappingfile.name} wscompile_config.xml"/> 
+      <param name="wscompile.command"
+       value="-import -cp . -keep -d output -Xdebugmodel:onewayModel.txt -mapping ${mappingfile.name} wscompile_config.xml"/>
     </antcall>
     <delete dir="output"/>
   </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes the WebServices test)
-			ant clean 
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes the WebServices test)
+            ant clean
+    </echo>
     </target>
 </project>

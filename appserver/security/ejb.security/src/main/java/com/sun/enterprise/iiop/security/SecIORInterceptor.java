@@ -103,12 +103,12 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
 
             // ORB orb = helper.getORB();
             int sslMutualAuthPort = getServerPort("SSL_MUTUALAUTH");
-//	try {
-//	    sslMutualAuthPort = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt)iorInfo).
-//								getServerPort("SSL_MUTUALAUTH");
-//	} catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
+//    try {
+//        sslMutualAuthPort = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt)iorInfo).
+//                                getServerPort("SSL_MUTUALAUTH");
+//    } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
 //            _logger.log(Level.FINE,"UnknownType exception", ute);
-//	}
+//    }
 
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, ".addCSIv2Components: sslMutualAuthPort: " + sslMutualAuthPort);
@@ -119,12 +119,12 @@ public class SecIORInterceptor extends org.omg.CORBA.LocalObject implements org.
 
             // Create CSIv2 tagged component
             int sslport = getServerPort("SSL");
-//	try {
-//	    sslport = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt)iorInfo).
-//								getServerPort("SSL");
-//	} catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
+//    try {
+//        sslport = ((com.sun.corba.ee.spi.legacy.interceptor.IORInfoExt)iorInfo).
+//                                getServerPort("SSL");
+//    } catch (com.sun.corba.ee.spi.legacy.interceptor.UnknownType ute) {
 //            _logger.log(Level.FINE,"UnknownType exception", ute);
-//	}
+//    }
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, ".addCSIv2Components: sslport: " + sslport);
             }

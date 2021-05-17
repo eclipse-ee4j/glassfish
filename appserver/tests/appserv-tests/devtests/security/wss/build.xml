@@ -34,7 +34,7 @@
     <target name="all">
         <record name="security-wss.output" action="start" />
 
-	<ant dir="encThenSign-default-conf" target="all"/>
+    <ant dir="encThenSign-default-conf" target="all"/>
         <ant dir="permethod" target="all"/>
 
         <!-- JWS 2.0 -->
@@ -44,6 +44,6 @@
 <!--        <ant dir="ssl" target="all"/>-->
 <!--        <ant dir="sslclientcert" target="all"/>-->
 
-        <record name="security-wss.output" action="stop" />    
+        <record name="security-wss.output" action="stop" />
     </target>
 </project>

@@ -28,8 +28,8 @@ import java.util.logging.Logger;
  * Implementation of a local string manager. Provides access to i18n messages
  * for classes that need them.
  *
- * <p> One StringManagerBase per resource bundle name can be created and accessed by the 
- * getManager method call. 
+ * <p> One StringManagerBase per resource bundle name can be created and accessed by the
+ * getManager method call.
  *
  * <xmp>
  * Example:
@@ -45,8 +45,8 @@ import java.util.logging.Logger;
  *  try {
  *      ....
  *  } catch (Exception e) {
- *      String localizedMsg = sm.getString("test", 
- *          new Integer(7), new java.util.Date(System.currentTimeMillis()), 
+ *      String localizedMsg = sm.getString("test",
+ *          new Integer(7), new java.util.Date(System.currentTimeMillis()),
  *          "a disturbance in the Force");
  *
  *      throw new MyException(localizedMsg, e);
@@ -71,7 +71,7 @@ public class StringManagerBase {
 
     private final String _resourceBundleName;
     private final ClassLoader _classLoader;
-    
+
     /** default value used for undefined local string */
     private static final String NO_DEFAULT = "No local string defined";
 
@@ -82,7 +82,7 @@ public class StringManagerBase {
      * Initializes the resource bundle.
      *
      * @param    resourceBundleName    name of the resource bundle
-     */    
+     */
     protected StringManagerBase(String resourceBundleName, ClassLoader classLoader) {
         this._resourceBundleName = resourceBundleName;
         this._classLoader = classLoader;
@@ -165,8 +165,8 @@ public class StringManagerBase {
     }
 
     /**
-     * Returns a local string for the caller and format the arguments 
-     * accordingly. If the key is not found, it will use the given 
+     * Returns a local string for the caller and format the arguments
+     * accordingly. If the key is not found, it will use the given
      * default format.
      *
      * @param   key            the key to the local format string
@@ -175,7 +175,7 @@ public class StringManagerBase {
      *
      * @return  a formatted localized string
      */
-    public String getStringWithDefault(String key, String defaultFormat, 
+    public String getStringWithDefault(String key, String defaultFormat,
             Object arguments[]) {
 
         MessageFormat f =
@@ -195,7 +195,7 @@ public class StringManagerBase {
             }
         }
 
-        String fmtStr; 
+        String fmtStr;
         try {
             fmtStr =  f.format(arguments);
         } catch (Exception e) {
@@ -266,10 +266,10 @@ public class StringManagerBase {
      *
      * @return  a formatted localized string
      */
-    public String getString(String key, Object arg1, Object arg2, 
+    public String getString(String key, Object arg1, Object arg2,
             Object arg3, Object arg4) {
 
-        return getStringWithDefault(key, NO_DEFAULT, 
+        return getStringWithDefault(key, NO_DEFAULT,
                                     new Object[] {arg1, arg2, arg3, arg4});
     }
 

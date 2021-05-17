@@ -70,7 +70,7 @@ public class AnnotationTest extends TestCase {
         final ServiceLocator serviceLocator = Utils.getServiceLocator();
         Globals.setDefaultHabitat(serviceLocator);
     }
-    
+
     public AnnotationTest(String name) {
         super(name);
     }
@@ -127,7 +127,7 @@ public class AnnotationTest extends TestCase {
         Assert.assertTrue("BundleDescriptors do not match.",
             dc.compareContent(bundleDescs[0], bundleDescs[1]));
     }
- 
+
     protected BundleDescriptor[] processEjbDescriptors() {
         try {
             processor.generateEjbJarXmlFile(workDir);
@@ -190,13 +190,13 @@ public class AnnotationTest extends TestCase {
                 new WebServicesDeploymentDescriptorFile(bundleDescs[0]),
                 new WebServicesDeploymentDescriptorFile(bundleDescs[1]),
                 WEB_INF_DIR, "webservices.xml");
-  
+
         return bundleDescs;
     }
 
     private BundleDescriptor[] loadDescriptorFiles(
             BundleDescriptor expBundleDescriptor,
-            BundleDescriptor genBundleDescriptor, 
+            BundleDescriptor genBundleDescriptor,
             DeploymentDescriptorFile expDf, DeploymentDescriptorFile genDf,
             String metaDir, String descFilename) {
 

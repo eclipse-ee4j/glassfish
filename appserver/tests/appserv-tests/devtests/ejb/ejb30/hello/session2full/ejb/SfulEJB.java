@@ -25,7 +25,7 @@ import jakarta.transaction.UserTransaction;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class SfulEJB 
+public class SfulEJB
 {
 
     private SessionContext sc;
@@ -39,7 +39,7 @@ public class SfulEJB
     private void setSless4(Sless sless) {
         sless4_ = sless;
     }
-    
+
     private Sless sless5_;
     void setSless5(Sless sless) {
         sless5_ = sless;
@@ -108,7 +108,7 @@ public class SfulEJB
     public void foo(int a, String b) {
     }
 
-    private void testSlessRefs(Sless s1, Sless s2, SlessSub s3) 
+    private void testSlessRefs(Sless s1, Sless s2, SlessSub s3)
         throws Exception {
 
         String sless1Id = s1.getId();
@@ -158,7 +158,7 @@ public class SfulEJB
         s3.roundTrip2(c);
 
         s3.hello3();
- 
+
     }
 
     public void afterCreate() {
@@ -169,7 +169,7 @@ public class SfulEJB
         System.out.println("In SfulEJB " + state + " @Remove method");
     }
 
-    public void removeRetainIfException(boolean throwException) 
+    public void removeRetainIfException(boolean throwException)
         throws Exception {
 
         System.out.println("In SfulEJB " + state + " removeRetainIfException");
@@ -179,10 +179,10 @@ public class SfulEJB
         }
     }
 
-    public void removeNotRetainIfException(boolean throwException) 
+    public void removeNotRetainIfException(boolean throwException)
         throws Exception {
 
-        System.out.println("In SfulEJB " + state + 
+        System.out.println("In SfulEJB " + state +
                            "removeNotRetainIfException");
         System.out.println("throwException = " + throwException);
         if( throwException ) {

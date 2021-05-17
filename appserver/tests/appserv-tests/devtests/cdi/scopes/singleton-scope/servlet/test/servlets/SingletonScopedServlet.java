@@ -64,7 +64,7 @@ public class SingletonScopedServlet extends HttpServlet {
         }
         if (bm1 == null)
             msg += "BeanManager Injection via component environment lookup failed";
-        if (tb.getInstancesCount() > 1) 
+        if (tb.getInstancesCount() > 1)
             msg += "Singleton scoped bean must be created only once";
         if (!areInjectecedInstancesEqual(tb, anotherInjectedSingletonInstance))
             msg += "Two different injection of a Singleton pseudo-scoped Bean must point to the same bean instance";

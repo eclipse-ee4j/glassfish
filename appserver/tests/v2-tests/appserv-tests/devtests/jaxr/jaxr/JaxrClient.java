@@ -35,7 +35,7 @@ public class JaxrClient {
         JaxrClient client = new JaxrClient(args);
         client.doTest();
     }
-    
+
     public JaxrClient (String[] args) {
              if (args.length == 3) {
                 url = args[0];
@@ -45,10 +45,10 @@ public class JaxrClient {
     }
 
     public String doTest() {
-        
+
         String res = "fail";
-        
-    	try {          
+
+        try {
                 Properties env = new Properties();
                 env.put("java.naming.provider.url", url);
                 env.put("java.naming.factory.initial", ctxFactory);
@@ -59,37 +59,37 @@ public class JaxrClient {
                 // Create Home object
                 System.out.println("*****"+jndiName);
                 java.lang.Object obj = context.lookup(jndiName);
-                // create EJB using factory from container 
+                // create EJB using factory from container
                 //java.lang.Object objref = ic.lookup("MyJaxr");
 
                 System.out.println("Looked up home!!");
 
                 JaxrHome  home = (JaxrHome)PortableRemoteObject.narrow(
-			                     obj, JaxrHome.class);
+                                 obj, JaxrHome.class);
                 System.out.println("Narrowed home!!");
 
                 JaxrRemote hr = home.create();
                 System.out.println("Got the EJB!!");
 
                 // invoke method on the EJB
-                System.out.println (" Looking up company information for "+company); 
+                System.out.println (" Looking up company information for "+company);
                 System.out.println(hr.getCompanyInformation(company));
                 hr.remove();
-	} catch(NamingException ne){
+    } catch(NamingException ne){
             System.out.println("Caught exception while initializing context.\n");
             ne.printStackTrace();
-	    System.out.println (" Test Failed !"); 
+        System.out.println (" Test Failed !");
             return res;
-	} catch(Exception re) {
+    } catch(Exception re) {
             re.printStackTrace();
-	    System.out.println (" Test Failed !"); 
+        System.out.println (" Test Failed !");
             return res;
-	} 
-        res = "pass";
-	System.out.println (" Test Passed !"); 
-        return res;
-        
     }
-    
+        res = "pass";
+    System.out.println (" Test Passed !");
+        return res;
+
+    }
+
 }
 

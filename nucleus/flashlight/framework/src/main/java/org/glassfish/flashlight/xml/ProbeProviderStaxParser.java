@@ -55,9 +55,9 @@ public class ProbeProviderStaxParser extends StaxParser{
         if(providers == null) {
             try {
                 read();
-            } 
+            }
             catch(Exception ex) {
-                // normal 
+                // normal
                 close();
             }
         }
@@ -87,7 +87,7 @@ public class ProbeProviderStaxParser extends StaxParser{
                                 ", found: {1}", PROBE_PROVIDER, parser.getLocalName());
             throw new XMLStreamException(errStr);
         }
-        
+
         Map<String,String> atts = parseAttributes();
         List<XmlProbe> probes = parseProbes();
 
@@ -102,7 +102,7 @@ public class ProbeProviderStaxParser extends StaxParser{
         List<XmlProbe> probes = new ArrayList<XmlProbe>();
 
         boolean done = false;
-        
+
         // Prime the pump here, and advance to the next start. Note that further advances
         // will be done as the elements within a probe are handled, not at this level.
         try {

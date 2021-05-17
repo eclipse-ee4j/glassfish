@@ -22,7 +22,7 @@
 package org.glassfish.admin.amx.util.jmx.stringifier;
 
 public class ModelMBeanAttributeInfoStringifier
-        extends MBeanAttributeInfoStringifier 
+        extends MBeanAttributeInfoStringifier
 {
     public final static ModelMBeanAttributeInfoStringifier DEFAULT =
             new ModelMBeanAttributeInfoStringifier();

@@ -23,8 +23,8 @@ import org.glassfish.contextpropagation.internal.DependencyProviderImpl;
 import org.glassfish.contextpropagation.wireadapters.WireAdapter;
 
 /**
- * The classes in this package were designed to facilitate the integration of 
- * the context propagation feature in a server. Through the use of inversion of 
+ * The classes in this package were designed to facilitate the integration of
+ * the context propagation feature in a server. Through the use of inversion of
  * control, we were able to abstract all the dependencies needed by context
  * propagation thus making this feature easy to port to another server. In this
  * way, we hope to encourage the use of context propagation on other servers.
@@ -37,8 +37,8 @@ public class ContextBootstrap {
   private static WireAdapter wireAdapter;
   private static String guid;
   public static boolean IS_DEBUG;
-  
-  private static DependencyProvider dependencyProvider;  
+
+  private static DependencyProvider dependencyProvider;
   static {
     if (dependencyProvider == null) {
       dependencyProvider = new DependencyProviderImpl(); // The service should have been injected, But we are not taking any chances.
@@ -51,22 +51,22 @@ public class ContextBootstrap {
           dependencyProvider.getGuid());
     }
   }
-  
+
   /**
    * This function must be called by the server prior to using context propagation.
-   * @param loggerAdapter An adaptor to the logger that is appropriate for 
+   * @param loggerAdapter An adaptor to the logger that is appropriate for
    * context propagation messages.
-   * @param tla An adaptor to the thread management system that allows safe 
+   * @param tla An adaptor to the thread management system that allows safe
    * storage of the ContextMap on the current thread.
-   * @param contextAccessController An adaptor to the security manager that 
+   * @param contextAccessController An adaptor to the security manager that
    * is used to determine access to particular work contexts by the user
    * associated to the current thread.
    * @param aGuid a unique identifier for this process that is suitable for
    * transmission over the wire.
    */
-  public static void configure(LoggerAdapter aLoggerAdapter, 
+  public static void configure(LoggerAdapter aLoggerAdapter,
       WireAdapter aWireAdapter, ThreadLocalAccessor aThreadLocalAccessor,
-      ContextAccessController aContextAccessController, String aGuid) { 
+      ContextAccessController aContextAccessController, String aGuid) {
     if (isConfigured) {
       throw new IllegalStateException("WorkArea is already configured");
     }
@@ -79,27 +79,27 @@ public class ContextBootstrap {
     loggerAdapter = aLoggerAdapter;
     wireAdapter = aWireAdapter;
     threadLocalAccessor = aThreadLocalAccessor;
-    contextAccessController = aContextAccessController;      
+    contextAccessController = aContextAccessController;
     guid = aGuid;
     IS_DEBUG = loggerAdapter.isLoggable(Level.DEBUG);
 
     isConfigured = true;
 }
-  
+
   /**
    * @return The bootstrapped WireAdapter
    */
   public static WireAdapter getWireAdapter() {
     checkIfConfigured();
-    return wireAdapter; 
+    return wireAdapter;
   }
 
   private static void checkIfConfigured() {
     if (!isConfigured) {
       throw new IllegalStateException("Context propagation is not yet configured.");
-    }    
+    }
   }
-  
+
   /**
    * @return The bootstrapped LoggerAdapter
    */
@@ -107,7 +107,7 @@ public class ContextBootstrap {
     checkIfConfigured();
     return loggerAdapter;
   }
-  
+
   /**
    * @param messageID a MessageID
    * @param args The objects to in the message
@@ -117,7 +117,7 @@ public class ContextBootstrap {
       loggerAdapter.log(Level.DEBUG, messageID, args);
     }
   }
-  
+
   /**
    * @param t a Throwable to include in the debug message
    * @param messageID a MessageID
@@ -134,7 +134,7 @@ public class ContextBootstrap {
    */
   public static ThreadLocalAccessor getThreadLocalAccessor() {
     checkIfConfigured();
-      return threadLocalAccessor; 
+      return threadLocalAccessor;
   }
 
   /**
@@ -144,7 +144,7 @@ public class ContextBootstrap {
     checkIfConfigured();
     return contextAccessController;
   }
-  
+
   /**
    * @return a String that uniquely identifies this process
    */

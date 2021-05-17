@@ -40,7 +40,7 @@ import org.glassfish.grizzly.utils.Charsets;
 
 /**
  * An implementation of SSIExternalResolver that is used with servlets.
- * 
+ *
  * @author Dan Sandberg
  * @author David Becker
  * @version $Revision: 1.4 $, $Date: 2007/05/05 05:32:20 $
@@ -244,10 +244,10 @@ public class SSIServletExternalResolver implements SSIExternalResolver {
                         // Use default as a last resort
                         String queryStringEncoding =
                             org.glassfish.grizzly.http.util.Constants.DEFAULT_HTTP_CHARACTER_ENCODING;
-                
+
                         /*String uriEncoding = null;
                         boolean useBodyEncodingForURI = false;
-                
+
                         // Get encoding settings from request / connector if
                         // possible
                         String requestEncoding = req.getCharacterEncoding();
@@ -257,7 +257,7 @@ public class SSIServletExternalResolver implements SSIExternalResolver {
                             useBodyEncodingForURI = ((CoyoteRequest)req)
                                     .getConnector().getUseBodyEncodingForURI();
                         }
-                
+
                         // If valid, apply settings from request / connector
                         if (uriEncoding != null) {
                             queryStringEncoding = uriEncoding;
@@ -266,10 +266,10 @@ public class SSIServletExternalResolver implements SSIExternalResolver {
                                 queryStringEncoding = requestEncoding;
                             }
                         }*/
-                
+
                         try {
                             retVal = URLDecoder.decode(queryString,
-                                    queryStringEncoding);                       
+                                    queryStringEncoding);
                         } catch (UnsupportedEncodingException e) {
                             retVal = queryString;
                         }

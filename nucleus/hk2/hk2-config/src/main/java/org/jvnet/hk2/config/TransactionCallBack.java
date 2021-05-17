@@ -18,7 +18,7 @@ package org.jvnet.hk2.config;
 
 /**
  * Transactional callback
- * 
+ *
  * @author jwells
  *
  * @param <T>
@@ -26,7 +26,7 @@ package org.jvnet.hk2.config;
 public interface TransactionCallBack<T> {
     /**
      * Is performed after the action has been completed
-     * 
+     *
      * @param param
      * @throws TransactionFailure
      */

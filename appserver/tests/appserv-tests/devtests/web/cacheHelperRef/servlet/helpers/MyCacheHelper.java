@@ -29,21 +29,21 @@ import jakarta.servlet.http.HttpServletRequest;
 public class MyCacheHelper implements CacheHelper {
 
     // Values is initialized  to CacheAble
-    private static String cacheKey="myKey"; 
+    private static String cacheKey="myKey";
     private static boolean isCacheAble=true;
     private static boolean isRefreshNeeded=false;
     private static int timeOut=20;
-  
-    
+
+
     public void init (ServletContext context, Map props) throws Exception {
         System.out.println("myCacheHelper2:init");
         // Nothing to initialize
     }
-    
+
     public void destroy() throws Exception {
         System.out.println("myCacheHelper2:exit");
     }
-    
+
     public String getCacheKey(HttpServletRequest req) {
         System.out.println("myCacheHelper2:getCacheKey");
         String key = req.getParameter("cacheKey");
@@ -53,7 +53,7 @@ public class MyCacheHelper implements CacheHelper {
             // If user do not enter a key, the default value is "myKey"
         return cacheKey;
     }
-    
+
     public int getTimeout(HttpServletRequest req) {
         String timeOutStr = null;
         int time = 0;
@@ -66,7 +66,7 @@ public class MyCacheHelper implements CacheHelper {
                 System.out.println("Number Format Exception Occurs: "
                                    + nfe.getMessage());
             }
-            // Negative time out value treat as 0 
+            // Negative time out value treat as 0
             if (time > 0)
                 return time;
             else return 0;
@@ -74,18 +74,18 @@ public class MyCacheHelper implements CacheHelper {
         // if user do not enter time out, use default timeOut value
         else return timeOut;
     }
-    
+
     public boolean isCacheable(HttpServletRequest req) {
         String isCacheAbleStr = null;
         System.out.println("myCacheHelper2:isCacheable");
         isCacheAbleStr = (String)req.getParameter("isCacheAble");
-        // Check if isCacheAble null 
+        // Check if isCacheAble null
         if ((isCacheAbleStr != null)
                 && (isCacheAbleStr.compareTo("false") != 0))
             return false;
         else return isCacheAble;
     }
-    
+
     public boolean isRefreshNeeded(HttpServletRequest req) {
         String isRefreshNeededStr = null;
         System.out.println("myCacheHelper2:isRefreshNeeded");
@@ -94,6 +94,6 @@ public class MyCacheHelper implements CacheHelper {
                 && (isRefreshNeededStr.compareTo("true") !=0))
             return true;
         else return isRefreshNeeded;
-    }   
+    }
 }
 

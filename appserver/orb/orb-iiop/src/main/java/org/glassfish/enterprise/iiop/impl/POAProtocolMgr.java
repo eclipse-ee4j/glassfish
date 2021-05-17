@@ -76,20 +76,20 @@ import org.omg.PortableServer.ServantLocatorPackage.CookieHolder;
 
 /**
  * This class implements the ProtocolManager interface for the
- * RMI/IIOP ORB with POA (Portable Object Adapter). 
- * Note that the POA is now accessed only through the 
+ * RMI/IIOP ORB with POA (Portable Object Adapter).
+ * Note that the POA is now accessed only through the
  * ReferenceFactoryManager for EJB.
- * 
+ *
  * @author Vivek Nagar
  */
 
 @Service
-public final class POAProtocolMgr extends org.omg.CORBA.LocalObject 
-			     implements ProtocolManager
+public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
+                 implements ProtocolManager
 {
     private static final Logger _logger =
         LogDomains.getLogger(POAProtocolMgr.class, LogDomains.CORBA_LOGGER);
-    
+
     private static final int MAPEXCEPTION_CODE = 9998;
 
     private ORB orb;
@@ -117,9 +117,9 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
     // Called in all VMs, must be called only after InitialNaming is available
     @Override
     public void initializePOAs() throws Exception {
-	    // NOTE:  The RootPOA manager used to be activated here.
+        // NOTE:  The RootPOA manager used to be activated here.
             getRFM() ;
-	    _logger.log(Level.FINE,
+        _logger.log(Level.FINE,
                 "POAProtocolMgr.initializePOAs: RFM resolved and activated");
     }
 
@@ -137,15 +137,15 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
         }
 
         @Override
-	public synchronized Servant preinvoke( byte[] oid, POA adapter,
-	    String operation, CookieHolder the_cookie ) throws ForwardRequest {
-	    return servant ;
-	}
+    public synchronized Servant preinvoke( byte[] oid, POA adapter,
+        String operation, CookieHolder the_cookie ) throws ForwardRequest {
+        return servant ;
+    }
 
         @Override
-	public void postinvoke( byte[] oid, POA adapter,
-	    String operation, Object the_cookie, Servant the_servant ) {
-	}
+    public void postinvoke( byte[] oid, POA adapter,
+        String operation, Object the_cookie, Servant the_servant ) {
+    }
     }
 
     private synchronized ReferenceFactoryManager getRFM() {
@@ -163,7 +163,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
     }
 
     private org.omg.CORBA.Object getRemoteNamingReference( Remote remoteNamingProvider ) {
-        final ServantLocator locator = new RemoteNamingServantLocator( orb, 
+        final ServantLocator locator = new RemoteNamingServantLocator( orb,
             remoteNamingProvider ) ;
 
         final PresentationManager pm = ORB.getPresentationManager() ;
@@ -174,7 +174,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
         } catch (Exception exc) {
             throw new RuntimeException( exc ) ;
         }
-    
+
         final List<Policy> policies = new ArrayList<Policy>() ;
         final ReferenceFactory rf = getRFM().create( "RemoteSerialContextProvider",
             repositoryId, policies, locator ) ;
@@ -187,7 +187,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
     }
 
     @Override
-    public void initializeRemoteNaming(Remote remoteNamingProvider) 
+    public void initializeRemoteNaming(Remote remoteNamingProvider)
         throws Exception {
 
         try {
@@ -220,7 +220,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
     }
 
 
-    /**     
+    /**
      * Return a factory that can be used to create/destroy remote
      * references for a particular EJB type.
      * @param container The container to use
@@ -244,8 +244,8 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
     @Override
     public void connectObject(Remote remoteObj) throws RemoteException
     {
-         StubAdapter.connect(remoteObj,  orb);    
-    }	
+         StubAdapter.connect(remoteObj,  orb);
+    }
 
 
     @Override
@@ -261,7 +261,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
     @Override
     public byte[] getObjectID(org.omg.CORBA.Object obj) {
         IOR ior = ((com.sun.corba.ee.spi.orb.ORB)orb).getIOR(obj, false);
-	    java.util.Iterator iter = ior.iterator();
+        java.util.Iterator iter = ior.iterator();
 
         byte[] oid = null;
         if (iter.hasNext()) {
@@ -279,14 +279,14 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
      */
     @Override
     public boolean isIdentical(Remote obj1, Remote obj2) {
-        if (obj1 instanceof org.omg.CORBA.Object && obj2 instanceof org.omg.CORBA.Object) { 
+        if (obj1 instanceof org.omg.CORBA.Object && obj2 instanceof org.omg.CORBA.Object) {
             org.omg.CORBA.Object corbaObj1 = (org.omg.CORBA.Object)obj1;
             org.omg.CORBA.Object corbaObj2 = (org.omg.CORBA.Object)obj2;
 
             return corbaObj1._is_equivalent(corbaObj2);
         } else {
-            return false;  
-        }       
+            return false;
+        }
     }
 
     @Override
@@ -303,7 +303,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
         }
 
     }
-  
+
     /**
      * Map the EJB/RMI exception to a protocol-specific (e.g. CORBA) exception
      */
@@ -346,7 +346,7 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject
         if( initCause ) {
             mappedException.initCause(exception);
         }
-        
+
         return mappedException;
     }
 

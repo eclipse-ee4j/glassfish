@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="build" depends="init-common">
        <mkdir dir="${build.classes.dir}"/>
        <echo message="common.xml: Compiling test source files" level="verbose"/>
@@ -42,11 +42,11 @@
               destdir="${build.classes.dir}"
               classpath="${s1astest.classpath}:${build.classes.dir}"
               debug="on"
-              failonerror="true"/>        
+              failonerror="true"/>
     </target>
- 
+
     <target name="runclient_nooverride" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${assemble.dir}/ejb-stubs-ejbappAppClient/ejb-stubs-ejbapp-clientClient.jar:${env.APS_HOME}/lib/reporter.jar"
            classname="${simple.client}">
@@ -55,7 +55,7 @@
            <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
            <arg value="${ic.props}"/>
         </java>
-    </target>     
+    </target>
 
 <!--This target is used to test that using no-arg InitialContext and
     not setting any vm params will still work, assuming the default
@@ -63,13 +63,13 @@
     tests run b/c of the port change possibility.  However, if the
     default port of 3700 is set, this test should work.   -->
     <target name="runclient_setnothing" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${assemble.dir}/ejb-stubs-ejbappAppClient.jar:${env.APS_HOME}/lib/reporter.jar"
               classname="${simple.client}">
            <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
         </java>
-    </target>    
+    </target>
 
     <target name="run_default" depends="init-common">
         <antcall target="runclient_nooverride">
@@ -94,7 +94,7 @@
 
 
     <target name="runclient_withoverride" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${assemble.dir}/ejb-stubs-ejbappAppClient.jar:${env.APS_HOME}/lib/reporter.jar"
            classname="${simple.client}">
@@ -105,7 +105,7 @@
            <arg value="ejb/ejb_stubs_ejbapp_HelloBean"/>
            <arg value="jndi.properties.s1as8_default"/>
         </java>
-    </target>     
+    </target>
 
 
     <target name="run_cosnaming_override" depends="init-common">

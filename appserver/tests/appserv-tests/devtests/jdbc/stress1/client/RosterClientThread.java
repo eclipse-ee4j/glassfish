@@ -33,7 +33,7 @@ public class RosterClientThread extends Thread {
 
     private static SimpleReporterAdapter status =
         new SimpleReporterAdapter("appserv-tests");
-    
+
     public RosterClientThread( int clientID ) throws Exception {
         clientID_ = clientID;
         Context initial = new InitialContext();
@@ -44,22 +44,22 @@ public class RosterClientThread extends Thread {
     }
     public void run() {
         int numRan = 0;
-	int numPassed = 0;
+    int numPassed = 0;
         System.out.println("Thread : " +clientID_ + " running");
         while( runFlag == true ) {
-	    numRan++;
+        numRan++;
             try {
                 insertInfo(myRoster);
                 getSomeInfo(myRoster);
                 getMoreInfo(myRoster);
-		numPassed++;
+        numPassed++;
             } catch (Exception ex) {
-	        System.out.println( "Failed to run after : " + numPassed );
-		break;
-	    }
+            System.out.println( "Failed to run after : " + numPassed );
+        break;
         }
-	System.out.println("Thread: " + clientID_ + " ran: " + numRan + 
-	    " passed: " + numPassed );
+        }
+    System.out.println("Thread: " + clientID_ + " ran: " + numRan +
+        " passed: " + numPassed );
     }
 
     private static void getSomeInfo(Roster myRoster) {
@@ -118,7 +118,7 @@ public class RosterClientThread extends Thread {
             playerList = myRoster.getPlayersByPosition("defender");
             playerList = myRoster.getAllPlayers();
             playerList = myRoster.getPlayersNotOnTeam();
-            playerList = myRoster.getPlayersByPositionAndName("power forward", 
+            playerList = myRoster.getPlayersByPositionAndName("power forward",
                                                               "Jack Patterson");
             playerList = myRoster.getPlayersByCity("Truckee");
             playerList = myRoster.getPlayersBySport("Soccer");
@@ -165,7 +165,7 @@ public class RosterClientThread extends Thread {
 
             myRoster.createTeamInLeague(new TeamDetails(
                 "T2", "Gophers", "Manteca"), "L1");
-           
+
             myRoster.createTeamInLeague(new TeamDetails(
                 "T3", "Deer", "Bodie"), "L2");
 
@@ -283,7 +283,7 @@ public class RosterClientThread extends Thread {
             // Players, no team
             myRoster.createPlayer(new PlayerDetails(
                 "P26", "Hobie Jackson", "pitcher", 582.00));
-          
+
             myRoster.createPlayer(new PlayerDetails(
                 "P27", "Melinda Kendall", "catcher", 677.00));
 

@@ -30,14 +30,14 @@
     &commonBuild;
     &commonRun;
     &testproperties;
-    
+
     <target name="all" depends="build,setup,deploy-ear, run-ear, undeploy-ear, unsetup"/>
 
     <target name="run-test" depends="build,deploy-ear, run-ear, undeploy-ear"/>
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-    
+
     <target name="sql" depends="init-common">
     <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/simpleBank.sql"/>
@@ -49,9 +49,9 @@
     <antcall target="deploy-jdbc-common">
         <param name="jdbc.conpool.name" value="ejb-subclassing-pool"/>
         <param name="jdbc.resource.name" value="jdbc/ejb-subclassing"/>
-    </antcall>    
+    </antcall>
     </target>
-    
+
     <target name="restart">
     <antcall target="restart-server-instance-common"/>
     </target>
@@ -66,7 +66,7 @@
         <param name="jdbc.resource.name" value="jdbc/ejb-subclassing"/>
       </antcall>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -77,18 +77,18 @@
     </target>
 
     <target name="build" depends="compile">
-    <property name="hasWebclient" value="yes"/> 
+    <property name="hasWebclient" value="yes"/>
     <antcall target="webclient-war-common">
     <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="**/*.class"/> 
+    <param name="webclient.war.classes" value="**/*.class"/>
     </antcall>
-       
+
     <antcall target="ejb-jar-common">
     <param name="ejbjar.classes" value="**/*.class"/>
     </antcall>
     <antcall target="ear-common"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy-ear" depends="init-common">
         <antcall target="deploy-verify-common"/>
     </target>
@@ -96,26 +96,26 @@
     <target name="deploy-war" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run-war" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="web-to-ejb (stand-alone war based)"/>
-	</antcall>
+    <param name="testsuite.id" value="web-to-ejb (stand-alone war based)"/>
+    </antcall>
     </target>
 
     <target name="run-ear" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="web-to-ejb (ear based)"/>
-	</antcall>
+    <param name="testsuite.id" value="web-to-ejb (ear based)"/>
+    </antcall>
     </target>
- 
+
     <target name="undeploy-ear" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
     <target name="undeploy-war" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

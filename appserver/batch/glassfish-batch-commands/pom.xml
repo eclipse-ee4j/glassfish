@@ -28,7 +28,7 @@
 
     <artifactId>glassfish-batch-commands</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Batch Commands for Glassfish</name>
 
     <dependencies>

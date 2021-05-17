@@ -17,7 +17,7 @@
 package com.sun.enterprise.container.common.spi.util;
 
 /**
- * Checked Exception from InjectionManager 
+ * Checked Exception from InjectionManager
  *
  * @author Kenneth Saks
  */

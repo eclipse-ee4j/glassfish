@@ -29,7 +29,7 @@ public abstract class PlayerBean implements EntityBean {
 
     public abstract String getPlayerId();
     public abstract void setPlayerId(String id);
-    
+
     public abstract String getName();
     public abstract void setName(String name);
 
@@ -52,20 +52,20 @@ public abstract class PlayerBean implements EntityBean {
     public abstract Collection ejbSelectSports(LocalPlayer player)
         throws FinderException;
 
-                
-        
+
+
     // Business methods
 
     public Collection getLeagues() throws FinderException {
 
-         LocalPlayer player = 
+         LocalPlayer player =
              (team.LocalPlayer)context.getEJBLocalObject();
          return ejbSelectLeagues(player);
     }
 
     public Collection getSports() throws FinderException {
 
-         LocalPlayer player = 
+         LocalPlayer player =
              (team.LocalPlayer)context.getEJBLocalObject();
          return ejbSelectSports(player);
     }
@@ -82,32 +82,32 @@ public abstract class PlayerBean implements EntityBean {
         setSalary(salary);
         return null;
     }
-         
+
     public void ejbPostCreate (String id, String name, String position,
         double salary) throws CreateException { }
 
     public void setEntityContext(EntityContext ctx) {
         context = ctx;
     }
-    
+
     public void unsetEntityContext() {
         context = null;
     }
-    
+
     public void ejbRemove() {
         Debug.print("PlayerBean ejbRemove");
     }
-    
+
     public void ejbLoad() {
         Debug.print("PlayerBean ejbLoad");
     }
-    
+
     public void ejbStore() {
         Debug.print("PlayerBean ejbStore");
     }
-    
+
     public void ejbPassivate() { }
-    
+
     public void ejbActivate() { }
 
 } // PlayerBean class

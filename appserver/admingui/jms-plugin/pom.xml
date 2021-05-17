@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-jms-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console JMS Plugin</name>
 
     <developers>

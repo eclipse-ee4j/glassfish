@@ -27,9 +27,9 @@ import java.util.Map;
 
 /**
  * This node handles all persistence-context-ref xml tag elements
- * 
+ *
  * @author  Shing Wai Chan
- * @version 
+ * @version
  */
 public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
     private static final String TRANSACTION = "Transaction";
@@ -42,33 +42,33 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
 
     public EntityManagerReferenceNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
-                                InjectionTargetNode.class, "addInjectionTarget");                          
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
+                                InjectionTargetNode.class, "addInjectionTarget");
     }
 
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map
      * xml element to method name on the descriptor class for setting
-     * the element value. 
-     *  
+     * the element value.
+     *
      * @return the map with the element name as a key, the setter method as
      *         a value
-     */    
+     */
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(TagNames.PERSISTENCE_CONTEXT_REF_NAME, "setName");
-        table.put(TagNames.PERSISTENCE_UNIT_NAME, "setUnitName");        
+        table.put(TagNames.PERSISTENCE_UNIT_NAME, "setUnitName");
         return table;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
-     */    
+     */
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.PERSISTENCE_CONTEXT_TYPE.equals(element.getQName())) {
             EntityManagerReferenceDescriptor entityMgrReferenceDescriptor =
@@ -113,22 +113,22 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
         } else {
             super.setElementValue(element, value);
         }
-    }    
+    }
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName name for the root element of this xml fragment
      * @param descriptor descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, EntityManagerReferenceDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, EntityManagerReferenceDescriptor descriptor) {
         Node entityMgrRefNode = appendChild(parent, nodeName);
         writeLocalizedDescriptions(entityMgrRefNode, descriptor);
-        
-        appendTextChild(entityMgrRefNode, TagNames.PERSISTENCE_CONTEXT_REF_NAME, descriptor.getName());      
-        appendTextChild(entityMgrRefNode, TagNames.PERSISTENCE_UNIT_NAME, descriptor.getUnitName());      
+
+        appendTextChild(entityMgrRefNode, TagNames.PERSISTENCE_CONTEXT_REF_NAME, descriptor.getName());
+        appendTextChild(entityMgrRefNode, TagNames.PERSISTENCE_UNIT_NAME, descriptor.getUnitName());
         PersistenceContextType contextType = descriptor.getPersistenceContextType();
         String contextTypeString = (contextType != null &&
             PersistenceContextType.EXTENDED.equals(contextType)) ?
@@ -136,9 +136,9 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
         appendTextChild(entityMgrRefNode, TagNames.PERSISTENCE_CONTEXT_TYPE,
             contextTypeString);
 
-        for(Map.Entry<String, String> property : 
+        for(Map.Entry<String, String> property :
                 descriptor.getProperties().entrySet()) {
-            Node propertyNode = appendChild(entityMgrRefNode, 
+            Node propertyNode = appendChild(entityMgrRefNode,
                                             TagNames.PERSISTENCE_PROPERTY);
             appendTextChild(propertyNode, TagNames.NAME_VALUE_PAIR_NAME,
                             property.getKey());
@@ -152,7 +152,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
                 ijNode.writeDescriptor(entityMgrRefNode, TagNames.INJECTION_TARGET, target);
             }
         }
-            
+
         return entityMgrRefNode;
     }
 }

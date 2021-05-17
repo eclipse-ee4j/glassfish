@@ -50,7 +50,7 @@ public abstract class AbstractWireAdapter implements WireAdapter {
   public final void prepareToWriteTo(OutputStream out) throws IOException {
     outputStream = out;
     bufferedStream = new ByteArrayOutputStream();
-    oos = new PositionAwareObjectOutputStream(bufferedStream); 
+    oos = new PositionAwareObjectOutputStream(bufferedStream);
     writeHeader(oos);
     catalog.add(oos.position());
   }
@@ -59,20 +59,20 @@ public abstract class AbstractWireAdapter implements WireAdapter {
 
   @Override
   public final <T> void write(String key, Entry entry) throws IOException {
-    write(oos, key, entry.getValue(), entry.getContextType(), entry.getPropagationModes(), 
+    write(oos, key, entry.getValue(), entry.getContextType(), entry.getPropagationModes(),
         entry.getContextType() == ContextType.OPAQUE ? entry.getClassName() : null);
     catalog.add(oos.position());
     ContextBootstrap.debug(MessageID.WRITE_ENTRY, catalog.positions.size(), key, entry);
   }
 
-  protected abstract void write(ObjectOutputStream oos, String key, Object value, ContextType contextType, 
+  protected abstract void write(ObjectOutputStream oos, String key, Object value, ContextType contextType,
       EnumSet<PropagationMode> propagationModes, String className) throws IOException;
 
   @Override
   public final void prepareToReadFrom(InputStream is) throws IOException {
     catalog.prepareToRead();
     ois = new ResettableObjectInputStream(is);
-    readHeader(ois, catalog);  
+    readHeader(ois, catalog);
   }
 
   protected abstract void readHeader(ObjectInputStream ois, Catalog catalog) throws IOException;
@@ -84,13 +84,13 @@ public abstract class AbstractWireAdapter implements WireAdapter {
     oos.flush();
     byte[] contents = bufferedStream.toByteArray();
     catalog.updateCatalogMetadata(contents);
-    outputStream.write(contents); 
+    outputStream.write(contents);
   }
 
   protected abstract void write(ObjectOutputStream objectOutputStream, Catalog catalog) throws IOException;
 
   protected abstract void writeFooter(ObjectOutputStream objectOutputStream) throws IOException;
-  
+
   @Override
   public final String readKey() throws IOException {
     try {
@@ -132,7 +132,7 @@ public abstract class AbstractWireAdapter implements WireAdapter {
       return null;
     }
   }
-  
+
   private void recover(ObjectInputStream ois, Catalog catalog) throws IOException, ClassNotFoundException {
     if (needsToReadCatalog ) {
       read(true, ois, catalog);

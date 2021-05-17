@@ -70,7 +70,7 @@ import jakarta.transaction.UserTransaction;
                         minPoolSize = 4,
                         properties = {"testName=foo"}
                 ),
-                
+
                 @ConnectionFactoryDefinition(
                         description="module-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:module/env/Servlet_ConnectionFactory",
@@ -78,7 +78,7 @@ import jakarta.transaction.UserTransaction;
                         resourceAdapter = "#cfd-ra",
                         properties = {"testName=foo"}
                 ),
-                
+
                 @ConnectionFactoryDefinition(
                         description="component-scope resource defined by @ConnectionFactoryDefinition",
                         name = "java:comp/env/Servlet_ConnectionFactory",
@@ -93,7 +93,7 @@ public class Servlet extends HttpServlet {
 
     @EJB
     private  Hello helloStateless;
-    
+
     @EJB(beanName = "HelloStatefulEJB")
     private  HelloStateful helloStateful;
 
@@ -109,7 +109,7 @@ public class Servlet extends HttpServlet {
 
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        
+
         try {
 
             // Connection-Factory-Definition through Annotation

@@ -68,7 +68,7 @@ public class XID implements Xid {
 
     /**
      * Compute the hash code.
-     * 
+     *
      * @return the computed hashcode
      */
     public int hashCode() {
@@ -82,13 +82,13 @@ public class XID implements Xid {
 
     /*
      * Convert to String
-     * 
+     *
      * <p> This is normally used to display the XID when debugging.
      */
 
     /**
      * Return a string representing this XID.
-     * 
+     *
      * @return the string representation of this XID
      */
     public String toString() {
@@ -106,7 +106,7 @@ public class XID implements Xid {
 
     /**
      * Returns the branch qualifier for this XID.
-     * 
+     *
      * @return the branch qualifier
      */
     public byte[] getBranchQualifier() {

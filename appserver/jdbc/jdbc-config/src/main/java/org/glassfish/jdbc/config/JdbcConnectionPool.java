@@ -46,7 +46,7 @@ import java.util.List;
  * Each named pool definition results in a pool instantiated at server start-up.
  * Pool is populated when accessed for the first time. If two or more
  * jdbc-resource elements point to the same jdbc-connection-pool element,
- * they are using the same pool of connections, at run time.         
+ * they are using the same pool of connections, at run time.
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -74,12 +74,12 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     /**
      *
      * Gets the value of the datasourceClassname property.
-     * 
+     *
      * Name of the vendor supplied JDBC datasource resource manager.
      * An XA or global transactions capable datasource class will implement
      * javax.sql.XADatasource interface. Non XA or Local transactions only
      * datasources will implement javax.sql.Datasource interface.
-     * 
+     *
      @return possible object is
      *         {@link String }
      */
@@ -97,10 +97,10 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     /**
      *
      * Gets the value of the driverClassname property.
-     * 
+     *
      * Name of the vendor supplied JDBC driver resource manager.
      * Get classnames that implement java.sql.Driver.
-     * 
+     *
      @return possible object is
      *         {@link String }
      */
@@ -125,7 +125,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * or more of these interfaces. An error is produced when this attribute has
      * a legal value and the indicated interface is not implemented by the
      * datasource class. This attribute has no default value.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -145,7 +145,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Gets the value of the steadyPoolSize property.
      *
      * Minimum and initial number of connections maintained in the pool
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -166,7 +166,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Gets the value of the maxPoolSize property.
      *
      * Maximum number of conections that can be created
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -212,7 +212,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * expires. Connections that have idled for longer than the timeout are
      * candidates for removal. When the pool size reaches steady-pool-size,
      * the connection removal stops.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -268,7 +268,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Applications that change the Isolation level on a pooled connection
      * programmatically, risk polluting the pool and this could lead to program
      * errors. Also see: is-isolation-level-guaranteed
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -335,7 +335,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * specifies the type of validation to be performed when
      * is-connection-validation-required is true. The following types of
      * validation are supported:
-     * 
+     *
      * auto-commit
      *   using connection.autoCommit()
      * meta-data
@@ -364,9 +364,9 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Specifies the table name to be used to perform a query to validate a
      * connection. This parameter is mandatory, if connection-validation-type is
      * set to table. Verification by accessing a user specified table may become
-     * necessary for connection validation, particularly if database driver 
+     * necessary for connection validation, particularly if database driver
      * caches calls to setAutoCommit() and getMetaData().
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -384,10 +384,10 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     /**
      * Gets the value of the validationClassName property.
      *
-     * Specifies the custom validation class name to be used to perform 
+     * Specifies the custom validation class name to be used to perform
      * connection validation. This parameter is mandatory, if connection-validation-type is
-     * set to custom-validation. 
-     * 
+     * set to custom-validation.
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -429,7 +429,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * A pool with this property set to true returns non-transactional
      * connections. This connection does not get automatically enlisted
      * with the transaction manager.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -477,7 +477,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Used to set the time-interval within which a connection is validated
      * atmost once. Default is 0 which implies that it is  not enabled.
      * TBD: Documentation is to be corrected.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -570,7 +570,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * The time interval between retries while attempting to create a connection
      * Default is 10 seconds. Effective when connection-creation-retry-attempts
      * is greater than 0.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -593,7 +593,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Sets the timeout property of a connection to enable termination of
      * abnormally long running queries. Default value of -1 implies that it is
      * not enabled.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -616,7 +616,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * method, which avoids enlistment of connections that are not used in a
      * transaction. This also prevents unnecessary enlistment of connections
      * cached in the calling components. Default value is false
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -638,7 +638,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Also, they are disassociated when the transaction is completed and a
      * component method ends, which helps reuse of the physical connections.
      * Default value is false.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -660,7 +660,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * in need of a connection, it can reuse the connection already associated
      * with that thread, thereby not incurring the overhead of getting a
      * connection from the pool. Default value is false
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -679,7 +679,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * Gets the value of the pooling property.
      *
      * Property to disable pooling for the pool.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -698,11 +698,11 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     /**
      * Gets the value of the statementCacheSize property.
      *
-     * When specified, statement caching is turned on to cache statements, 
-     * prepared statements, callable statements that are repeatedly executed by 
+     * When specified, statement caching is turned on to cache statements,
+     * prepared statements, callable statements that are repeatedly executed by
      * applications. Default value is 0, which implies the
      * feature is not enabled.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -722,10 +722,10 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     /**
      * Gets the value of the statementCacheType property.
      *
-     * When specified, statement caching type is set to cache statements, 
-     * prepared statements, callable statements that are repeatedly executed by 
-     * applications. 
-     *  
+     * When specified, statement caching type is set to cache statements,
+     * prepared statements, callable statements that are repeatedly executed by
+     * applications.
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -773,10 +773,10 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
     /**
      * Gets the value of the initSql property.
      *
-     * Init sql is executed whenever a connection created from the pool. 
+     * Init sql is executed whenever a connection created from the pool.
      * This is mostly useful when the state of a
      * connection is to be initialized
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -798,7 +798,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * if the administrator knows that the connections in the pool will always
      * be homogeneous and hence a connection picked from the pool need not be
      * matched by the resource adapter. Default value is false.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -820,7 +820,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * number of times after which it will be closed. This is useful for
      * instance, to avoid statement-leaks. Default value is 0, which implies the
      * feature is not enabled.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -843,7 +843,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * When set to true, application will get wrapped jdbc objects for
      * Statement, PreparedStatement, CallableStatement, ResultSet,
      * DatabaseMetaData. Defaults to false.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -857,15 +857,15 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      *              {@link String }
      */
     void setWrapJdbcObjects(String value) throws PropertyVetoException;
-    
+
     /**
      * Gets the value of the SqlTraceListeners property.
      *
-     * Comma separated list of SQL trace listener implementations to be used to 
-     * trace the SQL statements executed by the applications. The default 
-     * logger used by the system logs the SQL statements based on a set of 
+     * Comma separated list of SQL trace listener implementations to be used to
+     * trace the SQL statements executed by the applications. The default
+     * logger used by the system logs the SQL statements based on a set of
      * values stored in SQLTraceRecord object.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -906,7 +906,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * properties, according to the specification, several of these properties
      * may be necessary for most databases. See Section 5.3 of JDBC 2.0 Standard
      * Extension API.
-     * 
+     *
      * The following are the names and corresponding values for these properties
      * databaseName
      *      Name of the Database
@@ -929,7 +929,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      *      The initial SQL role name.
      * datasourceName
      *      used to name an underlying XADataSource, or ConnectionPoolDataSource
-     *      when pooling of connections is done 
+     *      when pooling of connections is done
      * description
      *      Textual Description
      *

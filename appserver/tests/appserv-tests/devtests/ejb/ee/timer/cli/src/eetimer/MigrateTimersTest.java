@@ -38,7 +38,7 @@ public class MigrateTimersTest extends TimerTestBase {
             migrateTimersOutsideCluster();
         } finally {
             //all associated timers will be removed upon undeploy, even if some
-            //instances are offline. 
+            //instances are offline.
             undeployEjb(cluster_name);
         }
         stat.printSummary();
@@ -48,7 +48,7 @@ public class MigrateTimersTest extends TimerTestBase {
     //from the same cluster
     public void migrateTimers() {
         String testName = "migrateTimers";
-        
+
         //no automatic migration when stopping a instance since gms has been disabled
         asadmin("stop-instance", instance_name_1);
         AsadminReturn output = asadminWithOutput("migrate-timers", instance_name_1);
@@ -79,7 +79,7 @@ public class MigrateTimersTest extends TimerTestBase {
 
     public void migrateTimersOutsideCluster() {
         String testName = "migrateTimersOutsideCluster";
-        
+
         //no automatic migration when stopping a instance since gms has been disabled
         asadmin("stop-instance", instance_name_1);
         asadmin("start-instance", instance_name_3);

@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 import jakarta.ejb.Remote;
 
 @Remote
-public interface SfulRemoteBusiness 
+public interface SfulRemoteBusiness
 {
 
     void foo();

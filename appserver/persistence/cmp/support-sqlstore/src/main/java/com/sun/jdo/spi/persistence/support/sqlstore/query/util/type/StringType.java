@@ -43,10 +43,10 @@ public class StringType
     /**
      * String defines an ordering.
      */
-	public boolean isOrderable()
-	{
-		return true;
-	}
+    public boolean isOrderable()
+    {
+        return true;
+    }
 }
 
 

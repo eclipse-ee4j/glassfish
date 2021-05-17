@@ -28,11 +28,11 @@ import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 import jakarta.xml.soap.*;
 
 public class TestHandler implements SOAPHandler<SOAPMessageContext> {
-    
+
     public Set<QName> getHeaders() {
         return null;
     }
-    
+
     String postConstString = "NOT_INITIALIZED";
     @PostConstruct
     public void init() {
@@ -50,7 +50,7 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
                 System.out.println("Handler PostConstruct not called property");
                 System.out.println("postConstString = " + postConstString);
                 return false;
-            }            
+            }
             if ("undefined".equals(injectedString)) {
                 System.out.println("Handler not injected property");
                 return false;
@@ -59,7 +59,7 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
             SOAPMessageContext smc = (SOAPMessageContext) context;
             SOAPMessage message = smc.getMessage();
             SOAPBody body = message.getSOAPBody();
-            
+
             SOAPElement paramElement =
                 (SOAPElement) body.getFirstChild().getFirstChild();
             int number = Integer.parseInt(paramElement.getValue());
@@ -69,11 +69,11 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
         }
         return true;
     }
-    
+
     public boolean handleFault(SOAPMessageContext context) {
         return true;
     }
-    
+
     public void close(MessageContext context) {}
-    
+
 }

@@ -20,14 +20,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.glassfish.main.web</groupId>
-    	<artifactId>web</artifactId>
+        <artifactId>web</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>web-naming</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Web Container Naming Utilities</name>
 
     <developers>
@@ -41,11 +41,11 @@
             </roles>
         </developer>
     </developers>
-    
+
     <properties>
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>com.sun.mail</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-framework</artifactId>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
             <artifactId>logging-annotation-processor</artifactId>

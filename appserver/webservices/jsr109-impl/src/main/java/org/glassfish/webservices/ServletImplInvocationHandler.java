@@ -36,13 +36,13 @@ public class ServletImplInvocationHandler implements InvocationHandler {
 
     private Object servletImplDelegate;
     private Class servletImplClass;
-    
+
     public ServletImplInvocationHandler(Object delegate) {
         servletImplDelegate = delegate;
         servletImplClass    = delegate.getClass();
     }
-    
-    public Object invoke(Object proxy, Method method, Object[] args) 
+
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
         // NOTE : be careful with "args" parameter.  It is null
@@ -56,7 +56,7 @@ public class ServletImplInvocationHandler implements InvocationHandler {
         Object returnValue = null;
 
         try {
-            // Since impl class isn't subtype of SEI, we need to do a 
+            // Since impl class isn't subtype of SEI, we need to do a
             // method lookup to get method object to use for invocation.
             Method implMethod = servletImplClass.getMethod
                 (method.getName(), method.getParameterTypes());
@@ -71,16 +71,16 @@ public class ServletImplInvocationHandler implements InvocationHandler {
             throw t;
         }
 
-	return returnValue;
+    return returnValue;
     }
 
-    private Object invokeJavaObjectMethod(InvocationHandler handler, 
-                                          Method method, Object[] args) 
+    private Object invokeJavaObjectMethod(InvocationHandler handler,
+                                          Method method, Object[] args)
         throws Throwable {
 
         Object returnValue = null;
 
-        // Can only be one of : 
+        // Can only be one of :
         //     boolean java.lang.Object.equals(Object)
         //     int     java.lang.Object.hashCode()
         //     String  java.lang.Object.toString()
@@ -100,7 +100,7 @@ public class ServletImplInvocationHandler implements InvocationHandler {
                 returnValue = handler.toString();
                 break;
             default :
-                throw new Throwable("Object method " + method.getName() + 
+                throw new Throwable("Object method " + method.getName() +
                                     "not found");
         }
 

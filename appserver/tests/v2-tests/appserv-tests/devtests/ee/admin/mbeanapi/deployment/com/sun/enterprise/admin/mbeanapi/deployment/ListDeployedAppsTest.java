@@ -44,25 +44,25 @@ public class ListDeployedAppsTest extends BaseTest
     {
         Set[] sets = (Set[])targetCmd.execute();
 
-		//System.out.println("Set1: " + sets[0]);
-		//System.out.println("Set2: " + sets[1]);
-		
-		if(sets.length > 1)
-			sets[0].retainAll(sets[1]);
-		
-		results = new String[sets[0].size()];
-		sets[0].toArray(results);
+        //System.out.println("Set1: " + sets[0]);
+        //System.out.println("Set2: " + sets[1]);
+
+        if(sets.length > 1)
+            sets[0].retainAll(sets[1]);
+
+        results = new String[sets[0].size()];
+        sets[0].toArray(results);
     }
 
-	String[] getResults()
-	{
-		return results;
-	}
+    String[] getResults()
+    {
+        return results;
+    }
     public static void main(String[] args) throws Exception
     {
-        new ListDeployedAppsTest("admin", "password", "localhost", 8686, 
+        new ListDeployedAppsTest("admin", "password", "localhost", 8686,
                 args[0], args[1]).run();
     }
-	
-	private String[] results;
+
+    private String[] results;
 }

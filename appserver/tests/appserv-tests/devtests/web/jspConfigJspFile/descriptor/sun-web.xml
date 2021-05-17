@@ -22,5 +22,5 @@
 <sun-web-app>
   <jsp-config>
     <property name="myParam" value="myValue" />
-  </jsp-config> 
+  </jsp-config>
 </sun-web-app>

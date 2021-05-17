@@ -63,9 +63,9 @@ public final class Demo {
 
     private final ProxyFactory mProxyFactory;
     private final DomainRoot   mDomainRoot;
-    
+
     private final MBeansListener  mListener;
-    
+
     private final boolean   mPrintln;
 
     private final Query mQueryMgr;
@@ -81,32 +81,32 @@ public final class Demo {
         final String password ) throws Exception
     {
         mPrintln = emitMessages;
-        
+
         mDebug = true;
         mHost = host;
         mPort = Integer.parseInt(port);
         mAdminUser     = user;
         mAdminPassword = password;
-        
+
         mMBeanServerConnection = _getMBeanServerConnection(mHost, mPort);
-        
+
         mProxyFactory = ProxyFactory.getInstance(mMBeanServerConnection);
         mDomainRoot   = mProxyFactory.getDomainRootProxy();
         mQueryMgr     = mDomainRoot.getQueryMgr();
-            
+
         mListener = new MBeansListener(mMBeanServerConnection, mDomainRoot.objectName().getDomain());
         mListener.startListening();
-        
+
         println( "Demo: " + host + ":" + port + " as {" + user + "," + password + "}" );
     }
-    
+
     private static String getArg(final String name, final String defaultValue, final String[] args )
     {
         String value = defaultValue;
         for( final String arg : args )
         {
             if ( arg == null ) continue;
-            
+
             if ( arg.startsWith(name) || arg.startsWith("--" + name) )
             {
                 final int idx = arg.indexOf("=");
@@ -116,7 +116,7 @@ public final class Demo {
         }
         return value;
     }
-    
+
     /**
         Run the demo.
      */
@@ -126,11 +126,11 @@ public final class Demo {
         final String port = getArg("port", "8686", args);
         final String user = getArg("user", "admin", args);
         final String password = getArg("password", "changeit", args);
-        
+
         try
         {
             final Demo demo = new Demo(emitMessages, host, port, user, password);
-            
+
             demo.run();
         }
         catch( final Throwable t )
@@ -138,27 +138,27 @@ public final class Demo {
             t.printStackTrace();
         }
     }
-    
+
     public static void main( final String[] args )
     {
         runDemo( true, args );
     }
-    
+
     private void run()
     {
         final Set<AMXProxy>  amxMBeans = mQueryMgr.queryAll();
         println( "AMX MBeans: " + amxMBeans.size() );
         println( "AMX config MBeans: " + getAllConfig().size() );
-        
-    }    
-            
+
+    }
+
     /** get all AMX MBeans that were found when the test started
     Caller should use the QueryMgr if a fresh set is needed */
     protected Set<AMXProxy> getAllAMX()
     {
         final Set<AMXProxy> allAMX = mQueryMgr.queryAll();
         assert allAMX.size() >= 30;
-        return allAMX;  
+        return allAMX;
     }
 
     /** get all AMX MBeans with the specified interface */
@@ -180,19 +180,19 @@ public final class Demo {
         }
         return result;
     }
-    
+
     private static MBeanServerConnection _getMBeanServerConnection(final String host, final int port)
             throws MalformedURLException, IOException
     {
         final long start = System.currentTimeMillis();
-        
+
         final String urlStr = "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
         final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
         //debug( "Demo: connecting to: " + url );
         final MBeanServerConnection conn = jmxConn.getMBeanServerConnection();
-        conn.getDomains();	// sanity check
+        conn.getDomains();    // sanity check
         try
         {
             final ObjectName domainRootObjectName = AMXGlassfish.DEFAULT.bootAMX(conn);
@@ -220,22 +220,22 @@ public final class Demo {
         }
         return parentsWith;
     }
-    
+
     /** Get all AMX MBeans that are descendendts of the specified MBean */
     protected <T extends AMXProxy> List<T> getAllDescendents( final AMXProxy top, final Class<T> clazz)
     {
         final AMXProxy[]  a = mQueryMgr.queryDescendants( top.objectName() );
         final List<AMXProxy>  list = ListUtil.newListFromArray(a);
-        
+
         return Util.asProxyList( list, clazz );
     }
-    
+
     /** Get all config MBeans */
     List<AMXConfigProxy> getAllConfig()
     {
         return getAllDescendents( mDomainRoot, AMXConfigProxy.class);
     }
-    
+
     /** Get all monitoring MBeans */
     List<AMXProxy> getAllMonitoring()
     {
@@ -250,10 +250,10 @@ public final class Demo {
     {
         private final MBeanServerConnection mServer;
         private final String                mDomain;
-        
+
         private final List<ObjectName> mRegistered = Collections.synchronizedList(new ArrayList<ObjectName>());
         private final List<ObjectName> mUnregistered = Collections.synchronizedList(new ArrayList<ObjectName>());
-        
+
         public MBeansListener(final MBeanServerConnection server, final String domain)
         {
             mServer  = server;
@@ -271,10 +271,10 @@ public final class Demo {
                 throw new RuntimeException(e);
             }
         }
-        
+
         public void handleNotification(
             final Notification notif,
-            final Object handback) 
+            final Object handback)
         {
             if ( ! (notif instanceof MBeanServerNotification) )
             {
@@ -297,19 +297,19 @@ public final class Demo {
             }
         }
     }
-    
-    
+
+
 
     protected void debug(final String s) {
         System.out.println("" + s);
     }
-    
+
     protected void println(final String s) {
         if ( mPrintln ) {
             System.out.println("" + s);
         }
     }
-    
+
     protected void warning(final String s) {
         if ( mPrintln ) {
             System.out.println("" + s);

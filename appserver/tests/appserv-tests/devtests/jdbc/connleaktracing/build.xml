@@ -19,9 +19,9 @@
 -->
 
         <!ENTITY commonSetup SYSTEM "./../../../config/properties.xml">
-	<!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
+    <!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
-	<!ENTITY run SYSTEM "./../config/run.xml">
+    <!ENTITY run SYSTEM "./../config/run.xml">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -51,9 +51,9 @@
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
             <param name="ejbjar.classes"
-		    value="**/ejb/*.class"/>
+            value="**/ejb/*.class"/>
             <param name="appclientjar.classes"
-		    value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class"/>
+            value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class"/>
         </antcall>
 
     </target>
@@ -67,7 +67,7 @@
     </target>
 
     <target name="run" depends="init-common">
-	    <antcall target="runclient-common"/>
+        <antcall target="runclient-common"/>
 
     </target>
 
@@ -77,7 +77,7 @@
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
         <antcall target="delete-jdbc-stuff"/>
-	<antcall target="undeploy-common"/>
+    <antcall target="undeploy-common"/>
     </target>
 
     <target name="usage">

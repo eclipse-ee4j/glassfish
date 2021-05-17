@@ -34,12 +34,12 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
     private static String scope = "around";
     private static String preIdentical = "fingerPrint";
 
-    @EJB 
+    @EJB
     SessionBeanInjectionRemote2 bean2;
 
     @Resource(mappedName = "jms/jms_unit_test_Queue")
     private Queue queue;
-    
+
     @Inject
     private JMSContext jmsContext;
 
@@ -63,20 +63,20 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
 
         return checkResult(context1, context2);
     }
-    
+
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public Boolean checkResult(String context1, String context2){
 
         if (context1.indexOf(preIdentical) == -1 || context1.indexOf(scope) == -1)
             return false;
-            
-        
+
+
         if (context2.indexOf(preIdentical) == -1 || context2.indexOf(scope) == -1)
             return false;
-        
+
         String context1Annotation = context1.substring(context1.indexOf(preIdentical),context1.indexOf(scope));
         String context2Annotation = context2.substring(context2.indexOf(preIdentical),context2.indexOf(scope));
-        
+
         if(context1Annotation.equals(context2Annotation)) {
             System.out.println("Injected using identical annotations.");
         }else{

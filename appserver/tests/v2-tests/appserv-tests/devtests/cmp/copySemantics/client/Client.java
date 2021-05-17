@@ -33,34 +33,34 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @version
  */
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
-	new SimpleReporterAdapter("appserv-tests");
+    new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
-	    stat.addDescription("copySemantics");
+        stat.addDescription("copySemantics");
 
             Context initial = new InitialContext();
                         Object objref = initial.lookup("java:comp/env/ejb/RemoteA1");
             test.AHome ahome = (test.AHome)PortableRemoteObject.narrow(objref, test.AHome.class);
 
-            test.A abean = ahome.create(new Integer(1), "A1", new java.util.Date(600000000000L), 
+            test.A abean = ahome.create(new Integer(1), "A1", new java.util.Date(600000000000L),
                 new byte[]{'A', 'B', 'C'});
 
             abean.test();
-	    stat.addStatus("ejbclient copySemantics", stat.PASS);
+        stat.addStatus("ejbclient copySemantics", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient copySemantics", stat.FAIL);
+        stat.addStatus("ejbclient copySemantics", stat.FAIL);
         }
 
-	  stat.printSummary("copySemantics");
+      stat.printSummary("copySemantics");
     }
-    
+
 }

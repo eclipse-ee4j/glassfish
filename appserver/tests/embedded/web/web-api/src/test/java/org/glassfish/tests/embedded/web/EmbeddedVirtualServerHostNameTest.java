@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;  
+import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -34,7 +34,7 @@ import org.junit.Test;
 
 /**
  * Test for VirtualServerConfig#setHostNames
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedVirtualServerHostNameTest {
@@ -43,7 +43,7 @@ public class EmbeddedVirtualServerHostNameTest {
     static WebContainer embedded;
     static String contextRoot = "host";
     static int newPort = 9090;
-    
+
     @BeforeClass
     public static void setupServer() throws GlassFishException {
 
@@ -55,7 +55,7 @@ public class EmbeddedVirtualServerHostNameTest {
         embedded = glassfish.getService(WebContainer.class);
 
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -87,7 +87,7 @@ public class EmbeddedVirtualServerHostNameTest {
         System.out.println(inputLine);
         Assert.assertEquals("Hello World!", sb.toString());
 
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -98,5 +98,5 @@ public class EmbeddedVirtualServerHostNameTest {
             glassfish = null;
         }
     }
-    
+
 }

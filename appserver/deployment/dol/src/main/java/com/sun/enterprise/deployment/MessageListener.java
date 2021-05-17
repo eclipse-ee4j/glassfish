@@ -22,14 +22,14 @@ import java.util.Set;
 
 /**
  * connector1.5
- * <!ELEMENT messagelistener (messagelistener-type, 
+ * <!ELEMENT messagelistener (messagelistener-type,
  *           activationspec)>
  *
  * @author Sheetal Vartak
  */
 public class MessageListener extends Descriptor {
 
-    
+
     private String msgListenerType;
     private String activationSpecClass;
     private Set configProperties;
@@ -37,42 +37,42 @@ public class MessageListener extends Descriptor {
 
     //default constructor
     public MessageListener() {
-	this.configProperties = new OrderedSet();
-	this.requiredConfigProperties = new OrderedSet();
+    this.configProperties = new OrderedSet();
+    this.requiredConfigProperties = new OrderedSet();
     }
 
-   
+
 
     public String getMessageListenerType() {
-	return msgListenerType;
+    return msgListenerType;
     }
 
     public void setMessageListenerType(String msgListenerType) {
-	this.msgListenerType = msgListenerType;
+    this.msgListenerType = msgListenerType;
     }
 
     public String getActivationSpecClass() {
-	return activationSpecClass;
+    return activationSpecClass;
     }
 
     public void setActivationSpecClass(String activationSpecClass) {
-	this.activationSpecClass = activationSpecClass;
+    this.activationSpecClass = activationSpecClass;
     }
 
-     
+
     /** add a connector-configProperty to the set
      */
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
-	this.configProperties.add(configProperty);
-    }
-    
-    /** remove a connector-configProperty from the set
-     */ 
-    public void removeConfigProperty(ConnectorConfigProperty configProperty) {
-	this.configProperties.remove(configProperty);
+    this.configProperties.add(configProperty);
     }
 
-    /** Set of ConnectorConfigProperty 
+    /** remove a connector-configProperty from the set
+     */
+    public void removeConfigProperty(ConnectorConfigProperty configProperty) {
+    this.configProperties.remove(configProperty);
+    }
+
+    /** Set of ConnectorConfigProperty
      */
     public Set getConfigProperties() {
         return configProperties;
@@ -81,13 +81,13 @@ public class MessageListener extends Descriptor {
     /** add a configProperty to the set
      */
     public void addRequiredConfigProperty(EnvironmentProperty configProperty) {
-	this.requiredConfigProperties.add(configProperty);
+    this.requiredConfigProperties.add(configProperty);
     }
 
     /** remove a configProperty from the set
      */
     public void removeRequiredConfigProperty(EnvironmentProperty configProperty) {
-	this.requiredConfigProperties.remove(configProperty);
+    this.requiredConfigProperties.remove(configProperty);
     }
 
     /** Set of EnvironmentProperty
@@ -106,5 +106,5 @@ public class MessageListener extends Descriptor {
     //FIXME.  No longer valid.  Use messagelistener-type instead of name
     public void setMessageListenerName(String msgListenerName) {
         throw new UnsupportedOperationException();
-    }    
+    }
   }

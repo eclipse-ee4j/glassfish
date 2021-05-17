@@ -29,25 +29,25 @@
 &commonBuild;
 
   <target name="all" depends="clean,init,build,jar"/>
-        
+
   <target name="init">
   <mkdir dir="${build.dest}"/>
-    
+
   </target>
-  
-   
+
+
   <target name="build" depends="init">
   <javac
-		destdir="${build.dest}"
-		classpath="${classpath}"
+        destdir="${build.dest}"
+        classpath="${classpath}"
                 srcdir="${basedir}"
                 debug="on"
-		deprecation="on"
+        deprecation="on"
     />
-    
+
   </target>
-  
-   
+
+
   <target name="jar" depends="init-common,build">
   <echo message="outputting jar at ${jarfile}"/>
   <property environment="env"/>
@@ -57,41 +57,41 @@
    <arg line="cvf ${jarfile} -C ${build.dest} ." />-->
    <jar jarfile="${jarfile}" basedir="${build.dest}" update="true"
    includes="**/*.class"/>
-   
-  
+
+
   </target>
-  
+
   <target name="clean">
     <delete dir="${build.dest}"/>
-      
+
   </target>
-  
+
   <target name="run" depends="init-common">
   <java
-	fork="on"
-	classpath="${classpath}:${jarfile}"
-	classname="com.sun.ejte.ccl.filediff.Diff">
-	<arg value="${env.APS_HOME}/util/filediff/golden_results.xml"/>
-	<arg value="${env.APS_HOME}/test_results.xml"/>
+    fork="on"
+    classpath="${classpath}:${jarfile}"
+    classname="com.sun.ejte.ccl.filediff.Diff">
+    <arg value="${env.APS_HOME}/util/filediff/golden_results.xml"/>
+    <arg value="${env.APS_HOME}/test_results.xml"/>
 </java>
 
 <!--<java
-	fork="on"
-	classpath="${classpath}:${jarfile}:${env.APS_HOME}/lib/reporter.jar:${s1astest.classpath}:${env.ANT_HOME}/lib/xercesImpl.jar:${env.ANT_HOME}/xmlParserAPIs.jar"
-	classname="com.sun.ejte.ccl.reporter.ParseML">
-	<arg value="${env.APS_HOME}/util/filediff/golden_results.xml"/>
-	<arg value="${env.APS_HOME}/test_results.xml"/>
+    fork="on"
+    classpath="${classpath}:${jarfile}:${env.APS_HOME}/lib/reporter.jar:${s1astest.classpath}:${env.ANT_HOME}/lib/xercesImpl.jar:${env.ANT_HOME}/xmlParserAPIs.jar"
+    classname="com.sun.ejte.ccl.reporter.ParseML">
+    <arg value="${env.APS_HOME}/util/filediff/golden_results.xml"/>
+    <arg value="${env.APS_HOME}/test_results.xml"/>
 </java>-->
 </target>
 
 <target name="modifyReport" depends="init-common">
   <java
-	fork="on"
-	classpath="${classpath}:${jarfile}"
-	classname="com.sun.ejte.ccl.filediff.ModifyReport">
-	<arg value="${env.APS_HOME}/test_results.html"/>	
+    fork="on"
+    classpath="${classpath}:${jarfile}"
+    classname="com.sun.ejte.ccl.filediff.ModifyReport">
+    <arg value="${env.APS_HOME}/test_results.html"/>
 </java>
 </target>
-      
+
 </project>
 

@@ -16,7 +16,7 @@
 
 package com.sun.s1peqe.ejb.bmp.enroller.ejb;
 
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
@@ -25,7 +25,7 @@ import java.util.*;
 import javax.naming.*;
 
 public class EnrollerBean implements SessionBean {
- 
+
     private DataSource ds;
     private DataSource ds_container;
     private DataSource ds_app;
@@ -57,10 +57,10 @@ public class EnrollerBean implements SessionBean {
         test1(id);
         test2(id);
         test3(id);
-        test4(id); 
+        test4(id);
         test5(id);
-        test6(id); 
-        //test7(id); 
+        test6(id);
+        //test7(id);
     }
 
     // Tests a tx and verifies that work is actually committed.
@@ -72,7 +72,7 @@ public class EnrollerBean implements SessionBean {
 
         Connection con = ds.getConnection();
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
         con.close();
 
@@ -113,7 +113,7 @@ public class EnrollerBean implements SessionBean {
 
         Connection con = ds.getConnection();
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
         con.close();
 
@@ -152,7 +152,7 @@ public class EnrollerBean implements SessionBean {
 
         t.begin();
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
         con.close();
 
@@ -191,7 +191,7 @@ public class EnrollerBean implements SessionBean {
         t.begin();
 
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
 
         Connection con1 = ds.getConnection();
@@ -225,7 +225,7 @@ public class EnrollerBean implements SessionBean {
 
         Connection con = ds.getConnection();
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
 
         Connection con1 = ds.getConnection();
@@ -268,7 +268,7 @@ public class EnrollerBean implements SessionBean {
         Connection con = ds.getConnection();
         System.out.println("Got conn");
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
         System.out.println("close conn");
         con.close();
@@ -330,12 +330,12 @@ public class EnrollerBean implements SessionBean {
 
         Connection con = ds.getConnection();
         for (int i=0; i < 5; i++) {
-            insertEntry(con, id + i, i, id + ":" + i);   
+            insertEntry(con, id + i, i, id + ":" + i);
         }
         con.close();
 
         boolean pass = false;
-        Connection con4 = null; 
+        Connection con4 = null;
         System.out.println("con4.getConnection");
         try {
             con4 = ds_container.getConnection();
@@ -377,7 +377,7 @@ public class EnrollerBean implements SessionBean {
             String selectStatement =
                 "select count(*) " +
                 "from testTx ";
-            PreparedStatement prepStmt = 
+            PreparedStatement prepStmt =
                 con.prepareStatement(selectStatement);
 
             ResultSet rs = prepStmt.executeQuery();
@@ -426,7 +426,7 @@ public class EnrollerBean implements SessionBean {
 
         String insertStatement =
             "insert into testTx values ( ? , ? , ?)";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(insertStatement);
 
         prepStmt.setString(1, key);
@@ -437,7 +437,7 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private void deleteEntry(Connection con, String key, int iterkey) 
+    private void deleteEntry(Connection con, String key, int iterkey)
         throws SQLException {
 
         String deleteStatement =
@@ -452,7 +452,7 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private void updateEntry(Connection con, String key, int iterkey, String value) 
+    private void updateEntry(Connection con, String key, int iterkey, String value)
         throws SQLException {
 
         String deleteStatement =
@@ -469,13 +469,13 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private String selectValue(Connection con, String key, int iterkey) 
+    private String selectValue(Connection con, String key, int iterkey)
         throws SQLException {
 
         String selectStatement =
             "select value " +
             "from testTx where key = ? and iterkey = ?";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, key);

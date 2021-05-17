@@ -24,7 +24,7 @@ package com.sun.enterprise.admin.monitor.stats;
  */
 
 public interface MutableCountStatistic extends MutableStatistic {
-    
+
     /** Provides the mutator to the only statistic in the implementing class that
      * changes - Count. It is expected that the count is monotonically increasing
      * on a temporal scale.

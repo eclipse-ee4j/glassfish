@@ -62,7 +62,7 @@
                 value="delete-file-user ${ASADMIN-ARGS} --authrealmname file j2ee"/>
         </antcall>
     </target>
- 
+
     <target name="assemble" depends="compile">
         <war destfile="${web.war}" webxml="descriptor/web.xml">
             <classes dir="${build}" excludes="WebTest.class"/>
@@ -70,8 +70,8 @@
                 <include name="sun-web.xml"/>
             </webinf>
         </war>
-    </target> 
-    
+    </target>
+
     <target name="deploy.asadmin" depends="prepare">
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="--name ${testName} ${web.war}"/>
@@ -91,7 +91,7 @@
             <param name="arg.list" value="${testName}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="runweb" depends="prepare,setHttpPort2">
         <javaWithResult fork="true" failonerror="false" jvm="${JAVA}"
@@ -108,9 +108,9 @@
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
-        </antcall>  
+        </antcall>
     </target>
- 
+
     <target name="private-all">
         <antcall target="create.user"/>
         <antcall target="assemble"/>

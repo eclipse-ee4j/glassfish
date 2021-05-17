@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import jakarta.transaction.UserTransaction;
 
-public class SlessEJB 
+public class SlessEJB
 {
 
 
@@ -46,11 +46,11 @@ public class SlessEJB
     }
 
     public Collection roundTrip2(Collection collectionOfSless) {
-        System.out.println("In SlessEJB::roundTrip2 " + 
+        System.out.println("In SlessEJB::roundTrip2 " +
                            collectionOfSless);
         if( collectionOfSless.size() > 0 ) {
             Sless sless = (Sless) collectionOfSless.iterator().next();
-            System.out.println("input Sless.getId() = " + sless.getId());  
+            System.out.println("input Sless.getId() = " + sless.getId());
         }
         return collectionOfSless;
     }

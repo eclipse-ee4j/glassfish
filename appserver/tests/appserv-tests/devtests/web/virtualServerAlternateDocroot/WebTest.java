@@ -78,7 +78,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for alternate docroot support");
         WebTest webTest = new WebTest(args);
@@ -86,8 +86,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke("/domain.xml", "<domain ");
             invoke("/server.policy", "grant codeBase");
             invoke("/config/login.conf", "fileRealm");
@@ -104,7 +104,7 @@ public class WebTest {
      * in order for the test to pass
      */
     private void invoke(String uri, String expected) throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port + uri);
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

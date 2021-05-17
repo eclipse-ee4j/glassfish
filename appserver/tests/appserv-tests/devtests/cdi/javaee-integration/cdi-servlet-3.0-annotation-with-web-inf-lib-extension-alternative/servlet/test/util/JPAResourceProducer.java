@@ -24,7 +24,7 @@ import jakarta.persistence.PersistenceContext;
 @Singleton
 public class JPAResourceProducer {
     @Produces @PersistenceContext(unitName="pu1")
-    //@TestDatabase 
+    //@TestDatabase
     EntityManager customerDatabasePersistenceUnit;
 
 }

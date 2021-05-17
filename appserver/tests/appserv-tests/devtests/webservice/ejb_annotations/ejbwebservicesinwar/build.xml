@@ -75,7 +75,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
     </target>
-    
+
    <target name="runclient" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
       <javac srcdir="." destdir="${build.classes.dir}/client"

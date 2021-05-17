@@ -26,11 +26,11 @@ public interface Synchronization
     extends EJBObject
 {
 
-	public boolean getFile(String instanceName, String sourceFile, 
-		String destLoc) throws RemoteException;
+    public boolean getFile(String instanceName, String sourceFile,
+        String destLoc) throws RemoteException;
 
-	public boolean putFile(String instanceName, String sourceFile, 	
-		String destDir) throws RemoteException;
+    public boolean putFile(String instanceName, String sourceFile,
+        String destDir) throws RemoteException;
 
 
 }

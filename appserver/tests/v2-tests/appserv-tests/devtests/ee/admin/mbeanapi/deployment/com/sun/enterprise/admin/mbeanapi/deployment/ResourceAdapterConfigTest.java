@@ -34,8 +34,8 @@ public class ResourceAdapterConfigTest extends BaseTest
     static final String kName           = "someName";
     static final String kRACName        = "myResourceAdapter";
 
-    public ResourceAdapterConfigTest(final String user, 
-        final String password, final String host, final int port, 
+    public ResourceAdapterConfigTest(final String user,
+        final String password, final String host, final int port,
         final String racName)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -43,11 +43,11 @@ public class ResourceAdapterConfigTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateResourceAdapterConfigCmd createRACCmd = 
+        final CreateResourceAdapterConfigCmd createRACCmd =
                 cmdFactory.createCreateResourceAdapterConfigCmd(racName,
                         getOptional());
 
-        final DeleteResourceAdapterConfigCmd deleteRACCmd = 
+        final DeleteResourceAdapterConfigCmd deleteRACCmd =
                 cmdFactory.createDeleteResourceAdapterConfigCmd(racName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createRACCmd);
@@ -77,9 +77,9 @@ public class ResourceAdapterConfigTest extends BaseTest
     {
         final Map optional = new HashMap(3);
 
-        optional.put(ResourceAdapterConfigKeys.THREAD_POOL_IDS_KEY, 
+        optional.put(ResourceAdapterConfigKeys.THREAD_POOL_IDS_KEY,
                 kThreadPoolIDs);
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
                 //kObjectType);
         System.out.println("Remove hard coded Name");
         optional.put("Name", kName);

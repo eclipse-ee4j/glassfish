@@ -51,16 +51,16 @@ public abstract class TestNGTestCase {
             getServerSession().getIdentityMapAccessor().initializeAllIdentityMaps();
          } catch (Exception ex) {
             throw new  RuntimeException("An exception occurred trying clear the cache.", ex);
-        }   
+        }
     }
-    
+
     /**
      * Create an entity manager.
      */
     public EntityManager createEntityManager() {
-        return getEntityManagerFactory().createEntityManager();       
+        return getEntityManagerFactory().createEntityManager();
     }
-    
+
     public Map getDatabaseProperties(){
         if (propertiesMap == null){
             propertiesMap = new HashMap();
@@ -68,18 +68,18 @@ public abstract class TestNGTestCase {
         }
         return propertiesMap;
     }
-    
+
     public ServerSession getServerSession(){
-        return ((oracle.toplink.essentials.internal.ejb.cmp3.EntityManagerImpl)createEntityManager()).getServerSession();               
+        return ((oracle.toplink.essentials.internal.ejb.cmp3.EntityManagerImpl)createEntityManager()).getServerSession();
     }
-    
+
     public EntityManagerFactory getEntityManagerFactory(){
         if (emf == null){
             emf = Persistence.createEntityManagerFactory("default", getDatabaseProperties());
         }
         return emf;
     }
-    
+
     public Platform getDbPlatform() {
         return getServerSession().getDatasourcePlatform();
     }

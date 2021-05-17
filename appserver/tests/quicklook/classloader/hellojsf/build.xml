@@ -18,17 +18,17 @@
 -->
 
 <project name="hellojsf" default="all" basedir=".">
-    
+
     <property file="${ws.root}/build.properties"/>
     <property file="build.properties"/>
     <property file="${ws.root}/gfproject/${deploy.platform}-config.properties"/>
-    
+
     <description>Builds, tests, and runs the project Hello JSP Application</description>
-    <import file="${ws.root}/gfproject/build-impl.xml"/>   
+    <import file="${ws.root}/gfproject/build-impl.xml"/>
     <import file="${ws.root}/gfproject/${deploy.platform}-targets.xml"/>
-    
+
     <description>Builds, tests, and runs the project Hello JSP Application</description>
-    
+
 <target name="all" depends="build,deploy,runtest,undeploy" />
 <target name="build-deploy" depends="build,deploy" />
 
@@ -45,21 +45,21 @@
     </war>
     <!-- copy file="${dist.dir}/${app.file.ext}" tofile="./${app.file.ext}"/ -->
 </target>
-    
+
     <target name="deploy">
         <antcall target="deploy-${deploy.platform}-impl"/>
     </target>
-    
-    <target  name="runtest"> 
+
+    <target  name="runtest">
         <antcall target="runtest-impl">
         <param name="testng.test.name" value="${testng.test.name}"/>
         <param name="testng.testclient" value="helloJSFTestNG"/>
     </antcall>
-        
+
     </target>
-    
+
     <target name="undeploy">
         <antcall target="undeploy-${deploy.platform}-impl"/>
     </target>
-    
+
 </project>

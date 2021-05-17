@@ -27,7 +27,7 @@ import org.glassfish.api.container.Adapter;
  */
 public interface GrizzlyContainer extends EmbeddedContainer {
 
-    public void bind(Port port);    
+    public void bind(Port port);
 
     public void add(Adapter adapter);
 }

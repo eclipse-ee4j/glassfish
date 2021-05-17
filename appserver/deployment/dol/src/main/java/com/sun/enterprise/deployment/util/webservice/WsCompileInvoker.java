@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * This interface is used by the deploytool to generate webservice artifacts. 
+ * This interface is used by the deploytool to generate webservice artifacts.
  * A client is expected to set the options and features using the add* methods before calling the generate* method
  *
  * Here is a code sample
  *
- *   SEIConfig cfg = new SEIConfig("WeatherWebService", "WeatherWebService", "endpoint", 
+ *   SEIConfig cfg = new SEIConfig("WeatherWebService", "WeatherWebService", "endpoint",
  *                                    "endpoint.WeatherService", "endpoint.WeatherServiceImpl");
  *   WsCompileInvoker inv = WsCompileInvoker.getWsCompileInvoker(System.out);
  *   inv.addWsCompileOption(inv.TARGET_DIR, "/home/user/codesamples/weatherinfo/test");
@@ -37,8 +37,8 @@ import java.util.HashMap;
  *   inv.addWsCompileFeature("strict");
  *   inv.generateWSDL(cfg);
  *
- * If the client uses the same instance of WsCompileInvoker for multiple invocations of wscompile, then it is 
- * the client's responsibility to empty the options (using the clearWsCompileOptionsAndFeatures() method) that 
+ * If the client uses the same instance of WsCompileInvoker for multiple invocations of wscompile, then it is
+ * the client's responsibility to empty the options (using the clearWsCompileOptionsAndFeatures() method) that
  * are present in this Map before using this Map for the next wscompile invocation
  */
 
@@ -47,7 +47,7 @@ public abstract class WsCompileInvoker {
 
 /**
  * This Map holds all the options to be used while invoking the wscompile tool; the options are set by the client
- * of this interface using the setter methods available in this interface. 
+ * of this interface using the setter methods available in this interface.
  **/
     protected HashMap wsCompileOptions = null;
 
@@ -64,10 +64,10 @@ public abstract class WsCompileInvoker {
     public static final String TARGET_DIR = "-d";
 
 /**
- * This specifies the file name to be used by the wscompile tool for creating the 109 mapping file. 
+ * This specifies the file name to be used by the wscompile tool for creating the 109 mapping file.
  */
     public static final String MAP_FILE = "-mapping";
-    
+
 /**
  * This is used to generate WSDL and mapping files given information on SEI config; the caller sends in all the
  * required info in SEIConfig (info like name of webservice, interface name, package name etc) and this method
@@ -81,7 +81,7 @@ public abstract class WsCompileInvoker {
 /**
  * This is used to generate SEI and mapping files given information on WSDL file location, require package name.
  * The caller sends the required info on WSDL location, package name etc in WSDLConfig argument and this method
- * creates the equivalent jaxrpc-config,xml, invokes wscompile with -import option which will generate the SEI 
+ * creates the equivalent jaxrpc-config,xml, invokes wscompile with -import option which will generate the SEI
  * and a template implementation of the SEI.
  * @param WSDLConfig containing webservice name, package name, and WSDL location
 */
@@ -96,10 +96,10 @@ public abstract class WsCompileInvoker {
  * @param WSDLConfig containing webservice name, package name, and WSDL location
  */
     public abstract void generateClientStubs(WSDLConfig config) throws WsCompileInvokerException, IOException;
-    
+
 /**
- * This is used to set an option to be used while invoking the wscompile tool; for example to use the -classpath 
- * option for wscompile, the call will be setWsCompileOption(WsCompileInvoker.CLASS_PATH, "the_path"); 
+ * This is used to set an option to be used while invoking the wscompile tool; for example to use the -classpath
+ * option for wscompile, the call will be setWsCompileOption(WsCompileInvoker.CLASS_PATH, "the_path");
  * For using wscompile options that are not defined in WsCompileInvoker, the 'option' argument of this call will be
  * the actual argument to be used ; for example, for using the '-s' option of wscompile, the call
  * to set the option will be setWsCompileOption("-s", "the_path_to_be_used");
@@ -127,7 +127,7 @@ public abstract class WsCompileInvoker {
         }
         return false;
     }
-            
+
 /**
  * This is used to set a feature to be used while invoking the wscompile tool; for example to use the -f:wsi feature,
  * the call will be addWsCompileFeature("wsi")
@@ -137,7 +137,7 @@ public abstract class WsCompileInvoker {
     public void addWsCompileFeature(String feature) {
         addWsCompileOption("-f:"+feature, null);
     }
-    
+
 /**
  * This is used to remove a feature that was set; for example to remove "-f:strict" feature that was set before the
  * call will be removeWsCompileFeature("strict")
@@ -149,7 +149,7 @@ public abstract class WsCompileInvoker {
     public boolean removeWsCompileFeature(String feature) {
         return(removeWsCompileOption("-f:"+feature));
     }
-    
+
 /**
  * This is used to clear all options that have been set
  */

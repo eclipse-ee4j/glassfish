@@ -34,7 +34,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 /** Basic progress status example.
- * Contains 10 steps 
+ * Contains 10 steps
  *
  * @author mmares
  */
@@ -45,10 +45,10 @@ import org.jvnet.hk2.annotations.Service;
 @ManagedJob
 @Progress(name="complex", totalStepCount=20)
 public class ProgressComplexCommand implements AdminCommand {
-    
+
     private final static Logger logger =
             LogDomains.getLogger(ProgressComplexCommand.class, LogDomains.ADMIN_LOGGER);
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ProgressStatus ps = context.getProgressStatus();
@@ -107,7 +107,7 @@ public class ProgressComplexCommand implements AdminCommand {
         doProgress(ch2, 5, 100, "progress ch2");
         context.getActionReport().appendMessage("All done");
     }
-    
+
     private static void doProgress(ProgressStatus ps, int count, long interval, String message) {
         for (int i = 0; i < count; i++) {
             try {
@@ -122,9 +122,9 @@ public class ProgressComplexCommand implements AdminCommand {
             }
         }
     }
-    
+
     static class ProgressRunnable implements Runnable {
-        
+
         private final ProgressStatus ps;
         private final int count;
         private final long interval;
@@ -140,8 +140,8 @@ public class ProgressComplexCommand implements AdminCommand {
         public void run() {
             doProgress(ps, count, interval, message);
         }
-        
-        
+
+
     }
-    
+
 }

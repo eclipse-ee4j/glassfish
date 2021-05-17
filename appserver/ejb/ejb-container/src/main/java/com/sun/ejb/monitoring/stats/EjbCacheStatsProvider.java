@@ -28,7 +28,7 @@ import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;
 
 /**
- * Probe listener for the Ejb Cache monitoring events. 
+ * Probe listener for the Ejb Cache monitoring events.
  *
  * @author Marina Vatkina
  */
@@ -41,22 +41,22 @@ import org.glassfish.gmbal.*;
 public class EjbCacheStatsProvider {
 
     private CountStatisticImpl expiredSessionsRemovedStat = new CountStatisticImpl(
-            "NumExpiredSessionsRemoved", "count", 
+            "NumExpiredSessionsRemoved", "count",
             "Provides a count value reflecting the number of expired sessions "
                 + "that were removed from the bean cache.");
 
     private CountStatisticImpl passivations = new CountStatisticImpl(
-            "NumPassivations", "count", 
+            "NumPassivations", "count",
             "Provides a count value reflecting the number of passivations for a "
                 + "StatefulSessionBean from the bean cache.");
 
     private CountStatisticImpl passivationErrors = new CountStatisticImpl(
-            "NumPassivationErrors", "count", 
+            "NumPassivationErrors", "count",
             "Provides a count value reflecting the number of errors that occured "
                 + "while passivating a StatefulSessionBean from the bean cache.");
 
     private CountStatisticImpl passivationSuccess = new CountStatisticImpl(
-            "NumPassivationSuccess", "count", 
+            "NumPassivationSuccess", "count",
             "Provides a count value reflecting the number of passivations for a "
                 + "StatefulSessionBean from the bean cache that succeeded");
 
@@ -85,15 +85,15 @@ public class EjbCacheStatsProvider {
         long now = System.currentTimeMillis();
 
         numBeans = new BoundedRangeStatisticImpl(
-            0, 0, 0, delegate.getMaxCacheSize(), 0, "NumBeansInCache", "count", 
+            0, 0, 0, delegate.getMaxCacheSize(), 0, "NumBeansInCache", "count",
             "Provides total number of EJBs in the associated EJB Cache.",
             now, now);
         cacheHits = new BoundedRangeStatisticImpl(
-            0, 0, 0, Long.MAX_VALUE, 0, "CacheHits", "count", 
+            0, 0, 0, Long.MAX_VALUE, 0, "CacheHits", "count",
             "Provides the number of times a user request hits an EJB in associated EJB cache instance",
             now, now);
         cacheMisses = new BoundedRangeStatisticImpl(
-            0, 0, 0, Long.MAX_VALUE, 0, "CacheMisses", "count", 
+            0, 0, 0, Long.MAX_VALUE, 0, "CacheMisses", "count",
             "Provides the number of times a user request fails to find an EJB in associated EJB cache instance",
             now, now);
     }

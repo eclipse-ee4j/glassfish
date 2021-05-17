@@ -82,16 +82,16 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant converter (Executes the converter tests)
-		ant all (Executes all the ejb session stateless tests)
-		ant clean (cleans all the ejb session stateless tests)
-		ant build (builds all the ejb session stateless tests)
-		ant setup (sets up all resources for stateless tests)
-		ant deploy (deploys all the ejb session stateless apps)
-		ant run (Executes all the ejb session stateless tests)
-		ant undeploy (undeploys all the session stateless apps)
-		ant unsetup (unsets all resources for stateless tests)
-	</echo>
+    <echo> Usage:
+        ant converter (Executes the converter tests)
+        ant all (Executes all the ejb session stateless tests)
+        ant clean (cleans all the ejb session stateless tests)
+        ant build (builds all the ejb session stateless tests)
+        ant setup (sets up all resources for stateless tests)
+        ant deploy (deploys all the ejb session stateless apps)
+        ant run (Executes all the ejb session stateless tests)
+        ant undeploy (undeploys all the session stateless apps)
+        ant unsetup (unsets all resources for stateless tests)
+    </echo>
     </target>
 </project>

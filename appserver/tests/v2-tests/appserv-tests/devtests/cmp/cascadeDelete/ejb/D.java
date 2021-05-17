@@ -25,6 +25,6 @@ import jakarta.ejb.*;
  */
 
 public interface D extends jakarta.ejb.EJBObject {
-    
+
 }
 

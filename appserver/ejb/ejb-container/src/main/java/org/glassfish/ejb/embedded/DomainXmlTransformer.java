@@ -78,7 +78,7 @@ public class DomainXmlTransformer {
     private static final Set<String> DISABLE_ELEMENTS = new HashSet(Arrays.asList(JMX_CONNECTOR));
     private static final Set<String> DISABLE_SUB_ELEMENTS = new HashSet(Arrays.asList(LAZY_INIT_ATTR));
 
-    private static final StringManager localStrings = 
+    private static final StringManager localStrings =
         StringManager.getManager(DomainXmlTransformer.class);
 
     public DomainXmlTransformer(File domainXml) {
@@ -100,7 +100,7 @@ public class DomainXmlTransformer {
                 XMLInputFactory.newInstance() :
                 XMLInputFactory.newInstance(XMLInputFactory.class.getName(),
                         XMLInputFactory.class.getClassLoader());
-        
+
         Set<String> empty_elements = (keepPorts)? EMPTY_ELEMENTS_KEEP_PORTS : EMPTY_ELEMENTS;
         try {
             fis = new FileInputStream(in);
@@ -128,7 +128,7 @@ public class DomainXmlTransformer {
                         }
                         getEndEventFor(parser, name);
                         continue;
-                    } 
+                    }
 
                     boolean skip_to_end = false;
                     if (empty_elements.contains(name)) {
@@ -172,10 +172,10 @@ public class DomainXmlTransformer {
                         }
                         fixedDasConfig = false; // for the next config
                     }
-                } 
+                }
                 if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.finest("[DomainXmlTransformer] Processing: " + event); 
-                } 
+                    _logger.finest("[DomainXmlTransformer] Processing: " + event);
+                }
                 writer.add(event);
             }
             writer.flush();
@@ -214,7 +214,7 @@ public class DomainXmlTransformer {
         return out;
     }
 
-    private XMLEvent getEndEventFor(XMLEventReader parser, String name) 
+    private XMLEvent getEndEventFor(XMLEventReader parser, String name)
             throws XMLStreamException, EOFException {
         while (parser.hasNext()) {
             XMLEvent event = parser.nextEvent();
@@ -245,14 +245,14 @@ public class DomainXmlTransformer {
         }
 
         StartElement oldStartEvent = event.asStartElement();
-        return xmlEventFactory.createStartElement(oldStartEvent.getName(), 
+        return xmlEventFactory.createStartElement(oldStartEvent.getName(),
                 attributes.iterator(), oldStartEvent.getNamespaces());
     }
 
     /** Write a new element with the specified name and text
      * @return the end element
      */
-    private XMLEvent getAddedEvent(XMLEvent event, XMLEventWriter writer, String elementName, 
+    private XMLEvent getAddedEvent(XMLEvent event, XMLEventWriter writer, String elementName,
             String text) throws XMLStreamException {
         StartElement oldStartEvent = event.asStartElement();
         StartElement newStartEvent = xmlEventFactory.createStartElement(new QName(elementName),
@@ -296,7 +296,7 @@ public class DomainXmlTransformer {
         attributes.add(newAttribute);
 
         StartElement oldStartEvent = event.asStartElement();
-        return xmlEventFactory.createStartElement(oldStartEvent.getName(), 
+        return xmlEventFactory.createStartElement(oldStartEvent.getName(),
                 attributes.iterator(), oldStartEvent.getNamespaces());
     }
 }

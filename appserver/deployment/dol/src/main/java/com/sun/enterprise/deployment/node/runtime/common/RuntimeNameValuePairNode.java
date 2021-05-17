@@ -30,15 +30,15 @@ import com.sun.enterprise.deployment.node.NameValuePairNode;
  * @author  Jerome Dochez
  */
 public class RuntimeNameValuePairNode extends NameValuePairNode{
-    
+
     NameValuePairDescriptor descriptor = null;
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         if (descriptor==null) {
             descriptor = new NameValuePairDescriptor();
-        } 
+        }
         return descriptor;
     }
 }

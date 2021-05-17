@@ -19,35 +19,35 @@ package org.glassfish.admin.amx.util.stringifier;
 import java.security.Provider;
 
 /**
-	Stringifies a java.security.Provider.
+    Stringifies a java.security.Provider.
  */
- 
+
 public final class ProviderStringifier implements Stringifier
 {
-	public final static ProviderStringifier	DEFAULT	= new ProviderStringifier();
-	
-		public
-	ProviderStringifier()
-	{
-	}
-	
-	
-		public String
-	stringify( Object object )
-	{
-		final Provider	provider	= (Provider)object;
-		
-		final StringBuffer	buf	= new StringBuffer();
+    public final static ProviderStringifier    DEFAULT    = new ProviderStringifier();
 
-		buf.append( provider.getInfo() );
-		
-		java.util.Iterator	iter	= provider.entrySet().iterator();
-		while ( iter.hasNext() )
-		{
-			buf.append( iter.next().toString() + "\n" );
-		}
+        public
+    ProviderStringifier()
+    {
+    }
 
-		return( buf.toString() );
-	}
+
+        public String
+    stringify( Object object )
+    {
+        final Provider    provider    = (Provider)object;
+
+        final StringBuffer    buf    = new StringBuffer();
+
+        buf.append( provider.getInfo() );
+
+        java.util.Iterator    iter    = provider.entrySet().iterator();
+        while ( iter.hasNext() )
+        {
+            buf.append( iter.next().toString() + "\n" );
+        }
+
+        return( buf.toString() );
+    }
 }
 

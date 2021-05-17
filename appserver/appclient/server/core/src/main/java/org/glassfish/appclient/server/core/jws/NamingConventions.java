@@ -83,7 +83,7 @@ public class NamingConventions {
                     uriToClientWithinEar.length() - ".jar".length());
         return uriToClientWithinEar;
     }
-    
+
     public static String defaultUserFriendlyContextRoot(ApplicationClientDescriptor descriptor) {
         String ufContextRoot;
         /*
@@ -96,7 +96,7 @@ public class NamingConventions {
              */
             ufContextRoot = descriptor.getApplication().getAppName();
         } else {
-            
+
             ufContextRoot = descriptor.getApplication().getAppName() +
                     "/" + uriToNestedClient(descriptor);
         }

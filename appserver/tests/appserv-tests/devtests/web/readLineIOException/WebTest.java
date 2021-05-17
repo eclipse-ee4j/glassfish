@@ -21,22 +21,22 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
     /**
-     * Fix for Bugzilla Bug 28959 IOException using CoyoteReader.readLine() 
+     * Fix for Bugzilla Bug 28959 IOException using CoyoteReader.readLine()
      * but not using .read()
      */
     public static void main(String args[]) {
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Standalone test for Bugzilla 28959");
 
         String host = args[0];
@@ -45,13 +45,13 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             goGet(host, port, "readline", contextRoot + "/ServletTest2" );
-            
+
             if (count != EXPECTED_COUNT){
                 stat.addStatus("readLineIOException UNPREDICTED-FAILURE", stat.FAIL);
-            }           
+            }
         } catch (Throwable t) {
             System.out.println(t.getMessage());
             stat.addStatus("readLineIOException UNPREDICTED-FAILURE", stat.FAIL);
@@ -70,7 +70,7 @@ public class WebTest {
         System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
         os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;
@@ -82,24 +82,24 @@ public class WebTest {
                 System.out.println(lineNum + ":  " + line);
                 if (index != -1) {
                     String status = line.substring(index+2);
-                    
+
                     if (status.equalsIgnoreCase("PASSED")){
                         count++;
-                    } 
-                } 
+                    }
+                }
                 lineNum++;
              }
              if (count == 10){
-                stat.addStatus("web-readLineIOException: readLine" 
+                stat.addStatus("web-readLineIOException: readLine"
                                     , stat.PASS);
              } else {
-                stat.addStatus("web-readLineIOException: readLine " 
-                                    , stat.FAIL);                       
+                stat.addStatus("web-readLineIOException: readLine "
+                                    , stat.FAIL);
              }
              count = 1;
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
          }
    }
-  
+
 }

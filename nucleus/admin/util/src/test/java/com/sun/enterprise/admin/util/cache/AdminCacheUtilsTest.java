@@ -30,9 +30,9 @@ import org.junit.Test;
  * @author mmares
  */
 public class AdminCacheUtilsTest {
-    
+
     private AdminCacheUtils acu = AdminCacheUtils.getInstance();
-    
+
     public AdminCacheUtilsTest() {
     }
 
@@ -43,7 +43,7 @@ public class AdminCacheUtilsTest {
 //    @AfterClass
 //    public static void tearDownClass() throws Exception {
 //    }
-    
+
     @Test
     public void testSimpleGetProvider() throws IOException {
         DataProvider provider;
@@ -54,7 +54,7 @@ public class AdminCacheUtilsTest {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         provider.writeToStream(o, baos);
         assertNotNull(data = baos.toByteArray());
-        assertTrue(o.equals(provider.toInstance(new ByteArrayInputStream(data), 
+        assertTrue(o.equals(provider.toInstance(new ByteArrayInputStream(data),
                 o.getClass())));
         //byte array
         o = "The Man Who Sold The World".getBytes();
@@ -66,7 +66,7 @@ public class AdminCacheUtilsTest {
         assertArrayEquals((byte[]) o, (byte[]) provider.toInstance(
                 new ByteArrayInputStream(data), byte[].class));
     }
-    
+
     @Test
     public void testGetProvider4CommandModel() throws Exception {
         DataProvider provider;

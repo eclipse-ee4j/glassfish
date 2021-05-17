@@ -68,9 +68,9 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     private Map<MethodDescriptor, List<InterceptorDescriptor>> methodInterceptorsMap =
             new HashMap<MethodDescriptor, List<InterceptorDescriptor>>();
 
-	/** 
-	* Default constructor. 
-	*/
+    /**
+    * Default constructor.
+    */
     public ManagedBeanDescriptor() {}
 
     public void setName(String name) {
@@ -150,7 +150,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     public Set<String> getAllInterceptorClasses() {
         Set<String> classes = new HashSet<String>();
-        
+
         for(InterceptorDescriptor desc : classInterceptorChain) {
             classes.add(desc.getInterceptorClassName());
         }
@@ -176,7 +176,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
      /**
-     * Return the ordered list of AroundConstruct interceptors 
+     * Return the ordered list of AroundConstruct interceptors
      */
     public List<InterceptorDescriptor> getAroundConstructCallbackInterceptors(Class clz, Constructor ctor) {
         LinkedList<InterceptorDescriptor> callbackInterceptors =
@@ -184,7 +184,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         Class[] ctorParamTypes = ctor.getParameterTypes();
         String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
-        MethodDescriptor mDesc = new MethodDescriptor(clz.getSimpleName(), null, 
+        MethodDescriptor mDesc = new MethodDescriptor(clz.getSimpleName(), null,
                 parameterClassNames, MethodDescriptor.EJB_BEAN);
 
         List<InterceptorDescriptor> interceptors = methodInterceptorsMap.get(mDesc);
@@ -230,7 +230,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
             beanClassCallbackInfo.setInterceptorClassName(getBeanClassName());
             callbackInterceptors.add(beanClassCallbackInfo);
         }
-      
+
         return callbackInterceptors;
     }
 
@@ -345,7 +345,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         javaGlobalPrefix.append(componentName);
 
 
-        return javaGlobalPrefix.toString();        
+        return javaGlobalPrefix.toString();
     }
 
     public String getAppJndiName() {
@@ -372,23 +372,23 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
 
         return javaAppPrefix.toString();
-               
+
     }
 
 
-	/**
-	* Returns a formatted String of the attributes of this object.
-	*/
+    /**
+    * Returns a formatted String of the attributes of this object.
+    */
     public void print(StringBuffer toStringBuffer) {
 
-	// toStringBuffer.append("\n homeClassName ").append(homeClassName);
+    // toStringBuffer.append("\n homeClassName ").append(homeClassName);
 
     }
 
     public void validate() {
 
         visit((ManagedBeanVisitor)new ApplicationValidator());
-           
+
     }
 
     public void visit(ManagedBeanVisitor aVisitor) {
@@ -480,4 +480,4 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
 
 }
-    
+

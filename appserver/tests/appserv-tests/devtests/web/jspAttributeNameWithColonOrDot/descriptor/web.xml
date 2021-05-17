@@ -24,9 +24,9 @@
 
     <jsp-config>
         <taglib>
-	    <taglib-uri>http://s1as/mytaglib</taglib-uri>
-	    <taglib-location>/WEB-INF/tlds/my-taglib.tld</taglib-location>
-	</taglib>
+        <taglib-uri>http://s1as/mytaglib</taglib-uri>
+        <taglib-location>/WEB-INF/tlds/my-taglib.tld</taglib-location>
+    </taglib>
     </jsp-config>
 
 </web-app>

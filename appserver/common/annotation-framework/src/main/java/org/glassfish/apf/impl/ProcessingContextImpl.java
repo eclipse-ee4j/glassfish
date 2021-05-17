@@ -28,7 +28,7 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
  * @author Jerome ochez
  */
 class ProcessingContextImpl implements ProcessingContext {
-    
+
     protected AnnotationProcessor processor;
     protected Stack<AnnotatedElementHandler> handlers = new Stack<AnnotatedElementHandler>();
     protected Scanner scanner;
@@ -38,13 +38,13 @@ class ProcessingContextImpl implements ProcessingContext {
     ProcessingContextImpl(AnnotationProcessor processor) {
         this.processor = processor;
     }
-    
+
     public AnnotationProcessor getProcessor() {
         return processor;
     }
-        
+
     public ReadableArchive getArchive() {
-        return archive;    
+        return archive;
     }
 
     public void setArchive(ReadableArchive archive) {
@@ -57,36 +57,36 @@ class ProcessingContextImpl implements ProcessingContext {
         }
         handlers.push(handler);
     }
-    
+
     public AnnotatedElementHandler getHandler() {
-        if (handlers.isEmpty()) 
+        if (handlers.isEmpty())
             return null;
-        
+
         return handlers.peek();
     }
-    
+
     public AnnotatedElementHandler popHandler() {
-        if (handlers.isEmpty()) 
+        if (handlers.isEmpty())
             return null;
-        
+
         return handlers.pop();
     }
-        
-    /** 
+
+    /**
      * @return the previously set ClientContext casted to the requestd
      * type if possible or throw an exception otherwise.
      */
     public <U extends AnnotatedElementHandler> U getHandler(Class<U> contextType)
         throws ClassCastException {
-        
-        if (handlers.isEmpty()) 
+
+        if (handlers.isEmpty())
             return null;
         if (AnnotationUtils.shouldLog("handler")) {
             AnnotationUtils.getLogger().finer("Top handler is " + handlers.peek());
         }
         return contextType.cast(handlers.peek());
     }
-    
+
     public Scanner getProcessingInput() {
         return scanner;
     }
@@ -95,18 +95,18 @@ class ProcessingContextImpl implements ProcessingContext {
     }
 
     private ErrorHandler errorHandler = null;
-    
-    /** 
+
+    /**
      * Sets the error handler for this processing context.
      */
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
-    
+
     /**
      * @return the error handler for this processing context.
      */
     public ErrorHandler getErrorHandler() {
         return errorHandler;
-    }      
+    }
 }

@@ -50,7 +50,7 @@ public class MyListener implements ServletRequestAttributeListener {
 
         ServletRequest sr = srae.getServletRequest();
         ServletContext sc = srae.getServletContext();
-    
+
         try {
 
             int loginTimeout = ds1.getLoginTimeout();

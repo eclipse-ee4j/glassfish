@@ -683,7 +683,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
 
         <!-- glassfish-ha -->
           <dependency>

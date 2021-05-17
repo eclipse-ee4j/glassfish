@@ -27,7 +27,7 @@ import java.util.Map;
  * This node handles the error-page xml tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ErrorPageNode extends DeploymentDescriptorNode<ErrorPageDescriptor> {
 
@@ -46,30 +46,30 @@ public class ErrorPageNode extends DeploymentDescriptorNode<ErrorPageDescriptor>
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map<String, String> getDispatchTable() {    
+    protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.ERROR_CODE, "setErrorSignifierAsString");
         table.put(WebTagNames.EXCEPTION_TYPE, "setExceptionType");
-        table.put(WebTagNames.LOCATION, "setLocation");        
+        table.put(WebTagNames.LOCATION, "setLocation");
         return table;
-    }    
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, ErrorPageDescriptor descriptor) {       
-        Node myNode = appendChild(parent, nodeName);    
+    public Node writeDescriptor(Node parent, String nodeName, ErrorPageDescriptor descriptor) {
+        Node myNode = appendChild(parent, nodeName);
         String exceptionType = descriptor.getExceptionType();
         if (exceptionType!=null && exceptionType.length()!=0) {
             appendTextChild(myNode, WebTagNames.EXCEPTION_TYPE, exceptionType);

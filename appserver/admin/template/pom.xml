@@ -28,7 +28,7 @@
     <artifactId>appserver-domain</artifactId>
     <name>Appserver template</name>
     <description>Appserver template</description>
-	
+
     <build>
         <plugins>
             <plugin>
@@ -68,10 +68,10 @@
                             <inputFiles>
                                 <inputFile>${project.build.directory}/dependency/config/logging.properties</inputFile>
                                 <inputFile>../../logging/logging.properties</inputFile>
-                            </inputFiles>  
+                            </inputFiles>
                         </configuration>
                     </execution>
-                </executions>						 
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -90,7 +90,7 @@
                             <attach>false</attach>
                             <appendAssemblyId>false</appendAssemblyId>
                             <useProjectArtifact>false</useProjectArtifact>
-                        </configuration>                        
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

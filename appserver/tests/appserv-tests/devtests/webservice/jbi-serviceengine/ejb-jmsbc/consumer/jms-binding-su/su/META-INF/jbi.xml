@@ -27,6 +27,6 @@
                 <consumes interface-name="tns:Hello"
                           service-name="tns:HelloEJBService"
                           endpoint-name="HelloEJBPort"/>
-		<javaesb:artifactstype>WSDL11</javaesb:artifactstype>
-	</services>
+        <javaesb:artifactstype>WSDL11</javaesb:artifactstype>
+    </services>
 </jbi>

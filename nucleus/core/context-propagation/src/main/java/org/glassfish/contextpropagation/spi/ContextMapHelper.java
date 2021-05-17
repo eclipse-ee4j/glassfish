@@ -26,29 +26,29 @@ import org.glassfish.contextpropagation.internal.Utils;
  */
 public class ContextMapHelper {
   /**
-   * 
+   *
    * @return The in-scope ContextMap.
    */
   public static ContextMap getScopeAwareContextMap() {
     return Utils.getScopeAwareContextMap();
   }
-  
+
   /**
-   * 
-   * @return The in-scope instance of ContextMapPropagator so that 
+   *
+   * @return The in-scope instance of ContextMapPropagator so that
    * communication protocols can ask the ContextMapPropagator to handle
    * the context propagation bytes on the wire.
    */
   public static ContextMapPropagator getScopeAwarePropagator() {
     return Utils.getScopeAwarePropagator();
   }
-  
+
   /**
-   * ViewCapable objects are created by the context propagation framework 
+   * ViewCapable objects are created by the context propagation framework
    * when needed using the ContextViewFactory registered against the
    * specified context name
    * @param prefixName This is the name of the context that should be instantiated
-   * with the corresponding factory. 
+   * with the corresponding factory.
    * @param factory A ContextViewFactory.
    */
   public static void registerContextFactoryForPrefixNamed(String prefixName, ContextViewFactory factory) {

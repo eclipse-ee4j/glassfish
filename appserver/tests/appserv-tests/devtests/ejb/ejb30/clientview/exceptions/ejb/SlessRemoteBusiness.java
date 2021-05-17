@@ -20,7 +20,7 @@ package com.sun.s1asdev.ejb.ejb30.clientview.exceptions;
 import jakarta.ejb.Remote;
 
 @Remote
-public interface SlessRemoteBusiness 
+public interface SlessRemoteBusiness
 {
 
     void forceTransactionRequiredException();
@@ -30,6 +30,6 @@ public interface SlessRemoteBusiness
     void throwRuntimeAppException() throws RuntimeAppException;
 
     void throwRollbackAppException() throws RollbackAppException;
-    
+
     void denied();
 }

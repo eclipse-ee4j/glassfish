@@ -21,30 +21,30 @@ import java.io.*;
 public class HandleDelegateClassLoader
     extends ClassLoader
 {
-    
+
     public HandleDelegateClassLoader() {
         super();
     }
-    
+
     protected Class findClass(String name)
         throws ClassNotFoundException
     {
         // This is called only if the class could not be loaded by
         // the parent class loader (see javadoc for loadClass methods).
         // Load the class from the current thread's context class loader.
-        
+
         Class c = Thread.currentThread().getContextClassLoader().loadClass(name);
-        
+
         return c;
     }
-    
+
     protected Class loadClass(String name, boolean resolve)
         throws ClassNotFoundException
     {
         if (!name.equals("com.sun.enterprise.iiop.IIOPHandleDelegate")) {
             return super.loadClass(name, resolve);
         }
-        
+
         Class handleDelClass = findLoadedClass(name);
         if (handleDelClass != null) {
             return handleDelClass;
@@ -66,11 +66,11 @@ public class HandleDelegateClassLoader
             }
 
             byte[] buf2 = baos.toByteArray();
-            
+
             handleDelClass = defineClass(
             "org.glassfish.enterprise.iiop.impl.IIOPHandleDelegate",
             buf2, 0, buf2.length);
-            
+
         } catch ( Exception ex ) {
             throw (ClassNotFoundException)new ClassNotFoundException(ex.getMessage()).initCause(ex);
         } finally {
@@ -82,11 +82,11 @@ public class HandleDelegateClassLoader
                 }
             }
         }
-        
+
         if (resolve) {
             resolveClass(handleDelClass);
         }
-        
+
         return handleDelClass;
     }
 }

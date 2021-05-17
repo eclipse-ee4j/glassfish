@@ -190,7 +190,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
          * <p>
          * This method might be invoked multiple times before the connection is actually connected, so it should be serially
          * reentrant. Note that the caller will
-         * 
+         *
          * @param urlConnection the connection to be configured
          */
         public void prepareConnection(HttpURLConnection urlConnection) throws IOException;
@@ -1149,7 +1149,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      * Creates a new HttpConnectorAddress corresponding to the location to which an earlier request was redirected.
      * <p>
      * If the new protocol is https then the HttpConnectorAddress secure setting is turned on.
-     * 
+     *
      * @param originalAddr the address which has been redirected elsewhere
      * @param redirection the location to which the attempted connection was redirected
      * @return connector address for the new location

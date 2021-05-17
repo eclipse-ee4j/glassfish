@@ -25,102 +25,102 @@ import java.text.MessageFormat;
  */
 class StringHelper
 {
-	private StringHelper()
-	{
-	}
-	
-	/**
-	 * @return the String from LocalStrings or the supplied String if it doesn't exist
-	 */
-	
-	static String get(String s)
-	{
-		try 
-		{
-			return bundle.getString(s);
-		} 
-		catch (Exception e) 
-		{
-			// it is not an error to have no key...
-			return s;
-		}
-	}
+    private StringHelper()
+    {
+    }
 
-	/** 
-	 * Convenience method which calls get(String, Object[])
-	 * @return the String from LocalStrings or the supplied String if it doesn't exist --
-	 * using the one supplied argument
-	 * @see get(String, Object[])
-	 */
-	static String get(String s, Object o)
-	{
-		return get(s, new Object[] { o });
-	}
+    /**
+     * @return the String from LocalStrings or the supplied String if it doesn't exist
+     */
 
-	/** 
-	 * Convenience method which calls get(String, Object[])
-	 * @return the String from LocalStrings or the supplied String if it doesn't exist --
-	 * using the two supplied arguments
-	 * @see get(String, Object[])
-	 */
-	static String get(String s, Object o1, Object o2)
-	{
-		return get(s, new Object[] { o1, o2 });
-	}
-	
-	/** 
-	 * Convenience method which calls get(String, Object[])
-	 * @return the String from LocalStrings or the supplied String if it doesn't exist --
-	 * using the three supplied arguments
-	 * @see get(String, Object[])
-	 */
-	static String get(String s, Object o1, Object o2, Object o3)
-	{
-		return get(s, new Object[] { o1, o2, o3 });
-	}
-	
-	/**
-	 * Get and format a String from LocalStrings.properties
-	 * @return the String from LocalStrings or the supplied String if it doesn't exist --
-	 * using the array of supplied Object arguments
-	 */
-	static String get(String s, Object[] objects)
-	{
-		s = get(s);
-		
-		try
-		{
-			MessageFormat mf = new MessageFormat(s);
-			return mf.format(objects);
-		}
-		catch(Exception e)
-		{
-			return s;
-		}
-	}
+    static String get(String s)
+    {
+        try
+        {
+            return bundle.getString(s);
+        }
+        catch (Exception e)
+        {
+            // it is not an error to have no key...
+            return s;
+        }
+    }
 
-	///////////////////////////////////////////////////////////////////////////
-	
-	private static	ResourceBundle bundle;
+    /**
+     * Convenience method which calls get(String, Object[])
+     * @return the String from LocalStrings or the supplied String if it doesn't exist --
+     * using the one supplied argument
+     * @see get(String, Object[])
+     */
+    static String get(String s, Object o)
+    {
+        return get(s, new Object[] { o });
+    }
 
-	static
-	{
-		try 
-		{   
-			String props = StringHelper.class.getPackage().getName() + ".LocalStrings";
-			bundle = ResourceBundle.getBundle(props);
-		} 
-		catch (Exception e) 
-		{
-			LoggerHelper.warning("No resource bundle found: " + Constants.exceptionResourceBundle, e);
-			bundle = null;
-		}
-	}
-	
-	static void main(String[] notUsed)
-	{
-		System.out.println("key=backup-res.BadProjectBackupDir, value =" + get("backup-res.BadProjectBackupDir"));
-	}
+    /**
+     * Convenience method which calls get(String, Object[])
+     * @return the String from LocalStrings or the supplied String if it doesn't exist --
+     * using the two supplied arguments
+     * @see get(String, Object[])
+     */
+    static String get(String s, Object o1, Object o2)
+    {
+        return get(s, new Object[] { o1, o2 });
+    }
+
+    /**
+     * Convenience method which calls get(String, Object[])
+     * @return the String from LocalStrings or the supplied String if it doesn't exist --
+     * using the three supplied arguments
+     * @see get(String, Object[])
+     */
+    static String get(String s, Object o1, Object o2, Object o3)
+    {
+        return get(s, new Object[] { o1, o2, o3 });
+    }
+
+    /**
+     * Get and format a String from LocalStrings.properties
+     * @return the String from LocalStrings or the supplied String if it doesn't exist --
+     * using the array of supplied Object arguments
+     */
+    static String get(String s, Object[] objects)
+    {
+        s = get(s);
+
+        try
+        {
+            MessageFormat mf = new MessageFormat(s);
+            return mf.format(objects);
+        }
+        catch(Exception e)
+        {
+            return s;
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    private static    ResourceBundle bundle;
+
+    static
+    {
+        try
+        {
+            String props = StringHelper.class.getPackage().getName() + ".LocalStrings";
+            bundle = ResourceBundle.getBundle(props);
+        }
+        catch (Exception e)
+        {
+            LoggerHelper.warning("No resource bundle found: " + Constants.exceptionResourceBundle, e);
+            bundle = null;
+        }
+    }
+
+    static void main(String[] notUsed)
+    {
+        System.out.println("key=backup-res.BadProjectBackupDir, value =" + get("backup-res.BadProjectBackupDir"));
+    }
 }
 
 

@@ -88,13 +88,13 @@ This will be automatically detected (useful for embedded ra mode of the test)
       </resource-ref>
       <resource-env-ref>
         <resource-env-ref-name>eis/testAdmin</resource-env-ref-name>
-	<jndi-name>eis/testAdmin</jndi-name>
+    <jndi-name>eis/testAdmin</jndi-name>
       </resource-env-ref>
   <resource-env-ref>
     <resource-env-ref-name>java:comp/env/Validator</resource-env-ref-name>
     <resource-env-ref-type>jakarta.validation.Validator</resource-env-ref-type>
   </resource-env-ref>
-  
+
   <resource-env-ref>
     <resource-env-ref-name>java:comp/env/ValidatorFactory</resource-env-ref-name>
     <resource-env-ref-type>jakarta.validation.ValidatorFactory</resource-env-ref-type>

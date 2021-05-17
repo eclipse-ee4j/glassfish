@@ -108,9 +108,9 @@ public interface JdbcResource extends ConfigBeanProxy, Resource,
      *              {@link String }
      */
     void setDescription(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

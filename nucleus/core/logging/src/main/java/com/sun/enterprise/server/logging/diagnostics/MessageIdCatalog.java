@@ -27,16 +27,16 @@ import java.util.MissingResourceException;
  * @author Carla Mott
  */
 public class MessageIdCatalog{
-    
+
      /**
       * Get all the documented DiagnosticCauses for a given message id.
       * The results will be localized based on the current locale of
       * the AppServer's JVM.
       */
      public ArrayList getDiagnosticCausesForMessageId( String messageId, String moduleName ) {
-	    if (moduleName == null || messageId == null)
-		    return null;
-	    ResourceBundle rb = java.util.logging.Logger.getLogger(moduleName).getResourceBundle();
+        if (moduleName == null || messageId == null)
+            return null;
+        ResourceBundle rb = java.util.logging.Logger.getLogger(moduleName).getResourceBundle();
          String cause = null;
          ArrayList causes = null;
          if( rb != null ) {
@@ -45,8 +45,8 @@ public class MessageIdCatalog{
                  // resource bundle is
                  // <MsgId>.diag.cause.1= <Cause 1>
                  // <MsgId>.diag.cause.2= <Cause 2> ....
-                 try { 
-                     cause = rb.getString( messageId + 
+                 try {
+                     cause = rb.getString( messageId +
                              DiagConstants.CAUSE_PREFIX + i );
                  } catch( MissingResourceException e ) {
                      // We couldn't find any causes listed for the message
@@ -55,8 +55,8 @@ public class MessageIdCatalog{
                      break;
                  }
                  if( cause == null ) { break; }
-                 if( causes == null ) { 
-                         causes = new ArrayList( ); 
+                 if( causes == null ) {
+                         causes = new ArrayList( );
                  }
                  causes.add( cause );
              }
@@ -84,7 +84,7 @@ public class MessageIdCatalog{
                  // <MsgId>.diag.check.1= <Check 1>
                  // <MsgId>.diag.check.2= <Check 2> ....
                  try {
-                         check = rb.getString( messageId + 
+                         check = rb.getString( messageId +
                                  DiagConstants.CHECK_PREFIX + i );
                  } catch( MissingResourceException e ) {
                      // We couldn't find any checks listed for the message
@@ -93,18 +93,18 @@ public class MessageIdCatalog{
                      break;
                  }
                  if( check == null ) break;
-                 if( checks == null ) { 
+                 if( checks == null ) {
                      checks = new ArrayList( );
                  }
                  checks.add( check );
              }
          }
-         return checks; 
+         return checks;
      }
 
      /**
       * We may collect lot of diagnostic causes and diagnostic checks for
-      * some common message id from the field. We may document those 
+      * some common message id from the field. We may document those
       * even after the product is shipped. We are planning to generate the
       * HTML's from the resource bundle's diagnostics and update the javadoc
       * or knowledgebase site. This URI should help us to locate the latest
@@ -133,4 +133,4 @@ public class MessageIdCatalog{
      }
      */
 }
-     
+

@@ -43,7 +43,7 @@ public class TestServlet extends HttpServlet {
         testBean.doSomething5(null);
         testBean.doSomething6(null);
         out.println(testBean.hello());
-        out.println("Successfully called methods on " + testBean); 
+        out.println("Successfully called methods on " + testBean);
 
         out.println(typeVariableBean.hello("some text"));
         out.println(typeVariableBean.hello(10));
@@ -62,4 +62,4 @@ public class TestServlet extends HttpServlet {
         processRequest(request, response);
     }
 }
-        
+

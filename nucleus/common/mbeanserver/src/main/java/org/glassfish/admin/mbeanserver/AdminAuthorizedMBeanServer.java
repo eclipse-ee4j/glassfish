@@ -38,7 +38,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * <p>
  * This class wraps the normal GlassFish MBeanServer with a security checker.
  * If control reaches this class then the incoming connection has already
- * authenticated successfully.  This class decides, depending on exactly what 
+ * authenticated successfully.  This class decides, depending on exactly what
  * the request wants to do and what MBean is involved, whether to allow
  * the current request or not.  If so, it delegates to the real MBeanServer; if
  * not it throws an exception.
@@ -47,32 +47,32 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * the normal operations to view JVM performance characteristics.  If the
  * attempted access concerns an AMX MBean and we're running in the DAS then
  * we allow it - it's OK to adjust configuration via JMX to the DAS.  But if
- * this is a non-DAS instance we make sure the operation on the AMX MBean is 
+ * this is a non-DAS instance we make sure the operation on the AMX MBean is
  * read-only before  allowing it.
- * 
+ *
  * @author tjquinn
  */
 public class AdminAuthorizedMBeanServer {
-    
+
     private final static Logger mLogger = Util.JMX_LOGGER;
-    
+
     @LogMessageInfo(message = "Attempted access to method {0} on object {1} rejected; user was granted {2} but the operation reports its impact as \"{3}\"", level="FINE")
     private final static String JMX_NOACCESS="NCLS-JMX-00010";
-    
+
     private static final Set<String> RESTRICTED_METHOD_NAMES = new HashSet<String>(Arrays.asList(
             "setAttribute",
             "setAttributes"
         ));
-    
+
     private static final Set<String> METHOD_NAMES_SUBJECT_TO_ACCESS_CONTROL = new HashSet<String> (Arrays.asList(
             "invoke","setAttribute","setAttributes","getAttribute","getAttributes"));
-    
-    
+
+
     private static class Handler implements InvocationHandler {
-        
+
         private final MBeanServer mBeanServer;
         private final boolean isInstance;
-        
+
         private Handler(final MBeanServer mbs, final boolean isInstance) {
             this.mBeanServer = mbs;
             this.isInstance = isInstance;
@@ -88,17 +88,17 @@ public class AdminAuthorizedMBeanServer {
                 final String operationImpact = impactToString(operationImpact(method, args));
                 final String msg = MessageFormat.format(format, operationName(method, args),
                         objNameString, AdminAccessController.Access.READONLY, operationImpact);
-                mLogger.log(Level.FINE, 
-                        "Disallowing access to {0} operation {1} because the impact is declared as {2}", 
+                mLogger.log(Level.FINE,
+                        "Disallowing access to {0} operation {1} because the impact is declared as {2}",
                         new Object[]{
-                            objNameString, 
-                            operationName(method, args), 
+                            objNameString,
+                            operationName(method, args),
                             operationImpact}
                         );
                 throw new AccessControlException(msg);
             }
         }
-        
+
         private String operationName(final Method method, final Object[] args) {
             if (method.getName().equals("invoke")) {
                 return ((objectNameString(args) == null) || (args.length < 2) || (args[1] == null) ? "null" : (String) args[1]);
@@ -106,11 +106,11 @@ public class AdminAuthorizedMBeanServer {
                 return method.getName();
             }
         }
-        
+
         private String objectNameString(Object[] args) {
             return (args == null || args.length == 0 || ( ! (args[0] instanceof ObjectName))) ? null : ((ObjectName) args[0]).toString();
         }
-        
+
         private boolean isAllowed(
                 final Method method,
                 final Object[] args) throws InstanceNotFoundException, IntrospectionException, ReflectionException, NoSuchMethodException {
@@ -119,25 +119,25 @@ public class AdminAuthorizedMBeanServer {
              * request does not affect an AMX MBean or if the request is
              * read-only.
              */
-            return ( ! isInstance) 
+            return ( ! isInstance)
                     ||  ! isSubjectToAccessControl(method, args) // do this before invoking isAMX to avoid intermittent
                                                                  // problems during instance shutdown
                     || isAMX(args)
                     || isReadonlyRequest(method, args);
         }
-        
+
         private boolean isAMX(final Object[] args) {
-            return (args == null) 
+            return (args == null)
                     || (args[0] == null)
                     || ( ! (args[0] instanceof ObjectName))
                     || ( ! isAMX((ObjectName) args[0]));
         }
-        
+
         private boolean isAMX(final ObjectName objectName) {
             final String amxDomain = amxDomain();
             return (objectName == null || amxDomain == null) ? false : amxDomain.equals(objectName.getDomain());
         }
-        
+
         private String amxDomain() {
             return AMXGlassfish.DEFAULT.domainRoot().getDomain();
         }
@@ -145,16 +145,16 @@ public class AdminAuthorizedMBeanServer {
         private boolean isSubjectToAccessControl(final Method method, final Object[] args) {
             return (METHOD_NAMES_SUBJECT_TO_ACCESS_CONTROL.contains(method.getName()));
         }
-        
+
         private boolean isReadonlyRequest(final Method method, final Object[] args) throws InstanceNotFoundException, IntrospectionException, ReflectionException, NoSuchMethodException {
             if (RESTRICTED_METHOD_NAMES.contains(method.getName())) {
                 return false;
             }
-            
-            return ( ! method.getName().equals("invoke") 
+
+            return ( ! method.getName().equals("invoke")
                        || (operationImpact(method, args) == MBeanOperationInfo.INFO));
         }
-        
+
         private int operationImpact(final Method method, final Object[] args) throws InstanceNotFoundException, IntrospectionException, ReflectionException, NoSuchMethodException {
             if (RESTRICTED_METHOD_NAMES.contains(method.getName())) {
                 return MBeanOperationInfo.ACTION;
@@ -169,9 +169,9 @@ public class AdminAuthorizedMBeanServer {
                 return MBeanOperationInfo.INFO;
             }
         }
-        
+
         private int operationImpactOfInvoke(final Object[] args) throws InstanceNotFoundException, IntrospectionException, ReflectionException, NoSuchMethodException {
-            
+
             final ObjectName objectName = (ObjectName) args[0];
             final String operationName = (String) args[1];
             final String[] signature = (String[]) args[3];
@@ -179,7 +179,7 @@ public class AdminAuthorizedMBeanServer {
             if (info != null) {
 
                 /*
-                * Find the matching operation.  
+                * Find the matching operation.
                 */
                 for (MBeanOperationInfo opInfo : info.getOperations()) {
                     if (opInfo.getName().equals(operationName) && isSignatureEqual(opInfo.getSignature(), signature)) {
@@ -193,7 +193,7 @@ public class AdminAuthorizedMBeanServer {
             }
             return MBeanOperationInfo.UNKNOWN;
         }
-        
+
         private static String impactToString(final int impact) {
             String result;
             switch (impact) {
@@ -204,14 +204,14 @@ public class AdminAuthorizedMBeanServer {
                 default: result = "?";
             }
             return result;
-                
+
         }
-        
+
         private boolean isSignatureEqual(final MBeanParameterInfo[] declaredMBeanParams, final String[] calledSig) {
             if (declaredMBeanParams.length != calledSig.length) {
                 return false;
             }
-            
+
             for (int i = 0; i < declaredMBeanParams.length; i++) {
                 if (! declaredMBeanParams[i].getType().equals(calledSig[i])) {
                     return false;
@@ -220,22 +220,22 @@ public class AdminAuthorizedMBeanServer {
             return true;
         }
     }
-    
+
     /**
      * Returns an MBeanServer that will check security and then forward requests
      * to the real MBeanServer.
-     * 
+     *
      * @param mbs the real MBeanServer to which to delegate
      * @return the security-checking wrapper around the MBeanServer
      */
     public static MBeanServerForwarder newInstance(final MBeanServer mbs, final boolean isInstance,
             final BootAMX bootAMX) {
         final AdminAuthorizedMBeanServer.Handler handler = new AdminAuthorizedMBeanServer.Handler(mbs, isInstance);
-       
+
         return (MBeanServerForwarder) Proxy.newProxyInstance(
                 MBeanServerForwarder.class.getClassLoader(),
                 new Class[] {MBeanServerForwarder.class},
                 handler);
     }
-    
+
 }

@@ -28,7 +28,7 @@ import static com.sun.enterprise.config.util.PortConstants.*;
 
 /**
  * Port base utilities used by create-local-instance. Similar to create-domain.
- * 
+ *
  * @author Jennifer
  */
 public class PortBaseHelper {

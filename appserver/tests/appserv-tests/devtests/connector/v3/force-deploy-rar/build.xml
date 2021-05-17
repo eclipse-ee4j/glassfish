@@ -39,7 +39,7 @@
 
     <target name="compile" depends="clean">
         <ant dir="ra" inheritAll="false" target="compile"/>
-        
+
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
             <param name="s1astest.classpath" value="${s1astest.classpath}:./ra/publish/internal/classes/"/>
@@ -134,7 +134,7 @@
 
 
         <antcall target="undeploy-common"/>
-        
+
         <antcall target="setuptwo"/>
         <antcall target="deploy"/>
         <java classname="client.WebTest">
@@ -220,7 +220,7 @@
             <param name="failonerror" value="true"/>
         </antcall>
     </target>
-    
+
     <target name="delete-pool">
         <antcall target="delete-connector-connpool-common">
             <param name="connector.conpool.name" value="versiontest-ra-pool"/>

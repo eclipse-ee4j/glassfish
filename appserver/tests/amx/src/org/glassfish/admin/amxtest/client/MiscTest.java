@@ -65,14 +65,14 @@ public final class MiscTest
      testGetPropertyNames()
      throws ClassNotFoundException
      {
-     final Set	s	= getQueryMgr().queryInterfaceSet( PropertiesAccess.class.getName(), null );
+     final Set    s    = getQueryMgr().queryInterfaceSet( PropertiesAccess.class.getName(), null );
 
      for( int i = 0; i < 5000; ++i )
      {
-     final Iterator iter	= s.iterator();
+     final Iterator iter    = s.iterator();
      while ( iter.hasNext() )
      {
-     final PropertiesAccess	pa	= (PropertiesAccess)iter.next();
+     final PropertiesAccess    pa    = (PropertiesAccess)iter.next();
 
      pa.getPropertyNames();
      }
@@ -120,9 +120,9 @@ public final class MiscTest
             final ObjectName on = Util.newObjectName(objectNameString);
 
             assert (on.equals(nsObjectName));
-		}
-	}
-	
+        }
+    }
+
 
 
 }

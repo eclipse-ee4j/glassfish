@@ -21,6 +21,6 @@
 <sun-application-client>
     <service-ref>
       <service-ref-name>service/WstoEjbService</service-ref-name>
-      <wsdl-override>http://HTTP_HOST:HTTP_PORT/wstoejb/wstoejb?WSDL</wsdl-override> 
+      <wsdl-override>http://HTTP_HOST:HTTP_PORT/wstoejb/wstoejb?WSDL</wsdl-override>
     </service-ref>
 </sun-application-client>

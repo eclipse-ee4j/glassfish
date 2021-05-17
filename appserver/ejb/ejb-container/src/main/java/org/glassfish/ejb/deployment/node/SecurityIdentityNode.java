@@ -32,12 +32,12 @@ import com.sun.enterprise.deployment.xml.TagNames;
  * This node handles all information relative to security-indentity tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class SecurityIdentityNode extends DeploymentDescriptorNode {
 
     public SecurityIdentityNode() {
-        super();        
+        super();
         registerElementHandler(new XMLElement(TagNames.RUNAS_SPECIFIED_IDENTITY), RunAsNode.class);
     }
 
@@ -63,7 +63,7 @@ public class SecurityIdentityNode extends DeploymentDescriptorNode {
     }
 
     @Override
-    public void setElementValue(XMLElement element, String value) {    
+    public void setElementValue(XMLElement element, String value) {
         if (TagNames.DESCRIPTION.equals(element.getQName())) {
             ((EjbDescriptor) getParentNode().getDescriptor()).setSecurityIdentityDescription(value);
         } else {
@@ -71,7 +71,7 @@ public class SecurityIdentityNode extends DeploymentDescriptorNode {
         }
     }
 
-    public Node writeDescriptor(Node parent, String nodeName, EjbDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, EjbDescriptor descriptor) {
         Node subNode = appendChild(parent, nodeName);
         appendTextChild(subNode, TagNames.DESCRIPTION, descriptor.getSecurityIdentityDescription());
         if (descriptor.getUsesCallerIdentity()) {

@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -48,13 +48,13 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*Blob*.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/BlobTestHome.class,**/BlobTest.class,**/*Client*.class" />
         </antcall>
-    </target> 
-    
+    </target>
+
    <target name="create-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="${basedir}/../common/create_resources.asadmin"/>
@@ -66,23 +66,23 @@
           <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
         </antcall>
     </target>
- 
+
     <target name="deploy"
             depends="init-common">
-	 <antcall target="execute-ejb-sql-common">
+     <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_blob_derby.sql"/>
         </antcall>
         <antcall target="deploy-common">
-	<param name="extra-params"
+    <param name="extra-params"
               value="--uniquetablenames=true --dropandcreatetables=true"/>
-	</antcall>
+    </antcall>
     </target>
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common">
-		<param name="appclient.application.args"
+        <param name="appclient.application.args"
               value="Java2DBTest"/>
-	</antcall>
+    </antcall>
     </target>
 
     <target name="undeploy" depends="init-common">
@@ -91,7 +91,7 @@
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant all
         </echo>
     </target>

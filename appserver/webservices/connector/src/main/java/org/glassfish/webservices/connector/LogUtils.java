@@ -40,7 +40,7 @@ public final class LogUtils {
     public static Logger getLogger() {
         return LOGGER;
     }
-    
+
     @LogMessageInfo(
             message = "Invalid Deployment Descriptors element {0} value {1}.",
             comment = "{0} - prefix, {1} - localname",

@@ -24,7 +24,7 @@ import com.sun.appserv.connectors.internal.api.ResourceHandle;
 
 /**
  * MessageBeanProtocolManager is implemented by the MessageBeanContainer
- * and allows MessageBeanClients to create message bean listeners 
+ * and allows MessageBeanClients to create message bean listeners
  * capable of receiving messages.  Each MessageBeanListener logically
  * represents a single message-driven bean instance, although there is
  * no guarantee as to exactly when the container creates that instance.
@@ -36,10 +36,10 @@ import com.sun.appserv.connectors.internal.api.ResourceHandle;
 public interface MessageBeanProtocolManager {
 
     /**
-     * Create a MessageBeanListener.  
+     * Create a MessageBeanListener.
      *
      * @param resourceHandle handle associated with this listener.  can be null.
-     * 
+     *
      * @throws Exception if the MessageBeanContainer was not able to create
      * the MessageBeanListener
      */
@@ -49,31 +49,31 @@ public interface MessageBeanProtocolManager {
     /**
      * Return the MessageBeanListener to the container.  Since a
      * MessageBeanListener is typically associated with active resources
-     * in the MessageBeanContainer, it is the responsibility of the 
+     * in the MessageBeanContainer, it is the responsibility of the
      * MessageBeanClient to manage them judiciously.
-     */ 
+     */
     void destroyMessageBeanListener(MessageBeanListener listener);
 
     Object createMessageBeanProxy(InvocationHandler handler) throws Exception;
 
     /**
-     * This is used by the message provider to find out whether message 
-     * deliveries will be transacted or not. The message delivery preferences 
-     * must not change during the lifetime of a message endpoint. This 
-     * information is only a hint and may be useful to perform optimizations 
+     * This is used by the message provider to find out whether message
+     * deliveries will be transacted or not. The message delivery preferences
+     * must not change during the lifetime of a message endpoint. This
+     * information is only a hint and may be useful to perform optimizations
      * on message delivery.
      *
      * @param method One of the methods used to deliver messages, e.g.
      *               onMessage method for jakarta.jms.MessageListener.
-     *               Note that if the <code>method</code> is not one 
-     *               of the methods for message delivery, the behavior 
+     *               Note that if the <code>method</code> is not one
+     *               of the methods for message delivery, the behavior
      *               of this method is not defined.
      */
     boolean isDeliveryTransacted (Method method) ;
 
 
     /**
-     * Returns the message-bean container's pool properties. 
+     * Returns the message-bean container's pool properties.
      */
     BeanPoolDescriptor getPoolDescriptor();
 

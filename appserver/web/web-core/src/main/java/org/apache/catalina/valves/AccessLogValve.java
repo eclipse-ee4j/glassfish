@@ -228,7 +228,7 @@ public final class AccessLogValve
     private volatile ThreadLocal<SimpleDateFormat> dateFormatter = null;
 
     private static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
-    
+
     /**
      * ThreadLocal for a date formatter to format Dates into a day string in the format
      * "dd".

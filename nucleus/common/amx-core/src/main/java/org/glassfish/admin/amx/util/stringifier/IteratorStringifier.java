@@ -20,65 +20,65 @@ import java.util.Iterator;
 
 
 /**
-	Stringifies an Iterator, using an optional element Stringifier
+    Stringifies an Iterator, using an optional element Stringifier
  */
- 
+
 public final class IteratorStringifier extends IteratorStringifierBase
 {
-		public 
-	IteratorStringifier()
-	{
-		super();
-	}
-	
-		public 
-	IteratorStringifier( String delim )
-	{
-		super( delim );
-	}
-	
-		public 
-	IteratorStringifier( Stringifier elementStringifier )
-	{
-		super( elementStringifier );
-	}
-	
-		public 
-	IteratorStringifier( String delim, Stringifier elementStringifier )
-	{
-		super( delim, elementStringifier );
-	}
-	
-	
-		public void
-	stringifyElement(
-		Object			elem,
-		String			delim,
-		StringBuffer	buf)
-	{
-		if ( elem == null )
-		{
-			buf.append( "null" );
-		}
-		else
-		{
-			buf.append( mElementStringifier.stringify( elem ) );
-		}
-	}
-	
-	
-	/*
-		Static variant when direct call will suffice.
-	 */
-		public static String
-	stringify( Iterator iter, String delim )
-	{
-		final IteratorStringifier	stringifier	= new IteratorStringifier( delim );
-		
-		return( stringifier.stringify( iter, delim, SmartStringifier.DEFAULT ) );
-	}
-	
-	
-	public final static IteratorStringifier DEFAULT = new IteratorStringifier( "," );
+        public
+    IteratorStringifier()
+    {
+        super();
+    }
+
+        public
+    IteratorStringifier( String delim )
+    {
+        super( delim );
+    }
+
+        public
+    IteratorStringifier( Stringifier elementStringifier )
+    {
+        super( elementStringifier );
+    }
+
+        public
+    IteratorStringifier( String delim, Stringifier elementStringifier )
+    {
+        super( delim, elementStringifier );
+    }
+
+
+        public void
+    stringifyElement(
+        Object            elem,
+        String            delim,
+        StringBuffer    buf)
+    {
+        if ( elem == null )
+        {
+            buf.append( "null" );
+        }
+        else
+        {
+            buf.append( mElementStringifier.stringify( elem ) );
+        }
+    }
+
+
+    /*
+        Static variant when direct call will suffice.
+     */
+        public static String
+    stringify( Iterator iter, String delim )
+    {
+        final IteratorStringifier    stringifier    = new IteratorStringifier( delim );
+
+        return( stringifier.stringify( iter, delim, SmartStringifier.DEFAULT ) );
+    }
+
+
+    public final static IteratorStringifier DEFAULT = new IteratorStringifier( "," );
 }
 

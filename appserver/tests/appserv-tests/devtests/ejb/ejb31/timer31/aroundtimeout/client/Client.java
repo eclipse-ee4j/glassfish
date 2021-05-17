@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) throws Exception {
@@ -36,11 +36,11 @@ public class Client {
         Thread.sleep(7000);
         client.doTest();
         stat.printSummary("ejb-ejb31-aroundtimeoutID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB Sless3 sless3;
     private static @EJB Sless4 sless4;
     private static @EJB Sless5 sless5;
@@ -81,8 +81,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+        return;
     }
 
 }

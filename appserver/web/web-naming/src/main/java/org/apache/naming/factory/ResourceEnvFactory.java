@@ -28,7 +28,7 @@ import org.apache.naming.ResourceEnvRef;
 
 /**
  * Object factory for Resources env.
- * 
+ *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:07 $
  */
@@ -54,23 +54,23 @@ public class ResourceEnvFactory
 
     /**
      * Crete a new Resource env instance.
-     * 
+     *
      * @param obj The reference object describing the DataSource
      */
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
                                     Hashtable<?,?> environment)
         throws Exception {
-        
+
         if (obj instanceof ResourceEnvRef) {
             Reference ref = (Reference) obj;
             ObjectFactory factory = null;
             RefAddr factoryRefAddr = ref.get(Constants.FACTORY);
             if (factoryRefAddr != null) {
                 // Using the specified factory
-                String factoryClassName = 
+                String factoryClassName =
                     factoryRefAddr.getContent().toString();
                 // Loading factory
-                ClassLoader tcl = 
+                ClassLoader tcl =
                     Thread.currentThread().getContextClassLoader();
                 Class<?> factoryClass = null;
                 if (tcl != null) {

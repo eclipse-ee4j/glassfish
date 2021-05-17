@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * @author martinmares
  */
 public class BeanUtils {
-    
+
     /** Loads all getters to the Map.
      */
     public static Map<String, Object> beanToMap(Object bean) throws InvocationTargetException {
@@ -50,15 +50,15 @@ public class BeanUtils {
         }
         return result;
     }
-    
+
     /** Sets values from map to provided bean.
-     * 
+     *
      * @param bean Set to its setters
      * @param data key is attribute name and value is value to set
      * @param ignoreNotExistingSetter if {@code false} and data contains key which
      *        does not point to any setter then IllegalArgumentException will be thrown
      */
-    public static void mapToBean(Object bean, Map<String, Object> data, boolean ignoreNotExistingSetter) 
+    public static void mapToBean(Object bean, Map<String, Object> data, boolean ignoreNotExistingSetter)
             throws InvocationTargetException, IllegalArgumentException {
         if (data == null || bean == null) {
             return;
@@ -74,10 +74,10 @@ public class BeanUtils {
                 }
                 mtd.invoke(bean, entry.getValue());
             } catch (IllegalAccessException ex) {
-            } 
+            }
         }
     }
-    
+
     public static Collection<Method> getGetters(Object bean) {
         if (bean == null) {
             return null;
@@ -96,7 +96,7 @@ public class BeanUtils {
         }
         return result;
     }
-    
+
     public static Collection<Method> getSetters(Object bean) {
         if (bean == null) {
             return null;
@@ -114,9 +114,9 @@ public class BeanUtils {
         }
         return result;
     }
-    
+
     /** Extract attribute name from getter or setter.
-     * 
+     *
      * @return IllegalArgumentException if method is not getter or setter.
      */
     public static String toAttributeName(Method m) throws IllegalArgumentException {
@@ -135,7 +135,7 @@ public class BeanUtils {
         result = Character.toLowerCase(result.charAt(0)) + result.substring(1);
         return result;
     }
-    
+
     public static Method getSetter(Object bean, String attributeName) {
         String methodName = "set" + Character.toUpperCase(attributeName.charAt(0)) + attributeName.substring(1);
         for (Method m : bean.getClass().getMethods()) {
@@ -145,5 +145,5 @@ public class BeanUtils {
         }
         return null;
     }
-    
+
 }

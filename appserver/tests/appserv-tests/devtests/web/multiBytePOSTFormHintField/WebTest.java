@@ -44,7 +44,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for POST form data with form-hint-field");
         WebTest webTest = new WebTest(args);
@@ -58,7 +58,7 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         // POST body
         String body = "japaneseName="
             + URLEncoder.encode("\u3068\u4eba\u6587", "Shift_JIS")
@@ -67,7 +67,7 @@ public class WebTest {
         // Create a socket to the host
         Socket sock = new Socket(host, Integer.parseInt(port));
         OutputStream os = sock.getOutputStream();
-    
+
         // Send header
         BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(
                                     sock.getOutputStream()));
@@ -75,7 +75,7 @@ public class WebTest {
         wr.write("Content-Length: " + body.length() + "\r\n");
         wr.write("Content-Type: application/x-www-form-urlencoded\r\n");
         wr.write("\r\n");
-    
+
         // Send body
         wr.write(body);
         wr.flush();

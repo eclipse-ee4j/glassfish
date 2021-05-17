@@ -30,13 +30,13 @@ import jakarta.ejb.Stateless;
 
 public class SlessEJB
 
-	implements Sless
+    implements Sless
 
 {
 
     public String sayHello() {
 
-	    return "Hello";
+        return "Hello";
 
     }
 
@@ -44,17 +44,17 @@ public class SlessEJB
 
     public double computeMidPoint(int min, int max)
 
-	    throws SwapArgumentsException
+        throws SwapArgumentsException
 
     {
 
-	    if (min > max) {
+        if (min > max) {
 
-		    throw new SwapArgumentsException("("+min+", "+max+")");
+            throw new SwapArgumentsException("("+min+", "+max+")");
 
-	    }
+        }
 
-	    return (min*1.0+max)/2.0;
+        return (min*1.0+max)/2.0;
 
     }
 

@@ -45,12 +45,12 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
@@ -129,5 +129,5 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
             }
         }
         return parent;
-    }      
+    }
 }

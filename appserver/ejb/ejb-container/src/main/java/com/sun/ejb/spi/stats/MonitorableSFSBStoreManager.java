@@ -28,17 +28,17 @@ public interface MonitorableSFSBStoreManager
 
     /**
      * Returns the number of passivated / checkpointed sessions in the store
-     *	Note that this includes the sessions passivated / checkpointed by
-     *	ohter store maangers in the cluster
+     *    Note that this includes the sessions passivated / checkpointed by
+     *    ohter store maangers in the cluster
      */
     public long getCurrentStoreSize();
 
 
     /**
      * Notification that the monitoringLevel is either turned off (false)
-     *	OR tuened on (true).
+     *    OR tuened on (true).
      * @param monitoringOn true if monitoring is either HIGH / LOW
-     *	false otherwise
+     *    false otherwise
      */
     public void monitoringLevelChanged(boolean monitoringOn);
 

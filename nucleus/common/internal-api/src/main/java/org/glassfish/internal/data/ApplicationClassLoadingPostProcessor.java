@@ -32,7 +32,7 @@ import org.glassfish.hk2.utilities.DescriptorImpl;
 public class ApplicationClassLoadingPostProcessor implements
         PopulatorPostProcessor {
     private final HK2Loader applicationLoader;
-    
+
     /* package */
     ApplicationClassLoadingPostProcessor(final ClassLoader appClassLoader) {
         applicationLoader = new HK2Loader() {
@@ -46,7 +46,7 @@ public class ApplicationClassLoadingPostProcessor implements
                     throw new MultiException(th);
                 }
             }
-            
+
         };
     }
 
@@ -57,7 +57,7 @@ public class ApplicationClassLoadingPostProcessor implements
     public DescriptorImpl process(ServiceLocator serviceLocator,
             DescriptorImpl descriptorImpl) {
         if (descriptorImpl.getLoader() != null) return descriptorImpl;
-        
+
         descriptorImpl.setLoader(applicationLoader);
         return descriptorImpl;
     }

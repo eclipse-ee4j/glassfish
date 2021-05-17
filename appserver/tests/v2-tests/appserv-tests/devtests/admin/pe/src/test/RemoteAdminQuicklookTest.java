@@ -23,16 +23,16 @@ public interface RemoteAdminQuicklookTest {
      * com.sun.ejte.ccl.reporter.SimpleReporterAdapter.PASS and FAIL.
      */
     public String test();
-    
+
     /** Sets the MBeanServerConnection for testing the stuff remotely. The parameter may
      * not be null.
      */
     public void setMBeanServerConnection(final MBeanServerConnection c);
-    
+
     /** Returns the name of the test.
      */
     public String getName();
-    
+
     /** Returns the time taken by the test to execute in milliseconds
      * @return long denoting the time taken for this test to execute
      */

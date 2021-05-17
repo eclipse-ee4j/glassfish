@@ -25,19 +25,19 @@ import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
  * @version 1.0
  */
 public class LogHelperStateManager {
-    
+
     /** The component name for this component
      */
     protected static final String componentName = "statemanager";   //NOI18N
-    
+
     /** The class loader for this component
      */
     protected static final ClassLoader loader = LogHelperStateManager.class.getClassLoader();
-    
+
     /** The bundle name for this component
      */
     protected static final String bundleName = "com.sun.jdo.spi.persistence.support.sqlstore.Bundle"; //NOI18N
-    
+
     /** Return the logger for the sqlstore component
      */
     public static Logger getLogger() {

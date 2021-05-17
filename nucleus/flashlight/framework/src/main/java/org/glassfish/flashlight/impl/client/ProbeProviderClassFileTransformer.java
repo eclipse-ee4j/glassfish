@@ -121,7 +121,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     synchronized void addProbe(FlashlightProbe probe) throws NoSuchMethodException {
         Method m = getMethod(probe);
         probes.put(probe.getProviderJavaMethodName() + "::" + Type.getMethodDescriptor(m), probe);
-        
+
         // probes can be added piecemeal after the initial transformation is done, flagging when probes are added to detect that
         allProbesTransformed = false;
     }
@@ -132,9 +132,9 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         if (providerClass == null) {
             if (Log.getLogger().isLoggable(Level.FINER))
                 Log.finer("provider class was reclaimed, not.transformed", providerClassName);
-            return; // Nothing to do!            
+            return; // Nothing to do!
         }
-            
+
         if (enabled)  {
             if (allProbesTransformed) {
                 if (Log.getLogger().isLoggable(Level.FINER))
@@ -145,7 +145,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
                 Log.finer("some probes need to be.transformed", providerClass);
         }
         allProbesTransformed = true;
-        
+
         //important!  The transform(...) callback method in this class uses this boolean!
         enabled = true;
 
@@ -166,12 +166,12 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         if (providerClass == null) {
             if (Log.getLogger().isLoggable(Level.FINER))
                 Log.finer("provider class was reclaimed, not.untransformed", providerClassName);
-            return; // Nothing to do!            
+            return; // Nothing to do!
         }
-        
+
         // Reset the flag to indicate the probes are not transformed
         allProbesTransformed = false;
-        
+
         if (!enabled) {
             if (Log.getLogger().isLoggable(Level.FINER))
                 Log.finer("already.not.transformed", providerClass);
@@ -205,7 +205,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
         if (providerClass == null) {
             if (Log.getLogger().isLoggable(Level.FINER))
                 Log.finer("provider class was reclaimed, not.transformed", providerClassName);
-            return null; // Nothing to do!            
+            return null; // Nothing to do!
         }
 
         try {
@@ -331,7 +331,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
             }
             mv.visitMaxs(maxStack, maxLocals);
         }
-        
+
         @Override
         protected void onMethodEnter() {
             if (!probe.getStateful()) {
@@ -339,10 +339,10 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
                 insertCode();
                 return;
             }
-            
+
             // Handle stateful probes:
             //     localState = ProbeRegistry.invokeProbeBefore(probeId, args);
-            
+
             // Declare a local to hold the state and initialize it to null
             // Note that if we decide to make the state local variable available to the debugger in the local variable table,
             // we can do a visitLocalVariable here as well.
@@ -365,7 +365,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
             // Store return to local
             storeLocal(stateLocal);
         }
-        
+
         @Override
         protected void onMethodExit(int opcode) {
             // For normal return path handling, we call onFinally here.
@@ -374,18 +374,18 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
                 onFinally(opcode);
             }
         }
-    
+
         private void onFinally(int opcode)  {
             // If this is a stateful probe, we don't add anything on exit
             if (!probe.getStateful())
                 return;
-           
+
             // For the exception handling path:
             //      ProbeRegistry.invokeProbeOnException(exceptionValue, probeid, localState);
             if (opcode == ATHROW) {
                 // Push either a duplicate of the exception or a null
                 if (probe.getStatefulException()) {
-                    dup();                    
+                    dup();
                 } else {
                     visitInsn(ACONST_NULL);
                 }
@@ -419,7 +419,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
                         box(Type.getReturnType(this.methodDesc));
                     }
                 } else {
-                    visitInsn(ACONST_NULL);    
+                    visitInsn(ACONST_NULL);
                 }
 
                 // Push the probe id
@@ -432,7 +432,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
                         "void invokeProbeAfter(Object, int, Object)"));
             }
         }
-        
+
         // This handles the stateless probe invocations
         private void insertCode() {
             //Add the body
@@ -456,7 +456,7 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
 
         return m;
     }
-   
+
     static {
         Instrumentation nonFinalInstrumentation = null;
         Throwable throwable = null;

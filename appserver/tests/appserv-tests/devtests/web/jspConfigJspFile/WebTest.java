@@ -52,7 +52,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {

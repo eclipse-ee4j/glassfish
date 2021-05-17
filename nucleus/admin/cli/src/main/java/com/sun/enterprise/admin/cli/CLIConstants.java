@@ -18,7 +18,7 @@ package com.sun.enterprise.admin.cli;
 
 /**
  * Constants for use in this package and "sub" packages
- * 
+ *
  * @author bnevins
  */
 public class CLIConstants {

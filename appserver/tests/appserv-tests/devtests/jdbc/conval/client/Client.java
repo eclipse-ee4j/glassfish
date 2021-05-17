@@ -38,7 +38,7 @@ public class Client {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP convalBMP = convalBMPHome.create();
-	stat.addDescription("Connection Validation Tests");
+    stat.addDescription("Connection Validation Tests");
 
         if (args != null && args.length > 0) {
             String param = args[0];

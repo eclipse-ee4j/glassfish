@@ -36,7 +36,7 @@ import org.jvnet.hk2.config.Dom;
 @Taxonomy( stability=Stability.NOT_AN_INTERFACE )
 public final class ConfigBeanRegistry {
     private static void debug( final String s ) { System.out.println(s); }
-    
+
     public static final class MBeanInstance
     {
         public final ConfigBean mConfigBean;
@@ -49,15 +49,15 @@ public final class ConfigBeanRegistry {
             mImpl = impl;
         }
     }
-    
+
     private final ConcurrentMap<ConfigBean,MBeanInstance> mFromConfigBean;
     private final ConcurrentMap<ObjectName, MBeanInstance> mFromObjectName;
-    
+
     private ConfigBeanRegistry() {
         mFromConfigBean = new ConcurrentHashMap<ConfigBean,MBeanInstance>();
         mFromObjectName = new ConcurrentHashMap<ObjectName, MBeanInstance>();
     }
-    
+
     private static final ConfigBeanRegistry INSTANCE = new ConfigBeanRegistry();
     public static ConfigBeanRegistry getInstance() {
         return INSTANCE;
@@ -98,19 +98,19 @@ public final class ConfigBeanRegistry {
         final MBeanInstance mb = getMBeanInstance(objectName);
         return mb == null ? null: mb.mConfigBean;
     }
-    
+
     public ObjectName getObjectName(final ConfigBean cb)
     {
         final MBeanInstance mb = getMBeanInstance(cb);
         return mb == null ? null: mb.mObjectName;
     }
-    
+
     public Object getImpl(final ObjectName objectName)
     {
         final MBeanInstance mb = getMBeanInstance(objectName);
         return mb == null ? null: mb.mImpl;
     }
-    
+
     public Object getImpl(final ConfigBean cb)
     {
         final MBeanInstance mb = getMBeanInstance(cb);
@@ -120,16 +120,16 @@ public final class ConfigBeanRegistry {
     public ObjectName getObjectNameForProxy(final ConfigBeanProxy cbp)
     {
         final Dom dom = Dom.unwrap(cbp);
-        
+
         if ( dom instanceof ConfigBean )
         {
             return getObjectName( (ConfigBean)dom );
         }
-        
+
         // not a config bean so return null
         return null;
     }
-    
+
 
 }
 

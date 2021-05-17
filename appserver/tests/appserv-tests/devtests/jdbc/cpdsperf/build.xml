@@ -42,7 +42,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -54,22 +54,22 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
     <!-- Create the ORACLE connection pool connection pool and datasource -->
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.resource.type" value="javax.sql.ConnectionPoolDataSource"/>
         <param name="jdbc.conpool.name" value="jdbc-cpdsperf-1"/>
-	<param name="db.class" value="oracle.jdbc.pool.OracleConnectionPoolDataSource"/>
-	<param name="db.user" value="system"/>
-	<param name="db.pwd" value="manager"/>
-	<param name="db.url" value="ORA"/>
+    <param name="db.class" value="oracle.jdbc.pool.OracleConnectionPoolDataSource"/>
+    <param name="db.user" value="system"/>
+    <param name="db.pwd" value="manager"/>
+    <param name="db.url" value="ORA"/>
       </antcall>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
@@ -79,7 +79,7 @@
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-cpdsperf-1.property.URL=jdbc:oracle:thin:@129.158.229.239:1521:ORA"/>
       </antcall>
-      
+
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-cpdsperf-1.property.ServerName=129.158.229.239"/>
@@ -90,10 +90,10 @@
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.resource.type" value="javax.sql.DataSource"/>
         <param name="jdbc.conpool.name" value="jdbc-cpdsperf-2"/>
-	<param name="db.class" value="oracle.jdbc.pool.OracleDataSource"/>
-	<param name="db.user" value="system"/>
-	<param name="db.pwd" value="manager"/>
-	<param name="db.url" value="ORA"/>
+    <param name="db.class" value="oracle.jdbc.pool.OracleDataSource"/>
+    <param name="db.user" value="system"/>
+    <param name="db.pwd" value="manager"/>
+    <param name="db.url" value="ORA"/>
       </antcall>
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
@@ -103,7 +103,7 @@
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-cpdsperf-2.property.URL=jdbc:oracle:thin:@129.158.229.239:1521:ORA"/>
       </antcall>
-      
+
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-cpdsperf-2.property.ServerName=129.158.229.239"/>
@@ -120,23 +120,23 @@
       </antcall>
 
 
-      
+
       <antcall target="deploy-common"/>
       <echo message="Executing sql from ${sql.file}"/>
       <sql
         src="sql/create_pointbase.sql"
-	driver="oracle.jdbc.driver.OracleDriver"
-	userid="system"
-	password="manager"
-	url="jdbc:oracle:thin:@129.158.229.239:1521:ORA"
-	classpath="${env.APS_HOME}/devtests/jdbc/classes12.zip"
-	onerror="continue"
-	print="yes"
+    driver="oracle.jdbc.driver.OracleDriver"
+    userid="system"
+    password="manager"
+    url="jdbc:oracle:thin:@129.158.229.239:1521:ORA"
+    classpath="${env.APS_HOME}/devtests/jdbc/classes12.zip"
+    onerror="continue"
+    print="yes"
       />
-      
+
       <antcall target="reconfig-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
       <antcall target="runclient-common"/>
     </target>
@@ -145,31 +145,31 @@
       <echo message="Executing sql from ${sql.file}"/>
       <sql
         src="sql/drop_pointbase.sql"
-	driver="oracle.jdbc.driver.OracleDriver"
-	userid="system"
-	password="manager"
-	url="jdbc:oracle:thin:@129.158.229.239:1521:ORA"
-	classpath="${env.APS_HOME}/devtests/jdbc/classes12.zip"
-	onerror="continue"
-	print="yes"
+    driver="oracle.jdbc.driver.OracleDriver"
+    userid="system"
+    password="manager"
+    url="jdbc:oracle:thin:@129.158.229.239:1521:ORA"
+    classpath="${env.APS_HOME}/devtests/jdbc/classes12.zip"
+    onerror="continue"
+    print="yes"
       />
 
-      <antcall target="undeploy-common"/> 
+      <antcall target="undeploy-common"/>
 
-      <antcall target="delete-jdbc-resource-common"> 
+      <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB-cpdsperf-1"/>
       </antcall>
-      <antcall target="delete-jdbc-resource-common"> 
+      <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB-cpdsperf-2"/>
       </antcall>
-      <antcall target="delete-jdbc-connpool-common"> 
+      <antcall target="delete-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-cpdsperf-1"/>
       </antcall>
-      <antcall target="delete-jdbc-connpool-common"> 
+      <antcall target="delete-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-cpdsperf-2"/>
       </antcall>
       <antcall target="reconfig-common"/>
-    </target>   
+    </target>
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

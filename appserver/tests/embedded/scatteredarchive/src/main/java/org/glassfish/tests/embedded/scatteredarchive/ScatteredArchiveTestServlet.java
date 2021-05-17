@@ -30,7 +30,7 @@ import java.io.PrintWriter;
 @WebServlet(name = "ScatteredArchiveTestServlet",
         urlPatterns = "/ScatteredArchiveTestServlet")
 public class ScatteredArchiveTestServlet extends HttpServlet {
-    
+
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse) throws ServletException, IOException {

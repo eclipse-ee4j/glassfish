@@ -22,21 +22,21 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.util.Collection;
 
-/** ObjectInputStream implementation with possibility to provide primary class 
+/** ObjectInputStream implementation with possibility to provide primary class
  * loader.
  *
  * @author martinmares
  */
 public class ObjectInputStreamForClassloader  extends ObjectInputStream {
-    
+
     private final Collection<ClassLoader> classLoaders;
 
-    public ObjectInputStreamForClassloader(InputStream in, Collection<ClassLoader> classLoaders) 
+    public ObjectInputStreamForClassloader(InputStream in, Collection<ClassLoader> classLoaders)
             throws IOException {
         super(in);
         this.classLoaders = classLoaders;
     }
-    
+
     @Override
     protected Class<?> resolveClass(ObjectStreamClass classDesc)
             throws IOException, ClassNotFoundException {
@@ -49,5 +49,5 @@ public class ObjectInputStreamForClassloader  extends ObjectInputStream {
         }
         return super.resolveClass(classDesc);
     }
-    
+
 }

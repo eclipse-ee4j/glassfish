@@ -40,23 +40,23 @@ import org.jvnet.hk2.annotations.Service;
 @I18n("progress")
 @Progress
 public class ProgressCustomCommand implements AdminCommand {
-    
+
     /** Value must be in for {@code [Nx][MINSEC-]MAXSEC}
      */
     @Param(primary=true, optional=true, multiple=true, defaultValue="0")
     String[] intervals;
-    
+
     private static final Pattern keyPattern = Pattern.compile("([\\ds]+x){0,1}(\\d+-){0,1}\\d+");
-    
+
     private static class Interval {
-        
+
         private boolean valid = true;
         private String origInteval;
         private int multiplicator = 1;
         private int minSec = -1;
         private int maxSec = 0;
         private boolean spin = false;
-        
+
         private Interval(String interval) {
             origInteval = interval;
             try {
@@ -91,7 +91,7 @@ public class ProgressCustomCommand implements AdminCommand {
                 valid  = false;
             }
         }
-        
+
         public boolean isSpin() {
             return this.spin;
         }
@@ -115,7 +115,7 @@ public class ProgressCustomCommand implements AdminCommand {
         public int getMaxSec() {
             return maxSec;
         }
-        
+
         public long getMilis() {
             if (!valid) {
                 return 0L;
@@ -125,16 +125,16 @@ public class ProgressCustomCommand implements AdminCommand {
             }
             return Math.round(Math.random() * ((maxSec - minSec) * 1000L)) + (minSec * 1000L);
         }
-        
+
         @Override
         public String toString() {
             return origInteval;
         }
-        
+
     }
-    
+
     private Collection<Interval> parsedIntervals;
-    
+
     private int getStepCount() {
         if (parsedIntervals == null) {
             return 0;
@@ -189,5 +189,5 @@ public class ProgressCustomCommand implements AdminCommand {
         }
         report.setMessage("Finished command process in " + parsedIntervals.size() + " block(s).");
     }
-    
+
 }

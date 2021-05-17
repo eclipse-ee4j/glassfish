@@ -33,7 +33,7 @@ import org.jvnet.hk2.annotations.Contract;
 public interface JavaEETransactionManagerDelegate {
 
     /**
-     * Returns <code>true</code> if this implementation supports 
+     * Returns <code>true</code> if this implementation supports
      * last agent optimization.
      */
     public boolean useLAO();
@@ -45,22 +45,22 @@ public interface JavaEETransactionManagerDelegate {
      */
     public void setUseLAO(boolean b);
 
-    /** 
+    /**
      * Commit distributed transaction if there is any.
      */
     public void commitDistributedTransaction() throws RollbackException,
-            HeuristicMixedException, HeuristicRollbackException, 
+            HeuristicMixedException, HeuristicRollbackException,
             SecurityException,
             IllegalStateException, SystemException;
 
-    /** 
+    /**
      * Rollback distributed transaction if there is any.
      */
-    public void rollbackDistributedTransaction() throws IllegalStateException, 
+    public void rollbackDistributedTransaction() throws IllegalStateException,
             SecurityException, SystemException;
 
     /**
-     * Get implementation specific status of the transaction associated with 
+     * Get implementation specific status of the transaction associated with
      * the current thread.
      *
      * @return the status value as an int.
@@ -68,7 +68,7 @@ public interface JavaEETransactionManagerDelegate {
     public int getStatus() throws SystemException;
 
     /**
-     * Get implementation specific transaction object that represents the transaction 
+     * Get implementation specific transaction object that represents the transaction
      * context of the calling thread.
      *
      * @return the transaction object.
@@ -108,7 +108,7 @@ public interface JavaEETransactionManagerDelegate {
      * Perform implementation specific steps to set setRollbackOnly status
      * for distributed transaction if there is any.
      */
-    public void setRollbackOnlyDistributedTransaction() 
+    public void setRollbackOnlyDistributedTransaction()
             throws IllegalStateException, SystemException;
 
     /**
@@ -215,12 +215,12 @@ public interface JavaEETransactionManagerDelegate {
     public void recreate(Xid xid, long timeout) throws WorkException;
 
     /**
-     * Returns an instance of an XAResourceWrapper if this delegate supports 
+     * Returns an instance of an XAResourceWrapper if this delegate supports
      * transaction recovery and there is a wrapper available for this class name.
      * Returns <code>null</code> otherwise.
      *
      *
-     * @return an instance of an XAResourceWrapper or <code>null</code> if this 
+     * @return an instance of an XAResourceWrapper or <code>null</code> if this
      * delegate doesn't support transaction recovery or a wrapper is not available.
      */
     public XAResourceWrapper getXAResourceWrapper(String clName);
@@ -242,12 +242,12 @@ public interface JavaEETransactionManagerDelegate {
      * @param xaresArray the array of XA Resources to be recovered.
      * @return true if the recovery has been successful.
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, 
+    public boolean recoverIncompleteTx(boolean delegated, String logPath,
             XAResource[] xaresArray) throws Exception;
 
     /**
      * Return the delegate specific read lock that implements Lock interface.
-     * 
+     *
      */
     public Lock getReadLock();
 
@@ -267,7 +267,7 @@ public interface JavaEETransactionManagerDelegate {
     public void releaseWriteLock();
 
     /**
-     * Return the delegate specific implementation when a "null transaction context" 
+     * Return the delegate specific implementation when a "null transaction context"
      * was received from the client. See EJB2.0 spec section 19.6.2.1.
      * A null tx context has no Coordinator objref. It indicates
      * that the client had an active
@@ -276,10 +276,10 @@ public interface JavaEETransactionManagerDelegate {
     public boolean isNullTransaction();
 
     /**
-     * Return TransactionAdminBean with delegate specific implementation details 
+     * Return TransactionAdminBean with delegate specific implementation details
      * of an active Transaction.
      */
-    public TransactionAdminBean getTransactionAdminBean(Transaction t) 
+    public TransactionAdminBean getTransactionAdminBean(Transaction t)
             throws SystemException;
 
     /**

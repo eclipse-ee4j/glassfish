@@ -30,7 +30,7 @@ import com.sun.jdo.api.persistence.enhancer.util.Support;
 
 /**
  * Application launcher for persistence-capable classes.
- * 
+ *
  * @author Martin Zaun
  * @version 1.1
  */
@@ -69,7 +69,7 @@ public class PersistenceLauncher {
 
     /**
      * Creates a class loader and launches a target class.
-     * 
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException,

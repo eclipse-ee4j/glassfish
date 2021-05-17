@@ -40,22 +40,22 @@ public class Client {
             System.out.println("I am in client");
 
             System.out.println("Calling SLSBWithUnsynchPC.flushBeforeJoin");
-            stat.addStatus("FlushUnsyncPCBeforeJoin", sLSBWithUnsynchPC.flushBeforeJoin() ? 
+            stat.addStatus("FlushUnsyncPCBeforeJoin", sLSBWithUnsynchPC.flushBeforeJoin() ?
                     stat.PASS : stat.FAIL);
-            
+
             System.out.println("Calling SLSBWithUnsynchPC.flushAfterJoin");
-            stat.addStatus("FlushUnsyncPCAfterJoin", sLSBWithUnsynchPC.flushAfterJoin() ? 
+            stat.addStatus("FlushUnsyncPCAfterJoin", sLSBWithUnsynchPC.flushAfterJoin() ?
                   stat.PASS : stat.FAIL);
-            
-            /* SPEC: If the flush method is not explicitly invoked, the persistence provider 
-             * may defer flushing until commit time depending on the operations invoked and 
+
+            /* SPEC: If the flush method is not explicitly invoked, the persistence provider
+             * may defer flushing until commit time depending on the operations invoked and
              * the flush mode setting in effect.
              */
             System.out.println("Calling SLSBWithUnsynchPC.AutoFlushByProvider");
             sLSBWithUnsynchPC.autoFlushByProvider("Tom3");
-            stat.addStatus("AutoFlushByProvider", sLSBWithUnsynchPC.isPersonFound("Tom3") ? 
+            stat.addStatus("AutoFlushByProvider", sLSBWithUnsynchPC.isPersonFound("Tom3") ?
                     stat.PASS : stat.FAIL);
-            
+
             System.out.println("DoTest method ends");
         } catch (Exception e) {
             e.printStackTrace();

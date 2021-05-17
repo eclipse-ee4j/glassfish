@@ -29,22 +29,22 @@ import java.util.List;
 
 public interface ComponentContext
     extends ResourceHandler {
-    
+
     /**
      * Get the EJB instance associated with this context.
      */
     Object getEJB();
-    
+
     /**
      * Get the Container instance which created this Context.
      */
     Container getContainer();
-    
+
     /**
      * Get the Transaction object associated with this Context.
      */
     Transaction getTransaction();
-    
+
     /**
      * The EJB spec makes a distinction between access to the TimerService
      * object itself (via EJBContext.getTimerService) and access to the
@@ -57,6 +57,6 @@ public interface ComponentContext
      * Get the resources associated with this Context.
      */
     List getResourceList();
-    
+
 }
 

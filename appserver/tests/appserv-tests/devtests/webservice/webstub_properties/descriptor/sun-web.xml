@@ -34,7 +34,7 @@
         <stub-property>
             <name>javax.xml.rpc.service.endpoint.address</name>
             <value>http://@webHost@:@webPort@/simpleserver/SimpleServer </value>
-        </stub-property>        
+        </stub-property>
     </port-info>
- </service-ref>      
+ </service-ref>
 </sun-web-app>

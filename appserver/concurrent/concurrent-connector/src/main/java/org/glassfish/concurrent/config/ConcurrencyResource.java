@@ -51,7 +51,7 @@ public interface ConcurrencyResource extends PropertyBag  {
      *
      * @return possible object is
      *         {@link String }
-     *        
+     *
      */
     @Attribute(defaultValue="Classloader,JNDI,Security,WorkArea")
     String getContextInfo();

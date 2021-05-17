@@ -93,17 +93,17 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant persistence (Executes the persistence tests)
-			ant all (Executes all the ejb session stateful tests)
-			ant clean (cleans all the ejb session stateful tests)
-			ant build (builds all the ejb session stateful tests)
-			ant setup (sets up resources for all the ejb session stateful tests)
-			ant deploy (deploys all the ejb session stateful apps)
-			ant run (Executes all the ejb session stateful tests)
-			ant undeploy (undeploys all the ejb session stateful apps)
-			ant unsetup (unsets all resources the ejb session stateful tests)
-	</echo>
+    <echo>
+        Usage:
+            ant persistence (Executes the persistence tests)
+            ant all (Executes all the ejb session stateful tests)
+            ant clean (cleans all the ejb session stateful tests)
+            ant build (builds all the ejb session stateful tests)
+            ant setup (sets up resources for all the ejb session stateful tests)
+            ant deploy (deploys all the ejb session stateful apps)
+            ant run (Executes all the ejb session stateful tests)
+            ant undeploy (undeploys all the ejb session stateful apps)
+            ant unsetup (unsets all resources the ejb session stateful tests)
+    </echo>
     </target>
 </project>

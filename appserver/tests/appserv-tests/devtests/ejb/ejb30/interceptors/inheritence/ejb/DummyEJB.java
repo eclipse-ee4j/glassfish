@@ -24,14 +24,14 @@ import jakarta.ejb.EJBException;
 import jakarta.annotation.PostConstruct;
 
 @Interceptors({
-	com.sun.s1asdev.ejb.ejb30.interceptors.session.OverridingMethodsInterceptor.class,
-	com.sun.s1asdev.ejb.ejb30.interceptors.session.DistinctMethodsInterceptor.class
+    com.sun.s1asdev.ejb.ejb30.interceptors.session.OverridingMethodsInterceptor.class,
+    com.sun.s1asdev.ejb.ejb30.interceptors.session.DistinctMethodsInterceptor.class
 })
 
 @Stateless
 public class DummyEJB
-	extends DummyLevel2EJB
-	implements Dummy
+    extends DummyLevel2EJB
+    implements Dummy
 {
     int interceptorId;
     private boolean createCalled = false;
@@ -47,13 +47,13 @@ public class DummyEJB
     @PostConstruct
     protected void overridablePostConstruct()
     {
-	postConstructList.add("DummyEJB");
+    postConstructList.add("DummyEJB");
         createCalled = true;
         dummyEJBPostConstructCount++;
     }
 
     public String dummy() {
-	    return "Dummy!!";
+        return "Dummy!!";
     }
 
     public void setInterceptorId(int val) {
@@ -66,63 +66,63 @@ public class DummyEJB
 
     public String isInterceptorCallCounOK() {
 
-		boolean beanAIResult = (beanAICount == dummyBaseAICount)
-			&& (beanAICount == dummyLevel2AICount)
-			&& checkAroundInvokeSequence();
+        boolean beanAIResult = (beanAICount == dummyBaseAICount)
+            && (beanAICount == dummyLevel2AICount)
+            && checkAroundInvokeSequence();
 
-		return "" + distinctInterceptor.isAICountOK()
-			+ " " + overridingInterceptor.isAICountOK()
-			+ " " + beanAIResult
-			+ " " +  checkAroundInvokeSequence();
-	}
+        return "" + distinctInterceptor.isAICountOK()
+            + " " + overridingInterceptor.isAICountOK()
+            + " " + beanAIResult
+            + " " +  checkAroundInvokeSequence();
+    }
 
 
     public String isPostConstructCallCounOK() {
 
-		boolean beanPCCountResult = (dummyEJBPostConstructCount == dummyBaseEJBPostConstructCount)
-			&& (dummyLevel2EJBPostConstructCount == 0)
-			&& checkPostConstructSequence();
+        boolean beanPCCountResult = (dummyEJBPostConstructCount == dummyBaseEJBPostConstructCount)
+            && (dummyLevel2EJBPostConstructCount == 0)
+            && checkPostConstructSequence();
 
-		return "" + distinctInterceptor.isPostConstructCallCounOK()
-			+ " " + overridingInterceptor.isPostConstructCallCounOK()
-			+ " " + beanPCCountResult
-			+ " " +  checkPostConstructSequence();
-	}
+        return "" + distinctInterceptor.isPostConstructCallCounOK()
+            + " " + overridingInterceptor.isPostConstructCallCounOK()
+            + " " + beanPCCountResult
+            + " " +  checkPostConstructSequence();
+    }
 
     @AroundInvoke
     Object myOwnAroundInvoke(InvocationContext ctx)
         throws Exception {
-		aroundInvokeList.add("DummyEJB");
-		if (distinctInterceptor == null) {
-			 distinctInterceptor = (DistinctMethodsInterceptor)
-			 	ctx.getContextData().get(distinctAIName);
-			 overridingInterceptor = (OverridingMethodsInterceptor)
-			 	ctx.getContextData().get(overridingAIName);
-		}
+        aroundInvokeList.add("DummyEJB");
+        if (distinctInterceptor == null) {
+             distinctInterceptor = (DistinctMethodsInterceptor)
+                 ctx.getContextData().get(distinctAIName);
+             overridingInterceptor = (OverridingMethodsInterceptor)
+                 ctx.getContextData().get(overridingAIName);
+        }
 
-		beanAICount++;
+        beanAICount++;
         return ctx.proceed();
     }
 
     private boolean checkPostConstructSequence() {
-	boolean result = postConstructList.size() == 2;
-	if (result) {
-	    "DummyBaseEJB".equals(postConstructList.get(0));
-	    "DummyEJB".equals(postConstructList.get(1));
-	}
+    boolean result = postConstructList.size() == 2;
+    if (result) {
+        "DummyBaseEJB".equals(postConstructList.get(0));
+        "DummyEJB".equals(postConstructList.get(1));
+    }
 
-	return result;
+    return result;
     }
 
     private boolean checkAroundInvokeSequence() {
-	boolean result = aroundInvokeList.size() == 3;
-	if (result) {
-	    "DummyBaseEJB".equals(aroundInvokeList.get(0));
-	    "DummyLevel2EJB".equals(aroundInvokeList.get(1));
-	    "DummyEJB".equals(aroundInvokeList.get(2));
-	}
+    boolean result = aroundInvokeList.size() == 3;
+    if (result) {
+        "DummyBaseEJB".equals(aroundInvokeList.get(0));
+        "DummyLevel2EJB".equals(aroundInvokeList.get(1));
+        "DummyEJB".equals(aroundInvokeList.get(2));
+    }
 
-	return result;
+    return result;
     }
 
 }

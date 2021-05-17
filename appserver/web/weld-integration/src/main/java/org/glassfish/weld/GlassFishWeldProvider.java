@@ -36,7 +36,7 @@ public class GlassFishWeldProvider implements CDIProvider {
 
         @Override
         protected BeanManagerImpl unsatisfiedBeanManager(String callerClassName) {
-            
+
             /*
              * In certain scenarios we use flat deployment model (weld-se, weld-servlet). In that case
              * we return the only BeanManager we have.

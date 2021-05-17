@@ -18,19 +18,19 @@ package test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-            
+
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-                
+
 @WebServlet(urlPatterns={"/dispatchforward"}, asyncSupported=true)
 public class DispatchForward extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
-                    
+
         String forwardUrl = "/asyncdispatch";
         String withargs = req.getParameter("withargs");
         if (withargs != null) {
@@ -40,10 +40,10 @@ public class DispatchForward extends HttpServlet {
         if (!req.getDispatcherType().equals(DispatcherType.ASYNC)) {
             System.out.println("DF: forwarding " + forwardUrl);
             req.getRequestDispatcher(forwardUrl).forward(req, res);
-        } else {        
+        } else {
             System.out.println("DF: async dispatch type ...");
             PrintWriter writer = res.getWriter();
             writer.write("Hello from DispatchForward\n");
-        } 
-    }       
+        }
+    }
 }

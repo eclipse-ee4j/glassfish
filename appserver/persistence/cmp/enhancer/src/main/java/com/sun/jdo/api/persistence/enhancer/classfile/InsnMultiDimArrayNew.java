@@ -101,19 +101,19 @@ public class InsnMultiDimArrayNew extends Insn {
     super(opc_multianewarray, offset);
 
     this.classOp = classOp;
-    this.nDimsOp = nDimsOp; 
+    this.nDimsOp = nDimsOp;
 
     if (classOp == null || nDimsOp < 1)
-	throw new InsnError ("attempt to create an opc_multianewarray" +//NOI18N
-			     " with invalid operands");//NOI18N
+    throw new InsnError ("attempt to create an opc_multianewarray" +//NOI18N
+                 " with invalid operands");//NOI18N
   }
 
-  
+
 
   void print (PrintStream out, int indent) {
     ClassPrint.spaces(out, indent);
     out.println(offset() + "  opc_multianewarray  pool(" +//NOI18N
-		classOp.getIndex() + ")," + nDimsOp);//NOI18N
+        classOp.getIndex() + ")," + nDimsOp);//NOI18N
   }
 
   int store(byte[] buf, int index) {

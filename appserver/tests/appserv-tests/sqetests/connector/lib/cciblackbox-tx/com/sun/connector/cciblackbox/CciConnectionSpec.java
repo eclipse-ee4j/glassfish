@@ -18,7 +18,7 @@ package com.sun.connector.cciblackbox;
 
 /**
  * This implementation class is used by an application component to pass
- * connection-specific info/properties to the getConnection method in 
+ * connection-specific info/properties to the getConnection method in
  * CciConnectionFactory class
  *
  * @author Sheetal Vartak

@@ -81,7 +81,7 @@ public class ResourceHandle implements
         }
     }
     private boolean markedReclaim = false;
-    
+
     public ResourceHandle(Object resource,
                           ResourceSpec spec,
                           ResourceAllocator alloc,
@@ -160,7 +160,7 @@ public class ResourceHandle implements
 
     /**
      * To check if the resourceHandle is marked for leak reclaim or not. <br>
-     * 
+     *
      * @return boolean
      */
     public boolean isMarkedForReclaim() {

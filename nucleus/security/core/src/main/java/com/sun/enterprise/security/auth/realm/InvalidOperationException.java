@@ -19,7 +19,7 @@ package com.sun.enterprise.security.auth.realm;
 
 /**
  * Exception thrown when an operation is invoked on a realm that does not
- * support it. 
+ * support it.
  * e.g. Invoking getGroups (username) is not supported by a certificate realm.
  * @author Harpreet Singh
  */

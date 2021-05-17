@@ -51,22 +51,22 @@ import org.glassfish.api.admin.RuntimeType;
 @I18n("unfreeze.transaction.service")
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="unfreeze-transaction-service", 
+        opType=RestEndpoint.OpType.POST,
+        path="unfreeze-transaction-service",
         description="Unfreeze Transaction Service",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="unfreeze-transaction-service", 
+        opType=RestEndpoint.OpType.POST,
+        path="unfreeze-transaction-service",
         description="Unfreeze Transaction Service",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="unfreeze-transaction-service", 
+        opType=RestEndpoint.OpType.POST,
+        path="unfreeze-transaction-service",
         description="Unfreeze Transaction Service")
 })
 public class UnFreezeTransactionService implements AdminCommand {

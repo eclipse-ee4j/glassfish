@@ -28,18 +28,18 @@ public class SimpleBMPBean
     protected DataSource ds;
 
     public void setEntityContext(EntityContext entityContext) {
-	Context context = null;
-	try {
-	    context    = new InitialContext();
-	    ds = (DataSource) context.lookup("java:comp/env/DataSource");
-	} catch (NamingException e) {
-	    throw new EJBException("cant find datasource");
-	}
+    Context context = null;
+    try {
+        context    = new InitialContext();
+        ds = (DataSource) context.lookup("java:comp/env/DataSource");
+    } catch (NamingException e) {
+        throw new EJBException("cant find datasource");
+    }
         System.out.println("[**SimpleBMPBean**] Done with setEntityContext....");
     }
 
     public Integer ejbCreate() throws CreateException {
-	    return new Integer(1);
+        return new Integer(1);
     }
 
     public boolean statementTest() {
@@ -52,8 +52,8 @@ public class SimpleBMPBean
             stmt = conFromDS.createStatement();
             conFromStatement = stmt.getConnection();
 
-		System.out.println("statement Test : conFromDS : " + conFromDS);
-		System.out.println("statement Test : conFromStatement : " + conFromStatement);
+        System.out.println("statement Test : conFromDS : " + conFromDS);
+        System.out.println("statement Test : conFromStatement : " + conFromStatement);
 
             if( conFromDS==conFromStatement || conFromDS.equals(conFromStatement) ){
                 result = true;
@@ -84,8 +84,8 @@ public class SimpleBMPBean
             stmt = conFromDS.prepareStatement("select * from customer_stmt_wrapper");
             conFromStatement = stmt.getConnection();
 
-		System.out.println("Prepared statement Test : conFromDS : " + conFromDS);
-		System.out.println("Prepared statement Test : conFromStatement : " + conFromStatement);
+        System.out.println("Prepared statement Test : conFromDS : " + conFromDS);
+        System.out.println("Prepared statement Test : conFromStatement : " + conFromStatement);
             if( conFromDS==conFromStatement || conFromDS.equals(conFromStatement) ){
                 result = true;
             }
@@ -115,8 +115,8 @@ public class SimpleBMPBean
             stmt = conFromDS.prepareCall("select * from customer_stmt_wrapper");
             conFromStatement = stmt.getConnection();
 
-		System.out.println("Callable statement Test : conFromDS : " + conFromDS);
-		System.out.println("Callable statement Test : conFromStatement : " + conFromStatement);
+        System.out.println("Callable statement Test : conFromDS : " + conFromDS);
+        System.out.println("Callable statement Test : conFromStatement : " + conFromStatement);
             if( conFromDS==conFromStatement || conFromDS.equals(conFromStatement) ){
                 result = true;
             }
@@ -146,8 +146,8 @@ public class SimpleBMPBean
             dbmd = conFromDS.getMetaData();
             conFromMetaData = dbmd.getConnection();
 
-		System.out.println("statementTest : conFromDS : " + conFromDS);
-		System.out.println("statementTest : conFromDbMetadata : " + conFromMetaData);
+        System.out.println("statementTest : conFromDS : " + conFromDS);
+        System.out.println("statementTest : conFromDbMetadata : " + conFromMetaData);
             if( conFromDS==conFromMetaData || conFromDS.equals(conFromMetaData) ){
                 result = true;
             }
@@ -173,8 +173,8 @@ public class SimpleBMPBean
             rs = stmt.executeQuery("select * from customer_stmt_wrapper");
             conFromResultSet = rs.getStatement().getConnection();
 
-		System.out.println("ResultSet test : conFromDS : " + conFromDS);
-		System.out.println("ResultSet test : conFromResultSet: " + conFromResultSet);
+        System.out.println("ResultSet test : conFromDS : " + conFromDS);
+        System.out.println("ResultSet test : conFromResultSet: " + conFromResultSet);
             if( conFromDS==conFromResultSet || conFromDS.equals(conFromResultSet) ){
                 result = true;
             }

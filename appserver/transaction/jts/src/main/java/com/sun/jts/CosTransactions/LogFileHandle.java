@@ -115,8 +115,8 @@ class LogFileHandle {
     static {
         dsyncProp = System.getProperty(DSYNC_PROPERTY);
         if (dsyncProp != null) {
-            MODE_READWRITEOLD = "rwd";   
-            MODE_READWRITENEW = "rwd"; 
+            MODE_READWRITEOLD = "rwd";
+            MODE_READWRITENEW = "rwd";
         }
     }
 
@@ -146,7 +146,7 @@ class LogFileHandle {
      * @see
      */
     LogFileHandle( File  file,
-                   int   openOptions ) 
+                   int   openOptions )
         throws LogException {
 
         // Perform buffering depending on the flag.
@@ -244,7 +244,7 @@ class LogFileHandle {
                     if( bytesRead == -1 ) bytesRead = 0;
                 }
             } catch( Throwable exc ) {
-                throw new LogException(LogException.LOG_READ_FAILURE, 1, 
+                throw new LogException(LogException.LOG_READ_FAILURE, 1,
                          sm.getString("jts.log_read_failed_bytes", bytesRead), exc);
             }
 
@@ -328,7 +328,7 @@ class LogFileHandle {
      * @see
      */
     void fileOpen( File   file,
-                   String fileMode ) 
+                   String fileMode )
         throws LogException {
         fhandle = null;
         try {

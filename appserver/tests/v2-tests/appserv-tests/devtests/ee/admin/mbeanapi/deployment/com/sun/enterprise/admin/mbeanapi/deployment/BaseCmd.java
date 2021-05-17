@@ -80,12 +80,12 @@ public abstract class BaseCmd implements Cmd, SinkCmd
 
     protected final DomainConfig getDomainConfig() throws Exception
     {
-       return getDomainRoot().getDomainConfig(); 
+       return getDomainRoot().getDomainConfig();
     }
 
     protected final J2EEDomain getJ2EEDomain() throws Exception
     {
-       return getDomainRoot().getJ2EEDomain(); 
+       return getDomainRoot().getJ2EEDomain();
     }
 
     protected final TLSParams getTLSParams()
@@ -95,6 +95,6 @@ public abstract class BaseCmd implements Cmd, SinkCmd
 
     protected final QueryMgr getQueryMgr() throws Exception
     {
-       return getDomainRoot().getQueryMgr(); 
+       return getDomainRoot().getQueryMgr();
     }
 }

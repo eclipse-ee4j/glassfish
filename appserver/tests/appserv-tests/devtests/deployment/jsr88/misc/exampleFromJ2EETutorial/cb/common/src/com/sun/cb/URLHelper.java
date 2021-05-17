@@ -16,7 +16,7 @@
 
 package com.sun.cb;
 import java.util.ResourceBundle;
- 
+
 public final class URLHelper {
 
     public static final String getSaajURL() {

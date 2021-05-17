@@ -29,7 +29,7 @@
         </ejb-ref>
         <bean-cache>
             <max-cache-size>8</max-cache-size>
-	    <resize-quantity>4</resize-quantity>
+        <resize-quantity>4</resize-quantity>
         </bean-cache>
      </ejb>
      <ejb>
@@ -47,10 +47,10 @@
             <res-ref-name>jdbc/DataSource</res-ref-name>
             <jndi-name>jdbc/__default</jndi-name>
         </resource-ref>
-	<bean-pool>
-	    <steady-pool-size>4</steady-pool-size>
-	    <max-pool-size>17</max-pool-size>
-	</bean-pool>
+    <bean-pool>
+        <steady-pool-size>4</steady-pool-size>
+        <max-pool-size>17</max-pool-size>
+    </bean-pool>
      </ejb>
    </enterprise-beans>
 </sun-ejb-jar>

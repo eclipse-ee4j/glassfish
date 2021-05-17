@@ -32,7 +32,7 @@
     &testproperties;
 
     <target name="all" depends="setup,build,run,unsetup"/>
-      
+
     <target name="setup" depends="init-common">
         <antcall target="deploy-jms-common"/>
     </target>
@@ -56,10 +56,10 @@
         <exec executable="${APPCLIENT}" failonerror="false">
           <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
           <arg line="-client ${assemble.dir}/${appname}-client.jar"/>
-	  <arg line="-name ${appname}Client"/>
-	  <arg line="-textauth"/>
-	  <arg line="-user j2ee"/>
-	  <arg line="-password j2ee"/>
+      <arg line="-name ${appname}Client"/>
+      <arg line="-textauth"/>
+      <arg line="-user j2ee"/>
+      <arg line="-password j2ee"/>
         </exec>
         <sequential>
           <sleep seconds="30"/>
@@ -69,7 +69,7 @@
     </target>
 
     <target name="restart" depends="init-common">
-	<antcall target="restart-server-instance-common"/>
+    <antcall target="restart-server-instance-common"/>
     </target>
 
     <target name="unsetup" depends="init-common">

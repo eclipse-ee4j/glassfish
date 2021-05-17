@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * <p>
  * We prevent such warnings by overriding the method which reads the runtime
  * deployment descriptor.
- * 
+ *
  * @author Tim Quinn
  */
 @Service
@@ -64,7 +64,7 @@ public class ACCAppClientArchivist extends AppClientArchivist implements PostCon
         extensionsArchivists = new ArrayList<ExtensionsArchivist>();
         for (ExtensionsArchivist extensionArchivist : allExtensionArchivists) {
             if (extensionArchivist.supportsModuleType(getModuleType())) {
-                extensionsArchivists.add(extensionArchivist);    
+                extensionsArchivists.add(extensionArchivist);
             }
         }
     }

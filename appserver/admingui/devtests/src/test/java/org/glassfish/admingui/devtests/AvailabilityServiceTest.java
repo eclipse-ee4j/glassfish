@@ -105,7 +105,7 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
 
             markCheckbox("propertyForm:propertySheet:propertSectionTextField:AvailabilityEnabledProp:avail");
 //            selectDropdownOption("propertyForm:propertySheet:propertSectionTextField:ClusterTypeProp:clusterType", CLUSTER_TYPE);
-            
+
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:DbVendorProp:DbVendor", DB_VENDOR);
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:DbUserNameProp:DbUserName", DB_USER);
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:DbUrlProp:DbUrl", DB_URL);

@@ -30,14 +30,14 @@ import java.util.logging.Logger;
 
 public class CacheManager {
 
-    public static final String CACHE_MANAGER_ATTR_NAME = 
+    public static final String CACHE_MANAGER_ATTR_NAME =
         "com.sun.appserv.web.CacheManager";
 
     public static final int DEFAULT_CACHE_MAX_ENTRIES = 4096;
 
     public static final int DEFAULT_CACHE_TIMEOUT = 30;
 
-    public static final String DEFAULT_CACHE_CLASSNAME = 
+    public static final String DEFAULT_CACHE_CLASSNAME =
         "com.sun.appserv.util.cache.LruCache";
 
     private static final Logger _logger = LogFacade.getLogger();
@@ -51,7 +51,7 @@ public class CacheManager {
     int maxEntries = DEFAULT_CACHE_MAX_ENTRIES;
     int defaultTimeout = DEFAULT_CACHE_TIMEOUT;
     String cacheClassName = DEFAULT_CACHE_CLASSNAME;
-    
+
     boolean enabled = false;
 
     // application servlet context
@@ -124,7 +124,7 @@ public class CacheManager {
      */
     public void addProperty(String name, String value) {
         if (name.equalsIgnoreCase("cacheClassName")) {
-           cacheClassName = value; 
+           cacheClassName = value;
         } else {
             if (cacheProps == null) {
                 cacheProps = new Properties();
@@ -157,7 +157,7 @@ public class CacheManager {
     public void setServletContext(ServletContext context) {
         this.context = context;
     }
-    
+
     /**
      * load the helper class
      * @param className of the helper
@@ -237,7 +237,7 @@ public class CacheManager {
 
     /**
      * get the underlying cache name
-     * @return the cacheClassName 
+     * @return the cacheClassName
      */
     public String getCacheClassName() {
         return cacheClassName;
@@ -257,7 +257,7 @@ public class CacheManager {
      * @return the Cache implementation
      * @throws Exception
      */
-    public Cache createCache(int cacacity, String className) 
+    public Cache createCache(int cacacity, String className)
                     throws Exception {
 
         // use the context class loader to load class so that any
@@ -290,7 +290,7 @@ public class CacheManager {
     /**
      * add cache mapping
      * @param name unique name of the mapping
-     * @param mapping CacheMapping 
+     * @param mapping CacheMapping
      */
     public void addCacheMapping(String name, CacheMapping mapping) {
         cacheMappings.put(name, mapping);
@@ -299,7 +299,7 @@ public class CacheManager {
     /**
      * get cacheMapping given its name
      * @param name name identifying the mapping
-     * @return CacheMapping 
+     * @return CacheMapping
      */
     public CacheMapping getCacheMapping(String name) {
         return cacheMappings.get(name);
@@ -388,7 +388,7 @@ public class CacheManager {
             } catch (Exception e) {
                 // XXX: ignore
             }
-        } 
+        }
         cacheHelpers.clear();
         cacheMappings.clear();
         cacheHelpersByFilterName.clear();

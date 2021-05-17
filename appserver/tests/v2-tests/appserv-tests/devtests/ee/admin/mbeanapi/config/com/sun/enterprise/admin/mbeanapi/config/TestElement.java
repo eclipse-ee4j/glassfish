@@ -37,7 +37,7 @@ public class TestElement {
     private String name;
     private HashMap attributes;
     RegEntry   entry;
-    
+
     TestElement(String line)
     {
         int current = 0, next = 0;
@@ -84,7 +84,7 @@ public class TestElement {
                     attrValue = line.substring(0, next);
             }
             attributes.put(attrName, attrValue);
-            
+
             entry = TestElemRegistry.getRegEntry(name);
 //System.out.println("attributes.put(\""+attrName+"\", \"" + attrValue+ "\")");
 //System.out.println("attributes.put(\""+camelize(attrName)+"\"(camelized), \"" + attrValue+ "\")");
@@ -98,12 +98,12 @@ public class TestElement {
     {
         return attributes.get(attrName);
     }
-    
+
     public Map getAttributesMapCopy()
     {
         return new HashMap(attributes);
     }
-    
+
     public String getDtdName()
     {
         return entry.dtdName;
@@ -139,13 +139,13 @@ public class TestElement {
                     params[i] = new Integer((String)(params[i]));
                 } catch (Exception e) {}
             }
-            optional.remove(req[i]); 
+            optional.remove(req[i]);
         }
-        
+
         params[params.length-1] = optional;
         return params;
     }
-    
+
     public Class[] getCreationClasses() throws Exception
     {
         Class[] classes = entry.getReqAttrClasses();
@@ -155,33 +155,33 @@ public class TestElement {
         cls[cls.length-1] = Class.forName("java.util.Map");
         return cls;
     }
-	
+
     public boolean isConfigSubordinatedElem()
     {
         return !("domain".equals(entry.getMasterNodeName()));
     }
-    
+
     //can be overriden
     public ObjectName getElemMBeanObjectName()  throws Exception
-	{
+    {
         if(isConfigSubordinatedElem())
             return new ObjectName("com.sun.appserv:category=config,config="+TestElemRegistry.mConfigName+
                          ",type="+getDtdName()+ ","+getElementKeyName()+"="+getElementKey());
         else
             return new ObjectName("com.sun.appserv:category=config,type="+getDtdName()+
                               ","+getElementKeyName()+"="+getElementKey());
-	}
+    }
     //can be overriden
     public ObjectName getElemMBeanObjectNamePattern()  throws Exception
-	{
+    {
         if(isConfigSubordinatedElem())
             return new ObjectName("com.sun.appserv:category=config,config="+TestElemRegistry.mConfigName+
                          ",type="+getDtdName()+",*");
         else
             return new ObjectName("com.sun.appserv:category=config,type="+getDtdName()+",*");
-                                  
-	}
-    
+
+    }
+
     public AMXConfig getMasterAMXConfigForElement(DomainRoot domainRoot) throws Exception
     {
         String masterNodeName = entry.getMasterNodeName();
@@ -192,6 +192,6 @@ public class TestElement {
         if("iiop-service".equals(masterNodeName))
             return ((ConfigConfig)domainRoot.getDomainConfig().getConfigConfigMap().get("server-config")).getIIOPServiceConfig();
         throw new Exception("Testing for Master Node "+masterNodeName+" is not implemented yet");
-        
+
     }
-}   
+}

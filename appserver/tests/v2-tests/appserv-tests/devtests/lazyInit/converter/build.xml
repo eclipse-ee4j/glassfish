@@ -59,7 +59,7 @@
     <param name="jdbc.conpool.name" value="sqe-timer-pool"/>
     </antcall>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -71,12 +71,12 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <antcall target="restart-server"/>
         <antcall target="runclient-common"/>
@@ -90,27 +90,27 @@
     <target name="run-standalone-client" depends="init-common">
         <property name="jndi.name" value="converter"/>
         <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
-        <property name="ctxfactory" 
+        <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-	<property name="ctxfactory" 
-            	value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
+    <property name="ctxfactory"
+                value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-	<echo message="provider.url used is ${provider.url}"/>
+    <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+    <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+    <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
       </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

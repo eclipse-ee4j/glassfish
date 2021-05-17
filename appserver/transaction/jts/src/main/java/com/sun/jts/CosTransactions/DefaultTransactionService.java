@@ -85,12 +85,12 @@ public class DefaultTransactionService implements ProxyChecker {
     private static boolean active = false;
     /*
         Logger to log transaction messages
-    */ 
+    */
     static Logger _logger = LogDomains.getLogger(DefaultTransactionService.class, LogDomains.TRANSACTION_LOGGER);
     public static final String JTS_SERVER_ID = "com.sun.jts.persistentServerId"; /* FROZEN */
     public static final String JTS_XA_SERVER_NAME = "com.sun.jts.xa-servername";
 
-   
+
     /**Default constructor.
      *
      * @param
@@ -112,7 +112,7 @@ public class DefaultTransactionService implements ProxyChecker {
     public static boolean isActive() {
         return active;
     }
-    
+
     /**Obtain the implementation of the Current interface provided
      * by the transaction service implementation.
      *
@@ -249,7 +249,7 @@ public class DefaultTransactionService implements ProxyChecker {
             //String serverId = properties.getProperty("com.sun.corba.ee.internal.POA.ORBServerId"/*#Frozen*/);
             String serverId = properties.getProperty(JTS_SERVER_ID);
             if (serverId == null) {
-                serverId = 
+                serverId =
                     properties.getProperty("com.sun.CORBA.POA.ORBServerId"/*#Frozen*/);
             }
             if (serverId != null) {
@@ -280,7 +280,7 @@ public class DefaultTransactionService implements ProxyChecker {
                 recoverable = true;
             } else {
                 long timestamp = System.currentTimeMillis();
-                Configuration.setServerName(getAdjustedServerName(serverName + 
+                Configuration.setServerName(getAdjustedServerName(serverName +
                          ",T" + String.valueOf(timestamp)/*#Frozen*/), false);
                 if (_logger.isLoggable(Level.FINE))
                     _logger.log(Level.FINE,"DTR: Non-Recoverable Server");
@@ -597,7 +597,7 @@ class CoordinatorResourceServantActivator extends LocalObject implements Servant
      *
      * @see
      */
-    public Servant incarnate( byte[] oid, POA adapter ) 
+    public Servant incarnate( byte[] oid, POA adapter )
         throws org.omg.PortableServer.ForwardRequest {
         Servant servant = new CoordinatorResourceImpl(oid);
         return servant;

@@ -29,7 +29,7 @@
     &reporting;
 
     <target name="all">
-    	 <antcall target="jmsContextDefaultInjection"/>
+         <antcall target="jmsContextDefaultInjection"/>
         <antcall target="jmsContextInjectionA"/>
         <antcall target="jmsContextInjectionB"/>
         <antcall target="jmsContextInjectionC"/>
@@ -59,49 +59,49 @@
         <ant dir="jmsContextInjectionB" target="all"/>
         <record name="jmsContextInjectionB.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionC">
         <record name="jmsContextInjectionC.output" action="start" />
         <ant dir="jmsContextInjectionC" target="all"/>
         <record name="jmsContextInjectionC.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionD">
         <record name="jmsContextInjectionD.output" action="start" />
         <ant dir="jmsContextInjectionD" target="all"/>
         <record name="jmsContextInjectionD.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionE">
         <record name="jmsContextInjectionE.output" action="start" />
         <ant dir="jmsContextInjectionE" target="all"/>
         <record name="jmsContextInjectionE.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionF">
         <record name="jmsContextInjectionF.output" action="start" />
         <ant dir="jmsContextInjectionF" target="all"/>
         <record name="jmsContextInjectionF.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionG">
         <record name="jmsContextInjectionG.output" action="start" />
         <ant dir="jmsContextInjectionG" target="all"/>
         <record name="jmsContextInjectionG.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionH">
         <record name="jmsContextInjectionH.output" action="start" />
         <ant dir="jmsContextInjectionH" target="all"/>
         <record name="jmsContextInjectionH.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionJ">
         <record name="jmsContextInjectionJ.output" action="start" />
         <ant dir="jmsContextInjectionJ" target="all"/>
         <record name="jmsContextInjectionJ.output" action="stop" />
     </target>
-    
+
     <target name="jmsContextInjectionK">
         <record name="jmsContextInjectionK.output" action="start" />
         <ant dir="jmsContextInjectionK" target="all"/>
@@ -109,9 +109,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the jms tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the jms tests)
+    </echo>
     </target>
 </project>

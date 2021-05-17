@@ -29,7 +29,7 @@ import com.sun.ejte.ccl.reporter.*;
  * Test accesses 403.jsp, which sets the response code to 403 and therefore
  * causes a forward to the error403.jsp error page, which sets the response
  * content type to text/xml;charset=Shift_JIS.
- * 
+ *
  * Test then accesses throwable.jsp, which throws a Throwable and therefore
  * causes a forward to the errorThrowable.jsp error page, which sets the
  * response content type to text/xml;charset=Shift_JIS.
@@ -57,7 +57,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 815");
         WebTest webTest = new WebTest(args);
@@ -65,8 +65,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke("/403.jsp", "HTTP/1.1 403");
             invoke("/throwable.jsp", "HTTP/1.1 500");
             stat.addStatus(TEST_NAME, stat.PASS);

@@ -26,10 +26,10 @@ public class ServletTest extends HttpServlet {
     public ServletTest() {
         Record.addData("S");
     }
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("[Servlet.init]");        
+        System.out.println("[Servlet.init]");
         Record.addData("Si");
     }
 
@@ -38,9 +38,9 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         out.println(Record.getData());

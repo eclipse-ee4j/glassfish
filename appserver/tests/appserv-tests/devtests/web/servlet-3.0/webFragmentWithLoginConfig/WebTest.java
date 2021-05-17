@@ -50,7 +50,7 @@ public class WebTest {
 
         expected = "success with " + adminUser;
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for web-fragment with login-config");
@@ -64,7 +64,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void run() throws Exception {
@@ -91,7 +91,7 @@ public class WebTest {
             System.out.print(get);
             os.write(get.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -139,7 +139,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -185,7 +185,7 @@ public class WebTest {
             System.out.println(sendCookie);
             os.write(sendCookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 

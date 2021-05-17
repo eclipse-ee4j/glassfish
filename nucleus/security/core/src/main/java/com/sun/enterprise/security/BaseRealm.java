@@ -38,13 +38,13 @@ import com.sun.enterprise.util.i18n.StringManager;
 public abstract class BaseRealm extends Realm
 {
     public static final String JAAS_CONTEXT_PARAM="jaas-context";
-    
+
     protected static final StringManager sm =
         StringManager.getManager(IASRealm.class);
 
-    
+
     /**
-     * Returns an AuthenticationHandler object which can be used to 
+     * Returns an AuthenticationHandler object which can be used to
      * authenticate within this realm.
      *
      * <P>This method return null always, since AuthenticationHandlers
@@ -149,7 +149,7 @@ public abstract class BaseRealm extends Realm
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
     }
-    
+
     /**
      * Adds new user to file realm. User cannot exist already.
      *
@@ -159,11 +159,11 @@ public abstract class BaseRealm extends Realm
     public  void addUser(String name, String password, String[] groupList)
         throws BadRealmException, IASSecurityException  {
         addUser(name, password.toCharArray(), groupList);
-        
+
     }
 
-      
-    
+
+
     /**
      * Remove user from file realm. User must exist.
      *
@@ -190,7 +190,7 @@ public abstract class BaseRealm extends Realm
         updateUser(name, newName, (password ==null)? null : password.toCharArray(), groups);
 
     }
-     
+
      /**
      * Update data for an existing user. User must exist.
      *
@@ -213,7 +213,7 @@ public abstract class BaseRealm extends Realm
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
     }
-    
+
     /**
      * @return true if the realm implementation support User Management (add,remove,update user)
      */
@@ -221,7 +221,7 @@ public abstract class BaseRealm extends Realm
         //false by default.
         return false;
     }
-    
+
    /**
     * Persist the realm data to permanent storage
     * @throws com.sun.enterprise.security.auth.realm.BadRealmException

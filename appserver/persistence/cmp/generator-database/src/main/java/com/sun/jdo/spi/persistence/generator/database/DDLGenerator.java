@@ -33,13 +33,13 @@ import org.netbeans.modules.dbschema.*;
 // around, such as mappingPolicy, being fields.  Other methods then become
 // instance methods, and don't take all the parameters.
 
-/** 
+/**
  * This class generates DDL for a given SchemaElement.
  *
  * @author Jie Leng, Dave Bristor
- */    
+ */
 public class DDLGenerator {
- 
+
     /** For writing DDL. */
     private static final char SPACE = ' '; //NOI18N
 
@@ -61,7 +61,7 @@ public class DDLGenerator {
 
     // XXX The use of streams can be improved.  They probably should be
     // writers anyway, and the names should be consistent.
-    
+
     /**
      * Generate DDL from schema and database vendor name.  Up to four files
      * containing DDL are created:
@@ -100,10 +100,10 @@ public class DDLGenerator {
     // are to be written, and to create the streams here.
     // XXX Reorder params so they are in order create, drop, create, drop or
     // maybe create, create, drop, drop, but not create, drop, drop, create!
-    public static void generateDDL(SchemaElement schema, String dbVendorName, 
+    public static void generateDDL(SchemaElement schema, String dbVendorName,
             OutputStream createDDLSql, OutputStream dropDDLSql,
             OutputStream dropDDLJdbc, OutputStream createDDLJdbc,
-            OutputStream dbStream, boolean dropAndCreateTbl) 
+            OutputStream dbStream, boolean dropAndCreateTbl)
             throws DBException, SQLException, IOException {
 
         if (schema != null) {
@@ -119,14 +119,14 @@ public class DDLGenerator {
             List alterDropConstraintsDDL = new ArrayList();
             List dropAllTblDDL = new ArrayList();
             TableElement[] tables = schema.getTables();
-            
-            if (tables != null) { 
+
+            if (tables != null) {
                 for (int ii = 0; ii < tables.length; ii++) {
                     TableElement table = tables[ii];
 
                     createAllTblDDL.add(
                             createCreateTableDDL(table, mappingPolicy));
-		    // Added for Symfoware support as indexes on primary keys are mandatory
+            // Added for Symfoware support as indexes on primary keys are mandatory
                     if (table.getPrimaryKey() != null) {
                         createIndexDDL.add(createIndexDDL(table));
                     }
@@ -139,7 +139,7 @@ public class DDLGenerator {
                 }
             }
             String stmtSeparator = mappingPolicy.getStatementSeparator();
-            generateSQL(createDDLSql, dropDDLSql, dropDDLJdbc, createDDLJdbc, 
+            generateSQL(createDDLSql, dropDDLSql, dropDDLJdbc, createDDLJdbc,
                 (DatabaseOutputStream) dbStream, createAllTblDDL, createIndexDDL,
                 alterAddConstraintsDDL, alterDropConstraintsDDL, dropAllTblDDL,
                 stmtSeparator, dropAndCreateTbl);
@@ -147,7 +147,7 @@ public class DDLGenerator {
     }
 
     /**
-     * Write DDL to files or drop or create table in database 
+     * Write DDL to files or drop or create table in database
      * @param createDDLSql a file for writing create DDL
      * @param dropDDLSql a file for writing drop DDL
      * @param dropDDLTxt a file for writing drop DDL and can be easily
@@ -158,7 +158,7 @@ public class DDLGenerator {
      * @param alterAddConstraintsDDL a list of adding constraints statement
      * @param alterDropConstraintDDL a list of droping constrains statement
      * @param dropAllTblDDL a list of droping tables statement
-     * @param stmtSeparator for separating each statement 
+     * @param stmtSeparator for separating each statement
      * @param dropAndCreateTbl true for dropping tables first
      * @throws DBException
      * @throws SQLException
@@ -177,7 +177,7 @@ public class DDLGenerator {
         PrintStream txtStream = null;
 
         try {
-            // drop constraints first 
+            // drop constraints first
             workStream = new PrintStream(dropSql);
             if (dropTxt != null) {
                 txtStream = new PrintStream(dropTxt);
@@ -244,7 +244,7 @@ public class DDLGenerator {
                     dbStream.write(stmt);
                 }
             }
-            
+
             workStream.close();
             if (txtStream != null) {
                 txtStream.close();
@@ -271,7 +271,7 @@ public class DDLGenerator {
      * @param stmtSeparator Separator between DDL statements in
      * human-readable DDL.
      */
-    private static void writeDDL(PrintStream sql, PrintStream txt, 
+    private static void writeDDL(PrintStream sql, PrintStream txt,
             String stmtSeparator, String stmt) {
 
         if (stmt == null || stmt.trim().length() == 0) {
@@ -285,7 +285,7 @@ public class DDLGenerator {
         if (txt != null) {
             txt.println(stmt);
         }
-    } 
+    }
 
     // XXX Some methods below use oneParam, etc.  These should be renamed
     // "formatterParam" or somesuch, leaving out their number.
@@ -305,7 +305,7 @@ public class DDLGenerator {
      * user-supplied properties on generating DDL.
      * @return String[] containing DDL to create a table.
      */
-    private static String[] createCreateTableDDL(TableElement table, 
+    private static String[] createCreateTableDDL(TableElement table,
             MappingPolicy mappingPolicy) {
 
         List createTblList = new ArrayList();
@@ -313,23 +313,23 @@ public class DDLGenerator {
 
         createTblList.add(
                 DDLTemplateFormatter.formatCreateTable(oneParam));
-        
-	// add columns for each table
+
+    // add columns for each table
         ColumnElement[] columns = table.getColumns();
         String constraint = createPrimaryKeyConstraint(table);
         int size = columns.length;
-        
-	for (int i = 0; i < size; i++) {
+
+    for (int i = 0; i < size; i++) {
             StringBuffer columnContent = new StringBuffer();
             columnContent.append(getColumnDef(columns[i], mappingPolicy));
 
             // If we haven't added the last column, or we have but there's a
             // constraint yet to be added, add a column separator.
             if ((i < size - 1) || ((i == size - 1) && (constraint != null))) {
-	        columnContent.append(COLUMN_SEPARATOR);
+            columnContent.append(COLUMN_SEPARATOR);
             }
             createTblList.add(columnContent.toString());
-	}
+    }
 
         if (constraint != null) {
             createTblList.add(constraint);
@@ -341,7 +341,7 @@ public class DDLGenerator {
     }
 
     /**
-     * createIndexDDL has been added for Symfoware support. Returns DDL in String form 
+     * createIndexDDL has been added for Symfoware support. Returns DDL in String form
      * to create index.  The returned string has the format:
      * <pre>
      * CREATE INDEX table_name.table_name KEY(id, name)
@@ -380,7 +380,7 @@ public class DDLGenerator {
     private static String createPrimaryKeyConstraint(TableElement table) {
         String rc = null;
         UniqueKeyElement pk = table.getPrimaryKey();
-        
+
         if (pk != null) {
             String[] twoParams = new String[2];
             twoParams[0] = pk.getName().getName();
@@ -411,7 +411,7 @@ public class DDLGenerator {
         if (fkeys != null) {
             String alterTblString =
                 DDLTemplateFormatter.formatAlterTableAddConstraint(oneParam);
-            
+
             for (int jj=0; jj < fkeys.length; jj++) {
                 ForeignKeyElement fkey = fkeys[jj];
                 fourParams[0] = fkey.getName().getName();
@@ -478,7 +478,7 @@ public class DDLGenerator {
         Integer length = column.getLength();
         String sqlType = mappingPolicy.getSQLTypeName(jdbcType);
         StringBuffer columnContent = new StringBuffer();
-        
+
         columnContent.append(column.getName().getName());
         columnContent.append(SPACE);
         columnContent.append(sqlType);
@@ -501,7 +501,7 @@ public class DDLGenerator {
             columnContent.append(length.toString());
             columnContent.append(END);
         }
-            
+
         // Add extra information required by LOB columns.
         if (jdbcType == Types.BLOB || jdbcType == Types.CLOB) {
             String lobText = mappingPolicy.getLobLogging();

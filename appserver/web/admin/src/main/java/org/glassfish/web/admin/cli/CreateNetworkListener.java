@@ -61,7 +61,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 @Service(name = "create-network-listener")
 @PerLookup
 @I18n("create.network.listener")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})  
+@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 public class CreateNetworkListener implements AdminCommand {
 

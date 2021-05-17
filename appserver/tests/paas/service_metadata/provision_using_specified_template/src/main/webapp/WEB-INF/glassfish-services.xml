@@ -19,7 +19,7 @@
 
 <glassfish-services>
 <service-description name="basic" init-type="lazy">
-  <template id="Native"/> 
+  <template id="Native"/>
   <configurations>
     <configuration name="min.clustersize" value="2"/>
     <configuration name="max.clustersize" value="4"/>

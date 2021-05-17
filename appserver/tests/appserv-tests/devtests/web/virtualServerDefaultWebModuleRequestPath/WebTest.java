@@ -46,7 +46,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 3710");
         WebTest webTest = new WebTest(args);
@@ -54,8 +54,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeAtRootContext();
             invokeAtContextRoot();
             stat.addStatus(TEST_NAME, stat.PASS);
@@ -66,7 +66,7 @@ public class WebTest {
     }
 
     private void invokeAtRootContext() throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port +
             "/checkRequestPath?run=first");
         System.out.println("Connecting to: " + url.toString());
@@ -91,7 +91,7 @@ public class WebTest {
     }
 
     private void invokeAtContextRoot() throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port + contextRoot +
             "/checkRequestPath?run=second");
         System.out.println("Connecting to: " + url.toString());

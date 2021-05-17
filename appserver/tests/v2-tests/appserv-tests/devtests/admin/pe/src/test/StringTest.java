@@ -33,21 +33,21 @@ public class StringTest implements RemoteAdminQuicklookTest
     public StringTest() throws Exception
     {
     }
-    
+
     public long getExecutionTime()
     {
         return ( end - start );
     }
-    
+
     public void setMBeanServerConnection(final MBeanServerConnection c)
     {
     }
-    
+
     public String getName()
     {
         return ( this.getClass().getName() );
     }
-    
+
     public String test()
     {
         try
@@ -78,14 +78,14 @@ public class StringTest implements RemoteAdminQuicklookTest
 
     private void makeLog(ResourceBundle bundle)
     {
-        
+
         List<Property> props = new ArrayList<Property>();
         Enumeration<String> keys = bundle.getKeys();
 
         while(keys.hasMoreElements())
         {
             String key = keys.nextElement();
-            
+
             try
             {
                 String val = bundle.getString(key);
@@ -97,7 +97,7 @@ public class StringTest implements RemoteAdminQuicklookTest
             {
                 System.out.println("EXCEPTION getting value for " + key);
             }
-            
+
         }
 
         // now create a list of LogProperty from the props...
@@ -106,8 +106,8 @@ public class StringTest implements RemoteAdminQuicklookTest
             if(p.cause == false)
                 loglist.add(new LogProperty(p, props));
         }
-        
-        
+
+
     }
     private void dumpLog()
     {
@@ -117,10 +117,10 @@ public class StringTest implements RemoteAdminQuicklookTest
         for(LogProperty p : loglist)
             System.out.println(p);
     }
-    
+
     int parseNum(String s)
     {
-        try 
+        try
         {
             return Integer.parseInt(s.substring(3, 7));
         }
@@ -136,14 +136,14 @@ public class StringTest implements RemoteAdminQuicklookTest
     private List<ResourceBundle> bundles;
     private List<LogProperty> loglist = new ArrayList<LogProperty>();
     private final static String CMB_PREFIX = "ADM16";
-    
+
     class Property
     {
         Property(String k, String v)
         {
             key = k;
             val = v;
-            
+
             if(key.startsWith(CMB_PREFIX))
             {
                 num = parseNum(key);
@@ -171,24 +171,24 @@ public class StringTest implements RemoteAdminQuicklookTest
         int num;
         boolean cause = false;
     }
-    
+
     class LogProperty extends Property
     {
         LogProperty(Property mainProp, List<Property> allProps)
         {
             super(mainProp);
             assert cause == false;
-            
+
             // look for cause...
-            
+
             for(Property prop : allProps)
             {
                 if(!prop.cause)
                     continue;
-            
+
                 if(num != prop.num)
                     continue;
-                
+
                 causes.add(prop);
             }
         }
@@ -196,21 +196,21 @@ public class StringTest implements RemoteAdminQuicklookTest
         public String toString()
         {
             String ret = super.toString();
-            
+
             if(causes.size() <= 0)
                 return ret + " ***** MISSING DIAG MESSAGES *********" + "\n\n";
 
             ret += "******  ASSOCIATED DIAG MESSAGES ****\n";
-            
+
             for(Property p : causes)
                 ret += p.toString();
-            
+
             return ret + "\n";
-            
+
         }
 
         List<Property> causes = new ArrayList<Property>();
     }
-    
+
 }
 

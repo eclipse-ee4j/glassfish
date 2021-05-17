@@ -40,8 +40,8 @@ import org.jvnet.hk2.component.*;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Node.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="update-node-ssh", 
+        opType=RestEndpoint.OpType.POST,
+        path="update-node-ssh",
         description="Update Node",
         params={
             @RestParam(name="id", value="$parent")

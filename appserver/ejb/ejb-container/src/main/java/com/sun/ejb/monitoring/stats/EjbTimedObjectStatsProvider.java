@@ -28,7 +28,7 @@ import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;
 
 /**
- * Probe listener for the Ejb Timed Object monitoring events. 
+ * Probe listener for the Ejb Timed Object monitoring events.
  *
  * @author Marina Vatkina
  */

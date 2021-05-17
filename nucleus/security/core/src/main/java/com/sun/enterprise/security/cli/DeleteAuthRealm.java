@@ -49,10 +49,10 @@ import org.glassfish.config.support.TargetType;
 
 /**
  * Delete Auth Realm Command
- * 
-* Usage: delete-auth-realm [--terse=false] [--echo=false] 
- *        [--interactive=true] [--host localhost] [--port 4848|4849] 
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name] 
+ *
+* Usage: delete-auth-realm [--terse=false] [--echo=false]
+ *        [--interactive=true] [--host localhost] [--port 4848|4849]
+ *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
  *        [--target target(Default server)] auth_realm_name
  *
  * @author Nandini Ektare
@@ -63,13 +63,13 @@ import org.glassfish.config.support.TargetType;
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
 public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
+
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(DeleteAuthRealm.class);
 
     @Param(name="authrealmname", primary=true)
     private String authRealmName;
- 
+
     @Param(name = "target", optional = true, defaultValue =
     SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
@@ -84,7 +84,7 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
 
     @AccessRequired.To("delete")
     AuthRealm authRealm = null;
-    
+
     private SecurityService securityService;
 
     @Override
@@ -98,13 +98,13 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
         if (authRealm == null) {
             final ActionReport report = context.getActionReport();
             report.setMessage(localStrings.getLocalString(
-                "delete.auth.realm.notfound", 
+                "delete.auth.realm.notfound",
                 "Authrealm named {0} not found", authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }
         return (authRealm != null);
     }
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -114,9 +114,9 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
 
-        try {            
+        try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-                public Object run(SecurityService param) 
+                public Object run(SecurityService param)
                 throws PropertyVetoException, TransactionFailure {
                     param.getAuthRealm().remove(authRealm);
                     //temporary fix - since the SecurityConfigListener is  not being called on an realm delete.
@@ -126,7 +126,7 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
             }, securityService);
         } catch(TransactionFailure e) {
             report.setMessage(localStrings.getLocalString(
-                "delete.auth.realm.fail", "Deletion of Authrealm {0} failed", 
+                "delete.auth.realm.fail", "Deletion of Authrealm {0} failed",
                 authRealmName) + "  " + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
@@ -134,7 +134,7 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
         }
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
-    
+
     private AuthRealm findRealm() {
         for (AuthRealm realm : securityService.getAuthRealm()) {
             if (realm.getName().equals(authRealmName)) {

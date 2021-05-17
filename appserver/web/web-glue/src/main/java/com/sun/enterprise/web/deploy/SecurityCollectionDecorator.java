@@ -28,21 +28,21 @@ import org.apache.catalina.deploy.SecurityCollection;
 public class SecurityCollectionDecorator extends SecurityCollection {
 
    private WebResourceCollection decoree;
-   
+
    public SecurityCollectionDecorator(WebResourceCollection decoree){
         this.decoree = decoree;
-        
+
         for (String urlPattern: decoree.getUrlPatterns()) {
             addPattern(urlPattern);
         }
-        
+
         for (String httpMethod: decoree.getHttpMethods()) {
             addMethod(httpMethod);
-        }                
+        }
 
         for (String httpMethodOmission: decoree.getHttpMethodOmissions()) {
             addMethodOmission(httpMethodOmission);
-        }                
+        }
    }
 
 

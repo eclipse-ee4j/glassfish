@@ -37,7 +37,7 @@ public class VerifyServlet extends HttpServlet {
     throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-	resp.setContentType("text/html");
+    resp.setContentType("text/html");
 
         String type = req.getQueryString();
         out.println("<html>");
@@ -46,8 +46,8 @@ public class VerifyServlet extends HttpServlet {
             out.println("</head>");
             out.println("<body>");
         try {
-	    out.println("RESULT:" + bean.verifyxa());
-	    //out.println("RESULT:" + ((type == null)? bean.verifydefault() : bean.verifyxa()));
+        out.println("RESULT:" + bean.verifyxa());
+        //out.println("RESULT:" + ((type == null)? bean.verifydefault() : bean.verifyxa()));
         }catch(Throwable e){
             out.println("got exception");
             out.println(e);

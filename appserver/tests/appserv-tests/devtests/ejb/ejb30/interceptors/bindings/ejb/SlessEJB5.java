@@ -37,7 +37,7 @@ public class SlessEJB5 implements Sless5
     private boolean aroundInvokeCalled = false;
 
     public void abdc() {
-        System.out.println("in SlessEJB5:abdc().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB5:abdc().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         // a little extra checking to make sure aroundInvoke is invoked...
@@ -68,7 +68,7 @@ public class SlessEJB5 implements Sless5
             throw new EJBException(e);
         }
     }
-    
+
 }
-    
+
 

@@ -41,7 +41,7 @@ import org.glassfish.internal.api.LocalPassword;
  * because we don't control how the login module is instantiated or initialized - but we do control that for the
  * callback handler - we can put that information here. This callback handler sets the info in the callback, which is
  * then available to the LoginModule.
- * 
+ *
  * @author tjquinn
  */
 public class AdminCallbackHandler implements CallbackHandler {

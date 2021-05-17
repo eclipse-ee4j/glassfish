@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.ee.remote_sfsb;
 
 import jakarta.ejb.Remote;
-	
+
 @Remote
 public interface RemoteSful
 {

@@ -36,7 +36,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugzilla 26628");
         WebTest webTest = new WebTest(args);
@@ -44,8 +44,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -56,14 +56,14 @@ public class WebTest {
     }
 
     private void invokeJsp() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/foo.jsp HTTP/1.0\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;

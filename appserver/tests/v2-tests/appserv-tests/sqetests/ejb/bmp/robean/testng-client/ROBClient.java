@@ -20,7 +20,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.rmi.PortableRemoteObject;
 import java.util.*;
-import samples.ejb.bmp.robean.ejb.*; 
+import samples.ejb.bmp.robean.ejb.*;
 import com.sun.ejb.ReadOnlyBeanNotifier;
 import com.sun.ejb.containers.ReadOnlyBeanHelper;
 

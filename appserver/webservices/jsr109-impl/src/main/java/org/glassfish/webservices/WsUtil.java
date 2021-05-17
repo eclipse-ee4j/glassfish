@@ -104,7 +104,7 @@ public class WsUtil {
 
     /**
      * Serve up the FINAL wsdl associated with this web service.
-     * 
+     *
      * @return true for success, false for failure
      */
     public boolean handleGet(HttpServletRequest request, HttpServletResponse response, WebServiceEndpoint endpoint) throws IOException {
@@ -257,7 +257,7 @@ public class WsUtil {
 
     /**
      * All wsdl files and wsdl imported files live under a well-known wsdl directory.
-     * 
+     *
      * @param uri module uri
      */
     public boolean isWsdlContent(String uri, BundleDescriptor bundle) {
@@ -373,7 +373,7 @@ public class WsUtil {
     /**
      * Transform the deployed WSDL document for a given webservice by replacing the ENDPOINT ADDRESS for each port with the
      * actual endpoint address on which it will be listening.
-     * 
+     *
      */
     public void generateFinalWsdl(URL wsdlFileUrl, WebService webService, WebServerInfo wsi, File finalWsdlFile) throws Exception {
         OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(finalWsdlFile));
@@ -1030,7 +1030,7 @@ public class WsUtil {
      * public void downloadFile(URL httpUrl, File toFile) throws Exception { InputStream is = null; FileOutputStream os =
      * null; try { if(!toFile.createNewFile()) { throw new Exception("Unable to create new File " +
      * toFile.getAbsolutePath()); } is = httpUrl.openStream();
-     * 
+     *
      * os = new FileOutputStream(toFile, true); int readCount; byte[] buffer = new byte[10240]; // Read 10KB at a time
      * while(true) { readCount = is.read(buffer, 0, 10240); if(readCount != -1) { os.write(buffer, 0, readCount); } else {
      * break; } } } finally { if(is != null) { is.close(); } if(os != null) { os.flush(); os.close(); } } }
@@ -1061,7 +1061,7 @@ public class WsUtil {
     /**
      * This implementation is similar to #getWsdlsAndSchemas(File pkgedWsdl, except that this works on URL which makes it
      * easy when the wsdl is loaded from the archive.
-     * 
+     *
      * @param pkgedWsdl URL
      * @return
      * @throws Exception
@@ -1468,7 +1468,7 @@ public class WsUtil {
 
     /*
      * This util is to implement the jaxws table that defines how MTOM is set
-     * 
+     *
      * BindingType - enable-mtom in DD - final MTOM value
      *
      * SOAPXX_BINDING none false SOAPXX_BINDING false false SOAPXX_BINDING true true SOAPXX_MTOM_BINDING none true

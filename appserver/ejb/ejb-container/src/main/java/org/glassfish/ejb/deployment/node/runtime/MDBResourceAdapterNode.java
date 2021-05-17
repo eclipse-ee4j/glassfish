@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
  * adapter configuration for the message-driven bean
  *
  * @author  Qingqing Ouyang
- * @version 
+ * @version
  */
 public class MDBResourceAdapterNode extends DeploymentDescriptorNode {
 
@@ -54,11 +54,11 @@ public class MDBResourceAdapterNode extends DeploymentDescriptorNode {
         return table;
     }
 
-    public Node writeDescriptor( Node parent, 
+    public Node writeDescriptor( Node parent,
             String nodeName, EjbMessageBeanDescriptor descriptor) {
         Node raNode = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(raNode, RuntimeTagNames.RESOURCE_ADAPTER_MID, 
-                descriptor.getResourceAdapterMid()); 
+        appendTextChild(raNode, RuntimeTagNames.RESOURCE_ADAPTER_MID,
+                descriptor.getResourceAdapterMid());
 
         ActivationConfigNode activationConfigNode = new ActivationConfigNode();
         activationConfigNode.writeDescriptor

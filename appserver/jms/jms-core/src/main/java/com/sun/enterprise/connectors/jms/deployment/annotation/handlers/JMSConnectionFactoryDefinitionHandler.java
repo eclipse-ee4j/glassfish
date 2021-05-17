@@ -199,66 +199,66 @@ public class JMSConnectionFactoryDefinitionHandler extends AbstractResourceHandl
             if (descriptor instanceof JMSConnectionFactoryDefinitionDescriptor) {
                 JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor)descriptor;
                 if (desc.getName().equals(defn.name())) {
-    
+
                     if (desc.getInterfaceName() == null) {
                         desc.setInterfaceName(defn.interfaceName());
                     }
-    
+
                     if (desc.getClassName() == null) {
                         if (isValid(defn.className())) {
                             desc.setClassName(defn.className());
                         }
                     }
-    
+
                     if (desc.getDescription() == null) {
                         if (isValid(defn.description())) {
                             desc.setDescription(defn.description());
                         }
                     }
-    
+
                     if (desc.getResourceAdapter() == null) {
                         if (isValid(defn.resourceAdapter())) {
                             desc.setResourceAdapter(defn.resourceAdapter());
                         }
                     }
-    
+
                     if (desc.getUser() == null) {
                         if (isValid(defn.user())) {
                             desc.setUser(defn.user());
                         }
                     }
-    
+
                     if (desc.getPassword() == null) {
                         if (defn.password() != null /*ALLOW EMPTY PASSWORDS && !defn.password().equals("")*/) {
                             desc.setPassword(defn.password());
                         }
                     }
-    
+
                     if (desc.getClientId() == null) {
                         if (isValid(defn.clientId())) {
                             desc.setClientId(defn.clientId());
                         }
                     }
-    
+
                     if (!desc.isTransactionSet()) {
                         desc.setTransactional(defn.transactional());
                     }
-    
+
                     if (desc.getMaxPoolSize() < 0) {
                         if (defn.maxPoolSize() >= 0) {
                             desc.setMaxPoolSize(defn.maxPoolSize());
                         }
                     }
-    
+
                     if (desc.getMinPoolSize() < 0) {
                         if (defn.minPoolSize() >= 0) {
                             desc.setMinPoolSize(defn.minPoolSize());
                         }
                     }
-    
+
                     Properties properties = desc.getProperties();
                     String[] defnProperties = defn.properties();
-    
+
                     if (defnProperties.length > 0) {
                         for (String property : defnProperties) {
                             int index = property.indexOf("=");

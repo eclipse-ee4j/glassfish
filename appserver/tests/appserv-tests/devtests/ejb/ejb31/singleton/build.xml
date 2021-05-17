@@ -60,9 +60,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ejb31-singleton tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the ejb-ejb31-singleton tests)
+    </echo>
     </target>
 </project>

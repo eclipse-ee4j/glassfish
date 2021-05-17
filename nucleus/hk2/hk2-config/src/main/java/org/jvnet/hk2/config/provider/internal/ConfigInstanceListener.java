@@ -56,21 +56,21 @@ public class ConfigInstanceListener implements InstanceLifecycleListener {
         if (!lifecycleEvent.getEventType().equals(InstanceLifecycleEventType.POST_PRODUCTION)) {
             return;
         }
-        
+
         Map<Injectee, Object> injectees = lifecycleEvent.getKnownInjectees();
         if (injectees == null) return;
-        
+
         ConfigListener listener = (ConfigListener) lifecycleEvent.getLifecycleObject();
         for (Object injectee : injectees.values()) {
             if (!(injectee instanceof ConfigBeanProxy)) continue;
-            
+
             ConfigBeanProxy configBeanProxy = (ConfigBeanProxy) injectee;
             Object impl = ConfigSupport.getImpl(configBeanProxy);
-            
+
             if (!(impl instanceof ObservableBean)) continue;
-            
+
             ObservableBean ob = (ObservableBean) impl;
-            
+
             ob.addListener(listener);
         }
 

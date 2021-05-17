@@ -33,22 +33,22 @@ public class SimpleBMPClient {
 
     public static SimpleReporterAdapter stat = new SimpleReporterAdapter();
     public static final Object lock = new Object();
-    public static int NO_OF_THREADS = 5; 
+    public static int NO_OF_THREADS = 5;
     public static final int JMX_PORT = 8686;
     public static final String HOST_NAME = "localhost";
     public long sumTotal = 0;
     public boolean successExecuting = true;
 
     public SimpleBMPClient(int option){
-	if(option == 1) {
+    if(option == 1) {
             execute();
-	} else if(option == 2) {
-	    try {
-	        getMonitorablePropertyOfConnectionPool("ql-jdbc-pool", "frequsedsqlqueries");
-	    } catch(Exception ex) {
+    } else if(option == 2) {
+        try {
+            getMonitorablePropertyOfConnectionPool("ql-jdbc-pool", "frequsedsqlqueries");
+        } catch(Exception ex) {
                 ex.printStackTrace();
-	    }
-	}
+        }
+    }
     }
 
     private void execute() {
@@ -65,40 +65,40 @@ public class SimpleBMPClient {
         }
 
         if(successExecuting) {
-	    stat.addStatus("SQL Trace monitoring Test1 ", stat.PASS);
-	} else {
-	    stat.addStatus("SQL Trace monitoring Test1 ", stat.FAIL);
-	}
+        stat.addStatus("SQL Trace monitoring Test1 ", stat.PASS);
+    } else {
+        stat.addStatus("SQL Trace monitoring Test1 ", stat.FAIL);
+    }
         stat.printSummary();
     }
 
     public static void main(String[] args)
         throws Exception {
 
-	stat.addDescription("SQL Tracing tests");
+    stat.addDescription("SQL Tracing tests");
         if (args != null && args.length > 0) {
             String param = args[0];
 
             switch (Integer.parseInt(param)) {
                 case 1: {//run the threads
-		    new SimpleBMPClient(1);
-		    break;
-		}
-		case 2: { //compare monitoring stats
+            new SimpleBMPClient(1);
+            break;
+        }
+        case 2: { //compare monitoring stats
                     new SimpleBMPClient(2);
-		    break;
-		}
-	    }
-	}
+            break;
+        }
+        }
+    }
     }
 
     class WorkerThread extends Thread{
 
-	private int timesToExecuteQuery = 0;
+    private int timesToExecuteQuery = 0;
 
         public WorkerThread(int noExecs, String name){
-	    super(name);
-	    timesToExecuteQuery = noExecs;
+        super(name);
+        timesToExecuteQuery = noExecs;
         }
 
         public void run() {
@@ -109,62 +109,62 @@ public class SimpleBMPClient {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
                 SimpleBMP simpleBMP = simpleBMPHome.create();
-		String tableName = Thread.currentThread().getName();
-		String tableValue = "iiop";
-		for(int i=0; i<timesToExecuteQuery; i++) {
+        String tableName = Thread.currentThread().getName();
+        String tableValue = "iiop";
+        for(int i=0; i<timesToExecuteQuery; i++) {
                     simpleBMP.preparedStatementTest1(tableName, tableValue);
-		}
+        }
             }catch(Exception e){
                 System.out.println("Thread : " + Thread.currentThread().getName() + "did not run ");
                 e.printStackTrace();
-		SimpleBMPClient.this.successExecuting = false;
+        SimpleBMPClient.this.successExecuting = false;
             }
         }
     }
 
     public void getMonitorablePropertyOfConnectionPool(String poolName, String monitoringStat) throws Exception {
 
-	boolean passed = false;
-	final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";    
+    boolean passed = false;
+    final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
-	final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
-	final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
+    final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
+    final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName =
                 new ObjectName("amx:pp=/mon/server-mon[server],type=jdbcra-mon,name=resources/" + poolName);
 
-	javax.management.openmbean.CompositeDataSupport returnValue = 
-		(javax.management.openmbean.CompositeDataSupport) 
-		connection.getAttribute(objectName, monitoringStat);
+    javax.management.openmbean.CompositeDataSupport returnValue =
+        (javax.management.openmbean.CompositeDataSupport)
+        connection.getAttribute(objectName, monitoringStat);
 
-	String freqUsedQueries = (String) returnValue.get("current");
-	String delimiter = "%%%EOL%%%";
-	StringTokenizer st = new StringTokenizer(freqUsedQueries, delimiter);
+    String freqUsedQueries = (String) returnValue.get("current");
+    String delimiter = "%%%EOL%%%";
+    StringTokenizer st = new StringTokenizer(freqUsedQueries, delimiter);
 
-	List<String> queryList = new LinkedList<String>();
-	List<String> expectedQueryList = new LinkedList<String>();
-	expectedQueryList.add("select * from customer_stmt_wrapper5 where c_phone= ?");
-	expectedQueryList.add("select * from customer_stmt_wrapper4 where c_phone= ?");
-	expectedQueryList.add("select * from customer_stmt_wrapper3 where c_phone= ?");
+    List<String> queryList = new LinkedList<String>();
+    List<String> expectedQueryList = new LinkedList<String>();
+    expectedQueryList.add("select * from customer_stmt_wrapper5 where c_phone= ?");
+    expectedQueryList.add("select * from customer_stmt_wrapper4 where c_phone= ?");
+    expectedQueryList.add("select * from customer_stmt_wrapper3 where c_phone= ?");
 
-	while(st.hasMoreTokens()) {
-	    String query = st.nextToken().trim();
-	    if(!query.equals("")) {
-		queryList.add(query);
-	    }
-	}
-	/*for(int k=0; k<queryList.size(); k++) {
-	    System.out.println(">>>>> query=" + queryList.get(k));
-	}*/
+    while(st.hasMoreTokens()) {
+        String query = st.nextToken().trim();
+        if(!query.equals("")) {
+        queryList.add(query);
+        }
+    }
+    /*for(int k=0; k<queryList.size(); k++) {
+        System.out.println(">>>>> query=" + queryList.get(k));
+    }*/
 
-	passed = expectedQueryList.equals(queryList);
-		            
-	if(passed) {
-	    stat.addStatus("SQL Trace monitoring Test2 ", stat.PASS);
-	} else {
-	    stat.addStatus("SQL Trace monitoring Test2 ", stat.FAIL);
-	}
+    passed = expectedQueryList.equals(queryList);
+
+    if(passed) {
+        stat.addStatus("SQL Trace monitoring Test2 ", stat.PASS);
+    } else {
+        stat.addStatus("SQL Trace monitoring Test2 ", stat.FAIL);
+    }
         stat.printSummary();
     }
 

@@ -67,10 +67,10 @@ public class LogControl {
     private final static String CONTROL_NAME = "control"/*#Frozen*/;
     public final static String RECOVERY_STRING_FILE_NAME = "recoveryfile"/*#Frozen*/;
     public final static String RECOVERY_LOCK_FILE_NAME = "recoverylockfile"/*#Frozen*/;
-	//START IASRI 4721336
+    //START IASRI 4721336
     //private final static String LOG_EXTENSION = ".ld"/*#Frozen*/;
     private final static String LOG_EXTENSION = ""/*#Frozen*/;
-	//END IASRI 4721336
+    //END IASRI 4721336
     private final static char[] EXTENT_CHARS = { 'e','x','t','e','n','t','.','0','0','0' };
 
     /**Internal instance members
@@ -252,7 +252,7 @@ public class LogControl {
         // for this logfile. If this fails the log cannot be opened.
 
         try {
-            logHandle.restoreCushion(false); 
+            logHandle.restoreCushion(false);
         } catch( LogException le ) {
             controlFH.destroy();
             throw new LogException(LogException.LOG_INSUFFICIENT_MEMORY,9,
@@ -270,7 +270,7 @@ public class LogControl {
         byte[] controlBytes = new byte[LogControlDescriptor.SIZEOF];
         int bytesRead = 0;
         try {
-            bytesRead = controlFH.fileRead(controlBytes); 
+            bytesRead = controlFH.fileRead(controlBytes);
         } catch( LogException le ) {
             controlFH.destroy();
             throw new LogException(LogException.LOG_READ_FAILURE,5,
@@ -313,7 +313,7 @@ public class LogControl {
                 int bytesWritten;
 
                 try {
-                    controlFH.allocFileStorage(LogHandle.CONTROL_FILE_SIZE); 
+                    controlFH.allocFileStorage(LogHandle.CONTROL_FILE_SIZE);
                 } catch( LogException le ) {
                     controlFH.destroy();
                     throw new LogException(LogException.LOG_WRITE_FAILURE,6,
@@ -339,7 +339,7 @@ public class LogControl {
                 }
 
                 try {
-                    logEDP.fileHandle.allocFileStorage(LogHandle.ALLOCATE_SIZE); 
+                    logEDP.fileHandle.allocFileStorage(LogHandle.ALLOCATE_SIZE);
                 } catch( LogException le ) {
                     controlFH.destroy();
                     throw new LogException(LogException.LOG_NO_SPACE,11,
@@ -375,7 +375,7 @@ public class LogControl {
                      currentExtent <= logHandle.logControlDescriptor.nextLSN.extent;
                  currentExtent++)
                 try {
-                    logEDP = logHandle.openExtent(currentExtent); 
+                    logEDP = logHandle.openExtent(currentExtent);
                 } catch( LogException le ) {
                     controlFH.destroy();
                     throw new LogException(LogException.LOG_OPEN_EXTENT_FAILURE,19,
@@ -392,7 +392,7 @@ public class LogControl {
             int[] restartValues2 = new int[2];
 
             try {
-                logHandle.checkRestart(controlFH,1,restartValues1); 
+                logHandle.checkRestart(controlFH,1,restartValues1);
             } catch( LogException le ) {
                 controlFH.destroy();
                 throw new LogException(LogException.LOG_READ_FAILURE,8,
@@ -408,7 +408,7 @@ public class LogControl {
 
             // BUGFIX(Ram Jeyaraman) Always check both the restart records,
             // even though the first record might have zero data length.
-            // It is possible, that the second record might 
+            // It is possible, that the second record might
             // have non-zero data length with a later
             // timestamp, even though the first record has zero data length.
             // Fix is to comment out the check below.
@@ -604,7 +604,7 @@ public class LogControl {
                     try {
                         logEDP = logHandle.positionFilePointer(headRec.currentLSN,
                                                                LogRecordHeader.SIZEOF+headRec.recordLength,
-                                                               LogExtent.ACCESSTYPE_READ); 
+                                                               LogExtent.ACCESSTYPE_READ);
                     } catch( LogException le ) {
                         controlFH.destroy();
                         removeFile(logHandle);
@@ -648,7 +648,7 @@ public class LogControl {
 
                         // Otherwise update head LSN in control data with value from LINKCOPY
 
-                        else { 
+                        else {
                             logHandle.logControlDescriptor.headLSN.copy(linkRec.previousLSN);
                             logHandle.logControlDescriptor.nextLSN.copy(linkRec.currentLSN);
                         }
@@ -679,7 +679,7 @@ public class LogControl {
      *
      * @see
      */
-    synchronized void cleanUp( LogHandle logHandle ) 
+    synchronized void cleanUp( LogHandle logHandle )
         throws LogException {
 
         // IF not LogInitialised Return LOG_NOT_INITIALISED
@@ -726,10 +726,10 @@ public class LogControl {
     static boolean checkFileExists( String logId,
                                     String logDirectory ) {
 
-		//START IASRI 4730519
-		if(logDirectory==null)
-		    return false;
-		//END IASRI 4730519
+        //START IASRI 4730519
+        if(logDirectory==null)
+            return false;
+        //END IASRI 4730519
         boolean exists = controlFile(logId,logDirectory).exists();
 
         return exists;
@@ -896,13 +896,13 @@ public class LogControl {
      */
     final static File directory( String logId, String logDir ) {
 
-	//START IASRI 4721336
-	//START IASRI 4730519
-	if(logDir==null) //It should not be null
-       	return new File( "." + File.separator + logId + LOG_EXTENSION);
-	//END IASRI 4730519
+    //START IASRI 4721336
+    //START IASRI 4730519
+    if(logDir==null) //It should not be null
+           return new File( "." + File.separator + logId + LOG_EXTENSION);
+    //END IASRI 4730519
     return new File(logDir);
-	//END IASRI 4721336
+    //END IASRI 4721336
     }
 
     final static File recoveryIdentifierFile(String logId, String logDir) {

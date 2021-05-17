@@ -24,23 +24,23 @@ import jakarta.servlet.http.*;
  * This is a simple example of an HTTP Servlet.  It responds to the GET
  * method of the HTTP protocol.
  */
-public class RetailPriceListServlet extends HttpServlet { 
+public class RetailPriceListServlet extends HttpServlet {
 
    public void doGet (HttpServletRequest request,
                        HttpServletResponse response)
    throws ServletException, IOException {
-       
-  		HttpSession session = request.getSession();
- 			ServletContext context = getServletContext();
+
+          HttpSession session = request.getSession();
+             ServletContext context = getServletContext();
       RetailPriceList rpl = new RetailPriceList();
       context.setAttribute("retailPriceList", rpl);
       ShoppingCart cart = new ShoppingCart(rpl);
       session.setAttribute("cart", cart);
 
       PrintWriter out = response.getWriter();
-      
 
-  		// then write the data of the response
+
+          // then write the data of the response
       out.println("<html><body  bgcolor=\"#ffffff\">" +
                   "Reloaded price list." + "</html></body>");
     }

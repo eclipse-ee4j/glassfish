@@ -20,7 +20,7 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 
 /**
  * This implementation class enables a resource adapter to pass its own
- * request-specific data structure across connection request flow 
+ * request-specific data structure across connection request flow
  * @author Sheetal Vartak
  */
 public class CciConnectionRequestInfo implements ConnectionRequestInfo {

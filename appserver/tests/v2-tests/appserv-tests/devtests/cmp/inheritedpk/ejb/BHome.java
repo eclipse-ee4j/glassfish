@@ -24,9 +24,9 @@ import java.util.*;
  */
 
 public interface BHome extends jakarta.ejb.EJBHome {
-    
+
     public  B findByPrimaryKey(java.sql.Date pk)  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
-    
+
     public  B create(java.sql.Date i, java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

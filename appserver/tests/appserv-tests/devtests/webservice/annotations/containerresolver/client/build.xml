@@ -68,7 +68,7 @@
       <replace file="webclient/Client.java" value="${http.host}" token="HTTP_HOST"/>
       <replace file="webclient/Client.java" value="${http.port}" token="HTTP_PORT"/>
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
-             
+
             includes="webclient/**">
        <classpath refid="classpath"/>
       </javac>
@@ -103,8 +103,8 @@
 
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">
@@ -115,7 +115,7 @@
       </java>
 
 
-<!--restore the tokens back in file--> 
+<!--restore the tokens back in file-->
          <replace file="webclient/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="webclient/Client.java" token="${http.port}" value="HTTP_PORT"/>
     </target>

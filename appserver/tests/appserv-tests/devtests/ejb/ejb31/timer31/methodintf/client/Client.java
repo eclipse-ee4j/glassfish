@@ -25,12 +25,12 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         stat.addDescription("ejb31-timer-methodintf");
 
         try {
@@ -39,7 +39,7 @@ public class Client {
             System.out.println("Waiting timers to expire for schedule_ann timer test");
             Thread.sleep(8000);
             System.out.println("Verifying timers transaction status");
-            boolean pass = bean.verifyTimers(); 
+            boolean pass = bean.verifyTimers();
             stat.addStatus("methodintf: ", ((pass)? stat.PASS : stat.FAIL) );
 
         } catch(Exception e) {

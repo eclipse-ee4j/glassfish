@@ -29,12 +29,12 @@ import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface SecurityContextService {
-	
-	/**
-	 * Return the Environment attributes collection associated with the current thread.
-	 * 
-	 * @return The environment attributes.
-	 */
-	public Attributes getEnvironmentAttributes();
-	
+
+    /**
+     * Return the Environment attributes collection associated with the current thread.
+     *
+     * @return The environment attributes.
+     */
+    public Attributes getEnvironmentAttributes();
+
 }

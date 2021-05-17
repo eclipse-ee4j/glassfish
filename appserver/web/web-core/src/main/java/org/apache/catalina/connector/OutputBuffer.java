@@ -44,7 +44,7 @@ import org.glassfish.grizzly.http.util.ByteChunk;
 
 /**
  * The buffer used by Tomcat response. This is a derivative of the Tomcat 3.3
- * OutputBuffer, with the removal of some of the state handling (which in 
+ * OutputBuffer, with the removal of some of the state handling (which in
  * Coyote is mostly the Processor's responsibility).
  *
  * @author Costin Manolache
@@ -59,7 +59,7 @@ public class OutputBuffer extends Writer
     // -------------------------------------------------------------- Constants
 
     private static final String SET_COOKIE_HEADER = "Set-Cookie";
-    public static final String DEFAULT_ENCODING = 
+    public static final String DEFAULT_ENCODING =
         org.glassfish.grizzly.http.util.Constants.DEFAULT_HTTP_CHARACTER_ENCODING;
     public static final int DEFAULT_BUFFER_SIZE = 8*1024;
     static final int debug = 0;
@@ -83,7 +83,7 @@ public class OutputBuffer extends Writer
      * Associated Coyote response.
      */
     private Response response;
-    
+
     private org.glassfish.grizzly.http.server.Response grizzlyResponse;
     private org.glassfish.grizzly.http.io.OutputBuffer grizzlyOutputBuffer;
 
@@ -97,7 +97,7 @@ public class OutputBuffer extends Writer
     private boolean suspended = false;
 
     private int size;
-    
+
     private org.glassfish.grizzly.http.io.OutputBuffer.LifeCycleListener sessionCookieChecker =
             new SessionCookieChecker();
     // ----------------------------------------------------------- Constructors
@@ -115,7 +115,7 @@ public class OutputBuffer extends Writer
 
     /**
      * Alternate constructor which allows specifying the initial buffer size.
-     * 
+     *
      * @param size Buffer size to use
      */
     public OutputBuffer(int size) {
@@ -147,7 +147,7 @@ public class OutputBuffer extends Writer
 
     /**
      * Is the response output suspended ?
-     * 
+     *
      * @return suspended flag value
      */
     public boolean isSuspended() {
@@ -157,7 +157,7 @@ public class OutputBuffer extends Writer
 
     /**
      * Set the suspended flag.
-     * 
+     *
      * @param suspended New suspended flag value
      */
     public void setSuspended(boolean suspended) {
@@ -173,7 +173,7 @@ public class OutputBuffer extends Writer
      */
     public void recycle() {
 
-	if (log.isLoggable(Level.FINE))
+    if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "recycle()");
 
         bytesWritten = 0;
@@ -190,9 +190,9 @@ public class OutputBuffer extends Writer
 
 
     /**
-     * Close the output buffer. This tries to calculate the response size if 
+     * Close the output buffer. This tries to calculate the response size if
      * the response has not been committed yet.
-     * 
+     *
      * @throws IOException An underlying IOException occurred
      */
     public void close()
@@ -208,7 +208,7 @@ public class OutputBuffer extends Writer
 
     /**
      * Flush bytes or chars contained in the buffer.
-     * 
+     *
      * @throws IOException An underlying IOException occurred
      */
     public void flush()
@@ -219,7 +219,7 @@ public class OutputBuffer extends Writer
 
     /**
      * Flush bytes or chars contained in the buffer.
-     * 
+     *
      * @throws IOException An underlying IOException occurred
      */
     protected void doFlush(boolean realFlush)
@@ -238,25 +238,25 @@ public class OutputBuffer extends Writer
     // ------------------------------------------------- Bytes Handling Methods
 
 
-    /** 
+    /**
      * Sends the buffer data to the client output, checking the
      * state of Response and calling the right interceptors.
-     * 
+     *
      * @param buf Byte buffer to be written to the response
      * @param off Offset
      * @param cnt Length
-     * 
+     *
      * @throws IOException An underlying IOException occurred
      */
     public void realWriteBytes(byte buf[], int off, int cnt)
-	throws IOException {
+    throws IOException {
 
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "realWrite(b, " + off + ", " + cnt + ") " + grizzlyResponse);
 
         if (grizzlyResponse == null)
             return;
-        
+
         if (grizzlyOutputBuffer.isClosed())
             return;
 
@@ -285,7 +285,7 @@ public class OutputBuffer extends Writer
     }
 
 
-    private void writeBytes(byte b[], int off, int len) 
+    private void writeBytes(byte b[], int off, int len)
         throws IOException {
 
         if (grizzlyOutputBuffer.isClosed())
@@ -322,7 +322,7 @@ public class OutputBuffer extends Writer
 
         grizzlyOutputBuffer.writeChar(c);
         charsWritten++;
-        
+
     }
 
 
@@ -373,17 +373,17 @@ public class OutputBuffer extends Writer
         if (s == null)
             s = "null";
         grizzlyOutputBuffer.write(s);
-    } 
+    }
 
 
     public void checkConverter()
         throws IOException {
-        
+
         grizzlyOutputBuffer.prepareCharacterEncoder();
 
     }
 
-    
+
     // --------------------  BufferedOutputStream compatibility
 
 
@@ -413,9 +413,9 @@ public class OutputBuffer extends Writer
     }
 
 
-    /** 
+    /**
      * True if this buffer hasn't been used ( since recycle() ) -
-     * i.e. no chars or bytes have been added to the buffer.  
+     * i.e. no chars or bytes have been added to the buffer.
      */
     public boolean isNew() {
         return (bytesWritten == 0) && (charsWritten == 0);
@@ -447,7 +447,7 @@ public class OutputBuffer extends Writer
         if (!prevIsReady) {
             return false;
         }
-        
+
         boolean result = grizzlyOutputBuffer.canWrite();
         if (!result) {
             if (writeHandler != null) {
@@ -458,12 +458,12 @@ public class OutputBuffer extends Writer
                 } finally {
                     CAN_WRITE_SCOPE.remove();
                 }
-                
+
             } else {
                 prevIsReady = true;  // Allow next .isReady() call to check underlying outputStream
             }
         }
-        
+
         return result;
     }
 
@@ -534,7 +534,7 @@ public class OutputBuffer extends Writer
             request.configureSessionCookie(cookie);
             if (request.isRequestedSessionIdFromCookie()) {
                 /*
-                 * Have the JSESSIONIDVERSION cookie inherit the 
+                 * Have the JSESSIONIDVERSION cookie inherit the
                  * security setting of the JSESSIONID cookie to avoid
                  * session loss when switching from HTTPS to HTTP,
                  * see IT 7414
@@ -690,12 +690,12 @@ public class OutputBuffer extends Writer
      * Are there any pending writes waiting to be flushed?
      */
     public boolean hasData() {
-        
+
         return !suspended && (!grizzlyResponse.isCommitted() ||
                 grizzlyOutputBuffer.getBufferedDataSize() > 0);
     }
     // END PWC 6512276
-    
+
     private class SessionCookieChecker implements org.glassfish.grizzly.http.io.OutputBuffer.LifeCycleListener {
 
         @Override
@@ -704,7 +704,7 @@ public class OutputBuffer extends Writer
             addSessionCookies();
         }
     }
-    
+
     class WriteHandlerImpl implements WriteHandler {
         private WriteListener writeListener = null;
         private volatile boolean disable = false;

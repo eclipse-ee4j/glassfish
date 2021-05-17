@@ -19,12 +19,12 @@ package org.glassfish.web.deployment.util;
 import com.sun.enterprise.deployment.InjectionCapable;
 
 /**
- * This class validates the part of the web bundle descriptor that 
+ * This class validates the part of the web bundle descriptor that
  * does not require classloader
  *
  */
 public class WebValidatorWithoutCL extends WebBundleValidator {
-    
+
   /**
      * visits all entries within the component environment for which
      * isInjectable() == true.

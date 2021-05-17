@@ -53,13 +53,13 @@ public class Client {
     public void doTest() {
 
         try {
-            
+
             System.out.println("I am in client");
             System.out.println("calling setName(" + personName + ")");
             sful.setName(personName);
-            
+
             Map<String, Boolean> map = sful.doTests();
-            
+
             Iterator<String> iter = map.keySet().iterator();
             while (iter.hasNext()) {
                 String testName = iter.next();
@@ -72,7 +72,7 @@ public class Client {
             stat.addStatus("local main" , stat.FAIL);
         }
 
-    	return;
+        return;
     }
 
 

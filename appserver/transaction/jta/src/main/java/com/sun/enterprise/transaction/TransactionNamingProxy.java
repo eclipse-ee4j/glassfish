@@ -40,12 +40,12 @@ import javax.naming.NamingException;
         TransactionNamingProxy.TRANSACTION_SYNC_REGISTRY,
         TransactionNamingProxy.APPSERVER_TRANSACTION_MGR,
         TransactionNamingProxy.APPSERVER_TRANSACTION_SYNC_REGISTRY})
-public class TransactionNamingProxy 
+public class TransactionNamingProxy
         implements NamedNamingObjectProxy {
 
     @Inject
     private ServiceLocator habitat;
-    
+
     @SuppressWarnings("unused")
     @Inject
     private org.glassfish.api.admin.ProcessEnvironment processEnv;  // Here for ordering

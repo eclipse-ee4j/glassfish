@@ -20,7 +20,7 @@ package com.sun.enterprise.resource.pool.monitor;
  * An abstract class that maintains common implementations of various probe
  * providers for applications based monitoring.  All probe providers extend
  * this implementation.
- * 
+ *
  * @author Shalini M
  */
 public abstract class ConnectionPoolAppProbeProvider {

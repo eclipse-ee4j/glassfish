@@ -24,12 +24,12 @@ import com.sun.ejte.ccl.reporter.*;
  * is not defined in web.xml
  */
 public class WebTest {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
     private static final String TEST_NAME = "web-jsp-security";
 
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -43,13 +43,13 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             goGet(host, port, contextRoot + "/test.jsp" );
-            
+
             if (count != EXPECTED_COUNT){
                 stat.addStatus(TEST_NAME, stat.FAIL);
-            }           
+            }
         } catch (Throwable t) {
             System.out.println(t.getMessage());
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -84,18 +84,18 @@ public class WebTest {
                 System.out.println(lineNum + ":  " + line);
                 if (index != -1) {
                     String status = line.substring(index+2);
-                    
+
                     if (status.equalsIgnoreCase("PASS")){
                         stat.addStatus(TEST_NAME, stat.PASS);
                     } else {
-                        stat.addStatus(TEST_NAME, stat.FAIL);                       
+                        stat.addStatus(TEST_NAME, stat.FAIL);
                     }
                     count++;
-                } 
+                }
                 lineNum++;
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
          } finally {
             try {
@@ -112,5 +112,5 @@ public class WebTest {
             } catch (IOException ex) {}
         }
    }
-  
+
 }

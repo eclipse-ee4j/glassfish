@@ -27,41 +27,41 @@ import java.beans.VetoableChangeListener;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public interface MappingElement extends MappingElementProperties, Comparable
 {
-	/** Add a property change listener.
-	 * @param l the listener to add
-	 */
-	public void addPropertyChangeListener (PropertyChangeListener l);
+    /** Add a property change listener.
+     * @param l the listener to add
+     */
+    public void addPropertyChangeListener (PropertyChangeListener l);
 
-	/** Remove a property change listener.
-	 * @param l the listener to remove
-	 */
-	public void removePropertyChangeListener (PropertyChangeListener l);
+    /** Remove a property change listener.
+     * @param l the listener to remove
+     */
+    public void removePropertyChangeListener (PropertyChangeListener l);
 
-	/** Add a vetoable change listener.
-	 * @param l the listener to add
-	 */
-	public void addVetoableChangeListener (VetoableChangeListener l);
+    /** Add a vetoable change listener.
+     * @param l the listener to add
+     */
+    public void addVetoableChangeListener (VetoableChangeListener l);
 
-	/** Remove a vetoable change listener.
-	 * @param l the listener to remove
-	 */
-	public void removeVetoableChangeListener (VetoableChangeListener l);
+    /** Remove a vetoable change listener.
+     * @param l the listener to remove
+     */
+    public void removeVetoableChangeListener (VetoableChangeListener l);
 
-	/** Get the name of this mapping element.
-	 * @return the name
-	 */
-	public String getName ();
+    /** Get the name of this mapping element.
+     * @return the name
+     */
+    public String getName ();
 
-	/** Set the name of this mapping element.
-	 * @param name the name
-	 * @exception ModelException if impossible
-	 */
+    /** Set the name of this mapping element.
+     * @param name the name
+     * @exception ModelException if impossible
+     */
     public void setName (String name) throws ModelException;
 }

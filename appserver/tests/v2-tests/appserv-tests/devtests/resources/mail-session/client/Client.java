@@ -39,9 +39,9 @@ import java.net.URL;
                         password = "naman",
                         from = "naman.mehta@oracle.com",
                         properties = {
-				"mail.imap.class=com.sun.mail.imap.IMAPStore",
-				"mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
-			}
+                "mail.imap.class=com.sun.mail.imap.IMAPStore",
+                "mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
+            }
                 ),
                 @MailSessionDefinition(description = "Mail Session Description 1",
                         name = "java:comp/env/Appclient_MailSession",
@@ -52,9 +52,9 @@ import java.net.URL;
                         password = "naman",
                         from = "naman.mehta@oracle.com",
                         properties = {
-				"mail.imap.class=com.sun.mail.imap.IMAPStore",
-				"mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
-			}
+                "mail.imap.class=com.sun.mail.imap.IMAPStore",
+                "mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
+            }
 
                 ),
                 @MailSessionDefinition(
@@ -63,9 +63,9 @@ import java.net.URL;
                         transportProtocol = "SMTP",
                         host = "localhost",
                         properties = {
-				"mail.imap.class=com.sun.mail.imap.IMAPStore",
-				"mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
-			}
+                "mail.imap.class=com.sun.mail.imap.IMAPStore",
+                "mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
+            }
                 ),
                 @MailSessionDefinition(description = "Mail Session Description 1",
                         name = "java:app/mail/Application_Level_MailSession_Override",
@@ -76,9 +76,9 @@ import java.net.URL;
                         password = "naman",
                         from = "naman.mehta@oracle.com",
                         properties = {
-				"mail.imap.class=com.sun.mail.imap.IMAPStore",
-				"mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
-			}
+                "mail.imap.class=com.sun.mail.imap.IMAPStore",
+                "mail.smtp.class=com.sun.mail.smtp.SMTPTransport"
+            }
                 )
         }
 )

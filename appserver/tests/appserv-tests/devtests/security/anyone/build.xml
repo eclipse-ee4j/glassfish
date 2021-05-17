@@ -89,7 +89,7 @@
 
     <target name="build" depends="compile">
         <mkdir dir="${assemble.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/> 
+        <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/nonweb"/>
@@ -103,36 +103,36 @@
         </antcall>
         <antcall target="package-appclientjar-common">
             <param name="appclientjar.files" value="${build.classes.dir}/nonweb"/>
-            <param name="appclient.jar" 
+            <param name="appclient.jar"
                 value="${assemble.dir}/${appname}-client.jar"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
                 value="com/sun/**/client/*.class,com/sun/**/ejb/Hello.class"/>
         </antcall>
 
-        <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/> 
-        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/> 
-        <jar jarfile="${assemble.dir}/${appname}App.ear"> 
-            <fileset dir="${assemble.dir}">
-               <include name="*.jar"/>
-               <include name="*.war"/>
-            </fileset>
-            <fileset dir="${build.classes.dir}">
-	       <include name="META-INF/application.xml"/>
-	       <include name="META-INF/sun-application.xml"/>
-            </fileset>
-            <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
-        </jar>   
-
-        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/> 
+        <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
         <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
                <include name="*.jar"/>
                <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-	       <include name="META-INF/sun-application.xml"/>
+           <include name="META-INF/application.xml"/>
+           <include name="META-INF/sun-application.xml"/>
             </fileset>
-        </jar>   
+            <fileset dir="${env.APS_HOME}" includes="lib/reporter.jar"/>
+        </jar>
+
+        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+        <jar jarfile="${assemble.dir}/${appname}App.ear">
+            <fileset dir="${assemble.dir}">
+               <include name="*.jar"/>
+               <include name="*.war"/>
+            </fileset>
+            <fileset dir="${build.classes.dir}">
+           <include name="META-INF/sun-application.xml"/>
+            </fileset>
+        </jar>
     </target>
 
     <target name="deploy" depends="init-common">

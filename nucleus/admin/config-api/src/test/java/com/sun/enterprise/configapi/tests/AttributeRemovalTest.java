@@ -66,7 +66,7 @@ public class AttributeRemovalTest extends ConfigApiTest {
         // ensure it's removed
         org.junit.Assert.assertNull(vs.getDefaultWebModule());
     }
-    
+
     @Test(expected=PropertyVetoException.class)
     public void readOnlyRemovalTest() throws TransactionFailure , PropertyVetoException{
         Server server = getHabitat().getService(Server.class);
@@ -104,6 +104,6 @@ public class AttributeRemovalTest extends ConfigApiTest {
         logger.fine("after, node-agent-ref is " + server.getNodeAgentRef());
 
     }
-    
+
 
 }

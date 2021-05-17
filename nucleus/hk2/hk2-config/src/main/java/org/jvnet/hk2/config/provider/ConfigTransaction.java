@@ -25,7 +25,7 @@ import org.jvnet.hk2.component.MultiMap;
 /**
  * Represents a configuration transaction from an outside
  * configuration system.
- * 
+ *
  * <p/>
  * In all of the methods that take configuration beans, it is
  * expected that those objects are annotated with
@@ -33,14 +33,14 @@ import org.jvnet.hk2.component.MultiMap;
  * of the bean must be unique; so that a call to delete
  * a bean must correspond to some previous addition of
  * the bean from earlier by object identity.
- * 
+ *
  * @author Jeff Trent
  */
 public interface ConfigTransaction {
 
   /**
    * Add configuration beans to the transaction.
-   * 
+   *
    * @param created - the configuration bean instance being created
    * @param name - optionally the name for the configuration
    * @param metadata - name,value(s)
@@ -61,15 +61,15 @@ public interface ConfigTransaction {
 
   /**
    * Locks changes, calls prepare.
-   * 
+   *
    * @throws ConfigTransactionException
    */
   void prepare() throws ConfigTransactionException;
-  
+
   /**
    * Locks changes, calls prepare (if not yet performed), followed by commit if no prepare errors.
    * If prepare errors exists, calls rollback on the constituent configuration beans.
-   * 
+   *
    * @throws ConfigTransactionException
    */
   void commit() throws ConfigTransactionException;
@@ -77,18 +77,18 @@ public interface ConfigTransaction {
   /**
    * Same basic behavior as {@link #commit()} with the added ability to substitute configuration
    * beans used in the prepare phase with the final bean object replacements that should be managed.
-   * 
+   *
    * <p/>
    * This is an important variant when the configuration beans in the prepare phase are transient
    * in nature.
-   * 
-   * @param finalBeanMapping 
+   *
+   * @param finalBeanMapping
    *    mapping from the bean instance used in prepare, with the final version that should be managed
-   *    
+   *
    * @throws ConfigTransactionException
    */
   void commit(Map<Object, Object> finalBeanMapping) throws ConfigTransactionException;
-  
+
   /**
    * Cancels the transaction, locking it out from further changes.
    */

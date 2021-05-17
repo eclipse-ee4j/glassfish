@@ -373,7 +373,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                             ioex.initCause(ex);
                             throw ioex;
                         }
-                    } else {   
+                    } else {
                         wfDesc = new WebFragmentDescriptor();
                     }
                 } finally {
@@ -381,7 +381,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                         embeddedArchive.close();
                     }
                 }
-                wfDesc.setJarName(lib.substring(lib.lastIndexOf('/') + 1));    
+                wfDesc.setJarName(lib.substring(lib.lastIndexOf('/') + 1));
                 wfList.add(wfDesc);
 
                 descriptor.putJarNameWebFragmentNamePair(wfDesc.getJarName(), wfDesc.getName());

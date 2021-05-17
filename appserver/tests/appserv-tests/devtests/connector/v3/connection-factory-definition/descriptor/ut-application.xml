@@ -20,7 +20,7 @@
 <application xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="7"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd">
     <display-name>connection-factory-definitionApp</display-name>
-    
+
     <module>
         <java>connection-factory-definition-client.jar</java>
     </module>

@@ -57,7 +57,7 @@ public class BeanRoot implements BeanRootInterface {
 
         StringBuffer check = new StringBuffer(" -EJB test-");
 
-        
+
         FilePermission fp = new FilePermission(
                 "/scratch/spei/bug/test/war.txt", "delete");
         try {

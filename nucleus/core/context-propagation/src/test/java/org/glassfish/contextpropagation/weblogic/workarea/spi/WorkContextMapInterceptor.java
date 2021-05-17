@@ -31,7 +31,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput;
  * An instance of the workarea runtime implementing
  * <code>WorkContextMapInterceptor</code> can be obtained as follows:
  * <p> <pre>
- * WorkContextMapInterceptor interceptor 
+ * WorkContextMapInterceptor interceptor
  *   = WorkContextHelper.getWorkContextHelper().getInterceptor();
  *</pre>
  *
@@ -39,7 +39,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput;
  * a {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap}, and obtain the interceptor, in one
  * call:
  * <p> <pre>
- * WorkContextMapInterceptor interceptor 
+ * WorkContextMapInterceptor interceptor
  *   = WorkContextHelper.getWorkContextHelper().getLocalInterceptor();
  *</pre>
  *
@@ -83,7 +83,7 @@ public interface WorkContextMapInterceptor {
    * @exception IOException if the data cannot be serialized.
    */
   public void sendRequest(WorkContextOutput out, int propagationMode) throws IOException;
-  
+
   /**
    * Transfer {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContext}s from thread-local storage to
    * the protocol-specific {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput} before
@@ -98,7 +98,7 @@ public interface WorkContextMapInterceptor {
    * @exception IOException if the data cannot be serialized.
    */
   public void sendResponse(WorkContextOutput out, int propagationMode) throws IOException;
-  
+
   /**
    * Transfer the protocol-specific {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextInput} data
    * to thread-local storage after receiving a request. This must be
@@ -113,7 +113,7 @@ public interface WorkContextMapInterceptor {
    */
   public void receiveRequest(WorkContextInput in)
     throws IOException;
-  
+
   /**
    * Transfer the protocol-specific {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextInput} data
    * to thread-local storage after receiving a response. This must be
@@ -126,9 +126,9 @@ public interface WorkContextMapInterceptor {
    * read {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap} data from.
    * @exception IOException if the data cannot be read.
    */
-  public void receiveResponse(WorkContextInput in) 
+  public void receiveResponse(WorkContextInput in)
     throws IOException;
-  
+
   /**
    * Return the thread-local contexts that should be propagated to new
    * threads. Callers should not attempt to modify or use the returned
@@ -146,7 +146,7 @@ public interface WorkContextMapInterceptor {
    * be a bit-wise OR of {@link org.glassfish.contextpropagation.weblogic.workarea.PropagationMode}s
    */
   public WorkContextMapInterceptor copyThreadContexts(int mode);
-  
+
   /**
    * Restore thread-local contexts from <code>contexts</code> that
    * should be propagated to new threads. <code>contexts</code> must
@@ -158,7 +158,7 @@ public interface WorkContextMapInterceptor {
    * {@link #copyThreadContexts}.
    */
   public void restoreThreadContexts(WorkContextMapInterceptor contexts);
-  
+
   /**
    * Remove and return all the thread-local contexts from the current
    * thread.  thread. Callers should not attempt to modify or use the
@@ -173,7 +173,7 @@ public interface WorkContextMapInterceptor {
    * {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap} data to be saved.
   */
   public WorkContextMapInterceptor suspendThreadContexts();
-  
+
   /**
    * Resume thread-local contexts from
    * <code>contexts</code>. <code>contexts</code> must have been
@@ -188,7 +188,7 @@ public interface WorkContextMapInterceptor {
   public void resumeThreadContexts(WorkContextMapInterceptor contexts);
 
   /**
-   * Return a version indicator for the current {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap}. 
+   * Return a version indicator for the current {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap}.
    * The version will change when
    * properties in the map are added, removed or changed.
    *

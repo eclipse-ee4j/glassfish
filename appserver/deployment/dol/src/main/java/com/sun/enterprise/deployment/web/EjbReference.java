@@ -18,15 +18,15 @@ package com.sun.enterprise.deployment.web;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
 
-/** 
- * Specialization of ContextParameter that represents a link to an EJB. 
+/**
+ * Specialization of ContextParameter that represents a link to an EJB.
  * @author Danny Coward
  */
 
 public interface EjbReference extends ContextParameter {
-    
-    /** 
-     * Get the type of the EJB (Session, Entity or Message-Driven). 
+
+    /**
+     * Get the type of the EJB (Session, Entity or Message-Driven).
      * @return the type of the EJB.
      */
     public String getType();
@@ -38,67 +38,67 @@ public interface EjbReference extends ContextParameter {
      */
     public void setType(String type);
 
-    /** 
-     * Gets the home classname of the referee EJB. 
+    /**
+     * Gets the home classname of the referee EJB.
      * @return the class name of the EJB home.
      */
     public String getHomeClassName();
 
-    /** 
-     * Sets the home classname of the referee EJB. 
+    /**
+     * Sets the home classname of the referee EJB.
      * @param the class name of the EJB home.
      */
     public void setHomeClassName(String homeClassName);
 
-    /** 
-     * Gets the bean instance interface classname of the referee EJB. 
+    /**
+     * Gets the bean instance interface classname of the referee EJB.
      * @return the classname of the EJB remote object.
      */
     public String getBeanClassName();
 
-    /** 
-     * Sets the bean interface classname of the referee EJB. 
+    /**
+     * Sets the bean interface classname of the referee EJB.
      * @param the classname of the EJB remote object.
      */
     public void setBeanClassName(String beanClassName);
-    
-    /** 
-     * Gets the link name of the reference. For use when linking to an EJB 
-     * within a J2EE application. 
+
+    /**
+     * Gets the link name of the reference. For use when linking to an EJB
+     * within a J2EE application.
      * @return the link name.
      */
     public String getLinkName();
 
-    /** 
-     * Sets the link name of the reference. For use when linking to an EJB 
-     * within a J2EE application. 
+    /**
+     * Sets the link name of the reference. For use when linking to an EJB
+     * within a J2EE application.
      * @param the link name.
      */
     public void setLinkName(String linkName);
-    
+
     /**
-     * Tests if the reference to the referree EJB is through local or 
+     * Tests if the reference to the referree EJB is through local or
      * remote interface
      * @return true if using the local interfaces
      */
     public boolean isLocal();
-    
+
     /**
-     * Sets whether the reference uses the local or remote interfaces of 
+     * Sets whether the reference uses the local or remote interfaces of
      * the referring EJB
      * @param true if using the local interface
      */
     public void setLocal(boolean isLocal);
- 
+
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * EJB reference is declared. 
+     * EJB reference is declared.
      */
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * EJB reference is declared.  
+     * EJB reference is declared.
      */
     public BundleDescriptor getReferringBundleDescriptor();
 }

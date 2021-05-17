@@ -24,7 +24,7 @@ public class ScreenTag extends SimpleTagSupport {
    private ArrayList parameters = null;
 
    public ArrayList getParameters() {
-   		return parameters;
+           return parameters;
    }
    public void setScreenId(String screenId) {
       this.screenId = screenId;
@@ -37,7 +37,7 @@ public class ScreenTag extends SimpleTagSupport {
     parameters = new ArrayList();
     HashMap screens = (HashMap)((DefinitionTag)getParent()).getScreens();
     if (screens != null) {
-      try {	
+      try {
         if (!screens.containsKey(screenId))
           screens.put(screenId, parameters);
         getJspBody().invoke(null);
@@ -46,6 +46,6 @@ public class ScreenTag extends SimpleTagSupport {
       }
     }
     else
-    	Debug.println("ScreenTag: Unable to get screens object.");
+        Debug.println("ScreenTag: Unable to get screens object.");
   }
 }

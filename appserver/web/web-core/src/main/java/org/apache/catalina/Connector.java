@@ -231,7 +231,7 @@ public interface Connector {
 
     /**
      * Gets the ProxyHandler instance associated with this CoyoteConnector.
-     * 
+     *
      * @return ProxyHandler instance associated with this CoyoteConnector,
      * or null
      */
@@ -239,12 +239,12 @@ public interface Connector {
 
     /**
      * Sets the ProxyHandler implementation for this CoyoteConnector to use.
-     * 
+     *
      * @param proxyHandler ProxyHandler instance to use
      */
     void setProxyHandler(ProxyHandler proxyHandler);
     // END S1AS 6188932
-    
+
     /**
      * Gets the name of this Connector.
      */
@@ -287,7 +287,7 @@ public interface Connector {
 
     // START OF SJSAS 8.1 PE 6191830
     /**
-      * Get the underlying WebContainer certificate for the request     
+      * Get the underlying WebContainer certificate for the request
       */
     X509Certificate[] getCertificates(Request request);
     // END OF SJSAS 8.1 PE 6191830
@@ -306,14 +306,14 @@ public interface Connector {
     void setURIEncoding(String encoding);
     // END CR 6309511
 
-    
+
     // START SJSAS 6363251
     /**
      * Set the <code>Adapter</code> used by this connector.
      */
     void setHandler(HttpHandler adapter);
-    
-    
+
+
     /**
      * Get the <code>HttpHandler</code> used by this connector.
      */

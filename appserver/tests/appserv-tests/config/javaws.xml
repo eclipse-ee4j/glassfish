@@ -130,17 +130,17 @@
         </sequential>
     </macrodef>
 
- 
-    
+
+
     <!--
         For the SQE framework, launches the app client using Java Web Start.
     -->
     <target name="launch-appclient-javaws" if="use.javaws">
-        
+
         <echo message="Launching app client using Java Web Start"/>
-        
+
         <tempfile property="clientOutputFile" prefix="appclient" suffix=".txt"/>
-  
+
         <prepare-javaws-security/>
         <!--
             Choose the output file.
@@ -179,7 +179,7 @@
               <sysproperty key="appname" value="${appname}"/>
               <sysproperty key="clientname" value="${clientname}"/>
         </java>
-        
+
         <!--
             Now launch the client.
         -->
@@ -201,7 +201,7 @@
             <available file="${javaws.status.file}"/>
         </waitfor>
         <echo>Java Web Start launch finished</echo>
-        
+
         <!--
             Read the output file into a property, echo the output to the
             output so any human watching can see it, and then check the
@@ -212,15 +212,15 @@
         </loadresource>
 
         <echo file="${clientOutputFile}" message="${launchOutput}"/>
-        
+
         <echo message="${launchOutput}"/>
-        
+
         <antcall target="checkReporting-common">
             <param name="test.name" value="${appname}"/>
             <param name="test.description" value="${test.description}"/>
             <param name="test.count" value="${test.count}"/>
         </antcall>
-    
+
         <delete file="${javaws.report.file}"/>
         <delete file="${javaws.status.file}"/>
 

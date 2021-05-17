@@ -233,12 +233,12 @@ class ConfigFile extends AuthConfig {
 
         // return the configured modules with the correct policies
 
-        //	ConfigFile.Entry[] entries = new Entry[idEntry.modules.size()];
+        //    ConfigFile.Entry[] entries = new Entry[idEntry.modules.size()];
         ConfigFile.Entry[] entries = new Entry[1];
         for (int i = 0; i < entries.length; i++) {
             // Login Bridge profile?
-            //	    AppConfigurationEntry aEntry =
-            //				(AppConfigurationEntry)idEntry.modules.get(i);
+            //        AppConfigurationEntry aEntry =
+            //                (AppConfigurationEntry)idEntry.modules.get(i);
             entries[i] = new ConfigFile.Entry(reqP, respP, idEntry.getModuleClassName(),
                     AppConfigurationEntry.LoginModuleControlFlag.REQUIRED, idEntry.getOptions());
         }

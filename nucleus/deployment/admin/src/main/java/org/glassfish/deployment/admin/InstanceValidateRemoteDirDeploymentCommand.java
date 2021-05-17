@@ -52,8 +52,8 @@ import org.glassfish.hk2.api.PerLookup;
 @ExecuteOn(value={RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_instanceValidateRemoteDirDeployment", 
+        opType=RestEndpoint.OpType.POST,
+        path="_instanceValidateRemoteDirDeployment",
         description="_instanceValidateRemoteDirDeployment")
 })
 @AccessRequired(resource="domain", action="read")

@@ -34,7 +34,7 @@ public class MyListener implements ServletContextListener {
         ServletContext sc = sce.getServletContext();
         FilterRegistration frPrelim = sc.getFilterRegistration("MyFilter");
         if (frPrelim == null) {
-            throw new RuntimeException("Missing FilterRegistration for " + 
+            throw new RuntimeException("Missing FilterRegistration for " +
                 "MyFilter");
         }
 

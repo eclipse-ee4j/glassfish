@@ -56,7 +56,7 @@
             <param name="operand.props"
                    value="configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.timeout-seconds=5"/>
         </antcall>
-		  
+
     </target>
 
     <target name="restore" depends="init-common">

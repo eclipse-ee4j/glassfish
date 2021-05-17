@@ -20,17 +20,17 @@ import com.sun.enterprise.deployment.types.EntityManagerFactoryReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 /**
- * An object representing a component environment reference 
+ * An object representing a component environment reference
  * to an EntityManagerFactory
  *
 */
-public class EntityManagerFactoryReferenceDescriptor extends 
+public class EntityManagerFactoryReferenceDescriptor extends
     EnvironmentProperty implements EntityManagerFactoryReference {
 
     private String unitName = null;
     private BundleDescriptor referringBundle;
 
-    public EntityManagerFactoryReferenceDescriptor(String name, 
+    public EntityManagerFactoryReferenceDescriptor(String name,
                                                    String unitName) {
         super(name, "", "");
 
@@ -40,7 +40,7 @@ public class EntityManagerFactoryReferenceDescriptor extends
     public EntityManagerFactoryReferenceDescriptor() {}
 
     public void setUnitName(String unitName) {
-        
+
         this.unitName = unitName;
     }
 
@@ -59,7 +59,7 @@ public class EntityManagerFactoryReferenceDescriptor extends
 
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle)
     {
-	this.referringBundle = referringBundle;
+    this.referringBundle = referringBundle;
     }
     @Override
     public int hashCode() {
@@ -72,9 +72,9 @@ public class EntityManagerFactoryReferenceDescriptor extends
 
     public BundleDescriptor getReferringBundleDescriptor()
     {
-	return referringBundle;
-    }    
-    
+    return referringBundle;
+    }
+
     public boolean isConflict(EntityManagerFactoryReferenceDescriptor other) {
         return (getName().equals(other.getName())) &&
             (!DOLUtils.equals(getUnitName(), other.getUnitName())

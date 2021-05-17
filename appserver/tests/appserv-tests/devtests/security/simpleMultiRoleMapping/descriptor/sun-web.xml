@@ -29,10 +29,10 @@
       <description>Maintain a one-to-one correspondence between static content and the generated servlet class' java code</description>
     </property>
   </jsp-config>
-    
+
   <security-role-mapping>
     <role-name>webrole</role-name>
     <group-name>webusers</group-name>
   </security-role-mapping>
-    
+
 </sun-web-app>

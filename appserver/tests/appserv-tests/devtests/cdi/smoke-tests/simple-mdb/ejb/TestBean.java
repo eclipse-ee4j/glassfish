@@ -18,6 +18,6 @@ package com.sun.s1asdev.cdi.hello.bean;
 
 
 
-//Simple TestBean to test CDI. 
+//Simple TestBean to test CDI.
 public class TestBean
 {}

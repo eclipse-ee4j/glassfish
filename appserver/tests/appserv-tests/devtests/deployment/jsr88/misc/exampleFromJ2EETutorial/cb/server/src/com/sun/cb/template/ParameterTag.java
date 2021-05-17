@@ -39,7 +39,7 @@ public class ParameterTag extends SimpleTagSupport {
    public void doTag() {
       boolean isDirect = false;
 
-      if ((isDirectString != null) && 
+      if ((isDirectString != null) &&
          isDirectString.toLowerCase().equals("true"))
          isDirect = true;
 
@@ -50,8 +50,8 @@ public class ParameterTag extends SimpleTagSupport {
           if (parameters != null) {
             Parameter param = new Parameter(paramName, paramValue, isDirect);
             parameters.add(param);
-          } else 
-            Debug.println("ParameterTag: parameters do not exist.");              
+          } else
+            Debug.println("ParameterTag: parameters do not exist.");
         }
       } catch (Exception e) {
          Debug.println("ParameterTag: error in doTag: " + e);

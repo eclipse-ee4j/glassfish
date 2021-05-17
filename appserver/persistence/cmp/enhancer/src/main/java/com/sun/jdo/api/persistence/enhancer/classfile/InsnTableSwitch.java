@@ -91,7 +91,7 @@ public class InsnTableSwitch extends Insn {
    * Constructor for opc_tableswitch
    */
   //@olsen: made public
-  public InsnTableSwitch(int lowOp, InsnTarget defaultOp, 
+  public InsnTableSwitch(int lowOp, InsnTarget defaultOp,
                          InsnTarget[] targetsOp) {
     this(lowOp, defaultOp, targetsOp, NO_OFFSET);
   }
@@ -105,8 +105,8 @@ public class InsnTableSwitch extends Insn {
     for (int i=0; i<targetsOp.length; i++) {
       int index = i + lowOp;
       if (targetsOp[i].offset() != defaultOp.offset()) {
-	ClassPrint.spaces(out, indent+2);
-	out.println(index + " -> " + targetsOp[i].offset());//NOI18N
+    ClassPrint.spaces(out, indent+2);
+    out.println(index + " -> " + targetsOp[i].offset());//NOI18N
       }
     }
     ClassPrint.spaces(out, indent+2);
@@ -132,17 +132,17 @@ public class InsnTableSwitch extends Insn {
   }
 
 
-  InsnTableSwitch(int lowOp, InsnTarget defaultOp, 
-		  InsnTarget[] targetsOp, int offset) {
+  InsnTableSwitch(int lowOp, InsnTarget defaultOp,
+          InsnTarget[] targetsOp, int offset) {
     super(opc_tableswitch, offset);
 
     this.lowOp = lowOp;
-    this.defaultOp = defaultOp; 
+    this.defaultOp = defaultOp;
     this.targetsOp = targetsOp;
 
     if (defaultOp == null || targetsOp == null)
-	throw new InsnError ("attempt to create an opc_tableswitch" +//NOI18N
-			     " with invalid operands");//NOI18N
+    throw new InsnError ("attempt to create an opc_tableswitch" +//NOI18N
+                 " with invalid operands");//NOI18N
   }
 
   static InsnTableSwitch read (InsnReadEnv insnEnv, int myPC) {

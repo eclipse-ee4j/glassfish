@@ -21,9 +21,9 @@ package com.sun.enterprise.admin.util.cache;
  * @author mmares
  */
 public class AdminCacheMemStoreTest extends AdminCacheTstBase {
-    
+
     public AdminCacheMemStoreTest() {
         super(AdminCacheMemStore.getInstance());
     }
-    
+
 }

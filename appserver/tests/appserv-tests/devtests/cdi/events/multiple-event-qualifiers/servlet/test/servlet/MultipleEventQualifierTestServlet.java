@@ -50,15 +50,15 @@ public class MultipleEventQualifierTestServlet extends HttpServlet {
         if (TestEventObserver.documentAfterDocumentUpdate != 1) {
             msg += "Document updated event not received by observer";
         }
-        
+
         if (TestEventObserver.documentOnAnyBlogEvent != 1) {
             msg += "On Any Blog event not received by observer";
         }
-        
+
         if (TestEventObserver.documentOnAnyDocumentEvent != 3) {
             msg += "On any document event not received by observer";
         }
-        
+
 
 
         writer.write(msg + "\n");

@@ -26,7 +26,7 @@ import com.sun.jndi.ldap.BerEncoder;
  * only virtual attributes be returned during LDAP search operation.
  * <p>
  * A virtual attribute is not stored with the entry. It is computed and
- * returned to the client application as a normal attribute during the 
+ * returned to the client application as a normal attribute during the
  * LDAP operation.
  * <p>
  * This control can be included with any JNDI operation that results
@@ -34,7 +34,7 @@ import com.sun.jndi.ldap.BerEncoder;
  * function in a mutually exclusive way. If both controls are included in the
  * search request, the server may send an error back as there are no results
  * to return. If neither of the controls is included in the search request
- * the server will return both virtual and real attributes.   
+ * the server will return both virtual and real attributes.
  * <p>
  * The object identifier for Virtual Attributes Only control is
  * 2.16.840.1.113730.3.4.19 and the control has no value.
@@ -76,10 +76,10 @@ public class VirtualAttributesOnlyControl extends BasicControl {
     /**
      * Constructs a control to return only virtual attributes in
      * the search result.
-     * The control is always marked critical. 
+     * The control is always marked critical.
      *
      */
     public VirtualAttributesOnlyControl() {
-	super(OID, true, null);
+    super(OID, true, null);
     }
 }

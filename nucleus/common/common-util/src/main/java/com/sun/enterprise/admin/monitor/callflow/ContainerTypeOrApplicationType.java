@@ -21,9 +21,9 @@
  * $Revision: 1.3 $
  */
 
-package	com.sun.enterprise.admin.monitor.callflow;
+package    com.sun.enterprise.admin.monitor.callflow;
 
 public enum ContainerTypeOrApplicationType {
     WEB_CONTAINER, EJB_CONTAINER, ORB_CONTAINER,
-    WEB_APPLICATION, EJB_APPLICATION, JAVA_PERSISTENCE,	OTHER;
+    WEB_APPLICATION, EJB_APPLICATION, JAVA_PERSISTENCE,    OTHER;
 }

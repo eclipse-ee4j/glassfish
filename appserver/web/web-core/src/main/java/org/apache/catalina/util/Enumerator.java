@@ -94,7 +94,7 @@ public final class Enumerator<T> implements Enumeration<T> {
             while (iterator.hasNext()) {
                 list.add(iterator.next());
             }
-            this.iterator = list.iterator();   
+            this.iterator = list.iterator();
         }
 
     }

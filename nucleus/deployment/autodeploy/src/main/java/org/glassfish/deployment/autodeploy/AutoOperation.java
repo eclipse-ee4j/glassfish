@@ -43,13 +43,13 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * AutoOperation and its subclasses have no-arg constructors so they can be
  * initialized as services and an init method that accepts what might otherwise
  * be constructor arguments.
- * 
+ *
  * @author tjquinn
  */
 @Service
 @PerLookup
 public abstract class AutoOperation {
-    
+
     public static final Logger deplLogger =
         org.glassfish.deployment.autodeploy.AutoDeployer.deplLogger;
 
@@ -82,16 +82,16 @@ public abstract class AutoOperation {
     private Properties props;
     private String commandName;
     private AdminCommand command;
-    
+
     @Inject
     private CommandRunner commandRunner;
 
     @Inject
     private AutodeployRetryManager retryManager;
-    
+
     @Inject
     private InternalSystemAdministrator internalSystemAdministrator;
-    
+
     /**
      * Initializes the AutoOperation.
      * @param file the File of interest
@@ -115,7 +115,7 @@ public abstract class AutoOperation {
      * @param file file of interest
      */
     protected abstract void markFiles(AutodeploymentStatus ds, File file);
-    
+
     /**
      * Returns the appropriate message string for the given operation and the
      * outcome.
@@ -168,13 +168,13 @@ public abstract class AutoOperation {
             return AutodeploymentStatus.FAILURE;
         }
     }
-    
+
     private File getSuffixedFile(File f, String suffix) {
         String absPath = f.getAbsolutePath();
         File ret = new File(absPath + suffix);
         return ret;
     }
-    
+
     /**
      * Returns a File object for the "deployed" marker file for a given file.
      * @param f
@@ -183,7 +183,7 @@ public abstract class AutoOperation {
     protected File getDeployedFile(File f) {
         return getSuffixedFile(f, AutoDeployConstants.DEPLOYED);
     }
-    
+
     /**
      * Returns a File object for the "deploy failed" marker file for a given file.
      * @param f
@@ -192,7 +192,7 @@ public abstract class AutoOperation {
     protected File getDeployFailedFile(File f) {
         return getSuffixedFile(f, AutoDeployConstants.DEPLOY_FAILED);
     }
-    
+
     /**
      * Returns a File object for the "undeployed" marker file for a given file.
      * @param f
@@ -201,7 +201,7 @@ public abstract class AutoOperation {
     protected File getUndeployedFile(File f) {
         return getSuffixedFile(f, AutoDeployConstants.UNDEPLOYED);
     }
-    
+
     /**
      * Returns a File object for the "undeploy failed" marker file for a given file.
      * @param f
@@ -210,8 +210,8 @@ public abstract class AutoOperation {
     protected File getUndeployFailedFile(File f) {
         return getSuffixedFile(f, AutoDeployConstants.UNDEPLOY_FAILED);
     }
-    
-    
+
+
     /**
      * Deletes all possible marker files for the file.
      * @param f the File whose markers should be removed
@@ -228,9 +228,9 @@ public abstract class AutoOperation {
                     }
                 }
             }
-        } catch (Exception e) { 
-            //ignore 
+        } catch (Exception e) {
+            //ignore
         }
     }
-    
+
 }

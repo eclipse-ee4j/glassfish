@@ -30,7 +30,7 @@ import org.w3c.dom.Node;
  * common to all EJB which are interfaces based (entity, session)
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public abstract class InterfaceBasedEjbNode<S extends EjbDescriptor> extends EjbNode<S> {
 
@@ -45,9 +45,9 @@ public abstract class InterfaceBasedEjbNode<S extends EjbDescriptor> extends Ejb
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(EjbTagNames.HOME, "setHomeClassName");
-        table.put(EjbTagNames.REMOTE, "setRemoteClassName");        
+        table.put(EjbTagNames.REMOTE, "setRemoteClassName");
         table.put(EjbTagNames.LOCAL_HOME, "setLocalHomeClassName");
-        table.put(EjbTagNames.LOCAL, "setLocalClassName");        
+        table.put(EjbTagNames.LOCAL, "setLocalClassName");
         table.put(EjbTagNames.BUSINESS_LOCAL, "addLocalBusinessClassName");
         table.put(EjbTagNames.BUSINESS_REMOTE, "addRemoteBusinessClassName");
         table.put(EjbTagNames.SERVICE_ENDPOINT_INTERFACE,
@@ -56,12 +56,12 @@ public abstract class InterfaceBasedEjbNode<S extends EjbDescriptor> extends Ejb
     }
 
     @Override
-    protected void writeCommonHeaderEjbDescriptor(Node ejbNode, EjbDescriptor descriptor) {    
+    protected void writeCommonHeaderEjbDescriptor(Node ejbNode, EjbDescriptor descriptor) {
         super.writeCommonHeaderEjbDescriptor(ejbNode, descriptor);
-        appendTextChild(ejbNode, EjbTagNames.HOME, descriptor.getHomeClassName());               
-        appendTextChild(ejbNode, EjbTagNames.REMOTE, descriptor.getRemoteClassName());               
-        appendTextChild(ejbNode, EjbTagNames.LOCAL_HOME, descriptor.getLocalHomeClassName());               
-        appendTextChild(ejbNode, EjbTagNames.LOCAL, descriptor.getLocalClassName());                   
+        appendTextChild(ejbNode, EjbTagNames.HOME, descriptor.getHomeClassName());
+        appendTextChild(ejbNode, EjbTagNames.REMOTE, descriptor.getRemoteClassName());
+        appendTextChild(ejbNode, EjbTagNames.LOCAL_HOME, descriptor.getLocalHomeClassName());
+        appendTextChild(ejbNode, EjbTagNames.LOCAL, descriptor.getLocalClassName());
 
         for(String next : descriptor.getLocalBusinessClassNames()) {
             appendTextChild(ejbNode, EjbTagNames.BUSINESS_LOCAL, next);

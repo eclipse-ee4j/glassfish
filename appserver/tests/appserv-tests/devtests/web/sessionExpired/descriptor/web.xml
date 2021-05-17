@@ -23,7 +23,7 @@
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
 
-  <listener>     
+  <listener>
     <listener-class>test.MyHttpSessionListener</listener-class>
   </listener>
 
@@ -46,7 +46,7 @@
     <servlet-name>CheckResult</servlet-name>
     <url-pattern>/CheckResult</url-pattern>
   </servlet-mapping>
-    
+
 
 </web-app>
 

@@ -106,7 +106,7 @@ public final class WorkCoordinator {
     public String getRAName(){
         return raName;
     }
- 
+
     /**
      * Submits the work to the queue and generates a work accepted event.
      */
@@ -144,7 +144,7 @@ public final class WorkCoordinator {
      */
     public void preInvoke() {
 
-        // If the work is just scheduled, check whether it has timed out or not. 
+        // If the work is just scheduled, check whether it has timed out or not.
         if (waitMode == NO_WAIT && timeout > -1) {
             long elapsedTime = System.currentTimeMillis() - startTime;
 
@@ -193,7 +193,7 @@ public final class WorkCoordinator {
                     new WorkEvent(this, WorkEvent.WORK_STARTED, work, null));
         }
 
-        //set the unauthenticated securityContext before executing the work            
+        //set the unauthenticated securityContext before executing the work
         com.sun.enterprise.security.SecurityContext.setUnauthenticatedContext();
 
     }
@@ -240,9 +240,9 @@ public final class WorkCoordinator {
                     getTransactionManager().clearThreadTx();
                 }
             } catch(Exception e) {
-	            logger.log(Level.WARNING, e.getMessage());
+                logger.log(Level.WARNING, e.getMessage());
             }finally{
-                //reset the securityContext once the work has completed            
+                //reset the securityContext once the work has completed
                 com.sun.enterprise.security.SecurityContext.setUnauthenticatedContext();
             }
         }
@@ -441,7 +441,7 @@ public final class WorkCoordinator {
         }
         return ec;
     }
-    
+
     public static synchronized int increaseSeed() {
         return ++seed;
     }

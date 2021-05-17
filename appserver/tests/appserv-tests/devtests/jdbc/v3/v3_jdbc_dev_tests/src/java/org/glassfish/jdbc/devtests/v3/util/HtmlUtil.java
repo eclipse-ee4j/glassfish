@@ -37,7 +37,7 @@ public class HtmlUtil {
             out.println(element.toString() + "<br>");
         }
     }
-    
+
     /**
      * Prints a horizontal ruler.
      * @param out

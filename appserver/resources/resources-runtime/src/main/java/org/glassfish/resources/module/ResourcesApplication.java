@@ -47,7 +47,7 @@ public class ResourcesApplication implements ApplicationContainer{
 
     @Inject
     private ApplicationScopedResourcesManager asrManager;
-    
+
     @Inject
     private ResourcesDeployer resourcesDeployer;
 
@@ -64,7 +64,7 @@ public class ResourcesApplication implements ApplicationContainer{
 
     public Object getDescriptor() {
         //TODO return all resources-xml ?
-        return null;  
+        return null;
     }
 
     public boolean start(ApplicationContext startupContext) throws Exception {
@@ -77,7 +77,7 @@ public class ResourcesApplication implements ApplicationContainer{
                 deployParams.origin == OpsParams.Origin.create_application_ref) {
             //<application> and its <resources>, <modules> are already available.
             //Deploy them.
-            
+
             //during app. load (eg: server start or application/application-ref enable(), load resources
             asrManager.deployResources(applicationName);
         }

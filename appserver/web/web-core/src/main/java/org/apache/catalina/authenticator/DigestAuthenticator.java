@@ -102,7 +102,7 @@ public class DigestAuthenticator
 
     /**
      * List of client nonce values currently being tracked
-     
+
     protected Map<String,NonceInfo> cnonces;
     */
 
@@ -140,7 +140,7 @@ public class DigestAuthenticator
 
 
 
-    
+
     // ------------------------------------------------------------- Properties
 
     /**
@@ -374,7 +374,7 @@ public class DigestAuthenticator
             request.getRemoteAddr() + ":" + currentTime + ":" + getKey();
 
         byte[] buffer = digest(ipTimeKey.getBytes(Charset.defaultCharset()));
-        
+
         return currentTime + ":" + new String (digestEncoder.encode(buffer));
     }
 

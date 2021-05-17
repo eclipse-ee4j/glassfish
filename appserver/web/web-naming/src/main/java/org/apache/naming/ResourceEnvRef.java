@@ -39,7 +39,7 @@ public class ResourceEnvRef
     /**
      * Default factory for this reference.
      */
-    public static final String DEFAULT_FACTORY = 
+    public static final String DEFAULT_FACTORY =
         org.apache.naming.factory.Constants.DEFAULT_RESOURCE_ENV_FACTORY;
 
 
@@ -48,7 +48,7 @@ public class ResourceEnvRef
 
     /**
      * Resource env reference.
-     * 
+     *
      * @param resourceType the resource type
      */
     public ResourceEnvRef(String resourceType) {
@@ -58,7 +58,7 @@ public class ResourceEnvRef
 
     /**
      * Resource env reference.
-     * 
+     *
      * @param resourceType the resource type
      */
     public ResourceEnvRef(String resourceType, String factory,
@@ -74,7 +74,7 @@ public class ResourceEnvRef
 
 
     /**
-     * Retrieves the class name of the factory of the object to which this 
+     * Retrieves the class name of the factory of the object to which this
      * reference refers.
      */
     public String getFactoryClassName() {

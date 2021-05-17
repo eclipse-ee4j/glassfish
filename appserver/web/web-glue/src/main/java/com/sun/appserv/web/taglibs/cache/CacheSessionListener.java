@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 
-/** 
+/**
  * HttpSessionListener which creates a cache for JSP tag body invocations
  * and adds it as a session attribute in response to sessionCreated events,
  * and clears the cache in response to sessionDestroyed events.
@@ -37,15 +37,15 @@ public class CacheSessionListener implements HttpSessionListener {
     public CacheSessionListener() {}
 
 
-    /** 
+    /**
      * Receives notification that a session was created, and adds newly
      * created cache for JSP tag body invocations as a session attribute.
      *
      * @param hse the notification event
      */
     public void sessionCreated(HttpSessionEvent hse) {
-      
-        HttpSession session = hse.getSession();  
+
+        HttpSession session = hse.getSession();
         ServletContext context = session.getServletContext();
 
         // Check if a cache manager has already been created and set in the
@@ -71,7 +71,7 @@ public class CacheSessionListener implements HttpSessionListener {
     }
 
 
-    /** 
+    /**
      * Receives notification that a session is about to be invalidated, and
      * clears the session's cache of JSP tag body invocations (if present).
      *
@@ -80,7 +80,7 @@ public class CacheSessionListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent hse) {
 
         // Clear the cache
-        HttpSession session = hse.getSession();  
+        HttpSession session = hse.getSession();
         Cache cache = (Cache)session.getAttribute(Constants.JSPTAG_CACHE_KEY);
         if (cache != null) {
             cache.clear();

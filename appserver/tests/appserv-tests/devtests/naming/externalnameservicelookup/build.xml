@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <exec executable="${env.JAVA_HOME}/bin/idlj" failonerror="false">
             <arg line="-fall src/Hello.idl"/>
@@ -52,40 +52,40 @@
             destdir="${build.classes.dir}"
             classpath="${s1astest.classpath}"
             debug="on"
-            failonerror="true"/>     
+            failonerror="true"/>
     </target>
 
 
 <target name="build" depends="compile">
-    <property name="hasWebclient" value="yes"/> 
+    <property name="hasWebclient" value="yes"/>
     <antcall target="webclient-war-common">
     <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="**/*.class"/> 
+    <param name="webclient.war.classes" value="**/*.class"/>
     </antcall>
 </target>
 
     <!--target name="build" depends="compile">
-      <antcall target="package-war-common">      
+      <antcall target="package-war-common">
       </antcall>
-    </target--> 
-    
-   
+    </target-->
+
+
 
     <target name="deploy" depends="init-common">
       <echo message="Deploying via asadmin..."/>
       <antcall target="deploy-war-common"/>
-    </target> 
+    </target>
 
 
 <target name="run" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="externalnameservicelookup"/>
-	</antcall>
+    <param name="testsuite.id" value="externalnameservicelookup"/>
+    </antcall>
     </target>
 
    <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
-  
+
 </project>

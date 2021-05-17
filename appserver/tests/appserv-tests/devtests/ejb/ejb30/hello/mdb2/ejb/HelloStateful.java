@@ -40,14 +40,14 @@ import jakarta.ejb.SessionContext;
     }
     /*
     @PreDestroy public void myPreDestroyMethod() {
-        System.out.println("PRE-DESTROY callback received in " + msg);        
+        System.out.println("PRE-DESTROY callback received in " + msg);
     }
     */
 
     public void setSessionContext(jakarta.ejb.SessionContext sc) {
         System.out.println("In HelloStateful:setSessionContext");
         try {
-            SessionContext sc2 = (SessionContext) 
+            SessionContext sc2 = (SessionContext)
                 new InitialContext().lookup("java:comp/EJBContext");
             System.out.println("Got SessionContext via java:comp/env/EJBContext");
 

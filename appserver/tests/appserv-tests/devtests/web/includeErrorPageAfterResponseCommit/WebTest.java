@@ -48,7 +48,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for " + TEST_NAME);
         WebTest webTest = new WebTest(args);
@@ -56,8 +56,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -75,7 +75,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-         
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/sqlException.jsp HTTP/1.0\n";

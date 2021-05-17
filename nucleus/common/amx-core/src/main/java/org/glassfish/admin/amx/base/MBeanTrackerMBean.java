@@ -40,13 +40,13 @@ public interface MBeanTrackerMBean
     */
     @ManagedOperation
     public Set<ObjectName> getChildrenOf(final ObjectName parent);
-    
+
     @ManagedOperation
     public ObjectName getParentOf(final ObjectName child);
-    
+
     @ManagedAttribute
     public boolean getEmitMBeanStatus();
-    
+
     @ManagedAttribute
     public void setEmitMBeanStatus(boolean emit);
 }

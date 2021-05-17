@@ -40,7 +40,7 @@ import org.glassfish.admin.amx.util.MapUtil;
 import org.glassfish.admin.amx.logging.Logging;
 import org.glassfish.admin.amx.annotation.*;
 
-/** 
+/**
  */
 //@Test(groups={"amx"}, description="AMXProxy tests", sequential=false, threadPoolSize=5)
 @Test(
@@ -56,14 +56,14 @@ public final class AMXOtherTests extends AMXTestBase
     public AMXOtherTests()
     {
     }
-    
+
     @Test
     public void testVariousGetters()
     {
         final RuntimeRoot runtimeRoot = getDomainRootProxy().getRuntime();
         final Map<String,ServerRuntime>  serverRuntimes = runtimeRoot.getServerRuntime();
     }
-    
+
 }
 
 

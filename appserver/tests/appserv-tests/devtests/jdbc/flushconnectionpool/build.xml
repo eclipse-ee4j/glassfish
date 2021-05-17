@@ -75,7 +75,7 @@
             <param name="operand.props"
                    value="jdbc-flushconnectionpool-pool"/>
         </antcall>
-	<antcall target="runclient-common"/>
+    <antcall target="runclient-common"/>
     </target>
 
     <target name="undeploy" depends="init-common">
@@ -108,14 +108,14 @@
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-flushconnectionpool-pool.steady_pool_size=1"/>
         </antcall>
 
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-flushconnectionpool-pool.max_pool_size=1"/>
         </antcall>
 
 
-	<!--	<antcall target="asadmin-common">
+    <!--    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-flushconnectionpool-pool.max_connection_usage_count=5"/>

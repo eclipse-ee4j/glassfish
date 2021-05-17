@@ -39,7 +39,7 @@
           <fileset dir="." includes="*.class"/>
       </delete>
     </target>
-       
+
     <target name="build" depends="clean">
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
@@ -52,7 +52,7 @@
                 <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
             </classpath>
         </javac>
-    </target> 
+    </target>
 
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
@@ -74,7 +74,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

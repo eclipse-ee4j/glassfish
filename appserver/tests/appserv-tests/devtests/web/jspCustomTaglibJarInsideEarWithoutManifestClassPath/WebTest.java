@@ -49,7 +49,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 590");
         WebTest webTest = new WebTest(args);

@@ -27,85 +27,85 @@ import java.util.Set;
 import java.util.Vector;
 
 /**
- * This descriptor represents an authorization contraint on a security 
+ * This descriptor represents an authorization contraint on a security
  * constraint in a web application.
  *
  * @author Danny Coward
  */
 
 public class AuthorizationConstraintImpl extends Descriptor implements
-		AuthorizationConstraint {
+        AuthorizationConstraint {
     private Set<SecurityRole> securityRoles;
-    
+
     /**
-     * Default constructor that creates an AuthorizationConstraint 
+     * Default constructor that creates an AuthorizationConstraint
      * with no roles.
      */
     public AuthorizationConstraintImpl() {
     }
-    
+
     /**
      * Copy constructor.
      */
     public AuthorizationConstraintImpl(AuthorizationConstraintImpl other) {
-	this.securityRoles = new HashSet<SecurityRole>(other.getSecurityRoleSet());
+    this.securityRoles = new HashSet<SecurityRole>(other.getSecurityRoleSet());
     }
-    
+
     /**
      * Return the set of roles.
      */
     private Set<SecurityRole> getSecurityRoleSet() {
-	if (this.securityRoles == null) {
-	    this.securityRoles = new HashSet<SecurityRole>();
-	}
-	return this.securityRoles;
+    if (this.securityRoles == null) {
+        this.securityRoles = new HashSet<SecurityRole>();
+    }
+    return this.securityRoles;
     }
 
-    /** 
-     * Return the security roles involved in this constraint. The 
+    /**
+     * Return the security roles involved in this constraint. The
      * enumeration is empty if there are none.
      * @return the enumeration of security roles in this constraint.
      */
     public Enumeration getSecurityRoles() {
-	if (this.securityRoles == null) {
-	    this.securityRoles = new HashSet<SecurityRole>();
-	}
-	return (new Vector<SecurityRole>(this.getSecurityRoleSet())).elements();
+    if (this.securityRoles == null) {
+        this.securityRoles = new HashSet<SecurityRole>();
     }
-    
+    return (new Vector<SecurityRole>(this.getSecurityRoleSet())).elements();
+    }
+
     /**
      * Adds a role to the authorization constraint.
      * @param the role to be added.
      */
     public void addSecurityRole(SecurityRole securityRole) {
-	this.getSecurityRoleSet().add(securityRole);
+    this.getSecurityRoleSet().add(securityRole);
     }
-    
+
     /**
      * Adds a role to the authorization constraint
      * @param the role name to be added
-     */ 
+     */
     public void addSecurityRole(String roleName) {
         SecurityRoleDescriptor sr = new SecurityRoleDescriptor();
         sr.setName(roleName);
         addSecurityRole(sr);
     }
-    
+
     /**
      * Removes the given role from the autrhorization constraint.
      * @param the role to be removed.
      */
     public void removeSecurityRole(SecurityRole securityRole) {
-	this.getSecurityRoleSet().remove(securityRole);
+    this.getSecurityRoleSet().remove(securityRole);
     }
 
     /**
      * Prints a formatted representation of this object.
      */
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("AuthorizationConstraint ");
-	super.print(toStringBuffer);
-	toStringBuffer.append(" securityRoles ").append(this.securityRoles);
+    toStringBuffer.append("AuthorizationConstraint ");
+    super.print(toStringBuffer);
+    toStringBuffer.append(" securityRoles ").append(this.securityRoles);
     }
-    
+
 }

@@ -52,7 +52,7 @@ import com.sun.enterprise.server.logging.parser.ParsedLogRecord;
 public class LogFile implements java.io.Serializable {
 
     private static final long serialVersionUID = -2960142541274652618L;
-    
+
     private static SimpleDateFormat SIMPLE_DATE_FORMAT =
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -94,7 +94,7 @@ public class LogFile implements java.io.Serializable {
             return results;
         }
         try {
-            
+
             File logFile = new File(getLogFileName());
             LogParser logParser = LogParserFactory.getInstance().createLogParser(logFile );
             logParser.parseLog(reader, new LogParserListener() {
@@ -105,7 +105,7 @@ public class LogFile implements java.io.Serializable {
                 public void outputSummary(BufferedWriter writer, Object... objects)
                         throws IOException {
                 }
-                
+
                 @Override
                 public void foundLogRecord(long position, ParsedLogRecord logRecord) {
                     counter++;
@@ -114,20 +114,20 @@ public class LogFile implements java.io.Serializable {
                     }
                     if (results.size() < maxRecords) {
                         LogEntry entry = new LogEntry(logRecord.getFormattedLogRecord(),
-                                startingRecord + results.size());                    
+                                startingRecord + results.size());
                         entry.setLoggedDateTime(new Date(logRecord.getTimeMillis()));
                         entry.setLoggedLevel(logRecord.getLevel());
                         entry.setLoggedLoggerName(logRecord.getLogger());
                         entry.setLoggedMessage(logRecord.getMessage());
                         entry.setLoggedNameValuePairs(logRecord.getSupplementalAttributes().toString());
                         entry.setLoggedProduct(logRecord.getComponentId());
-                        entry.setMessageId(logRecord.getMessageId());                        
+                        entry.setMessageId(logRecord.getMessageId());
                         results.add(entry);
                     }
                 }
-                
+
                 @Override
-                public void close() throws IOException {                    
+                public void close() throws IOException {
                 }
             });
         } catch (Exception ex) {
@@ -161,27 +161,27 @@ public class LogFile implements java.io.Serializable {
             LogParser logParser = LogParserFactory.getInstance().createLogParser(logFile);
             if (logParser != null) {
                 logParser.parseLog(reader, new LogParserListener() {
-                    
+
                     long recordNumber = (_recordIdx.size() - 1) * localIndexSize;
 
                     @Override
                     public void outputSummary(BufferedWriter writer, Object... objects)
                             throws IOException {
                     }
-                    
+
                     @Override
-                    public void foundLogRecord(long position, ParsedLogRecord object) {                    
+                    public void foundLogRecord(long position, ParsedLogRecord object) {
                         long modIndex = recordNumber % localIndexSize;
                         if (modIndex == 0) {
                             _recordIdx.add((Long)(startPos+position));
                         }
                         recordNumber++;
                     }
-                    
+
                     @Override
-                    public void close() throws IOException {                    
+                    public void close() throws IOException {
                     }
-                });                
+                });
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -226,7 +226,7 @@ public class LogFile implements java.io.Serializable {
             if (bytesToSkip > 0) {
                 long bytesSkipped = file.skip(bytesToSkip);
                 if (bytesSkipped != fromFilePosition) {
-                    if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) { 
+                    if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
                         LogFacade.LOGGING_LOGGER.log(Level.FINE, "Did not skip exact bytes while positioning reader in " + getLogFileName());
                     }
                 }
@@ -235,15 +235,15 @@ public class LogFile implements java.io.Serializable {
                     new BufferedReader(new InputStreamReader(file));
             return reader;
         } catch (Exception ex) {
-            if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) { 
+            if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
                 LogFacade.LOGGING_LOGGER.log(Level.FINE, "Error reading from file: " + getLogFileName(), ex);
             }
             if (file != null) try { file.close(); } catch (Exception ex2) {
-                if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) { 
+                if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
                     LogFacade.LOGGING_LOGGER.log(Level.FINE, "Error closing file: " + getLogFileName(), ex2);
-                }                
-            }            
-        } 
+                }
+            }
+        }
         return null;
     }
 
@@ -274,12 +274,12 @@ public class LogFile implements java.io.Serializable {
      * Class to manage LogEntry information
      */
     public static class LogEntry implements java.io.Serializable {
-        
+
         /**
          * SVUID for backwards compatibility
          */
         private static final long serialVersionUID = -8597022493595023899L;
-        
+
         public LogEntry(String line, long recordNumber) {
             setRecordNumber(recordNumber);
         }
@@ -418,9 +418,9 @@ public class LogFile implements java.io.Serializable {
         private String loggedMessage = null;
         private String messageId = "";
     }
-    
+
     private long _indexSize = 10;
     private String _logFileName = null;
     private List _recordIdx   = new ArrayList();
-    
+
 }

@@ -40,7 +40,7 @@ import org.junit.Test;
 
 /**
  * Tests for Context createServlet & createFilter using class to default virtual server
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedCreateServletAndFilterTest {
@@ -67,7 +67,7 @@ public class EmbeddedCreateServletAndFilterTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedAddServletDefaultVS() throws Exception {
 
@@ -106,7 +106,7 @@ public class EmbeddedCreateServletAndFilterTest {
         in.close();
 
         vs.removeContext(context);
-        
+
      }
 
     @AfterClass
@@ -118,6 +118,6 @@ public class EmbeddedCreateServletAndFilterTest {
             glassfish = null;
         }
     }
-    
-    
+
+
 }

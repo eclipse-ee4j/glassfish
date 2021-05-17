@@ -24,9 +24,9 @@ import java.util.*;
  */
 
 public interface A2 extends jakarta.ejb.EJBObject {
- 
+
     public String getName() throws java.rmi.RemoteException;
-    
+
     public java.util.Date getMyDate() throws java.rmi.RemoteException;
 
     public java.sql.Date getSqlDate() throws java.rmi.RemoteException;

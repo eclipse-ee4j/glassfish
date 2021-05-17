@@ -24,37 +24,37 @@ import com.sun.enterprise.admin.monitor.stats.AverageRangeStatistic;
  * @since 8.1
  */
 public interface HAStatefulSessionStoreStats extends StatefulSessionStoreStats {
-    
+
     /**
      * Returns the total number of sessions checkpointed using this store
      * @return CountStatistic
      */
     public CountStatistic getCheckpointCount();
-    
+
     /**
      * Returns the total number of sessions successfully checkpointed using
      * this store
      * @return CountStatistic
      */
     public CountStatistic getCheckpointSuccessCount();
-    
+
     /**
      * Returns the total number of sessions that could not be checkpointed
      * using this store
      * @return CountStatistic
      */
     public CountStatistic getCheckpointErrorCount();
-    
+
     /**
      * Returns the total number of bytes checkpointed by the store
      * @return AverageRangeStatistic
      */
     public AverageRangeStatistic getCheckpointedBeanSize();
-    
+
     /**
      * Returns the time spent on checkpointing beans to the store
      * @return AverageRangeStatistic
      */
     public AverageRangeStatistic getCheckpointTime();
-    
+
 }

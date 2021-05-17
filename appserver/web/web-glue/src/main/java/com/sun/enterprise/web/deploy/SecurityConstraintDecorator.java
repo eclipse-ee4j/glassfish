@@ -26,15 +26,15 @@ import java.util.Enumeration;
  *
  * @author Jean-Francois Arcand
  */
-public class SecurityConstraintDecorator 
+public class SecurityConstraintDecorator
                     extends org.apache.catalina.deploy.SecurityConstraint {
 
     private SecurityConstraint securityConstraint;
-    
+
     public SecurityConstraintDecorator(SecurityConstraint securityConstraint,
                                        WebModule webModule){
         this.securityConstraint = securityConstraint;
-        
+
         if (securityConstraint.getAuthorizationConstraint() != null){
             setAuthConstraint(true);
             Enumeration enumeration = securityConstraint
@@ -50,12 +50,12 @@ public class SecurityConstraintDecorator
             }
             setDisplayName(securityConstraint.getAuthorizationConstraint().getName());
         }
- 
+
         if (securityConstraint.getUserDataConstraint() != null){
             setUserConstraint(securityConstraint.getUserDataConstraint()
                                                     .getTransportGuarantee());
         }
-        
+
     }
 
 }

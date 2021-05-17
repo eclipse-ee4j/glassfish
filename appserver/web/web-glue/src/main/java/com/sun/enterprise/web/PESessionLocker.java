@@ -38,26 +38,26 @@ import jakarta.servlet.ServletRequest;
  * @author lwhite
  */
 public class PESessionLocker extends BaseSessionLocker {
-    
+
     /** Creates a new instance of PESessionLocker */
     public PESessionLocker() {
     }
-    
+
     /** Creates a new instance of PESessionLocker */
     public PESessionLocker(Context ctx) {
         this();
         _context = ctx;
-    }    
-    
-    /** 
+    }
+
+    /**
      * lock the session associated with this request
      * this will be a foreground lock
      * checks for background lock to clear
      * and does a decay poll loop to wait until
-     * it is clear; after 5 times it takes control for 
+     * it is clear; after 5 times it takes control for
      * the foreground
      * @param request
-     */     
+     */
     public boolean lockSession(ServletRequest request) throws ServletException {
         boolean result = false;
         Session sess = this.getSession(request);
@@ -88,14 +88,14 @@ public class PESessionLocker extends BaseSessionLocker {
                     if (sess instanceof StandardSession) {
                         ((StandardSession)sess).unlockBackground();
                     }
-                }              
+                }
             }
         }
         return result;
     }
-    
+
     private Session getSession(ServletRequest request) {
-        jakarta.servlet.http.HttpServletRequest httpReq = 
+        jakarta.servlet.http.HttpServletRequest httpReq =
             (jakarta.servlet.http.HttpServletRequest) request;
         jakarta.servlet.http.HttpSession httpSess = httpReq.getSession(false);
         if(httpSess == null) {
@@ -109,8 +109,8 @@ public class PESessionLocker extends BaseSessionLocker {
         } catch (java.io.IOException ex) {}
 
         return sess;
-    }     
-    
+    }
+
     protected void threadSleep(long sleepTime) {
 
         try {
@@ -119,18 +119,18 @@ public class PESessionLocker extends BaseSessionLocker {
             ;
         }
 
-    } 
-    
-    /** 
+    }
+
+    /**
      * unlock the session associated with this request
      * @param request
-     */     
+     */
     public void unlockSession(ServletRequest request) {
         Session sess = this.getSession(request);
         //now unlock the session
         if(sess != null) {
             sess.unlockForeground();
-        }        
-    }    
-    
+        }
+    }
+
 }

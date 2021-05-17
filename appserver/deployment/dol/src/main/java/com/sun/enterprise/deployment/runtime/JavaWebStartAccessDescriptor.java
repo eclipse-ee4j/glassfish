@@ -24,9 +24,9 @@ import org.glassfish.deployment.common.Descriptor;
  * @author tjquinn
  */
 public class JavaWebStartAccessDescriptor extends Descriptor {
-    
+
     private BundleDescriptor bundleDescriptor;
-    
+
     /** Creates a new instance of JavaWebStartAccessDescriptor */
     public JavaWebStartAccessDescriptor() {
     }
@@ -76,7 +76,7 @@ public class JavaWebStartAccessDescriptor extends Descriptor {
 
         this.contextRoot = contextRoot;
     }
-    
+
     /**
      * Holds value of property vendor.
      */
@@ -120,6 +120,6 @@ public class JavaWebStartAccessDescriptor extends Descriptor {
     public void setJnlpDocument(String jnlpDoc) {
         this.jnlpDoc = jnlpDoc;
     }
-    
+
 
 }

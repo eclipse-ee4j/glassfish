@@ -71,7 +71,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * amount of time the transaction manager waits for response from a
      * datasource participating in transaction.
      * A value of 0 implies infinite timeout
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -94,7 +94,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * $INSTANCE-ROOT/logs. If this attribute is not explicitly specified in the
      * <transaction-service> element, 'tx' sub directory will be created under
      * the path specified in log-root attribute of <domain> element.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -114,7 +114,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *
      * During recovery, if outcome of a transaction cannot be determined from
      * the logs, then this property is used to fix the outcome
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -133,7 +133,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * Gets the value of the retryTimeoutInSeconds property.
      *
      * Used to determine the retry time in the following scenarios.
-     * 
+     *
      * 1 Time to wait at the transaction recovery time, when resources are
      *   unreachable.
      * 2 If there are any transient exceptions in the second phase of the
@@ -143,7 +143,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * A positive value indicates the number of seconds for which retry will be
      * attempted. Default is 10 minutes which may be appropriate for a database
      * being restarted
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -169,7 +169,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * better performance. A smaller value (e.g. 20) results in smaller log
      * files but slightly reduced performance due to the greater frequency of
      * keypoint operations.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -183,8 +183,8 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *              {@link String }
      */
     public void setKeypointInterval(String value) throws PropertyVetoException;
-    
-    
+
+
 
    /**
         Properties.
@@ -193,25 +193,25 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
     props={
         @PropertyDesc(name="oracle-xa-recovery-workaround", defaultValue="true", dataType=Boolean.class,
             description="If true, the Oracle XA Resource workaround is used in transaction recovery"),
-            
+
         @PropertyDesc(name="disable-distributed-transaction-logging", defaultValue="false", dataType=Boolean.class,
             description="If true, disables transaction logging, which might improve performance. " +
                 "If the automatic-recovery attribute is set to true , this property is ignored"),
-            
+
         @PropertyDesc(name="xaresource-txn-timeout", defaultValue="120", dataType=PositiveInteger.class,
             description=" Changes the XAResource timeout. In some cases, the XAResource default timeout can cause " +
                 "transactions to be aborted, so it is desirable to change it"),
-            
+
         @PropertyDesc(name="pending-txn-cleanup-interval", defaultValue="60", dataType=PositiveInteger.class,
             description="Interval in seconds at which an asynchronous thread checks for pending transactions and completes them"),
-            
+
         @PropertyDesc(name="use-last-agent-optimization", defaultValue="true", dataType=Boolean.class,
             description="Enables last agent optimization, which improves the throughput of transactions. " +
                 "If one non-XA resource is used with XA resources in the same transaction, the non XA resource is the last agent"),
-            
+
         @PropertyDesc(name="wait-time-before-recovery-insec", defaultValue="60", dataType=PositiveInteger.class,
             description="Wait time in seconds after which an instance starts the recovery for a dead instance"),
-            
+
         @PropertyDesc(name="db-logging-resource",
             description="db-logging-resource NDI name of the JDBC resource for the database to which transactions are logged")
     }

@@ -69,7 +69,7 @@ public class WebTest {
             System.err.println("Unexpected return code: " + code);
             stat.addStatus(TEST_NAME, stat.FAIL);
         } else {
-            try (InputStream is = conn.getInputStream(); BufferedReader input = new BufferedReader(new InputStreamReader(is))) { 
+            try (InputStream is = conn.getInputStream(); BufferedReader input = new BufferedReader(new InputStreamReader(is))) {
                 String line = input.readLine();
                 if (!EXPECTED_RESPONSE.equals(line)) {
                     System.err.println("Wrong response. " + "Expected: " + EXPECTED_RESPONSE + ", received: " + line);

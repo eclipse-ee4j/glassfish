@@ -58,7 +58,7 @@
             <classes dir="${build}"/>
         </war>
 
-         
+
         <copy file="application.xml" todir="${build}/archive/META-INF"/>
         <copy file="${all.war}" todir="${build}/archive"/>
         <jar destfile="${all.ear}" basedir="${build}/archive"/>
@@ -92,16 +92,16 @@
         </antcall>
     </target>
 
-    <target name="enable.asadmin"> 
+    <target name="enable.asadmin">
         <antcall target="common.enable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
 
     <target name="disable.asadmin">
         <antcall target="common.disable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
@@ -373,7 +373,7 @@
             <param name="extra.args" value="${customized.config.client.args}"/>
         </antcall>
     </target>
-        
+
     <target name="check.added.customization.and.suppressed.original.config">
         <antcall target="check.additive.customization">
             <param name="log.id" value="${log.id}.1"/>
@@ -396,7 +396,7 @@
             <param name="extra.args" value="-param builtin=in-app"/>
         </antcall>
     </target>
-    
+
     <target name="clobber" depends="clean">
         <delete file="${all.ear}"/>
         <delete dir="${build}"/>

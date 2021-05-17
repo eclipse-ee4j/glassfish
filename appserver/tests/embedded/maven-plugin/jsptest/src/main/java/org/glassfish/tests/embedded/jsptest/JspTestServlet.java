@@ -39,7 +39,7 @@ public class JspTestServlet extends HttpServlet {
         print("\n[OUTPUT from JspTestServlet]", out);
         print("[Hi from JspTestServlet]", out);
         print("[End of OUTPUT from SecureWebAppTestServlet]", out);
-        
+
         out.flush();
         out.close();
     }

@@ -31,44 +31,44 @@ import org.w3c.dom.Node;
  * This node handles the pm-descriptors runtime xml element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 
 public class PMDescriptorsNode extends RuntimeDescriptorNode {
 
     public PMDescriptorsNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.PM_DESCRIPTOR), 
+        registerElementHandler(new XMLElement(RuntimeTagNames.PM_DESCRIPTOR),
                                PMDescriptorNode.class, "addPersistenceManager");
-        registerElementHandler(new XMLElement(RuntimeTagNames.PM_INUSE), 
-                               PMInUseNode.class, "setPersistenceManagerInUse");        
+        registerElementHandler(new XMLElement(RuntimeTagNames.PM_INUSE),
+                               PMInUseNode.class, "setPersistenceManagerInUse");
     }
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, String nodeName, EjbBundleDescriptorImpl descriptor) {
-		
-	Node pms = null;
-	Vector pmDescriptors = descriptor.getPersistenceManagers();
-	if (pmDescriptors!=null && !pmDescriptors.isEmpty()) {
+
+    Node pms = null;
+    Vector pmDescriptors = descriptor.getPersistenceManagers();
+    if (pmDescriptors!=null && !pmDescriptors.isEmpty()) {
             pms = super.writeDescriptor(parent, nodeName, descriptor);
             PMDescriptorNode pmNode = new PMDescriptorNode();
-            
+
             for (Iterator pmIterator = pmDescriptors.iterator();pmIterator.hasNext();) {
                 IASPersistenceManagerDescriptor pmDescriptor = (IASPersistenceManagerDescriptor) pmIterator.next();
                 pmNode.writeDescriptor(pms, RuntimeTagNames.PM_DESCRIPTOR, pmDescriptor);
             }
             PersistenceManagerInUse inUse = descriptor.getPersistenceManagerInUse();
             if (inUse!=null) {
-		PMInUseNode inUseNode = new PMInUseNode();
-		inUseNode.writeDescriptor(pms, RuntimeTagNames.PM_INUSE, inUse);
+        PMInUseNode inUseNode = new PMInUseNode();
+        inUseNode.writeDescriptor(pms, RuntimeTagNames.PM_INUSE, inUse);
             }
         }
-	return pms;
+    return pms;
     }
 }

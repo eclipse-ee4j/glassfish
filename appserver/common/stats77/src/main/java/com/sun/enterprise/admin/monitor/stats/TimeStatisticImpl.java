@@ -26,41 +26,41 @@ import com.sun.enterprise.util.i18n.StringManager;
  */
 
 public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
-    
+
     private final long count;
     private final long maxTime;
     private final long minTime;
     private final long totTime;
-    private static final StringManager localStrMgr = 
+    private static final StringManager localStrMgr =
                 StringManager.getManager(TimeStatisticImpl.class);
 
     public final String toString() {
-        return super.toString() + NEWLINE + 
+        return super.toString() + NEWLINE +
             "Count: " + getCount() + NEWLINE +
             "MinTime: " + getMinTime() + NEWLINE +
             "MaxTime: " + getMaxTime() + NEWLINE +
             "TotalTime: " + getTotalTime();
     }
 
-	public TimeStatisticImpl(String name) {
-		this(name, StatisticImpl.DEFAULT_UNIT);
-	}
-	public TimeStatisticImpl(String name, String unit) {
-		this(StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE, 
-			StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE, name,  unit,
-			Util.getDescriptionFromName(name), Util.getInitTime()[0], Util.getInitTime()[1]);
-	}
+    public TimeStatisticImpl(String name) {
+        this(name, StatisticImpl.DEFAULT_UNIT);
+    }
+    public TimeStatisticImpl(String name, String unit) {
+        this(StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE,
+            StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE, name,  unit,
+            Util.getDescriptionFromName(name), Util.getInitTime()[0], Util.getInitTime()[1]);
+    }
 
         /** Constructs an immutable instance of TimeStatistic.
      * @param name  The name of the statistic
      * @param unit  The unit of measurement for this statistic
      * @param desc  A brief description of the statistic
-	 */
+     */
     public TimeStatisticImpl(String name, String unit, String desc) {
-		this(StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE, 
-			StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE, name,  unit,
-			desc, Util.getInitTime()[0], Util.getInitTime()[1]);
-        
+        this(StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE,
+            StatisticImpl.DEFAULT_VALUE, StatisticImpl.DEFAULT_VALUE, name,  unit,
+            desc, Util.getInitTime()[0], Util.getInitTime()[1]);
+
     }
 
     /** Constructs an immutable instance of TimeStatistic.
@@ -70,37 +70,37 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
      *              at the first measurement.
      * @param counter   The number of times an operation has been invoked since
      *                  measurement started
-     * @param maximumTime   The maximum time it took to complete one invocation 
-     *                      of an operation, since the measurement started 
+     * @param maximumTime   The maximum time it took to complete one invocation
+     *                      of an operation, since the measurement started
      * @param minimumTime   The minimum time it took to complete one invocation
-     *                      of an opeation, since the measurement started 
-     * @param totalTime     The total amount of time spent in all invocations, 
-     *                      over the duration of the measurement 
+     *                      of an opeation, since the measurement started
+     * @param totalTime     The total amount of time spent in all invocations,
+     *                      over the duration of the measurement
      * @param name  The name of the statistic
      * @param unit  The unit of measurement for this statistic
      * @param desc  A brief description of the statistic
      * @param startTime Time in milliseconds at which the measurement was started
      * @param sampleTime    Time at which the last measurement was done.
-	 */
+     */
      public TimeStatisticImpl(long counter, long maximumTime, long minimumTime,
-                              long totalTime, String name, String unit, 
+                              long totalTime, String name, String unit,
                              String desc, long startTime, long sampleTime) {
-        
+
         super(name, unit, desc, startTime, sampleTime);
         count = counter;
         maxTime = maximumTime;
         minTime = minimumTime;
         totTime = totalTime;
     }
-    
+
     /**
-     * Returns the number of times an operation was invoked 
-     * @return long indicating the number of invocations 
+     * Returns the number of times an operation was invoked
+     * @return long indicating the number of invocations
      */
     public long getCount() {
         return count;
     }
-    
+
     /**
      * Returns the maximum amount of time that it took for one invocation of an
      * operation, since measurement started.
@@ -109,41 +109,41 @@ public class TimeStatisticImpl extends StatisticImpl implements TimeStatistic {
     public long getMaxTime() {
         return maxTime;
     }
-    
+
     /**
      * Returns the minimum amount of time that it took for one invocation of an
      * operation, since measurement started.
-     * @return long indicating the minimum time for one invocation 
+     * @return long indicating the minimum time for one invocation
      */
     public long getMinTime() {
         return minTime;
-    }    
+    }
 
     /**
-     * Returns the amount of time that it took for all invocations, 
+     * Returns the amount of time that it took for all invocations,
      * since measurement started.
-     * @return long indicating the total time for all invocation 
+     * @return long indicating the total time for all invocation
      */
     public long getTotalTime() {
         return totTime;
     }
-	
-	private static class Util {
-		/** A method to get the description from a name. Can be simple property file
-		 * pair reader. Note that name is invariant, whereas the descriptions are
-		 * localizable.
-		 */
-		private static String getDescriptionFromName(String name) {
-			return (localStrMgr.getString("describes_string")  + name);
-		}
 
-		/** Returns an array of two longs, that represent the times at the time of call.
-		 * The idea is not to call expensive System#currentTimeMillis twice for two
-		 * successive operations.
-		 */
-		private static long[] getInitTime() {
-			final long time = System.currentTimeMillis();
-			return ( new long[]{time, time} );
-		}
-	}	
+    private static class Util {
+        /** A method to get the description from a name. Can be simple property file
+         * pair reader. Note that name is invariant, whereas the descriptions are
+         * localizable.
+         */
+        private static String getDescriptionFromName(String name) {
+            return (localStrMgr.getString("describes_string")  + name);
+        }
+
+        /** Returns an array of two longs, that represent the times at the time of call.
+         * The idea is not to call expensive System#currentTimeMillis twice for two
+         * successive operations.
+         */
+        private static long[] getInitTime() {
+            final long time = System.currentTimeMillis();
+            return ( new long[]{time, time} );
+        }
+    }
 }

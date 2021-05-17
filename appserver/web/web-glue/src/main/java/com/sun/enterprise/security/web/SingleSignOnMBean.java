@@ -28,20 +28,20 @@ public interface SingleSignOnMBean {
      */
     public int getActiveSessionCount();
 
-    
+
     /**
      * Gets the number of SSO cache hits
      *
      * @return Number of SSO cache hits
-     */    
+     */
     public int getHitCount();
 
-    
+
     /**
      * Gets the number of SSO cache misses
      *
      * @return Number of SSO cache misses
-     */    
+     */
     public int getMissCount();
-    
+
 }

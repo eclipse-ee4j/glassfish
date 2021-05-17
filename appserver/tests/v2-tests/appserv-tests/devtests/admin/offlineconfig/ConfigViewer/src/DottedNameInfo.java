@@ -31,15 +31,15 @@ public class DottedNameInfo
 {
     String _name;
     String _parent;
-    
-    
+
+
     /** Creates a new instance of DottedNameInfo */
     public DottedNameInfo(String name, String parentName)
     {
         _name = name;
         _parent = parentName;
     }
-    
+
     public String toString()
     {
        if(_name.startsWith(_parent+"."))

@@ -31,11 +31,11 @@ public class EnrollerClient {
     private SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    public static void main(String[] args) { 
-        EnrollerClient client = new EnrollerClient(); 
+    public static void main(String[] args) {
+        EnrollerClient client = new EnrollerClient();
 
         // run the tests
-        client.runTestClient(args);   
+        client.runTestClient(args);
     }
 
     public void runTestClient(String[] args) {
@@ -53,61 +53,61 @@ public class EnrollerClient {
 
     private void test01(String[] args) {
         String enrollerString = "";
-	String queueString = "";
-        try {  	   
-	    if (args.length != 0 && args[0].equals("standalone")) {
-	        enrollerString = "ejb/MyEnroller";
-		queueString = "jms/SampleQueue";
-	    } else {
-	        enrollerString = "java:comp/env/ejb/SimpleEnroller";
-		queueString = "java:comp/env/jms/SampleQueue";
-	    }
-	    Properties env = new Properties();
-	    env.put("java.naming.factory.initial", "org.glassfish.jndi.cosnaming.CNCtxFactory");
-	    ORBLocator orbLocator = Globals.getDefaultHabitat().getService(ORBLocator.class);
-	    
-	    env.put("java.naming.corba.orb", orbLocator.getORB());
-	    // Initialize the Context with JNDI specific properties
-	    InitialContext ctx = new InitialContext(env);
-	    System.out.println("looking up ejb/MyStudent using org.glassfish.jndi.cosnaming.CNCtxFactory...");
-	    Object obj = ctx.lookup("ejb/MyStudent");
-	    System.out.println("Looked up ejb/MyStudent with CnCtxFactory...");
-	    StudentHome sH = 
-	      (StudentHome) PortableRemoteObject.narrow(obj, 
-							StudentHome.class);
-	    Student denise1 = sH.create("111", "Tiffany Moore");
-	    System.out.println("Created student id 111 for Tiffany Moore");
-	    
-	    Context initial = new InitialContext();
-	    System.out.println("Looking up MEJB...");
-	    Object objref = initial.lookup("ejb/mgmt/MEJB"); 
-	    System.out.println("Looked up ejb/mgmt/MEJB");
-	    System.out.println("Looking up EJB REFs whose jndi name is specified as a corbaname: url ==>");
-	    System.out.println("Creating new Context 1..");
-           
-	    System.out.println("Using Context 1, Looking up EJB using corbaname: url with global jndi name ==>");
-	   
-	    objref = initial.lookup("corbaname:iiop:localhost:3700#ejb/MyStudent");
-	    System.out.println("Looked up corbaname:iiop:localhost:3700#ejb/MyStudent");
-            
-            StudentHome sHome = 
-                (StudentHome) PortableRemoteObject.narrow(objref, 
+    String queueString = "";
+        try {
+        if (args.length != 0 && args[0].equals("standalone")) {
+            enrollerString = "ejb/MyEnroller";
+        queueString = "jms/SampleQueue";
+        } else {
+            enrollerString = "java:comp/env/ejb/SimpleEnroller";
+        queueString = "java:comp/env/jms/SampleQueue";
+        }
+        Properties env = new Properties();
+        env.put("java.naming.factory.initial", "org.glassfish.jndi.cosnaming.CNCtxFactory");
+        ORBLocator orbLocator = Globals.getDefaultHabitat().getService(ORBLocator.class);
+
+        env.put("java.naming.corba.orb", orbLocator.getORB());
+        // Initialize the Context with JNDI specific properties
+        InitialContext ctx = new InitialContext(env);
+        System.out.println("looking up ejb/MyStudent using org.glassfish.jndi.cosnaming.CNCtxFactory...");
+        Object obj = ctx.lookup("ejb/MyStudent");
+        System.out.println("Looked up ejb/MyStudent with CnCtxFactory...");
+        StudentHome sH =
+          (StudentHome) PortableRemoteObject.narrow(obj,
+                            StudentHome.class);
+        Student denise1 = sH.create("111", "Tiffany Moore");
+        System.out.println("Created student id 111 for Tiffany Moore");
+
+        Context initial = new InitialContext();
+        System.out.println("Looking up MEJB...");
+        Object objref = initial.lookup("ejb/mgmt/MEJB");
+        System.out.println("Looked up ejb/mgmt/MEJB");
+        System.out.println("Looking up EJB REFs whose jndi name is specified as a corbaname: url ==>");
+        System.out.println("Creating new Context 1..");
+
+        System.out.println("Using Context 1, Looking up EJB using corbaname: url with global jndi name ==>");
+
+        objref = initial.lookup("corbaname:iiop:localhost:3700#ejb/MyStudent");
+        System.out.println("Looked up corbaname:iiop:localhost:3700#ejb/MyStudent");
+
+            StudentHome sHome =
+                (StudentHome) PortableRemoteObject.narrow(objref,
                                                           StudentHome.class);
             Student denise = sHome.create("823", "Denise Smith");
 
 
-	    System.out.println("Using Context 1, looking up global jndi name ==>");	    
-	    Object objRef = initial.lookup("ejb/MyCourse");
-	    System.out.println("Looked up ejb/MyCourse");
-	    CourseHome cHome = (CourseHome) 
-	      PortableRemoteObject.narrow(objRef, 
-					  CourseHome.class);	    
-	    Course power = cHome.create("220", "Power J2EE Programming");    
+        System.out.println("Using Context 1, looking up global jndi name ==>");
+        Object objRef = initial.lookup("ejb/MyCourse");
+        System.out.println("Looked up ejb/MyCourse");
+        CourseHome cHome = (CourseHome)
+          PortableRemoteObject.narrow(objRef,
+                      CourseHome.class);
+        Course power = cHome.create("220", "Power J2EE Programming");
 
-	    objref = initial.lookup(enrollerString);
-	    System.out.println("Looked up " + enrollerString);
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+        objref = initial.lookup(enrollerString);
+        System.out.println("Looked up " + enrollerString);
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
             Enroller enroller = eHome.create();
             enroller.enroll("823", "220");
@@ -125,7 +125,7 @@ public class EnrollerClient {
                 System.out.println(courseId + " " + course.getName());
             }
             System.out.println();
- 
+
             Course intro = cHome.findByPrimaryKey("777");
             System.out.println(intro.getName() + ":");
             courses = intro.getStudentIds();
@@ -136,47 +136,47 @@ public class EnrollerClient {
                 System.out.println(studentId + " " + student.getName());
             }
 
-	    System.out.println("Looking up JMS Resource Refs ==>");
-	    System.out.println("Creating new Context 2..");
-	    Context initial1 = new InitialContext();            	    
-	    jakarta.jms.Queue queue = (jakarta.jms.Queue) initial1.lookup(queueString);
-	    System.out.println("looked up " + queueString);
+        System.out.println("Looking up JMS Resource Refs ==>");
+        System.out.println("Creating new Context 2..");
+        Context initial1 = new InitialContext();
+        jakarta.jms.Queue queue = (jakarta.jms.Queue) initial1.lookup(queueString);
+        System.out.println("looked up " + queueString);
 
-	    System.out.println("Creating new Context 3...");
-	    Context initial2 = new InitialContext();
-	    jakarta.jms.QueueConnectionFactory queueConnectionFactory = 
-	      (QueueConnectionFactory)
-	      initial2.lookup("jms/QCFactory");
-	    System.out.println("Looked up jms/QCFactory");
-	    
+        System.out.println("Creating new Context 3...");
+        Context initial2 = new InitialContext();
+        jakarta.jms.QueueConnectionFactory queueConnectionFactory =
+          (QueueConnectionFactory)
+          initial2.lookup("jms/QCFactory");
+        System.out.println("Looked up jms/QCFactory");
+
             stat.addStatus("load balancing", stat.PASS);
         } catch (Exception ex) {
             stat.addStatus("load balancing", stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         }
-    } 
+    }
 
-	private void testInAppClientContainer() {
-		System.out.println("Creating new Context ...");
-		try {
-			InitialContext ctx = new InitialContext();
-			Object obj = ctx.lookup("java:comp/InAppClientContainer");
-			if (obj == null) {
-				stat.addStatus("testInAppClientContainer", stat.FAIL);
-				return;
-			}
-			Boolean result = (Boolean) obj;
-			if (!result) {
-				stat.addStatus("testInAppClientContainer", stat.FAIL);
-			}
-			System.out.println("Looked up java:comp/InAppClientContainer :"
-					+ result);
-			 stat.addStatus("testInAppClientContainer", stat.PASS);
-		} catch (Exception ex) {
-			 stat.addStatus("testInAppClientContainer", stat.FAIL);
-	         System.err.println("Caught an unexpected exception!");
-	         ex.printStackTrace();
-		}
-	}
-} 
+    private void testInAppClientContainer() {
+        System.out.println("Creating new Context ...");
+        try {
+            InitialContext ctx = new InitialContext();
+            Object obj = ctx.lookup("java:comp/InAppClientContainer");
+            if (obj == null) {
+                stat.addStatus("testInAppClientContainer", stat.FAIL);
+                return;
+            }
+            Boolean result = (Boolean) obj;
+            if (!result) {
+                stat.addStatus("testInAppClientContainer", stat.FAIL);
+            }
+            System.out.println("Looked up java:comp/InAppClientContainer :"
+                    + result);
+             stat.addStatus("testInAppClientContainer", stat.PASS);
+        } catch (Exception ex) {
+             stat.addStatus("testInAppClientContainer", stat.FAIL);
+             System.err.println("Caught an unexpected exception!");
+             ex.printStackTrace();
+        }
+    }
+}

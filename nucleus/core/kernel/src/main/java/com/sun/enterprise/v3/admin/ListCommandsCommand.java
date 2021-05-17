@@ -35,15 +35,15 @@ import org.jvnet.hk2.annotations.Service;
  * Simple admin command to list all existing commands.
  *
  * @author Jerome Dochez
- * 
+ *
  */
 @Service(name="list-commands")
 @Singleton        // no per-execution state
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-commands", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-commands",
         description="list-commands")
 })
 @AccessRequired(resource="domain", action="read")
@@ -53,7 +53,7 @@ public class ListCommandsCommand implements AdminCommand {
 
     @Inject
     ServiceLocator habitat;
-    
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -72,11 +72,11 @@ public class ListCommandsCommand implements AdminCommand {
             part.setMessage(name);
         }
     }
-    
+
     protected String getScope() {
         return null;
     }
-    
+
     private List<String> sortedAdminCommands() {
         String scope = getScope();
         List<String> names = new ArrayList<String>();
@@ -85,7 +85,7 @@ public class ListCommandsCommand implements AdminCommand {
                 //see 6161 -- I thought we should ensure that a command found in habitat should
                 //return a valid Command Object, but it was decided that we don't need to instantiate
                 //each object satisfying AdminCommand contract to get a list of all commands
-                
+
                 // limit list to commands for current scope
             if (name != null) {
                 int ci = name.indexOf("/");
@@ -109,21 +109,21 @@ public class ListCommandsCommand implements AdminCommand {
         return (names);
 
     }
-    
+
     private static boolean debugCommand(ServiceHandle<?> command) {
         ActiveDescriptor<?> ad = command.getActiveDescriptor();
         Map<String, List<String>> metadata = ad.getMetadata();
-        
+
         List<String> modes = metadata.get(MODE);
         if (modes == null) return false;
-        
+
         for (String mode : modes) {
             if (DEBUG.equals(mode)) return true;
         }
-        
+
         return false;
     }
-    
+
     private static boolean debugSet() { //TODO take into a/c debug-enabled?
         String s = System.getenv("AS_DEBUG");
         return ( Boolean.valueOf(s) );

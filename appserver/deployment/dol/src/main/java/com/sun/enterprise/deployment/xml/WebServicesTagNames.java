@@ -24,7 +24,7 @@ package com.sun.enterprise.deployment.xml;
 public class WebServicesTagNames {
 
     public static final String IBM_NAMESPACE = "http://www.ibm.com/webservices/xsd";
-    
+
     public static final String TRANSPORT_GUARANTEE = "transport-guarantee";
     public static final String CALL_PROPERTY = "call-property";
     public static final String WEB_SERVICE_ENDPOINT = "webservice-endpoint";
@@ -43,9 +43,9 @@ public class WebServicesTagNames {
     public static final String SERVICE_REF = "service-ref";
     public static final String SERVICE_REF_NAME = "service-ref-name";
     public static final String SERVICE_INTERFACE = "service-interface";
-    public static final String SERVICE_ENDPOINT_INTERFACE = 
+    public static final String SERVICE_ENDPOINT_INTERFACE =
         "service-endpoint-interface";
-    public static final String WEB_SERVICE_DESCRIPTION_NAME = 
+    public static final String WEB_SERVICE_DESCRIPTION_NAME =
         "webservice-description-name";
     public static final String WSDL_PORT = "wsdl-port";
     public static final String RESPECT_BINDING = "respect-binding";
@@ -88,7 +88,7 @@ public class WebServicesTagNames {
     public static final String SERVICE_REF_TYPE="service-ref-type";
 
     public static final String COMPONENT_NAME = "component-name";
-    public static final String ENDPOINT_ADDRESS = "endpoint-address";   
+    public static final String ENDPOINT_ADDRESS = "endpoint-address";
 
     public static final String HANDLER = "handler";
     public static final String HANDLER_NAME = "handler-name";

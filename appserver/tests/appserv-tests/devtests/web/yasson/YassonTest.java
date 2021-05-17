@@ -43,7 +43,7 @@ public class YassonTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 21922");
         YassonTest yassonTest = new YassonTest(args);
@@ -51,8 +51,8 @@ public class YassonTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -62,7 +62,7 @@ public class YassonTest {
     }
 
     private void invoke() throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port + contextRoot
                           + "/TransformToJson?parameter="
                           + URLEncoder.encode(PARAMETER));
@@ -70,7 +70,7 @@ public class YassonTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200"
                                 + ", received: " + responseCode);
         } else {

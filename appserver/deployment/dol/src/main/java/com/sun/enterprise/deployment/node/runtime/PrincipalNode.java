@@ -26,44 +26,44 @@ import org.w3c.dom.Node;
  * This mode handles the principal definition in the runtine DDs
  *
  * @author Jerome Dochez
- * @version 
+ * @version
  */
 public class PrincipalNode extends DeploymentDescriptorNode {
-    
+
     PrincipalImpl principal=null;
-        
+
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         return principal;
     }
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     public void setElementValue(XMLElement element, String value) {
-        
+
         if (RuntimeTagNames.NAME.equals(element.getQName())) {
             principal = new PrincipalImpl(value);
         } else super.setElementValue(element, value);
-    }     
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, PrincipalImpl descriptor) {      
-        Node principal = appendChild(parent, nodeName);     
-	appendTextChild(principal, RuntimeTagNames.NAME, descriptor.getName());
+     */
+    public Node writeDescriptor(Node parent, String nodeName, PrincipalImpl descriptor) {
+        Node principal = appendChild(parent, nodeName);
+    appendTextChild(principal, RuntimeTagNames.NAME, descriptor.getName());
         return principal;
-        
+
     }
 }

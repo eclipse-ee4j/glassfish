@@ -35,10 +35,10 @@ import java.nio.ByteBuffer;
  * @author dochez
  */
 public class ConstantPoolInfo {
-    
+
     byte[] bytes = new byte[Short.MAX_VALUE];
     private AnnotationScanner scanner = null;
-    
+
 
     public ConstantPoolInfo(AnnotationScanner scanner) {
         this.scanner = scanner;
@@ -48,8 +48,8 @@ public class ConstantPoolInfo {
      * Read the input channel and initialize instance data
      * structure.
      */
-    public boolean containsAnnotation(int constantPoolSize, final ByteBuffer buffer) throws IOException { 
-            
+    public boolean containsAnnotation(int constantPoolSize, final ByteBuffer buffer) throws IOException {
+
         for (int i=1;i<constantPoolSize;i++) {
             final byte type = buffer.get();
             switch(type) {
@@ -91,7 +91,7 @@ public class ConstantPoolInfo {
                 case LONG:
                 case DOUBLE:
                     buffer.position(buffer.position()+8);
-                    // for long, and double, they use 2 constantPool 
+                    // for long, and double, they use 2 constantPool
                     i++;
                     break;
                 case NAMEANDTYPE:
@@ -105,8 +105,8 @@ public class ConstantPoolInfo {
         }
         return false;
     }
-    
-    
+
+
     public static final byte CLASS = 7;
     public static final int FIELDREF = 9;
     public static final int METHODREF = 10;
@@ -118,5 +118,5 @@ public class ConstantPoolInfo {
     public static final int INTERFACEMETHODREF = 11;
     public static final int NAMEANDTYPE = 12;
     public static final int ASCIZ = 1;
-    public static final int UNICODE = 2;    
+    public static final int UNICODE = 2;
 }

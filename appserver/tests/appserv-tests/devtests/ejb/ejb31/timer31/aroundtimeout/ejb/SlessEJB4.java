@@ -45,7 +45,7 @@ public class SlessEJB4 implements Sless4
     // aroundTimeout should be still false, and exception is expected.
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB4-cbd")
     public void cbd() {
-        System.out.println("in SlessEJB4:cbd().  aroundTimeoutCalled = " + 
+        System.out.println("in SlessEJB4:cbd().  aroundTimeoutCalled = " +
                            aroundTimeoutCalled);
 
         // a little extra checking to make sure aroundTimeout is invoked...
@@ -68,13 +68,13 @@ public class SlessEJB4 implements Sless4
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB4-abef")
     public void abef(Timer t) {}
 
-    // @ExcludeDefaultInterceptors is a no-op here since it 
+    // @ExcludeDefaultInterceptors is a no-op here since it
     // was already excluded at class-level
     @ExcludeDefaultInterceptors
     @Interceptors({InterceptorE.class, InterceptorF.class})
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB4-cbdef")
     public void cbdef() {}
-    
+
     @ExcludeClassInterceptors
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB4-nothing")
     public void nothing() {}
@@ -91,7 +91,7 @@ public class SlessEJB4 implements Sless4
             throw new EJBException(e);
         }
     }
-    
+
     public void verify() {
         Common.checkResults("SlessEJB4", EXPECTED);
         Collection<Timer> timers = timerSvc.getTimers();
@@ -100,5 +100,5 @@ public class SlessEJB4 implements Sless4
         aroundTimeoutCalled = false;
     }
 }
-    
+
 

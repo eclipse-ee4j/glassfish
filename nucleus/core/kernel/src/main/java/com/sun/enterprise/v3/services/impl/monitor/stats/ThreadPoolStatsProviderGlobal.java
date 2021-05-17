@@ -24,7 +24,7 @@ import org.glassfish.gmbal.ManagedObject;
 
 /**
  * Server wide Thread Pool statistics
- * 
+ *
  * @author Amy Roh
  */
 @AMXMetadata(type = "thread-pool-mon", group = "monitoring")
@@ -90,5 +90,5 @@ public class ThreadPoolStatsProviderGlobal extends ThreadPoolStatsProvider {
         totalExecutedTasksCount.increment();
         currentThreadsBusy.decrement();
     }
-    
+
 }

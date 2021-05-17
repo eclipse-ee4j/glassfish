@@ -27,7 +27,7 @@ import java.util.Properties;
  */
 public interface TrustHandler {
 
-    
+
     public void initialize(Properties props);
     /**
      * determines if the container can trust the network entity from which we received the message with P-Asserted-Identity
@@ -44,5 +44,5 @@ public interface TrustHandler {
      */
     public boolean isTrusted(String asserterAddress, String messageDirection,X509Certificate securityid, Principal[] pAssertedValues);
 
-   
+
 }

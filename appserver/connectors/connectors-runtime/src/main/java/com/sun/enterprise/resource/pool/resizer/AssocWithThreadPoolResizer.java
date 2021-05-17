@@ -32,7 +32,7 @@ import java.util.logging.Level;
 /**
  * Resizer for Associate With Thread type pools to remove unusable connections
  * and maintain steady pool size.
- * 
+ *
  * @author Shalini M
  */
 public class AssocWithThreadPoolResizer extends Resizer {
@@ -143,7 +143,7 @@ public class AssocWithThreadPoolResizer extends Resizer {
         }
 
         //remove invalid resources from the free (active) resources list.
-        //Since the whole pool is not locked, it may happen that some of these 
+        //Since the whole pool is not locked, it may happen that some of these
         //resources may be given to applications.
         int noOfInvalidResources = removeInvalidResources(resourcesToValidate);
 

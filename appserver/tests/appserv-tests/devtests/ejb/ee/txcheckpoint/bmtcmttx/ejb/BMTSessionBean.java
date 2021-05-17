@@ -30,7 +30,7 @@ import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 
 public class BMTSessionBean
-    implements SessionBean 
+    implements SessionBean
 {
 
     private static final String LOCAL_CHILD_SUFFIX = "_childLocal";
@@ -39,11 +39,11 @@ public class BMTSessionBean
 
     private int activateCount;
     private int passivateCount;
-    private int	count;
+    private int    count;
 
     private SessionContext              sessionCtx;
     private String                      sfsbName;
-    private UserTransaction		userTx;
+    private UserTransaction        userTx;
 
     private CMTSessionHome cmtHome;
     private CMTSession cmtSfsb;
@@ -55,19 +55,19 @@ public class BMTSessionBean
         System.out.println ("In SFSB.ejbCreate() for name -> " + sfsbName);
         this.sfsbName = sfsbName;
 
-	try {
-	    InitialContext ic = new InitialContext();
-	    Object objref = ic.lookup("java:comp/env/ejb/CMTSessionHome");
-	    cmtHome = (CMTSessionHome)PortableRemoteObject.narrow(
-		objref, CMTSessionHome.class);
-	    cmtSfsb = (CMTSession) cmtHome.create(sfsbName);
+    try {
+        InitialContext ic = new InitialContext();
+        Object objref = ic.lookup("java:comp/env/ejb/CMTSessionHome");
+        cmtHome = (CMTSessionHome)PortableRemoteObject.narrow(
+        objref, CMTSessionHome.class);
+        cmtSfsb = (CMTSession) cmtHome.create(sfsbName);
 
-	    for (int i=0; i<MAX_SIZE; i++) {
-		cmtSessions[i] = (CMTSession) cmtHome.create(sfsbName + i);
-	    }
-	} catch (Exception ex) {
-	    throw new EJBException(ex.toString());
-	}
+        for (int i=0; i<MAX_SIZE; i++) {
+        cmtSessions[i] = (CMTSession) cmtHome.create(sfsbName + i);
+        }
+    } catch (Exception ex) {
+        throw new EJBException(ex.toString());
+    }
     }
 
     public String getName() {
@@ -80,63 +80,63 @@ public class BMTSessionBean
     }
 
     public void startTx() {
-	try {
-	    userTx = sessionCtx.getUserTransaction();
-	    userTx.begin();
-	} catch (Exception ex) {
-	    throw new EJBException(ex.toString());
-	}
+    try {
+        userTx = sessionCtx.getUserTransaction();
+        userTx.begin();
+    } catch (Exception ex) {
+        throw new EJBException(ex.toString());
+    }
     }
 
     public void commitTx() {
-	try {
-	    userTx.commit();
-	} catch (Exception ex) {
-	    throw new EJBException(ex.toString());
-	}
+    try {
+        userTx.commit();
+    } catch (Exception ex) {
+        throw new EJBException(ex.toString());
+    }
     }
 
     public void rollbackTx() {
-	try {
-	    userTx.rollback();
-	} catch (Exception ex) {
-	    throw new EJBException(ex.toString());
-	}
+    try {
+        userTx.rollback();
+    } catch (Exception ex) {
+        throw new EJBException(ex.toString());
+    }
     }
 
     public void incrementCount() {
-	count++;
+    count++;
     }
 
     public void accessCMTBean()
-	throws java.rmi.RemoteException
+    throws java.rmi.RemoteException
     {
-	cmtSfsb.incrementCount();
-	for (int i=0; i<MAX_SIZE; i++) {
-	    cmtSessions[i].incrementCount();
-	}
+    cmtSfsb.incrementCount();
+    for (int i=0; i<MAX_SIZE; i++) {
+        cmtSessions[i].incrementCount();
+    }
     }
 
     public CMTSession getCMTSession() {
-	return cmtSfsb;
+    return cmtSfsb;
     }
 
     public int getActivateCount() {
-	return activateCount;
+    return activateCount;
     }
 
     public int getPassivateCount() {
-	return passivateCount;
+    return passivateCount;
     }
 
     public void ejbRemove() {}
 
     public void ejbActivate() {
-	activateCount++;
+    activateCount++;
     }
 
     public void ejbPassivate() {
-	passivateCount++;
+    passivateCount++;
     }
 
 }

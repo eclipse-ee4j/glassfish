@@ -19,11 +19,11 @@
 -->
 
 <!ENTITY commonSetup SYSTEM "./../../../../config/properties.xml">
-	<!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
+    <!ENTITY commonBuild SYSTEM "./../../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
-	<!ENTITY run SYSTEM "./../../../../config/run.xml">
-	<!ENTITY eeSetup SYSTEM "./../../config/ee-common.xml">
-	<!ENTITY eeProperties SYSTEM "./../../config/ee-properties.xml">
+    <!ENTITY run SYSTEM "./../../../../config/run.xml">
+    <!ENTITY eeSetup SYSTEM "./../../config/ee-common.xml">
+    <!ENTITY eeProperties SYSTEM "./../../config/ee-properties.xml">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -57,28 +57,28 @@
     </target>
 
     <target name="build" depends="compile">
-	<property name="hasWebclient" value="true"/>
+    <property name="hasWebclient" value="true"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
             <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
         <antcall target="ejb-jar-common">
-	    <param name="ejbjar.classes" value="**/*.class"/>
-	</antcall>
+        <param name="ejbjar.classes" value="**/*.class"/>
+    </antcall>
 
-	<delete file="${assemble.dir}/${appname}.ear"/>
+    <delete file="${assemble.dir}/${appname}.ear"/>
         <mkdir dir="${assemble.dir}"/>
 
         <mkdir dir="${build.classes.dir}/META-INF"/>
 
-        <ear earfile="${assemble.dir}/${appname}App.ear" 
-	     appxml="${application.xml}">
-	     <fileset dir="${assemble.dir}">
-	        <include name="*.jar"/>
-	        <include name="*.war"/>
-	     </fileset>
-	</ear>
+        <ear earfile="${assemble.dir}/${appname}App.ear"
+         appxml="${application.xml}">
+         <fileset dir="${assemble.dir}">
+            <include name="*.jar"/>
+            <include name="*.war"/>
+         </fileset>
+    </ear>
     </target>
 
     <target name="deploy" depends="init-common">
@@ -92,20 +92,20 @@
     <target name="run" depends="init-common">
         <antcall target="stop-derby"/>
 
-	<parallel>
-        	<antcall target="run-test-1"/>
-		<sequential>
-			<sleep seconds="15"/>
-			<antcall target="start-derby"/>
-		</sequential>
-	</parallel>
+    <parallel>
+            <antcall target="run-test-1"/>
+        <sequential>
+            <sleep seconds="15"/>
+            <antcall target="start-derby"/>
+        </sequential>
+    </parallel>
 
     </target>
 
     <target name="run-test-1" depends="init-common">
         <antcall target="runwebclient-common">
-  	    <param name="testsuite.id" value="web-to-ejb (ear based)"/>
-	</antcall>
+          <param name="testsuite.id" value="web-to-ejb (ear based)"/>
+    </antcall>
     </target>
 
     <target name="undeploy" depends="init-common">

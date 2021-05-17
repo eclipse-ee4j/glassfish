@@ -34,27 +34,27 @@ public class StatefulBean {
     private SessionContext sessionCtx;
 
     @EJB
-	private SingletonBean singleton;
+    private SingletonBean singleton;
 
     @PostConstruct
-	public void init() {
-	System.out.println("In StatefulBean::init()");
-	System.out.println("sessionCtx = " + sessionCtx);
-	if( sessionCtx == null ) {
-	    throw new EJBException("EE injection error");
-	}
-	singleton.hello();
+    public void init() {
+    System.out.println("In StatefulBean::init()");
+    System.out.println("sessionCtx = " + sessionCtx);
+    if( sessionCtx == null ) {
+        throw new EJBException("EE injection error");
+    }
+    singleton.hello();
     }
 
     public void hello() {
-	System.out.println("In StatefulBean::hello()");
+    System.out.println("In StatefulBean::hello()");
     }
 
     @PreDestroy
-	public void destroy() {
-	System.out.println("In StatefulBean::destroy()");
+    public void destroy() {
+    System.out.println("In StatefulBean::destroy()");
     }
 
-    
+
 
 }

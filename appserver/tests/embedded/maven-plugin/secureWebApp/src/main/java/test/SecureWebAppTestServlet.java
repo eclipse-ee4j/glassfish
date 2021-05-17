@@ -56,7 +56,7 @@ public class SecureWebAppTestServlet extends HttpServlet {
             return;
         }
         print("[End of OUTPUT from SecureWebAppTestServlet]", out);
-        
+
         out.flush();
         out.close();
     }

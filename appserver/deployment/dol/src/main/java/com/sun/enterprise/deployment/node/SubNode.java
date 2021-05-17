@@ -33,4 +33,4 @@ public interface SubNode<T> {
   public String getTagName();
 
   public T getDescriptor();
-}    
+}

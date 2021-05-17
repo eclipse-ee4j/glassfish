@@ -50,7 +50,7 @@ public class CheckpointAtEndOfMethodDescriptor extends Descriptor {
     public ArrayList getConvertedMethodDescs() {
        if (convertedMethodDescs.isEmpty()) {
            convertStyleCheckpointedMethods();
-       } 
+       }
        return convertedMethodDescs;
     }
 
@@ -87,14 +87,14 @@ public class CheckpointAtEndOfMethodDescriptor extends Descriptor {
             MethodDescriptor methodDesc = (MethodDescriptor) mdItr.next();
 
             // the ejb-name element defined in the method element will
-            // be always ignored and overriden by the one defined in 
+            // be always ignored and overriden by the one defined in
             // ejb element
             methodDesc.setEjbName(ejbDescriptor.getName());
 
             // Convert to style 3 method descriptors
-            Vector mds = 
+            Vector mds =
                 methodDesc.doStyleConversion(ejbDescriptor, allMethods);
-            convertedMethodDescs.addAll(mds); 
+            convertedMethodDescs.addAll(mds);
         }
     }
 

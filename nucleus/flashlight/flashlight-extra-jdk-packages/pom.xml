@@ -42,7 +42,7 @@
                 <role>developer</role>
                 <role>lead</role>
             </roles>
-        </developer>        
+        </developer>
     </developers>
 
     <build>
@@ -59,7 +59,7 @@
  com.sun.tools,
  com.sun.tools.attach
                             </Export-Package>
-                            <Bundle-Description>${project.description}</Bundle-Description> 
+                            <Bundle-Description>${project.description}</Bundle-Description>
                         </manifestEntries>
                     </archive>
                 </configuration>

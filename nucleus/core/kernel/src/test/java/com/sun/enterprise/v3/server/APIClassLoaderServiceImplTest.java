@@ -62,7 +62,7 @@ public class APIClassLoaderServiceImplTest {
 
             ModuleLifecycleListener lifecycleListener = lifecycleListeners.iterator().next();
 
-            
+
             // assert that the classloader isn't called on to load the same bad
             // class twice
             assertEquals(0, loadClassCalls);
@@ -85,7 +85,7 @@ public class APIClassLoaderServiceImplTest {
 
             assertEquals("blacklist not honored, excessive call to classloader.load", 1, loadClassCalls);
 
-            
+
             // try same thing with resources
 
             assertEquals(0, getResourceCalls); // sanity
@@ -100,7 +100,7 @@ public class APIClassLoaderServiceImplTest {
 
             assertEquals("blacklist not honored, excessive call to classloader.getResource", 1, getResourceCalls);
 
-            
+
             //
             // Now signal that a new module has been loaded, clearing the blacklist
             //
@@ -118,7 +118,7 @@ public class APIClassLoaderServiceImplTest {
 
             assertEquals("blacklist did not clear after a module was installed", 2, loadClassCalls);
 
-            
+
             //
             // Now signal that a new module has been updated, clearing the blacklist
             //

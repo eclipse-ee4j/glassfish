@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Testing Ambiguous dependencies");
         WebTest webTest = new WebTest(args);
@@ -46,7 +46,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -56,7 +56,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot
                      + "/myurl";
         System.out.println("opening connection to " + url);
@@ -96,10 +96,10 @@ public class WebTest {
             if (EXPECTED_RESPONSE.equals(line)) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {
-                System.out.println("Wrong response. Expected: " + 
+                System.out.println("Wrong response. Expected: " +
                         EXPECTED_RESPONSE + ", received: " + line);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
-        }    
+        }
     }
 }

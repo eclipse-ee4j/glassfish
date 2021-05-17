@@ -29,7 +29,7 @@
   </parent>
 
     <artifactId>osgi-modules-uninstaller</artifactId>
-    
+
     <name>GlassFish OSGI Modules Uninstaller</name>
 
     <dependencies>

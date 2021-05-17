@@ -18,7 +18,7 @@
 -->
 
 <project name="v3-targets" default="all" basedir=".">
-    
+
     <property name="db.root" value="${glassfish.home}/javadb"/>
     <property name="db.classpath" value="${db.root}/lib"/>
     <property name="war.file.ext" value="${war.file}.war"/>
@@ -48,20 +48,20 @@
 </target>
 
 <target name="start-server-unix" if="isUnix">
-    <exec executable="${glassfish.home}/bin/asadmin">        
+    <exec executable="${glassfish.home}/bin/asadmin">
         <arg value="start-domain"/>
     </exec>
 
 </target>
 
 <target name="start-server-windows" if="isWindows">
-    
-    <exec executable="cmd">	
+
+    <exec executable="cmd">
         <arg value="/c"/>
         <arg value="${glassfish.home}/bin/asadmin"/>
         <arg value="start-domain"/>
     </exec>
-    
+
 </target>
 
 <target name="stop-server" depends="setOSConditions">
@@ -71,7 +71,7 @@
 
 <target name="stop-server-unix" if="isUnix">
     <echo message="stopping server on unix ..."/>
-    <exec executable="${glassfish.home}/bin/asadmin">        
+    <exec executable="${glassfish.home}/bin/asadmin">
         <arg value="stop-domain"/>
     </exec>
 </target>
@@ -84,13 +84,13 @@
         <arg value="stop-domain"/>
     </exec>
 </target>
-    
-      
+
+
 <target name="deploy-v3-impl" depends="setOSConditions">
     <echo message="glassfish.home is ${glassfish.home}"/>
     <echo message="deploying in v3 mode"/>
     <echo message="./${war.file}"/>
-    <echo message="OS is ${os.name}"/>    
+    <echo message="OS is ${os.name}"/>
 
     <echo message="Please access URL http://${glassfish.http.host}:${glassfish.http.port}/${contextroot}"/>
     <antcall target="deploy-v3-impl-unix"/>
@@ -104,10 +104,10 @@
     <arg value="deploy"/>
     <arg value="--path"/>
     <arg value="--upload=false"/>
-    <arg line="${deployed.app}"/>   
-   </exec>  
+    <arg line="${deployed.app}"/>
+   </exec>
 </target>
-  
+
 <target name="deploy-v3-impl-unix" if="isUnix">
   <exec executable="${glassfish.home}/bin/asadmin">
     <arg value="deploy"/>
@@ -119,7 +119,7 @@
 <target name="undeploy-v3-impl" depends="setOSConditions">
     <echo message="undeploying in v3 mode"/>
     <echo message="./${war.file}"/>
-    
+
     <antcall target="undeploy-v3-impl-unix"/>
     <antcall target="undeploy-v3-impl-windows"/>
 </target>
@@ -128,16 +128,16 @@
     <exec executable="cmd">
     <arg value="/c"/>
     <arg value="${glassfish.home}/bin/asadmin.bat"/>
-    <arg value="undeploy"/>    
+    <arg value="undeploy"/>
     <arg value="${war.file}"/>
-  </exec>  
+  </exec>
 </target>
-  
+
 <target name="undeploy-v3-impl-unix" if="isUnix">
   <exec executable="${glassfish.home}/bin/asadmin">
     <arg value="undeploy"/>
     <arg value="${war.file}"/>
-  </exec>      
+  </exec>
 </target>
 
 </project>

@@ -161,7 +161,7 @@ public class GlassFishMain {
             prompt();
             String command = null;
             while((command = reader.readLine()) != null && command.isEmpty()) {
-                // loop until a non empty command or Ctrl-D is inputted.  
+                // loop until a non empty command or Ctrl-D is inputted.
             }
             return command;
         }

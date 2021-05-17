@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for https://glassfish.dev.java.net/issues/show_bug.cgi?id=1093
  * ("x-powered-by header has redundant information"):
  *
- * Make sure that if one JSP forwards to another, the response does not 
+ * Make sure that if one JSP forwards to another, the response does not
  * contain any duplicate 'X-Powered-By: JSP' header.
  */
 public class WebTest {
@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish issue 1093");
 

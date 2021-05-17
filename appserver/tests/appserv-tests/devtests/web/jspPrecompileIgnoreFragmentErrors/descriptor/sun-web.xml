@@ -22,5 +22,5 @@
 <sun-web-app>
   <jsp-config>
     <property name="ignoreJspFragmentErrors" value="true" />
-  </jsp-config> 
+  </jsp-config>
 </sun-web-app>

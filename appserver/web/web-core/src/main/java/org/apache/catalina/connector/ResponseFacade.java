@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 
 
 /**
- * Facade class that wraps a Coyote response object. 
+ * Facade class that wraps a Coyote response object.
  * All methods are delegated to the wrapped response.
  *
  * @author Remy Maucherat
@@ -43,7 +43,7 @@ import java.util.function.Supplier;
  */
 
 
-public class ResponseFacade 
+public class ResponseFacade
     implements HttpServletResponse {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
@@ -51,7 +51,7 @@ public class ResponseFacade
 
 
     // ----------------------------------------------------------- DoPrivileged
-    
+
     private final class SetContentTypePrivilegedAction
             implements PrivilegedAction<Void> {
 
@@ -65,10 +65,10 @@ public class ResponseFacade
         public Void run() {
             response.setContentType(contentType);
             return null;
-        }            
+        }
     }
-     
-    
+
+
     // ----------------------------------------------------------- Constructors
 
 
@@ -93,7 +93,7 @@ public class ResponseFacade
 
     // --------------------------------------------------------- Public Methods
 
-    
+
     /**
      * Prevent cloning the facade.
      */
@@ -101,8 +101,8 @@ public class ResponseFacade
     protected Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-      
-    
+
+
     /**
      * Clear facade.
      */
@@ -221,11 +221,11 @@ public class ResponseFacade
 
         if (isCommitted())
             return;
-        
+
         if (SecurityUtil.isPackageProtectionEnabled()){
             AccessController.doPrivileged(new SetContentTypePrivilegedAction(type));
         } else {
-            response.setContentType(type);            
+            response.setContentType(type);
         }
     }
 
@@ -267,7 +267,7 @@ public class ResponseFacade
             //            throw new IllegalStateException
             //                (/*sm.getString("responseFacade.finished")*/);
             return;
-        
+
         if (SecurityUtil.isPackageProtectionEnabled()){
             try{
                 AccessController.doPrivileged(
@@ -289,7 +289,7 @@ public class ResponseFacade
         } else {
             response.setAppCommitted(true);
 
-            response.flushBuffer();            
+            response.flushBuffer();
         }
     }
 

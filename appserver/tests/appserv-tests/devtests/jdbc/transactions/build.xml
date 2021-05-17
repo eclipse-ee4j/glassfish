@@ -35,7 +35,7 @@
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="transactions.output" action="start" />
-	<ant dir="test1" target="all"/>
+    <ant dir="test1" target="all"/>
         <record name="transactions.output" action="stop" />
     </target>
 
@@ -52,9 +52,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the reconfig tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the reconfig tests)
+    </echo>
     </target>
 </project>

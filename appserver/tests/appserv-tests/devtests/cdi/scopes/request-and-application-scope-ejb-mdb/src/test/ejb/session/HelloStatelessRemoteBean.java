@@ -37,7 +37,7 @@ public class HelloStatelessRemoteBean implements HelloSless {
 
     @Inject
     BeanManager bm;
-    
+
     @Inject BeanToTestTimerUse timerBeanTest;
 
     @PostConstruct
@@ -55,10 +55,10 @@ public class HelloStatelessRemoteBean implements HelloSless {
             msg += "Injection of Application scoped bean in EJB remote method failed";
         if (trsb == null)
             msg += "Injection of Request scoped bean in EJB remote method failed";
-        
-        if (!timerBeanTest.getResult()) 
+
+        if (!timerBeanTest.getResult())
             msg += "Injection of session scoped bean into EJB timer beans failed";
-                
+
         return msg;
     }
 }

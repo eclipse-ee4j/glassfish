@@ -21,7 +21,7 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 
 import java.util.*;
 
-/** Interface class of managed connection factory parser methods. 
+/** Interface class of managed connection factory parser methods.
  *  @author Srikanth P
  */
 public interface MessageListenerConfigParser extends ConnectorConfigParser {
@@ -31,15 +31,15 @@ public interface MessageListenerConfigParser extends ConnectorConfigParser {
      *  Obtains the Message Listener types of a given rar.
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @return Array of MessageListener types as strings
-     *  @throws ConnectorRuntimeException If rar is not exploded or 
-     *                                    incorrect ra.xml 
+     *  @throws ConnectorRuntimeException If rar is not exploded or
+     *                                    incorrect ra.xml
      */
     public String[] getMessageListenerTypes(ConnectorDescriptor desc)
                       throws ConnectorRuntimeException;
 
     /**
-     *  Returns the ActivationSpecClass name for the given rar and message 
-     *  listener type. 
+     *  Returns the ActivationSpecClass name for the given rar and message
+     *  listener type.
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @param messageListenerType MessageListener type
      *  @throws ConnectorRuntimeException If rar is not exploded or
@@ -48,8 +48,8 @@ public interface MessageListenerConfigParser extends ConnectorConfigParser {
     public String getActivationSpecClass(ConnectorDescriptor desc,
           String messageListenerType) throws ConnectorRuntimeException;
 
-    /** 
-     * Returns the Properties object consisting of PropertyName as the key 
+    /**
+     * Returns the Properties object consisting of PropertyName as the key
      * and the datatype as the value
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @param  messageListenerType message listener type.It is uniqie

@@ -32,31 +32,31 @@ public class SubjectUtilTest {
 
     private static final String USERNAME = "john";
     private static final String USERNAME2 = "John";
-    private static final String[] GROUPS = {"g1", "g2"}; 
-    
+    private static final String[] GROUPS = {"g1", "g2"};
+
     private boolean debug = false;
-    
+
     @Test
     public void testUserNameUtil() {
-        
+
         Subject sub = createSub(USERNAME, GROUPS);
-        
+
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
-        
+
         if (debug)
             System.out.println("user list =" + usernames);
-        
+
         Assert.assertEquals(1, usernames.size());
     }
 
-    
+
     @Test
     public void testGroupNameUtil() {
 
         Subject sub = createSub(USERNAME, GROUPS);
-        
+
         List<String> groupnames = SubjectUtil.getGroupnamesFromSubject(sub);
-        
+
         if (debug)
             System.out.println("group list =" + groupnames);
 
@@ -65,51 +65,51 @@ public class SubjectUtilTest {
 
     @Test
     public void testUserNameUtil_empty() {
-        
+
         Subject sub = createSub(null, GROUPS);
-        
+
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
-        
+
         Assert.assertEquals(0, usernames.size());
     }
 
-    
+
     @Test
     public void testGroupNameUtil_empty() {
 
         Subject sub = createSub(USERNAME, null);
-        
+
         List<String> groupnames = SubjectUtil.getGroupnamesFromSubject(sub);
-        
+
         Assert.assertEquals(0, groupnames.size());
 
     }
-    
+
     @Test
     public void testUserNameUtil_multi() {
-        
+
         Subject sub = createSub(USERNAME, GROUPS);
         sub.getPrincipals().add(new PrincipalImpl(USERNAME2));
-        
+
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
-        
+
         if (debug)
             System.out.println("user list =" + usernames);
-        
+
         Assert.assertEquals(2, usernames.size());
     }
 
 
-    
+
     public static Subject createSub(String username, String[] groups) {
-        
+
         Set<Principal> pset = new HashSet<Principal>();
-        
+
         if (username != null) {
             Principal u = new PrincipalImpl(username);
             pset.add(u);
         }
-        
+
         if (groups != null) {
             for (String g : groups) {
                 if (g != null) {
@@ -118,14 +118,14 @@ public class SubjectUtilTest {
                 }
             }
         }
-        
-        
+
+
         Set prvSet = new HashSet();
 
         Set<Object> pubSet = new HashSet<Object>();
-        
+
         Subject sub = new Subject(false, pset, pubSet, prvSet);
-        
+
         return sub;
 
     }

@@ -25,8 +25,8 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 */
 public class WebProperty extends RuntimeDescriptor
 {
-    static public final String NAME = "name";	// NOI18N
-    static public final String VALUE = "value";	// NOI18N
+    static public final String NAME = "name";    // NOI18N
+    static public final String VALUE = "value";    // NOI18N
 
     // description handled at Descriptor
 }

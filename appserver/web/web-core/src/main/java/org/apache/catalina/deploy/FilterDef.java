@@ -237,7 +237,7 @@ public class FilterDef implements Serializable {
      * @return true if the init parameter with the given name and value
      * was set, false otherwise
      */
-    public boolean setInitParameter(String name, String value, 
+    public boolean setInitParameter(String name, String value,
                                     boolean override) {
         if (null == name || null == value) {
             throw new IllegalArgumentException(
@@ -278,7 +278,7 @@ public class FilterDef implements Serializable {
                 }
                 if (parameters.containsKey(e.getKey())) {
                     if (conflicts == null) {
-                        conflicts = new HashSet<String>();    
+                        conflicts = new HashSet<String>();
                     }
                     conflicts.add(e.getKey());
                 }
@@ -291,7 +291,7 @@ public class FilterDef implements Serializable {
             for (Map.Entry<String, String> e : initParameters.entrySet()) {
                 setInitParameter(e.getKey(), e.getValue(), true);
             }
-   
+
             return Collections.emptySet();
         }
     }
@@ -301,7 +301,7 @@ public class FilterDef implements Serializable {
         synchronized (parameters) {
             return parameters.get(name);
         }
-    }        
+    }
 
 
     public Map<String, String> getInitParameters() {

@@ -326,7 +326,7 @@ public class DeploymentImpl implements CDI11Deployment {
         if (!beanDeploymentArchives.isEmpty()) {
             return beanDeploymentArchives;
         }
-        
+
         return emptyList();
     }
 
@@ -343,9 +343,9 @@ public class DeploymentImpl implements CDI11Deployment {
             if (logger.isLoggable(FINE)) {
                 logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING, new Object[] { beanClass, beanDeploymentArchive.getId() });
             }
-            
+
             if (((BeanDeploymentArchiveImpl) beanDeploymentArchive).getModuleBeanClasses().contains(beanClass.getName())) {
-                
+
                 // Don't stuff this Bean Class into the BDA's beanClasses,
                 // as Weld automatically add theses classes to the BDA's bean Classes
                 if (logger.isLoggable(FINE)) {
@@ -364,16 +364,16 @@ public class DeploymentImpl implements CDI11Deployment {
                         logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA,
                                 new Object[] { beanClass, subBeanDeploymentArchive.getId() });
                     }
-                    
+
                     if (moduleBeanClassNames.contains(beanClass.getName())) {
-                        
+
                         // Don't stuff this Bean Class into the BDA's beanClasses,
                         // as Weld automatically add theses classes to the BDA's bean Classes
                         if (logger.isLoggable(FINE)) {
                             logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING,
                                     new Object[] { beanClass.getName(), subBeanDeploymentArchive });
                         }
-                        
+
                         return subBeanDeploymentArchive;
                     }
                 }
@@ -389,30 +389,30 @@ public class DeploymentImpl implements CDI11Deployment {
         if (logger.isLoggable(FINE)) {
             logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA, new Object[] { beanClass });
         }
-        
+
         List<Class<?>> beanClasses = new ArrayList<>();
         List<URL> beanXMLUrls = new CopyOnWriteArrayList<>();
         Set<EjbDescriptor> ejbs = new HashSet<>();
         beanClasses.add(beanClass);
-        
+
         BeanDeploymentArchive newBeanDeploymentArchive = new BeanDeploymentArchiveImpl(beanClass.getName(), beanClasses, beanXMLUrls, ejbs, context);
         BeansXml beansXml = newBeanDeploymentArchive.getBeansXml();
         if (beansXml == null || !beansXml.getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
             if (logger.isLoggable(FINE)) {
                 logger.log(FINE, CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
             }
-            
+
             lIter = beanDeploymentArchives.listIterator();
             while (lIter.hasNext()) {
                 BeanDeploymentArchive bda = lIter.next();
                 bda.getBeanDeploymentArchives().add(newBeanDeploymentArchive);
             }
-            
+
             if (logger.isLoggable(FINE)) {
                 logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,
                         new Object[] { beanClass, newBeanDeploymentArchive });
             }
-            
+
             beanDeploymentArchives.add(newBeanDeploymentArchive);
             idToBeanDeploymentArchive.put(newBeanDeploymentArchive.getId(), newBeanDeploymentArchive);
             extensionBDAMap.put(beanClass.getClassLoader(), newBeanDeploymentArchive);
@@ -427,7 +427,7 @@ public class DeploymentImpl implements CDI11Deployment {
         if (simpleServiceRegistry == null) {
             simpleServiceRegistry = new SimpleServiceRegistry();
         }
-        
+
         return simpleServiceRegistry;
     }
 
@@ -444,7 +444,7 @@ public class DeploymentImpl implements CDI11Deployment {
                 ClassLoader moduleClassLoader = ((BeanDeploymentArchiveImpl) beanDeploymentArchive).getModuleClassLoaderForBDA();
                 extensions = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
                         .loadExtensions(moduleClassLoader);
-                
+
                 if (extensions != null) {
                     for (Metadata<Extension> beanDeploymentArchiveExtension : extensions) {
                         extnList.add(beanDeploymentArchiveExtension);
@@ -713,7 +713,7 @@ public class DeploymentImpl implements CDI11Deployment {
         if (libJarRootBdas == null) {
             return null;
         }
-        
+
         return libJarRootBdas.iterator();
     }
 
@@ -721,7 +721,7 @@ public class DeploymentImpl implements CDI11Deployment {
         if (rarRootBdas == null) {
             return null;
         }
-        
+
         return rarRootBdas.iterator();
     }
 }

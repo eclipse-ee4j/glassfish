@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  * Wrapper for application references to entity manager factories.
  * A new instance of this class will be created for each injected
  * EntityManagerFactory reference or each lookup of an EntityManagerFactory
- * reference within the component jndi environment.    
+ * reference within the component jndi environment.
  *
  * @author Kenneth Saks
  */
@@ -74,7 +74,7 @@ public class EntityManagerFactoryWrapper
 
         if( entityManagerFactory == null ) {
             entityManagerFactory = lookupEntityManagerFactory(invMgr, compEnvMgr, unitName);
-            
+
             if( entityManagerFactory == null ) {
                 throw new IllegalStateException
                     ("Unable to retrieve EntityManagerFactory for unitName "
@@ -159,7 +159,7 @@ public class EntityManagerFactoryWrapper
     /**
      * Lookup physical EntityManagerFactory based on current component
      * invocation.
-     * @param invMgr invocationmanager 
+     * @param invMgr invocationmanager
      * @param emfUnitName unit name of entity manager factory or null if not
      *                    specified.
      * @return EntityManagerFactory or null if no matching factory could be
@@ -180,10 +180,10 @@ public class EntityManagerFactoryWrapper
                     emfUnitName, desc);
             }
         }
-        
+
         return emf;
     }
-    
+
     public static EntityManagerFactory lookupEntityManagerFactory(ComponentInvocationType invType,
             String emfUnitName, Object descriptor) {
 

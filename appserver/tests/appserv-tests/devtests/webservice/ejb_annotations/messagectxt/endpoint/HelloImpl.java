@@ -30,11 +30,11 @@ public class HelloImpl {
 
 
     public String sayHello(String who) {
-	if(ejbsc != null) {
+    if(ejbsc != null) {
            System.out.println(ejbsc.getMessageContext());
            if (ejbsc.getMessageContext() instanceof jakarta.xml.ws.handler.MessageContext){
               //System.out.println("YYYYY" +ejbsc.getMessageContext().getClass());
-        	return "WebSvcTest-Hello " + who;
+            return "WebSvcTest-Hello " + who;
 }
            else {
              // System.out.println("NNN " + ejbsc.getMessageContext().getClass());

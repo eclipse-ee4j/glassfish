@@ -47,7 +47,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6339608");
         WebTest webTest = new WebTest(args);
@@ -70,9 +70,9 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         sock = new Socket(host, Integer.parseInt(port));
-    
+
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
             sock.getOutputStream(), "Shift_JIS"));
         bw.write("GET " + contextRoot

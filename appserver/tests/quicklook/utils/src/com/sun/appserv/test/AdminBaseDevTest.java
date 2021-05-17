@@ -33,7 +33,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public abstract class AdminBaseDevTest extends BaseDevTest {
-    
+
     public AdminBaseDevTest() {
         boolean verbose = false;
         try {
@@ -89,7 +89,7 @@ public abstract class AdminBaseDevTest extends BaseDevTest {
             name2 += DASHES.substring(0, numpads);
 
         super.report(name2, success);
-        
+
         if(!success && !isVerbose())
             writeFailure();
         return success;

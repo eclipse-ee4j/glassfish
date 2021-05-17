@@ -23,7 +23,7 @@ public interface SFSB
     extends EJBObject
 {
 
-	public String getName()
+    public String getName()
         throws RemoteException;
 
 

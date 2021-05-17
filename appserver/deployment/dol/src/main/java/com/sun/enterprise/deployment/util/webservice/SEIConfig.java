@@ -35,10 +35,10 @@ public class SEIConfig {
      * @param svcName Name of the webservice
      * @param space   namespace to be used for the webservice
      * @param pkg     the package name where the SEI and its implementations are present
-     * @param svcIntf the name of the SEI 
+     * @param svcIntf the name of the SEI
      * @param svcImpl the name of SEI implementation
      */
-    
+
     public SEIConfig(String svcName, String space, String pkg, String svcIntf, String svcImpl) {
         this.webServiceName = svcName;
         this.nameSpace = space;
@@ -46,14 +46,14 @@ public class SEIConfig {
         this.interfaceName = svcIntf;
         this.servantName = svcImpl;
     }
-    
+
     public String getWebServiceName() { return this.webServiceName; }
-    
+
     public String getNameSpace() { return this.nameSpace; }
-    
+
     public String getPackageName() { return this.packageName; }
-    
+
     public String getInterface() { return this.interfaceName; }
-    
+
     public String getServant() { return this.servantName; }
 }

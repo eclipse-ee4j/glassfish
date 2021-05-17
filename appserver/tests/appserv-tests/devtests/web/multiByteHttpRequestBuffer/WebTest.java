@@ -57,7 +57,7 @@ public class WebTest {
         size = Integer.parseInt(args[3]);
         isAscii = Boolean.valueOf(args[4]);
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Multi-byte Http request buffer");
         WebTest webTest = new WebTest(args);

@@ -256,7 +256,7 @@ public abstract class DomainXml implements Populator {
 
         try {
             ServerReaderFilter xsr = null;
-            // Set the resolver so that any external entity references, such 
+            // Set the resolver so that any external entity references, such
             // as a reference to a DTD, return an empty file.  The domain.xml
             // file doesn't support entity references.
             xif.setXMLResolver(new XMLResolver() {

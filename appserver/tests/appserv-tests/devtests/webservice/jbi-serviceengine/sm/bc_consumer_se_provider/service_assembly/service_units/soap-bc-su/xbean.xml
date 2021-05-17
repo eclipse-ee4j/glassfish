@@ -26,5 +26,5 @@
             locationURI="http://localhost:8192/calculatorendpoint"
             defaultMep="http://www.w3.org/2004/08/wsdl/in-out"
     />
-    
+
 </beans>

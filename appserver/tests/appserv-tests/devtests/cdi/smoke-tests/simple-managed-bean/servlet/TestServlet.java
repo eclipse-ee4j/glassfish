@@ -54,5 +54,5 @@ public class TestServlet extends HttpServlet {
         if (tb != null && !tb.testInjection()) msg += info + "Bean Injection into ManagedBean failed";
         return msg;
     }
- 
+
 }

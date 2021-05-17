@@ -81,9 +81,9 @@ class TimeoutManager {
     private static boolean       quiescing = false;
     private static boolean       isSetTimeout = false;
 
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(TimeoutManager.class, LogDomains.TRANSACTION_LOGGER);
     /**
      * Initialises the static state of the TimeoutManager class.
@@ -115,8 +115,8 @@ class TimeoutManager {
 
 
     static synchronized void initSetTimeout() {
-	if (isSetTimeout)
-	   return;
+    if (isSetTimeout)
+       return;
         isSetTimeout = true;
         timeoutThread = new TimeoutThread();
         timeoutThread.start();
@@ -155,8 +155,8 @@ class TimeoutManager {
             // new TimeoutInfo if necessary, and set up the type and interval.
 
             case TimeoutManager.ACTIVE_TIMEOUT :
-		 if (!isSetTimeout) {
-		     initSetTimeout();
+         if (!isSetTimeout) {
+             initSetTimeout();
                  }
                  timeoutInfo = new TimeoutInfo();
                  timeoutInfo.expireTime  =
@@ -166,9 +166,9 @@ class TimeoutManager {
                  pendingTimeouts.put(localTID,timeoutInfo);
                  break;
             case TimeoutManager.IN_DOUBT_TIMEOUT :
-		 if (!isSetTimeout) {
-		     initSetTimeout();
-		     // isSetTimeout = true;
+         if (!isSetTimeout) {
+             initSetTimeout();
+             // isSetTimeout = true;
                  }
                 timeoutInfo = new TimeoutInfo();
                 timeoutInfo.expireTime  =
@@ -181,10 +181,10 @@ class TimeoutManager {
             // For any other type, remove the timeout if there is one.
 
             default:
-		if (!isSetTimeout)
-		  break;
+        if (!isSetTimeout)
+          break;
                    result = (pendingTimeouts.remove(localTID) != null);
-		   if (!result)
+           if (!result)
                       result = (indoubtTimeouts.remove(localTID) != null);
 
                     // If the transaction service is quiescing and
@@ -234,8 +234,8 @@ class TimeoutManager {
             if(_logger.isLoggable(Level.FINER))
             {
                 _logger.logp(Level.FINER,"TimeoutManager","timeoutCoordinator()",
-		    "RecoveryManager.getLocalCoordinator() returned null,"+
-		    "which means txn is done. Setting timeout type to CANCEL_TIMEOUT");
+            "RecoveryManager.getLocalCoordinator() returned null,"+
+            "which means txn is done. Setting timeout type to CANCEL_TIMEOUT");
             }
             TimeoutManager.setTimeout(localTID,
                                       TimeoutManager.CANCEL_TIMEOUT,
@@ -250,12 +250,12 @@ class TimeoutManager {
 
                 case TimeoutManager.ACTIVE_TIMEOUT :
                     if(_logger.isLoggable(Level.FINER))
-            	    {
+                    {
                         _logger.logp(Level.FINER,"TimeoutManager","timeoutCoordinator()",
                                      "TimeoutManager.timeoutCoordinator():case ACTIVE_TIMEOUT"+
                                      "RecoveryManager.getLocalCoordinator() returned non-null,"+
                                      "which means txn is still around. Marking for Rollback the"+
-                                     "transaction...: GTID is : " + 
+                                     "transaction...: GTID is : " +
                                      ((TopCoordinator)coord).superInfo.globalTID.toString());
                     }
                     try {
@@ -277,13 +277,13 @@ class TimeoutManager {
                                      "TimeoutManager.timeoutCoordinator():case IN_DOUBT_TIMEOUT"+
                                      "RecoveryManager.getLocalCoordinator() returned non-null,"+
                                      "which means txn is still around. Invoking recover(boolean)"+
-                                     "on TopCoordinator...: GTID is: "+ 
+                                     "on TopCoordinator...: GTID is: "+
                                      ((TopCoordinator)coord).superInfo.globalTID.toString());
                     }
                     Status state = ((TopCoordinator) coord).recover(isRoot);
 
                     if (state == Status.StatusUnknown) {
-                    
+
                         // If the outcome is not currently known, we do
                         // nothing with the transaction, as we expect to
                         // eventually get an outcome from the parent.
@@ -357,7 +357,7 @@ class TimeoutManager {
             Vector timedOut = null;
 
             Enumeration timeouts = null;
-          
+
             synchronized (pendingTimeouts) {
                 timeouts = pendingTimeouts.elements();
 
@@ -382,7 +382,7 @@ class TimeoutManager {
                }
             }
 
-	    synchronized (indoubtTimeouts) {
+        synchronized (indoubtTimeouts) {
 
                 timeouts = indoubtTimeouts.elements();
 
@@ -427,10 +427,10 @@ class TimeoutManager {
      * @return a set of in-doubt transaction ids.
      */
     static XID[] getInDoubtXids() {
-        
+
        synchronized (indoubtTimeouts) {
         Vector inDoubtList = new Vector();
-        
+
         Enumeration timeouts = indoubtTimeouts.elements();
 
         while (timeouts.hasMoreElements()) {
@@ -440,17 +440,17 @@ class TimeoutManager {
             // Look up the Coordinator for the transaction.
             // If there is none, then the transaction has already gone.
             // Otherwise do something with the transaction.
-                
-            CoordinatorImpl coord = 
+
+            CoordinatorImpl coord =
                 RecoveryManager.getLocalCoordinator(timeoutInfo.localTID);
-                                
+
             if (coord != null) {
                 XID xid = new XID();
                 xid.copy(coord.getGlobalTID());
                 inDoubtList.addElement(xid);
             }
         }
-        
+
         return (XID[]) inDoubtList.toArray(new XID[] {});
        }
     }
@@ -537,29 +537,29 @@ class TimeoutManager {
         // Report on pendingTimeouts.
 
         if (pendingTimeouts.size() > 0) {
-			if(_logger.isLoggable(Level.FINER))
-			{	
-				_logger.logp(Level.FINER,"TimeoutManager","report()",
-						"TimeoutManager.pendingTimeouts non-empty");
-			}
+            if(_logger.isLoggable(Level.FINER))
+            {
+                _logger.logp(Level.FINER,"TimeoutManager","report()",
+                        "TimeoutManager.pendingTimeouts non-empty");
+            }
             Enumeration keys = pendingTimeouts.keys();
 
             while (keys.hasMoreElements()) {
                 Long localTID = (Long) keys.nextElement();
                 TimeoutInfo timeInfo =
                     (TimeoutInfo) pendingTimeouts.get(localTID);
-				if(_logger.isLoggable(Level.FINER))
-				{
-					_logger.logp(Level.FINER,"TimeoutManager","report()",
-                			"localTid :"+localTID+" -> " + timeInfo);
-				}
+                if(_logger.isLoggable(Level.FINER))
+                {
+                    _logger.logp(Level.FINER,"TimeoutManager","report()",
+                            "localTid :"+localTID+" -> " + timeInfo);
+                }
             }
         } else {
-			if(_logger.isLoggable(Level.FINER))
-			{
-				_logger.logp(Level.FINER,"TimeoutManager","report()",
-          		 		"TimeoutManager.pendingTimeouts empty");
-			}
+            if(_logger.isLoggable(Level.FINER))
+            {
+                _logger.logp(Level.FINER,"TimeoutManager","report()",
+                           "TimeoutManager.pendingTimeouts empty");
+            }
         }
     }
     */
@@ -630,7 +630,7 @@ class TimeoutThread extends Thread {
             String timeout_interval = Configuration.getPropertyValue(Configuration.TIMEOUT_INTERVAL);
             if(timeout_interval!=null){
                 TIMEOUT_INTERVAL= Integer.parseInt(timeout_interval);
-		TIMEOUT_INTERVAL*=1000;
+        TIMEOUT_INTERVAL*=1000;
                 if(TIMEOUT_INTERVAL<10000)
                     TIMEOUT_INTERVAL=10000;
             }
@@ -675,7 +675,7 @@ class TimeoutThread extends Thread {
                         // Look up the Coordinator and tell it to roll back
                         // if it still exists. Note that we rely on the
                         // Coordinator calling removeCoordinator when it
-                        // has finished, which will remove the timeout from 
+                        // has finished, which will remove the timeout from
                         // the list, and remove other associations as well.
 
                         TimeoutManager.
@@ -685,7 +685,7 @@ class TimeoutThread extends Thread {
                 }
             }
         } catch (InterruptedException exc) {
-			_logger.log(Level.INFO,"jts.time_out_thread_stopped");
+            _logger.log(Level.INFO,"jts.time_out_thread_stopped");
         }
     }
 }

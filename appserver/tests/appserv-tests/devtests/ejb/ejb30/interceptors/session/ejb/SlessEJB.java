@@ -23,19 +23,19 @@ import jakarta.interceptor.Interceptors;
 //Default is @Local
 @Stateless
 public class SlessEJB
-	implements Sless
+    implements Sless
 {
     public String sayHello() {
-	    return "Hello";
+        return "Hello";
     }
 
     public double computeMidPoint(int min, int max)
-	    throws SwapArgumentsException
+        throws SwapArgumentsException
     {
-	    if (min > max) {
-		    throw new SwapArgumentsException("("+min+", "+max+")");
-	    }
-	    return (min*1.0+max)/2.0;
+        if (min > max) {
+            throw new SwapArgumentsException("("+min+", "+max+")");
+        }
+        return (min*1.0+max)/2.0;
     }
 
     @Interceptors(ArgumentsVerifier.class)

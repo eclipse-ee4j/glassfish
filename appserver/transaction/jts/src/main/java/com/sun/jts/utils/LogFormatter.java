@@ -24,12 +24,12 @@ import java.util.logging.*;
 import java.text.*;
 
 /**
- * This class is used to format the trace record. 
+ * This class is used to format the trace record.
  *
  * @author <a href="mailto:k.venugopal@sun.comi,kannan.srinivasan@sun.com">K Venugopal</a>
  * @version 1.0
  */
-public class LogFormatter 
+public class LogFormatter
 {
   /**
    * Helper method to convert a byte arror to string. This is typically used for printing Xids.
@@ -37,15 +37,15 @@ public class LogFormatter
    * @param byteArray a <code>byte[]</code> value
    * @return a <code>String</code> value
    */
-  
+
     public static String convertToString(byte[] byteArray)
     {
         int i;
         StringBuffer strBuf=new StringBuffer();
         for(i = 0; i < byteArray.length; i++)
          {
-            strBuf.append(byteArray[i]);    
-        }    
+            strBuf.append(byteArray[i]);
+        }
         return strBuf.toString();
     }
 
@@ -57,19 +57,19 @@ public class LogFormatter
    */
     public static String convertXidArrayToString(Xid[] xidArray)
     {
-	if(xidArray.length != 0)
-	{
-        	int i;
-        	StringBuffer strBuf = new StringBuffer("Xid class name is " + xidArray[0].getClass().getName() + " Number of Xids are " + xidArray.length + " [ ");
-        	for(i = 0; i < xidArray.length - 1; i++)
-        	{
-            		strBuf.append(xidArray[i]).append("\n");
-        	}
-        	strBuf.append(xidArray[xidArray.length - 1]).append(" ]");
-        	return strBuf.toString();
-	}
-	else
-		return " null ";
+    if(xidArray.length != 0)
+    {
+            int i;
+            StringBuffer strBuf = new StringBuffer("Xid class name is " + xidArray[0].getClass().getName() + " Number of Xids are " + xidArray.length + " [ ");
+            for(i = 0; i < xidArray.length - 1; i++)
+            {
+                    strBuf.append(xidArray[i]).append("\n");
+            }
+            strBuf.append(xidArray[xidArray.length - 1]).append(" ]");
+            return strBuf.toString();
+    }
+    else
+        return " null ";
     }
 
   /**
@@ -81,7 +81,7 @@ public class LogFormatter
     public static String convertPropsToString(Properties prop)
     {
         if(prop==null){
-	    return "{null}";
+        return "{null}";
         }
         StringBuffer strBuf =  new StringBuffer("{ ");
         for(Enumeration enum1 = prop.propertyNames(); enum1.hasMoreElements(); )
@@ -90,45 +90,45 @@ public class LogFormatter
             strBuf.append("[ ").append(obj).append("->");
             Object val=prop.getProperty((String)obj);
             if(val==null)
-	        strBuf.append("null");
+            strBuf.append("null");
             else
-                strBuf.append((String)val);        
+                strBuf.append((String)val);
             strBuf.append(" ] ");
-        }        
+        }
         strBuf.append("}");
         return strBuf.toString();
     }
 
-	/**
-	    getLocalizedMessage is used to localize the messages being used in
-		exceptions
-	**/
+    /**
+        getLocalizedMessage is used to localize the messages being used in
+        exceptions
+    **/
 
-	public static String getLocalizedMessage(Logger logger , String key){
-		try{
-			ResourceBundle rb = logger.getResourceBundle();
-			String message = rb.getString(key);
-			return message;
-		}catch ( Exception ex){
-			logger.log(Level.FINE,"JTS:Error while localizing the log message");
-			return key;
-		}
-	}
-	
-	/**
-	    getLocalizedMessage is used to localize the messages being used in
-		exceptions with arguments inserted appropriately.
-	**/
+    public static String getLocalizedMessage(Logger logger , String key){
+        try{
+            ResourceBundle rb = logger.getResourceBundle();
+            String message = rb.getString(key);
+            return message;
+        }catch ( Exception ex){
+            logger.log(Level.FINE,"JTS:Error while localizing the log message");
+            return key;
+        }
+    }
 
-	public static String getLocalizedMessage(Logger logger , String key,
-											Object[] args){
-		try{
-			ResourceBundle rb = logger.getResourceBundle();
-			String message = rb.getString(key);
-			return MessageFormat.format(message,args);
-		}catch ( Exception ex){
-				logger.log(Level.FINE,"JTS:Error while localizing the log message");
-			return key;
-		}
-	}
+    /**
+        getLocalizedMessage is used to localize the messages being used in
+        exceptions with arguments inserted appropriately.
+    **/
+
+    public static String getLocalizedMessage(Logger logger , String key,
+                                            Object[] args){
+        try{
+            ResourceBundle rb = logger.getResourceBundle();
+            String message = rb.getString(key);
+            return MessageFormat.format(message,args);
+        }catch ( Exception ex){
+                logger.log(Level.FINE,"JTS:Error while localizing the log message");
+            return key;
+        }
+    }
 }

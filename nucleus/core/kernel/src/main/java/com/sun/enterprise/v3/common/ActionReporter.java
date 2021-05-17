@@ -52,11 +52,11 @@ public abstract class ActionReporter extends ActionReport {
     public void setFailure() {
         setActionExitCode(ExitCode.FAILURE);
     }
-    
+
     public boolean isFailure() {
         return getActionExitCode() == ExitCode.FAILURE;
     }
-    
+
     public void setWarning() {
         setActionExitCode(ExitCode.WARNING);
     }
@@ -64,15 +64,15 @@ public abstract class ActionReporter extends ActionReport {
     public boolean isWarning() {
         return getActionExitCode() == ExitCode.WARNING;
     }
-    
+
     public boolean isSuccess() {
         return getActionExitCode() == ExitCode.SUCCESS;
     }
-    
+
     public void setSuccess() {
         setActionExitCode(ExitCode.SUCCESS);
     }
-    
+
     @Override
     public void setActionDescription(String message) {
         this.actionDescription = message;
@@ -90,7 +90,7 @@ public abstract class ActionReporter extends ActionReport {
     public Throwable getFailureCause() {
         return exception;
     }
-        
+
     @Override
     public MessagePart getTopMessagePart() {
         return topMessage;
@@ -139,8 +139,8 @@ public abstract class ActionReporter extends ActionReport {
     public String getMessage() {
         return topMessage.getMessage();
     }
-        
-    
+
+
     @Override
     public void setMessage(InputStream in) {
         try {
@@ -167,9 +167,9 @@ public abstract class ActionReporter extends ActionReport {
         out.close();
         in.close();
     }
-    
+
     /**
-     * Returns the content type to be used in sending the response back to 
+     * Returns the content type to be used in sending the response back to
      * the client/caller.
      * <p>
      * This is the default type.  Specific subclasses of ActionReporter might
@@ -189,11 +189,11 @@ public abstract class ActionReporter extends ActionReport {
      *  operations where some of the intermediate steps can go wrong, although
      *  overall operation succeeds. Does nothing if either of the arguments are null.
      *  The traversal visits the message of current reporter first. The various
-     *  parts of the message are separated by EOL_MARKERs. 
+     *  parts of the message are separated by EOL_MARKERs.
      * <p>
      * Note: This method is a recursive implementation.
      * @param aReport a given (usually top-level) ActionReporter instance
-     * @param sb StringBuilder instance that contains all the messages  
+     * @param sb StringBuilder instance that contains all the messages
      */
     public void getCombinedMessages(ActionReporter aReport, StringBuilder sb) {
         if (aReport == null || sb == null)

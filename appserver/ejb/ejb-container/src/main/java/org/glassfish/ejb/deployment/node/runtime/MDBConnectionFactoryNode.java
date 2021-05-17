@@ -41,21 +41,21 @@ public class MDBConnectionFactoryNode extends DeploymentDescriptorNode<MdbConnec
     }
 
     @Override
-    protected Map getDispatchTable() {  
-	Map dispatchTable = super.getDispatchTable();
-	dispatchTable.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
-	return dispatchTable;
+    protected Map getDispatchTable() {
+    Map dispatchTable = super.getDispatchTable();
+    dispatchTable.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
+    return dispatchTable;
     }
 
     @Override
     public void addDescriptor(Object newDescriptor) {
-	if (newDescriptor instanceof ResourcePrincipal) {
-	    descriptor.setDefaultResourcePrincipal((ResourcePrincipal) newDescriptor);
-	} else super.addDescriptor(newDescriptor);
+    if (newDescriptor instanceof ResourcePrincipal) {
+        descriptor.setDefaultResourcePrincipal((ResourcePrincipal) newDescriptor);
+    } else super.addDescriptor(newDescriptor);
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, MdbConnectionFactoryDescriptor mcf) {    
+    public Node writeDescriptor(Node parent, String nodeName, MdbConnectionFactoryDescriptor mcf) {
         Node mcfNode = super.writeDescriptor(parent, nodeName, mcf);
         appendTextChild(mcfNode, RuntimeTagNames.JNDI_NAME, mcf.getJndiName());
         if (mcf.getDefaultResourcePrincipal()!=null) {

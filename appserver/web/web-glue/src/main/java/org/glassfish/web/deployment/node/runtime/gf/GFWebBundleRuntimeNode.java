@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This node is responsible for handling all runtime information for 
+ * This node is responsible for handling all runtime information for
  * web bundle.
  */
 public class GFWebBundleRuntimeNode extends WebBundleRuntimeNode {
@@ -35,28 +35,28 @@ public class GFWebBundleRuntimeNode extends WebBundleRuntimeNode {
     public GFWebBundleRuntimeNode(WebBundleDescriptorImpl descriptor) {
         super(descriptor);
     }
-    
+
     /** Creates new GFWebBundleRuntimeNode */
     public GFWebBundleRuntimeNode() {
-        super(null);    
+        super(null);
     }
-    
+
     /**
      * @return the XML tag associated with this XMLNode
      */
     @Override
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.GF_WEB_RUNTIME_TAG);
-    }    
-    
-    /** 
+    }
+
+    /**
      * @return the DOCTYPE that should be written to the XML file
      */
     @Override
     public String getDocType() {
         return DTDRegistry.GF_WEBAPP_301_DTD_PUBLIC_ID;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */
@@ -67,8 +67,8 @@ public class GFWebBundleRuntimeNode extends WebBundleRuntimeNode {
 
    /**
     * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+    *
+    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
     * @param versionUpgrades The list of upgrades from older versions
     * to the latest schema
     * @return the doctype tag name
@@ -76,7 +76,7 @@ public class GFWebBundleRuntimeNode extends WebBundleRuntimeNode {
     public static String registerBundle(Map<String, String> publicIDToDTD,
                                         Map<String, List<Class>> versionUpgrades) {
        publicIDToDTD.put(DTDRegistry.GF_WEBAPP_301_DTD_PUBLIC_ID, DTDRegistry.GF_WEBAPP_301_DTD_SYSTEM_ID);
-       
-       return RuntimeTagNames.GF_WEB_RUNTIME_TAG;       
-   }    
+
+       return RuntimeTagNames.GF_WEB_RUNTIME_TAG;
+   }
 }

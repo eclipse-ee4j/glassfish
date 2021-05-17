@@ -61,9 +61,9 @@ public class LocalVariable {
     InsnTarget startPCTarget = env.getTarget(startPC);
     int length = data.readUnsignedShort();
     InsnTarget endPCTarget = env.getTarget(startPC+length);
-    ConstUtf8 name = 
+    ConstUtf8 name =
       (ConstUtf8) env.pool().constantAt(data.readUnsignedShort());
-    ConstUtf8 sig = 
+    ConstUtf8 sig =
       (ConstUtf8) env.pool().constantAt(data.readUnsignedShort());
     int slot = data.readUnsignedShort();
     return new LocalVariable(startPCTarget, endPCTarget, name, sig, slot);
@@ -83,7 +83,7 @@ public class LocalVariable {
     out.print(" sig = " + ((varSig == null) ? "(null)" : varSig.asString()));//NOI18N
     out.print(" start_pc = " + Integer.toString(varStartPC.offset()));//NOI18N
     out.print(" length = " +//NOI18N
-	     Integer.toString(varEndPC.offset() - varStartPC.offset()));
+         Integer.toString(varEndPC.offset() - varStartPC.offset()));
     out.println(" slot = " + Integer.toString(varSlot));//NOI18N
   }
 

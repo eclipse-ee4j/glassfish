@@ -159,8 +159,8 @@ public final class JMXUtil
     /**
     Build an ObjectName pattern.
 
-    @param domain	the JMX domain
-    @param props	properties of the ObjectName
+    @param domain    the JMX domain
+    @param props    properties of the ObjectName
      */
     public static ObjectName newObjectNamePattern(
             final String domain,
@@ -188,8 +188,8 @@ public final class JMXUtil
     /**
     Build an ObjectName pattern.
 
-    @param domain	the JMX domain
-    @param props	properties of the ObjectName
+    @param domain    the JMX domain
+    @param props    properties of the ObjectName
      */
     public static ObjectName newObjectNamePattern(
             final String domain,
@@ -284,7 +284,7 @@ public final class JMXUtil
     /**
     Convert a Set of ObjectName into an array
 
-    @param objectNameSet	a Set of ObjectName
+    @param objectNameSet    a Set of ObjectName
     @return an ObjectName[]
      */
     public static ObjectName[] objectNameSetToArray(final Set<ObjectName> objectNameSet)
@@ -296,7 +296,7 @@ public final class JMXUtil
     }
 
     /**
-    @param key	the property name, within the ObjectName
+    @param key    the property name, within the ObjectName
     @param objectNames
     @return values from each ObjectName
      */
@@ -364,7 +364,7 @@ public final class JMXUtil
     }
 
     /**
-    @param key	the property name, within the ObjectName
+    @param key    the property name, within the ObjectName
     @param objectNameSet
     @return values from each ObjectName
      */
@@ -377,7 +377,7 @@ public final class JMXUtil
     }
 
     /**
-    @param key	the property name, within the ObjectName
+    @param key    the property name, within the ObjectName
     @param objectNameSet
     @return values from each ObjectName
      */
@@ -526,7 +526,7 @@ public final class JMXUtil
     /**
     Get a String[] of Attribute names.
 
-    @param infos	array of infos
+    @param infos    array of infos
      */
     public static String[] getAttributeNames(final MBeanAttributeInfo[] infos)
     {
@@ -541,7 +541,7 @@ public final class JMXUtil
     }
 
     /**
-    @param infos	array of infos
+    @param infos    array of infos
     @param attrName
      */
     public static MBeanAttributeInfo getMBeanAttributeInfo(
@@ -592,7 +592,7 @@ public final class JMXUtil
     Convert an AttributeList to a Map where the keys are the Attribute names,
     and the values are Attribute.
 
-    @param attrs	the AttributeList
+    @param attrs    the AttributeList
      */
     public static Map<String, Attribute> attributeListToAttributeMap(final AttributeList attrs)
     {
@@ -612,7 +612,7 @@ public final class JMXUtil
     Convert an AttributeList to a Map where the keys are the Attribute names,
     and the values are the Attribute values.
 
-    @param attrs	the AttributeList
+    @param attrs    the AttributeList
      */
     public static Map<String, Object> attributeListToValueMap(final AttributeList attrs)
     {
@@ -634,7 +634,7 @@ public final class JMXUtil
     Convert an AttributeList to a Map where the keys are the Attribute names,
     and the values are the Attribute values.
 
-    @param attrs	the AttributeList
+    @param attrs    the AttributeList
      */
     public static Map<String, String> attributeListToStringMap(final AttributeList attrs)
     {
@@ -656,7 +656,7 @@ public final class JMXUtil
     Convert an MBeanAttributeInfo[] to a Map where the keys are the Attribute names,
     and the values are MBeanAttributeInfo.
 
-    @param attrInfos	the AttributeList
+    @param attrInfos    the AttributeList
      */
     public static Map<String, MBeanAttributeInfo> attributeInfosToMap(final MBeanAttributeInfo[] attrInfos)
     {
@@ -708,8 +708,8 @@ public final class JMXUtil
     Find a feature by name (attribute name, operation name, etc) and return
     all matches.  The feature is matched by calling MBeanFeatureInfo.getName().
 
-    @param infos	infos
-    @param name	name
+    @param infos    infos
+    @param name    name
     @return Set of the matching items
      */
     public static Set<MBeanFeatureInfo> findInfoByName(
@@ -814,10 +814,10 @@ public final class JMXUtil
     Get the Attributes using getAttributes() if possible, but if exceptions
     are encountered, attempt to get them one-by-one.
 
-    @param conn			the conneciton
-    @param objectName	name of the object to access
-    @param attrNames	attribute names
-    @param problemNames	optional Set to which problem names will be added.
+    @param conn            the conneciton
+    @param objectName    name of the object to access
+    @param attrNames    attribute names
+    @param problemNames    optional Set to which problem names will be added.
     @return AttributeList
      */
     public static AttributeList getAttributesRobust(
@@ -872,30 +872,30 @@ public final class JMXUtil
     boolean
     sameAttributes( MBeanAttributeInfo[] infos1, MBeanAttributeInfo[] infos2 )
     {
-    boolean	equal	= false;
+    boolean    equal    = false;
 
     if( infos1.length == infos2.length )
     {
-    equal	= ArrayUtil.arraysEqual( infos1, infos2 );
+    equal    = ArrayUtil.arraysEqual( infos1, infos2 );
     if ( ! equal )
     {
     // could still be equal, just in different order
     Arrays.sort( infos1, MBeanAttributeInfoComparator.INSTANCE );
     Arrays.sort( infos2, MBeanAttributeInfoComparator.INSTANCE );
 
-    equal	= true;	// reset to false upon failure
+    equal    = true;    // reset to false upon failure
     for( int i = 0; i < infos1.length; ++i )
     {
     if ( ! infos1[ i ].equals( infos2[ i ] ) )
     {
-    equal	= false;
+    equal    = false;
     break;
     }
     }
     }
     else
     {
-    equal	= true;
+    equal    = true;
     }
     }
     return( equal );
@@ -907,24 +907,24 @@ public final class JMXUtil
     boolean
     sameOperations( final MBeanOperationInfo[] infos1, final MBeanOperationInfo[] infos2 )
     {
-    boolean	equal	= false;
+    boolean    equal    = false;
 
     if ( infos1.length == infos2.length )
     {
     // if they're in identical order, this is the quickest test if they ultimately succeed
-    equal	= ArrayUtil.arraysEqual( infos1, infos2 );
+    equal    = ArrayUtil.arraysEqual( infos1, infos2 );
     if ( ! equal )
     {
     // could still be equal, just in different order
     Arrays.sort( infos1, MBeanOperationInfoComparator.INSTANCE );
     Arrays.sort( infos2, MBeanOperationInfoComparator.INSTANCE );
 
-    equal	= true;	// reset to false upon failure
+    equal    = true;    // reset to false upon failure
     for( int i = 0; i < infos1.length; ++i )
     {
     if ( ! infos1[ i ].equals( infos2[ i ] ) )
     {
-    equal	= false;
+    equal    = false;
     break;
     }
     }
@@ -998,12 +998,12 @@ public final class JMXUtil
 
                 if (sig.length == types.length)
                 {
-                    result = info;	// assume match...
+                    result = info;    // assume match...
                     for (int j = 0; j < sig.length; ++j)
                     {
                         if (!types[j].equals(sig[j].getType()))
                         {
-                            result = null;	// no match
+                            result = null;    // no match
                             break;
                         }
                     }
@@ -1238,21 +1238,21 @@ public final class JMXUtil
         }
 
         /*
-        java.util.Iterator	iter	= null;
+        java.util.Iterator    iter    = null;
         trace( "-------------------- getterSetters -------------------" );
-        iter	= getterSetters.values().iterator();
+        iter    = getterSetters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getName() + ", " );
         }
         trace( "-------------------- getters -------------------" );
-        iter	= getters.values().iterator();
+        iter    = getters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getName() + ", " );
         }
         trace( "-------------------- setters -------------------" );
-        iter	= setters.values().iterator();
+        iter    = setters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getName() + ", " );

@@ -21,13 +21,13 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.*;
 
 public class SimpleHandler extends GenericHandler {
-    
+
     protected HandlerInfo info = null;
-    
+
     public void init(HandlerInfo info) {
         this.info = info;
     }
-    
+
     public boolean handleRequest(MessageContext context) {
         try {
             Date startTime = new Date();
@@ -37,7 +37,7 @@ public class SimpleHandler extends GenericHandler {
         }
         return true;
     }
-    
+
     public boolean handleResponse(MessageContext context) {
         try {
             Date startTime = (Date) context.getProperty("startTime");
@@ -49,7 +49,7 @@ public class SimpleHandler extends GenericHandler {
         }
         return true;
     }
-    
+
     public QName[] getHeaders() {
         return new QName[0];
     }

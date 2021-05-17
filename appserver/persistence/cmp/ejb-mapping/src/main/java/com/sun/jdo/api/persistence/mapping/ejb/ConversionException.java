@@ -21,9 +21,9 @@
 
 package com.sun.jdo.api.persistence.mapping.ejb;
 
-/** 
+/**
  *
- * @author Jie Leng 
+ * @author Jie Leng
  * @version %I%
  */
 public class ConversionException extends Exception
@@ -34,7 +34,7 @@ public class ConversionException extends Exception
     public ConversionException () {}
 
     /**
-     * Constructs an <code>ConversionException</code> with the 
+     * Constructs an <code>ConversionException</code> with the
      * specified detail message.
      * @param msg the detail message.
     */

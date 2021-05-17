@@ -53,7 +53,7 @@ import jakarta.inject.Inject;
 /**
  *
  * This is a remote command that supports the delete-http-lb-ref CLI command.
- * 
+ *
  * @author Yamini K B
  */
 @Service(name = "delete-http-lb-ref")
@@ -63,8 +63,8 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=LbConfig.class,
-        opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE 
-        path="delete-http-lb-ref", 
+        opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE
+        path="delete-http-lb-ref",
         description="delete-http-lb-ref")
 })
 public final class DeleteHTTPLBRefCommand extends LBCommandsBase
@@ -92,7 +92,7 @@ public final class DeleteHTTPLBRefCommand extends LBCommandsBase
 
     final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(CreateHTTPLBRefCommand.class);
-    
+
     @Override
     public void execute(AdminCommandContext context) {
 
@@ -130,7 +130,7 @@ public final class DeleteHTTPLBRefCommand extends LBCommandsBase
             report.setMessage(msg);
             return;
         }
-        
+
         if (config != null) {
             if (lbconfigs.getLbConfig(config) == null) {
                 String msg = localStrings.getLocalString("LbConfigDoesNotExist",

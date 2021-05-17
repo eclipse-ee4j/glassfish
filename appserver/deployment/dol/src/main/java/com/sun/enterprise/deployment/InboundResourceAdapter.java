@@ -29,33 +29,33 @@ import java.util.Set;
  * <!ELEMENT inbound-resourceadapter (messageadapter?)>
  * <!ELEMENT messageadapter (messagelistener+)>
  *
- * @author	Qingqing Ouyang
+ * @author    Qingqing Ouyang
  */
 public class InboundResourceAdapter extends Descriptor
 {
     private Set messageListeners;
 
-    public InboundResourceAdapter () 
+    public InboundResourceAdapter ()
     {
         messageListeners = new OrderedSet();
     }
-    
+
     public Set
     getMessageListeners()
     {
         return messageListeners;
     }
-    
+
     public void
     addMessageListener (MessageListener listener)
     {
         messageListeners.add(listener);
     }
 
-    public void 
-    removeMessageListener (MessageListener listener) 
+    public void
+    removeMessageListener (MessageListener listener)
     {
-	messageListeners.remove(listener);
+    messageListeners.remove(listener);
     }
 
     public boolean hasMessageListenerType(String msgListenerType){

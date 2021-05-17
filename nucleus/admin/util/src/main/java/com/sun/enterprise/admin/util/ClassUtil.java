@@ -20,7 +20,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 
 /*
-	Used internally.
+    Used internally.
  */
 final class ClassToClassMapping {
     final Class mSrc;
@@ -33,7 +33,7 @@ final class ClassToClassMapping {
 }
 
 /*
-	Various utilities used for classes.
+    Various utilities used for classes.
  */
 public final class ClassUtil {
     private ClassUtil() {
@@ -41,61 +41,61 @@ public final class ClassUtil {
     }
 
     /*
-    	Test whether an Object is an array
-    	
-    	@param o	object to test
-    	@returns	true if the object is an array, false otherwise.
+        Test whether an Object is an array
+
+        @param o    object to test
+        @returns    true if the object is an array, false otherwise.
      */
     public static boolean objectIsArray(Object o) {
         return (classIsArray(o.getClass()));
     }
 
     /*
-    	Test whether a Class is an array
-    	
-    	@param theClass		class to test
-    	@returns			true if the class is an array, false otherwise.
+        Test whether a Class is an array
+
+        @param theClass        class to test
+        @returns            true if the class is an array, false otherwise.
      */
     public static boolean classIsArray(Class theClass) {
         return (classnameIsArray(theClass.getName()));
     }
 
     /*
-    	Test whether an Object is an array of primitive types
-    	
-    	@param o		object to test
-    	@returns		true if the object is an array, false otherwise.
+        Test whether an Object is an array of primitive types
+
+        @param o        object to test
+        @returns        true if the object is an array, false otherwise.
      */
     public static boolean objectIsPrimitiveArray(Object o) {
         return (getPrimitiveArrayTypeCode(o.getClass()) != 0);
     }
 
     /*
-    	Test whether a classname is an array
-    	
-    	@param classname	classname string
-    	@returns			true if the object is an array, false otherwise.
+        Test whether a classname is an array
+
+        @param classname    classname string
+        @returns            true if the object is an array, false otherwise.
      */
     public static boolean classnameIsArray(String classname) {
         return (classname.startsWith("["));
     }
 
     /*
-    	Test whether a classname is a primitive array
-    	
-    	@param classname	classname string
-    	@returns			true if the object is a primitive array, false otherwise.
+        Test whether a classname is a primitive array
+
+        @param classname    classname string
+        @returns            true if the object is a primitive array, false otherwise.
      */
     public static boolean classnameIsPrimitiveArray(String classname) {
         return (getPrimitiveArrayTypeCode(classname) != 0);
     }
 
     /*
-    	Return the primitive element type code for an array of primitive types.
-    	Same as getPrimitiveArrayTypeCode( theClass.getName() )
-    	
-    	@param classname	the Class object
-    	@returns			the element type code; otherwise (char)0
+        Return the primitive element type code for an array of primitive types.
+        Same as getPrimitiveArrayTypeCode( theClass.getName() )
+
+        @param classname    the Class object
+        @returns            the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(Class theClass) {
         char typeCode = 0;
@@ -108,10 +108,10 @@ public final class ClassUtil {
     }
 
     /*
-    	Return the primitive element type code for an array of primitive types.
-    	
-    	@param classname	classname string
-    	@returns			the element type code; otherwise (char)0
+        Return the primitive element type code for an array of primitive types.
+
+        @param classname    classname string
+        @returns            the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(String classname) {
         char typeCode = 0;
@@ -142,10 +142,10 @@ public final class ClassUtil {
     }
 
     /*
-    	Get the classname for an array element.
-    	
-    	@param classname	classname string
-    	@returns			the classname for the array element
+        Get the classname for an array element.
+
+        @param classname    classname string
+        @returns            the classname for the array element
      */
     public static String getArrayMemberClassName(String classname) {
         String result = null;
@@ -197,8 +197,8 @@ public final class ClassUtil {
         return (result);
     }
 
-    /* 
-    	Class.forName does not work for primitive types, so we need to do it ourselves here.
+    /*
+        Class.forName does not work for primitive types, so we need to do it ourselves here.
      */
     final static class ClassNameToClassMapping {
         String mName;
@@ -218,11 +218,11 @@ public final class ClassUtil {
             new ClassNameToClassMapping("void", void.class), };
 
     /*
-    	Get a Class from a classname.  Class.forName does not work for primitive types;
-    	this methods returns the correct Class for any type.
-    	
-    	@param classname	classname string
-    	@returns			the classname for the array element
+        Get a Class from a classname.  Class.forName does not work for primitive types;
+        this methods returns the correct Class for any type.
+
+        @param classname    classname string
+        @returns            the classname for the array element
      */
     public static Class getClassFromName(final String classname) throws ClassNotFoundException {
         Class theClass = null;
@@ -252,11 +252,11 @@ public final class ClassUtil {
             new ClassToClassMapping(boolean.class, Boolean.class), new ClassToClassMapping(float.class, Float.class),
             new ClassToClassMapping(double.class, Double.class), new ClassToClassMapping(char.class, Character.class), };
 
-    /* 
-    	Map primitive class Classes to Object forms eg int.class to Integer.class
-    	
-    	@param		theClass	the class to map
-    	@returns	the corresponding Object class or the original Class if not a primitive.
+    /*
+        Map primitive class Classes to Object forms eg int.class to Integer.class
+
+        @param        theClass    the class to map
+        @returns    the corresponding Object class or the original Class if not a primitive.
      */
     public static Class primitiveClassToObjectClass(final Class theClass) {
         Class result = theClass;
@@ -274,11 +274,11 @@ public final class ClassUtil {
         return (result);
     }
 
-    /* 
-    	Test whether a class is a primitive class.
-    	
-    	@param		theClass	the class to test
-    	@returns	true if it's a primitive class, false otherwise.
+    /*
+        Test whether a class is a primitive class.
+
+        @param        theClass    the class to test
+        @returns    true if it's a primitive class, false otherwise.
      */
     public static boolean isPrimitiveClass(final Class theClass) {
         boolean isSimple = false;
@@ -353,17 +353,17 @@ public final class ClassUtil {
     }
 
     /*
-    	Convert a Java class name string into a more user friendly string. Examples
-    	java.lang.String		=> String
-    	java.lang.<type>		=> <type>;
-    	[i						=> int[]
-    	[Lfoo.bar.ClassName;	=> foo.bar.ClassName[]
-    	
-    	The types thus correspond exactly to what a Java programmer would write, rather
-    	than the internal JVM representation.
-    	
-    	@param 		type
-    	@returns	a friendlier string representing the type
+        Convert a Java class name string into a more user friendly string. Examples
+        java.lang.String        => String
+        java.lang.<type>        => <type>;
+        [i                        => int[]
+        [Lfoo.bar.ClassName;    => foo.bar.ClassName[]
+
+        The types thus correspond exactly to what a Java programmer would write, rather
+        than the internal JVM representation.
+
+        @param         type
+        @returns    a friendlier string representing the type
      */
     final static String javaLang = "java.lang.";
 
@@ -490,10 +490,10 @@ public final class ClassUtil {
     }
 
     /*
-    	Return true if caller signature is compatible with callee.
-    	
-    	@param callee	the signature of the method to be called
-    	@param caller	the signature of the argument list
+        Return true if caller signature is compatible with callee.
+
+        @param callee    the signature of the method to be called
+        @param caller    the signature of the argument list
      */
     public static boolean signaturesAreCompatible(Class[] callee, Class[] argsSignature) {
         boolean compatible = false;
@@ -587,9 +587,9 @@ public final class ClassUtil {
     }
 
     /*
-    	Don't get fancy here, simple precedence:
-    		Integer, Long	 if no decimal point, use Long if won't fit in an Integer
-    		Double			 if decimal point (for maximum precision)
+        Don't get fancy here, simple precedence:
+            Integer, Long     if no decimal point, use Long if won't fit in an Integer
+            Double             if decimal point (for maximum precision)
      */
     private static Object instantiateNumber(final String theString) throws Exception {
         Object result = null;
@@ -608,11 +608,11 @@ public final class ClassUtil {
     }
 
     /*
-    	Given a Class and a String, create a new instance with a constructor that accept
-    	a String. Primitive types are instantiated as their equivalent Object forms.
-    	
-    	@param theClass		the class from which an instance should be instantiated
-    	@param theString	the string to be supplied to the constructor
+        Given a Class and a String, create a new instance with a constructor that accept
+        a String. Primitive types are instantiated as their equivalent Object forms.
+
+        @param theClass        the class from which an instance should be instantiated
+        @param theString    the string to be supplied to the constructor
      */
     public static Object instantiateFromString(final Class theClass, final String theString) throws Exception {
         Object result = null;
@@ -641,11 +641,11 @@ public final class ClassUtil {
     }
 
     /*
-    	Given a Class, create a new instance with an empty constructor.
-    	Primitive types are instantiated as their equivalent Object forms.
-    	Any value is acceptable in the newly created object.
-    	
-    	@param theClass		the class from which an instance should be instantiated
+        Given a Class, create a new instance with an empty constructor.
+        Primitive types are instantiated as their equivalent Object forms.
+        Any value is acceptable in the newly created object.
+
+        @param theClass        the class from which an instance should be instantiated
      */
     public static Object instantiateDefault(final Class inClass) throws Exception {
         Object result = null;
@@ -673,15 +673,15 @@ public final class ClassUtil {
             result = Array.newInstance(getInnerArrayElementClass(inClass), dimensions);
         } else {
             result = objectClass.newInstance();
-            //result	= InstantiateFromString( objectClass, "0" );
+            //result    = InstantiateFromString( objectClass, "0" );
         }
         return (result);
     }
 
     /*
-    	We allow abbrevations of certain standard java types
-    	
-    	Turn "Integer" into "java.lang.Integer", etc.
+        We allow abbrevations of certain standard java types
+
+        Turn "Integer" into "java.lang.Integer", etc.
      */
     final static String[] sJavaLangTypes = { "Character", "Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double", "String",
             "Object" };
@@ -718,9 +718,9 @@ public final class ClassUtil {
     }
 
     /*
-    	Convert inner element.  Only works for arrays of Objects.  Example:
-    	
-    	mapActualElementClass( "[[[LObject;", "Long" ) =>[[[LLong;
+        Convert inner element.  Only works for arrays of Objects.  Example:
+
+        mapActualElementClass( "[[[LObject;", "Long" ) =>[[[LLong;
      */
     public static Class convertArrayClass(final Class arrayClass, final Class newInnerType) throws ClassNotFoundException {
         final String arrayClassname = arrayClass.getName();

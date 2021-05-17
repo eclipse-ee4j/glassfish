@@ -32,8 +32,8 @@ import com.sun.jdo.api.persistence.mapping.ejb.beans.FetchedWith;
 public interface HasFetchedWith {
 
     public FetchedWith getFetchedWith();
-    
+
     public void setFetchedWith(FetchedWith fw);
-    
+
 }
 

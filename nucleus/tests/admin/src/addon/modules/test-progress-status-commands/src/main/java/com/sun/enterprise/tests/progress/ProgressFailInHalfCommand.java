@@ -28,7 +28,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 /** Basic progress status example.
- * Contains 10 steps 
+ * Contains 10 steps
  *
  * @author mmares
  */
@@ -39,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 @Progress(totalStepCount=10)
 @ManagedJob
 public class ProgressFailInHalfCommand implements AdminCommand {
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ProgressStatus ps = context.getProgressStatus();
@@ -54,12 +54,12 @@ public class ProgressFailInHalfCommand implements AdminCommand {
         ar.setActionExitCode(ActionReport.ExitCode.FAILURE);
         ar.setMessage("Something failed");
     }
-    
+
     private void doSomeLogic() {
         try {
             Thread.sleep(200L);
         } catch (Exception ex) {
         }
     }
-    
+
 }

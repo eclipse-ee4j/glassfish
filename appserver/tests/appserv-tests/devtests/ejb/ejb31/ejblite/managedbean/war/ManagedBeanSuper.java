@@ -27,12 +27,12 @@ public class ManagedBeanSuper {
     public String getAroundInvokeSequence() { return ""; }
 
     public String throwAppException() throws AppException {
-	throw new AppException();
+    throw new AppException();
     }
 
     public String throwIllegalArgumentException() {
-	throw new IllegalArgumentException();
+    throw new IllegalArgumentException();
     }
 
-					     
+
 }

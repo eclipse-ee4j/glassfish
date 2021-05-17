@@ -55,7 +55,7 @@ public class ConstClass extends ConstBasic {
   }
 
   /**
-   * A printable representation 
+   * A printable representation
    */
   public String toString () {
       return "CONSTANTClass(" + indexAsString() + "): " + //NOI18N

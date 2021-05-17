@@ -27,9 +27,9 @@ import java.net.URLConnection;
 import java.net.HttpURLConnection;
 
 public class WebTest {
-           
+
     private String contextPath = "test";
-    
+
     @BeforeClass
     public static void setup() throws IOException {
     }

@@ -43,17 +43,17 @@ public @interface ToDo {
    public enum Kind{
     /** Code needs modification. Code means annotations, but not javadoc. */
     CODE,
-    
+
     /** Documentation needed, javadoc or other forms */
     DOCS,
-    
+
     /** Both code and documentation are needed */
     CODE_AND_DOCS,
     };
 
    /** How important */
    Priority priority() default Priority.UNKNOWN;
-   
+
    /** What kind of activity is required */
    Kind kind() default Kind.CODE;
 

@@ -85,7 +85,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>
@@ -112,7 +112,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>
@@ -141,7 +141,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>
@@ -173,7 +173,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>
@@ -205,7 +205,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>
@@ -237,7 +237,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>
@@ -269,7 +269,7 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
-      <message-destination-ref>       
+      <message-destination-ref>
         <description>timertest destination</description>
         <message-destination-ref-name>jms/MyQueue</message-destination-ref-name>
         <message-destination-type>jakarta.jms.Queue</message-destination-type>

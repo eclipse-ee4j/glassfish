@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.classload.lifecycle;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -34,7 +34,7 @@ public class FooBean implements SessionBean {
     public FooBean() {}
 
     public void ejbCreate() {
-	System.out.println("In FooBean::ejbCreate()");
+    System.out.println("In FooBean::ejbCreate()");
         try {
             InitialContext ic = new InitialContext();
             Service service = (Service) ic.lookup("java:comp/env/service/GoogleSearch_ejbCreate");
@@ -48,8 +48,8 @@ public class FooBean implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-	System.out.println("In FooBean::setSessionContext()");
-	this.sc = sc;
+    System.out.println("In FooBean::setSessionContext()");
+    this.sc = sc;
     }
 
     public void callHello() {
@@ -57,7 +57,7 @@ public class FooBean implements SessionBean {
     }
 
     public void ejbRemove() {
-	System.out.println("In FooBean::ejbRemove()");
+    System.out.println("In FooBean::ejbRemove()");
         try {
             InitialContext ic = new InitialContext();
             Service service = (Service) ic.lookup("java:comp/env/service/GoogleSearch_ejbRemove");

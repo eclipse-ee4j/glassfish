@@ -30,7 +30,7 @@
     <artifactId>runner</artifactId>
 
     <name>CDI Test Case Runner</name>
-    
+
     <build>
         <plugins>
             <plugin>

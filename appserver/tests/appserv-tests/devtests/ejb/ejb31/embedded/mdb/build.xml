@@ -38,7 +38,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -51,14 +51,14 @@
     <target name="build" depends="compile">
         <!-- package ourselves to include persistence.xml -->
         <mkdir dir="${assemble.dir}"/>
-        <jar jarfile="${assemble.dir}/${appname}-ejb.jar" 
-             basedir="${build.classes.dir}" 
+        <jar jarfile="${assemble.dir}/${appname}-ejb.jar"
+             basedir="${build.classes.dir}"
              update="true"
              includes ="**/S*.class">
         </jar>
         <delete dir="${build.classes.dir}/org"/>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common">
         <echo message="...Starting DAS to create JMS resources...."/>
         <antcall target="startDomain"/>
@@ -91,8 +91,8 @@
 
         <antcall target="stopDomain"/>
         <echo message="Domain has beed STOPPED to run the test"/>
-    </target> 
-    
+    </target>
+
     <target name="unsetup" depends="init-common">
         <echo message="...Starting DAS to delete JMS resources...."/>
         <antcall target="startDomain"/>
@@ -120,15 +120,15 @@
         <!-- Should domain be stopped? -->
         <antcall target="stopDomain"/>
         <echo message="Domain has beed STOPPED"/>
-    </target> 
-    
+    </target>
+
     <target name="run" depends="init-common">
         <antcall target="run_se"/>
     </target>
- 
+
     <target name="run_se" depends="init-common">
        <echo message="Running with ${embedded.classpath} in classpath"/>
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/${appname}-ejb.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">

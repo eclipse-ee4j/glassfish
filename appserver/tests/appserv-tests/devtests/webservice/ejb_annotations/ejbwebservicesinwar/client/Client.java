@@ -30,10 +30,10 @@ public class Client {
 
 
         public static void main(String[] args) {
-	    stat.addDescription("ejbwebservicesinwar");
+        stat.addDescription("ejbwebservicesinwar");
             Client client = new Client();
             client.doTest(args);
-	    stat.printSummary("ejbwebservicesinwar");
+        stat.printSummary("ejbwebservicesinwar");
        }
 
        public void doTest(String[] args) {
@@ -41,17 +41,17 @@ public class Client {
 
                 URL serviceInfo = new URL (args[0]);
                 URLConnection con = serviceInfo.openConnection();
-               BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream())); 
+               BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
                 String inputLine;
-                int index=0; 
+                int index=0;
                 while ((inputLine = in.readLine()) != null) {
                    if ((index= inputLine.indexOf("message="))>0){
 
-                      String url = inputLine.substring(index+7);  
+                      String url = inputLine.substring(index+7);
                       if (url.indexOf("sayHello")>0) {
                          stat.addStatus("ejbwebservicesinwar", stat.PASS);
-                      } 
+                      }
                       System.out.println(inputLine);
                    }
                 }

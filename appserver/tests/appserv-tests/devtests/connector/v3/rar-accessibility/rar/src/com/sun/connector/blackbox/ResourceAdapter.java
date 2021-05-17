@@ -44,7 +44,7 @@ public class ResourceAdapter implements jakarta.resource.spi.ResourceAdapter, Se
     }
 
     public XAResource[] getXAResources(ActivationSpec[] activationSpecs) throws ResourceException {
-        return null;  
+        return null;
     }
 
     public BootstrapContext getBootstrapContext(){

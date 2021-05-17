@@ -68,7 +68,7 @@ public class MaskingClassLoader extends ClassLoader {
         if (isDottedNameLoadableByParent(name)) {
             return super.loadClass(name, resolve);
         }
-        
+
         throw new ClassNotFoundException(name);
     }
 
@@ -77,7 +77,7 @@ public class MaskingClassLoader extends ClassLoader {
         if (isDottedNameLoadableByParent(resourceToDotted(name))) {
             return super.getResource(name);
         }
-        
+
         return null;
     }
 
@@ -86,7 +86,7 @@ public class MaskingClassLoader extends ClassLoader {
         if (isDottedNameLoadableByParent(resourceToDotted(name))) {
             return super.getResources(name);
         }
-        
+
         return new Enumeration<URL>() {
 
             @Override
@@ -106,7 +106,7 @@ public class MaskingClassLoader extends ClassLoader {
         if (name.startsWith("/")) {
             name = name.substring(1);
         }
-        
+
         return name.replace("/", ".");
     }
 
@@ -114,18 +114,18 @@ public class MaskingClassLoader extends ClassLoader {
         if (!(name.startsWith("javax.") || name.startsWith("org."))) {
             return true;
         }
-        
+
         String packageName = name.substring(0, name.lastIndexOf("."));
         if (punchins.contains(packageName)) {
             return true;
         }
-        
+
         for (String multiple : multiples) {
             if (name.startsWith(multiple)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 

@@ -28,7 +28,7 @@ public final class SingletonEnforcerTest extends TestBase
     }
 
     private static final class Dummy {}
-    
+
     @Test
     public void testForNull() {
         assertTrue( SingletonEnforcer.get( Dummy.class ) == null );
@@ -38,14 +38,14 @@ public final class SingletonEnforcerTest extends TestBase
     public void testVariety() {
         SingletonEnforcer.register( String.class, "hello" );
         assertNotNull( SingletonEnforcer.get( String.class ) );
-        
+
         SingletonEnforcer.register( Boolean.class, Boolean.TRUE );
         assertNotNull( SingletonEnforcer.get( Boolean.class ) );
-        
+
         SingletonEnforcer.register( Integer.class, new Integer(0) );
         assertNotNull( SingletonEnforcer.get( Integer.class ) );
     }
-    
+
     /*
     @Test(expected=IllegalArgumentException.class)
     public void testForBrokenJUnit() {

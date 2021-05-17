@@ -25,7 +25,7 @@ import org.glassfish.deployment.common.Descriptor;
     */
 
 public class NamedReferencePair implements Serializable {
-    
+
     // Types of named reference pairs
     public static final int EJB = 1;
     public static final int EJB_REF = 2;
@@ -35,16 +35,16 @@ public class NamedReferencePair implements Serializable {
     private Descriptor referant;
     private NamedDescriptor referee;
     private int type;
-    
+
     public static NamedReferencePair createEjbPair
-        (EjbDescriptor referant, EjbDescriptor referee) 
+        (EjbDescriptor referant, EjbDescriptor referee)
     {
       if (referant instanceof Descriptor)
         return new NamedReferencePair((Descriptor) referant, referee, EJB); // FIXME by srini - can we extract intf to avoid this
       else
         return null;
     }
-        
+
     public static NamedReferencePair createEjbRefPair
         (Descriptor referant, EjbReferenceDescriptor referee)
     {
@@ -62,34 +62,34 @@ public class NamedReferencePair implements Serializable {
     {
         return new NamedReferencePair(referant, referee, RESOURCE_ENV_REF);
     }
-    
+
     /** Construct a pairing between the given descriptor and the object
     * it has with a jndi name.*/
-    protected NamedReferencePair(Descriptor referant, NamedDescriptor referee, 
+    protected NamedReferencePair(Descriptor referant, NamedDescriptor referee,
                                  int type) {
-	this.referant = referant;
-	this.referee  = referee;
+    this.referant = referant;
+    this.referee  = referee;
         this.type     = type;
     }
 
     /** Gets the descriptor with the named descriptor. */
     public Descriptor getReferant() {
-	return this.referant;
+    return this.referant;
     }
-    
+
     /** Gets the named descriptor for the decriptor.*/
     public NamedDescriptor getReferee() {
-	return this.referee;
+    return this.referee;
     }
 
     public String getPairTypeName() {
         switch(this.type) {
-            case EJB : return "EJB"; 
+            case EJB : return "EJB";
             case EJB_REF : return "EJB REF";
             case RESOURCE_REF : return "RESOURCE REF";
             case RESOURCE_ENV_REF : return "RESOURCE ENV REF";
         }
-        throw new IllegalStateException("unknown type = " + type);        
+        throw new IllegalStateException("unknown type = " + type);
     }
 
     public int getPairType() {
@@ -98,7 +98,7 @@ public class NamedReferencePair implements Serializable {
 
     /** My pretty format. */
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("NRP: ").append(referant.getName()).append(" -> ").append(((Descriptor) referee).getName());
+    toStringBuffer.append("NRP: ").append(referant.getName()).append(" -> ").append(((Descriptor) referee).getName());
     }
-    
+
 }

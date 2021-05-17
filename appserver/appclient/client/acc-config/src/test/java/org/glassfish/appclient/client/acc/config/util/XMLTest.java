@@ -49,7 +49,7 @@ import static org.junit.Assert.*;
 public class XMLTest {
 
     private static final String[] SAMPLE_XML_PATH = {"/sun-acc.xml", "/glassfish-acc.xml"};
-    
+
     private static final String FIRST_HOST = "glassfish.dev.java.net";
     private static final int FIRST_PORT = 3701;
     private static final String SECOND_HOST = "other.dev.java.net";
@@ -79,9 +79,9 @@ public class XMLTest {
             System.out.println("  Testing with " + sampleXMLPath);
             ClientContainer cc = readConfig(sampleXMLPath);
             Properties props = XML.toProperties(cc.getProperty());
-            assertEquals("property value mismatch for first property from " + sampleXMLPath, 
+            assertEquals("property value mismatch for first property from " + sampleXMLPath,
                     FIRST_PROP_VALUE, props.getProperty(FIRST_PROP_NAME));
-            assertEquals("property value mismatch for second property from " + sampleXMLPath, 
+            assertEquals("property value mismatch for second property from " + sampleXMLPath,
                     SECOND_PROP_VALUE, props.getProperty(SECOND_PROP_NAME));
         }
     }
@@ -105,7 +105,7 @@ public class XMLTest {
 
     }
 
-    private static ClientContainer readConfig(final String configPath) 
+    private static ClientContainer readConfig(final String configPath)
             throws JAXBException, FileNotFoundException, ParserConfigurationException, SAXException, IOException {
         ClientContainer result = null;
         InputStream is = XMLTest.class.getResourceAsStream(configPath);
@@ -154,31 +154,31 @@ public class XMLTest {
             GLASSFISH_ACC(
                 "-//GlassFish.org//DTD GlassFish Application Server 3.1 Application Client Container//EN",
                 "dtds/glassfish-application-client-container_1_3.dtd");
-            
+
             private static final String SYSTEM_ID_PREFIX = "http://glassfish.org/";
-            
+
             private final String publicID;
             private final String systemIDSuffix;
             private final URI uri;
-            
+
             ACC_INFO(final String publicID, final String systemIDSuffix) {
                 this.publicID = publicID;
                 this.systemIDSuffix = systemIDSuffix;
                 uri = URI.create(LOCAL_PATH_PREFIX + systemIDSuffix);
             }
         }
-        
+
         private static final String SUN_ACC_PUBLIC_ID =
                 "-//Sun Microsystems Inc.//DTD Application Server 8.0 Application Client Container//EN";
         private static final String GLASSFISH_ACC_PUBLIC_ID =
                 "-//GlassFish.org//DTD GlassFish Application Server 3.1 Application Client Container//EN";
         private static final String SYSTEM_ID_PREFIX =
                 "http://glassfish.org/";
-        private static final URI SUN_ACC_SYSTEM_ID_URI = 
+        private static final URI SUN_ACC_SYSTEM_ID_URI =
                 URI.create(SYSTEM_ID_PREFIX + "dtds/sun-application-client-container_1_2.dtd");
-        private static final URI GLASSFISH_ACC_SYSTEM_ID_URI = 
+        private static final URI GLASSFISH_ACC_SYSTEM_ID_URI =
                 URI.create(SYSTEM_ID_PREFIX + "dtds/glassfish-application-client-container_1_3.dtd");
-        
+
         private static final String LOCAL_PATH_PREFIX = "/glassfish/lib/";
 
         private static final Map<String,String> publicIdToLocalPathMap =

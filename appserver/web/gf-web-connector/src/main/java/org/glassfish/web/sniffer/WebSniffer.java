@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * Implementation of the Sniffer for the web container.
- * 
+ *
  * @author Jerome Dochez
  */
 @Service(name="web")
@@ -74,7 +74,7 @@ public class WebSniffer  extends GenericSniffer {
      * Returns true if the passed file or directory is recognized by this
      * instance.
      *
-     * @param location the file or directory to explore 
+     * @param location the file or directory to explore
      * @return true if this sniffer handles this application type
      */
     @Override
@@ -103,10 +103,10 @@ public class WebSniffer  extends GenericSniffer {
     public boolean isJavaEE() {
         return true;
     }
-    
-    private static final List<String> deploymentConfigurationPaths = 
+
+    private static final List<String> deploymentConfigurationPaths =
             initDeploymentConfigurationPaths();
-    
+
     private static List<String> initDeploymentConfigurationPaths() {
         final List<String> result = new ArrayList<String>();
         result.add("WEB-INF/web.xml");
@@ -115,11 +115,11 @@ public class WebSniffer  extends GenericSniffer {
         result.add("WEB-INF/weblogic.xml");
         return result;
     }
-    
+
     /**
      * Returns the web-oriented descriptor paths that might exist in a web
      * app.
-     * 
+     *
      * @return list of the deployment descriptor paths
      */
     @Override
@@ -156,7 +156,7 @@ public class WebSniffer  extends GenericSniffer {
         }
         return false;
     }
-    
+
     // TODO(Sahoo): Ideally we should have separate sniffer for JSP, but since WebSniffer is already
     // handling JSPs, we must make sure that all JSP related modules get installed by WebSniffer as well.
     private String[] containerModuleNames = {"org.glassfish.main.web.glue",

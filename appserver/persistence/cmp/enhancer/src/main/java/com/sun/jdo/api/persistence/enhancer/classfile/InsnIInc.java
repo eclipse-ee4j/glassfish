@@ -67,12 +67,12 @@ public class InsnIInc extends Insn {
   }
 
   /**
-   * The amount by which the slot is to be incremented 
+   * The amount by which the slot is to be incremented
    */
   public int incrValue() {
     return value;
   }
-  
+
   /**
    * Constructor for opc_iinc instruction
    */
@@ -92,7 +92,7 @@ public class InsnIInc extends Insn {
   void print (PrintStream out, int indent) {
     ClassPrint.spaces(out, indent);
     out.println(offset() + "  opc_iinc  " + //NOI18N
-		localVarIndex + "," + value);//NOI18N
+        localVarIndex + "," + value);//NOI18N
   }
 
   int store(byte[] buf, int index) {

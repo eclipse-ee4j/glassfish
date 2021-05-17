@@ -24,7 +24,7 @@ import org.glassfish.web.deployment.runtime.ManagerProperties;
 /**
  * This node is the superclass for all web related runtime nodes
  *
- * @version 
+ * @version
  */
 public class ManagerPropertiesNode extends RuntimeDescriptorNode {
 

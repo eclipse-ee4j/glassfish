@@ -33,13 +33,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-/** 
+/**
  * Handler for EJBLocalHome invocations through EJBLocalHome proxy.
  *
  * @author Kenneth Saks
- */    
+ */
 
-public class EJBLocalHomeInvocationHandler 
+public class EJBLocalHomeInvocationHandler
     extends EJBLocalHomeImpl implements InvocationHandler {
 
     private static final Logger logger = EjbContainerUtilImpl.getLogger();
@@ -59,7 +59,7 @@ public class EJBLocalHomeInvocationHandler
     // container.  It's populated during container initialization and
     // passed in when the InvocationHandler is created.  This avoids the
     // overhead of building the method info each time a LocalHome proxy
-    // is created.  
+    // is created.
     private MethodMap invocationInfoMap_;
 
     protected EJBLocalHomeInvocationHandler(EjbDescriptor ejbDescriptor,
@@ -67,7 +67,7 @@ public class EJBLocalHomeInvocationHandler
         throws Exception {
 
         if( ejbDescriptor instanceof EjbSessionDescriptor ) {
-            isStatelessSession_ = 
+            isStatelessSession_ =
                 ((EjbSessionDescriptor)ejbDescriptor).isStateless();
         } else {
             isStatelessSession_ = false;
@@ -75,7 +75,7 @@ public class EJBLocalHomeInvocationHandler
 
         localHomeIntfClass_ = localHomeIntf;
 
-        // NOTE : Container is not set on super-class until after 
+        // NOTE : Container is not set on super-class until after
         // constructor is called.
     }
 
@@ -94,7 +94,7 @@ public class EJBLocalHomeInvocationHandler
     /**
      * Called by EJBLocalHome proxy.
      */
-    public Object invoke(Object proxy, Method method, Object[] args) 
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
         ClassLoader originalClassLoader = null;
@@ -120,7 +120,7 @@ public class EJBLocalHomeInvocationHandler
 
         if( methodClass == java.lang.Object.class )  {
             return InvocationHandlerUtil.invokeJavaObjectMethod
-                (this, method, args);    
+                (this, method, args);
         } else if( methodClass == IndirectlySerializable.class ) {
             return this.getSerializableObjectFactory();
         } else if( handleSpecialEJBLocalHomeMethod(method, methodClass) ) {
@@ -130,10 +130,10 @@ public class EJBLocalHomeInvocationHandler
         // Use optimized version of get that takes param count as an argument.
         InvocationInfo invInfo = (InvocationInfo)
             invocationInfoMap_.get(method, ((args != null) ? args.length : 0) );
-            
+
         if( invInfo == null ) {
             throw new IllegalStateException("Unknown method :" + method);
-        } 
+        }
 
         if( (methodClass == jakarta.ejb.EJBLocalHome.class) ||
             invInfo.ejbIntfOverride ) {
@@ -144,13 +144,13 @@ public class EJBLocalHomeInvocationHandler
         } else if(methodClass == GenericEJBLocalHome.class) {
 
             // This is a creation request through the EJB 3.0
-            // client view, so just create a local business object and 
+            // client view, so just create a local business object and
             // return it.
-            EJBLocalObjectImpl localImpl = 
+            EJBLocalObjectImpl localImpl =
                 createEJBLocalBusinessObjectImpl((String) args[0]);
             return localImpl.getClientObject((String) args[0]);
-            
-        } 
+
+        }
 
         // Process finder, create method, or home method.
         EJBLocalObjectImpl localObjectImpl = null;
@@ -162,13 +162,13 @@ public class EJBLocalHomeInvocationHandler
                 returnValue = localObjectImpl.getClientObject();
             }
         }
- 
+
         if( !isStatelessSession_ ) {
 
             if( invInfo.targetMethod1 == null ) {
 
-                Object [] params = new Object[] 
-                    { invInfo.ejbName, "LocalHome", 
+                Object [] params = new Object[]
+                    { invInfo.ejbName, "LocalHome",
                       invInfo.method.toString() };
                 String errorMsg = localStrings.getLocalString
                     ("ejb.bean_class_method_not_found", "", params);
@@ -204,10 +204,10 @@ public class EJBLocalHomeInvocationHandler
                     if( inv.ejbObject != null ) {
                         returnValue = ((EJBLocalObjectImpl)inv.ejbObject)
                             .getClientObject();
-                    } 
+                    }
                 } else if (invInfo.startsWithFindByPrimaryKey) {
-		    returnValue = container.invokeFindByPrimaryKey(
-			invInfo.targetMethod1, inv, args);
+            returnValue = container.invokeFindByPrimaryKey(
+            invInfo.targetMethod1, inv, args);
                 } else if ( invInfo.startsWithFind ) {
 
                     Object pKeys = invokeTargetBeanMethod(container, invInfo.targetMethod1,
@@ -220,7 +220,7 @@ public class EJBLocalHomeInvocationHandler
 
                 }
             } catch(InvocationTargetException ite) {
-                inv.exception = ite.getCause();           
+                inv.exception = ite.getCause();
             } catch(Throwable c) {
                 inv.exception = c;
             } finally {
@@ -261,7 +261,7 @@ public class EJBLocalHomeInvocationHandler
     }
 
     // allow subclasses to execute a protected method in BaseContainer
-    protected Object invokeTargetBeanMethod(BaseContainer container, 
+    protected Object invokeTargetBeanMethod(BaseContainer container,
             Method beanClassMethod, EjbInvocation inv, Object target, Object[] params)
             throws Throwable {
 

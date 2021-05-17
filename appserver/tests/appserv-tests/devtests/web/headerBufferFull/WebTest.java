@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("headerBufferSize");
@@ -62,7 +62,7 @@ public class WebTest {
         os.write(get.getBytes());
         os.write("Host: localhost\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -86,6 +86,6 @@ public class WebTest {
         } else {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
-     
+
     }
 }

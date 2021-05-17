@@ -25,6 +25,6 @@
 
     <target name="all">
         <ant dir="web" target="all"/>
-	<ant dir="ejb" target="all"/>
+    <ant dir="ejb" target="all"/>
     </target>
 </project>

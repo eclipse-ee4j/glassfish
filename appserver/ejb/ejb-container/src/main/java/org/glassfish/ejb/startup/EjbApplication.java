@@ -66,7 +66,7 @@ public class EjbApplication
     private Collection<Container> containers = new ArrayList<Container>();
     private ClassLoader ejbAppClassLoader;
     private DeploymentContext dc;
-    
+
     private ServiceLocator services;
 
     private SingletonLifeCycleManager singletonLCM;
@@ -97,7 +97,7 @@ public class EjbApplication
         Application app = ejbBundle.getApplication();
         initializeInOrder = (app != null) && (app.isInitializeInOrder());
     }
-    
+
     public Collection<EjbDescriptor> getDescriptor() {
         return ejbs;
     }
@@ -130,7 +130,7 @@ public class EjbApplication
                 dc.addTransientAppMetaData(EJB_APP_MARKED_AS_STARTED_STATUS, Boolean.TRUE);
             }
         }
-        
+
         try {
             DeployCommandParameters params = ((DeploymentContext)startupContext).
                     getCommandParameters(DeployCommandParameters.class);
@@ -209,7 +209,7 @@ public class EjbApplication
             abortInitializationAfterException();
             throw new RuntimeException("EJB Container initialization error", t);
         }
-        
+
         return true;
     }
 
@@ -270,7 +270,7 @@ public class EjbApplication
 
         for (Container container : containers) {
             if( undeploy ) {
-                container.undeploy();      
+                container.undeploy();
             } else {
                 container.onShutdown();
             }
@@ -278,9 +278,9 @@ public class EjbApplication
                 container.getSecurityManager().destroy();
             }
         }
-        
+
         containers.clear();
-        
+
         return true;
     }
 
@@ -374,7 +374,7 @@ public class EjbApplication
         }
         if(!isredeploy) {
             return false;
-        } 
+        }
 
         if (keepState == null) {
             Application app = bundleDesc.getApplication();

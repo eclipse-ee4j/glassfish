@@ -52,7 +52,7 @@ import com.sun.appserv.management.util.stringifier.StringifierRegistryImpl;
  * @version $Revision: 1.2 $
  */
 public class AMXConnectionVerifier {
-    private final DomainRoot	mDomainRoot;
+    private final DomainRoot    mDomainRoot;
 
     private DomainConfig   getDomainConfig()
     {
@@ -74,14 +74,14 @@ public class AMXConnectionVerifier {
         return( SmartStringifier.toString( o ) );
     }
 
-    private void  listMap(final String	msg, final Map 	m)
+    private void  listMap(final String    msg, final Map     m)
     {
         println( msg + ": " + toString( m.keySet() ) );
     }
 
     private void list()
     {
-        final DomainConfig	dcp	= getDomainConfig();
+        final DomainConfig    dcp    = getDomainConfig();
 
         // Top-level items
         println( "\n--- Top-level --- \n" );
@@ -128,7 +128,7 @@ public class AMXConnectionVerifier {
 
 
         // get a ConfigConfig
-        final ConfigConfig	config	=
+        final ConfigConfig    config    =
             (ConfigConfig)dcp.getConfigConfigMap().get( "server-config" );
 
 
@@ -145,19 +145,19 @@ public class AMXConnectionVerifier {
      */
     private void   queryWild(final String name, final String value)
     {
-        final String[]	propNames	= new String[ 1 ];
-        propNames[ 0 ]	= name;
+        final String[]    propNames    = new String[ 1 ];
+        propNames[ 0 ]    = name;
 
-        final String[]	propValues	= new String[ 1 ];
-        propValues[ 0 ]	= value;
+        final String[]    propValues    = new String[ 1 ];
+        propValues[ 0 ]    = value;
 
-        final Set	items	= getQueryMgr().queryWildSet( propNames, propValues );
+        final Set    items    = getQueryMgr().queryWildSet( propNames, propValues );
 
         println( "\n--- Queried for " + propNames[ 0 ] + "=" + propValues[ 0 ] + " ---" );
-        final Iterator	iter	= items.iterator();
+        final Iterator    iter    = items.iterator();
         while ( iter.hasNext() )
         {
-            final AMX	item	= (AMX)iter.next();
+            final AMX    item    = (AMX)iter.next();
 
             println( "j2eeType=" + item.getJ2EEType() + "," + "name=" + item.getName() );
         }
@@ -168,15 +168,15 @@ public class AMXConnectionVerifier {
      */
     private void queryForJ2EEType( final String j2eeType )
     {
-        final String	prop	= Util.makeJ2EETypeProp( j2eeType );
-        final Set		items	= getQueryMgr().queryPropsSet( prop );
+        final String    prop    = Util.makeJ2EETypeProp( j2eeType );
+        final Set        items    = getQueryMgr().queryPropsSet( prop );
 
         println( "\n--- Queried for " + prop + " ---" );
 
-        final Iterator	iter	= items.iterator();
+        final Iterator    iter    = items.iterator();
         while ( iter.hasNext() )
         {
-            final AMX	item	= (AMX)iter.next();
+            final AMX    item    = (AMX)iter.next();
 
             // they may or may not have unique names, so show ObjectNames
             println( item.getFullType() );
@@ -193,16 +193,16 @@ public class AMXConnectionVerifier {
         queryForJ2EEType( XTypes.SSL_CONFIG );
     }
 
-    public AMXConnectionVerifier(final String host, 
-                                   final int port, 
-                                   final String adminUser, 
+    public AMXConnectionVerifier(final String host,
+                                   final int port,
+                                   final String adminUser,
                                    final String adminPassword,
                                    final boolean useTLS)
                                     throws IOException
     {
-        final AMXConnector ct	= new AMXConnector( host, port, adminUser, adminPassword, useTLS );
+        final AMXConnector ct    = new AMXConnector( host, port, adminUser, adminPassword, useTLS );
 
-        mDomainRoot	= ct.getDomainRoot();
+        mDomainRoot    = ct.getDomainRoot();
 
         proveConnection( );
     }

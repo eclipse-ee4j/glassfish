@@ -21,7 +21,7 @@
          Request: Sahoo
          Approval: Bill Shannon
      -->
-    <!-- 
+    <!--
         Since jline is a third-party library, we can't do much to fix
         findbugs reported erros in it. So, we skip scanning all jline classes.
     -->

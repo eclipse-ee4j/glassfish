@@ -17,7 +17,7 @@
 package com.sun.ejb.codegen;
 
 /**
- * The Generator exception is thrown whenever there is an error in 
+ * The Generator exception is thrown whenever there is an error in
  * generating the stubs and skeletons and other related files.
  */
 
@@ -27,8 +27,8 @@ public class GeneratorException extends java.lang.Exception {
      * @param the string description
      */
     public GeneratorException(String s) {
-	super(s);
-	this.reason = s;
+    super(s);
+    this.reason = s;
     }
 
     /**
@@ -36,7 +36,7 @@ public class GeneratorException extends java.lang.Exception {
      * @return the string representation of the exception.
      */
     public String toString() {
-	return reason;
+    return reason;
     }
 
     /**

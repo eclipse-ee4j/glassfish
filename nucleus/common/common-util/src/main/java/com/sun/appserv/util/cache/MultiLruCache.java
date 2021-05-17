@@ -65,7 +65,7 @@ public class MultiLruCache extends BaseCache {
         // create the array of LRU lists
         int segments = ((maxBuckets / segmentSize) +
                         (((maxBuckets % segmentSize) != 0) ? 1 : 0));
-       	lists = new LruCacheItem[segments][2];
+           lists = new LruCacheItem[segments][2];
         listsLength = new int[lists.length];
         for (int i = 0; i < lists.length; i++) {
             lists[i][LRU_HEAD] = null;
@@ -312,8 +312,8 @@ public class MultiLruCache extends BaseCache {
     static class LruCacheItem extends BaseCache.CacheItem {
 
         // double linked LRU list
-	    LruCacheItem lNext;
-	    LruCacheItem lPrev;
+        LruCacheItem lNext;
+        LruCacheItem lPrev;
         boolean isTrimmed;
 
         LruCacheItem(int hashCode, Object key, Object value, int size) {

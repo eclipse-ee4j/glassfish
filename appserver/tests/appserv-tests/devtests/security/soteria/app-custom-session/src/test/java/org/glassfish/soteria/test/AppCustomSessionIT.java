@@ -47,7 +47,7 @@ public class AppCustomSessionIT extends ArquillianBase {
     public static void printSummary(){
       stat.printSummary();
     }
-   
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();
@@ -58,75 +58,75 @@ public class AppCustomSessionIT extends ArquillianBase {
         assertDefaultAuthenticated(
             readFromServer("/servlet?name=reza&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongName() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet?name=romo&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongPassword() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet?name=reza&password=wrongpassword"));
     }
-    
+
     @Test
     public void testAuthenticatedSession() {
-        
+
         // 1. Initially request page when we're not authenticated
-        
+
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
-        
-        
+
+
         // 2. Authenticate
-        
+
         String response = readFromServer("/servlet?name=reza&password=secret1");
-        
+
         assertDefaultAuthenticated(
             response);
-        
+
         // For the initial authentication, the mechanism should be called
-        
+
         assertTrue(
-            "Authentication mechanism should have been called, but wasn't", 
+            "Authentication mechanism should have been called, but wasn't",
             response.contains("authentication mechanism called: true"));
-        
-        
+
+
         // 3. Request same page again within same http session, should still
         //    be authenticated
-        
+
         response = readFromServer("/servlet");
-        
+
         assertDefaultAuthenticated(
             response);
-        
+
         // For the subsequent authentication, the mechanism should NOT be called
         // (the session interceptor takes care of authentication now)
-        
+
         assertTrue(
-            "Authentication mechanism should have been called, but wasn't", 
+            "Authentication mechanism should have been called, but wasn't",
             response.contains("authentication mechanism called: false"));
-        
-        
+
+
         // 4. Logout. Should not be authenticated anymore
-        
+
         assertDefaultNotAuthenticated(
             readFromServer("/servlet?logout=true"));
-        
-        
+
+
         // 5. Request same page again, should still not be authenticated
-        
+
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
-       
+
     }
 
 }

@@ -90,7 +90,7 @@ public final class Bootstrap {
             ClassLoaderFactory.setDebug(debug);
             commonLoader = createClassLoader("common", null);
             if( commonLoader == null ) {
-                // no config file, default to this loader 
+                // no config file, default to this loader
                 // - we might be in a 'single' env.
                 commonLoader=this.getClass().getClassLoader();
             }
@@ -128,10 +128,10 @@ public final class Bootstrap {
             // Local repository
             boolean packed = false;
             if (repository.startsWith(CATALINA_HOME_TOKEN)) {
-                repository = getCatalinaHome() 
+                repository = getCatalinaHome()
                     + repository.substring(CATALINA_HOME_TOKEN.length());
             } else if (repository.startsWith(CATALINA_BASE_TOKEN)) {
-                repository = getCatalinaBase() 
+                repository = getCatalinaBase()
                     + repository.substring(CATALINA_BASE_TOKEN.length());
             }
             if (repository.endsWith("*.jar")) {
@@ -217,7 +217,7 @@ public final class Bootstrap {
             param = new Object[1];
             param[0] = arguments;
         }
-        Method method = 
+        Method method =
             catalinaDaemon.getClass().getMethod(methodName, paramTypes);
         if (log.isLoggable(Level.FINE))
             log.log(Level.FINE, "Calling startup class " + method);
@@ -281,7 +281,7 @@ public final class Bootstrap {
     public void stopServer()
         throws Exception {
 
-        Method method = 
+        Method method =
             catalinaDaemon.getClass().getMethod("stopServer",(Class[])null);
         method.invoke(catalinaDaemon,(Object[])null);
 
@@ -297,7 +297,7 @@ public final class Bootstrap {
         paramTypes[0] = Boolean.TYPE;
         Object paramValues[] = new Object[1];
         paramValues[0] = Boolean.valueOf(await);
-        Method method = 
+        Method method =
             catalinaDaemon.getClass().getMethod("setAwait", paramTypes);
         method.invoke(catalinaDaemon, paramValues);
 
@@ -356,12 +356,12 @@ public final class Bootstrap {
 
         if (System.getProperty("catalina.home") != null)
             return;
-        File bootstrapJar = 
+        File bootstrapJar =
             new File(System.getProperty("user.dir"), "bootstrap.jar");
         if (bootstrapJar.exists()) {
             try {
                 System.setProperty
-                    ("catalina.home", 
+                    ("catalina.home",
                      (new File(System.getProperty("user.dir"), ".."))
                      .getCanonicalPath());
             } catch (Exception e) {

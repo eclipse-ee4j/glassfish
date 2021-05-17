@@ -52,10 +52,10 @@ public class TestBean implements Test {
         order2.setId(200);
         order2.setAddress("567 1st St. Random City, USA");
 
-        // Associate orders with the customer. The association 
-        // must be set on both sides of the relationship: on the 
-        // customer side for the orders to be persisted when 
-        // transaction commits, and on the order side because it 
+        // Associate orders with the customer. The association
+        // must be set on both sides of the relationship: on the
+        // customer side for the orders to be persisted when
+        // transaction commits, and on the order side because it
         // is the owning side.
         customer0.getOrders().add(order1);
         order1.setCustomer(customer0);
@@ -65,14 +65,14 @@ public class TestBean implements Test {
 
         return "OK";
     }
-        
+
     public String verifyInsert() {
 
         Customer c = findCustomer("Joe Smith");
 
         Collection<Order> orders = c.getOrders();
         if (orders == null || orders.size() != 2) {
-            throw new RuntimeException("Unexpected number of orders: " 
+            throw new RuntimeException("Unexpected number of orders: "
                     + ((orders == null)? "null" : "" + orders.size()));
         }
 
@@ -113,10 +113,10 @@ public class TestBean implements Test {
     }
 
     public Customer findCustomer(String name) {
-	Query q = em.createQuery("select c from Customer c where c.name = :name");
+    Query q = em.createQuery("select c from Customer c where c.name = :name");
         q.setParameter("name", name);
         Customer c = (Customer)q.getSingleResult();
-	return c;
+    return c;
     }
 
 }

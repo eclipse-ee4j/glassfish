@@ -40,7 +40,7 @@ public class WFTestFilter3 implements Filter {
         } catch(SQLException ex) {
             throw new ServletException(ex);
         }
-    }   
+    }
 
     public void doFilter(ServletRequest req, ServletResponse res,
             FilterChain chain) throws IOException, ServletException {

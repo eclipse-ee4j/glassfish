@@ -52,7 +52,7 @@ public class ConstInterfaceMethodRef extends ConstBasicMemberRef {
     super(cnameIndex, NT_index);
   }
 
-  static ConstInterfaceMethodRef read (DataInputStream input) 
+  static ConstInterfaceMethodRef read (DataInputStream input)
     throws IOException {
     int cname = input.readUnsignedShort();
     int NT = input.readUnsignedShort();

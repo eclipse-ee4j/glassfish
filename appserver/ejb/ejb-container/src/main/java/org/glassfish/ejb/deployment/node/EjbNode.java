@@ -63,15 +63,15 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
     /** Creates new EjbNode */
     public EjbNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), 
-                                                             EnvEntryNode.class, "addEnvironmentProperty");                          
-        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);     
-        registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);     
+        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY),
+                                                             EnvEntryNode.class, "addEnvironmentProperty");
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
         JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), 
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
                                                              ResourceRefNode.class, "addResourceReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.DATA_SOURCE), DataSourceDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
@@ -81,9 +81,9 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
 
         registerElementHandler(new XMLElement(EjbTagNames.SECURITY_IDENTITY),
-                                                            SecurityIdentityNode.class);             
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), 
-                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");               
+                                                            SecurityIdentityNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
+                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_CONTEXT_REF), EntityManagerReferenceNode.class, "addEntityManagerReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
@@ -93,8 +93,8 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
     }
 
     @Override
-    public void addDescriptor(Object  newDescriptor) {       
-        if (newDescriptor instanceof EjbReference) {            
+    public void addDescriptor(Object  newDescriptor) {
+        if (newDescriptor instanceof EjbReference) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
             }
@@ -102,11 +102,11 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
                         (EjbReference) newDescriptor);
         } else  if (newDescriptor instanceof RunAsIdentityDescriptor) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Adding security-identity" + newDescriptor);                   
+                DOLUtils.getDefaultLogger().fine("Adding security-identity" + newDescriptor);
             }
             getEjbDescriptor().setUsesCallerIdentity(false);
-	    getEjbDescriptor().setRunAsIdentity((RunAsIdentityDescriptor) newDescriptor);
-        } else if( newDescriptor instanceof 
+        getEjbDescriptor().setRunAsIdentity((RunAsIdentityDescriptor) newDescriptor);
+        } else if( newDescriptor instanceof
                    MessageDestinationReferenceDescriptor ) {
             MessageDestinationReferenceDescriptor msgDestRef =
                 (MessageDestinationReferenceDescriptor) newDescriptor;
@@ -134,32 +134,32 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(EjbTagNames.EJB_NAME, "setName");
-        table.put(EjbTagNames.EJB_CLASS, "setEjbClassName");        
-        table.put(TagNames.MAPPED_NAME, "setMappedName");        
+        table.put(EjbTagNames.EJB_CLASS, "setEjbClassName");
+        table.put(TagNames.MAPPED_NAME, "setMappedName");
         return table;
-    }    
-        
+    }
+
     /**
      * write the common descriptor info to a DOM tree and return it
      *
      * @param parent node for the DOM tree
      * @param the descriptor to write
-     */    
+     */
     protected void writeCommonHeaderEjbDescriptor(Node ejbNode, EjbDescriptor descriptor) {
-        appendTextChild(ejbNode, EjbTagNames.EJB_NAME, descriptor.getName());                       
-        appendTextChild(ejbNode, TagNames.MAPPED_NAME, descriptor.getMappedName());                       
-    }    
-    
+        appendTextChild(ejbNode, EjbTagNames.EJB_NAME, descriptor.getName());
+        appendTextChild(ejbNode, TagNames.MAPPED_NAME, descriptor.getMappedName());
+    }
+
     /**
      * write the security identity information about an EJB
      *
      * @param parent node for the DOM tree
      * @param the EJB descriptor the security information to be retrieved
-     */        
+     */
     protected void writeSecurityIdentityDescriptor(Node parent,  EjbDescriptor descriptor) {
-        if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity()==null) 
+        if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity()==null)
             return;
-        
+
         SecurityIdentityNode node = new SecurityIdentityNode();
         node.writeDescriptor(parent, EjbTagNames.SECURITY_IDENTITY,  descriptor);
     }

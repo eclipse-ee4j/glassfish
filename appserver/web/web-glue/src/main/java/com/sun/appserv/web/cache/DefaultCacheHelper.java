@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.web.LogFacade;
 
-/** DefaultCacheHelper interface is the built-in implementation of the 
+/** DefaultCacheHelper interface is the built-in implementation of the
  *  <code>CacheHelper</code> interface to aide in:
  *  a) the key generation b) whether to cache the response.
  *  There is one CacheHelper instance per web application.
@@ -38,9 +38,9 @@ public class DefaultCacheHelper implements CacheHelper {
     private static final String[] KEY_PREFIXES = {
         "", "ca.", "rh.", "rp.", "rc.", "ra.", "sa.", "si." };
 
-    public static final String ATTR_CACHING_FILTER_NAME = 
+    public static final String ATTR_CACHING_FILTER_NAME =
                                 "com.sun.ias.web.cachingFilterName";
-    public static final String PROP_KEY_GENERATOR_ATTR_NAME = 
+    public static final String PROP_KEY_GENERATOR_ATTR_NAME =
                                 "cacheKeyGeneratorAttrName";
 
     private static final Logger _logger = LogFacade.getLogger();
@@ -89,9 +89,9 @@ public class DefaultCacheHelper implements CacheHelper {
         }
     }
 
-    /** getCacheKey: generate the key to be used to cache this request 
+    /** getCacheKey: generate the key to be used to cache this request
      *  @param request incoming <code>HttpServletRequest</code>
-     *  @return key string used to access the cache entry. 
+     *  @return key string used to access the cache entry.
      *  Key is composed of: servletPath + a concatenation of the field values in
      *  the request; all key field names must be found in the appropriate scope.
      */
@@ -102,7 +102,7 @@ public class DefaultCacheHelper implements CacheHelper {
 
         if (isKeyGeneratorChecked == false && attrKeyGenerator != null) {
             try {
-                keyGenerator = (CacheKeyGenerator) 
+                keyGenerator = (CacheKeyGenerator)
                                 context.getAttribute(attrKeyGenerator);
             } catch (ClassCastException cce){
                 _logger.log(Level.WARNING, LogFacade.CACHE_DEFAULT_HELP_ILLEGAL_KET_GENERATOR, cce);
@@ -112,7 +112,7 @@ public class DefaultCacheHelper implements CacheHelper {
         }
 
         if (keyGenerator != null) {
-            String key = keyGenerator.getCacheKey(context, request); 
+            String key = keyGenerator.getCacheKey(context, request);
             if (key != null)
                 return key;
         }
@@ -143,12 +143,12 @@ public class DefaultCacheHelper implements CacheHelper {
         return sb.toString();
     }
 
-    /** isCacheable: is the response to given request cachebale? 
+    /** isCacheable: is the response to given request cachebale?
      *  @param request incoming <code>HttpServletRequest</code> object
-     *  @return <code>true</code> if the response could be cached. 
-     *  or return <code>false</code> if the results of this request 
-     *  must not be cached. 
-     *  
+     *  @return <code>true</code> if the response could be cached.
+     *  or return <code>false</code> if the results of this request
+     *  must not be cached.
+     *
      *  Applies pre-configured cacheability constraints in the cache-mapping;
      *  all constraints must pass for this to be cacheable.
      */
@@ -177,9 +177,9 @@ public class DefaultCacheHelper implements CacheHelper {
     /** isRefreshNeeded: is the response to given request be refreshed?
      *  @param request incoming <code>HttpServletRequest</code> object
      *  @return <code>true</code> if the response needs to be refreshed.
-     *  or return <code>false</code> if the results of this request 
+     *  or return <code>false</code> if the results of this request
      *  don't need to be refreshed.
-     *  
+     *
      *  XXX: 04/16/02 right now there is no configurability for this in
      *  ias-web.xml; should add a refresh-field element there:
      *  <refresh-field name="refresh" scope="request.parameter" />
@@ -203,9 +203,9 @@ public class DefaultCacheHelper implements CacheHelper {
     /** get timeout for the cacheable data in this request
      *  @param request incoming <code>HttpServletRequest</code> object
      *  @return either the statically specified value or from the request
-     *  fields. If not specified, get the timeout defined for the 
-     *  cache element. 
-     */ 
+     *  fields. If not specified, get the timeout defined for the
+     *  cache element.
+     */
     public int getTimeout(HttpServletRequest request) {
         // cache mapping associated with the request
         CacheMapping mapping = lookupCacheMapping(request);

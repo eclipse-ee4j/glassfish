@@ -36,12 +36,12 @@ public class Client {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP convalBMP = convalBMPHome.create();
-	stat.addDescription("Connection Creation Retry Tests");
+    stat.addDescription("Connection Creation Retry Tests");
 
         if (convalBMP.test1()) {
-        	stat.addStatus(testSuite + "test ", stat.PASS);
+            stat.addStatus(testSuite + "test ", stat.PASS);
         } else {
-        	stat.addStatus(testSuite + "test ", stat.FAIL);
+            stat.addStatus(testSuite + "test ", stat.FAIL);
         }
         stat.printSummary();
     }

@@ -77,9 +77,9 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
 
     @Inject @Optional
     private MonitoringRuntimeDataRegistry mrdr;
-    
+
     private Map<Dom, String> matchingNodes;
-    
+
     private TreeNode[] parentNodes;
 
     @Override
@@ -90,7 +90,7 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             return preAuthorizationForNonMonitoring(context);
         }
     }
-    
+
     private boolean preAuthorizationForMonitoring(final AdminCommandContext context) {
         mr.prepareList(context, pattern);
         return true;
@@ -114,7 +114,7 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
         }
         return true;
     }
-    
+
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         if (monitor) {
@@ -123,11 +123,11 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             return getAccessChecksForNonMonitoring();
         }
     }
-    
+
     private Collection<? extends AccessCheck> getAccessChecksForMonitoring() {
         return mr.getAccessChecksForList();
     }
-    
+
     private Collection<? extends AccessCheck> getAccessChecksForNonMonitoring() {
         final Collection<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
         for (Map.Entry<Dom,String> entry : matchingNodes.entrySet()) {
@@ -135,16 +135,16 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
         }
         return accessChecks;
     }
-    
+
     public void execute(AdminCommandContext context) {
 
         ActionReport report = context.getActionReport();
-        
+
         /* Issue 5918 Used in ManifestManager to keep output sorted */
         try {
             PropsFileActionReporter reporter = (PropsFileActionReporter) report;
             reporter.useMainChildrenAttribute(true);
-        } catch(ClassCastException e) { 
+        } catch(ClassCastException e) {
             // ignore, this is not a manifest output
         }
 
@@ -152,7 +152,7 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             listMonitorElements(context);
             return;
         }
-        
+
         List<Map.Entry> matchingNodesSorted = sortNodesByDottedName(matchingNodes);
         for (Map.Entry<Dom, String> node : matchingNodesSorted) {
             ActionReport.MessagePart part = report.getTopMessagePart().addChild();
@@ -164,7 +164,7 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             }
         }
     }
-    
+
     private void listMonitorElements(AdminCommandContext ctxt) {
         mr.execute();
     }
@@ -175,7 +175,7 @@ public class ListCommand extends V2DottedNameSupport implements AdminCommand,
             paramMap.set("MoniTor", "true");
             paramMap.set("DEFAULT", pattern);
             List<Server> targetList = targetService.getInstances(targetName);
-            ClusterOperationUtil.replicateCommand("list", FailurePolicy.Error, FailurePolicy.Warn, 
+            ClusterOperationUtil.replicateCommand("list", FailurePolicy.Error, FailurePolicy.Warn,
                     FailurePolicy.Ignore, targetList, context, paramMap, habitat);
         } catch(Exception ex) {
             report.setActionExitCode(ExitCode.FAILURE);

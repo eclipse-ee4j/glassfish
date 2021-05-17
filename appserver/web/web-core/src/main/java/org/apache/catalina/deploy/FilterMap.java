@@ -43,7 +43,7 @@ public class FilterMap implements Serializable {
     /**
      * The name of the filter with which this filter mapping is associated
      */
-    private String filterName = null;    
+    private String filterName = null;
 
     /**
      * The servlet name for which this filter mapping applies
@@ -86,7 +86,7 @@ public class FilterMap implements Serializable {
     public void setURLPattern(String urlPattern) {
         this.urlPattern = RequestUtil.urlDecode(urlPattern);
     }
-    
+
     public Set<DispatcherType> getDispatcherTypes() {
         // Per the SRV.6.2.5 absence of any dispatcher elements is
         // equivelant to a REQUEST value

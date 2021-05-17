@@ -46,7 +46,7 @@ import org.glassfish.jersey.internal.util.collection.Ref;
 
 /**
  * Represents sessions with GlassFish Rest service
- * 
+ *
  * @author Mitesh Meswani
  */
 @Path("/sessions")
@@ -60,7 +60,7 @@ public class SessionsResource extends AbstractResource {
     /**
      * Get a new session with GlassFish Rest service If a request lands here when authentication has been turned on => it
      * has been authenticated.
-     * 
+     *
      * @return a new session with GlassFish Rest service
      */
     @POST

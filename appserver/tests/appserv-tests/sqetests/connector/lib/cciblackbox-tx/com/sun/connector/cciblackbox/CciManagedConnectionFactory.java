@@ -38,9 +38,9 @@ import wlstest.functional.connector.common.utils.server.Logger;
 
 
 /**
- * An object of this class is a factory of both ManagedConnection and 
+ * An object of this class is a factory of both ManagedConnection and
  * connection factory instances.
- * This class supports connection pooling by defining methods for 
+ * This class supports connection pooling by defining methods for
  * matching and creating connections.
  * @author Sheetal Vartak
  */
@@ -48,7 +48,7 @@ public class CciManagedConnectionFactory implements ManagedConnectionFactory, Se
 
   private String XADataSourceName;
   private String url;
-  
+
   transient private Context ic;
 
   public CciManagedConnectionFactory() {
@@ -136,11 +136,11 @@ public class CciManagedConnectionFactory implements ManagedConnectionFactory, Se
   public void setXADataSourceName(String XADataSourceName) {
     this.XADataSourceName = XADataSourceName;
   }
-  
+
   public String getConnectionURL(){
       return url;
   }
-  
+
   public void setConnectionURL(String connectionURL){
       this.url = connectionURL;
   }
@@ -159,12 +159,12 @@ public class CciManagedConnectionFactory implements ManagedConnectionFactory, Se
             throw new ResourceException("catch sql exception while exe getXADataSource()", ex);
         }
   }
-  
+
    private XADataSource getDerbyXADataSource() throws SQLException{
       String urltrim = url.trim().substring(url.indexOf("//") + 2);
       String host = urltrim.substring(0, urltrim.indexOf(":"));
       String port = urltrim.substring(urltrim.indexOf(":") + 1, urltrim.indexOf("/"));
- //     String dbname = urltrim.substring(urltrim.indexOf("/")+1);  
+ //     String dbname = urltrim.substring(urltrim.indexOf("/")+1);
       String dbname = XADataSourceName + ";create=true;autocommit=false";
       Logger.info("getDerbyXADataSource() for host:" + host + ";port:" + port + ";dbname:" + dbname);
 
@@ -175,30 +175,30 @@ public class CciManagedConnectionFactory implements ManagedConnectionFactory, Se
 
       return (XADataSource) ds;
   }
-  
+
    private XADataSource getOraXADataSource() throws SQLException{
         Object ds = loadAndInstantiateClass("oracle.jdbc.xa.client.OracleXADataSource");
         invokeMethod(ds, "setURL", new Object[]{url});
         return (XADataSource)ds;
   }
-   
+
    private Object loadAndInstantiateClass(String className){
         try {
             Class cls = Class.forName(className);
            Object obj = cls.newInstance();
            Logger.info("JDBC Driver Loaded and instantiated " + className + ".");
            return obj;
-        
+
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.info("catch exception while instantiate class with non-param constructor: "+className, ex);
         }
         catch (ClassNotFoundException ex) {
             Logger.info("could not find class: "+className, ex);
-        }   
-        
+        }
+
         return null;
    }
-   
+
    private Object invokeMethod(Object obj, String methodName, Object[] args){
        Method methodToInvoke = null;
        Object ret = null;

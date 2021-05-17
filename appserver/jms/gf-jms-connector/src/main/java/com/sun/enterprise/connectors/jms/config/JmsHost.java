@@ -90,7 +90,7 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
      * Sets the value of the host property.
      *
      * ip V6 or V4 address or hostname
-     * 
+     *
      * @param value allowed object is
      *              {@link String }
      */
@@ -100,14 +100,14 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
      * Gets the value of the port property.
      *
      * Port number used by the JMS service
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
     @Attribute (defaultValue="7676")
     @Pattern(regexp=PORT_PATTERN,
             message="{port-pattern}",
-            payload=JmsHost.class)   
+            payload=JmsHost.class)
     String getPort();
 
     /**
@@ -141,7 +141,7 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
      * Gets the value of the adminUserName property.
      *
      * Specifies the admin username
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -160,7 +160,7 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
      * Gets the value of the adminPassword property.
      *
      * Attribute specifies the admin password
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -174,9 +174,9 @@ public interface JmsHost extends ConfigExtension, PropertyBag, Payload {
      *              {@link String }
      */
     void setAdminPassword(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+        Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

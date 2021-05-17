@@ -65,7 +65,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         {
             throw new IllegalStateException( "Proxy no longer valid for: " + objectName() );
         }
-        
+
         return result;
 
     //throw new IllegalArgumentException( "Cannot convert " + getObjectName() +
@@ -120,7 +120,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     {
         return proxyFactory().getDomainRootProxy();
     }
-    
+
     private static final String STRING = String.class.getName();
     private static final String[] EMPTY_SIG = new String[0];
     private static final String[] STRING_SIG = new String[]
@@ -283,7 +283,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     private static final String METHOD_ATTRIBUTE_NAMES = "attributeNames";
     /** proxy method */
     private static final String METHOD_PATHNAME = "path";
-    
+
     private static final String INVOKE_OPERATION = "invokeOp";
 
     /**
@@ -505,7 +505,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             throw e;
         }
     }
-    
+
     public Object invokeOp( final String operationName)
     {
         try
@@ -517,7 +517,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             throw new RuntimeException( "Exception invoking " + operationName, e );
         }
     }
-    
+
     public Object invokeOp( final String operationName, final Object[] args, final String[] signature )
     {
         try
@@ -529,7 +529,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             throw new RuntimeException( "Exception invoking " + operationName, e );
         }
     }
-    
+
     private boolean isChildGetter( final Method m, final Object[] args)
     {
         boolean isChildGetter = false;
@@ -540,7 +540,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         }
         return isChildGetter;
     }
-    
+
     private String deduceChildType( final Method m )
     {
         String type = null;
@@ -549,7 +549,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         {
             type = getter.type();
         }
-        
+
         if ( type == null || type.length() == 0 )
         {
             String temp = m.getName();
@@ -560,24 +560,24 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             }
             type = Util.typeFromName(temp);
         }
-        
+
         return type;
     }
-    
+
     private ObjectName[] handleChildGetter(
         final Method method,
         final Object[] args)
     {
         final String type = deduceChildType(method);
-        
+
         final List<ObjectName> childrenList = childrenOfType(type);
-        
+
         final ObjectName[] children = new ObjectName[ childrenList.size() ];
         childrenList.toArray( children );
-        
+
         return children;
     }
-    
+
     /**
         Convert an ObjectName[] to the proxy-based Map/Set/List/[] result type
      */
@@ -585,11 +585,11 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     autoConvert(final Method method, final ObjectName[] items )
     {
         //debug( "_invoke: trying to make ObjectName[] into proxies for " + method.getName() );
-        final Class<?> returnType = method.getReturnType();        
+        final Class<?> returnType = method.getReturnType();
         Class<? extends AMXProxy> proxyClass = AMXProxy.class;
-        
+
         Object result = items;  // fallback is to return the original ObjectName[]
-        
+
         if ( returnType.isArray() )
         {
             final Class<?> componentType = returnType.getComponentType();
@@ -608,7 +608,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             {
                 proxyClass = getProxyClass((ParameterizedType) method.getGenericReturnType());
             }
-            
+
             // Note that specialized sub-types of Set/List/Map, are *not* supported;
             // the method must be declared with Set/List/Map. This is intentional
             // to discourage use of HashMap, LinkedList, ArrayList, TreeMap, etc.
@@ -625,11 +625,11 @@ public final class AMXProxyHandler extends MBeanProxyHandler
                 result = proxyFactory().toProxyMap(items, proxyClass);
             }
         }
-        
+
         return result;
     }
-    
-        private List<ObjectName> 
+
+        private List<ObjectName>
     tentativeObjectNameList(final Collection<?> items)
     {
         final List<ObjectName> objectNames = new ArrayList<ObjectName>();
@@ -645,7 +645,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         }
         return objectNames;
     }
-    
+
     /**
         Convert an Map/Set/List to the proxy-based Map/Set/List/[] result type
      */
@@ -653,7 +653,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     autoConvertCollection(final Method method, final Object itemsIn)
     {
         Object result = itemsIn;  // fallback is to return the original result
-        
+
         //System.out.println( "autoConvertCollection() for " + method.getName() );
         final Class<?> returnType = method.getReturnType();
         Class<? extends AMXProxy> proxyClass = AMXProxy.class;
@@ -661,13 +661,13 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         {
             proxyClass = getProxyClass((ParameterizedType) method.getGenericReturnType());
         }
-        
+
         // definitely do not want to auto convert to proxy if it's List<ObjectName> (for example)
         if ( proxyClass == null || ! AMXProxy.class.isAssignableFrom(proxyClass) )
         {
             return itemsIn;
         }
-        
+
         if ( Collection.class.isAssignableFrom(returnType) && (itemsIn instanceof Collection) )
         {
             final List<ObjectName> objectNames = tentativeObjectNameList((Collection)itemsIn);
@@ -706,13 +706,13 @@ public final class AMXProxyHandler extends MBeanProxyHandler
                 }
                 proxies.put( (String)me.getKey(), proxyFactory().getProxy((ObjectName)value, proxyClass ));
             }
-            
+
             if ( ok )
             {
                 result = proxies;
             }
         }
-    
+
         return result;
     }
 
@@ -724,7 +724,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
             throws java.lang.Throwable
     {
         final int numArgs = argsIn == null ? 0 : argsIn.length;
-        
+
         // auto-convert any AMXProxy to ObjectName (Lists, Maps, etc thereof are caller's design headache)
         final Object[] args = argsIn == null ?  new Object[0] : new Object[ argsIn.length ];
         for( int i = 0; i < numArgs; ++i )
@@ -735,7 +735,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
                 args[i] = ((AMXProxy)argsIn[i]).objectName();
             }
         }
-        
+
         debugMethod(method.getName(), args);
         Object result = null;
         final String methodName = method.getName();
@@ -936,9 +936,9 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     public AMXProxy parent()
     {
         if ( mParentObjectName == null ) return null;
-        
+
         final AMXProxy proxy = proxyFactory().getProxy(mParentObjectName);
-        
+
         return proxy;
     }
 
@@ -1021,7 +1021,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         {
             return Collections.emptyList();
         }
-        
+
         final List<ObjectName> items = new ArrayList<ObjectName>();
 
         for (final ObjectName objectName : objectNames)
@@ -1033,7 +1033,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         }
         return items;
     }
-    
+
     public <T extends AMXProxy> Map<String, T> childrenMap(final String type, final Class<T> intf)
     {
         final Map<String, T> m = new HashMap<String, T>();
@@ -1134,8 +1134,8 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     {
         return getMBeanInfo();
     }
-    
-    
+
+
     public Map<String, Object> attributesMap( final Set<String> attrNames )
     {
         try
@@ -1187,7 +1187,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     {
         return getDescriptorField(info, DESC_IS_SINGLETON, Boolean.FALSE);
     }
-    
+
     public static boolean globalSingleton(final MBeanInfo info)
     {
         return getDescriptorField(info, DESC_IS_GLOBAL_SINGLETON, Boolean.FALSE);
@@ -1223,16 +1223,16 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     {
         return getDescriptorField(DESC_SUB_TYPES, EMPTY_STRINGS);
     }
-    
+
     public String java() {
         final Tools tools  = domainRootProxy().getTools();
         return tools.java( getObjectName() );
     }
-    
+
     public Descriptor descriptor() {
         return getMBeanInfo().getDescriptor();
     }
-    
+
     public MBeanAttributeInfo attributeInfo(final String attrName) {
         for( final MBeanAttributeInfo info: getMBeanInfo().getAttributes() )
         {
@@ -1243,7 +1243,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         }
         return null;
     }
-    
+
     @Override
     public MBeanOperationInfo operationInfo(final String operationName) {
         for( final MBeanOperationInfo info: getMBeanInfo().getOperations() )
@@ -1255,7 +1255,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
         }
         return null;
     }
-    
+
     @Override
     public boolean equals(final Object rhs)
     {
@@ -1263,7 +1263,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler
     }
 
     @Override
-    public int hashCode() { 
+    public int hashCode() {
         return super.hashCode();
     }
 }

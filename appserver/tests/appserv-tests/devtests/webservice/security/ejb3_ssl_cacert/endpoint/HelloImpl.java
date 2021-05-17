@@ -26,5 +26,5 @@ public class HelloImpl {
     public String sayHello(String who) {
         return "WebSvcTest-Hello " + who;
     }
-    
+
 }

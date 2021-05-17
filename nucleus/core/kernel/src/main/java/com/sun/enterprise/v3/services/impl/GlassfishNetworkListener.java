@@ -66,7 +66,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
     private final Logger logger;
 
     private volatile HttpAdapter httpAdapter;
-    
+
     public GlassfishNetworkListener(final GrizzlyService grizzlyService,
             final NetworkListener networkListener,
             final Logger logger) {
@@ -182,7 +182,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             AbstractActiveDescriptor<V3Mapper> aad = BuilderHelper.createConstantDescriptor(mapper);
             aad.addContractType(Mapper.class);
             aad.setName(address.toString() + port);
-            
+
             ServiceLocatorUtilities.addOneDescriptor(grizzlyService.getHabitat(), aad);
             super.configureHttpProtocol(habitat, networkListener, http, filterChainBuilder, securityEnabled);
             final Protocol protocol = http.getParent();
@@ -202,7 +202,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
         config.setDefaultErrorPageGenerator(new GlassfishErrorPageGenerator());
         return config;
     }
-   
+
     @Override
     protected HttpHandler getHttpHandler() {
         return httpAdapter.getMapper();
@@ -218,18 +218,18 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
 
     @Override
     protected FileCache configureHttpFileCache(org.glassfish.grizzly.config.dom.FileCache cache) {
-        
+
         final FileCache fileCache = super.configureHttpFileCache(cache);
         fileCache.getMonitoringConfig().addProbes(new FileCacheMonitor(
                 grizzlyService.getMonitoring(), name, fileCache));
-        
+
         return fileCache;
     }
 
     @Override
     protected ThreadPoolConfig configureThreadPoolConfig(final NetworkListener networkListener,
                                                          final ThreadPool threadPool) {
-        
+
         final ThreadPoolConfig config = super.configureThreadPoolConfig(
                 networkListener, threadPool);
         config.getInitialMonitoringConfig().addProbes(new ThreadPoolMonitor(
@@ -244,7 +244,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             final String defaultResponseType, final KeepAlive keepAlive,
             final DelayedExecutor delayedExecutor,
             final int maxRequestHeaders, final int maxResponseHeaders) {
-        
+
         final org.glassfish.grizzly.http.HttpServerFilter httpCodecFilter =
                 new GlassfishHttpCodecFilter(
                 http == null || Boolean.parseBoolean(http.getXpoweredBy()),
@@ -255,15 +255,15 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 delayedExecutor,
                 maxRequestHeaders,
                 maxResponseHeaders);
-        
+
         if (http != null) { // could be null for HTTP redirect
             httpCodecFilter.setMaxPayloadRemainderToSkip(
                     Integer.parseInt(http.getMaxSwallowingInputBytes()));
-            
+
             httpCodecFilter.setAllowPayloadForUndefinedHttpMethods(
                     Boolean.parseBoolean(http.getAllowPayloadForUndefinedHttpMethods()));
         }
-        
+
         return httpCodecFilter;
     }
 
@@ -290,7 +290,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
 
     static List<String> toArray(String s, String token) {
         final ArrayList<String> list = new ArrayList<String>();
-        
+
         int from = 0;
         do {
             final int idx = s.indexOf(token, from);
@@ -305,12 +305,12 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             list.add(str);
 
             from = idx + 1;
-            
+
         } while (true);
 
         return list;
     }
-    
+
     protected static class HttpAdapterImpl implements HttpAdapter {
         private final VirtualServer virtualServer;
         private final ContainerMapper conainerMapper;
@@ -338,14 +338,14 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             return webAppRootPath;
         }
     }
-    
+
     /**
      * Glassfish specific HttpCodecFilter extension.
      */
     private static class GlassfishHttpCodecFilter extends org.glassfish.grizzly.http.HttpServerFilter {
         private final String serverVersion;
         private final String xPoweredBy;
-        
+
         public GlassfishHttpCodecFilter(
                 final boolean isXPoweredByEnabled,
                 final boolean chunkingEnabled,
@@ -355,7 +355,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 final int maxRequestHeaders, final int maxResponseHeaders) {
             super(chunkingEnabled, maxHeadersSize, defaultResponseContentType,
                     keepAlive, executor, maxRequestHeaders, maxResponseHeaders);
-            
+
             /*
             * Set the server info.
             * By default, the server info is taken from Version#getVersion.
@@ -368,13 +368,13 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             * HTTP response header (which will be suppressed) or any container
             * generated error pages. However, it will still appear in the
             * server logs (see IT 6900).
-            * 
+            *
             * Taken from com.sun.enterprise.web.WebContainer code
             */
             String serverInfo = System.getProperty("product.name");
-            
+
             serverVersion = serverInfo != null ? serverInfo : Version.getVersion();
-            
+
             if (isXPoweredByEnabled) {
                 xPoweredBy = "Servlet/5.0 JSP/3.0"
                         + "(" + ((serverInfo != null && !serverInfo.isEmpty()) ? serverInfo : Version.getVersion())
@@ -385,28 +385,28 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 xPoweredBy = null;
             }
         }
-        
+
         @Override
         protected boolean onHttpHeaderParsed(final HttpHeader httpHeader,
                 final Buffer buffer,
                 final FilterChainContext ctx) {
-            
+
             final boolean result = super.onHttpHeaderParsed(httpHeader,
                     buffer, ctx);
-            
+
             final HttpRequestPacket request = (HttpRequestPacket) httpHeader;
             final HttpResponsePacket response = request.getResponse();
-            
+
             // Set response "Server" header
             if (serverVersion != null && !serverVersion.isEmpty()) {
                 response.addHeader(Header.Server, serverVersion);
             }
-            
+
             // Set response "X-Powered-By" header
             if (xPoweredBy != null) {
                 response.addHeader(Header.XPoweredBy, xPoweredBy);
             }
-            
+
             return result;
         }
     }

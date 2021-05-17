@@ -45,14 +45,14 @@ public class TxBeanB implements SessionBean {
     private String dbURL1 = null;
     private String dbURL2 = null;
     private String password = null;
-    private SessionContext ctx = null;   
+    private SessionContext ctx = null;
     private QueueConnectionFactory qfactory = null;
 
     // ------------------------------------------------------------------------
     // Container Required Methods
     // ------------------------------------------------------------------------
     public void setSessionContext(SessionContext sc) {
-        System.out.println("setSessionContext in BeanB");  
+        System.out.println("setSessionContext in BeanB");
         try {
             ctx = sc;
             Context ic = new InitialContext();
@@ -68,13 +68,13 @@ public class TxBeanB implements SessionBean {
     }
 
     public void ejbCreate() {
-        System.out.println("ejbCreate in BeanB");  
+        System.out.println("ejbCreate in BeanB");
         try {
             Context context = new InitialContext();
-            
-            qfactory = (QueueConnectionFactory) 
+
+            qfactory = (QueueConnectionFactory)
             context.lookup("java:comp/env/jms/QCFactory");
-            
+
             queue = (Queue) context.lookup("java:comp/env/jms/SampleQueue");
 
             System.out.println("QueueConnectionFactory & " +
@@ -83,22 +83,22 @@ public class TxBeanB implements SessionBean {
             System.out.println("Exception in ejbCreate: " + ex.toString());
             ex.printStackTrace();
         }
-    } 
+    }
 
     public void ejbDestroy() {
-        System.out.println("ejbDestroy in BeanB");  
+        System.out.println("ejbDestroy in BeanB");
     }
 
     public void ejbActivate() {
-        System.out.println("ejbActivate in BeanB");  
+        System.out.println("ejbActivate in BeanB");
     }
-  
+
     public void ejbPassivate() {
-        System.out.println("ejbPassivate in BeanB");  
+        System.out.println("ejbPassivate in BeanB");
     }
 
     public void ejbRemove() {
-        System.out.println("ejbRemove in BeanB");  
+        System.out.println("ejbRemove in BeanB");
     }
 
     // ------------------------------------------------------------------------
@@ -107,7 +107,7 @@ public class TxBeanB implements SessionBean {
     public void insert(String acc, float bal) throws RemoteException {
         Connection con1 = null;
         Connection con2 = null;
-        System.out.println("insert in BeanB");  
+        System.out.println("insert in BeanB");
         try {
             con1 = getConnection(dbURL1);
             Statement stmt1 = con1.createStatement();
@@ -138,7 +138,7 @@ public class TxBeanB implements SessionBean {
     public void delete(String account) throws RemoteException {
         Connection con1 = null;
         Connection con2 = null;
-        System.out.println("delete in BeanB");  
+        System.out.println("delete in BeanB");
         try {
             con1 = getConnection(dbURL1);
             Statement stmt1 = con1.createStatement();
@@ -167,7 +167,7 @@ public class TxBeanB implements SessionBean {
     }
 
     public void sendJMSMessage(String msg) throws RemoteException {
-        System.out.println("sendJMSMessage in BeanB");  
+        System.out.println("sendJMSMessage in BeanB");
         try {
             QueueConnection qconn = qfactory.createQueueConnection();
             QueueSession qsession = qconn.createQueueSession(true, 0);
@@ -190,7 +190,7 @@ public class TxBeanB implements SessionBean {
     public boolean verifyResults(String account, String resource)
                                 throws RemoteException {
         boolean result = false;
-        System.out.println("verifyResults in BeanB");  
+        System.out.println("verifyResults in BeanB");
         try {
             if (resource.equals("DB1")) {
                 result = checkResult(getConnection(dbURL1), account);
@@ -226,13 +226,13 @@ public class TxBeanB implements SessionBean {
 
     private boolean checkResult(Connection conn, String account) {
         boolean result = false;
-        System.out.println("checkResult in BeanB");  
+        System.out.println("checkResult in BeanB");
         try {
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM txAccount WHERE " +
                                              "account = '"+ account + "'");
 
-            if ( rs.next() ) { 
+            if ( rs.next() ) {
                 result = true;
             }
         } catch (Exception ex) {
@@ -248,7 +248,7 @@ public class TxBeanB implements SessionBean {
 
     private Connection getConnection(String dbURL) {
         Connection con = null;
-        System.out.println("getConnection in BeanB");  
+        System.out.println("getConnection in BeanB");
         try{
             Context context = new InitialContext();
             DataSource ds = (DataSource) context.lookup(dbURL);
@@ -256,7 +256,7 @@ public class TxBeanB implements SessionBean {
             System.out.println("Got DB Connection Successfully...");
         } catch (Exception ex) {
             System.out.println("Exception in getConnection: " + ex.toString());
-	    ex.printStackTrace();
+        ex.printStackTrace();
         }
         return con;
     }

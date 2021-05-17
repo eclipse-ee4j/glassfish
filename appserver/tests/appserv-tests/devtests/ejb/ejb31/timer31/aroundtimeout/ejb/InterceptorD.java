@@ -35,7 +35,7 @@ public class InterceptorD {
     @AroundTimeout
     @AroundInvoke
     Object aroundAll(InvocationContext ctx)
-	        throws Exception {
+            throws Exception {
         Common.aroundTimeoutCalled(ctx, "D");
         Object instance = ctx.getTarget();
         if( instance instanceof SlessEJB5 ) {
@@ -44,5 +44,5 @@ public class InterceptorD {
 
         return ctx.proceed();
     }
-   
+
 }

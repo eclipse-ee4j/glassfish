@@ -20,15 +20,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * The <code>javax.sql.DataSource</code> implementation of SunONE application 
+ * The <code>javax.sql.DataSource</code> implementation of SunONE application
  * server will implement this interface. An application program would be able
- * to use this interface to do the extended functionality exposed by SunONE 
+ * to use this interface to do the extended functionality exposed by SunONE
  * application server.
- * <p>A sample code for getting driver's connection implementation would like 
+ * <p>A sample code for getting driver's connection implementation would like
  * the following.
  * <pre>
      InitialContext ic = new InitialContext();
-     com.sun.appserv.DataSource ds = (com.sun.appserv.DataSOurce) ic.lookup("jdbc/PointBase"); 
+     com.sun.appserv.DataSource ds = (com.sun.appserv.DataSOurce) ic.lookup("jdbc/PointBase");
      Connection con = ds.getConnection();
      Connection drivercon = ds.getConnection(con);
 
@@ -36,13 +36,13 @@ import java.sql.SQLException;
 
      con.close();
    </pre>
- * 
+ *
  * @author Binod P.G
  */
 public interface DataSource extends javax.sql.DataSource {
 
     /**
-     * Retrieves the actual SQLConnection from the Connection wrapper 
+     * Retrieves the actual SQLConnection from the Connection wrapper
      * implementation of SunONE application server. If an actual connection is
      * supplied as argument, then it will be just returned.
      *

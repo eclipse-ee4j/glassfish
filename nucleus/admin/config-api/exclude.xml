@@ -24,8 +24,8 @@
     <Match>
         <Class name="com.sun.enterprise.config.serverbeans.Cluster$DeleteDecorator"/>
         <Or>
-	    <Field name="autohadboverride"/>
-	    <Field name="nodeagent"/>
+        <Field name="autohadboverride"/>
+        <Field name="nodeagent"/>
         </Or>
         <Bug pattern="UUF_UNUSED_FIELD"/>
     </Match>
@@ -36,8 +36,8 @@
     <Match>
         <Class name="com.sun.enterprise.config.util.RegisterInstanceCommandParameters"/>
         <Or>
-	    <Field name="config"/>
-	    <Field name="lbEnabled"/>
+        <Field name="config"/>
+        <Field name="lbEnabled"/>
         </Or>
         <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
     </Match>

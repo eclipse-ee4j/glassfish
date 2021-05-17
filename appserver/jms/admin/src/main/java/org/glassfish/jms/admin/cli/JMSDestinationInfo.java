@@ -30,9 +30,9 @@ import java.util.Properties;
 
 public class JMSDestinationInfo implements Serializable
 {
-    private String	destName,
-			destType;
-    private Properties	attrs;
+    private String    destName,
+            destType;
+    private Properties    attrs;
 
     public JMSDestinationInfo (String destName, String destType)
     {

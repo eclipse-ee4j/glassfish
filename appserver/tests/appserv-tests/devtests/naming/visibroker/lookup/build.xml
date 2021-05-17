@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <exec executable="${env.JAVA_HOME}/bin/idlj" failonerror="false">
             <arg line="-fall src/Hello.idl"/>
@@ -46,23 +46,23 @@
         <copy todir="src/HelloApp">
             <fileset dir="HelloApp"/>
         </copy>
-	<delete dir="HelloApp"/>
-	
+    <delete dir="HelloApp"/>
+
         <echo message="common.xml: Compiling test source files" level="verbose"/>
         <mkdir dir="${build.classes.dir}"/>
         <javac srcdir="src"
             destdir="${build.classes.dir}"
             classpath="${s1astest.classpath}"
             debug="on"
-            failonerror="true"/>  
+            failonerror="true"/>
     </target>
 
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="*.class,**/*.class"/> 
+            <param name="webclient.war.classes" value="*.class,**/*.class"/>
         </antcall>
     </target>
 
@@ -71,18 +71,18 @@
     <target name="deploy" depends="init-common">
       <echo message="Deploying via asadmin..."/>
       <antcall target="deploy-war-common"/>
-    </target> 
+    </target>
 
 
     <target name="run" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="lookup"/>
-	</antcall>
+    <param name="testsuite.id" value="lookup"/>
+    </antcall>
     </target>
 
    <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
-  
+
 </project>

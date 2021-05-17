@@ -39,14 +39,14 @@ import com.sun.logging.*;
  *
  */
 public final class ClientSecurityContext extends AbstractSecurityContext {
-    
+
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     public static final String IIOP_CLIENT_PER_THREAD_FLAG =
         "com.sun.appserv.iiopclient.perthreadauth";
 
     // Bug Id: 4787940
-    private static final boolean isPerThreadAuth = 
+    private static final boolean isPerThreadAuth =
             Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG);
 
     // either the thread local or shared version will be used
@@ -59,36 +59,36 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      * @param The name of the user.
      * @param The Credentials of the user.
      */
-    public ClientSecurityContext(String userName, 
-				 Subject s) {
+    public ClientSecurityContext(String userName,
+                 Subject s) {
 
-	this.initiator = new PrincipalImpl(userName);
-	this.subject = s ;
+    this.initiator = new PrincipalImpl(userName);
+    this.subject = s ;
     }
 
     /**
      * Initialize the SecurityContext & handle the unauthenticated
      * principal case
-     
+
     public static ClientSecurityContext init() {
-	ClientSecurityContext sc = getCurrent();
-	if (sc == null) { // there is no current security context
+    ClientSecurityContext sc = getCurrent();
+    if (sc == null) { // there is no current security context
             // create a default one if
-	    sc = generateDefaultSecurityContext();
+        sc = generateDefaultSecurityContext();
         }
-	return sc;
+    return sc;
     }*/
-    
+
    /*
     private static ClientSecurityContext generateDefaultSecurityContext() {
-	final String PRINCIPAL_NAME = "auth.default.principal.name";
-	final String PRINCIPAL_PASS = "auth.default.principal.password";
-	
-        
-	//ServerConfiguration config = ServerConfiguration.getConfiguration();
-	//String username = config.getProperty(PRINCIPAL_NAME, "guest");
-	//String password = config.getProperty(PRINCIPAL_PASS, "guest123");
-	
+    final String PRINCIPAL_NAME = "auth.default.principal.name";
+    final String PRINCIPAL_PASS = "auth.default.principal.password";
+
+
+    //ServerConfiguration config = ServerConfiguration.getConfiguration();
+    //String username = config.getProperty(PRINCIPAL_NAME, "guest");
+    //String password = config.getProperty(PRINCIPAL_PASS, "guest123");
+
         //Temporary hardcoding to make V3 code for WebProfile compile
         String username ="guest";
         char[] password = new char[]{'g','e','t','s','t','1','2','3'};
@@ -138,7 +138,7 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
 
     /**
      * This method sets the SecurityContext to be stored here.
-     * 
+     *
      * @param The Security Context that should be stored.
      */
     public static void setCurrent(ClientSecurityContext sc) {
@@ -147,29 +147,29 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
         } else {
             sharedCsc = sc;
         }
-    } 
-
-    /**
-     * This method returns the caller principal. 
-     * This information may be redundant since the same information 
-     * can be inferred by inspecting the Credentials of the caller.
-     * 
-     * @return The caller Principal. 
-     */
-    public Principal getCallerPrincipal() {
-	return initiator;
     }
 
-    
+    /**
+     * This method returns the caller principal.
+     * This information may be redundant since the same information
+     * can be inferred by inspecting the Credentials of the caller.
+     *
+     * @return The caller Principal.
+     */
+    public Principal getCallerPrincipal() {
+    return initiator;
+    }
+
+
     public Subject getSubject() {
-	return subject;
+    return subject;
     }
 
     public String toString() {
-	return "ClientSecurityContext[ " + "Initiator: " + initiator +
-	    "Subject " + subject + " ]";
+    return "ClientSecurityContext[ " + "Initiator: " + initiator +
+        "Subject " + subject + " ]";
     }
-    
+
     //added for CR:6620388
     public static boolean hasEmtpyCredentials(ClientSecurityContext sc) {
         if (sc == null) {
@@ -213,7 +213,7 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     public void setSecurityContextWithPrincipal(Principal principal) {
         throw new UnsupportedOperationException("Not supported yet in V3.");
     }
-    
+
 
 }
 

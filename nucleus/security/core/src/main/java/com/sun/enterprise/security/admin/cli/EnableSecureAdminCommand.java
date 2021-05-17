@@ -54,30 +54,30 @@ import org.jvnet.hk2.config.TransactionFailure;
  * <pre>
  * {@code
         ###
-	### create new protocol for secure admin
-	###
-	asadmin create-protocol --securityenabled=true sec-admin-listener
-	asadmin create-http --default-virtual-server=__asadmin sec-admin-listener
-	#asadmin create-network-listener --listenerport 4849 --protocol sec-admin-listener sec-admin-listener
-	asadmin create-ssl --type network-listener --certname s1as --ssl2enabled=false --ssl3enabled=false --clientauthenabled=false sec-admin-listener
+    ### create new protocol for secure admin
+    ###
+    asadmin create-protocol --securityenabled=true sec-admin-listener
+    asadmin create-http --default-virtual-server=__asadmin sec-admin-listener
+    #asadmin create-network-listener --listenerport 4849 --protocol sec-admin-listener sec-admin-listener
+    asadmin create-ssl --type network-listener --certname s1as --ssl2enabled=false --ssl3enabled=false --clientauthenabled=false sec-admin-listener
         asadmin set configs.config.server-config.network-config.protocols.protocol.sec-admin-listener.ssl.client-auth=want
-	asadmin set configs.config.server-config.network-config.protocols.protocol.sec-admin-listener.ssl.classname=com.sun.enterprise.security.ssl.GlassfishSSLImpl
+    asadmin set configs.config.server-config.network-config.protocols.protocol.sec-admin-listener.ssl.classname=com.sun.enterprise.security.ssl.GlassfishSSLImpl
 
 
-	###
-	### create the port redirect config
-	###
-	asadmin create-protocol --securityenabled=false admin-http-redirect
-	asadmin create-http-redirect --secure-redirect true admin-http-redirect
-	#asadmin create-http-redirect --secure-redirect true --redirect-port 4849 admin-http-redirect
-	asadmin create-protocol --securityenabled=false pu-protocol
-	asadmin create-protocol-finder --protocol pu-protocol --targetprotocol sec-admin-listener --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
-	asadmin create-protocol-finder --protocol pu-protocol --targetprotocol admin-http-redirect --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder admin-http-redirect
+    ###
+    ### create the port redirect config
+    ###
+    asadmin create-protocol --securityenabled=false admin-http-redirect
+    asadmin create-http-redirect --secure-redirect true admin-http-redirect
+    #asadmin create-http-redirect --secure-redirect true --redirect-port 4849 admin-http-redirect
+    asadmin create-protocol --securityenabled=false pu-protocol
+    asadmin create-protocol-finder --protocol pu-protocol --targetprotocol sec-admin-listener --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder http-finder
+    asadmin create-protocol-finder --protocol pu-protocol --targetprotocol admin-http-redirect --classname org.glassfish.grizzly.config.portunif.HttpProtocolFinder admin-http-redirect
 
-	###
-	### update the admin listener
-	###
-	asadmin set configs.config.server-config.network-config.network-listeners.network-listener.admin-listener.protocol=pu-protocol
+    ###
+    ### update the admin listener
+    ###
+    asadmin set configs.config.server-config.network-config.network-listeners.network-listener.admin-listener.protocol=pu-protocol
  * }
  *
  *
@@ -89,8 +89,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @ExecuteOn({RuntimeType.DAS,RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="enable-secure-admin", 
+        opType=RestEndpoint.OpType.POST,
+        path="enable-secure-admin",
         description="enable-secure-admin")
 })
 @AccessRequired(resource="domain/secure-admin", action="enable")
@@ -132,10 +132,10 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
         if (isAdminUserWithoutPassword) {
             throw new SecureAdminCommandException(Strings.get("adminsWithEmptyPW"));
         }
-        
+
     }
 
-    
+
     @Override
     Iterator<Work<TopLevelContext>> secureAdminSteps() {
         return stepsIterator(secureAdminSteps);
@@ -180,7 +180,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
 
         }.init(steps);
     }
-    
+
     @Override
     protected boolean updateSecureAdminSettings(
             final SecureAdmin secureAdmin_w) {
@@ -191,15 +191,15 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
          */
         try {
             final List<String> badAliases = new ArrayList<String>();
-            secureAdmin_w.setDasAlias(processAlias(adminalias, 
-                    SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS, 
+            secureAdmin_w.setDasAlias(processAlias(adminalias,
+                    SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS,
                     secureAdmin_w, badAliases));
-            secureAdmin_w.setInstanceAlias(processAlias(instancealias, 
+            secureAdmin_w.setInstanceAlias(processAlias(instancealias,
                     SecureAdmin.Duck.DEFAULT_INSTANCE_ALIAS,
                     secureAdmin_w, badAliases));
-            
+
             ensureSpecialAdminIndicatorIsUnique(secureAdmin_w);
-            
+
             if (badAliases.size() > 0) {
                 throw new SecureAdminCommandException(
                         Strings.get("enable.secure.admin.badAlias",
@@ -218,7 +218,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
         /*
          * Do not validate the default aliases.  The user might be using
          * password-based inter-process authentication in which case the aliases
-         * might not even be present in the keystore and/or truststore.  
+         * might not even be present in the keystore and/or truststore.
          */
         if (alias.equals(defaultAlias)) {
             isAliasOK = true;
@@ -236,7 +236,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
             ensureSecureAdminPrincipalForAlias(alias,
                     secureAdmin_w);
         }
-        return alias;   
+        return alias;
     }
 
     @Override
@@ -253,12 +253,12 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
              secureAdmin_w.setSpecialAdminIndicator(uuid.toString());
         }
     }
-    
+
     /**
      * Makes sure there is a SecureAdminPrincipal entry for the specified
      * alias.  If not, one is added in the context of the current
      * transaction.
-     * 
+     *
      * @param alias the alias to check for
      * @param secureAdmin_w SecureAdmin instance (already in a transaction)
      */
@@ -280,7 +280,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
             throw new RuntimeException(ex);
         }
     }
-    
+
     private SecureAdminPrincipal getSecureAdminPrincipalForAlias(final String alias,
             final SecureAdmin secureAdmin_w) {
         try {
@@ -295,7 +295,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
             throw new RuntimeException(ex);
         }
     }
-    
+
     private synchronized KeyStore keyStore() throws IOException {
         if (keystore == null) {
             keystore = sslUtils.getKeyStore();

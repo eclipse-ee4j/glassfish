@@ -29,14 +29,14 @@ class HelloImpl extends HelloPOA {
   private ORB orb;
 
   public void setORB(ORB orb_val) {
-    orb = orb_val; 
+    orb = orb_val;
   }
-    
+
   // implement sayHello() method
   public String sayHello() {
     return "\nHello world !!\n";
   }
-    
+
   // implement shutdown() method
   public void shutdown() {
     orb.shutdown(false);
@@ -57,12 +57,12 @@ public class HelloServer {
 
       // create servant and register it with the ORB
       HelloImpl helloImpl = new HelloImpl();
-      helloImpl.setORB(orb); 
+      helloImpl.setORB(orb);
 
       // get object reference from the servant
       org.omg.CORBA.Object ref = rootpoa.servant_to_reference(helloImpl);
       Hello href = HelloHelper.narrow(ref);
-	  
+
       // get the root naming context
       // NameService invokes the name service
       org.omg.CORBA.Object objRef =
@@ -80,16 +80,16 @@ public class HelloServer {
 
       // wait for invocations from clients
       orb.run();
-    } 
-	
+    }
+
       catch (Exception e) {
         System.err.println("ERROR: " + e);
         e.printStackTrace(System.out);
       }
-	  
+
       System.out.println("HelloServer Exiting ...");
-	
+
   }
 }
- 
+
 

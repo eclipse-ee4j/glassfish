@@ -29,18 +29,18 @@ import java.sql.SQLException;
  * @author  lwhite
  */
 public class PESchemaUpdater implements SchemaUpdater {
-    
+
     /** Creates a new instance of PESchemaUpdater */
     public PESchemaUpdater() {
     }
-    
+
     public void doSchemaCheck() throws java.io.IOException {
         //deliberate no-op for PE
     }
-    
+
     public boolean doTablesExist() throws SQLException, ClassNotFoundException {
         //deliberate no-op for PE
         return true;
     }
-    
+
 }

@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Contract for handling the SSL related configuration.
- * 
+ *
  * @author Jerome Dochez
  */
 @Contract

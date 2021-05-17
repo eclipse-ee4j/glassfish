@@ -91,15 +91,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the interceptors tests)
-		ant clean (cleans all the interceptors tests)
-		ant build (builds all the interceptors tests)
-		ant setup (sets up all resources for interceptors tests)
-		ant deploy (deploys all the interceptors apps)
-		ant run (Executes all the interceptors tests)
-		ant undeploy (undeploys all the  interceptors apps)
-		ant unsetup (unsets all resources for interceptors tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the interceptors tests)
+        ant clean (cleans all the interceptors tests)
+        ant build (builds all the interceptors tests)
+        ant setup (sets up all resources for interceptors tests)
+        ant deploy (deploys all the interceptors apps)
+        ant run (Executes all the interceptors tests)
+        ant undeploy (undeploys all the  interceptors apps)
+        ant unsetup (unsets all resources for interceptors tests)
+    </echo>
     </target>
 </project>

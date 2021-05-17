@@ -48,13 +48,13 @@ public final class ApplicationContextFacade
     implements ServletContext {
 
     private static final Logger log = LogFacade.getLogger();
-        
+
     // ---------------------------------------------------------- Attributes
     /**
      * Cache Class object used for reflection.
      */
     private static HashMap<String, Class<?>[]> classCache = new HashMap<String, Class<?>[]>();
-    
+
     static {
         Class<?>[] clazz = new Class[]{String.class};
         classCache.put("addFilter", new Class[]{String.class, String.class});
@@ -78,7 +78,7 @@ public final class ApplicationContextFacade
         classCache.put("getRequestDispatcher", clazz);
         classCache.put("getServlet", clazz);
         classCache.put("getServletRegistration", clazz);
-        classCache.put("log", clazz);        
+        classCache.put("log", clazz);
         classCache.put("removeAttribute", clazz);
         classCache.put("setAttribute", new Class[]{String.class, Object.class});
         classCache.put("setInitParameter", new Class[]{String.class, String.class});
@@ -90,13 +90,13 @@ public final class ApplicationContextFacade
         classCache.put("getResponseCharacterEncoding", new Class[]{});
         classCache.put("setResponseCharacterEncoding", new Class[]{String.class});
     }
-    
+
     /**
      * Cache method object.
      */
     private HashMap<String, Method> objectCache;
-    
-    
+
+
     // ----------------------------------------------------------- Constructors
 
 
@@ -109,7 +109,7 @@ public final class ApplicationContextFacade
     public ApplicationContextFacade(ApplicationContext context) {
         super();
         this.context = context;
-        
+
         objectCache = new HashMap<String, Method>();
     }
 
@@ -121,7 +121,7 @@ public final class ApplicationContextFacade
      * Wrapped application context.
      */
     private ApplicationContext context = null;
-    
+
 
 
     // ------------------------------------------------- ServletContext Methods
@@ -173,8 +173,8 @@ public final class ApplicationContextFacade
     public int getEffectiveMajorVersion() {
         return context.getEffectiveMajorVersion();
     }
-    
-    
+
+
     /**
      * Gets the minor version of the Servlet specification that the
      * application represented by this ServletContext is based on.
@@ -213,7 +213,7 @@ public final class ApplicationContextFacade
         throws MalformedURLException {
         if (Globals.IS_SECURITY_ENABLED) {
             try {
-                return (URL) invokeMethod(context, "getResource", 
+                return (URL) invokeMethod(context, "getResource",
                                           new Object[]{path});
             } catch(Throwable t) {
                 if (t instanceof MalformedURLException){
@@ -231,7 +231,7 @@ public final class ApplicationContextFacade
     @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public InputStream getResourceAsStream(String path) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (InputStream) doPrivileged("getResourceAsStream", 
+            return (InputStream) doPrivileged("getResourceAsStream",
                                               new Object[]{path});
         } else {
             return context.getResourceAsStream(path);
@@ -243,7 +243,7 @@ public final class ApplicationContextFacade
     @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public RequestDispatcher getRequestDispatcher(final String path) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (RequestDispatcher) doPrivileged("getRequestDispatcher", 
+            return (RequestDispatcher) doPrivileged("getRequestDispatcher",
                                                     new Object[]{path});
         } else {
             return context.getRequestDispatcher(path);
@@ -255,7 +255,7 @@ public final class ApplicationContextFacade
     @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public RequestDispatcher getNamedDispatcher(String name) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (RequestDispatcher) doPrivileged("getNamedDispatcher", 
+            return (RequestDispatcher) doPrivileged("getNamedDispatcher",
                                                     new Object[]{name});
         } else {
             return context.getNamedDispatcher(name);
@@ -272,7 +272,7 @@ public final class ApplicationContextFacade
         throws ServletException {
         if (SecurityUtil.isPackageProtectionEnabled()) {
             try {
-                return (Servlet) invokeMethod(context, "getServlet", 
+                return (Servlet) invokeMethod(context, "getServlet",
                                               new Object[]{name});
             } catch (Throwable t) {
                 if (t instanceof ServletException) {
@@ -334,7 +334,7 @@ public final class ApplicationContextFacade
     @Deprecated
     public void log(Exception exception, String msg) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            doPrivileged("log", new Class[]{Exception.class, String.class}, 
+            doPrivileged("log", new Class[]{Exception.class, String.class},
                          new Object[]{exception,msg});
         } else {
             context.log(exception, msg);
@@ -345,7 +345,7 @@ public final class ApplicationContextFacade
     @Override
     public void log(String message, Throwable throwable) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            doPrivileged("log", new Class[]{String.class, Throwable.class}, 
+            doPrivileged("log", new Class[]{String.class, Throwable.class},
                          new Object[]{message, throwable});
         } else {
             context.log(message, throwable);
@@ -379,7 +379,7 @@ public final class ApplicationContextFacade
     @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
     public String getInitParameter(String name) {
         if (SecurityUtil.isPackageProtectionEnabled()) {
-            return (String) doPrivileged("getInitParameter", 
+            return (String) doPrivileged("getInitParameter",
                                          new Object[]{name});
         } else {
             return context.getInitParameter(name);
@@ -603,7 +603,7 @@ public final class ApplicationContextFacade
             return context.addFilter(filterName, className);
         }
     }
-    
+
 
     /*
      * Registers the given filter instance with this ServletContext
@@ -690,7 +690,7 @@ public final class ApplicationContextFacade
         }
     }
 
-    
+
     /**
      * Gets the <tt>SessionCookieConfig</tt> object through which various
      * properties of the session tracking cookies created on behalf of this
@@ -698,7 +698,7 @@ public final class ApplicationContextFacade
      */
     @Override
     @SuppressWarnings("unchecked") // doPrivileged() returns the correct type
-    public SessionCookieConfig getSessionCookieConfig() {        
+    public SessionCookieConfig getSessionCookieConfig() {
         if (SecurityUtil.isPackageProtectionEnabled()) {
             return (SessionCookieConfig) doPrivileged(
                 "getSessionCookieConfig", null);
@@ -706,7 +706,7 @@ public final class ApplicationContextFacade
             return context.getSessionCookieConfig();
         }
     }
-    
+
 
     /**
      * Sets the session tracking modes that are to become effective for this
@@ -938,9 +938,9 @@ public final class ApplicationContextFacade
     */
     // END PWC 1.2
 
-       
+
     /**
-     * Use reflection to invoke the requested method. Cache the method object 
+     * Use reflection to invoke the requested method. Cache the method object
      * to speed up the process
      *                   will be invoked
      * @param methodName The method to call.
@@ -954,9 +954,9 @@ public final class ApplicationContextFacade
         }
     }
 
-    
+
     /**
-     * Use reflection to invoke the requested method. Cache the method object 
+     * Use reflection to invoke the requested method. Cache the method object
      * to speed up the process
      * @param appContext The AppliationContext object on which the method
      *                   will be invoked
@@ -964,8 +964,8 @@ public final class ApplicationContextFacade
      * @param params The arguments passed to the called method.
      */
     private Object invokeMethod(ApplicationContext appContext,
-                                final String methodName, 
-                                Object[] params) 
+                                final String methodName,
+                                Object[] params)
         throws Throwable{
 
         try{
@@ -975,22 +975,22 @@ public final class ApplicationContextFacade
                     .getMethod(methodName, classCache.get(methodName));
                 objectCache.put(methodName, method);
             }
-            
+
             return executeMethod(method,appContext,params);
         } catch (Exception ex){
             handleException(ex, methodName);
             return null;
         }
     }
-    
+
     /**
-     * Use reflection to invoke the requested method. Cache the method object 
+     * Use reflection to invoke the requested method. Cache the method object
      * to speed up the process
      * @param methodName The method to call.
      * @param clazz The list of argument classes for the given method
      * @param params The arguments passed to the called method.
-     */    
-    private Object doPrivileged(final String methodName, 
+     */
+    private Object doPrivileged(final String methodName,
                                 final Class<?>[] clazz,
                                 Object[] params){
 
@@ -1006,8 +1006,8 @@ public final class ApplicationContextFacade
             return null;
         }
     }
-    
-    
+
+
     /**
      * Executes the method of the specified <code>ApplicationContext</code>
      * @param method The method object to be invoked.
@@ -1015,13 +1015,13 @@ public final class ApplicationContextFacade
      *                   will be invoked
      * @param params The arguments passed to the called method.
      */
-    private Object executeMethod(final Method method, 
+    private Object executeMethod(final Method method,
                                  final ApplicationContext context,
-                                 final Object[] params) 
-            throws PrivilegedActionException, 
+                                 final Object[] params)
+            throws PrivilegedActionException,
                    IllegalAccessException,
                    InvocationTargetException {
-                                     
+
         if (Globals.IS_SECURITY_ENABLED){
            return AccessController.doPrivileged(new PrivilegedExceptionAction<Object>(){
                 public Object run() throws IllegalAccessException, InvocationTargetException{
@@ -1030,16 +1030,16 @@ public final class ApplicationContextFacade
             });
         } else {
             return method.invoke(context, params);
-        }        
+        }
     }
 
-    
+
     /**
      * Throw the real exception.
      * @param ex The current exception
      */
     private void handleException(Exception ex, String methodName)
-	    throws Throwable {
+        throws Throwable {
 
         Throwable realException;
 
@@ -1047,16 +1047,16 @@ public final class ApplicationContextFacade
             log.log(Level.FINE, "ApplicationContextFacade." + methodName, ex);
         }
 
-	if (ex instanceof PrivilegedActionException) {
+    if (ex instanceof PrivilegedActionException) {
             ex = ((PrivilegedActionException) ex).getException();
-	}
+    }
 
         if (ex instanceof InvocationTargetException) {
             realException =
-		((InvocationTargetException) ex).getTargetException();
+        ((InvocationTargetException) ex).getTargetException();
         } else {
             realException = ex;
-        }   
+        }
 
         throw realException;
     }

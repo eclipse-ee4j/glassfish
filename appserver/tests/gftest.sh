@@ -16,24 +16,24 @@
 #
 
 run_test(){
-	local testid=${1}
-	local found=false
-	for runtest in `find . -name run_test\.sh`; do
-		for id in `${runtest} list_test_ids`; do
-			if [[ "${id}" = "${testid}" ]]; then
-				found=true
-				break
-			fi
-		done
-		if [[ "${found}" = true ]]; then
-			${runtest} run_test_id ${testid}
-			break
-		fi
-	done
-	if [[ "${found}" = false ]]; then
-		echo Invalid Test Id.
-		exit 1
-	fi
+    local testid=${1}
+    local found=false
+    for runtest in `find . -name run_test\.sh`; do
+        for id in `${runtest} list_test_ids`; do
+            if [[ "${id}" = "${testid}" ]]; then
+                found=true
+                break
+            fi
+        done
+        if [[ "${found}" = true ]]; then
+            ${runtest} run_test_id ${testid}
+            break
+        fi
+    done
+    if [[ "${found}" = false ]]; then
+        echo Invalid Test Id.
+        exit 1
+    fi
 }
 
 if [ ! -z "${JENKINS_HOME}" ] ; then

@@ -22,7 +22,7 @@ import com.sun.enterprise.deployment.MethodDescriptor;
 
 /**
  * Contains information about a stateful session bean remove method.
- */ 
+ */
 
 public class EjbRemovalInfo implements Serializable
 {

@@ -231,7 +231,7 @@ public class BaseSeleniumTestClass {
     protected String captureScreenshot() {
         return SeleniumHelper.captureScreenshot();
     }
-    
+
     /**
      * Select the option requested in the given select element
      * @param id
@@ -289,7 +289,7 @@ public class BaseSeleniumTestClass {
         driver.switchTo().frame(driver.findElement(By.tagName("iframe")));
         WebDriverWait wait = new WebDriverWait(driver, 5);
 
-        // while the following loop runs, the DOM changes - 
+        // while the following loop runs, the DOM changes -
         // page is refreshed, or element is removed and re-added
         wait.until(presenceOfElementLocated(By.id(uploadElement)));
         //Select the file path for upload.
@@ -325,9 +325,9 @@ public class BaseSeleniumTestClass {
     }
 
     protected void selectWindow(String windowId) {
-    	selenium.selectWindow(windowId);
+        selenium.selectWindow(windowId);
     }
-    
+
     protected String getSelectedLabel(String elem) {
         waitForElement(elem);
         return selenium.getSelectedLabel(elem);
@@ -385,11 +385,11 @@ public class BaseSeleniumTestClass {
     }
 
     public void openAndWait(String url, String triggerText, int timeout) {
-        open(url);        
+        open(url);
         // wait for 2 minutes, as that should be enough time to insure that the admin console app has been deployed by the server
         waitForPageLoad(triggerText, timeout);
     }
-    
+
     public void openAndWaitForHomePage(String url, String triggerText, int timeout) {
         open(url);
         if (IS_SECURE_ADMIN_ENABLED) {
@@ -430,7 +430,7 @@ public class BaseSeleniumTestClass {
         pressButton(id);
         waitForPageLoad(triggerText, seconds);
     }
-    
+
     protected void clickAndWait(String id, String triggerText, boolean switchFromFrame) {
         log ("Clicking on {0} \"{1}\"", id, triggerText);
         waitForElement(id);
@@ -1014,7 +1014,7 @@ public class BaseSeleniumTestClass {
         // times out after 5 seconds
         WebDriverWait wait = new WebDriverWait(driver, 5);
 
-        // while the following loop runs, the DOM changes - 
+        // while the following loop runs, the DOM changes -
         // page is refreshed, or element is removed and re-added
         wait.until(presenceOfElementLocated(By.id(elem)));
         selenium.focus(elem);
@@ -1073,7 +1073,7 @@ public class BaseSeleniumTestClass {
                 }
                 if (!textShouldBeMissing) {
                     boolean visible = false;
-                    final List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), \"" + 
+                    final List<WebElement> elements = driver.findElements(By.xpath("//*[contains(text(), \"" +
                             triggerText.replace("\"", "\\\"") + "\")]"));
                     if (!elements.isEmpty()) {
                         for (WebElement e : elements) {

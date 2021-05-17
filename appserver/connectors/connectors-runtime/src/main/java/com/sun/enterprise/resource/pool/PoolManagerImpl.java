@@ -97,7 +97,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
                listener.poolCreated(poolInfo);
             } catch (Exception ex) {
                 if(_logger.isLoggable(Level.FINE)) {
-	            _logger.log(Level.FINE, "Exception thrown on pool listener");
+                _logger.log(Level.FINE, "Exception thrown on pool listener");
                 }
             }
         }
@@ -180,7 +180,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             if (handle.getResourceState().isUnenlisted()) {
                 //The spec being used here is the spec with the updated
                 //lazy enlistment info
-                //Here's the real place where we care about the correct 
+                //Here's the real place where we care about the correct
                 //resource manager (which in turn depends upon the ResourceSpec)
                 //and that's because if lazy enlistment needs to be done
                 //we need to get the LazyEnlistableResourceManager
@@ -343,7 +343,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     public void unregisterPoolLifeCycleListener() {
         listener = null;
     }
-    
+
     public void unregisterResource(com.sun.appserv.connectors.internal.api.ResourceHandle resource, int xaresFlag) {
         ResourceHandle h = (ResourceHandle)resource;
         ResourceManager rm = getResourceManager(h.getResourceSpec());
@@ -484,7 +484,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
                }
            }
        }
-    
+
     public ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName) {
         Set descriptors = getConnectorRuntime().getResourceReferenceDescriptor();
         List matchingRefs = new ArrayList();
@@ -660,11 +660,11 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         ResourcePool pool = getPool( poolInfo );
         if (pool != null ) {
             pool.reconfigurePool( ccp );
-        }        
+        }
     }
 
     /**
-     * Flush Connection pool by reinitializing the connections 
+     * Flush Connection pool by reinitializing the connections
      * established in the pool.
      * @param poolInfo
      * @throws com.sun.appserv.connectors.internal.api.PoolingException

@@ -19,7 +19,7 @@ package org.glassfish.ejb.deployment.descriptor;
 import org.glassfish.deployment.common.Descriptor;
 
 
-/** 
+/**
  * This class contains information about relationships between
  * EJB2.0 CMP EntityBeans.
  * It represents information in the <ejb-relation> XML element.
@@ -35,19 +35,19 @@ public final class RelationshipDescriptor extends Descriptor {
     private boolean isBidirectional = true;
 
     public boolean isOneOne() {
-	return (!source.getIsMany() && !sink.getIsMany()); 
+    return (!source.getIsMany() && !sink.getIsMany());
     }
-    
+
     public boolean isOneMany() {
-	return (!source.getIsMany() && sink.getIsMany()); 
+    return (!source.getIsMany() && sink.getIsMany());
     }
-    
+
     public boolean isManyOne() {
-	return (source.getIsMany() && !sink.getIsMany()); 
+    return (source.getIsMany() && !sink.getIsMany());
     }
-    
+
     public boolean isManyMany() {
-	return (source.getIsMany() && sink.getIsMany()); 
+    return (source.getIsMany() && sink.getIsMany());
     }
 
     /**
@@ -59,30 +59,30 @@ public final class RelationshipDescriptor extends Descriptor {
     }
 
     public RelationRoleDescriptor getSource()
-    {  
-	return source;  
+    {
+    return source;
     }
     public void setSource(RelationRoleDescriptor source)
-    {  
-	this.source = source;  
+    {
+    this.source = source;
     }
 
     public void setSink(RelationRoleDescriptor sink)
     {
-	this.sink = sink;
+    this.sink = sink;
     }
     public RelationRoleDescriptor getSink()
     {
-	return sink;
+    return sink;
     }
 
     public void setIsBidirectional(boolean isBidirectional)
     {
-	this.isBidirectional = isBidirectional;
+    this.isBidirectional = isBidirectional;
     }
     public boolean getIsBidirectional()
     {
-	return isBidirectional;
+    return isBidirectional;
     }
 
     @Override

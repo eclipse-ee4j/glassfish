@@ -35,7 +35,7 @@ import javax.management.MBeanServerConnection;
 /**
  */
 class ThreadMonitor {
-    
+
     private final MBeanServerConnection mbsc;
     private final StringManager sm = StringManager.getManager(ThreadMonitor.class);
     private static final BigInteger S2NANOS = new BigInteger("" + 1000000000);
@@ -49,7 +49,7 @@ class ThreadMonitor {
         try {
             final ThreadMXBean tmx = ManagementFactory.newPlatformMXBeanProxy(mbsc, ManagementFactory.THREAD_MXBEAN_NAME, ThreadMXBean.class);
             final String title = getTitle();
-            td.append(title); 
+            td.append(title);
             td.append(sm.getString("thread.no", tmx.getThreadCount()));
             td.append(sm.getString("daemon.thread.no", tmx.getDaemonThreadCount()));
             td.append(sm.getString("peak.thread.no", tmx.getPeakThreadCount()));
@@ -90,7 +90,7 @@ class ThreadMonitor {
         sb.append(sm.getString("execution.info")).append(StringBuilderNewLineAppender.SEP);
         sb.append("-----------------------").append(StringBuilderNewLineAppender.SEP);
         final long ids = ti.getThreadId();
-        final String ss  = ti.getThreadState().toString();        
+        final String ss  = ti.getThreadState().toString();
         msg = sm.getString("thread.title", quote(ti.getThreadName()), ids, ss);
         sb.append(msg);
         if (ti.getLockName() != null) {
@@ -142,7 +142,7 @@ class ThreadMonitor {
                 msg = sm.getString("thread.cpu.user.time", times[0], times[1]);
                 sb.append(msg).append(StringBuilderNewLineAppender.SEP);
             }
-        }      
+        }
         msg = sm.getString("lock.owner.details", ti.getLockOwnerName(), ti.getLockOwnerId());
         msg = getMoreThreadInfo(ti, "getLockedMonitors");
         sb.append(sm.getString("monitor.info", msg)).append(StringBuilderNewLineAppender.SEP);
@@ -150,23 +150,23 @@ class ThreadMonitor {
         sb.append(sm.getString("ownable.sync.info", msg));
         return ( sb.toString() );
     }
-    
+
     private String getTitle() throws Exception {
         final RuntimeMXBean rt  = ManagementFactory.newPlatformMXBeanProxy(mbsc, ManagementFactory.RUNTIME_MXBEAN_NAME, RuntimeMXBean.class);
         final String vmname     = rt.getVmName();
         final String vmversion  = rt.getVmVersion();
         final String vmvendor   = rt.getVmVendor();
         final String title      = sm.getString("td.title", vmname, vmversion, vmvendor);
-        
+
         return ( title );
     }
-    
+
     private String quote(final String uq) {
         final StringBuilder sb = new StringBuilder("\"");
         sb.append(uq).append("\"");
         return ( sb.toString() );
     }
-    
+
     private String getDeadlockInfo(final ThreadMXBean tmx) {
         final StringBuilderNewLineAppender sb = new StringBuilderNewLineAppender(new StringBuilder());
         final long[] dts = tmx.findMonitorDeadlockedThreads();
@@ -182,7 +182,7 @@ class ThreadMonitor {
         }
         return ( sb.toString() );
     }
-    
+
     private String getMoreThreadInfo(ThreadInfo ti, String mn) {
         String ms = "";
         try {
@@ -197,6 +197,6 @@ class ThreadMonitor {
             return (NA);
         }
     }
-    
+
     public static final String NA = "NOT_AVAILABLE";
 }

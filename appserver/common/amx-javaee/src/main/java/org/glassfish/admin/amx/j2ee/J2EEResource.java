@@ -23,19 +23,19 @@ import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 
 /**
-	J2EEResource is the base model for all J2EE resources.
-	J2EE resources are resources utilized by the J2EE core
-	server to provide the J2EE standard services required by
-	the J2EE platform architecture.
+    J2EEResource is the base model for all J2EE resources.
+    J2EE resources are resources utilized by the J2EE core
+    server to provide the J2EE standard services required by
+    the J2EE platform architecture.
  */
 @AMXMBeanMetadata(leaf=true)
 public interface J2EEResource extends J2EEManagedObject
 {
- 	@ManagedAttribute
+     @ManagedAttribute
     @Description( "Get the ObjectName of the corresponding config MBean, if any" )
     public ObjectName getCorrespondingConfig();
-    
- 	@ManagedAttribute
+
+     @ManagedAttribute
     @Description( "Get the ObjectName of the corresponding config resource-ref" )
     public ObjectName getCorrespondingRef();
 }

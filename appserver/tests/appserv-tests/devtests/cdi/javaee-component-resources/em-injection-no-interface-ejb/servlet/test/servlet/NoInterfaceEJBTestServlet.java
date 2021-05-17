@@ -84,7 +84,7 @@ public class NoInterfaceEJBTestServlet extends HttpServlet {
         if (!status) msg += "Injection and use of EntityMaanger failed";
         status = jt.lazyLoadingByFind(1);
         if (!status) msg += "Injection and use of EntityMaanger lazy loading test failed";
-        
+
         writer.write(msg + "\n");
 
     }

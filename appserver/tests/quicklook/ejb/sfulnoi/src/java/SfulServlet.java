@@ -22,18 +22,18 @@ import jakarta.servlet.http.*;
 import jakarta.ejb.EJB;
 
 public class SfulServlet extends HttpServlet {
-   
+
     @EJB
     private SfulBean simpleEJB;
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         boolean status = false;
         try {
-            
-            out.println("-------SfulServlet--------");  
+
+            out.println("-------SfulServlet--------");
             out.println("SfulServlet at " + request.getContextPath ());
 
             String testcase = request.getParameter("tc");
@@ -41,11 +41,11 @@ public class SfulServlet extends HttpServlet {
             if (testcase != null) {
 
         if ("SetName".equals(testcase)){
-		out.println("Simple EJB:");
-		out.println("@EJB Injection="+simpleEJB);
+        out.println("Simple EJB:");
+        out.println("@EJB Injection="+simpleEJB);
 
-		if (simpleEJB != null) {
-		  out.println("SetName in a stateful session bean.");
+        if (simpleEJB != null) {
+          out.println("SetName in a stateful session bean.");
             try {
                 simpleEJB.setName("Duke");
                 status = true;
@@ -53,43 +53,43 @@ public class SfulServlet extends HttpServlet {
                 e.printStackTrace();
                 status = false;
             }
-		}
+        }
 
-	      } else if ("GetName".equals(testcase)){
+          } else if ("GetName".equals(testcase)){
 
-		String simpleEJBName = null;
-		
-		if (simpleEJB != null) {
-		  simpleEJBName = simpleEJB.getName();
-		  out.println("@EJB.getName()=" + simpleEJBName);
-		}
+        String simpleEJBName = null;
 
-		if (simpleEJB != null &&
-		    "Duke".equals(simpleEJBName)){
-		  status = true;
-		}
+        if (simpleEJB != null) {
+          simpleEJBName = simpleEJB.getName();
+          out.println("@EJB.getName()=" + simpleEJBName);
+        }
 
-	      } else {
-		out.println("No such testcase");
-	      }
-	  }
+        if (simpleEJB != null &&
+            "Duke".equals(simpleEJBName)){
+          status = true;
+        }
+
+          } else {
+        out.println("No such testcase");
+          }
+      }
         } catch (Exception ex ) {
             ex.printStackTrace();
             System.out.println("servlet test failed");
             throw new ServletException(ex);
-        } finally { 
-            if (status) 
-	      out.println("Test:Pass");
+        } finally {
+            if (status)
+          out.println("Test:Pass");
             else
-	      out.println("Test:Fail");
+          out.println("Test:Fail");
             out.close();
         }
-    } 
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

@@ -66,7 +66,7 @@ public class InstanceHandler {
             }
         }
     }
-    
+
      public static ArrayList getJvmOptions(HandlerContext handlerCtx) {
         ArrayList<String> list;
         String endpoint = (String) handlerCtx.getInputValue("endpoint");
@@ -79,7 +79,7 @@ public class InstanceHandler {
             list = new ArrayList<String>();
         return list;
     }
- 
+
    @Handler(id="saveJvmOptionValues",
         input={
             @HandlerInput(name="endpoint",   type=String.class, required=true),
@@ -163,5 +163,5 @@ public class InstanceHandler {
 
     private static final String PROPERTY_VALUE = "value";
 }
-        
- 
+
+

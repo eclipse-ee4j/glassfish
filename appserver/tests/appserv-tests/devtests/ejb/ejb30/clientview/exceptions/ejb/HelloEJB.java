@@ -46,7 +46,7 @@ public class HelloEJB implements Hello  {
     @EJB(name="sfulBusiness") public SfulBusiness sfulBusiness;
     @EJB(name="slessBusiness") public SlessBusiness slessBusiness;
 
-    @EJB(name="slessRemoteBusiness2") protected SlessRemoteBusiness2 slessRemoteBusiness2;    
+    @EJB(name="slessRemoteBusiness2") protected SlessRemoteBusiness2 slessRemoteBusiness2;
     @EJB(name="sfulRemoteBusiness2") public SfulRemoteBusiness2 sfulRemoteBusiness2;
 
     @EJB public SlessRemoteBusiness slessRemoteBusiness;
@@ -57,12 +57,12 @@ public class HelloEJB implements Hello  {
     @PostConstruct
     public void create() {
 
-	try {
+    try {
             ut = context.getUserTransaction();
-            
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
     }
 
     private void setup() {
@@ -74,10 +74,10 @@ public class HelloEJB implements Hello  {
 
             sfulRemoteBusiness = (SfulRemoteBusiness) context.lookup("com.sun.s1asdev.ejb.ejb30.clientview.exceptions.HelloEJB/sfulRemoteBusiness");
             slessRemoteBusiness = (SlessRemoteBusiness)  context.lookup("com.sun.s1asdev.ejb.ejb30.clientview.exceptions.HelloEJB/slessRemoteBusiness");
-            
+
             sfulRemoteBusiness2 = (SfulRemoteBusiness2) context.lookup("sfulRemoteBusiness2");
             slessRemoteBusiness2 = (SlessRemoteBusiness2)  context.lookup("slessRemoteBusiness2");
-            
+
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -94,13 +94,13 @@ public class HelloEJB implements Hello  {
         } catch(EJBAccessException eae) {
             // this might be thrown by container but application
             // can't depend on receiving the sub-class exception
-            System.out.println("Got specific ejb30 exception " + 
+            System.out.println("Got specific ejb30 exception " +
                                eae + " for sfulBusiness.denied()");
             // bean must still exist
             sfulBusiness.foo();
             numEx++;
         } catch(EJBException ele) {
-            System.out.println("Got valid exception " + 
+            System.out.println("Got valid exception " +
                                ele + " for sfulBusiness.denied()");
             // bean must still exist
             sfulBusiness.foo();
@@ -110,7 +110,7 @@ public class HelloEJB implements Hello  {
         try {
             sfulRemoteBusiness.denied();
         } catch(EJBException re) {
-            System.out.println("Got expected exception " + 
+            System.out.println("Got expected exception " +
                                re + " for sfulRemoteBusiness.denied()");
 
             // bean must still exist
@@ -121,7 +121,7 @@ public class HelloEJB implements Hello  {
         try {
             sfulRemoteBusiness2.denied();
         } catch(RemoteException re) {
-            System.out.println("Got expected exception " + 
+            System.out.println("Got expected exception " +
                                re + " for sfulBusiness2.denied()");
 
             // bean must still exist
@@ -132,7 +132,7 @@ public class HelloEJB implements Hello  {
         try {
             slessBusiness.denied();
         } catch(EJBException ele) {
-            System.out.println("Got expected exception " + 
+            System.out.println("Got expected exception " +
                                ele + " for slessBusiness.denied()");
 
             numEx++;
@@ -141,7 +141,7 @@ public class HelloEJB implements Hello  {
         try {
             slessRemoteBusiness.denied();
         } catch(EJBException re) {
-            System.out.println("Got expected exception " + 
+            System.out.println("Got expected exception " +
                                re + " for slessRemoteBusiness.denied()");
             numEx++;
         }
@@ -149,15 +149,15 @@ public class HelloEJB implements Hello  {
         try {
             slessRemoteBusiness2.denied();
         } catch(RemoteException re) {
-            System.out.println("Got expected exception " + 
+            System.out.println("Got expected exception " +
                                re + " for slessRemoteBusiness2.denied()");
             numEx++;
         }
-        
+
         if( numEx != 6 ) {
             throw new RuntimeException("Didn't receive all expected " +
                                        "exceptions : " + numEx);
-                                       
+
         } else {
             System.out.println("PASS : runAccessDeniedExceptionTest");
         }
@@ -180,7 +180,7 @@ public class HelloEJB implements Hello  {
 
             e.printStackTrace();
         }
-        
+
         try {
             ut.begin();
             ut.setRollbackOnly();
@@ -189,7 +189,7 @@ public class HelloEJB implements Hello  {
             try { ut.rollback(); } catch(Exception t) {}
             numEx++;
         } catch(Exception e) {}
-        
+
         try {
             ut.begin();
             ut.setRollbackOnly();
@@ -198,14 +198,14 @@ public class HelloEJB implements Hello  {
             try { ut.rollback(); } catch(Exception t) {}
             numEx++;
         } catch(Exception e) {}
-        
+
         try {
             ut.begin();
             ut.setRollbackOnly();
             slessRemoteBusiness.forceTransactionRolledbackException();
         } catch(EJBTransactionRolledbackException txre) {
             try { ut.rollback(); } catch(Exception t) {}
-            numEx++;            
+            numEx++;
         } catch(Exception e) {}
 
         try {
@@ -216,7 +216,7 @@ public class HelloEJB implements Hello  {
             try { ut.rollback(); } catch(Exception t) {}
             numEx++;
         } catch(Exception e) {}
-        
+
         try {
             ut.begin();
             ut.setRollbackOnly();
@@ -225,17 +225,17 @@ public class HelloEJB implements Hello  {
             try { ut.rollback(); } catch(Exception t) {}
             numEx++;
         } catch(Exception e) {}
-        
+
         if( numEx != 6 ) {
             throw new RuntimeException("Didn't receive all expected " +
                                        "exceptions : " + numEx);
-                                       
+
         } else {
             System.out.println("PASS : runTxRolledbackTest");
         }
 
     }
-    
+
     public void runTxRequiredTest() {
 
         setup();
@@ -246,42 +246,42 @@ public class HelloEJB implements Hello  {
             sfulBusiness.forceTransactionRequiredException();
         } catch(EJBTransactionRequiredException txre) {
             numEx++;
-        } 
-        
+        }
+
         try {
             slessBusiness.forceTransactionRequiredException();
         } catch(EJBTransactionRequiredException txre) {
             numEx++;
         }
-        
+
         try {
             sfulRemoteBusiness.forceTransactionRequiredException();
         } catch(EJBTransactionRequiredException txre) {
             numEx++;
-        } 
-        
+        }
+
         try {
             slessRemoteBusiness.forceTransactionRequiredException();
         } catch(EJBTransactionRequiredException txre) {
-            numEx++;            
-        } 
+            numEx++;
+        }
 
         try {
             sfulRemoteBusiness2.forceTransactionRequiredException();
         } catch(TransactionRequiredException txre) {
             numEx++;
         } catch(RemoteException e) {}
-        
+
         try {
             slessRemoteBusiness2.forceTransactionRequiredException();
         } catch(TransactionRequiredException txre) {
             numEx++;
         } catch(RemoteException e) {}
-        
+
         if( numEx != 6 ) {
             throw new RuntimeException("Didn't receive all expected " +
                                        "exceptions : " + numEx);
-                                       
+
         } else {
             System.out.println("PASS : runTxRequiredTest");
         }
@@ -299,14 +299,14 @@ public class HelloEJB implements Hello  {
             sfulBusiness.remove();
         } catch(NoSuchEJBException nsee) {
             numEx++;
-        } 
+        }
 
-        sfulRemoteBusiness.remove();        
+        sfulRemoteBusiness.remove();
         try {
             sfulRemoteBusiness.remove();
         } catch(NoSuchEJBException nsee) {
             numEx++;
-        } 
+        }
 
 
         // sfulremotebusiness2
@@ -321,11 +321,11 @@ public class HelloEJB implements Hello  {
         } catch(NoSuchObjectException nsoe) {
             numEx++;
         } catch(RemoteException e) {}
-        
+
         if( numEx != 3 ) {
             throw new RuntimeException("Didn't receive all expected " +
                                        "exceptions : " + numEx);
-                                       
+
         } else {
             System.out.println("PASS : runNoSuchObjectTest");
         }
@@ -349,14 +349,14 @@ public class HelloEJB implements Hello  {
             } catch(RuntimeAppException b) {
                 numEx++;
             }
-        } 
-        
+        }
+
         try {
             slessBusiness.throwRuntimeAppException();
         } catch(RuntimeAppException txre) {
             numEx++;
         }
-        
+
         try {
             sfulRemoteBusiness.throwRuntimeAppException();
         } catch(RuntimeAppException a) {
@@ -368,13 +368,13 @@ public class HelloEJB implements Hello  {
             } catch(RuntimeAppException b) {
                 numEx++;
             }
-        } 
-        
+        }
+
         try {
             slessRemoteBusiness.throwRuntimeAppException();
         } catch(RuntimeAppException txre) {
-            numEx++;            
-        } 
+            numEx++;
+        }
 
         try {
             sfulRemoteBusiness2.throwRuntimeAppException();
@@ -388,17 +388,17 @@ public class HelloEJB implements Hello  {
                 numEx++;
             } catch(RemoteException re) {}
         } catch(RemoteException e) {}
-        
+
         try {
             slessRemoteBusiness2.throwRuntimeAppException();
         } catch(RuntimeAppException txre) {
             numEx++;
         } catch(RemoteException e) {}
-        
+
         if( numEx != 6 ) {
             throw new RuntimeException("Didn't receive all expected " +
                                        "exceptions : " + numEx);
-                                       
+
         } else {
             System.out.println("PASS : runAppExceptionTest");
         }
@@ -459,8 +459,8 @@ public class HelloEJB implements Hello  {
             try { ut.rollback(); } catch(Exception t) {}
         }
 
-        
-        try {            
+
+        try {
             ut.begin();
             sfulRemoteBusiness.throwRuntimeAppException();
         } catch(RuntimeAppException a) {
@@ -470,7 +470,7 @@ public class HelloEJB implements Hello  {
         } catch(Exception e) {
         } finally {
             try { ut.rollback(); } catch(Exception t) {}
-        } 
+        }
 
         try {
             ut.begin();
@@ -484,7 +484,7 @@ public class HelloEJB implements Hello  {
             try { ut.rollback(); } catch(Exception t) {}
         }
 
-        
+
         try {
             ut.begin();
             slessRemoteBusiness.throwRuntimeAppException();
@@ -495,7 +495,7 @@ public class HelloEJB implements Hello  {
         } catch(Exception e) {
         } finally {
             try { ut.rollback(); } catch(Exception t) {}
-        } 
+        }
 
         try {
             ut.begin();
@@ -565,7 +565,7 @@ public class HelloEJB implements Hello  {
         if( numEx != 12 ) {
             throw new RuntimeException("Didn't receive all expected " +
                                        "exceptions : " + numEx);
-       
+
         } else {
             System.out.println("PASS : runRollbackAppExceptionTest");
         }

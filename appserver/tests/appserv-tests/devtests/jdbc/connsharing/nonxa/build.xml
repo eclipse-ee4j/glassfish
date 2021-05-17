@@ -41,11 +41,11 @@
     &eeSetup;
     &eeProperties;
     &testproperties;
-	-->
+    -->
 
     <property name="execution.mode" value="pe"/>
-    
-    
+
+
     <target name="all" depends="build,deploy,run,undeploy"/>
     <target name="all-assoc-with-thread" depends="build,deploy,set-assoc-with-thread,run,undeploy"/>
 
@@ -64,13 +64,13 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-connsharing-pool"/>
@@ -114,12 +114,12 @@
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-connsharing-pool"/>
-	    <param name="jdbc.resource.name" value="jdbc/connsharing"/>
+        <param name="jdbc.resource.name" value="jdbc/connsharing"/>
       </antcall>
 
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.conpool.name" value="jdbc-connsharing-pool"/>
-	    <param name="jdbc.resource.name" value="jdbc/connsharing2"/>
+        <param name="jdbc.resource.name" value="jdbc/connsharing2"/>
       </antcall>
 
       <antcall target="deploy-common"/>
@@ -133,14 +133,14 @@
         </antcall>
     </target>
 
-    
+
     <target name="run" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
       <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
@@ -149,7 +149,7 @@
       <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/connsharing"/>
       </antcall>
-      
+
       <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/connsharing2"/>
       </antcall>
@@ -175,7 +175,7 @@
         </antcall>
 
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

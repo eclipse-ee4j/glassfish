@@ -28,11 +28,11 @@ import jakarta.inject.Inject;
  * @author Jerome Dochez
  */
 public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
-  
-	@Inject
-	private ServiceLocator serviceLocator;
 
-	public String getName() {
+    @Inject
+    private ServiceLocator serviceLocator;
+
+    public String getName() {
         return "Embedded";
     }
 
@@ -49,45 +49,45 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
 //            parser.drop(PrivateAdminAdapter.class);
 //        }
 //        parser.replace(GFDomainXml.class, EmbeddedDomainXml.class);
-//        
+//
 //        parser.replace(DomainXmlPersistence.class, EmbeddedDomainPersistence.class);
 //
 //    }
 
-	@Override
-	public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
+    @Override
+    public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
 
-		// we don't want to reconfigure the loggers.
+        // we don't want to reconfigure the loggers.
 
-		boolean skip = false;
+        boolean skip = false;
 
-		if ("com.sun.enterprise.v3.admin.adapter.AdminConsoleAdapter".equals(
-				descriptorImpl.getImplementation())) {
-			skip = true;
-		}
+        if ("com.sun.enterprise.v3.admin.adapter.AdminConsoleAdapter".equals(
+                descriptorImpl.getImplementation())) {
+            skip = true;
+        }
 
-		String enableCLI = System.getenv("GF_EMBEDDED_ENABLE_CLI");
-		if (enableCLI == null || !enableCLI.equalsIgnoreCase("true")) {
+        String enableCLI = System.getenv("GF_EMBEDDED_ENABLE_CLI");
+        if (enableCLI == null || !enableCLI.equalsIgnoreCase("true")) {
 
-			if ("com.sun.enterprise.v3.admin.PublicAdminAdapter".equals(
-					descriptorImpl.getImplementation())
-					|| "com.sun.enterprise.server.logging.LogManagerService".equals(
-							descriptorImpl.getImplementation())
-					|| "com.sun.enterprise.v3.admin.PrivateAdminAdapter".equals(
-							descriptorImpl.getImplementation())) {
-				skip = true;
-			}
-		}
+            if ("com.sun.enterprise.v3.admin.PublicAdminAdapter".equals(
+                    descriptorImpl.getImplementation())
+                    || "com.sun.enterprise.server.logging.LogManagerService".equals(
+                            descriptorImpl.getImplementation())
+                    || "com.sun.enterprise.v3.admin.PrivateAdminAdapter".equals(
+                            descriptorImpl.getImplementation())) {
+                skip = true;
+            }
+        }
 
-		if ("com.sun.enterprise.v3.server.GFDomainXml".equals(
-				descriptorImpl.getImplementation())) {
-			descriptorImpl.setImplementation("org.glassfish.kernel.embedded.EmbeddedDomainXml");
-			descriptorImpl.setScope(PerLookup.class.getCanonicalName());
-		} else if ("com.sun.enterprise.v3.server.DomainXmlPersistence".equals(
-				descriptorImpl.getImplementation())) {
-			descriptorImpl.setImplementation("org.glassfish.kernel.embedded.EmbeddedDomainPersistence");
-			descriptorImpl.setScope(PerLookup.class.getCanonicalName());
-		} else if ("org.glassfish.web.deployment.archivist.WebArchivist".equals(descriptorImpl.getImplementation())) {
+        if ("com.sun.enterprise.v3.server.GFDomainXml".equals(
+                descriptorImpl.getImplementation())) {
+            descriptorImpl.setImplementation("org.glassfish.kernel.embedded.EmbeddedDomainXml");
+            descriptorImpl.setScope(PerLookup.class.getCanonicalName());
+        } else if ("com.sun.enterprise.v3.server.DomainXmlPersistence".equals(
+                descriptorImpl.getImplementation())) {
+            descriptorImpl.setImplementation("org.glassfish.kernel.embedded.EmbeddedDomainPersistence");
+            descriptorImpl.setScope(PerLookup.class.getCanonicalName());
+        } else if ("org.glassfish.web.deployment.archivist.WebArchivist".equals(descriptorImpl.getImplementation())) {
             descriptorImpl.setImplementation("org.glassfish.web.embed.impl.EmbeddedWebArchivist");
             descriptorImpl.setScope(PerLookup.class.getCanonicalName());
         } else if ("org.glassfish.web.WebEntityResolver".equals(descriptorImpl.getImplementation())) {
@@ -95,10 +95,10 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
             descriptorImpl.setScope(PerLookup.class.getCanonicalName());
         }
 
-		if (!skip) {
-			return descriptorImpl;
-		}
-		return null;
-	}
+        if (!skip) {
+            return descriptorImpl;
+        }
+        return null;
+    }
 }
 

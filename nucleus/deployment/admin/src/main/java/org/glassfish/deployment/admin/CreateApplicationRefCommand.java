@@ -134,7 +134,7 @@ public class CreateApplicationRefCommand implements AdminCommand, AdminCommandSe
 
     @Inject
     Events events;
-    
+
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
@@ -351,7 +351,7 @@ public class CreateApplicationRefCommand implements AdminCommand, AdminCommandSe
                 }
             }
         }
-    } 
+    }
 
     private void handleLifecycleModule(AdminCommandContext context, Transaction t) {
         final ActionReport report = context.getActionReport();
@@ -379,7 +379,7 @@ public class CreateApplicationRefCommand implements AdminCommand, AdminCommandSe
             paramMap.add(DeploymentProperties.TARGET, target);
             paramMap.add(DeploymentProperties.ENABLED, enabled.toString());
             if (virtualservers != null) {
-                paramMap.add(DeploymentProperties.VIRTUAL_SERVERS, 
+                paramMap.add(DeploymentProperties.VIRTUAL_SERVERS,
                     virtualservers);
             }
             // pass the app props so we have the information to persist in the
@@ -389,7 +389,7 @@ public class CreateApplicationRefCommand implements AdminCommand, AdminCommandSe
 
             final List<String> targets = new ArrayList<String>();
             targets.add(target);
-            ClusterOperationUtil.replicateCommand("_lifecycle", FailurePolicy.Error, FailurePolicy.Warn, 
+            ClusterOperationUtil.replicateCommand("_lifecycle", FailurePolicy.Error, FailurePolicy.Warn,
                     FailurePolicy.Ignore, targets, context, paramMap, habitat);
         }
     }

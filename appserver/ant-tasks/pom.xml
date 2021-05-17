@@ -24,7 +24,7 @@
         <artifactId>glassfish-parent</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-    </parent>  
+    </parent>
     <artifactId>ant-tasks</artifactId>
     <name>Ant tasks</name>
 

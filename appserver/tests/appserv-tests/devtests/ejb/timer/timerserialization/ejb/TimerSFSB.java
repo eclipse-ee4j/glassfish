@@ -23,19 +23,19 @@ public interface TimerSFSB
     extends EJBObject
 {
 
-	public void createTimer(int ms)
+    public void createTimer(int ms)
         throws RemoteException;
 
-	public String getName()
+    public String getName()
         throws RemoteException;
 
-	public long getTimeRemaining()
+    public long getTimeRemaining()
         throws RemoteException;
 
-	public TimerHandle getTimerHandle()
+    public TimerHandle getTimerHandle()
         throws RemoteException;
 
-	public void cancelTimer()
+    public void cancelTimer()
         throws RemoteException;
 
 }

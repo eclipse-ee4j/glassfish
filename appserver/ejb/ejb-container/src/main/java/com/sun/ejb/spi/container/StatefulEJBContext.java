@@ -33,9 +33,9 @@ public interface StatefulEJBContext {
     public boolean existsInStore();
 
     public void setExistsInStore(boolean val);
-    
+
     public long getVersion();
-    
+
     public long incrementAndGetVersion();
 
     public void setVersion(long versionInBackingStore);

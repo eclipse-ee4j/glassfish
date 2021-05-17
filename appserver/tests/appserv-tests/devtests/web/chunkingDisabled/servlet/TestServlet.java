@@ -27,7 +27,7 @@ public class TestServlet extends HttpServlet {
             throws IOException, ServletException {
 
         PrintWriter out = res.getWriter();
- 
+
         /*
          * Check to see if we are in SE/EE, by trying to load a class that's
          * available only in SE/EE.
@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
                     "com.sun.enterprise.ee.web.authenticator.HASingleSignOn");
             // EE
             out.println("This is EE");
-	} catch (ClassNotFoundException e) {
+    } catch (ClassNotFoundException e) {
             // PE
             for (int i=0; i<BUFFER_SIZE; i++) {
                 out.print("X");

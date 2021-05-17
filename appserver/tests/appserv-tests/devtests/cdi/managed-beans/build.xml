@@ -86,15 +86,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the managedbeans tests)
-		ant clean (cleans all the managedbeans tests)
-		ant build (builds all the managedbeans tests)
-		ant setup (sets up all resources for managedbeans tests)
-		ant deploy (deploys all the managedbeans apps)
-		ant run (Executes all the managedbeans tests)
-		ant undeploy (undeploys all the  managedbeans apps)
-		ant unsetup (unsets all resources for managedbeans tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the managedbeans tests)
+        ant clean (cleans all the managedbeans tests)
+        ant build (builds all the managedbeans tests)
+        ant setup (sets up all resources for managedbeans tests)
+        ant deploy (deploys all the managedbeans apps)
+        ant run (Executes all the managedbeans tests)
+        ant undeploy (undeploys all the  managedbeans apps)
+        ant unsetup (unsets all resources for managedbeans tests)
+    </echo>
     </target>
 </project>

@@ -24,7 +24,7 @@ import java.net.*;
 import java.util.*;
 
 /*
- * CLI Dev test 
+ * CLI Dev test
  * @author mvatkina
  */
 public class Client extends ClientBase {

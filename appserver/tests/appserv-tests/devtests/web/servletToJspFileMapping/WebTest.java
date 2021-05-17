@@ -38,7 +38,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4924326");
         WebTest webTest = new WebTest(args);
@@ -53,7 +53,7 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         String url = "http://" + host + ":" + port + contextRoot;
         int code = invokeServlet(url + "/TestServlet1");
         if (code != 200) {
@@ -67,7 +67,7 @@ public class WebTest {
     }
 
     private int invokeServlet(String url) throws Exception {
-            
+
         System.out.println("Invoking servlet at: " + url);
 
         HttpURLConnection conn = (HttpURLConnection)

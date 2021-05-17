@@ -37,16 +37,16 @@ import org.glassfish.contextpropagation.wireadapters.AbstractWireAdapter;
 import org.glassfish.contextpropagation.wireadapters.Catalog;
 import org.glassfish.contextpropagation.wireadapters.WireAdapter;
 
-/* 
+/*
  *  We considered the following but chose against that:
- *  -  changing the api so that data can be read lazily. In that case we would store all the metadata in the catalog (key, type and position), and only the value, propagationmode in contents. 
+ *  -  changing the api so that data can be read lazily. In that case we would store all the metadata in the catalog (key, type and position), and only the value, propagationmode in contents.
  *  -  using a custom or all-together-different stream to provide faster more compact serialization and to avoid the use of a buffered stream
  */
 
 /**
  * This wire adapter implementation produces a compact wire format that
  * starts with a catalog. It minimizes the amount of metadata sent over the wire.
- * The metadata necessary to rehydrate the objects is either hardwired or 
+ * The metadata necessary to rehydrate the objects is either hardwired or
  * available in registries.
  */
 public class DefaultWireAdapter extends AbstractWireAdapter {
@@ -88,8 +88,8 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
     case VIEW_CAPABLE:
       // OPTIMIZE If we change the way we store the data from
       // using the ContextMap to using a view-specific map the payload
-      // used by keys will be smaller      
-      // Just putting the context type should be sufficient for now. 
+      // used by keys will be smaller
+      // Just putting the context type should be sufficient for now.
       break;
     case SERIALIZABLE:
       writeBytes(oos, WLSContext.HELPER.toBytes((Serializable) value));
@@ -110,7 +110,7 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
       byte[] bytes = value instanceof WLSContext ? WLSContext.HELPER.toBytes((WLSContext) value) : (byte[]) value;
       oos.writeBoolean(className != null);
       if (className != null) writeAscii(oos, className);
-      writeBytes(oos, bytes); 
+      writeBytes(oos, bytes);
       break;
     default:
       // TODO log unexpected Type
@@ -124,13 +124,13 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
     oos.write(bytes);
   }
 
-  private void writePropagationModes(ObjectOutputStream oos, 
+  private void writePropagationModes(ObjectOutputStream oos,
       EnumSet<PropagationMode> propagationModes) throws IOException {
     int count = propagationModes.size();
     oos.writeByte(count);
     for (PropagationMode propMode : propagationModes) {
       oos.writeByte(propMode.ordinal());
-    }    
+    }
   }
 
   private void writeAscii(ObjectOutputStream oos, String str) throws IOException {
@@ -151,11 +151,11 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
   @Override
   public String nextKey() throws IOException {
     try {
-      key = readAscii();  
+      key = readAscii();
       if (key.equals(NULL_KEY)) key = null;
     } catch (EOFException e) {
       key = null;
-    } 
+    }
     return key;
   }
 
@@ -164,13 +164,13 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
     String className = null;
     Entry.ContextType contextType = Entry.ContextType.fromOrdinal(ois.readByte());
     ContextBootstrap.debug(MessageID.READ_CONTEXT_TYPE, contextType);
-    Object value = null; 
+    Object value = null;
     switch (contextType) {
     case BOOLEAN:
       value = ois.readBoolean();
       break;
     case BYTE:
-      value = ois.readByte(); 
+      value = ois.readByte();
       break;
     case SHORT:
       value = ois.readShort();
@@ -219,7 +219,7 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
       className = hasClassName ? readAscii() : null;
       byte[] bytes = readBytes(ois);
       SerializableContextFactory factory = WireAdapter.HELPER.findContextFactory(key, className);
-      value = factory == null ? 
+      value = factory == null ?
           bytes : WLSContext.HELPER.readFromBytes(factory.createInstance(), bytes);
       break;
     default:
@@ -263,14 +263,14 @@ public class DefaultWireAdapter extends AbstractWireAdapter {
   @Override
   protected void write(ObjectOutputStream objectOutputStream, Catalog catalog) throws IOException {
     writeAscii(objectOutputStream, NULL_KEY); // so that we know there are no more keys and are ready to read the catalog
-    catalog.write(objectOutputStream);   
+    catalog.write(objectOutputStream);
   }
 
   protected void read(boolean mandatory, ObjectInputStream ois, Catalog catalog) throws IOException {
     if (mandatory) {
       ois.reset();
       int skipAmount = catalog.getStart();
-      for (int skipped = 0; 
+      for (int skipped = 0;
           skipped < skipAmount;
           skipped += ois.skip(skipAmount - skipped) );
       readAscii(); // Read the NULL_KEY

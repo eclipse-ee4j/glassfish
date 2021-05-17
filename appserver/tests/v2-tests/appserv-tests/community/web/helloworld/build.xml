@@ -19,32 +19,32 @@
 
 <project name="hello-jsp" default="default" basedir=".">
     <property file="build.properties"/>
-    
+
  <description>Builds, tests, and runs the project Hello JSP Application</description>
 <!-- <import file="nbproject/build-impl.xml"/>-->
 
 <path id="sun.appserver.antjar">
     <fileset dir="${install.dir}/lib">
         <include name="**/*.jar"/>
-    </fileset>          
+    </fileset>
 </path>
 
 
 <target name="sun-taskdef">
     <taskdef name="sun-appserv-deploy"
- classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.DeployTask">        
-            <classpath refid="sun.appserver.antjar" />        
+ classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.DeployTask">
+            <classpath refid="sun.appserver.antjar" />
     </taskdef>
-    <taskdef name="sun-appserv-undeploy" 
+    <taskdef name="sun-appserv-undeploy"
  classname="org.apache.tools.ant.taskdefs.optional.sun.appserv.UndeployTask">
-       <classpath refid="sun.appserver.antjar" />    
+       <classpath refid="sun.appserver.antjar" />
     </taskdef>
 </target>
 
 <path id="class.path">
     <fileset dir="${install.dir}/lib">
         <include name="**/*.jar"/>
-    </fileset>      
+    </fileset>
     <pathelement location="${class.output}/app"/>
 </path>
 
@@ -65,7 +65,7 @@
              includes="**/*.class">
     </fileset>
 
-<target name="build">    
+<target name="build">
     <delete dir="${class.output}/app"/>
     <delete dir="${dist.dir}"/>
     <mkdir dir="${class.output}/app"/>
@@ -84,13 +84,13 @@
         <!--<lib dir="thirdparty/libs">
         <exclude name="jdbc1.jar"/>
         </lib>-->
-        <classes dir="${class.output}/app">        
-            <include name="**/Hello.class"/>        
+        <classes dir="${class.output}/app">
+            <include name="**/Hello.class"/>
         </classes>
         <!--<zipfileset dir="src/graphics/images/gifs"
         prefix="images"/>-->
-        <!--<webinf dir="metadata">                  
-            <include name="**/*.xml"/>                                        
+        <!--<webinf dir="metadata">
+            <include name="**/*.xml"/>
         </webinf>-->
     </war>
     <copy file="${dist.dir}/${war.file}" tofile="./${war.file}"/>
@@ -106,7 +106,7 @@
 <taskdef name="testng"
          classpathref="path2testng"
          classname="org.testng.TestNGAntTask"/>
-         
+
 
 <!-- Generate the TestNG report -->
 <target name="report">
@@ -122,7 +122,7 @@
 </target>
 <target name="compile-tests"
             description="compile the test ng example" depends="">
-       
+
        <mkdir dir="${test.class.output}"/>
        <javac   debug="true"
               fork="true"
@@ -133,8 +133,8 @@
        />
 </target>
 
-<target  name="run">      
-    <echo message="=============Starting TestNG test at ${class.output}/test  ============"/>    
+<target  name="run">
+    <echo message="=============Starting TestNG test at ${class.output}/test  ============"/>
     <mkdir dir="${result.output}"/>
     <testng outputdir="${result.output}"
     suitename="V3 TestSuite"
@@ -149,15 +149,15 @@
 </target>
 
 <target name="stop">
-    
+
 </target>
 
 <target name="deploy">
     <antcall target="deploy-v2"/>
     <antcall target="deploy-v3"/>
 </target>
-    
-<target name="deploy-v2" depends="sun-taskdef" unless="v3">     
+
+<target name="deploy-v2" depends="sun-taskdef" unless="v3">
 
     <sun-appserv-deploy file="${dist.dir}/${war.file}"
     name="helloworld"
@@ -170,25 +170,25 @@
     host="${admin.host}"
     port="${admin.port}"
     asinstalldir="${install.dir}" />
-</target>   
+</target>
 
 <target name="deploy-v3" if="v3">
     <echo message="deploying in v3 mode"/>
     <echo message="./${war.file}"/>
     <copy file="${dist.dir}/${war.file}" todir="${glassfish.home}/domains/domain1/autodeploy"/>
 <!--<get src="http://localhost:8080/_asadmin/deploy?path=${war.file}" dest="test.html"/>-->
-    
+
 </target>
- 
-<target name="undeploy" depends="sun-taskdef">      
+
+<target name="undeploy" depends="sun-taskdef">
 
     <sun-appserv-undeploy file="${dist.dir}/${war.file}"
-    name="helloworld"           
+    name="helloworld"
     user="${admin.user}"
     passwordfile="${install.dir}/pass.txt"
     host="${admin.host}"
     port="${admin.port}"
-    asinstalldir="${install.dir}" />            
+    asinstalldir="${install.dir}" />
 </target>
 
 <target name="source">
@@ -204,5 +204,5 @@
         </zip>
 
     </target>
-    
+
 </project>

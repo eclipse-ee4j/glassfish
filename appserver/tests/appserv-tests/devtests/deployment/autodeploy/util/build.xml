@@ -23,17 +23,17 @@
 ]>
 
 <project name="autodeploy-util" default="all" basedir=".">
-	&commonBuild;
+    &commonBuild;
         &autodeployUtil;
 
     <target name="prepare" depends="init">
         <mkdir dir="${build}" />
     </target>
-	
+
     <target name="build" depends="compile">
-        
+
     </target>
-    
+
     <target name="compile" depends="prepare">
         <javac srcdir="."
                destdir="${build}"
@@ -46,5 +46,5 @@
     <target name="private-all" depends="build">
         <echo>Autodeploy util common tools are ready</echo>
     </target>
-    
+
 </project>

@@ -24,7 +24,7 @@ import java.rmi.RemoteException;
 public interface LocalStudent
     extends EJBLocalObject
 {
- 
+
   /**
    * Returns the Name of a student.
    * exception RemoteException

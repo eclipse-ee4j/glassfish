@@ -75,7 +75,7 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * afterCompletion method.  The return value must be one of:
      * <code>jakarta.transaction.Status.STATUS_COMMITTED</code> or
      * <code>jakarta.transaction.Status.STATUS_ROLLED_BACK</code>.
-     * @param 	st 	local Status value
+     * @param     st     local Status value
      * @return the jakarta.transaction.Status value of the status
      */
     int translateStatus(int st);
@@ -92,26 +92,26 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * by the combination of URL.hashCode() + userName.hashCode() +
      * password.hashCode() + driverName.hashCode();
      *
-     * @param 	pmf 	PersistenceManagerFactory instance to be replaced
-     * @return 	the PersistenceManagerFactory known to the runtime
+     * @param     pmf     PersistenceManagerFactory instance to be replaced
+     * @return     the PersistenceManagerFactory known to the runtime
      */
     PersistenceManagerFactory replaceInternalPersistenceManagerFactory(
-	PersistenceManagerFactory pmf);
+    PersistenceManagerFactory pmf);
 
     /** Called at the beginning of the Transaction.beforeCompletion() to
      * register the component with the app server if necessary.
-     * The component argument is an array of Objects. 
-     * The first element is com.sun.jdo.spi.persistence.support.sqlstore.Transaction 
+     * The component argument is an array of Objects.
+     * The first element is com.sun.jdo.spi.persistence.support.sqlstore.Transaction
      * object responsible for transaction completion.
-     * The second element is com.sun.jdo.api.persistence.support.PersistenceManager 
-     * object that has been associated with the Transaction context for the 
-     * calling thread. 
-     * The third element is jakarta.transaction.Transaction object that has been 
-     * associated with the given instance of PersistenceManager. 
+     * The second element is com.sun.jdo.api.persistence.support.PersistenceManager
+     * object that has been associated with the Transaction context for the
+     * calling thread.
+     * The third element is jakarta.transaction.Transaction object that has been
+     * associated with the given instance of PersistenceManager.
      * The return value is passed unchanged to the postInvoke method.
      *
-     * @param 	component 	an array of Objects
-     * @return 	implementation-specific Object
+     * @param     component     an array of Objects
+     * @return     implementation-specific Object
      */
     Object preInvoke(Object component);
 
@@ -120,7 +120,7 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * The parameter is the return value from preInvoke, and can be any
      * Object.
      *
-     * @param 	im 	implementation-specific Object
+     * @param     im     implementation-specific Object
      */
     void postInvoke(Object im);
 
@@ -139,15 +139,15 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
     /** Called in a managed environment to get a Connection from the application
      * server specific resource. In a non-managed environment throws an Exception
-     * as it should not be called. 
+     * as it should not be called.
      *
-     * @param resource the application server specific resource. 
+     * @param resource the application server specific resource.
      * @param username the resource username. If null, Connection is requested
-     * without username and password validation. 
+     * without username and password validation.
      * @param password the password for the resource username.
-     * @return a Connection. 
+     * @return a Connection.
      * @throws java.sql.SQLException.
-     */  
+     */
     java.sql.Connection getConnection(Object resource, String username, char[] password)
         throws java.sql.SQLException;
 
@@ -169,14 +169,14 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
     /** Called in a managed environment to access a TransactionManager
      * for managing local transaction boundaries and registering synchronization
      * for call backs during completion of a local transaction.
-     * 
+     *
      * @return jakarta.transaction.TransactionManager
      */
     TransactionManager getLocalTransactionManager();
 
     /** Identifies the managed environment behavior.
      * @return true if this implementation represents the managed environment.
-     */  
+     */
     boolean isManaged();
 
     /**
@@ -188,38 +188,38 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
     /**
      * Set environment specific default values for the given PersistenceManagerFactory.
-     * 
+     *
      * @param pmf the PersistenceManagerFactory.
      */
     void setPersistenceManagerFactoryDefaults(PersistenceManagerFactory pmf);
 
-    /** 
+    /**
      * Returns name prefix for DDL files extracted from the info instance by the
      * application server specific code.
-     *   
+     *
      * @param info the instance to use for the name generation.
-     * @return name prefix as String. 
-     */   
+     * @return name prefix as String.
+     */
     String getDDLNamePrefix(Object info);
-        
+
     /**
      * Called to register a ApplicationLifeCycleEventListener. If
      * ApplicationLifeCycle management is active (typically in managed
      * environment), the registered listener will receive a call back
      * for lifecycle events.
      *
-     * @param listener An instance of ApplicationLifeCycleEventListener. 
-     */ 
+     * @param listener An instance of ApplicationLifeCycleEventListener.
+     */
     void registerApplicationLifeCycleEventListener(
             ApplicationLifeCycleEventListener listener);
-        
+
     /**
      * Called to notify a ApplicationLifeCycleEventListeners that an application
      * is unloaded. If ApplicationLifeCycle management is active (typically in managed
      * environment), the registered listener will handle the notification.
      *
      * @param cl An instance of the ClassLoader that loaded the application.
-     */ 
+     */
     void notifyApplicationUnloaded(ClassLoader cl);
 
 }

@@ -27,23 +27,23 @@ import java.util.concurrent.Future;
  * Generic interface used by the GrizzlyService to start the tcp/udp/tcl stack.
  * By default, we are starting Grizzly, but we might allow other framework to
  * hook in and drive hk2/v3.
- * 
+ *
  * TODO: Allow addition of other types of Container, not only Adapter but
  *       also any extension.
- * 
+ *
  * @author Jeanfrancois Arcand
  */
 public interface NetworkProxy extends EndpointMapper<HttpHandler>{
 
 
-    /** 
-     * Stop the proxy. 
+    /**
+     * Stop the proxy.
      */
     void stop() throws IOException;
-    
-    
-    /** 
-     * Start the proxy. 
+
+
+    /**
+     * Start the proxy.
      */
     Future<Result<Thread>> start() throws IOException;
 

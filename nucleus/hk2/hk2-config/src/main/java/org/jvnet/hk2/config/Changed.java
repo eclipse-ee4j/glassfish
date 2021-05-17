@@ -39,5 +39,5 @@ public interface Changed {
      * @param changedInstance changed instance.
      */
     public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance);
-        
+
 }

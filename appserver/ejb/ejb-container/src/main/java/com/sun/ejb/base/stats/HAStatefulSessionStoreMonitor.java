@@ -17,7 +17,7 @@
 package com.sun.ejb.base.stats;
 
 /**
- * An instance of this class is used by the StatefulContainer to update monitoring 
+ * An instance of this class is used by the StatefulContainer to update monitoring
  *  data. There is once instance of this class per StatefulEJBContainer
  *
  * @author Mahesh Kannan
@@ -30,29 +30,29 @@ public class HAStatefulSessionStoreMonitor
     private HAStatefulSessionStoreStatsImpl haStatsImpl;
 
     protected void setDelegate(HAStatefulSessionStoreStatsImpl delegate) {
-	this.haStatsImpl = delegate;
-	super.setDelegate(delegate);
+    this.haStatsImpl = delegate;
+    super.setDelegate(delegate);
     }
 
     public final void incrementCheckpointCount(boolean success) {
-	HAStatefulSessionStoreStatsImpl delegate = haStatsImpl;
-	if (delegate != null) {
-	    delegate.incrementCheckpointCount(success);
-	}
+    HAStatefulSessionStoreStatsImpl delegate = haStatsImpl;
+    if (delegate != null) {
+        delegate.incrementCheckpointCount(success);
+    }
     }
 
     public final void setCheckpointSize(long val) {
-	HAStatefulSessionStoreStatsImpl delegate = haStatsImpl;
-	if (delegate != null) {
-	    delegate.setCheckpointSize(val);
-	}
+    HAStatefulSessionStoreStatsImpl delegate = haStatsImpl;
+    if (delegate != null) {
+        delegate.setCheckpointSize(val);
+    }
     }
 
     public final void setCheckpointTime(long val) {
-	HAStatefulSessionStoreStatsImpl delegate = haStatsImpl;
-	if (delegate != null) {
-	    delegate.setCheckpointTime(val);
-	}
+    HAStatefulSessionStoreStatsImpl delegate = haStatsImpl;
+    if (delegate != null) {
+        delegate.setCheckpointTime(val);
+    }
     }
 
 }

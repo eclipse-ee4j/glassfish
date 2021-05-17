@@ -19,7 +19,7 @@ package org.glassfish.web.deployment.util;
 import com.sun.enterprise.deployment.InjectionCapable;
 
 /**
- * This class validates the part of the web bundle descriptor that requires 
+ * This class validates the part of the web bundle descriptor that requires
  * classloader
  *
  */

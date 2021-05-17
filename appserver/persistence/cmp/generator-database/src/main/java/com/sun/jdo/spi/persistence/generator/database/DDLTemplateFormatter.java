@@ -35,27 +35,27 @@ import java.text.MessageFormat;
 // if another generateDDL can happen simultaneously, we're in trouble.
 class DDLTemplateFormatter {
     /** Formatter for the start of "create table" DDL. */
-    private static MessageFormat createTableStart = null; 
+    private static MessageFormat createTableStart = null;
 
     /** Formatter for the start of "create index" DDL. */
     private static MessageFormat createIndex = null;
 
     /** Formatter for "add constraint" DDL. */
-    private static MessageFormat alterTableAddConstraintStart = null; 
+    private static MessageFormat alterTableAddConstraintStart = null;
 
     /** Formatter for "drop constraing" DDL. */
     private static MessageFormat alterTableDropConstraint = null;
 
     /** Formatter for DDL for adding a PK constraint. */
-    private static MessageFormat primaryKeyConstraint = null; 
+    private static MessageFormat primaryKeyConstraint = null;
 
     /** Formatter for DDL for adding an FK constraint. */
-    private static MessageFormat foreignKeyConstraint = null; 
+    private static MessageFormat foreignKeyConstraint = null;
 
     /** Formatter for "drop table" DDL. */
     private static MessageFormat dropTable = null;
 
-    
+
     /**
      * Prevent instantiation.
      */
@@ -70,7 +70,7 @@ class DDLTemplateFormatter {
     static void reset(MappingPolicy mappingPolicy) {
         createTableStart = new MessageFormat(
                 mappingPolicy.getCreateTableStart());
-	// Added for Symfoware support as indexes on primary keys are mandatory
+    // Added for Symfoware support as indexes on primary keys are mandatory
         createIndex = new MessageFormat(
                 mappingPolicy.getCreateIndex());
 
@@ -90,7 +90,7 @@ class DDLTemplateFormatter {
                 mappingPolicy.getDropTable());
     }
 
-    
+
     /**
      * @returns A String formatted for the start of "create table" DDL.
      */

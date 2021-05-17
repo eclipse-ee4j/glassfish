@@ -45,7 +45,7 @@ public class JustConnect {
         JMXConnector jmxc = JMXConnectorFactory.connect(url, env);
         System.out.println("Connected, to url: " + urls +  ", connection id = " + jmxc.getConnectionId());
     }
-    
+
     public static void main(final String[] args) throws Exception {
         if (args == null || args.length != 3) {
             System.err.println("Usage: java org.jm.jmx.utils.JustConnect jmxserviceurl username password" +

@@ -49,7 +49,7 @@ abstract public class ConstBasic implements VMConstants {
 
   /**
    * Resolve integer index references to the actual constant pool
-   * entries that they represent.  This is used during class file 
+   * entries that they represent.  This is used during class file
    * reading because a constant pool entry could have a forward
    * reference to a higher numbered constant.
    */

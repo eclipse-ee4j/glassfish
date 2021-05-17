@@ -99,8 +99,8 @@ public abstract class QueryPlan {
      *
      * @param tableElement Identifies which table is being added.
      * @param persistenceConfig
-     * 	If we are adding a foreign table the persistenceConfig parameter
-     * 	holds the PersistenceConfig for the foreign Persistence Class.
+     *     If we are adding a foreign table the persistenceConfig parameter
+     *     holds the PersistenceConfig for the foreign Persistence Class.
      */
     public QueryTable addQueryTable(TableElement tableElement,
                                     ClassDesc persistenceConfig) {
@@ -187,10 +187,10 @@ public abstract class QueryPlan {
     }
 
     protected Statement addStatement(QueryTable t) {
-		Statement s = createStatement(t);
-		statements.add(s);
+        Statement s = createStatement(t);
+        statements.add(s);
 
-		return s;
+        return s;
     }
 
     protected abstract Statement newStatement();
@@ -205,13 +205,13 @@ public abstract class QueryPlan {
     }
 
     protected Statement getStatement(QueryTable t) {
-		if (t == null) return null;
+        if (t == null) return null;
 
         for (int i = 0; i < statements.size(); i++) {
             Statement s = (Statement) statements.get(i);
 
-			if (s.tableList.indexOf(t) != -1)
-				return s;
+            if (s.tableList.indexOf(t) != -1)
+                return s;
         }
 
         return null;

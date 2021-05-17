@@ -117,35 +117,35 @@ public class ConnectorRegistry {
     }
 
     /**
-     * get the version counter of  a resource info 
+     * get the version counter of  a resource info
      * @param resourceInfo resource-name
      * @return version counter. {@code -1L} if the resource is invalid
      */
     public long getResourceInfoVersion(ResourceInfo resourceInfo) {
-    	AtomicLong version = resourceInfoVersion.get(resourceInfo);
-    	if (version == null) {
-    	   // resource is no longer valid
-    	   return -1L;
-    	} else {
-    		return version.get();
-    	}
+        AtomicLong version = resourceInfoVersion.get(resourceInfo);
+        if (version == null) {
+           // resource is no longer valid
+           return -1L;
+        } else {
+            return version.get();
+        }
     }
-    
+
     /**
      * Update version information for a resource.
      * @param resourceInfo resource info to be updated.
      * @return new version couter
      */
     public long updateResourceInfoVersion(ResourceInfo resourceInfo) {
-    	AtomicLong version = resourceInfoVersion.get(resourceInfo);
-    	if (version == null) {
-    		AtomicLong newVersion = new AtomicLong();
-    		version = resourceInfoVersion.putIfAbsent(resourceInfo, newVersion);
-    	   	if (version == null) {
-    	      version = newVersion;
-    		}
-    	}    	
-    	return version.incrementAndGet();
+        AtomicLong version = resourceInfoVersion.get(resourceInfo);
+        if (version == null) {
+            AtomicLong newVersion = new AtomicLong();
+            version = resourceInfoVersion.putIfAbsent(resourceInfo, newVersion);
+               if (version == null) {
+              version = newVersion;
+            }
+        }
+        return version.incrementAndGet();
     }
 
     /**
@@ -154,8 +154,8 @@ public class ConnectorRegistry {
      * @return boolean indicating whether the factories will get invalidated
      */
     public boolean removeResourceFactories(ResourceInfo resourceInfo){
-    	resourceInfoVersion.remove(resourceInfo);
-    	return false; // we actually don't know if there are any resource factories instantiated.
+        resourceInfoVersion.remove(resourceInfo);
+        return false; // we actually don't know if there are any resource factories instantiated.
     }
 
     /**
@@ -525,11 +525,11 @@ public class ConnectorRegistry {
         }
     }
 
-    /** Gets the runtime equivalent of policies enforced by the Security Maps 
-     *  pertaining to a pool from the Pool's Meta Data.   
+    /** Gets the runtime equivalent of policies enforced by the Security Maps
+     *  pertaining to a pool from the Pool's Meta Data.
      *  @param poolInfo pool information
      *  @return runtimeSecurityMap in the form of HashMap of
-     *   HashMaps (user and groups). 
+     *   HashMaps (user and groups).
      *  @see SecurityMapUtils.processSecurityMaps( SecurityMap[])
      */
 

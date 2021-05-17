@@ -30,7 +30,7 @@ import java.util.*;
  * TopCoordinator with calls to CoordinatorLogPool.getCoordinatorLog().
  * The getCoordinatorLog() method attempts to return a CoordinatorLog
  * from the pool. If the pool is empty it instantiates a new
- * CoordinatorLog. 
+ * CoordinatorLog.
  *
  * Objects are re-used by calling CoordinatorLogPool.putCoordinatorLog()
  * to return a CoordinatorLog object back to the pool. At this time a
@@ -56,14 +56,14 @@ class CoordinatorLogPool {
 
     public static CoordinatorLogPool CLPool = new CoordinatorLogPool();
     public static Hashtable CLPooltable = new Hashtable();
-    
 
-    /** 
+
+    /**
      * constructor
      *
      */
     public CoordinatorLogPool() {
-	pool = new Stack();
+    pool = new Stack();
     }
 
     /**
@@ -72,16 +72,16 @@ class CoordinatorLogPool {
      *
      */
     public static synchronized CoordinatorLog getCoordinatorLog() {
-        if (Configuration.isDBLoggingEnabled() || 
+        if (Configuration.isDBLoggingEnabled() ||
             Configuration.isFileLoggingDisabled())
             return null;
-	if (CLPool.pool.empty()) {
-	    return new CoordinatorLog();
-	}
-	else {
-	    CoordinatorLog cl = (CoordinatorLog) CLPool.pool.pop();
-	    return cl;
-	}
+    if (CLPool.pool.empty()) {
+        return new CoordinatorLog();
+    }
+    else {
+        CoordinatorLog cl = (CoordinatorLog) CLPool.pool.pop();
+        return cl;
+    }
     }
 
     /**
@@ -92,9 +92,9 @@ class CoordinatorLogPool {
      *
      */
     public static void putCoordinatorLog(CoordinatorLog cl) {
-	if (CLPool.pool.size() <= MAXSTACKSIZE) {
-	    CLPool.pool.push(cl);
-	} 
+    if (CLPool.pool.size() <= MAXSTACKSIZE) {
+        CLPool.pool.push(cl);
+    }
     }
 
     // Added to support delegated recovery: multiple logs should coexist

@@ -46,7 +46,7 @@ import org.xml.sax.SAXException;
  * "asadmin get-client-stubs" command is not aware of the enabled state.
  *
  * This class retrieve the stubs from the JWS URL of the application.
- * 
+ *
  * The GlassFish server now uses http sessions to maintain
  * some important information during Java Web Start launches.
  * For this test to work it now saves the session that is set
@@ -58,10 +58,10 @@ import org.xml.sax.SAXException;
 public class GetJWSClientStubs {
 
     private static final String SESSION_PROPERTY_NAME = "JSESSIONID";
-    
+
     String javaWebStartUrl;
     String stubsPath;
-    
+
     String session = null;
 
     public GetJWSClientStubs(String[] args) {
@@ -188,7 +188,7 @@ public class GetJWSClientStubs {
         }
         return result;
     }
-    
+
     private String getSession(final HttpURLConnection c) {
         final String s = c.getHeaderField("Set-Cookie");
         log("Set-Cookie from server is " + s);

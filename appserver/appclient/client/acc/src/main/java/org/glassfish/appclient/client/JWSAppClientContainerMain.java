@@ -182,7 +182,7 @@ public class JWSAppClientContainerMain {
 
     /**
      * Interpret the JWSACC arguments (if any) supplied on the command line.
-     * 
+     *
      * @param args the JWSACC arguments
      */
     private static void processJWSArgs() {

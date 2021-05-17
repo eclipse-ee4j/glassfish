@@ -65,11 +65,11 @@ public interface TimerStuff {
     void assertTimerNotActive(Timer timer) throws Exception;
 
     void sendMessageAndCreateTimer() throws  Exception;
-    void recvMessageAndCreateTimer(boolean expectMessage) 
+    void recvMessageAndCreateTimer(boolean expectMessage)
         throws  Exception;
-    void sendMessageAndCreateTimerAndRollback() 
+    void sendMessageAndCreateTimerAndRollback()
         throws  Exception;
-    void recvMessageAndCreateTimerAndRollback(boolean expectMessage) 
+    void recvMessageAndCreateTimerAndRollback(boolean expectMessage)
         throws  Exception;
 
 

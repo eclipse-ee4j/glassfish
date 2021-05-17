@@ -44,7 +44,7 @@ public class ConnectionPoolAppEmitterImpl {
     public String getAppName() {
         return this.appName;
     }
-    
+
     /**
      * Fires probe event related to the fact the given connection pool has
      * got a connection used event.

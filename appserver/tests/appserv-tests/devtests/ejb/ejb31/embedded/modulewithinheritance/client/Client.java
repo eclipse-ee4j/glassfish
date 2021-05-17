@@ -76,7 +76,7 @@ public class Client {
                 stat.addStatus("EJB embedded create container", stat.FAIL);
                 System.out.println("Created another container without closing the current...");
             }
-        } catch (EJBException e) { 
+        } catch (EJBException e) {
             System.out.println("Caught expected: " + e.getMessage());
             stat.addStatus("EJB embedded create container", stat.PASS);
         }

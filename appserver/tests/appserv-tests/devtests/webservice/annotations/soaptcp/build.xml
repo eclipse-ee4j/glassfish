@@ -26,13 +26,13 @@
 ]>
 
 <project name="webservicerefs" default="all" basedir=".">
-    
+
     &commonSetup;
     &commonBuild;
     &commonRun;
     &testproperties;
     &jaxwsTools;
-    
+
     <path id="client-classpath">
         <pathelement path="${env.APS_HOME}/lib/reporter.jar"/>
         <pathelement path="${env.S1AS_HOME}/lib/j2ee.jar"/>
@@ -41,16 +41,16 @@
         <pathelement path="${env.S1AS_HOME}/lib/activation.jar"/>
         <pathelement path="${env.S1AS_HOME}/lib/appserv-rt.jar"/>
     </path>
-    
+
     <target name="all" depends="clean, setup-web, clean, setup-ejb, assemble-client, runclient, undeploy"/>
-    
+
     <target name="clean" depends="init-common">
         <antcall target="clean-common"/>
     </target>
-    
+
     <target name="setup-web" depends="assemble-web, deploy-web-app"/>
     <target name="setup-ejb" depends="assemble-ejb, deploy-ejb-jar"/>
-    
+
     <target name="assemble-ejb">
         <antcall target="compile-common">
             <param name="src" value="ejb_endpoint"/>
@@ -63,7 +63,7 @@
             <param name="jar.file" value="${assemble.dir}/${appname}-ejb.jar"/>
         </antcall>
     </target>
-    
+
     <target name="assemble-web">
         <antcall target="compile-common">
             <param name="src" value="servlet_endpoint"/>
@@ -73,7 +73,7 @@
             <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
         </antcall>
     </target>
-    
+
     <target name="assemble-client" depends="init-common">
         <mkdir dir="${build.classes.dir}/client"/>
         <echo message="wsimporting http://${http.host}:${http.port}/${appname}/webservice/ServletHelloService?WSDL"/>
@@ -86,7 +86,7 @@
             <param name="wsimport.args"
                    value="-keep -d ${build.classes.dir}/client http://${http.host}:${http.port}/WSHelloEJBService/WSHelloEJB?WSDL"/>
         </antcall>
-        <javac srcdir="." destdir="${build.classes.dir}/client" 
+        <javac srcdir="." destdir="${build.classes.dir}/client"
                includes="client/**">
             <classpath refid="client-classpath"/>
         </javac>
@@ -94,22 +94,22 @@
             <fileset dir="${client.wsit.descriptors}"/>
         </copy>
     </target>
-    
+
     <target name="deploy-web-app">
         <antcall target="deploy-war-common">
             <param name="contextroot" value="${appname}"/>
         </antcall>
     </target>
-    
+
     <target name="deploy-ejb-jar">
         <antcall target="deploy-jar-common"/>
     </target>
-    
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
         <antcall target="undeploy-jar-common"/>
     </target>
-    
+
     <target name="runclient">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>

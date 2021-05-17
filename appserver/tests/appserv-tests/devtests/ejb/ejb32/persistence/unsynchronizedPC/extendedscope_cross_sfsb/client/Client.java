@@ -27,7 +27,7 @@ public class Client {
             "appserv-tests");
     @EJB(beanName = "TC1SfsbWithUnsynchPC")
     private static Tester tC1SfsbWithUnsynchPC;
-    
+
     @EJB(beanName = "TC2SfsbWithSynchPC")
     private static Tester tC2SfsbWithSynchPC;
 
@@ -41,13 +41,13 @@ public class Client {
     public void doTest() {
         try {
             System.out.println("I am in client");
-            
+
             System.out.println("Calling SFSBWithUnsynchPC.doTest");
             stat.addStatus("TestCase1_extendedScopeSfsbWithUnsyncPCInvokeSfsbWithSynchPC", tC1SfsbWithUnsynchPC.doTest() ? stat.PASS : stat.FAIL);
-            
+
             System.out.println("Calling TC2_SFSBWithSynchPC.doTest");
             stat.addStatus("TestCase2_extendedScopeSfsbWithSyncPCInvokeSfsbWithUnsynchPC", tC2SfsbWithSynchPC.doTest() ? stat.PASS : stat.FAIL);
-            
+
             System.out.println("DoTest method ends");
         } catch (Exception e) {
             e.printStackTrace();

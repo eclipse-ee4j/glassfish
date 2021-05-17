@@ -55,8 +55,8 @@ import org.glassfish.internal.api.Target;
 /**
  * Change Admin Password Command
  *
- * Usage: change-admin-password [--user admin_user] [--terse=false] 
- *        [--echo=false] [--host localhost] [--port 4848|4849] 
+ * Usage: change-admin-password [--user admin_user] [--terse=false]
+ *        [--echo=false] [--host localhost] [--port 4848|4849]
  *        [--secure | -s]
  *
  * @author Nandini Ektare
@@ -67,19 +67,19 @@ import org.glassfish.internal.api.Target;
 @I18n("change.admin.password")
 @ExecuteOn({RuntimeType.ALL})
 public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(ChangeAdminPassword.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(ChangeAdminPassword.class);
 
     @Param(name="password", password=true)
     private String oldpassword;
-   
+
     @Param(name="newpassword", password=true)
     private String newpassword;
 
     @Param(name="username", primary=true)
     private String userName;
-        
+
     @Inject
     private Configs configs;
     @Inject
@@ -87,14 +87,14 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
 
     @Inject
     private RealmsManager realmsManager;
-    
+
     @Inject
     private AdminService adminService;
-    
+
     private SecureAdmin secureAdmin = null;
-    
+
     private Config config;
-    
+
     @AccessRequired.To("update")
     private AuthRealm fileAuthRealm;
 
@@ -109,34 +109,34 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
                         "null_empty_password","The new password is null or empty"));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return false;
-            }           
+            }
         }
         final List <Config> configList = configs.getConfig();
         config = configList.get(0);
 
         SecurityService securityService = config.getSecurityService();
-       
-        fileAuthRealm = null;        
-        for (AuthRealm authRealm : securityService.getAuthRealm()) {            
-            if (authRealm.getName().equals(adminService.getAuthRealmName())) {                
-                fileAuthRealm = authRealm;            
+
+        fileAuthRealm = null;
+        for (AuthRealm authRealm : securityService.getAuthRealm()) {
+            if (authRealm.getName().equals(adminService.getAuthRealmName())) {
+                fileAuthRealm = authRealm;
                 break;
             }
-        }        
+        }
 
         if (fileAuthRealm == null) {
             report.setMessage(localStrings.getLocalString(
                 "change.admin.password.adminrealmnotfound", "Server " +
                 "Error: There is no admin realm to perform this operation"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;                                            
+            return false;
         }
-        
+
         return true;
     }
 
-    
-    
+
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -149,9 +149,9 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
 
         // Get FileRealm class name, match it with what is expected.
         String fileRealmClassName = fileAuthRealm.getClassname();
-        
+
         // Report error if provided impl is not the one expected
-        if (fileRealmClassName != null && 
+        if (fileRealmClassName != null &&
             !fileRealmClassName.equals(
                 "com.sun.enterprise.security.auth.realm.file.FileRealm")) {
             report.setMessage(
@@ -159,7 +159,7 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
                     "change.admin.password.adminrealmnotsupported",
                     "Configured admin realm is not supported."));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                
+            return;
         }
 
         // ensure we have the file associated with the authrealm
@@ -174,10 +174,10 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
                     "change.admin.password.keyfilenotfound",
                     "There is no physical file associated with admin realm"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                                            
+            return;
         }
-                            
-        // We have the right impl so let's get to updating existing user 
+
+        // We have the right impl so let's get to updating existing user
         FileRealm fr = null;
         try {
             realmsManager.createRealms(config);
@@ -198,20 +198,20 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
 
         //now updating admin user password
         try {
-            Enumeration en = fr.getGroupNames(userName);            
+            Enumeration en = fr.getGroupNames(userName);
             int size = 0;
-            while (en.hasMoreElements()) { 
-                size++; 
-                en.nextElement(); 
-            }            
-            String[] groups = new String[size];            
-            en = fr.getGroupNames(userName);            
+            while (en.hasMoreElements()) {
+                size++;
+                en.nextElement();
+            }
+            String[] groups = new String[size];
+            en = fr.getGroupNames(userName);
             for (int i = 0; i < size; i++) {
                 groups[i] = (String) en.nextElement();
             }
             fr.updateUser(userName,userName, newpassword.toCharArray(), groups);
             fr.persist();
-            report.setActionExitCode(ActionReport.ExitCode.SUCCESS);            
+            report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         } catch (Exception e) {
             report.setMessage(
                 localStrings.getLocalString(
@@ -220,9 +220,9 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
                 "  " + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
-        }        
+        }
     }
- 
 
-  
+
+
 }

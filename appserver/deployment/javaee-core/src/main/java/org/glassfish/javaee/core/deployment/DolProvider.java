@@ -70,7 +70,7 @@ import java.util.logging.Logger;
  * ApplicationMetada
  */
 @Service
-public class DolProvider implements ApplicationMetaDataProvider<Application>, 
+public class DolProvider implements ApplicationMetaDataProvider<Application>,
         ApplicationInfoProvider {
 
     @Inject
@@ -134,7 +134,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         String archiveType = dc.getArchiveHandler().getArchiveType();
         Archivist archivist = archivistFactory.getArchivist(archiveType, cl);
         if (archivist == null) {
-            // if no JavaEE medata was found in the archive, we return 
+            // if no JavaEE medata was found in the archive, we return
             // an empty Application object
             return Application.createApplication();
         }
@@ -150,11 +150,11 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         }
         Collection<Sniffer> sniffers = dc.getTransientAppMetaData(DeploymentProperties.SNIFFERS, Collection.class);
         archivist.setExtensionArchivists(archivistFactory.getExtensionsArchivists(sniffers, archivist.getModuleType()));
-        
+
         ApplicationHolder holder = dc.getModuleMetaData(ApplicationHolder.class);
         File deploymentPlan = params.deploymentplan;
         handleDeploymentPlan(deploymentPlan, archivist, sourceArchive, holder);
-        
+
         long start = System.currentTimeMillis();
         Application application=null;
         if (holder!=null) {
@@ -169,7 +169,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
             }
 
             try {
-                applicationFactory.openWith(application, sourceArchive, 
+                applicationFactory.openWith(application, sourceArchive,
                     archivist);
             } catch(SAXException e) {
                 throw new IOException(e);
@@ -238,15 +238,15 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         try {
             // for these cases, the standard DD could contain the application
             // name for ear and module name for standalone module
-            if (params.altdd != null || 
-                archive.exists("META-INF/application.xml") || 
+            if (params.altdd != null ||
+                archive.exists("META-INF/application.xml") ||
                 archive.exists("WEB-INF/web.xml") ||
-                archive.exists("META-INF/ejb-jar.xml") || 
-                archive.exists("META-INF/application-client.xml") || 
+                archive.exists("META-INF/ejb-jar.xml") ||
+                archive.exists("META-INF/application-client.xml") ||
                 archive.exists("META-INF/ra.xml")) {
                 String archiveType = context.getArchiveHandler().getArchiveType() ;
                 application = applicationFactory.createApplicationFromStandardDD(archive, archiveType);
-                DeploymentTracing tracing = null; 
+                DeploymentTracing tracing = null;
                 tracing = context.getModuleMetaData(DeploymentTracing.class);
                 if (tracing != null) {
                     tracing.addMark(DeploymentTracing.Mark.DOL_LOADED);
@@ -358,9 +358,9 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
                archivist.copyInto(dpa, targetArchive, false);
             }
         }
-    }    
+    }
 
-    protected void saveAppDescriptor(Application application, 
+    protected void saveAppDescriptor(Application application,
         DeploymentContext context) throws IOException {
         if (application != null) {
             ReadableArchive archive = archiveFactory.openArchive(
@@ -379,13 +379,13 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         }
     }
 
-    private void addModuleConfig(DeploymentContext dc, 
+    private void addModuleConfig(DeploymentContext dc,
         Application application) {
         DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
         if (!params.origin.isDeploy()) {
             return;
         }
-        
+
         try {
             com.sun.enterprise.config.serverbeans.Application app_w = dc.getTransientAppMetaData(com.sun.enterprise.config.serverbeans.ServerTags.APPLICATION, com.sun.enterprise.config.serverbeans.Application.class);
             if (app_w != null) {
@@ -408,10 +408,10 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
     }
 
     private void validateKeepStateOption(DeploymentContext context, DeployCommandParameters params, Application app) {
-        if ((params.keepstate != null && params.keepstate) || 
+        if ((params.keepstate != null && params.keepstate) ||
             app.getKeepState()) {
             if (!isDASTarget(context, params)) {
-                // for non-DAS target, and keepstate is set to true either 
+                // for non-DAS target, and keepstate is set to true either
                 // through deployment option or deployment descriptor
                 // explicitly set the deployment option to false
                 params.keepstate = false;
@@ -421,7 +421,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
                 subReport.setMessage(warningMsg);
                 context.getLogger().log(Level.WARNING, warningMsg);
             }
-        }    
+        }
     }
 
     private boolean isDASTarget(DeploymentContext context, DeployCommandParameters params) {
@@ -433,7 +433,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
                 targets = domain.getAllReferencedTargetsForApplication(
                     params.name);
             }
-            if (targets.size() == 1 && 
+            if (targets.size() == 1 &&
                 DeploymentUtils.isDASTarget(targets.get(0))) {
                 return true;
             }

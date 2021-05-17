@@ -59,7 +59,7 @@ public class ExceptionRange {
     return excHandlerPC;
   }
 
-  /** 
+  /**
    * return the exception specification
    * a null return value means a catch of any (try/finally)
    */
@@ -68,11 +68,11 @@ public class ExceptionRange {
   }
 
   /**
-   * constructor 
+   * constructor
    */
 
   public ExceptionRange(InsnTarget startPC, InsnTarget endPC,
-			InsnTarget handlerPC, ConstClass catchType) {
+            InsnTarget handlerPC, ConstClass catchType) {
     excStartPC = startPC;
     excEndPC = endPC;
     excHandlerPC = handlerPC;

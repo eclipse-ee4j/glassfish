@@ -22,7 +22,7 @@ import org.glassfish.common.util.timer.TimerSchedule;
 import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 
 /**
- * A runtime representation of the user-defined calendar-based 
+ * A runtime representation of the user-defined calendar-based
  * timeout expression for an enterprise bean timer.
  *
  * @author mvatkina

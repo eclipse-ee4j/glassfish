@@ -27,7 +27,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Any property for which help text needs to be specified should be marked with this annotation. The help text will be
  * calculated and returned as part of the OPTIONS response.
- * 
+ *
  * @author jdlee
  */
 @Qualifier
@@ -37,14 +37,14 @@ import org.jvnet.hk2.annotations.Contract;
 public @interface HelpText {
     /**
      * The name of the resource bundle from which to retrieve the help text
-     * 
+     *
      * @return
      */
     String bundle();
 
     /**
      * The key in the bundle for the help text
-     * 
+     *
      * @return
      */
     String key();

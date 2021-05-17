@@ -38,6 +38,6 @@
         <ant dir="endpoint_mapping_consumer" target="clean"/>
         <ant dir="add-numbers" target="clean"/>
         <ant dir="enterprise_app" target="clean"/>
-	</target>
+    </target>
 
 </project>

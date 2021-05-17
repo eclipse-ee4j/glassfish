@@ -20,7 +20,7 @@ import java.net.*;
 
 import com.sun.ejte.ccl.reporter.*;
 
-public class WebTest {    
+public class WebTest {
 
     static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
@@ -36,7 +36,7 @@ public class WebTest {
         String portS = args[1];
         String contextRoot = args[2];
         int port = new Integer(portS).intValue();
-        
+
         try {
             goGet(host, port, contextRoot + "/test.jsp" );
             stat.addStatus(TEST_NAME, stat.PASS);
@@ -73,7 +73,7 @@ public class WebTest {
                 if (line.indexOf("PASS") >= 0) {
                     pass = true;
                     break;
-                } 
+                }
             }
         } finally {
             try {

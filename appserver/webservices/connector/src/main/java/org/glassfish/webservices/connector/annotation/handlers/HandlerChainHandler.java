@@ -75,7 +75,7 @@ import org.jvnet.hk2.annotations.Service;
 public class HandlerChainHandler extends AbstractHandler {
 
     private static final Logger conLogger = LogUtils.getLogger();
-    
+
     /** Creates a new instance of HandlerChainHandler */
     public HandlerChainHandler() {
     }
@@ -91,16 +91,16 @@ public class HandlerChainHandler extends AbstractHandler {
         dependencies[1] = WebServiceRef.class;
         dependencies[2] = WebServiceProvider.class;
         return dependencies;
-    }    
-    
+    }
+
     public HandlerProcessingResult processAnnotation(AnnotationInfo annInfo)
         throws AnnotationProcessorException {
-        
+
         AnnotatedElementHandler annCtx = annInfo.getProcessingContext().getHandler();
-        AnnotatedElement annElem = annInfo.getAnnotatedElement();    
+        AnnotatedElement annElem = annInfo.getAnnotatedElement();
         Class declaringClass;
-        
-        boolean serviceSideChain = 
+
+        boolean serviceSideChain =
                 ((annElem.getAnnotation(WebService.class) != null) ||
                  (annElem.getAnnotation(WebServiceProvider.class) != null)) ? true : false;
         if(serviceSideChain) {
@@ -123,7 +123,7 @@ public class HandlerChainHandler extends AbstractHandler {
         }
         return processHandlerChainAnnotation(annInfo, annCtx, annElem, declaringClass, serviceSideChain);
     }
-    
+
     public HandlerProcessingResult processHandlerChainAnnotation(AnnotationInfo annInfo,
             AnnotatedElementHandler annCtx, AnnotatedElement annElem, Class declaringClass, boolean serviceSideChain)
             throws AnnotationProcessorException {
@@ -132,10 +132,10 @@ public class HandlerChainHandler extends AbstractHandler {
         if(serviceSideChain) {
             // This is a service handler chain
             // Ignore @WebService annotation on an interface; process only those in an actual service impl class
-            if (declaringClass.isInterface()) {         
-                return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);            
-            }           
-        
+            if (declaringClass.isInterface()) {
+                return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
+            }
+
             // The @HandlerChain can be in the impl class (typically in the java-wsdl case) or
             // can be in the SEI also. Check if there is handler chain in the impl class.
             // If so, the @HandlerChain in impl class gets precedence
@@ -153,7 +153,7 @@ public class HandlerChainHandler extends AbstractHandler {
                                     localStrings.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
                                         "class {0} referenced from annotation symbol cannot be loaded",
                                         new Object[] { webService.endpointInterface() }), annInfo);
-                        } 
+                        }
                         if (endpointIntf.getAnnotation(HandlerChain.class)!=null) {
                             hChain = (HandlerChain) endpointIntf.getAnnotation(HandlerChain.class);
                         }
@@ -165,14 +165,14 @@ public class HandlerChainHandler extends AbstractHandler {
             hChain = annElem.getAnnotation(HandlerChain.class);
             clientSideHandlerChain = true;
         }
-        
+
         // At this point the hChain should be the annotation to use.
         if(hChain == null) {
-            return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);            
+            return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
         }
         // At this point the hChain should be the annotation to use.
         String handlerFile = hChain.file();
-        
+
         HandlerChainContainer[] containers=null;
         if (annCtx instanceof HandlerContext) {
             containers = ((HandlerContext) annCtx).getHandlerChainContainers(serviceSideChain, declaringClass);
@@ -186,7 +186,7 @@ public class HandlerChainHandler extends AbstractHandler {
                         "component referenced from annotation symbol cannot be found"),
                     annInfo);
         }
-        
+
         try {
             URL handlerFileURL=null;
             try {
@@ -194,7 +194,7 @@ public class HandlerChainHandler extends AbstractHandler {
             } catch(java.net.MalformedURLException e) {
                 // swallowing purposely
             }
-                
+
             InputStream handlerFileStream;
             if (handlerFileURL==null) {
                 ClassLoader clo = annInfo.getProcessingContext().getProcessingInput().getClassLoader();
@@ -202,7 +202,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 if (handlerFileStream==null) {
                     String y = declaringClass.getPackage().getName().replaceAll("\\.","/");
                     handlerFileStream = clo.getResourceAsStream(
-                            declaringClass.getPackage().getName().replaceAll("\\.","/") + "/" + handlerFile);                    
+                            declaringClass.getPackage().getName().replaceAll("\\.","/") + "/" + handlerFile);
                 }
                 if(handlerFileStream==null) {
                     // This could be a handler file generated by jaxws customization
@@ -210,7 +210,7 @@ public class HandlerChainHandler extends AbstractHandler {
                     if(annElem instanceof Class) {
                         String y = ((Class)annElem).getPackage().getName().replaceAll("\\.","/");
                         handlerFileStream = clo.getResourceAsStream(
-                                ((Class)annElem).getPackage().getName().replaceAll("\\.","/") + "/" + handlerFile);                                            
+                                ((Class)annElem).getPackage().getName().replaceAll("\\.","/") + "/" + handlerFile);
                     }
                 }
             } else {
@@ -220,7 +220,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 throw new AnnotationProcessorException(
                         localStrings.getLocalString(
                             "enterprise.deployment.annotation.handlers.handlerfilenotfound",
-                            "handler file {0} not found", 
+                            "handler file {0} not found",
                             new Object[] { handlerFile }),
                          annInfo);
             }
@@ -230,7 +230,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 factory.setNamespaceAware(true);
                 factory.setExpandEntityReferences(false);
                 factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-                
+
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 document = builder.parse(handlerFileStream);
             } catch (SAXParseException spe) {
@@ -249,8 +249,8 @@ public class HandlerChainHandler extends AbstractHandler {
                 if (!container.hasHandlerChain()) {
                     fromDD = false;
                     processHandlerFile(document, container);
-                } 
-                
+                }
+
                 // we now need to create the right context to push on the stack
                 // and manually invoke the handlers annotation processing since
                 // we know they are Jax-ws handlers.
@@ -267,25 +267,25 @@ public class HandlerChainHandler extends AbstractHandler {
                                 conLogger.log(Level.WARNING, LogUtils.DDHANDLER_NOT_FOUND, className);
                             } else {
                                 conLogger.log(Level.WARNING, LogUtils.HANDLER_FILE_HANDLER_NOT_FOUND,
-                                    new Object[] {className, handlerFile});                                   
+                                    new Object[] {className, handlerFile});
                             }
                         }
                     }
                 }
-                // we have the list of handler classes, we can now 
-                // push the context and call back annotation processing.                                
+                // we have the list of handler classes, we can now
+                // push the context and call back annotation processing.
                 Descriptor jndiContainer=null;
-                if (serviceSideChain) { 
-                    WebServiceEndpoint endpoint = (WebServiceEndpoint) container; 
+                if (serviceSideChain) {
+                    WebServiceEndpoint endpoint = (WebServiceEndpoint) container;
                     if (DOLUtils.warType().equals(endpoint.getBundleDescriptor().getModuleType())) {
-                        jndiContainer = endpoint.getBundleDescriptor();                 
+                        jndiContainer = endpoint.getBundleDescriptor();
                     } else {
                         EjbDescriptor ejbDescriptor = endpoint.getEjbComponentImpl();
                         if(ejbDescriptor instanceof Descriptor) {
                             jndiContainer = Descriptor.class.cast(ejbDescriptor);
                         }
                     }
-                } else { 
+                } else {
                     ServiceReferenceDescriptor ref = (ServiceReferenceDescriptor) container;
                     if(DOLUtils.ejbType().equals(ref.getBundleDescriptor().getModuleType())) {
                         EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ref.getBundleDescriptor();
@@ -307,14 +307,14 @@ public class HandlerChainHandler extends AbstractHandler {
                     } else {
                         jndiContainer = ref.getBundleDescriptor();
                     }
-                } 
-                ResourceContainerContextImpl newContext = new ResourceContainerContextImpl(jndiContainer); 
-                ProcessingContext ctx = annInfo.getProcessingContext(); 
-                
+                }
+                ResourceContainerContextImpl newContext = new ResourceContainerContextImpl(jndiContainer);
+                ProcessingContext ctx = annInfo.getProcessingContext();
+
                 ctx.pushHandler(newContext);
                 // process the classes
                 annInfo.getProcessingContext().getProcessor().process(
-                        annInfo.getProcessingContext(), 
+                        annInfo.getProcessingContext(),
                         handlerClasses.toArray(new Class[handlerClasses.size()]));
 
                 ctx.popHandler();
@@ -322,12 +322,12 @@ public class HandlerChainHandler extends AbstractHandler {
         } catch(Throwable t) {
             throw new AnnotationProcessorException(t.getMessage(), annInfo);
         }
-        return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);        
+        return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
     }
 
-    private void processHandlerFile(Document document, HandlerChainContainer ep) 
+    private void processHandlerFile(Document document, HandlerChainContainer ep)
         throws SAXException {
-        
+
         NodeList handlerChainList = document.getElementsByTagNameNS("http://java.sun.com/xml/ns/javaee",
                 WebServicesTagNames.HANDLER_CHAIN);
         if(handlerChainList.getLength() != 0) {
@@ -339,7 +339,7 @@ public class HandlerChainHandler extends AbstractHandler {
         handlerChainList = document.getElementsByTagName(WebServicesTagNames.HANDLER_CHAIN);
         processHandlerChains(handlerChainList, ep);
     }
-    
+
     private String getAsQName(Node n) {
         String nodeValue = n.getTextContent();
         int index = nodeValue.indexOf(":");
@@ -351,9 +351,9 @@ public class HandlerChainHandler extends AbstractHandler {
         return("{"+ns+"}"+nodeValue.substring(index+1));
     }
 
-    private void processHandlerChains(NodeList handlerChainList, HandlerChainContainer ep) 
+    private void processHandlerChains(NodeList handlerChainList, HandlerChainContainer ep)
         throws SAXException {
-        
+
         for(int i=0; i<handlerChainList.getLength(); i++) {
             WebServiceHandlerChain hc = new WebServiceHandlerChain();
             Node handlerChain = handlerChainList.item(i);
@@ -377,9 +377,9 @@ public class HandlerChainHandler extends AbstractHandler {
         }
     }
 
-    private void processHandlers(Node handler, WebServiceHandlerChain hc) 
+    private void processHandlers(Node handler, WebServiceHandlerChain hc)
         throws SAXException {
-        
+
         Node child = handler.getFirstChild();
         com.sun.enterprise.deployment.WebServiceHandler h =
                     new com.sun.enterprise.deployment.WebServiceHandler();
@@ -400,5 +400,5 @@ public class HandlerChainHandler extends AbstractHandler {
             child = child.getNextSibling();
         }
         hc.addHandler(h);
-    }        
+    }
 }

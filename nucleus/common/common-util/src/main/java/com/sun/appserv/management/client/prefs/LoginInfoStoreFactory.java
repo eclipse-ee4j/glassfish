@@ -24,12 +24,12 @@ import com.sun.appserv.management.client.prefs.LoginInfoStoreFactory;
  * @since Appserver 9.0
  */
 public class LoginInfoStoreFactory {
-    
+
     /** Private constructor.
      */
     private LoginInfoStoreFactory() {
     }
-    
+
     /** Returns the store that is represented by given class name. The parameter must
      * implement the {@link LoginInfoStore} interface. If a null is passed, an instance of the default
      * store {@link MemoryHashLoginInfoStore} is returned.
@@ -39,21 +39,21 @@ public class LoginInfoStoreFactory {
      * @throws StoreException if the construction of default store results in problems
      * @throws ClassNotFoundException if the given class could not be loaded
      */
-    public static LoginInfoStore getStore(final String storeImplClassName) 
+    public static LoginInfoStore getStore(final String storeImplClassName)
         throws StoreException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         LoginInfoStore store = null;
         if (storeImplClassName == null)
             store = getDefaultStore();
-        else 
+        else
             store = getCustomStore(storeImplClassName);
         return ( store );
     }
-    
+
     public static LoginInfoStore getDefaultStore() throws StoreException {
         return ( new MemoryHashLoginInfoStore() );
     }
-    
-    private static LoginInfoStore getCustomStore(final String icn) 
+
+    private static LoginInfoStore getCustomStore(final String icn)
         throws ClassNotFoundException, IllegalAccessException, InstantiationException{
         final Class ic  = Class.forName(icn);
         final String in = LoginInfoStore.class.getName();
@@ -62,7 +62,7 @@ public class LoginInfoStoreFactory {
         final LoginInfoStore store = (LoginInfoStore) ic.newInstance();
         return ( store );
     }
-    
+
     private static boolean isStore(final Class c) {
         final Class[] ifs = c.getInterfaces();
         final Class sc    = LoginInfoStore.class;

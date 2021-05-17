@@ -35,8 +35,8 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
 
     private static final Map<String, String[]> services = new HashMap<String, String[]>();
     static {
-        //        services.put(ContainerProvider.class.getName(), new String[] { 
-        //            "org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainerProvider" 
+        //        services.put(ContainerProvider.class.getName(), new String[] {
+        //            "org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpContainerProvider"
         //        });
         services.put(AutoDiscoverable.class.getName(), new String[] {
                 //            "org.glassfish.jersey.server.validation.internal.ValidationAutoDiscoverable",
@@ -45,7 +45,7 @@ public class AdminJerseyServiceIteratorProvider extends ServiceIteratorProvider 
                 //                "org.glassfish.jersey.server.wadl.internal.WadlAutoDiscoverable"
         });
         services.put(ComponentProvider.class.getName(), new String[] {
-                //            "org.glassfish.jersey.gf.cdi.CdiComponentProvider", 
+                //            "org.glassfish.jersey.gf.cdi.CdiComponentProvider",
                 //                "org.glassfish.jersey.gf.ejb.EjbComponentProvider"
         });
     }

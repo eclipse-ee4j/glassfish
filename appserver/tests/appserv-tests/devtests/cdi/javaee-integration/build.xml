@@ -77,7 +77,7 @@
 
     <target name="javaee-int">
         <record name="javaee-int.output" action="start" />
-        
+
         <ant dir="builtin-beans" target="${javaee-int-target}" />
         <ant dir="servlet-context-injection-cdi" target="${javaee-int-target}" />
         <ant dir="simple-managed-bean-interceptor-nonnull-package" target="${javaee-int-target}" />
@@ -97,14 +97,14 @@
 
     <target name="usage">
         <echo> Usage:
-		ant all (Executes all the javaee-int tests)
-		ant clean (cleans all the javaee-int tests)
-		ant build (builds all the javaee-int tests)
-		ant setup (sets up all resources for javaee-int tests)
-		ant deploy (deploys all the javaee-int apps)
-		ant run (Executes all the javaee-int tests)
-		ant undeploy (undeploys all the  javaee-int apps)
-		ant unsetup (unsets all resources for javaee-int tests)
-	</echo>
+        ant all (Executes all the javaee-int tests)
+        ant clean (cleans all the javaee-int tests)
+        ant build (builds all the javaee-int tests)
+        ant setup (sets up all resources for javaee-int tests)
+        ant deploy (deploys all the javaee-int apps)
+        ant run (Executes all the javaee-int tests)
+        ant undeploy (undeploys all the  javaee-int apps)
+        ant unsetup (unsets all resources for javaee-int tests)
+    </echo>
     </target>
 </project>

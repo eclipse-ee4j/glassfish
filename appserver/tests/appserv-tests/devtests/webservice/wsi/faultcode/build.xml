@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+    </exec>
   </target>
 
   <target name="compile" depends="">
@@ -58,11 +58,11 @@
   <target name="wscompile-appclient" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d output -s output -classpath . wscompile_config_appclient.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/faultcode">
-       <fileset dir="output/faultcode" 
+       <fileset dir="output/faultcode"
         includes="SimpleTestService.class, SimpleTest.class"/>
     </copy>
     <delete dir="output"/>
@@ -71,11 +71,11 @@
   <target name="wscompile-ejb" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d output -s output -classpath . wscompile_config_ejb.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/faultcodeejb">
-       <fileset dir="output/faultcodeejb" 
+       <fileset dir="output/faultcodeejb"
         includes="SimpleTestService.class, SimpleTest.class"/>
     </copy>
     <delete dir="output"/>
@@ -84,24 +84,24 @@
   <target name="assemble" depends="init-common, compile">
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="faultcode.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="FaultCodeMapping_appclient.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="FaultCodeMapping_appclient.xml"/>
     <antcall target="appclient-jar-common">
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="FaultCodeMapping_appclient.xml,META-INF/wsdl/**,faultcode/*.class" />
 
     </antcall>
-    <copy todir="${build.classes.dir}" 
-	 file="FaultCodeMapping_ejb.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="FaultCodeMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
-      <param name="ejbjar.classes" 
+      <param name="ejbjar.classes"
              value="FaultCodeMapping_ejb.xml,META-INF/wsdl/**,faultcodeejb/*.class" />
 
     </antcall>
     <antcall target="ear-common" />
-  </target> 
+  </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -121,29 +121,29 @@
           <param name="appclient.application.args" value="http://${http.host}:${http.port}/faultcodeejb/FaultCodeTest"/>
         </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
   <target name="gen-mapping-appclient" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping FaultCodeMapping_appclient.xml wscompile_config_appclient.xml"/>
     </antcall>
   </target>
 
   <target name="gen-mapping-ejb" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping FaultCodeMapping_ejb.xml wscompile_config_ejb.xml"/>
     </antcall>
   </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes the WebServices test)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes the WebServices test)
+    </echo>
     </target>
 </project>

@@ -82,7 +82,7 @@ public class MTProvisionCommand implements AdminCommand, AdminCommandSecurity.Ac
 
     @Inject
     ArchiveFactory archiveFactory;
-    
+
     private Application app;
     private ApplicationRef appRef;
 
@@ -99,7 +99,7 @@ public class MTProvisionCommand implements AdminCommand, AdminCommandSecurity.Ac
         }
         return accessChecks;
     }
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MTProvisionCommand.class);
 
     public void execute(AdminCommandContext context) {

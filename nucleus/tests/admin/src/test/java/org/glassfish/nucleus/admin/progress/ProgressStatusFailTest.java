@@ -27,7 +27,7 @@ import static org.testng.AssertJUnit.*;
  */
 @Test(testName="ProgressStatusFailTest")
 public class ProgressStatusFailTest {
-    
+
     public void failDuringExecution() {
         NadminReturn result = nadminWithOutput("progress-fail-in-half");
         assertFalse(result.returnValue);
@@ -35,7 +35,7 @@ public class ProgressStatusFailTest {
         assertFalse(prgs.isEmpty());
         assertEquals(50, prgs.get(prgs.size() - 1).getValue());
     }
-    
+
     public void timeout() {
         NadminReturn result = nadminWithOutput(6 * 1000, "progress-custom", "3x1", "1x8", "2x1");
         assertFalse(result.returnValue);
@@ -43,5 +43,5 @@ public class ProgressStatusFailTest {
         assertFalse(prgs.isEmpty());
         assertEquals(50, prgs.get(prgs.size() - 1).getValue());
     }
-    
+
 }

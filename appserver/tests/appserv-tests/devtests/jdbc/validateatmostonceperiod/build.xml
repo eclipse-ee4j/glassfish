@@ -98,8 +98,8 @@
             <param name="appclient.application.args" value="1"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="2"/>
@@ -111,8 +111,8 @@
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.${poolname}.validate_atmost_once_period_in_seconds=60"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="3"/>

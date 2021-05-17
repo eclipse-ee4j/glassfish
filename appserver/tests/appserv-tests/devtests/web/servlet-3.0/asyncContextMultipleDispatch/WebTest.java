@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for repeated calls to AsyncContext#dispatch with one 
+ * Unit test for repeated calls to AsyncContext#dispatch with one
  * intervening ServletRequest#startAsync. This unit test also checks
  * to make sure that the intervening ServletRequest#startAsync notifies
  * the registered AsyncListener at its onStartAsync method, and provides
@@ -45,7 +45,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) throws Exception {
 
         stat.addDescription("Unit test for AsyncContext#dispatch");
@@ -59,11 +59,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         HttpURLConnection conn = getHttpURLConnection("/TestServlet");
         conn.disconnect();
 

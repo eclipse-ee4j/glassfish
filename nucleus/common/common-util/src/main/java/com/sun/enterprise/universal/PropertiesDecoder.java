@@ -37,7 +37,7 @@ public class PropertiesDecoder {
       * @param props The flattened string properties
       * @return A Map of the String keys and values.  It will return an
       */
-    
+
     public static Map<String,String> unflatten(final String s) {
         if(!ok(s))
             return Collections.emptyMap();

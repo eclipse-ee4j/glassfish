@@ -73,7 +73,7 @@ public class WoodstockHandler {
      * <p>
      * This handler will delete file from temp directory</p>
      * @param handlerCtx
-     * @throws IOException 
+     * @throws IOException
      */
     @Handler(id = "deleteFileFromTempDir",
             input = {
@@ -112,7 +112,7 @@ public class WoodstockHandler {
      * <p>
      * Output value: "uploadDir" -- Type: <code>java.lang.String</code></p>
      *
-     * @param	handlerCtx	The HandlerContext.
+     * @param    handlerCtx    The HandlerContext.
      */
     @Handler(id = "uploadFileToTempDir",
             input = {
@@ -154,17 +154,17 @@ public class WoodstockHandler {
                 if (prefix.length() <= 2) {
                     prefix = prefix + new SecureRandom().nextInt(100000);
                 }
-                
+
                 tmpFile = File.createTempFile(prefix, suffix);
-                tmpFile.deleteOnExit();      
-                
+                tmpFile.deleteOnExit();
+
                 //delete the file, otherwise FileUtils#moveTo throws file already exist error
                 tmpFile.delete();
-                
+
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.writeToTmpFile"));
                 }
-                                
+
                 uploadedFile.write(tmpFile);
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine(GuiUtil.getCommonMessage("log.afterWriteToTmpFile"));

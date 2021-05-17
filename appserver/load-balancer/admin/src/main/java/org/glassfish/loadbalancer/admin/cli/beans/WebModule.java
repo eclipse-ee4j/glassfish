@@ -15,9 +15,9 @@
  */
 
 /**
- *	This generated bean class WebModule matches the schema element web-module
+ *    This generated bean class WebModule matches the schema element web-module
  *
- *	Generated on Thu May 06 00:44:23 PDT 2004
+ *    Generated on Thu May 06 00:44:23 PDT 2004
  */
 package org.glassfish.loadbalancer.admin.cli.beans;
 
@@ -28,13 +28,13 @@ import java.util.*;
 public class WebModule extends org.netbeans.modules.schema2beans.BaseBean {
 
     static Vector comparators = new Vector();
-    static public final String CONTEXTROOT = "ContextRoot";	// NOI18N
-    static public final String ENABLED = "Enabled";	// NOI18N
-    static public final String DISABLETIMEOUTINMINUTES = "DisableTimeoutInMinutes";	// NOI18N
-    static public final String ERRORURL = "ErrorUrl";	// NOI18N
-    static public final String IDEMPOTENT_URL_PATTERN = "IdempotentUrlPattern";	// NOI18N
-    static public final String IDEMPOTENTURLPATTERNURLPATTERN = "IdempotentUrlPatternUrlPattern";	// NOI18N
-    static public final String IDEMPOTENTURLPATTERNNOOFRETRIES = "IdempotentUrlPatternNoOfRetries";	// NOI18N
+    static public final String CONTEXTROOT = "ContextRoot";    // NOI18N
+    static public final String ENABLED = "Enabled";    // NOI18N
+    static public final String DISABLETIMEOUTINMINUTES = "DisableTimeoutInMinutes";    // NOI18N
+    static public final String ERRORURL = "ErrorUrl";    // NOI18N
+    static public final String IDEMPOTENT_URL_PATTERN = "IdempotentUrlPattern";    // NOI18N
+    static public final String IDEMPOTENTURLPATTERNURLPATTERN = "IdempotentUrlPatternUrlPattern";    // NOI18N
+    static public final String IDEMPOTENTURLPATTERNNOOFRETRIES = "IdempotentUrlPatternNoOfRetries";    // NOI18N
 
     public WebModule() {
         this(Common.USE_DEFAULT_VALUES);
@@ -216,19 +216,19 @@ public class WebModule extends org.netbeans.modules.schema2beans.BaseBean {
         boolean restrictionFailure = false;
         // Validating property contextRoot
         if (getContextRoot() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getContextRoot() == null", "contextRoot", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getContextRoot() == null", "contextRoot", this);    // NOI18N
         }
         // Validating property enabled
         if (getEnabled() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getEnabled() == null", "enabled", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getEnabled() == null", "enabled", this);    // NOI18N
         }
         // Validating property disableTimeoutInMinutes
         if (getDisableTimeoutInMinutes() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getDisableTimeoutInMinutes() == null", "disableTimeoutInMinutes", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getDisableTimeoutInMinutes() == null", "disableTimeoutInMinutes", this);    // NOI18N
         }
         // Validating property errorUrl
         if (getErrorUrl() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getErrorUrl() == null", "errorUrl", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getErrorUrl() == null", "errorUrl", this);    // NOI18N
         }
         // Validating property idempotentUrlPattern
         for (int _index = 0; _index < sizeIdempotentUrlPattern();
@@ -246,11 +246,11 @@ public class WebModule extends org.netbeans.modules.schema2beans.BaseBean {
         Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
-        str.append("IdempotentUrlPattern[" + this.sizeIdempotentUrlPattern() + "]");	// NOI18N
+        str.append("IdempotentUrlPattern[" + this.sizeIdempotentUrlPattern() + "]");    // NOI18N
         for (int i = 0; i < this.sizeIdempotentUrlPattern(); i++) {
             str.append(indent + "\t");
             str.append("#" + i + ":");
-            str.append(indent + "\t");	// NOI18N
+            str.append(indent + "\t");    // NOI18N
             str.append((this.isIdempotentUrlPattern(i) ? "true" : "false"));
             this.dumpAttributes(IDEMPOTENT_URL_PATTERN, i, str, indent);
         }
@@ -260,8 +260,8 @@ public class WebModule extends org.netbeans.modules.schema2beans.BaseBean {
     @Override
     public String dumpBeanNode() {
         StringBuffer str = new StringBuffer();
-        str.append("WebModule\n");	// NOI18N
-        this.dump(str, "\n  ");	// NOI18N
+        str.append("WebModule\n");    // NOI18N
+        this.dump(str, "\n  ");    // NOI18N
         return str.toString();
     }
 }

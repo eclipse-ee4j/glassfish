@@ -52,7 +52,7 @@
     </developers>
 
     <modules>
-	<module>concurrent-connector</module>
-	<module>concurrent-impl</module>
+    <module>concurrent-connector</module>
+    <module>concurrent-impl</module>
     </modules>
 </project>

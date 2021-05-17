@@ -69,7 +69,7 @@ public class ReadOnlyBeanContainer
     extends EntityContainer
     implements ReadOnlyBeanRefreshEventHandler
 {
-    
+
     private long refreshPeriodInMillis = 0;
 
     // Sequence number incremented each time a bean-level refresh is requested.
@@ -77,25 +77,25 @@ public class ReadOnlyBeanContainer
     // to determine when it needs updating due to bean-level refresh.
     private int beanLevelSequenceNum = 1;
 
-    // Last time a bean-level timeout refresh event occurred. 
-    private long beanLevelLastRefreshRequestedAt = 0;                 
+    // Last time a bean-level timeout refresh event occurred.
+    private long beanLevelLastRefreshRequestedAt = 0;
 
     private volatile long currentTimeInMillis = System.currentTimeMillis();
-    
+
     // timer task for refreshing or null if no refresh.
     private TimerTask refreshTask = null;
 
     private EJBObjectCache robCache;
-    
+
     private DistributedReadOnlyBeanService distributedReadOnlyBeanService;
 
     private volatile Map<FinderResultsKey, FinderResultsValue> finderResultsCache =
         new ConcurrentHashMap<FinderResultsKey, FinderResultsValue>();
-    
+
     private static final int FINDER_LOCK_SIZE = 8 * 1024;
-    
+
     private Object[] finderLocks = new Object[FINDER_LOCK_SIZE];
-   
+
     //Don't make this as a static. In future, we may want to
     //  support bean level flag for this
     private boolean RELATIVE_TIME_CHECK_MODE = false;
@@ -105,7 +105,7 @@ public class ReadOnlyBeanContainer
     {
         //super(ContainerType.READ_ONLY, desc, loader);
         super(ContainerType.ENTITY, desc, loader, sm);
-        
+
         EjbEntityDescriptor ed = (EjbEntityDescriptor)desc;
         refreshPeriodInMillis =
             ed.getIASEjbExtraDescriptors().getRefreshPeriodInSeconds() * 1000L;
@@ -128,7 +128,7 @@ public class ReadOnlyBeanContainer
                         "com.sun.ejb.containers.readonly.relative.refresh.mode"));
                 _logger.log(Level.FINE, "RELATIVE_TIME_CHECK_MODE: " + RELATIVE_TIME_CHECK_MODE);
             } catch (Exception ex) {
-            	_logger.log(Level.FINE, "(Ignorable) Exception while initializing RELATIVE_TIME_CHECK_MODE", ex);
+                _logger.log(Level.FINE, "(Ignorable) Exception while initializing RELATIVE_TIME_CHECK_MODE", ex);
             }
 
             Timer timer = ejbContainerUtilImpl.getTimer();
@@ -137,15 +137,15 @@ public class ReadOnlyBeanContainer
                 timer.scheduleAtFixedRate(refreshTask, timerFrequency*1000L, timerFrequency*1000L);
             } else {
                 refreshTask = new RefreshTask();
-                timer.scheduleAtFixedRate(refreshTask, refreshPeriodInMillis, 
+                timer.scheduleAtFixedRate(refreshTask, refreshPeriodInMillis,
                                       refreshPeriodInMillis);
             }
         } else {
             refreshPeriodInMillis = 0;
         }
-        
+
         for (int i=0; i<FINDER_LOCK_SIZE; i++) {
-        	finderLocks[i] = new Object();
+            finderLocks[i] = new Object();
         }
 
         // Create read-only bean cache
@@ -160,55 +160,55 @@ public class ReadOnlyBeanContainer
             int cacheSize = (cacheProp.maxCacheSize <= 0) ?
                 DEFAULT_CACHE_SIZE : cacheProp.maxCacheSize;
             robCache = new FIFOEJBObjectCache(ejbDescriptor.getName());
-        
-            robCache.init(cacheSize, 
-                          cacheProp.numberOfVictimsToSelect, 
+
+            robCache.init(cacheSize,
+                          cacheProp.numberOfVictimsToSelect,
                           idleTimeoutInMillis, 1.0F, null);
             // .setEJBObjectCacheListener(
             //     new EJBObjectCacheVictimHandler());
         }
-        
+
         this.distributedReadOnlyBeanService =
             DistributedEJBServiceFactory.getDistributedEJBService()
                 .getDistributedReadOnlyBeanService();
         this.distributedReadOnlyBeanService.addReadOnlyBeanRefreshEventHandler(
                 getContainerId(), getClassLoader(), this);
-        
+
 
     }
-    
+
     private void updateBeanLevelRefresh() {
-               
+
         beanLevelSequenceNum++;
         beanLevelLastRefreshRequestedAt = this.currentTimeInMillis;
 
         if( _logger.isLoggable(Level.FINE) ) {
-            _logger.log(Level.FINE, "updating bean-level refresh for " + 
-                        " read-only bean " + ejbDescriptor.getName() + 
-                        " at " + new Date(beanLevelLastRefreshRequestedAt) + 
+            _logger.log(Level.FINE, "updating bean-level refresh for " +
+                        " read-only bean " + ejbDescriptor.getName() +
+                        " at " + new Date(beanLevelLastRefreshRequestedAt) +
                         " beanLevelSequenceNum = " + beanLevelSequenceNum);
 
-            
+
         }
 
         // Clear out bean-level finder results cache.
         if( _logger.isLoggable(Level.FINE) ) {
-            _logger.log(Level.FINE, "Clearing " + 
-            		finderResultsCache.size() + " items from " + 
+            _logger.log(Level.FINE, "Clearing " +
+                    finderResultsCache.size() + " items from " +
                         "finder results cache");
         }
 
         finderResultsCache =
             new ConcurrentHashMap<FinderResultsKey, FinderResultsValue>();
 
-        
+
     }
 
     protected void callEJBStore(EntityBean ejb, EntityContextImpl context) {
-        // this method in the ReadOnlyBean case should be a no-op 
+        // this method in the ReadOnlyBean case should be a no-op
         // and should not throw any exception.
     }
-    
+
     protected ComponentContext _getContext(EjbInvocation inv) {
         ComponentContext ctx = super._getContext(inv);
 
@@ -224,7 +224,7 @@ public class ReadOnlyBeanContainer
         }
         return ctx;
     }
-    
+
     protected void callEJBLoad(EntityBean ejb, EntityContextImpl entityCtx,
                                boolean activeTx)
         throws Exception
@@ -232,7 +232,7 @@ public class ReadOnlyBeanContainer
         // ReadOnlyContextImpl should always be used in conjunction with ReadOnlyBeanContainer
         assert entityCtx instanceof ReadOnlyContextImpl;
         ReadOnlyContextImpl context = (ReadOnlyContextImpl) entityCtx;
-               
+
         ReadOnlyBeanInfo robInfo = context.getReadOnlyBeanInfo();
 
         // Grab the pk-specific lock before doing the refresh comparisons.
@@ -245,18 +245,18 @@ public class ReadOnlyBeanContainer
         long  pkLastRefreshedAt = 0;
 
         synchronized(robInfo) {
-            
+
             int currentBeanLevelSequenceNum = beanLevelSequenceNum;
 
-            if( robInfo.beanLevelSequenceNum != currentBeanLevelSequenceNum) { 
+            if( robInfo.beanLevelSequenceNum != currentBeanLevelSequenceNum) {
 
                 if( _logger.isLoggable(Level.FINE) ) {
                     _logger.log(Level.FINE, "REFRESH DUE TO BEAN-LEVEL UPDATE:"
-                                + " Bean-level sequence num = " + 
-                                beanLevelSequenceNum + 
+                                + " Bean-level sequence num = " +
+                                beanLevelSequenceNum +
                                 robInfo + " current time is " + new Date());
                 }
-                
+
                 robInfo.refreshNeeded = true;
             } else if (RELATIVE_TIME_CHECK_MODE && (refreshPeriodInMillis > 0)) { // 0 implies no time based refresh
                 if ((currentTimeInMillis - robInfo.lastRefreshedAt) > refreshPeriodInMillis) {
@@ -268,17 +268,17 @@ public class ReadOnlyBeanContainer
 
                     robInfo.refreshNeeded = true;
                 }
-            } 
-            
+            }
+
             // Refresh could be true EITHER because time-based refresh
             // occurred or programmatic refresh of this PK.
             if (robInfo.refreshNeeded) {
-                
+
                 if( _logger.isLoggable(Level.FINE) ) {
                     _logger.log(Level.FINE, " PK-LEVEL REFRESH : "
                                 + robInfo + " current time is " + new Date());
                 }
-                
+
                 try {
 
                     if( isContainerManagedPers ) {
@@ -299,46 +299,46 @@ public class ReadOnlyBeanContainer
                             // if it's present on a BMP bean class
                             BeanStateSynchronization beanStateSynch =
                                 (BeanStateSynchronization) ejb;
-                            
+
                             beanStateSynch.ejb__refresh
                                 (entityCtx.getPrimaryKey());
                         }
 
                     }
-                    
-                } finally {                    
-                    // Always set refreshNeeded to false 
+
+                } finally {
+                    // Always set refreshNeeded to false
                     robInfo.refreshNeeded = false;
                 }
 
                 // Rob info only updated if no errors so far.
 
                 updateAfterRefresh(robInfo);
-            }                     
-                        
+            }
+
             pkLevelSequenceNum = robInfo.pkLevelSequenceNum;
             pkLastRefreshedAt = robInfo.lastRefreshedAt;
-            
+
         } // releases lock for pk's read-only bean info
-        
+
         if ((entityCtx.isNewlyActivated())
                 || (context.getPKLevelSequenceNum() != pkLevelSequenceNum)) {
 
-            // Now do instance-level refresh check to see if 
-            // ejbLoad is warranted.        
-            callLoad(ejb, context, pkLevelSequenceNum, 
+            // Now do instance-level refresh check to see if
+            // ejbLoad is warranted.
+            callLoad(ejb, context, pkLevelSequenceNum,
                     pkLastRefreshedAt, currentTimeInMillis);
         }
     }
-        
+
     private void callLoad(EntityBean ejb, ReadOnlyContextImpl context,
                           int pkLevelSequenceNum, long pkLastRefreshedAt,
                           long currentTime) throws Exception {
 
         if( _logger.isLoggable(Level.FINE) ) {
-            _logger.log(Level.FINE, 
+            _logger.log(Level.FINE,
                         "Calling ejbLoad for read-only bean " +
-                        ejbDescriptor.getName() + " primary key " + 
+                        ejbDescriptor.getName() + " primary key " +
                         context.getPrimaryKey() + " at " +
                         new Date(currentTime));
         }
@@ -353,31 +353,31 @@ public class ReadOnlyBeanContainer
             }
 
             // Set last refresh time after successful load
-            context.setLastRefreshedAt(pkLastRefreshedAt);       
+            context.setLastRefreshedAt(pkLastRefreshedAt);
         } finally {
             context.setInEjbLoad(false);
-        }        
+        }
 
     }
-    
+
     protected void callEJBRemove(EntityBean ejb, EntityContextImpl context)
         throws Exception
     {
 
         // This will only be called for BMP read-only beans since AS 7
-        // allowed the client to make this call.  Calls to remove 
+        // allowed the client to make this call.  Calls to remove
         // CMP read-only beans result in a runtime exception.
 
-        Object pk = context.getPrimaryKey();                
+        Object pk = context.getPrimaryKey();
         robCache.removeAll(pk);
-        
+
     }
-    
+
     protected void doConcreteContainerShutdown(boolean appBeingUndeployed) {
 
         this.distributedReadOnlyBeanService.removeReadOnlyBeanRefreshEventHandler(
                 getContainerId());
-        
+
         if( refreshTask != null ) {
             refreshTask.cancel();
         }
@@ -386,16 +386,16 @@ public class ReadOnlyBeanContainer
 
         super.doConcreteContainerShutdown(appBeingUndeployed);
     }
-    
+
     // Called from BaseContainer just before invoking a business method
-    // whose tx attribute is TX_NEVER / TX_NOT_SUPPORTED / TX_SUPPORTS 
+    // whose tx attribute is TX_NEVER / TX_NOT_SUPPORTED / TX_SUPPORTS
     // without a client tx.
     protected void preInvokeNoTx(EjbInvocation inv) {
         EntityContextImpl context = (EntityContextImpl)inv.context;
-        
+
         if ( context.isInState(BeanState.DESTROYED) )
             return;
-        
+
         if ( !inv.invocationInfo.isCreateHomeFinder ) {
             // follow EJB2.0 section 12.1.6.1
             EntityBean e = (EntityBean)context.getEJB();
@@ -405,20 +405,20 @@ public class ReadOnlyBeanContainer
                 _logger.log(Level.FINE, "Exception in preInvokeNoTx()", ex);
                 // Error during ejbLoad, so discard bean: EJB2.0 18.3.3
                 forceDestroyBean(context);
-                
+
                 throw new NoSuchObjectLocalException(
                     "NoSuchEntityException thrown by ejbLoad, " +
                     "EJB instance discarded");
             } catch ( Exception ex ) {
                 // Error during ejbLoad, so discard bean: EJB2.0 18.3.3
                 forceDestroyBean(context);
-                
+
                 throw new EJBException(ex);
             }
             context.setNewlyActivated(false);
         }
     }
-    
+
     protected void afterNewlyActivated(EntityContextImpl context) {
         // In the case of ReadOnlyBean store the Context into the list
         ReadOnlyBeanInfo robInfo = addToCache(context.getPrimaryKey(), true);
@@ -428,9 +428,9 @@ public class ReadOnlyBeanContainer
         // ReadOnlyContextImpl should always be used in conjunction with ReadOnlyBeanContainer
         assert context instanceof ReadOnlyContextImpl;
         ReadOnlyContextImpl readOnlyContext = (ReadOnlyContextImpl) context;
-        readOnlyContext.setReadOnlyBeanInfo(robInfo);       
+        readOnlyContext.setReadOnlyBeanInfo(robInfo);
     }
-    
+
     protected void addPooledEJB(EntityContextImpl ctx) {
         try {
             // ReadOnlyContextImpl should always be used in conjunction with ReadOnlyBeanContainer
@@ -439,9 +439,9 @@ public class ReadOnlyBeanContainer
             if( readOnlyCtx.getReadOnlyBeanInfo() != null ) {
 
                 readOnlyCtx.setReadOnlyBeanInfo(null);
-                
+
                 robCache.remove(ctx.getPrimaryKey(), true);
-            }                                    
+            }
         } catch (Exception ex) {
 
             _logger.log(Level.SEVERE, "entitybean.container.addPooledEJB", ex);
@@ -453,9 +453,9 @@ public class ReadOnlyBeanContainer
             super.addPooledEJB(ctx);
         }
     }
-    
+
     protected void forceDestroyBean(EJBContextImpl context) {
-        
+
         try {
             ReadOnlyContextImpl readOnlyCtx = (ReadOnlyContextImpl) context;
             if( readOnlyCtx.getReadOnlyBeanInfo() != null ) {
@@ -464,14 +464,14 @@ public class ReadOnlyBeanContainer
 
                 robCache.remove(readOnlyCtx.getPrimaryKey(), true);
             }
-            
-        } catch (Exception ex) {            
 
-            _logger.log(Level.SEVERE, "entitybean.container.forceDestroyBean", ex);            
+        } catch (Exception ex) {
+
+            _logger.log(Level.SEVERE, "entitybean.container.forceDestroyBean", ex);
             EJBException ejbEx = new EJBException();
             ejbEx.initCause(ex);
-            throw ejbEx;        
-    
+            throw ejbEx;
+
         } finally {
             super.forceDestroyBean(context);
         }
@@ -479,11 +479,11 @@ public class ReadOnlyBeanContainer
 
     public void preInvoke(EjbInvocation inv) {
 
-        // Overriding preInvoke is the best way to interpose on the 
+        // Overriding preInvoke is the best way to interpose on the
         // create early enough to throw an exception or eat the
         // request before too much setup work is done by the container.
         // It's better to keep this logic in the Read-Only Bean container
-        // than to put it in the InvocationHandlers.  Note that 
+        // than to put it in the InvocationHandlers.  Note that
         // interposition for the remove operation is handled below
         // by overriding the removeBean method.
         if( (inv.invocationInfo != null) &&
@@ -497,26 +497,26 @@ public class ReadOnlyBeanContainer
                 // appropriate in this case since creation is not a
                 // supported operation for read-only beans.  If the application
                 // is coded this way, it's best to throw a system exception
-                // to signal that the application is broken.  NOTE that this 
-                // only applies to the CMP 1.x and 2.x read-only bean 
-                // functionality added starting with AS 8.1.  
+                // to signal that the application is broken.  NOTE that this
+                // only applies to the CMP 1.x and 2.x read-only bean
+                // functionality added starting with AS 8.1.
 
                 throw new EJBException(msg);
-                                       
+
             } else {
-                // Preserve AS 7 BMP ROB create behavior 
+                // Preserve AS 7 BMP ROB create behavior
                 CreateException ce = new CreateException(msg);
                 throw new PreInvokeException(ce);
             }
 
         } else {
-            super.preInvoke(inv);                
+            super.preInvoke(inv);
         }
     }
 
-    protected Object invokeTargetBeanMethod(Method beanClassMethod, EjbInvocation inv, 
-                                  Object target, Object[] params, 
-                                  com.sun.enterprise.security.SecurityManager mgr) 
+    protected Object invokeTargetBeanMethod(Method beanClassMethod, EjbInvocation inv,
+                                  Object target, Object[] params,
+                                  com.sun.enterprise.security.SecurityManager mgr)
         throws Throwable {
 
         Object returnValue = null;
@@ -533,28 +533,28 @@ public class ReadOnlyBeanContainer
                         returnValue = value.value;
                     }
                 } else {
-                	//Use even if !RELATIVE_MODE or if refreshTime == 0
+                    //Use even if !RELATIVE_MODE or if refreshTime == 0
                     returnValue = value.value;
                 }
             }
 
             if (returnValue == null) {
-            	int hashCode = key.getExtendedHC();
-            	if (hashCode < 0) {
-            		hashCode = -hashCode;
-            	}
-            	int index = hashCode & (FINDER_LOCK_SIZE - 1);
-            	synchronized (finderLocks[index]) {
-            	    value = finderResultsCache.get(key);
-	                if (value == null) {
-	                    returnValue = super.invokeTargetBeanMethod(
-	                        beanClassMethod, inv, target, params, mgr);
-	                    finderResultsCache.put(key, new FinderResultsValue(returnValue,
-	                        currentTimeInMillis));
-	                } else {
+                int hashCode = key.getExtendedHC();
+                if (hashCode < 0) {
+                    hashCode = -hashCode;
+                }
+                int index = hashCode & (FINDER_LOCK_SIZE - 1);
+                synchronized (finderLocks[index]) {
+                    value = finderResultsCache.get(key);
+                    if (value == null) {
+                        returnValue = super.invokeTargetBeanMethod(
+                            beanClassMethod, inv, target, params, mgr);
+                        finderResultsCache.put(key, new FinderResultsValue(returnValue,
+                            currentTimeInMillis));
+                    } else {
                             returnValue = value.value;
-	                }
-            	    }
+                    }
+                    }
                 }
 
         } else {
@@ -574,18 +574,18 @@ public class ReadOnlyBeanContainer
             ". remove is not allowed for read-only entity beans";
 
         if( isContainerManagedPers ) {
-            
+
             // EJB team decided that throwing a runtime exception was more
             // appropriate in this case since removal is not a
             // supported operation for read-only beans.  If the application
             // is coded this way, it's best to throw a system exception
-            // to signal that the application is broken.  NOTE that this 
-            // only applies to the CMP 1.x and 2.x read-only bean 
-            // functionality added starting with AS 8.1.  
-            
+            // to signal that the application is broken.  NOTE that this
+            // only applies to the CMP 1.x and 2.x read-only bean
+            // functionality added starting with AS 8.1.
+
             // There's no post-invoke logic to convert local exceptions
             // to remote, so take care of that here.
-            if (local) {                
+            if (local) {
                 throw new EJBException(msg);
             } else {
                 throw new RemoteException(msg);
@@ -597,9 +597,9 @@ public class ReadOnlyBeanContainer
             // were silently "eaten" by the ejb container.   The
             // client didn't receive any exception, but ejbRemove
             // was not called on the container.
-        }        
+        }
     }
-    
+
     protected void initializeHome()
         throws Exception
     {
@@ -608,8 +608,8 @@ public class ReadOnlyBeanContainer
         if (isRemote) {
             ((ReadOnlyEJBHomeImpl) this.ejbHomeImpl).
                 setReadOnlyBeanContainer(this);
-        } 
-        
+        }
+
         if (isLocal) {
             ReadOnlyEJBLocalHomeImpl readOnlyLocalHomeImpl =
                 (ReadOnlyEJBLocalHomeImpl) ejbLocalHomeImpl;
@@ -626,9 +626,9 @@ public class ReadOnlyBeanContainer
     protected EJBLocalHomeInvocationHandler getEJBLocalHomeInvocationHandler(Class homeIntfClass) throws Exception {
         return new ReadOnlyEJBLocalHomeImpl(ejbDescriptor, homeIntfClass);
     }
-    
+
     public void setRefreshFlag(Object primaryKey) {
-        
+
         try {
             handleRefreshRequest(primaryKey);
         } finally {
@@ -636,25 +636,25 @@ public class ReadOnlyBeanContainer
                     getContainerId(), primaryKey);
         }
     }
-        
-    public void handleRefreshRequest(Object primaryKey) {    
-        // Lookup the read-only bean info for this pk. 
+
+    public void handleRefreshRequest(Object primaryKey) {
+        // Lookup the read-only bean info for this pk.
         // If there is no entry for this pk, do nothing.
         // If there is a cache hit we *don't* want to increment the
         // ref count.
-        ReadOnlyBeanInfo robInfo = (ReadOnlyBeanInfo) 
+        ReadOnlyBeanInfo robInfo = (ReadOnlyBeanInfo)
             robCache.get(primaryKey, false);
         if( robInfo != null ) {
-           
+
             synchronized(robInfo) {
-                
+
                 robInfo.refreshNeeded = true;
                 robInfo.lastRefreshRequestedAt = this.currentTimeInMillis;
-                
+
                 if( _logger.isLoggable(Level.FINE) ) {
-                    _logger.log(Level.FINE, 
+                    _logger.log(Level.FINE,
                         "Updating refresh time for read-only bean " +
-                        ejbDescriptor.getName() + " primary key " + primaryKey 
+                        ejbDescriptor.getName() + " primary key " + primaryKey
                         + " at " + new Date(robInfo.lastRefreshRequestedAt) +
                         " pkLevelSequenceNum = " + robInfo.pkLevelSequenceNum);
                 }
@@ -665,7 +665,7 @@ public class ReadOnlyBeanContainer
                         primaryKey + " at " + new Date());
         }
     }
-    
+
     /**
      * invoked when application calls refreshAll()
      */
@@ -676,9 +676,9 @@ public class ReadOnlyBeanContainer
             distributedReadOnlyBeanService.notifyRefreshAll(getContainerId());
         }
     }
-    
+
     public void handleRefreshAllRequest() {
-    	_logger.log(Level.FINE, "Received refreshAll request...");
+        _logger.log(Level.FINE, "Received refreshAll request...");
         updateBeanLevelRefresh();
     }
 
@@ -689,12 +689,12 @@ public class ReadOnlyBeanContainer
     }
 
     private ReadOnlyBeanInfo addToCache(Object primaryKey, boolean incrementRefCount) {
-        
+
         // Optimize for the cache where the cache item already
         // exists and we have a 2nd, 3rd, 4th, etc. context for
         // the same primary key.  If the item exists, the ref count
         // will be incremented.
-        ReadOnlyBeanInfo robInfo = (ReadOnlyBeanInfo) 
+        ReadOnlyBeanInfo robInfo = (ReadOnlyBeanInfo)
             robCache.get(primaryKey, incrementRefCount);
 
         if( robInfo == null ) {
@@ -721,21 +721,21 @@ public class ReadOnlyBeanContainer
             // Cache ejbObject/ejbLocalObject within ROB info.
             // This value is used by
             // findByPrimaryKey to avoid a DB access.  Caching here
-            // ensures that there will be one DB access for the PK 
+            // ensures that there will be one DB access for the PK
             // regardless of the order in which findByPrimaryKey is called
             // with respect to the business method call.  This also covers
             // the case where a business method is invoked through the
             // local view and findByPrimaryKey is invoked through the
-            // Remote view (or vice versa).  
+            // Remote view (or vice versa).
             if( ejbDescriptor.isLocalInterfacesSupported() ) {
-                newRobInfo.cachedEjbLocalObject = 
+                newRobInfo.cachedEjbLocalObject =
                     getEJBLocalObjectForPrimaryKey(primaryKey);
             }
             if( ejbDescriptor.isRemoteInterfacesSupported() ) {
-                newRobInfo.cachedEjbObject = 
+                newRobInfo.cachedEjbObject =
                     getEJBObjectStub(primaryKey, null);
             }
-            
+
             ReadOnlyBeanInfo otherRobInfo = (ReadOnlyBeanInfo)
                 robCache.put(primaryKey, newRobInfo, incrementRefCount);
 
@@ -743,40 +743,40 @@ public class ReadOnlyBeanContainer
             // use that as the pk's robInfo.  Otherwise, the new robInfo we
             // created is the "truth" for this pk.
             robInfo = (otherRobInfo == null) ? newRobInfo : otherRobInfo;
-        } 
+        }
 
         return robInfo;
     }
-    
+
     //Called from InvocationHandler for findByPrimaryKey
     //The super class (EntityContainer) also defines this method whcih is where
-    //	the real work (of finding it from the database) is done.
+    //    the real work (of finding it from the database) is done.
     protected Object invokeFindByPrimaryKey(Method method, EjbInvocation inv,
-		Object[] args)
-	throws Throwable
+        Object[] args)
+    throws Throwable
     {
-	Object returnValue = null;
-	ReadOnlyBeanInfo robInfo = addToCache(args[0], false);
-	synchronized (robInfo) {
-	    returnValue = inv.isLocal
-		? robInfo.cachedEjbLocalObject : robInfo.cachedEjbObject;
+    Object returnValue = null;
+    ReadOnlyBeanInfo robInfo = addToCache(args[0], false);
+    synchronized (robInfo) {
+        returnValue = inv.isLocal
+        ? robInfo.cachedEjbLocalObject : robInfo.cachedEjbObject;
 
-	    if ( robInfo.refreshNeeded ) {
-		_logger.log(Level.FINE, "ReadOnlyBeanContainer calling ejb.ejbFindByPK... for pk=" + args[0]);
-		returnValue = super.invokeFindByPrimaryKey(method, inv, args);
-		robInfo.refreshNeeded = false;
+        if ( robInfo.refreshNeeded ) {
+        _logger.log(Level.FINE, "ReadOnlyBeanContainer calling ejb.ejbFindByPK... for pk=" + args[0]);
+        returnValue = super.invokeFindByPrimaryKey(method, inv, args);
+        robInfo.refreshNeeded = false;
 
-		//set the seq numbers so that the subsequent business method calls 
-		//  (if within expiration time) do not have to call ejb__refresh!!
-		updateAfterRefresh(robInfo);
+        //set the seq numbers so that the subsequent business method calls
+        //  (if within expiration time) do not have to call ejb__refresh!!
+        updateAfterRefresh(robInfo);
 
-	    }
-	}
-
-	return returnValue;
+        }
     }
 
-    public Object postFind(EjbInvocation inv, Object primaryKeys, 
+    return returnValue;
+    }
+
+    public Object postFind(EjbInvocation inv, Object primaryKeys,
                            Object[] findParams)
         throws FinderException
     {
@@ -796,7 +796,7 @@ public class ReadOnlyBeanContainer
         // sets since it's possible for a query to return N beans from one
         // db access, which would otherwise require N db accesses if the
         // refresh were done upon business method invocation or findByPK.
-        // If a PK has been accessed before appearing in the result set of 
+        // If a PK has been accessed before appearing in the result set of
         // a nonFindByPK finder, there is no performance gain.
         if( !inv.method.getName().equals("findByPrimaryKey") ) {
             if ( primaryKeys instanceof Enumeration ) {
@@ -843,21 +843,21 @@ public class ReadOnlyBeanContainer
     //Called after a sucessful ejb_refresh and
     //it is assumed that the caller has a lock on the robInfo
     private void updateAfterRefresh(ReadOnlyBeanInfo robInfo) {
-	robInfo.beanLevelSequenceNum = beanLevelSequenceNum;
-	robInfo.pkLevelSequenceNum++;
-	robInfo.lastRefreshedAt = this.currentTimeInMillis;
+    robInfo.beanLevelSequenceNum = beanLevelSequenceNum;
+    robInfo.pkLevelSequenceNum++;
+    robInfo.lastRefreshedAt = this.currentTimeInMillis;
     }
 
     private final class RefreshTask extends TimerTask {
 
-        public void run() {            
+        public void run() {
             updateBeanLevelRefresh();
         }
     }
 
     private final class CurrentTimeRefreshTask extends TimerTask {
 
-        public void run() {            
+        public void run() {
             currentTimeInMillis = System.currentTimeMillis();
         }
     }
@@ -881,7 +881,7 @@ public class ReadOnlyBeanContainer
         private Object[] params;
 
         private int hc;
-        
+
         private int extendedHC;
 
         public FinderResultsKey(Method method, Object[] params) {
@@ -891,16 +891,16 @@ public class ReadOnlyBeanContainer
 
             this.params = (params == null) ? EMPTY_PARAMS : params;
             for (Object param : this.params) {
-            	extendedHC += param.hashCode();
+                extendedHC += param.hashCode();
             }
         }
-        
+
         public int hashCode() {
             return hc;
         }
-        
+
         public int getExtendedHC() {
-        	return this.extendedHC;
+            return this.extendedHC;
         }
 
         public boolean equals(Object o) {
@@ -911,15 +911,15 @@ public class ReadOnlyBeanContainer
 
                 FinderResultsKey other = (FinderResultsKey) o;
                 if ((params.length == other.params.length)
-                		&& (finderMethod.equals(other.finderMethod))) {
+                        && (finderMethod.equals(other.finderMethod))) {
 
                     equal = true;
 
                     for(int i = 0; i < params.length; i++) {
-                        
+
                         Object nextParam = params[i];
                         Object nextParamOther  = other.params[i];
-                        
+
                         if( nextParam instanceof EJBLocalObject ) {
 
                             equal = compareEJBLocalObject
@@ -929,7 +929,7 @@ public class ReadOnlyBeanContainer
 
                             equal = compareEJBObject
                                 (((EJBObject)nextParam), nextParamOther);
-                                                        
+
                         } else {
                             equal = nextParam.equals(nextParamOther);
                         }
@@ -948,13 +948,13 @@ public class ReadOnlyBeanContainer
         private boolean compareEJBLocalObject(EJBLocalObject localObj1,
                                               Object other) {
             boolean equal = false;
-            
+
             if( other instanceof EJBLocalObject ) {
 
                 equal = localObj1.isIdentical((EJBLocalObject) other);
 
             }
-            
+
             return equal;
 
         }
@@ -965,7 +965,7 @@ public class ReadOnlyBeanContainer
             boolean equal = false;
 
             if( other instanceof EJBObject ) {
-                
+
                 // @@@ Might want to optimize to avoid EJBObject invocation
                 // overhead.
                 try {
@@ -981,8 +981,8 @@ public class ReadOnlyBeanContainer
 
         }
 
-        
+
 
     }
-    
+
 }

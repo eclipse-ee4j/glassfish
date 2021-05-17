@@ -30,7 +30,7 @@ public interface LogParser {
      * @param listener
      * @throws LogParserException
      */
-    public void parseLog(BufferedReader reader, 
+    public void parseLog(BufferedReader reader,
             LogParserListener listener) throws LogParserException;
-    
+
 }

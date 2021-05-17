@@ -39,7 +39,7 @@ import org.junit.Test;
 
 /**
  * Tests for Context addServlet & addFilter using class name to default virtual server
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedAddServletAndFilterByClassNameTest {
@@ -66,7 +66,7 @@ public class EmbeddedAddServletAndFilterByClassNameTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedAddServletDefaultVS() throws Exception {
 
@@ -99,7 +99,7 @@ public class EmbeddedAddServletAndFilterByClassNameTest {
         in.close();
 
         vs.removeContext(context);
-        
+
      }
 
     @AfterClass
@@ -111,6 +111,6 @@ public class EmbeddedAddServletAndFilterByClassNameTest {
             glassfish = null;
         }
     }
-    
-    
+
+
 }

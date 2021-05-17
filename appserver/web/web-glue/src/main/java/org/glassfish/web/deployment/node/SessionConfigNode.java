@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 
 /**
  * This class is responsible for handling session-config xml node.
- * 
+ *
  * @author Shing Wai Chan
  */
 public class SessionConfigNode extends DeploymentDescriptorNode {
@@ -51,40 +51,40 @@ public class SessionConfigNode extends DeploymentDescriptorNode {
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
-     */    
-    public void setElementValue(XMLElement element, String value) {    
+     */
+    public void setElementValue(XMLElement element, String value) {
         if (WebTagNames.SESSION_TIMEOUT.equals(element.getQName())) {
             // if the session out value is already set
             // which means there are multiple session-config elements
             // throw an exception
-            if (descriptor.getSessionTimeout() != 
+            if (descriptor.getSessionTimeout() !=
                 SessionConfigDescriptor.SESSION_TIMEOUT_DEFAULT) {
                 throw new RuntimeException(
                     "Has more than one session-config element!");
-            } 
+            }
             descriptor.setSessionTimeout(Integer.parseInt(value.trim()));
         } else if (WebTagNames.TRACKING_MODE.equals(element.getQName())) {
             descriptor.addTrackingMode(value);
         } else {
             super.setElementValue(element, value);
         }
-    }      
+    }
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, SessionConfigDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         if (descriptor.getSessionTimeout() != descriptor.SESSION_TIMEOUT_DEFAULT) {
-            appendTextChild(myNode, WebTagNames.SESSION_TIMEOUT, 
+            appendTextChild(myNode, WebTagNames.SESSION_TIMEOUT,
                     String.valueOf(descriptor.getSessionTimeout()));
         }
         CookieConfigDescriptor cookieConfigDesc = (CookieConfigDescriptor)descriptor.getCookieConfig();

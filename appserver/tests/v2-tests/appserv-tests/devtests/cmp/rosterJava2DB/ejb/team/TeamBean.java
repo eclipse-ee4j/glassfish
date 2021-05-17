@@ -30,7 +30,7 @@ public abstract class TeamBean implements EntityBean {
 
     public abstract String getTeamId();
     public abstract void setTeamId(String id);
-    
+
     public abstract String getName();
     public abstract void setName(String name);
 
@@ -39,7 +39,7 @@ public abstract class TeamBean implements EntityBean {
 
 
     // Access methods for relationship fields
-             
+
     public abstract Collection getPlayers();
     public abstract void setPlayers(Collection players);
 
@@ -52,55 +52,55 @@ public abstract class TeamBean implements EntityBean {
         throws FinderException;
 
     public abstract String ejbSelectByNameWithCONCAT(String part1, String part2)
-        throws FinderException;	
-                            
+        throws FinderException;
+
     public abstract String ejbSelectByNameSubstring(String substring)
-        throws FinderException;	
+        throws FinderException;
 
     public abstract String ejbSelectNameLocate(String substring)
-        throws FinderException;	
+        throws FinderException;
 
-                            
+
     // Business methods
 
     public double getSalaryOfPlayer(String playerName) throws FinderException {
         LocalTeam team = (team.LocalTeam)context.getEJBLocalObject();
-        
+
         return ejbSelectSalaryOfPlayerInTeam(team, playerName);
     }
-    
-    
+
+
     public String getTeamNameWithStringfunctionTests1() throws FinderException {
-                                                        
+
         StringBuffer out = new StringBuffer();
 //        LocalTeam team = (team.LocalTeam) context.getEJBLocalObject();
 //        out.append("<BR>Name of Team : " + team.getName());
-        out.append("<BR>");		
+        out.append("<BR>");
         out.append(ejbSelectByNameWithCONCAT("Cr", "ows"));
         out.append("<BR>");
-        
+
         return out.toString();
     }
-    
+
     public String getTeamNameWithStringfunctionTests2() throws FinderException {
-                                                        
+
         StringBuffer out = new StringBuffer();
         out.append(ejbSelectByNameSubstring("aaaaCrowsaaaaa"));
         out.append("<BR>");
 
         return out.toString();
     }
-                                
+
     public String getTeamNameWithStringfunctionTests3() throws FinderException {
-                                                        
+
         StringBuffer out = new StringBuffer();
         out.append(ejbSelectNameLocate("row"));
         out.append("<BR>");
-        
+
         return out.toString();
     }
 
-                                  
+
     public ArrayList getCopyOfPlayers() {
 
         Debug.print("TeamBean getCopyOfPlayers");
@@ -151,30 +151,30 @@ public abstract class TeamBean implements EntityBean {
         setCity(city);
         return null;
     }
-         
+
     public void ejbPostCreate (String id, String name, String city)
         throws CreateException { }
 
     public void setEntityContext(EntityContext ctx) {
         context = ctx;
     }
-    
+
     public void unsetEntityContext() {
         context = null;
     }
-    
+
     public void ejbRemove() {
         Debug.print("TeamBean ejbRemove");
     }
-    
+
     public void ejbLoad() {
         Debug.print("TeamBean ejbLoad");
     }
-    
+
     public void ejbStore() {
         Debug.print("TeamBean ejbStore");
     }
-    
+
     public void ejbPassivate() { }
     public void ejbActivate() { }
 

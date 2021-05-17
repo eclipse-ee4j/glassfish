@@ -31,8 +31,8 @@ import static jakarta.persistence.FetchType.*;
     @NamedQuery(name = "SimpleEntity.findAll", query = "select e from SimpleEntity e")
 })
 public class SimpleEntity {
-    
-    @Id 
+
+    @Id
     @GeneratedValue
     private int id;
     private String name;
@@ -40,10 +40,10 @@ public class SimpleEntity {
     public SimpleEntity(String name) {
         setName(name);
     }
-    
+
     public SimpleEntity() {
     }
-    
+
     public String getName() {
         return name;
     }

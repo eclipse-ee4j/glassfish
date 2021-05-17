@@ -32,7 +32,7 @@ public final class PrimitiveDataType implements DataType {
         assert DomDocument.PRIMS.contains(realType) : "This class can't validate: " + realType;
         this.realType = realType;
     }
-    
+
     public void validate(String value) throws ValidationException {
         if (value.startsWith("${") && value.endsWith("}")) //it's a token
           return;
@@ -46,10 +46,10 @@ public final class PrimitiveDataType implements DataType {
         //no need for else as we are asserting it in the constructor
         if (!match) {
             String msg = "This value: " + value + " is not of type: " + realType + ", validation failed";
-            throw new ValidationException(msg);            
+            throw new ValidationException(msg);
         }
     }
-    
+
     private static boolean representsBoolean(String value) {
         boolean isBoolean = "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value);
         return (isBoolean);

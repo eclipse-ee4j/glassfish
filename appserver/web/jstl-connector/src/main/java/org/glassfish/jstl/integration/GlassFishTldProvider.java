@@ -81,10 +81,10 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
         // None of the JSTL TLDs declare any listeners
         return null;
     }
- 
+
     public void postConstruct() {
 
-        
+
         Class jstlImplClass = org.apache.taglibs.standard.Version.class;
 
         URI[] uris = null;

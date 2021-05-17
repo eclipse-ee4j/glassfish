@@ -32,7 +32,7 @@ public class HelloS2 {
 
     @PreDestroy
     private void destroy() {
-	System.out.println("HelloS2::destroy()");
+    System.out.println("HelloS2::destroy()");
     }
 
 }

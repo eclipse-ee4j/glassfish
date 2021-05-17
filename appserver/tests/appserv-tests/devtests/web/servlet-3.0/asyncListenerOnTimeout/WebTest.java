@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for AsyncListener#onTimeout");
@@ -58,15 +58,15 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest(String mode, String expectedResponse) throws Exception {
 
         InputStream is = null;
         BufferedReader input = null;
-       
-        try {     
+
+        try {
             URL url = new URL("http://" + host  + ":" + port +
                 contextRoot + "/AsyncListenerTimeoutServlet?" + mode);
             System.out.println("Connecting to: " + url.toString());

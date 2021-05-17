@@ -35,7 +35,7 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
 
     private String name = "Resource adapter work";
     private boolean nameSet = false;
-    
+
     //Store the client's TCC so that when the work is executed,
     //TCC is set appropriately.
     private ClassLoader tcc = null;

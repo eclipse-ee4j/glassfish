@@ -17,7 +17,7 @@
 package com.sun.s1peqe.webservices.ejb.taxcal;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -26,11 +26,11 @@ import javax.naming.*;
 public class StateTaxEjb implements SessionBean {
 
     private SessionContext sc;
-    
+
     public StateTaxEjb(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In StateTaxEjb::ejbCreate !!");
+    System.out.println("In StateTaxEjb::ejbCreate !!");
     }
 
     public double getStateTax(double income, double deductions) {
@@ -38,13 +38,13 @@ public class StateTaxEjb implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

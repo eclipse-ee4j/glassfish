@@ -19,8 +19,8 @@ package test.beans;
 public interface TestBeanInterface {
     public void setState(String s);
     public String getState();
-    
+
     public void method1();
 }
-    
- 
+
+

@@ -160,12 +160,12 @@ public class VersioningUtilsTest {
         List result = VersioningUtils.getVersions(APPLICATION_NAME, listApplications);
         assertEquals(expResult, result);
     }
-    
+
     /**
      * Test of {@link org.glassfish.deployment.versioning.VersioningUtils.matchExpression}
      *
      * Check the matching of version expression over a set of version
-     * 
+     *
      * @throws VersioningException for registration issues, or if the given
      *  application name had some
      *  critical patterns.
@@ -393,7 +393,7 @@ public class VersioningUtilsTest {
                 + VersioningUtils.EXPRESSION_SEPARATOR + "cab-5");
         listVersion.add(APPLICATION_NAME
                 + VersioningUtils.EXPRESSION_SEPARATOR + "cba-6");
-        
+
         expression = APPLICATION_NAME
                 + VersioningUtils.EXPRESSION_SEPARATOR + "a*";
         result = VersioningUtils.matchExpression(listVersion, expression);
@@ -480,7 +480,7 @@ public class VersioningUtilsTest {
         appName = APPLICATION_NAME
                 + VersioningUtils.EXPRESSION_SEPARATOR
                 + versionIdentifier;
-        
+
         expectedResult = APPLICATION_NAME
                 + VersioningUtils.REPOSITORY_DASH
                 + versionIdentifier.replace(":", VersioningUtils.REPOSITORY_DASH);
@@ -537,7 +537,7 @@ public class VersioningUtilsTest {
         assertEquals(false, VersioningUtils.isVersionIdentifier(APPLICATION_NAME+":BETA*"));
     }
 
-    // this class is used to fake the List<Application> 
+    // this class is used to fake the List<Application>
     // so we can call the VersioningUtils.matchExpression
     // with an home made set of applications.
     private class ApplicationTest implements Application {
@@ -666,7 +666,7 @@ public class VersioningUtilsTest {
         public void setDescription(String value) throws PropertyVetoException {
             throw new UnsupportedOperationException("Not supported yet.");
         }
- 
+
         @Override
         public String getDeploymentOrder() {
             throw new UnsupportedOperationException("Not supported yet.");

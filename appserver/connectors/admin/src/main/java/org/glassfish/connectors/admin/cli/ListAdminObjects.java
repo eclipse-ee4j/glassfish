@@ -37,7 +37,7 @@ import java.util.Collection;
 
 /**
  * List Admin Objects command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.CONFIG, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @ExecuteOn(value={RuntimeType.DAS})
@@ -47,13 +47,13 @@ import java.util.Collection;
 @I18n("list.admin.objects")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-admin-objects", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-admin-objects",
         description="list-admin-objects")
 })
 public class ListAdminObjects implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAdminObjects.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAdminObjects.class);
 
     @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target ;

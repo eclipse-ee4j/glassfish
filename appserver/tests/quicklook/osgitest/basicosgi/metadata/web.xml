@@ -32,7 +32,7 @@
     <url-pattern>/simpleservlet</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-	<welcome-file>hello.jsp</welcome-file>
+    <welcome-file>hello.jsp</welcome-file>
     </welcome-file-list>
   <login-config>
     <auth-method>BASIC</auth-method>
@@ -42,6 +42,6 @@
       <form-error-page></form-error-page>
     </form-login-config>
   </login-config>
-  
+
 </web-app>
 

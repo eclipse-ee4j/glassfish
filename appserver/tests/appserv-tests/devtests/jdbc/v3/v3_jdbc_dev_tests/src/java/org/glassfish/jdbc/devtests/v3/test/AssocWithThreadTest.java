@@ -38,7 +38,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
  */
 public class AssocWithThreadTest implements SimpleTest{
 
-    
+
         Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
 
     public Map<String, Boolean> runTest(DataSource ds1, PrintWriter out) {
@@ -53,10 +53,10 @@ public class AssocWithThreadTest implements SimpleTest{
         }
         return resultsMap;
     }
-    
+
     private boolean testAssocWithThread(DataSource ds1, PrintWriter out) throws SystemException {
 
-        
+
         HtmlUtil.printHR(out);
         out.println("<h4> Assoc-with-thread test </h4>");
 
@@ -74,10 +74,10 @@ public class AssocWithThreadTest implements SimpleTest{
         }else{
             return false;
         }
-        
+
     }
 
-    
+
      private String test1(DataSource ds1, PrintWriter out) throws SystemException {
         String result = null;
         Connection con = null;

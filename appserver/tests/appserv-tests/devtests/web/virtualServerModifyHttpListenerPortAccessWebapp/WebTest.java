@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.*;
  *  virtual servers get lost")
  *
  * This unit test does the following:
- * 
+ *
  * - Creates virtual server myvs, and associates it with http-listener-1
  * - Deploys webapp to myvs, and assigns this webapp as the default-web-module
  *   of myvs
@@ -53,7 +53,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 4407");
         WebTest webTest = new WebTest(args);
@@ -61,8 +61,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeAtContextRoot();
             invokeAtRootContext();
             stat.addStatus(TEST_NAME, stat.PASS);
@@ -73,7 +73,7 @@ public class WebTest {
     }
 
     private void invokeAtContextRoot() throws Exception {
-    
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/ HTTP/1.1\n";
@@ -102,7 +102,7 @@ public class WebTest {
     }
 
     private void invokeAtRootContext() throws Exception {
-    
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET / HTTP/1.1\n";

@@ -128,7 +128,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
         Response response = runCommand(postCommand, payload, "rest.resource.create.message", "\"{0}\" created successfully.",
                 "rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.");
         if (response.getStatus() != 200) {
-            // If creating JVM options is error, restore JVM options with exsiting.  
+            // If creating JVM options is error, restore JVM options with exsiting.
             payload = processData(existing);
             runCommand(postCommand, payload, "rest.resource.create.message", "\"{0}\" created successfully.",
                     "rest.resource.post.forbidden", "POST on \"{0}\" is forbidden.");
@@ -326,7 +326,7 @@ public abstract class CollectionLeafResource extends AbstractResource {
 
     /**
      * Escapes special chars (e.g., colons) in a JVM Option part
-     * 
+     *
      * @param part
      * @return
      */

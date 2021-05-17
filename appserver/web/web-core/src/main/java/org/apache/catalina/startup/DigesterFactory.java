@@ -57,7 +57,7 @@ public class DigesterFactory {
         return newDigester(false, false, null);
     }
 
-    
+
     /**
      * Create a <code>Digester</code> parser with XML validation turned off.
      * @param rule an instance of <code>Rule</code> used for parsing the xml.
@@ -80,8 +80,8 @@ public class DigesterFactory {
         digester.setNamespaceAware(xmlNamespaceAware);
         digester.setValidating(xmlValidation);
         digester.setUseContextClassLoader(true);
-        
-        String parserName = 
+
+        String parserName =
                 digester.getFactory().getClass().getName();
         if (parserName.indexOf("xerces")!=-1) {
             digester = patchXerces(digester);
@@ -135,7 +135,7 @@ public class DigesterFactory {
     }
 
 
-    /** 
+    /**
      * Turn on schema AND DTD validation on Xerces parser.
      */
     protected void turnOnXercesValidation(Digester digester){

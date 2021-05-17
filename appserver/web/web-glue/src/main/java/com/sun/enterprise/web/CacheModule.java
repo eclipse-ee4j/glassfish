@@ -38,7 +38,7 @@ import java.util.logging.Logger;
  * configures the cache for the application
  */
 public final class CacheModule {
-    public final static String CACHING_FILTER_CLASSNAME = 
+    public final static String CACHING_FILTER_CLASSNAME =
                             "com.sun.appserv.web.cache.filter.CachingFilter";
     public final static String DEFAULT_CACHE_HELPER_CLASSNAME =
                             "com.sun.appserv.web.cache.DefaultCacheHelper";
@@ -60,7 +60,7 @@ public final class CacheModule {
      * read the configuration and setup the runtime support for caching in a
      * application.
      */
-    public static CacheManager configureResponseCache(WebModule app, 
+    public static CacheManager configureResponseCache(WebModule app,
                                 SunWebApp bean) throws Exception  {
 
         Cache cacheConfig = ((SunWebAppImpl)bean).getCache();
@@ -114,8 +114,8 @@ public final class CacheModule {
 
             manager.addProperty(name, value);
         }
-        
-        // configure the default cache-helper 
+
+        // configure the default cache-helper
         DefaultHelper defHelperConfig = cacheConfig.getDefaultHelper();
 
         HashMap<String, String> map = new HashMap<String, String>();
@@ -135,7 +135,7 @@ public final class CacheModule {
             CacheHelper helperConfig = cacheConfig.getCacheHelper(i);
 
             String helperName = helperConfig.getAttributeValue(
-                CacheHelper.NAME); 
+                CacheHelper.NAME);
             HashMap<String, String> helperProps = new HashMap<String, String>();
             props = helperConfig.getWebProperty();
             for (int j = 0; j < props.length; j++) {
@@ -144,7 +144,7 @@ public final class CacheModule {
 
                 helperProps.put(name, value);
             }
-            helperProps.put("class-name", 
+            helperProps.put("class-name",
                             helperConfig.getAttributeValue(
                             CacheHelper.CLASS_NAME));
 
@@ -155,14 +155,14 @@ public final class CacheModule {
         for (int i = 0; i < cacheConfig.sizeCacheMapping(); i++) {
             org.glassfish.web.deployment.runtime.CacheMapping
                             mapConfig = cacheConfig.getCacheMapping(i);
-            
+
             CacheMapping mapping = new CacheMapping();
             configureCacheMapping(mapConfig, mapping, logger);
 
             // use filter's name to refer to setup the filter
             String filterName = CACHING_FILTER_CLASSNAME + i;
 
-            /** 
+            /**
              * all cache-mapings are indexed by the unique filter-name;
              * DefaultCacheHelper uses this name to access the mapping.
              */
@@ -212,7 +212,7 @@ public final class CacheModule {
                         new Object[] {mapping.getServletName(), mapping.getURLPattern()});
             }
         }
-        
+
         manager.setServletContext(app.getServletContext());
         return manager;
     }
@@ -243,7 +243,7 @@ public final class CacheModule {
         }
         mapping.setHelperNameRef(helperRef);
 
-        /** 
+        /**
          * <timeout>600</timeout>
          * <timeout name="cacheTimeout" scope="request.attribute" />
          */
@@ -282,7 +282,7 @@ public final class CacheModule {
         }
 
         /** <http-method> GET </http-method>
-         *  <http-method> POST </http-method> 
+         *  <http-method> POST </http-method>
          */
         if (mapConfig.sizeHttpMethod() > 0) {
             mapping.setMethods(mapConfig.getHttpMethod());
@@ -298,7 +298,7 @@ public final class CacheModule {
             scope = mapConfig.getAttributeValue(
                     org.glassfish.web.deployment.runtime.CacheMapping.KEY_FIELD,
                 i, org.glassfish.web.deployment.runtime.CacheMapping.SCOPE);
-            if (name != null && scope != null) {            
+            if (name != null && scope != null) {
                 mapping.addKeyField(new Field(name, scope));
 
                 if (logger.isLoggable(Level.FINE)) {
@@ -319,7 +319,7 @@ public final class CacheModule {
                     org.glassfish.web.deployment.runtime.ConstraintField.NAME);
             scope = fieldConfig.getAttributeValue(
                     org.glassfish.web.deployment.runtime.ConstraintField.SCOPE);
-            ConstraintField constraintField = 
+            ConstraintField constraintField =
                                         new ConstraintField(name, scope);
 
             value = fieldConfig.getAttributeValue(org.glassfish.web.deployment.runtime.ConstraintField.CACHE_ON_MATCH);
@@ -337,7 +337,7 @@ public final class CacheModule {
                 value = fieldConfig.getValue(j).trim();
                 expr = fieldConfig.getAttributeValue(
                         org.glassfish.web.deployment.runtime.ConstraintField.VALUE, j, org.glassfish.web.deployment.runtime.ConstraintField.MATCH_EXPR);
-                
+
                 ValueConstraint constraint = new ValueConstraint(value, expr);
                 value = fieldConfig.getAttributeValue(org.glassfish.web.deployment.runtime.ConstraintField.VALUE, j, org.glassfish.web.deployment.runtime.ConstraintField.CACHE_ON_MATCH);
                 if (value != null) {

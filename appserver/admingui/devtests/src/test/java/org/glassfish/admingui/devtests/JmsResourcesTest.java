@@ -69,7 +69,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         final String poolName = "JMSConnFactory" + generateRandomString();
         final String description = "Test Pool - " + poolName;
         final String instanceName = "standalone" + generateRandomString();
-        
+
         StandaloneTest instanceTest = new StandaloneTest();
         instanceTest.createStandAloneInstance(instanceName);
 
@@ -80,11 +80,11 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         selectDropdownOption("form:propertySheet:generalPropertySheet:resTyped:resType", "jakarta.jms.TopicConnectionFactory"); // i18n?
         setFieldValue("form:propertySheet:generalPropertySheet:descProp:descProp", description);
         selectDropdownOption("form:propertySheet:poolPropertySheet:transprop:trans", "LocalTransaction"); //i18n
-        
+
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", instanceName);
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", "server");
         pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
-        
+
         clickAndWait("form:propertyContentPage:topButtons:newButton", TRIGGER_JMS_CONNECTION_FACTORIES);
         assertTrue(isTextPresent(poolName));
 
@@ -94,7 +94,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         waitForButtonEnabled("propertyForm:resourcesTable:topActionsGroup1:disableButton");
         pressButton("propertyForm:resourcesTable:topActionsGroup1:disableButton");
         waitForButtonDisabled("propertyForm:resourcesTable:topActionsGroup1:disableButton");
-     
+
         selectTableRowByValue("propertyForm:resourcesTable", poolName, "colSelect", "colName");
         waitForButtonEnabled("propertyForm:resourcesTable:topActionsGroup1:enableButton");
         pressButton("propertyForm:resourcesTable:topActionsGroup1:enableButton");
@@ -169,7 +169,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("form:propertyContentPage:propertySheet:propertSectionTextField:descProp:desc", description);
 
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", instanceName);
-        addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", "server"); 
+        addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", "server");
         pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
 
         clickAndWait("form:propertyContentPage:topButtons:newButton", TRIGGER_JMS_DESTINATION_RESOURCES);

@@ -106,9 +106,9 @@ public abstract class GenericHandler implements ArchiveHandler {
      * @param context deployment context
      * @return the default application name for the specified archive
      */
-    public String getDefaultApplicationName(ReadableArchive archive, 
+    public String getDefaultApplicationName(ReadableArchive archive,
         DeploymentContext context) {
-        // first try to get the name from ApplicationInfoProvider if 
+        // first try to get the name from ApplicationInfoProvider if
         // we can find an implementation of this service
         ApplicationInfoProvider nameProvider = habitat.getService(ApplicationInfoProvider.class);
 
@@ -172,7 +172,7 @@ public abstract class GenericHandler implements ArchiveHandler {
     public Manifest getManifest(ReadableArchive archive) throws IOException {
         return archive.getManifest();
     }
-    
+
     /**
      * Returns the classpath URIs for this archive.
      *

@@ -55,31 +55,31 @@ import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
  *the first time it is invoked to sign a JAR file.  After the first requested
  *signing it uses the same alias and provider to sign all JARs.
  *<p>
- *The public interface to this class is the static signJar method.  
+ *The public interface to this class is the static signJar method.
  *
  * @author tjquinn
  */
 @Service
 @Singleton
 public class ASJarSigner implements PostConstruct {
-    
+
     /** property name optionally set by the admin in domain.xml to select an alias for signing */
     public static final String USER_SPECIFIED_ALIAS_PROPERTYNAME = "com.sun.aas.jws.signing.alias";
 
     /** keystore type for JKS keystores */
     private static final String JKS_KEYSTORE_TYPE_VALUE = "jks";
-    
+
     /** default alias for signing if the admin does not specify one */
     private static final String DEFAULT_ALIAS_VALUE = "s1as";
 
     private static final String DEFAULT_DIGEST_ALGORITHM = "SHA-1";
     private static final String DEFAULT_SIGNATURE_ALGORITHM = "SHA1withRSA";
-    
+
     private static final SecuritySupport securitySupport = SecuritySupport.getDefaultInstance();
 
 //    /** user-specified signing alias */
 //    private final String userAlias; // = System.getProperty(USER_SPECIFIED_ALIAS_PROPERTYNAME);
-    
+
     private static final StringManager localStrings = StringManager.getManager(ASJarSigner.class);
 
     private Logger logger;
@@ -99,7 +99,7 @@ public class ASJarSigner implements PostConstruct {
      */
     public long signJar(final File unsignedJar, final File signedJar,
         String alias, Attributes attrs) throws Exception {
-        
+
         final ZipOutputStream zout = new ZipOutputStream(
                     new FileOutputStream(signedJar));
         try {
@@ -119,7 +119,7 @@ public class ASJarSigner implements PostConstruct {
             zout.close();
         }
     }
-    
+
     /**
      * Creates a signed ZIP output stream from an unsigned JAR and, possibly, additional content.
      * @param unsignedJar JAR file containing most of the content to sign and return
@@ -128,7 +128,7 @@ public class ASJarSigner implements PostConstruct {
      * @param attrs additional manifest attributes to add
      * @param additionalContent additional JAR entries to add
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public long signJar(final File unsignedJar, final ZipOutputStream signedJar,
             String alias, final Attributes attrs, final Map<String,byte[]> additionalContent) throws Exception {
@@ -149,23 +149,23 @@ public class ASJarSigner implements PostConstruct {
                         certificates = keyStores[i].getCertificateChain(alias);
                     }
                 }
-                
+
                 CertPath certPath = CertificateFactory.getInstance("X.509").generateCertPath(asList(certificates));
-                
+
                 JarSigner signer = new JarSigner.Builder(privateKey, certPath)
                         .digestAlgorithm(DEFAULT_DIGEST_ALGORITHM)
                         .signatureAlgorithm(DEFAULT_SIGNATURE_ALGORITHM)
                         .build();
-                
+
                 // TODO: add Attributes to Manifest and additionalContent
-                
+
                 signer.sign(new JarFile(unsignedJar), signedJar);
-               
+
             } catch (Throwable t) {
                 /*
                  *The jar signer will have written some information to System.out
                  */
-                throw new Exception(localStrings.getString("jws.sign.errorSigning", 
+                throw new Exception(localStrings.getString("jws.sign.errorSigning",
                         unsignedJar.getAbsolutePath(), alias), t);
             } finally {
                 duration = System.currentTimeMillis() - startTime;

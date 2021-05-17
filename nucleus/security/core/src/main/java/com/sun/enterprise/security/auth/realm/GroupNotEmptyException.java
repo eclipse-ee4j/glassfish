@@ -18,7 +18,7 @@ package com.sun.enterprise.security.auth.realm;
 
 
 /**
- * Exception thrown when an operation is requested to remove a group that has 
+ * Exception thrown when an operation is requested to remove a group that has
  * a list of users.
  *
  * @author Harpreet Singh

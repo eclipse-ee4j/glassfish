@@ -29,22 +29,22 @@ import org.glassfish.api.ActionReport;
 
 /**
  *
- * 
+ *
  */
 public class CLIUtil {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(CLIUtil.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(CLIUtil.class);
 
     /**
      * Selects a config of interest from the domain, based on the target.
      * (Eliminates duplicated code formerly in Create, Delete, and ListAuthRealm).
-     * 
+     *
      * @param domain
      * @param target
-     * @return 
+     * @return
      */
-    static Config chooseConfig(final Domain domain, 
+    static Config chooseConfig(final Domain domain,
             final String target) {
         Config config = null;
         Config tmp = null;
@@ -66,7 +66,7 @@ public class CLIUtil {
         }
         return config;
     }
-    
+
     static Config chooseConfig(final Domain domain,
             final String target,
             final ActionReport report) {
@@ -79,10 +79,10 @@ public class CLIUtil {
         }
         return config;
     }
-    
+
     static boolean isRealmNew(final SecurityService securityService,
             final String authRealmName) {
-        
+
         // check if there exists an auth realm byt he specified name
         // if so return failure.
         List<AuthRealm> authrealms = securityService.getAuthRealm();
@@ -93,23 +93,23 @@ public class CLIUtil {
         }
         return true;
     }
-    
+
     static AuthRealm findRealm(final SecurityService securityService,
             String authRealmName) {
         // ensure we have the file authrealm
-        
+
         if (authRealmName == null) {
             authRealmName = securityService.getDefaultRealm();
         }
-        
-        for (AuthRealm authRealm : securityService.getAuthRealm()) {            
+
+        for (AuthRealm authRealm : securityService.getAuthRealm()) {
             if (authRealm.getName().equals(authRealmName)) {
                 return authRealm;
             }
-        }     
+        }
         return null;
     }
-    
+
     static JaccProvider findJaccProvider(final SecurityService securityService,
             final String jaccProviderName) {
         final List<JaccProvider> jaccProviders = securityService.getJaccProvider();
@@ -120,11 +120,11 @@ public class CLIUtil {
         }
         return null;
     }
-    
+
     static MessageSecurityConfig findMessageSecurityConfig(final SecurityService securityService,
             final String authLayer) {
-        List<MessageSecurityConfig> mscs = securityService.getMessageSecurityConfig();        
-        
+        List<MessageSecurityConfig> mscs = securityService.getMessageSecurityConfig();
+
         for (MessageSecurityConfig  msc : mscs) {
             if (msc.getAuthLayer().equals(authLayer)) {
                 return msc;

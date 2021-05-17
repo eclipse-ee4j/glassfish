@@ -37,7 +37,7 @@ class LdapPrincipal implements Principal {
      * @param name The principal's string name.
      */
     public LdapPrincipal(String name) {
-	this.name = name;
+    this.name = name;
     }
 
     /**
@@ -47,17 +47,17 @@ class LdapPrincipal implements Principal {
      * @return true if they are equal; false otherwise.
      */
     public boolean equals(Object object) {
-	if (ldapName == null) {
-	    ldapName = getLdapName(name);
-	}
-	//this is a broken equals implementation. It doesnot have any dependency on Glassfish code
-	/*if (object instanceof String) {
-	    return ldapName.equals(getLdapName((String)object));
-	}*/
-	if (object instanceof Principal) {
-	    return ldapName.equals(getLdapName(((Principal)object).getName()));
-	}
-	return false;
+    if (ldapName == null) {
+        ldapName = getLdapName(name);
+    }
+    //this is a broken equals implementation. It doesnot have any dependency on Glassfish code
+    /*if (object instanceof String) {
+        return ldapName.equals(getLdapName((String)object));
+    }*/
+    if (object instanceof Principal) {
+        return ldapName.equals(getLdapName(((Principal)object).getName()));
+    }
+    return false;
     }
 
     /**
@@ -66,13 +66,13 @@ class LdapPrincipal implements Principal {
      * @return The principal's hash code.
      */
     public int hashCode() {
-	if (hash == -1) {
-	    if (ldapName == null) {
-		ldapName = getLdapName(name);
-	    }
-	    hash = ldapName.hashCode();
-	}
-	return hash;
+    if (hash == -1) {
+        if (ldapName == null) {
+        ldapName = getLdapName(name);
+        }
+        hash = ldapName.hashCode();
+    }
+    return hash;
     }
 
     /**
@@ -81,7 +81,7 @@ class LdapPrincipal implements Principal {
      * @return String The principal's string name.
      */
     public String getName() {
-	return name;
+    return name;
     }
 
     /**
@@ -90,16 +90,16 @@ class LdapPrincipal implements Principal {
      * @return String The principal's string name.
      */
     public String toString() {
-	return name;
+    return name;
     }
 
     private LdapName getLdapName(String name) {
-	LdapName ldapName = null;
-	try {
-	    ldapName = new LdapName(name);
-	} catch (NamingException e) {
-	    // ignore
-	}
-	return ldapName;
+    LdapName ldapName = null;
+    try {
+        ldapName = new LdapName(name);
+    } catch (NamingException e) {
+        // ignore
+    }
+    return ldapName;
     }
 }

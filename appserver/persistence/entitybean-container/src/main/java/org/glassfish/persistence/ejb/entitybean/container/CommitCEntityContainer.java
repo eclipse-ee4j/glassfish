@@ -42,39 +42,39 @@ public class CommitCEntityContainer
     {
         super(desc, loader, sm);
     }
-    
+
     protected EntityContextImpl getReadyEJB(EjbInvocation inv) {
         Object primaryKey = getInvocationKey(inv);
         return activateEJBFromPool(primaryKey, inv);
     }
-    
+
     protected void createReadyStore(int cacheSize, int numberOfVictimsToSelect,
             float loadFactor, long idleTimeout)
     {
         readyStore = null;
     }
-    
+
     protected void createEJBObjectStores(int cacheSize,
             int numberOfVictimsToSelect, long idleTimeout) throws Exception
     {
         super.defaultCacheEJBO = false;
         super.createEJBObjectStores(cacheSize, numberOfVictimsToSelect, idleTimeout);
     }
-    
+
     // called from releaseContext, afterCompletion
     protected void addReadyEJB(EntityContextImpl context) {
         passivateAndPoolEJB(context);
     }
-    
+
     protected void destroyReadyStoreOnUndeploy() {
         readyStore = null;
     }
-    
+
     protected void removeContextFromReadyStore(Object primaryKey,
             EntityContextImpl context)
     {
         // There is nothing to remove as we don't have a readyStore
     }
-    
+
 }
 

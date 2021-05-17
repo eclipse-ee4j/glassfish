@@ -50,7 +50,7 @@ public class MyListener implements HttpSessionListener {
 
         HttpSession session = hse.getSession();
         ServletContext sc = session.getServletContext();
-    
+
         try {
 
             int loginTimeout = ds1.getLoginTimeout();

@@ -45,24 +45,24 @@ public class LocaleCharsetMapNode extends RuntimeDescriptorNode<LocaleCharsetMap
 
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-	RuntimeDescriptor descriptor = getDescriptor();
-	if (element.getQName().equals(RuntimeTagNames.LOCALE)) {
-	    descriptor.setAttributeValue(LocaleCharsetMap.LOCALE, value);
-	} else 
-	if (element.getQName().equals(RuntimeTagNames.AGENT)) {
-	    descriptor.setAttributeValue(LocaleCharsetMap.AGENT, value);
-	}
-	if (element.getQName().equals(RuntimeTagNames.CHARSET)) {
-	    descriptor.setAttributeValue(LocaleCharsetMap.CHARSET, value);
-	} 
-    }    
-    
+    RuntimeDescriptor descriptor = getDescriptor();
+    if (element.getQName().equals(RuntimeTagNames.LOCALE)) {
+        descriptor.setAttributeValue(LocaleCharsetMap.LOCALE, value);
+    } else
+    if (element.getQName().equals(RuntimeTagNames.AGENT)) {
+        descriptor.setAttributeValue(LocaleCharsetMap.AGENT, value);
+    }
+    if (element.getQName().equals(RuntimeTagNames.CHARSET)) {
+        descriptor.setAttributeValue(LocaleCharsetMap.CHARSET, value);
+    }
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -73,17 +73,17 @@ public class LocaleCharsetMapNode extends RuntimeDescriptorNode<LocaleCharsetMap
      */
     @Override
     public Node writeDescriptor(Node parent, String nodeName, LocaleCharsetMap descriptor) {
-	
-	Element locale = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-	
-	// description?
-	appendTextChild(locale, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
-	
-	// locale, agent, charset attributes
-	setAttribute(locale, RuntimeTagNames.LOCALE, (String) descriptor.getAttributeValue(LocaleCharsetMap.LOCALE));
-	setAttribute(locale, RuntimeTagNames.AGENT, (String) descriptor.getAttributeValue(LocaleCharsetMap.AGENT));
-	setAttribute(locale, RuntimeTagNames.CHARSET, (String) descriptor.getAttributeValue(LocaleCharsetMap.CHARSET));
-	
-	return locale;
+
+    Element locale = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+
+    // description?
+    appendTextChild(locale, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
+
+    // locale, agent, charset attributes
+    setAttribute(locale, RuntimeTagNames.LOCALE, (String) descriptor.getAttributeValue(LocaleCharsetMap.LOCALE));
+    setAttribute(locale, RuntimeTagNames.AGENT, (String) descriptor.getAttributeValue(LocaleCharsetMap.AGENT));
+    setAttribute(locale, RuntimeTagNames.CHARSET, (String) descriptor.getAttributeValue(LocaleCharsetMap.CHARSET));
+
+    return locale;
     }
 }

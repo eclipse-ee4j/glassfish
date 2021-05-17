@@ -19,7 +19,7 @@ package com.sun.jdo.api.persistence.enhancer.classfile;
 import java.io.PrintStream;
 
 /**
- * An instruction which requires a integral constant as an immediate operand 
+ * An instruction which requires a integral constant as an immediate operand
  */
 
 public class InsnIntOp extends Insn {
@@ -79,7 +79,7 @@ public class InsnIntOp extends Insn {
 
   void print (PrintStream out, int indent) {
     ClassPrint.spaces(out, indent);
-    if (opcode() == opc_newarray) 
+    if (opcode() == opc_newarray)
         out.println(offset() + "  opc_newarray  " + primType(operandValue));//NOI18N
     else
         out.println(offset() + "  " + opName(opcode()) + "  " + operandValue);//NOI18N
@@ -127,9 +127,9 @@ public class InsnIntOp extends Insn {
        * If a two byte constant, the constant is prefixed by a wide
        * instruction */
       if (operandValue < 256)
-	return 2;
+    return 2;
       else
-	return 4;
+    return 4;
 
     default:
         throw new InsnError ("invalid instruction " + opName(opcode()) +//NOI18N

@@ -23,14 +23,14 @@ import javax.net.ssl.X509TrustManager;
 /** A class to create an @{link MBeanServerConnection} to appserver.
  */
 public class MBeanServerConnectionFactory {
-    
+
     /** Creates a new instance of MBeanServerConnectionFactory */
     private MBeanServerConnectionFactory() {
     }
-    
-    public static final MBeanServerConnection getMBeanServerConnectionHTTPOrHTTPS(final String adminUser, final String 
+
+    public static final MBeanServerConnection getMBeanServerConnectionHTTPOrHTTPS(final String adminUser, final String
             adminPassword, final String adminHost, final String adminPort, final String isSecure) throws RuntimeException {
-        
+
         MBeanServerConnection mbsc = null;
         try {
             final String protocol = AppserverConnectionSource.PROTOCOL_HTTP;
@@ -44,7 +44,7 @@ public class MBeanServerConnectionFactory {
             throw new RuntimeException(e);
         }
     }
-    
+
     private static TLSParams getDummyTLSParams() {
         final X509TrustManager[] tms = TrustAnyTrustManager.getInstanceArray();
         return ( new TLSParams(tms, null) );

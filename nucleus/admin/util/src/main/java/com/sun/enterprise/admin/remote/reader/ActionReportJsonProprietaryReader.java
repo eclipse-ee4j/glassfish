@@ -180,7 +180,7 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
     //        }
     //        return result;
     //    }
-    //    
+    //
     //    private JSONArray extractArray(final String key, final JSONObject json) {
     //        Object res = json.opt(key);
     //        if (res == null) {

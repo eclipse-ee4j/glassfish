@@ -26,35 +26,35 @@ import jakarta.ejb.*;
 
 
 public abstract class SuppliersBean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
     private LocalParts part0;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
@@ -68,50 +68,50 @@ public abstract class SuppliersBean implements jakarta.ejb.EntityBean {
         }
         //part0.testInCascadeDelete();
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract java.lang.Integer getPartid();
     public abstract void setPartid(java.lang.Integer partid);
-    
+
     public abstract java.lang.Integer getSupplierid();
     public abstract void setSupplierid(java.lang.Integer supplierid);
-    
+
     public abstract java.lang.String getName();
     public abstract void setName(java.lang.String name);
-    
+
     public abstract int getStatus();
     public abstract void setStatus(int status);
-    
+
     public abstract java.lang.String getCity();
     public abstract void setCity(java.lang.String city);
-    
+
     public abstract Data.LocalParts getParts();
-    
+
     public abstract void setParts(Data.LocalParts parts);
-    
+
     public Data.SuppliersKey ejbCreate(java.lang.Integer partid, java.lang.Integer supplierid, java.lang.String name, int status, java.lang.String city) throws jakarta.ejb.CreateException {
         if ((supplierid == null) ||(partid == null)){
             throw new jakarta.ejb.CreateException("The partid and supplierid are required.");
@@ -120,12 +120,12 @@ public abstract class SuppliersBean implements jakarta.ejb.EntityBean {
         setSupplierid(supplierid);
         setName(name);
         setStatus(status);
-        setCity(city); 
+        setCity(city);
         return null;
     }
-    
+
     public void ejbPostCreate(java.lang.Integer partid, java.lang.Integer supplierid, java.lang.String name, int status, java.lang.String city) throws jakarta.ejb.CreateException {
         part0 = getParts();
     }
-    
+
 }

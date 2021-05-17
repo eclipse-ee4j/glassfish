@@ -29,7 +29,7 @@ public class SimpleMessageClient implements Runnable{
     static long MDB_SLEEP_TIME = 2000;
     static boolean debug = false;
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     int id =0;
@@ -40,13 +40,13 @@ public class SimpleMessageClient implements Runnable{
 
     public static void main(String[] args) {
         /**
-	 * Start the threads that will send messages to MDB
-	 */
+     * Start the threads that will send messages to MDB
+     */
         ArrayList al = new ArrayList();
         try {
             for (int i =0; i < NUM_CLIENTS; i++) {
                 Thread client = new Thread(new SimpleMessageClient(i));
-		al.add(client);
+        al.add(client);
                 client.start();
             }
         } catch (Throwable t) {
@@ -76,66 +76,66 @@ public class SimpleMessageClient implements Runnable{
             queueConnection.start();
             queueReceiver = queueSession.createReceiver(queue);
 
-	    HashMap map = new HashMap();
+        HashMap map = new HashMap();
 
             long startTime = System.currentTimeMillis();
             boolean pass = true;
-	    //
-	    // Receives all the messages and keep in the data structure
-	    //
+        //
+        // Receives all the messages and keep in the data structure
+        //
             for (int i =0; i < NUM_CLIENTS * NUM_CYCLES; i++) {
                 TextMessage msg = (TextMessage) queueReceiver.receive(TIME_OUT);
-		Integer id = new Integer(msg.getIntProperty("replyid"));
-		if (map.containsKey(id)) {
-		    pass = false;
-		    debug("Duplicate :" + id);
-		}
-		map.put(id, msg.getText());
+        Integer id = new Integer(msg.getIntProperty("replyid"));
+        if (map.containsKey(id)) {
+            pass = false;
+            debug("Duplicate :" + id);
+        }
+        map.put(id, msg.getText());
             }
             long totalTime = System.currentTimeMillis() - startTime;
-	    System.out.println("Received all messages in :" + totalTime + " milliseconds");
-	    System.out.println("------------------------------------------------------");
+        System.out.println("Received all messages in :" + totalTime + " milliseconds");
+        System.out.println("------------------------------------------------------");
 
-            // 
-	    // Now examine the received data
-	    //
+            //
+        // Now examine the received data
+        //
             for (int i =0; i < NUM_CLIENTS * NUM_CYCLES; i++) {
-	        String reply = (String) map.get(new Integer(i));
-		if (!reply.equals("REPLIED:CLIENT")) {
-		   pass = false;
-		}
-		System.out.println("Receeived :" + i + ":" + reply);
-	    }
-            
-	    // Try to receive one more message than expected.
+            String reply = (String) map.get(new Integer(i));
+        if (!reply.equals("REPLIED:CLIENT")) {
+           pass = false;
+        }
+        System.out.println("Receeived :" + i + ":" + reply);
+        }
+
+        // Try to receive one more message than expected.
             TextMessage msg = (TextMessage) queueReceiver.receive(TIME_OUT);
 
-	    if (msg != null) {
-	       pass = false;
-	       System.out.println("Received more than expected number of messages :" + msg.getText());
-	    }
+        if (msg != null) {
+           pass = false;
+           System.out.println("Received more than expected number of messages :" + msg.getText());
+        }
 
             if (pass) {
                 stat.addStatus("Concurrent message delivery test", stat.PASS);
             } else {
                 stat.addStatus("Concurrent message delivery test", stat.FAIL);
-	    }
+        }
         }catch (Throwable t) {
             t.printStackTrace();
             stat.addStatus("Concurrent message delivery test", stat.FAIL);
         }finally {
             stat.printSummary("Concurrent message delivery test");
-	    for (int i=0; i <al.size(); i++) {
-	       Thread client = (Thread) al.get(i);
-	       try {
-	          client.join();
-	       } catch (Exception e) {
-	          System.out.println(e.getMessage());
-	       }
-	    }
+        for (int i=0; i <al.size(); i++) {
+           Thread client = (Thread) al.get(i);
+           try {
+              client.join();
+           } catch (Exception e) {
+              System.out.println(e.getMessage());
+           }
+        }
             System.exit(0);
         }
-         
+
 
     }
 
@@ -156,9 +156,9 @@ public class SimpleMessageClient implements Runnable{
                 ("java:comp/env/jms/QCFactory");
             queue = (Queue) jndiContext.lookup("java:comp/env/jms/SampleQueue");
 
-	    int startId = id * NUM_CYCLES;
-	    int endId = (id * NUM_CYCLES) + NUM_CYCLES;
-	    for (int i= startId;i < endId; i ++) {
+        int startId = id * NUM_CYCLES;
+        int endId = (id * NUM_CYCLES) + NUM_CYCLES;
+        for (int i= startId;i < endId; i ++) {
                 try {
                     queueConnection =
                     queueConnectionFactory.createQueueConnection();
@@ -169,10 +169,10 @@ public class SimpleMessageClient implements Runnable{
                     queueSender = queueSession.createSender(queue);
                     message = queueSession.createTextMessage();
                     message.setText("CLIENT");
-	            message.setIntProperty("id",i);
-	            message.setLongProperty("sleeptime",MDB_SLEEP_TIME);
+                message.setIntProperty("id",i);
+                message.setLongProperty("sleeptime",MDB_SLEEP_TIME);
                     queueSender.send(message);
-		    debug("Send the message :" + message.getIntProperty("id") + ":" + message.getText());
+            debug("Send the message :" + message.getIntProperty("id") + ":" + message.getText());
                 } catch (Exception e) {
                     System.out.println("Exception occurred: " + e.toString());
                 } finally {
@@ -190,8 +190,8 @@ public class SimpleMessageClient implements Runnable{
 
     static void debug(String msg) {
         if (debug) {
-	   System.out.println(msg);
-	}
+       System.out.println(msg);
+    }
     }
 } // class
 

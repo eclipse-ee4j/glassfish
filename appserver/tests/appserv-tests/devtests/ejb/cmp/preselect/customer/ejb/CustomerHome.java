@@ -21,9 +21,9 @@ import jakarta.ejb.*;
 import java.rmi.RemoteException;
 
 public interface CustomerHome extends EJBHome {
-    
+
     public CustomerRemote create (String id, String name) throws RemoteException, CreateException;
-    
+
     public CustomerRemote findByPrimaryKey (String id)
-        throws FinderException, RemoteException;     
+        throws FinderException, RemoteException;
 }

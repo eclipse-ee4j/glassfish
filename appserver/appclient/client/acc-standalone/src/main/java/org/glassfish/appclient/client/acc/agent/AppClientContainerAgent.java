@@ -32,7 +32,7 @@ import org.glassfish.appclient.client.acc.UserError;
 
 /**
  * Agent which prepares the ACC before the VM launches the selected main program.
- * 
+ *
  * <p>
  * This agent gathers processes agent arguments, supplied either by the appclient script or the end-user (when entering
  * a java command directly), and processes those arguments. The primary purpose is to:
@@ -41,7 +41,7 @@ import org.glassfish.appclient.client.acc.UserError;
  *   <li>create and initialize a new app client container instance, asking the ACC to load and inject the indicated main
  *       class in the process <b>if and only if</b> the main class is not the AppClientCommand class.
  * </ol>
- * 
+ *
  * Then the agent is done. The java launcher and the VM see to it that the main class's main method is invoked.
  *
  * @author tjquinn
@@ -74,24 +74,24 @@ public class AppClientContainerAgent {
         if (agentArgsText == null) {
             throw new IllegalArgumentException();
         }
-        
+
         if (!agentArgsText.startsWith(FILE_OPTIONS_INTRODUCER)) {
             return agentArgsText;
         }
-        
+
         File argsFile = new File(agentArgsText.substring(FILE_OPTIONS_INTRODUCER.length()));
         String result;
-        
+
         try (LineNumberReader reader = new LineNumberReader(new FileReader(argsFile))) {
             result = reader.readLine();
         }
-        
+
         if (Boolean.getBoolean("keep.argsfile")) {
             System.err.println("Agent arguments file retained: " + argsFile.getAbsolutePath());
         } else if (!argsFile.delete()) {
             logger.log(FINE, "Unable to delete temporary args file {0}; continuing", argsFile.getAbsolutePath());
         }
-        
+
         return result;
     }
 }

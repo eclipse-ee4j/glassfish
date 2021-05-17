@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
 @Test(testName="JobManagerTest", enabled=true)
 public class JobManagerTest {
     private static File nucleusRoot  = NucleusTestUtils.getNucleusRoot();
-    
+
     private final String COMMAND1 = "progress-simple";
 
     @BeforeTest
@@ -44,7 +44,7 @@ public class JobManagerTest {
         deleteJobsFile();
         //osgi-cache workaround
         File osgiCacheDir = new File(nucleusRoot, "domains"+File.separator+"domain1"+File.separator+"osgi-cache");
-        deleteDirectoryContents(osgiCacheDir);        
+        deleteDirectoryContents(osgiCacheDir);
         nadmin("start-domain");
 
 
@@ -56,7 +56,7 @@ public class JobManagerTest {
         nadmin("start-domain");
 
     }
-    
+
     @Test(enabled=true)
     public void noJobsTest() {
         nadmin("stop-domain");
@@ -67,9 +67,9 @@ public class JobManagerTest {
         result = nadminWithOutput("list-jobs").outAndErr;
         assertTrue(matchString("Nothing to list", result));
 
-     
+
     }
-    
+
     @Test(dependsOnMethods = { "noJobsTest" },enabled=true)
     public void runJobTest() {
         String result = null;
@@ -181,7 +181,7 @@ public class JobManagerTest {
             jobsFile.delete();
         }
     }
-    
+
 
 }
 

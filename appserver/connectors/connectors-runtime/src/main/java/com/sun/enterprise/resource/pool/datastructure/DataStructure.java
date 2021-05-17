@@ -34,13 +34,13 @@ public interface DataStructure {
     String DS_TYPE_PARTITIONED = "PARTITIONED";
 
     /**
-     * Set maxSize based on the new max pool size set on the connection pool 
-     * during a reconfiguration. 
+     * Set maxSize based on the new max pool size set on the connection pool
+     * during a reconfiguration.
 
      * @param maxSize
      */
     void setMaxSize(int maxSize);
-    
+
     /**
      * creates a new resource and adds to the datastructure.
      *

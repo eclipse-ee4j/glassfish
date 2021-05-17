@@ -155,7 +155,7 @@ public class Util {
     /**
      * Removes any hypens ( - ) from the given string. When it removes a hypen, it converts next immediate character, if
      * any, to an Uppercase.(schema2beans convention)
-     * 
+     *
      * @param string the input string
      * @return a <code>String</code> resulted after removing the hypens
      */
@@ -273,7 +273,7 @@ public class Util {
 
     /**
      * Apply changes passed in <code>data</code> using CLI "set".
-     * 
+     *
      * @param data The set of changes to be applied
      * @return ActionReporter containing result of "set" execution
      */
@@ -510,7 +510,7 @@ public class Util {
      * <code>Class</code> for the first generic type. If the <code>Class</code> is not a generic type, <code>null</code> is
      * returned. The primary intended usage for this is in the <code>MessageBodyReader</code>s to help return a more
      * accurate result from <code>isReadable</code>, though it may also be helpful in other, more general situations.
-     * 
+     *
      * @param genericType
      * @return
      */
@@ -533,7 +533,7 @@ public class Util {
 
     /**
      * Get the current configured indenting value for the REST layer
-     * 
+     *
      * @return
      */
     public static int getFormattingIndentLevel() {
@@ -555,7 +555,7 @@ public class Util {
 
     /**
      * Convenience wrapper around ParameterMap constructor to make it easier to use its fluent API
-     * 
+     *
      * @return ParameterMap
      */
     public static ParameterMap parameterMap() {

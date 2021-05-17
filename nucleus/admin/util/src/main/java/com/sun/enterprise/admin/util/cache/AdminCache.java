@@ -20,14 +20,14 @@ import java.util.Date;
 
 /**
  * Simple cache for administration framework.
- * 
+ *
  * @author mmares
  */
 public interface AdminCache {
 
     /**
      * Retrieve data from cache.
-     * 
+     *
      * @param key in the cache
      * @param clazz Cache data will be converted to requested type using appropriate {@code AdminCacheObjectProvider}
      * @return Cached data converted to requested type or {@code null} if not cached
@@ -36,7 +36,7 @@ public interface AdminCache {
 
     /**
      * Puts data to cache.
-     * 
+     *
      * @param key in the cache
      * @param data Cached data will be converted to raw bytes using appropriate {@code AdminCacheObjectProvider}
      * @return Cached data converted to requested type or {@code null} if not cached
@@ -45,14 +45,14 @@ public interface AdminCache {
 
     /**
      * Checked if content is in the cache.
-     * 
+     *
      * @param key in the cache
      */
     public boolean contains(String key);
 
     /**
      * Date when was cached data last updated.
-     * 
+     *
      * @param key in the cache
      * @return {@code Date} of last update or null if does not exist in cache
      */

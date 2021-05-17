@@ -66,15 +66,15 @@ public class LRUCacheImpl implements Cache {
     /**
      * Check if an entry is found for this key object. If found, the entry is
      * put in the result object and back into the list.
-     * 
+     *
      * @param key key whose mapping entry is to be checked.
-     * @return result object that contains the key with the entry if not 
+     * @return result object that contains the key with the entry if not
      * null when
      * (1) object not found in cache
      */
     public Object checkAndUpdateCache(CacheObjectKey key) {
         Object result = null;
-        CacheEntry entry = list.get(key);        
+        CacheEntry entry = list.get(key);
         if(entry != null) {
             //Cache hit
             result = entry.entryObj;
@@ -92,11 +92,11 @@ public class LRUCacheImpl implements Cache {
         }
         return result;
     }
-    
+
     /**
      * Add the key and entry value into the cache.
      * @param key key that contains the sql string and its type (PS/CS)
-     * @param o entry that is the wrapper of PreparedStatement or 
+     * @param o entry that is the wrapper of PreparedStatement or
      * CallableStatement
      * @param force If the already existing key is to be overwritten
      */
@@ -134,7 +134,7 @@ public class LRUCacheImpl implements Cache {
 //        Iterator keyIterator = list.keySet().iterator();
         while(entrySetIterator.hasNext()){
 //            CacheObjectKey key = (CacheObjectKey) entrySetIterator.next();
-            Map.Entry<CacheObjectKey, CacheEntry> entryTuple = 
+            Map.Entry<CacheObjectKey, CacheEntry> entryTuple =
                     (Map.Entry<CacheObjectKey, CacheEntry>) entrySetIterator.next();
             CacheEntry entry = entryTuple.getValue();
             try{
@@ -160,7 +160,7 @@ public class LRUCacheImpl implements Cache {
         while(entrySetIterator.hasNext()){
 //            CacheObjectKey key = (CacheObjectKey)keyIterator.next();
 //            CacheEntry entry = list.get(key);
-            Map.Entry<CacheObjectKey, CacheEntry> entryTuple = 
+            Map.Entry<CacheObjectKey, CacheEntry> entryTuple =
                     (Map.Entry<CacheObjectKey, CacheEntry>) entrySetIterator.next();
             CacheEntry entry = entryTuple.getValue();
             try{
@@ -180,9 +180,9 @@ public class LRUCacheImpl implements Cache {
             }
             entrySetIterator.remove();
             break;
-        }        
+        }
     }
-    
+
     /**
      * Returns the number of entries in the statement cache
      * @return has integer value

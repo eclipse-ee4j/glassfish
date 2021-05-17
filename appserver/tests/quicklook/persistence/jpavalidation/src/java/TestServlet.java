@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
         try {
             out.println("TestServlet at " + request.getContextPath());
             testcase = request.getParameter("tc");
-	    System.out.println("testcase = " + testcase);
+        System.out.println("testcase = " + testcase);
 
             if ("initialize".equals(testcase)) {
 
@@ -71,10 +71,10 @@ public class TestServlet extends HttpServlet {
         } catch (Exception ex) {
 
             System.out.println("Failure in TestServlet");
-	    out.println("Failure in TestServlet");
+        out.println("Failure in TestServlet");
 
         } finally {
-            if (status) 
+            if (status)
               out.println(testcase+":pass");
             else
               out.println(testcase+":fail");

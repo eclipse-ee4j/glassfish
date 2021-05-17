@@ -49,7 +49,7 @@ public class SlessEJB3 implements SlessSub
     private void setEJBContext6(EJBContext context) {
         ejbContext6_ = context;
     }
-    
+
     public String hello() {
         System.out.println("In SlessEJB3:hello()");
 
@@ -97,13 +97,13 @@ public class SlessEJB3 implements SlessSub
     }
 
     public Collection roundTrip2(Collection collectionOfSless) {
-        System.out.println("In SlessEJB3::roundTrip2 " + 
+        System.out.println("In SlessEJB3::roundTrip2 " +
                            collectionOfSless);
         if( collectionOfSless.size() > 0 ) {
             Sless sless = (Sless) collectionOfSless.iterator().next();
-            System.out.println("input Sless.getId() = " + sless.getId());  
+            System.out.println("input Sless.getId() = " + sless.getId());
         }
         return collectionOfSless;
-    }    
+    }
 
 }

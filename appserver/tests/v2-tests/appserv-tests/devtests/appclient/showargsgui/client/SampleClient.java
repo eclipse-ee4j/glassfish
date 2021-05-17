@@ -37,7 +37,7 @@ public class SampleClient extends javax.swing.JFrame {
     public SampleClient() {
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -78,7 +78,7 @@ public class SampleClient extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     /**
      * @param args the command line arguments
      */
@@ -90,7 +90,7 @@ public class SampleClient extends javax.swing.JFrame {
                 client.setVisible(true);
                 System.out.println("Just set visible to TRUE");
             }
-            
+
             public Runnable init(String args[]) {
                 client = new SampleClient();
                 client.initArgs(args);
@@ -107,7 +107,7 @@ public class SampleClient extends javax.swing.JFrame {
         }.init(args));
         System.out.println("About to return from static main");
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList argValueList;
     private javax.swing.JLabel jLabel1;
@@ -115,7 +115,7 @@ public class SampleClient extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
-    
+
     private void initArgs(String[] args) {
         argValueList.setListData(args);
     }

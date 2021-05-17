@@ -34,10 +34,10 @@ class BootAMXListener implements NotificationListener
 {
     private JMXConnectorServer mServer = null;
     private final BootAMXMBean mBooter;
-    
+
     private static final Logger LOGGER = Util.JMX_LOGGER;
 
-    @LogMessageInfo(message = "Booting AMX Listener, connection made for {0}, now booting AMX MBeans", 
+    @LogMessageInfo(message = "Booting AMX Listener, connection made for {0}, now booting AMX MBeans",
             level="INFO")
     private static final String JMX_BOOTING_AMX_LISTENER="NCLS-JMX-00008";
 
@@ -45,11 +45,11 @@ class BootAMXListener implements NotificationListener
     {
         mBooter = booter;
     }
-    
+
     void setServer(JMXConnectorServer server) {
         mServer = server;
     }
-    
+
     @Override
     public void handleNotification(final Notification notif, final Object handback)
     {

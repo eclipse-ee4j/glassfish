@@ -32,7 +32,7 @@ public interface ConfigurationPersistence {
 
     /**
      * callback when the new {@link DomDocument} instance should be saved to an external media like a file
-     * 
+     *
      * @param doc the new document instance
      * @throws IOException if the file cannot be opened/written/closed
      * @throws XMLStreamException if the xml cannot be written out successfully

@@ -25,7 +25,7 @@ import jakarta.inject.Inject;
 public class SimpleInjectee {
     @Inject
     private SimpleService simpleService;
-    
+
     /**
      * Used by the test code to ensure we can call a proxied service
      * from a PerLookup object

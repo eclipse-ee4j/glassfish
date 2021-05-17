@@ -43,7 +43,7 @@ public class ResettableObjectInputStream extends ObjectInputStream {
       ClassNotFoundException {
     return underlying.readObject();
   }
-  
+
   @Override
   public Object readUnshared() throws IOException, ClassNotFoundException {
     return underlying.readUnshared();

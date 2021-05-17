@@ -26,12 +26,12 @@ public class Foo {
     int id = 0;
 
     public Foo() {
-	id = count;
-	count++;
+    id = count;
+    count++;
     }
 
     public String toString() {
-	return "Foo" + id;
+    return "Foo" + id;
     }
 
 }

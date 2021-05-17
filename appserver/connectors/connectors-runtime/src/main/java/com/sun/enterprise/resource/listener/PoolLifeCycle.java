@@ -22,7 +22,7 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 /**
  * Pool Life cycle listener that can be implemented by listeners for getting
  * events on the pool's lifecycle like creation/destruction.
- * 
+ *
  * @author Jagadish Ramu
  */
 public interface PoolLifeCycle {

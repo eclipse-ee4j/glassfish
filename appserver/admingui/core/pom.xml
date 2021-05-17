@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-core</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console Core Jar</name>
 
     <developers>
@@ -169,12 +169,12 @@
             <groupId>jakarta.ws.rs</groupId>
             <artifactId>jakarta.ws.rs-api</artifactId>
             <scope>provided</scope>
-        </dependency> 
+        </dependency>
         <dependency> <!-- for FindBugs -->
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-json-jackson</artifactId>
             <scope>provided</scope>
-        </dependency> 
+        </dependency>
 
 
     </dependencies>

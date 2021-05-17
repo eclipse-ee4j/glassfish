@@ -25,14 +25,14 @@ import jakarta.ejb.*;
  */
 
 public interface LocalPartsHome extends jakarta.ejb.EJBLocalHome {
-    
+
     public Data.LocalParts findByPrimaryKey(java.lang.Integer aKey)
     throws jakarta.ejb.FinderException;
-    
+
     public LocalParts create(java.lang.Integer partid, java.lang.String name, java.lang.String color, java.math.BigDecimal weight, java.lang.Double price) throws jakarta.ejb.CreateException;
-    
+
     public java.util.Collection findAll() throws jakarta.ejb.FinderException;
-    
+
     public java.util.Collection findByPartsName(java.lang.String name) throws jakarta.ejb.FinderException;
-    
+
 }

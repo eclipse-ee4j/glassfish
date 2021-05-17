@@ -27,7 +27,7 @@ import org.apache.catalina.deploy.ContextEjb;
 public class ContextEjbDecorator extends ContextEjb{
 
     private EjbReferenceDescriptor decoree;
-    
+
     public ContextEjbDecorator(EjbReferenceDescriptor decoree){
         this.decoree = decoree;
     }
@@ -44,17 +44,17 @@ public class ContextEjbDecorator extends ContextEjb{
         return decoree.getEjbHomeInterface();
     }
 
-  
+
     public String getLink() {
         return decoree.getLinkName();
     }
 
- 
+
     public String getLocal() {
         return decoree.getEjbInterface();
     }
 
- 
+
     public String getName() {
         return decoree.getName();
     }
@@ -64,6 +64,6 @@ public class ContextEjbDecorator extends ContextEjb{
         return decoree.getType();
     }
 
- 
+
 
 }

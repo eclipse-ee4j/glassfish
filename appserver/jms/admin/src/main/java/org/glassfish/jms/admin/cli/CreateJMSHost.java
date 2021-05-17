@@ -108,7 +108,7 @@ public class CreateJMSHost implements AdminCommand {
         Config targetConfig = domain.getConfigNamed(target);
         if (targetConfig != null)
             config = targetConfig;
-        
+
         Server targetServer = domain.getServerNamed(target);
         //String configRef = targetServer.getConfigRef();
         if (targetServer!=null) {
@@ -165,15 +165,15 @@ public class CreateJMSHost implements AdminCommand {
                     jmsHost.setName(jmsHostName);
                     jmsHost.setHost(mqhost);
                     jmsHost.setPort(mqport);
-		    if(props != null)
-		    {
-		    	for (Map.Entry e: props.entrySet()){
-				Property prop = jmsHost.createChild(Property.class);
-				prop.setName((String)e.getKey());
-				prop.setValue((String)e.getValue());
-				jmsHost.getProperty().add(prop);
-			}
-		    }
+            if(props != null)
+            {
+                for (Map.Entry e: props.entrySet()){
+                Property prop = jmsHost.createChild(Property.class);
+                prop.setName((String)e.getKey());
+                prop.setValue((String)e.getValue());
+                jmsHost.getProperty().add(prop);
+            }
+            }
                     param.getJmsHost().add(jmsHost);
 
                     return jmsHost;

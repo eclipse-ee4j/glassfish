@@ -128,7 +128,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         assertEquals("123.234.456.88", getFieldValue("propertyForm:propertySheet:propertSectionTextField:gmsMulticastAddress:gmsMulticastAddress"));
         assertEquals("${ABCDE}", getFieldValue("propertyForm:propertySheet:propertSectionTextField:GmsBindInterfaceAddress:GmsBindInterfaceAddress"));
         assertEquals(false, isChecked("propertyForm:propertySheet:propertSectionTextField:gmsEnabledProp:gmscb"));
-        
+
         deleteCluster(clusterName);
     }
 
@@ -276,7 +276,7 @@ public class ClusterTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:jmsTypePropertySheet:jmsTypeSection:jmsTypeProp:optLocal", "i18ncs.cluster.jms.mqClusterTypeEnhanced");
         selenium.check("propertyForm:jmsPropertySheet:configureJmsClusterSection:ClusterTypeProp:optConventional");
 //        selectDropdownOption("propertyForm:jmsPropertySheet:configureJmsClusterSection:ClusterTypeProp:clusterType", "Conventional");
-        
+
         selectDropdownOption("propertyForm:jmsPropertySheet:configureJmsClusterSection:ConfigStoreTypeProp:configStoreType", "Master Broker");
         selectDropdownOption("propertyForm:jmsPropertySheet:configureJmsClusterSection:MessageStoreTypeProp:messageStoreType", "JDBC");
 

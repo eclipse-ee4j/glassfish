@@ -37,22 +37,22 @@ public class MessageNode extends DeploymentDescriptorNode {
 
     public MessageNode() {
         registerElementHandler(new XMLElement(
-            RuntimeTagNames.JAVA_METHOD), MethodNode.class, 
+            RuntimeTagNames.JAVA_METHOD), MethodNode.class,
             "setMethodDescriptor");
     }
-    
+
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         if (descriptor == null) {
             descriptor = new MessageDescriptor();
             setMiscDescriptors();
         }
         return descriptor;
-    }     
+    }
 
-        
+
     /**
      * receives notification of the value for a particular tag
      *
@@ -65,24 +65,24 @@ public class MessageNode extends DeploymentDescriptorNode {
         } else {
             super.setElementValue(element, value);
         }
-    }    
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for 
+     * @param node name for
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
-        MessageDescriptor messageDesc) {    
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
+        MessageDescriptor messageDesc) {
         Node messageNode = super.writeDescriptor(parent, nodeName,
            messageDesc);
 
-        // for empty message case, set the method descriptor 
+        // for empty message case, set the method descriptor
         // to a method descriptor with "*" as name
-        if (messageDesc.getOperationName() == null && 
+        if (messageDesc.getOperationName() == null &&
             messageDesc.getMethodDescriptor() == null) {
             MethodDescriptor allMethodDesc = new MethodDescriptor();
             allMethodDesc.setName(ALL_METHODS);
@@ -98,14 +98,14 @@ public class MessageNode extends DeploymentDescriptorNode {
         }
 
         // operation-name
-        appendTextChild(messageNode, WebServicesTagNames.OPERATION_NAME, 
+        appendTextChild(messageNode, WebServicesTagNames.OPERATION_NAME,
             messageDesc.getOperationName());
 
         return messageNode;
     }
 
     private void setMiscDescriptors() {
-        XMLNode parentNode = 
+        XMLNode parentNode =
             getParentNode().getParentNode().getParentNode();
 
         // get the endpoint or portinfo descriptor
@@ -124,22 +124,22 @@ public class MessageNode extends DeploymentDescriptorNode {
             // In the cases of used in
             // 1. webservice-endpoint for web component
             // 2. port-info for web component
-            bundleDesc = 
-                (WebBundleDescriptor)parentNode.getDescriptor(); 
+            bundleDesc =
+                (WebBundleDescriptor)parentNode.getDescriptor();
         } else if (parentNode.getDescriptor() instanceof BundleDescriptor) {
             // In the cases of used in port-info for app client
-            bundleDesc = (BundleDescriptor)parentNode.getDescriptor(); 
+            bundleDesc = (BundleDescriptor)parentNode.getDescriptor();
         } else {
             // In the case of used in webservice-endpoint for ejb component
             if (parentNode.getDescriptor() instanceof EjbDescriptor) {
-                EjbDescriptor ejbDesc = 
+                EjbDescriptor ejbDesc =
                     (EjbDescriptor)parentNode.getDescriptor();
                 bundleDesc = ejbDesc.getEjbBundleDescriptor();
             } else {
                 // In the case of used in port-info for ejb component
                 parentNode = parentNode.getParentNode();
                 if (parentNode.getDescriptor() instanceof EjbDescriptor) {
-                    EjbDescriptor ejbDesc = 
+                    EjbDescriptor ejbDesc =
                         (EjbDescriptor)parentNode.getDescriptor();
                     bundleDesc = ejbDesc.getEjbBundleDescriptor();
                 }

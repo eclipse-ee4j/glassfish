@@ -54,7 +54,7 @@ static Logger logger = LogDomains.getLogger(ORBLazyServiceInitializer.class, Log
     }
 
     public String getServiceName() {
-       
+
         return "iiop-service";
     }
 

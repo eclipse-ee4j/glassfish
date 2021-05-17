@@ -143,9 +143,9 @@ public final class AzResourceImpl extends AzAttributesImpl implements AzResource
 
         return output;
     }
-    
-	@LogMessageInfo(
-			message = "Unable to decode URI: {0}.",
-			level = "WARNING")
-	private static final String URI_DECODING_ERROR = "SEC-SVCS-00102";
+
+    @LogMessageInfo(
+            message = "Unable to decode URI: {0}.",
+            level = "WARNING")
+    private static final String URI_DECODING_ERROR = "SEC-SVCS-00102";
 }

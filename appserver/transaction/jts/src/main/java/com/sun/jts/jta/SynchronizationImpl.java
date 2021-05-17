@@ -42,9 +42,9 @@ public class SynchronizationImpl extends SynchronizationPOA
     private POA poa;
     private org.omg.CosTransactions.Synchronization corbaRef = null;
     private TransactionState state = null;
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(SynchronizationImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     public SynchronizationImpl() {
@@ -58,7 +58,7 @@ public class SynchronizationImpl extends SynchronizationPOA
         this.state = state;
     }
 
-    public void addSynchronization(Synchronization sync, 
+    public void addSynchronization(Synchronization sync,
                                    boolean interposed) {
         if (!interposed)
             syncs.addElement(sync);
@@ -77,15 +77,15 @@ public class SynchronizationImpl extends SynchronizationPOA
                 try {
                     state.setRollbackOnly();
                 } catch (Exception ex1) {
-		    _logger.log(Level.WARNING,
-		        "jts.unexpected_error_occurred_in_after_completion",ex1);
+            _logger.log(Level.WARNING,
+                "jts.unexpected_error_occurred_in_after_completion",ex1);
                 }
-		_logger.log(Level.WARNING,
-		    "jts.unexpected_error_occurred_in_after_completion",rex);
+        _logger.log(Level.WARNING,
+            "jts.unexpected_error_occurred_in_after_completion",rex);
                 throw rex;
             } catch (Exception ex) {
-				_logger.log(Level.WARNING,
-						"jts.unexpected_error_occurred_in_after_completion",ex);
+                _logger.log(Level.WARNING,
+                        "jts.unexpected_error_occurred_in_after_completion",ex);
             }
         }
         Enumeration e1 = interposedSyncs.elements();
@@ -97,15 +97,15 @@ public class SynchronizationImpl extends SynchronizationPOA
                 try {
                     state.setRollbackOnly();
                 } catch (Exception ex1) {
-		    _logger.log(Level.WARNING,
-		        "jts.unexpected_error_occurred_in_after_completion",ex1);
+            _logger.log(Level.WARNING,
+                "jts.unexpected_error_occurred_in_after_completion",ex1);
                 }
-		_logger.log(Level.WARNING,
-		    "jts.unexpected_error_occurred_in_after_completion",rex);
+        _logger.log(Level.WARNING,
+            "jts.unexpected_error_occurred_in_after_completion",rex);
                 throw rex;
             } catch (Exception ex) {
-				_logger.log(Level.WARNING,
-						"jts.unexpected_error_occurred_in_after_completion",ex);
+                _logger.log(Level.WARNING,
+                        "jts.unexpected_error_occurred_in_after_completion",ex);
             }
         }
         state.beforeCompletion();
@@ -121,8 +121,8 @@ public class SynchronizationImpl extends SynchronizationPOA
                 try {
                     sync.afterCompletion(result);
                 } catch (Exception ex) {
-					_logger.log(Level.WARNING,
-							"jts.unexpected_error_occurred_in_after_completion",ex);
+                    _logger.log(Level.WARNING,
+                            "jts.unexpected_error_occurred_in_after_completion",ex);
                 }
             }
             Enumeration e = syncs.elements();
@@ -131,8 +131,8 @@ public class SynchronizationImpl extends SynchronizationPOA
                 try {
                     sync.afterCompletion(result);
                 } catch (Exception ex) {
-					_logger.log(Level.WARNING,
-							"jts.unexpected_error_occurred_in_after_completion",ex);
+                    _logger.log(Level.WARNING,
+                            "jts.unexpected_error_occurred_in_after_completion",ex);
                 }
             }
         } finally {
@@ -145,8 +145,8 @@ public class SynchronizationImpl extends SynchronizationPOA
                     poa.deactivate_object(poa.reference_to_id(corbaRef));
                 }
             } catch (Exception ex) {
-				_logger.log(Level.WARNING,
-						"jts.unexpected_error_occurred_in_after_completion",ex);
+                _logger.log(Level.WARNING,
+                        "jts.unexpected_error_occurred_in_after_completion",ex);
             }
         }
     }
@@ -163,8 +163,8 @@ public class SynchronizationImpl extends SynchronizationPOA
                             poa.servant_to_reference(this));
                 //corbaRef = (org.omg.CosTransactions.Synchronization) this;
             } catch (Exception ex) {
-				_logger.log(Level.SEVERE,
-						"jts.unexpected_error_in_getcorbareference",ex);
+                _logger.log(Level.SEVERE,
+                        "jts.unexpected_error_in_getcorbareference",ex);
             }
         }
 
@@ -206,18 +206,18 @@ public class SynchronizationImpl extends SynchronizationPOA
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result,
-				   ExceptionList exceptions,
-				   ContextList contexts) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result,
+                   ExceptionList exceptions,
+                   ContextList contexts) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 

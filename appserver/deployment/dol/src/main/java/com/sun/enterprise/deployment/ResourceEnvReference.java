@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.deployment;
 
-    
+
 /**
  * I am an object representing a dependency on a resource environment.
  * @author Kenneth Saks

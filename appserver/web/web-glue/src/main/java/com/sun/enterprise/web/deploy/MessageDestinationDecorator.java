@@ -30,7 +30,7 @@ import org.apache.catalina.deploy.MessageDestination;
 public class MessageDestinationDecorator extends MessageDestination {
 
     private MessageDestinationDescriptor decoree;
-    
+
     public MessageDestinationDecorator(MessageDestinationDescriptor decoree){
         this.decoree = decoree;
     }
@@ -40,17 +40,17 @@ public class MessageDestinationDecorator extends MessageDestination {
         return decoree.getDescription();
     }
 
- 
+
     public String getDisplayName() {
         return decoree.getDisplayName();
     }
 
-  
+
     public String getLargeIcon() {
         return decoree.getLargeIconUri();
     }
 
-  
+
     public String getName() {
         return decoree.getName();
     }

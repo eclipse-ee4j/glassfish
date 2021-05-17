@@ -28,10 +28,10 @@ public class TC4SlsbWithSynchPC implements Tester{
     @PersistenceContext(unitName="lib/unsyncpc_txscope_synctype_mismatch-par.jar#em",
             synchronization = SynchronizationType.SYNCHRONIZED)
     EntityManager em;
-    
+
     @EJB(beanName = "TC4SfsbWithUnsynchPC")
     Finder finder;
-    
+
     @Override
     public boolean doTest() {
         try {

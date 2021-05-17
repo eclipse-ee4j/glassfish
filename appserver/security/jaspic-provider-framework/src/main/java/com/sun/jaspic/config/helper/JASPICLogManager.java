@@ -18,7 +18,7 @@ package com.sun.jaspic.config.helper;
 
 /**
  *
- * 
+ *
  */
 public class JASPICLogManager {
 

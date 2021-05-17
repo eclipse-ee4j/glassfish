@@ -30,9 +30,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class ServletTest2 extends HttpServlet {
-    
+
     Collator japCollator = Collator.getInstance(Locale.JAPANESE);
-    
+
     public void doPost (HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 
@@ -51,7 +51,7 @@ public class ServletTest2 extends HttpServlet {
     }
 
     public void doGet (HttpServletRequest req, HttpServletResponse res)
-            throws ServletException, IOException {    
+            throws ServletException, IOException {
         doPost (req,res);
     }
 }

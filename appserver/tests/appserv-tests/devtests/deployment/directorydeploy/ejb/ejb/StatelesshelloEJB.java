@@ -18,7 +18,7 @@ package statelesshello;
 
 import java.io.Serializable;
 import java.io.InputStream;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -26,11 +26,11 @@ import javax.naming.*;
 
 public class StatelesshelloEJB implements SessionBean {
     private SessionContext sc;
-    
+
     public StatelesshelloEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In ejbCreate !!");
+    System.out.println("In ejbCreate !!");
     }
 
     public boolean isStatelesshello() throws EJBException {
@@ -52,47 +52,47 @@ public class StatelesshelloEJB implements SessionBean {
 
 
 
-	Double d = null;
-	String name = null;
-	StringBuffer buffer = new StringBuffer("Statelesshello EJB - checked environment properties for user ");
-	System.out.println("StatelesshelloEJB is saying hello to user\n");
-	System.out.println("Now going forward with reading the environment properties\n");
+    Double d = null;
+    String name = null;
+    StringBuffer buffer = new StringBuffer("Statelesshello EJB - checked environment properties for user ");
+    System.out.println("StatelesshelloEJB is saying hello to user\n");
+    System.out.println("Now going forward with reading the environment properties\n");
 
-	try {
-	    InitialContext ic = new InitialContext();
-	    name = (String) ic.lookup("java:comp/env/user");
-	    buffer.append(name);
-	    buffer.append("\nand for number which is = ");
-	    d = (Double) ic.lookup("java:comp/env/number");
-	    buffer.append(d);
-	    buffer.append("\n");
-	} catch(NamingException e) {
+    try {
+        InitialContext ic = new InitialContext();
+        name = (String) ic.lookup("java:comp/env/user");
+        buffer.append(name);
+        buffer.append("\nand for number which is = ");
+        d = (Double) ic.lookup("java:comp/env/number");
+        buffer.append(d);
+        buffer.append("\n");
+    } catch(NamingException e) {
             e.printStackTrace();
             throw new EJBException(e.getMessage());
-	}
-	if(d == null) {
-	    throw new EJBException("Wrong value for environment property");
-	}
-	System.out.println(buffer);
+    }
+    if(d == null) {
+        throw new EJBException("Wrong value for environment property");
+    }
+    System.out.println(buffer);
         return new String(buffer);
     }
-    
+
     public String getUserDefinedException() throws RemoteException, StatelesshelloException {
-        
+
         System.out.println("Throwing a User Defined Exception");
         throw new StatelesshelloException("test exception");
-        
+
     }
-    
-    
+
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

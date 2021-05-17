@@ -24,7 +24,7 @@ public class TestServletContextListener implements ServletContextListener {
         System.out.println(">>> contextInitialized");
         ServletContext context = sce.getServletContext();
         context.setAttribute("myattr", "myservletcontextlistener");
-    }   
+    }
 
     public void contextDestroyed(ServletContextEvent sce) {
         System.out.println(">>> contextDestroyed");

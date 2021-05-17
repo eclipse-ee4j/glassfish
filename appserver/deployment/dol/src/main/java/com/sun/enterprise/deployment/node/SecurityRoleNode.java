@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
 /**
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescriptor> {
 
@@ -39,7 +39,7 @@ public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescr
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(TagNames.ROLE_NAME, "setName");
         return table;
@@ -48,14 +48,14 @@ public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescr
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, Role descriptor) {
         Node roleNode = appendChild(parent, nodeName);
-        appendTextChild(roleNode, TagNames.DESCRIPTION, descriptor.getDescription());        
+        appendTextChild(roleNode, TagNames.DESCRIPTION, descriptor.getDescription());
         appendTextChild(roleNode, TagNames.ROLE_NAME, descriptor.getName());
         return roleNode;
     }
@@ -63,7 +63,7 @@ public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescr
     @Override
     public Node writeDescriptor(Node parent, String nodeName, SecurityRoleDescriptor descriptor) {
         Node roleNode = appendChild(parent, nodeName);
-        appendTextChild(roleNode, TagNames.DESCRIPTION, descriptor.getDescription());        
+        appendTextChild(roleNode, TagNames.DESCRIPTION, descriptor.getDescription());
         appendTextChild(roleNode, TagNames.ROLE_NAME, descriptor.getName());
         return roleNode;
     }

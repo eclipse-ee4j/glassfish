@@ -82,7 +82,7 @@ public final class AMXValidator
             log(Level.FINE, toString(args), null);
         }
     }
-    
+
     private static String toString(final Object... args)
     {
         final StringBuilder buf = new StringBuilder();
@@ -92,7 +92,7 @@ public final class AMXValidator
         }
         return buf.toString();
     }
-    
+
     private static final Level LEVEL_DEBUG = Level.FINE;
     private static void debug(final Object... args)
     {
@@ -101,7 +101,7 @@ public final class AMXValidator
             log( LEVEL_DEBUG, toString(args), null );
         }
     }
-    
+
 
     private static final String NL = StringUtil.NEWLINE();
 
@@ -110,14 +110,14 @@ public final class AMXValidator
     private final ProxyFactory mProxyFactory;
 
     private final DomainRoot mDomainRoot;
-    
+
     // created if needed
     private MBeanTrackerMBean  mMBeanTracker;
 
     private volatile boolean  mUnregisterNonCompliant;
     private volatile boolean  mLogInaccessibleAttributes;
     private volatile String   mValidationLevel;
-    
+
     public AMXValidator(
         final MBeanServerConnection conn,
         final String    validationLevel,
@@ -128,12 +128,12 @@ public final class AMXValidator
 
         mProxyFactory = ProxyFactory.getInstance(conn);
         mDomainRoot = mProxyFactory.getDomainRootProxy(false);
-        
+
         mValidationLevel = validationLevel;
         mUnregisterNonCompliant = unregisterNonCompliant;
         mLogInaccessibleAttributes = logInaccessibleAttributes;
     }
-    
+
     /**
         Return a Set containing ObjectNames that appear to be AMX-compliant MBeans
      */
@@ -143,17 +143,17 @@ public final class AMXValidator
         for( final ObjectName cand : candidates )
         {
             if ( cand.getKeyProperty(TYPE_KEY) == null ) continue;
-            
+
             // for now, require matching jmx domain "amx"
             if ( cand.getDomain().equals( AMXGlassfish.DEFAULT_JMX_DOMAIN) )
             {
                 amxSet.add(cand);
             }
-            
+
         }
         return amxSet;
     }
-    
+
     /**
         Find all MBeans that appear to be AMX MBeans
      */
@@ -171,7 +171,7 @@ public final class AMXValidator
         {
             throw new RuntimeException(e);
         }
-        
+
         return filterAMX(theWorld);
     }
 
@@ -225,7 +225,7 @@ public final class AMXValidator
         }
 
     }
-    
+
     /** keeps track of all validation failures */
     private static final class Failures
     {
@@ -262,7 +262,7 @@ public final class AMXValidator
                 {
                     return;
                 }
-            
+
                 mFailures.put( problems.getObjectName(), problems);
             }
         }
@@ -286,31 +286,31 @@ public final class AMXValidator
             return builder.toString() + NL + mNumTested + " MBeans tested.";
         }
     }
-    
+
     public static final class ProblemList
     {
         final ObjectName   mObjectName;
         final List<String> mProblems;
         boolean            mInstanceNotFound;
-        
+
         public ProblemList( final ObjectName objectName )
         {
             mObjectName = objectName;
             mProblems = new ArrayList<String>();
             mInstanceNotFound = false;
         }
-        
+
         public List<String> getProblems() { return mProblems; }
         public ObjectName getObjectName() { return mObjectName; }
-        
+
         public boolean hasProblems() { return !mProblems.isEmpty(); }
-        
-        
+
+
         public boolean instanceNotFound()
         {
             return mInstanceNotFound;
         }
-        
+
         private void add( final String msg )
         {
             try
@@ -322,7 +322,7 @@ public final class AMXValidator
                 // can't happen
             }
         }
-        
+
         private void add( final Throwable t) throws InstanceNotFoundException { add( "", t); }
 
         private void add( final String msg, final Throwable t )
@@ -348,7 +348,7 @@ public final class AMXValidator
                 }
             }
         }
-        
+
         @Override
         public String toString()
         {
@@ -356,7 +356,7 @@ public final class AMXValidator
             {
                 return "MBean " + mObjectName + " unregistered while being validated";
             }
-            
+
             return "MBean " + mObjectName + " problems: " + NL + CollectionUtil.toString( mProblems, NL);
         }
     }
@@ -446,8 +446,8 @@ public final class AMXValidator
     {
         return ExceptionUtil.getRootCause(t) instanceof InstanceNotFoundException;
     }
-    
-            
+
+
     private void _validate(final AMXProxy proxy, final ProblemList problems) throws InstanceNotFoundException
     {
         progress( "Validate: ", proxy.objectName() );
@@ -514,7 +514,7 @@ public final class AMXValidator
         {
             throw new IllegalStateException("Pathnames MBean does not exist");
         }
-        
+
         try
         {
             final String path = proxy.path();
@@ -595,12 +595,12 @@ public final class AMXValidator
                 {
                     throw new Exception("Attributes Map contains attributes not found in the MBeanInfo: " + keys);
                 }
-                
+
                 if ( mLogInaccessibleAttributes )
                 {
                     final Set<String> missing = new HashSet<String>(attrNames);
                     missing.removeAll(attributesMap.keySet());
-                    
+
                     logInfo("Inaccessible attributes: " + missing + " in " + proxy.objectName(), null);
                 }
             }
@@ -645,8 +645,8 @@ public final class AMXValidator
             }
         }
     }
-    
-    
+
+
     private void fail(final ObjectName objectName, final String msg)
             throws ValidationFailureException
     {
@@ -678,7 +678,7 @@ public final class AMXValidator
                 problems.add("AMXConfig MBean is not a descendant of Domain: " + config.objectName() + ", it has parent " + config.getParent() );
             }
         }
-        
+
         // check default values support
         final Map<String, String> defaultValues = config.getDefaultValues(false);
         final Map<String, String> defaultValuesAMX = config.getDefaultValues(true);
@@ -822,16 +822,16 @@ public final class AMXValidator
                 {
                     fail(proxy, "Children types must be case-insensitive");
                 }
-                
+
                 // verify that the MBeanTracker agrees with the parent MBean
-                final Set<ObjectName> tracked = getMBeanTracker().getChildrenOf(proxy.objectName()); 
+                final Set<ObjectName> tracked = getMBeanTracker().getChildrenOf(proxy.objectName());
                 if ( childrenSet.size() != children.length )
                 {
                     // try again, in case it's a timing issue
                     final Set<ObjectName> childrenSetNow = SetUtil.newSet( proxy.getChildren() );
                     if ( ! tracked.equals( childrenSetNow ) )
                     {
-                        fail(proxy, "MBeanTracker has different MBeans than the MBean: {" + 
+                        fail(proxy, "MBeanTracker has different MBeans than the MBean: {" +
                             CollectionUtil.toString(tracked, ", ") + "} vs MBean having {" +
                             CollectionUtil.toString(childrenSetNow, ", ") + "}");
                     }
@@ -878,7 +878,7 @@ public final class AMXValidator
             }
         }
     }
-    
+
     private MBeanTrackerMBean getMBeanTracker() {
         if ( mMBeanTracker == null )
         {
@@ -886,8 +886,8 @@ public final class AMXValidator
                 mMBeanServer, MBeanTrackerMBean.MBEAN_TRACKER_OBJECT_NAME, MBeanTrackerMBean.class, false);
         }
         return mMBeanTracker;
-    }   
-    
+    }
+
     private static final class MetadataValidator
     {
         private final Descriptor mDescriptor;
@@ -904,7 +904,7 @@ public final class AMXValidator
 
             validateRemote();
         }
-        
+
         // Descriptor fields must be remotable
         void validateRemote() throws InstanceNotFoundException
         {
@@ -964,7 +964,7 @@ public final class AMXValidator
             }
         }
     }
-    
+
         private static boolean
     isLegalClassname( final String s )
     {
@@ -972,11 +972,11 @@ public final class AMXValidator
         {
             return false;   // detect totally bogus name
         }
-            
+
         return true;
     }
 
-    
+
     private void checkLegalAttributeType(final String clazz, final String attrName, final ProblemList problems )
         throws InstanceNotFoundException
     {
@@ -985,7 +985,7 @@ public final class AMXValidator
             problems.add( "Illegal classname for attribute " + StringUtil.quote(attrName) + ": " + StringUtil.quote(clazz) );
         }
     }
-    
+
     private void checkLegalReturnType(final String clazz, final String operation, final ProblemList problems )
         throws InstanceNotFoundException
     {
@@ -1034,7 +1034,7 @@ public final class AMXValidator
         for (final MBeanOperationInfo opInfo : mbeanInfo.getOperations())
         {
             checkLegalReturnType( opInfo.getReturnType(), opInfo.getName(), problems );
-            
+
             new MetadataValidator(opInfo.getDescriptor(), problems);
         }
 
@@ -1057,7 +1057,7 @@ public final class AMXValidator
             try
             {
                 final Set<ObjectName>  instances = mMBeanServer.queryNames( pattern, null);
-                
+
                 if ( instances.size() > 1 )
                 {
                     problems.add( "Global singleton " + objectName +
@@ -1132,7 +1132,7 @@ public final class AMXValidator
         private final int mNumTested;
 
         private final int mNumFailures;
-        
+
         private final Map<ObjectName, ProblemList> mProblems;
 
         private ValidationResult( final Failures failures )
@@ -1169,7 +1169,7 @@ public final class AMXValidator
             return details();
         }
     }
-        
+
     private void unregisterNonCompliantMBean( final ObjectName objectName)
     {
         if ( mUnregisterNonCompliant )
@@ -1183,13 +1183,13 @@ public final class AMXValidator
             }
         }
     }
-    
+
     public ValidationResult validate(final Collection<ObjectName> c)
     {
         final ObjectName[] targets = CollectionUtil.toArray( c, ObjectName.class );
         return validate( targets );
     }
-    
+
     public ValidationResult validate(final ObjectName[] targets)
     {
         final Failures failures = new Failures();
@@ -1200,7 +1200,7 @@ public final class AMXValidator
             progress( "AMXValidator.validate(), begin: " + objectName );
             final ProblemList problems = new ProblemList(objectName);
             AMXProxy     amx = null;
-            
+
             try
             {
                 // certain failures prevent even the proxy from being created, a fatal error
@@ -1218,12 +1218,12 @@ public final class AMXValidator
                     progress( "AMXValidator.validate(), InstanceNotFound: " + objectName );
                     continue;
                 }
-                
+
                 final String msg = "Cannot create AMXProxy for MBean \"" + objectName;
                 progress( msg );
                 problems.add(msg);
             }
-            
+
             if ( amx != null )
             {
                 try
@@ -1244,7 +1244,7 @@ public final class AMXValidator
             if ( problems.hasProblems() && ! problems.instanceNotFound() )
             {
                 debug( "AMXValidator.validate(): got problems from _validate for " + objectName + " : " + problems );
-                
+
                 //debug( "Calling unregisterNonCompliantMBean(): " + objectName + " for problems: " + problems );
                 unregisterNonCompliantMBean(objectName);
 

@@ -22,7 +22,7 @@ import javax.naming.ldap.ExtendedResponse;
 /**
   * This class represents an LDAP extended operation response with
   * an OID and empty response value. The response comprises an optional
-  * object identifier and an optional ASN.1 BER encoded value. 
+  * object identifier and an optional ASN.1 BER encoded value.
   * For extended responses which do not have value to return,
   * this class can be used.
   *<p>
@@ -41,7 +41,7 @@ class EmptyExtendedResponse implements ExtendedResponse {
      private static final long serialVersionUID = -6096832546823615936L;
 
      EmptyExtendedResponse(String oid) {
-	this.oid = oid;
+    this.oid = oid;
      }
 
     /**
@@ -51,11 +51,11 @@ class EmptyExtendedResponse implements ExtendedResponse {
       * If the server does not send it, the response will contain no ID
       * (i.e. null).
       *
-      * @return	A possibly null object identifier string representing the LDAP
+      * @return    A possibly null object identifier string representing the LDAP
       *         <tt>ExtendedResponse.responseName</tt> component.
       */
     public String getID() {
-	return oid;
+    return oid;
     }
 
     /**
@@ -65,7 +65,7 @@ class EmptyExtendedResponse implements ExtendedResponse {
      * @return The null value.
      */
     public byte[] getEncodedValue() {
-	return null;
+    return null;
     }
 
 }

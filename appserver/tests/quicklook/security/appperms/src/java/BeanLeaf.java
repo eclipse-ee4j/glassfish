@@ -30,19 +30,19 @@ public class BeanLeaf {
 
     String MESSAGE_POST = "PostBeanLeaf";
     String MESSAGE_HELLO = "HelloBeanLeaf";
-    
+
     @PostConstruct
     public void afterConstruct() {
         if (msg != null && !msg.getMessage().contains(MESSAGE_POST)){
-	  msg.appendMessage(MESSAGE_POST);
-	}
+      msg.appendMessage(MESSAGE_POST);
+    }
     }
 
     public String sayHello() {
         if (msg != null && !msg.getMessage().contains(MESSAGE_HELLO)){
-	  msg.appendMessage(MESSAGE_HELLO);
-	}
+      msg.appendMessage(MESSAGE_HELLO);
+    }
         return "Hello from: " + this.getClass().getName() + "; " + System.identityHashCode(this);
     }
-    
+
 }

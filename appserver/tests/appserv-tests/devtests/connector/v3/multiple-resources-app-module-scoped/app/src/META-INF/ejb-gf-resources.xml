@@ -57,4 +57,4 @@
      <admin-object-resource enabled="true" jndi-name="java:module/eis/testAdmin" object-type="user" res-adapter="generic-ra" res-type="connector.MyAdminObject">
       <property name="ResetControl" value="BEGINNING"/>
     </admin-object-resource>
-</resources> 
+</resources>

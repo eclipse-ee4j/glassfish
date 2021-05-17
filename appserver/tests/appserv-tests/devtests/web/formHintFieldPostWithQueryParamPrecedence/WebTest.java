@@ -47,7 +47,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6346738");
         WebTest test = new WebTest(args);
@@ -67,7 +67,7 @@ public class WebTest {
             }
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
@@ -76,7 +76,7 @@ public class WebTest {
 
         // Create a socket to the host
         socket = new Socket(host, new Integer(port).intValue());
-    
+
         // Send header
         BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(
                                             socket.getOutputStream()));
@@ -85,7 +85,7 @@ public class WebTest {
         wr.write("Content-Length: " + body.length() + "\r\n");
         wr.write("Content-Type: application/x-www-form-urlencoded\r\n");
         wr.write("\r\n");
-    
+
         // Send body
         wr.write(body);
         wr.flush();

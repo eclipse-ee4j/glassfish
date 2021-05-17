@@ -40,7 +40,7 @@ import org.glassfish.internal.api.Globals;
 public class SecurityServicesUtil {
 
     private static ServiceLocator habitat = Globals.getDefaultHabitat();
-    
+
     private static final LocalStringManagerImpl _localStrings =
             new LocalStringManagerImpl(SecurityServicesUtil.class);
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
@@ -52,20 +52,20 @@ public class SecurityServicesUtil {
 
     @Inject
     private ProcessEnvironment processEnv;
-    
+
     @Inject
     private ServerEnvironment env;
 
-    @Inject 
+    @Inject
     private AuditManager auditManager;
-    
+
 //    static {
 //        secureRandom.setSeed(System.currentTimeMillis());
 //    }
 
     //the appclient CBH
     private CallbackHandler callbackHandler;
-    
+
     /**
      * replacing all of this with SharedSecureRandom
      * So on restart, all your seed material comes from a new time that varies
@@ -157,7 +157,7 @@ public class SecurityServicesUtil {
     public ServiceLocator getHabitat() {
         return habitat;
     }
-    
+
     public AuditManager getAuditManager() {
         return auditManager;
     }
@@ -173,7 +173,7 @@ public class SecurityServicesUtil {
     public ProcessEnvironment getProcessEnv() {
         return processEnv;
     }
-    
+
     public boolean isACC() {
         return processEnv.getProcessType().equals(ProcessType.ACC);
     }
@@ -191,5 +191,5 @@ public class SecurityServicesUtil {
     public void setCallbackHandler(CallbackHandler callbackHandler) {
         this.callbackHandler = callbackHandler;
     }
-    
+
 }

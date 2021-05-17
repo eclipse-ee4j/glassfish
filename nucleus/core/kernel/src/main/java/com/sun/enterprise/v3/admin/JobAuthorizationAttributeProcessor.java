@@ -30,7 +30,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Attaches a user attribute to job resources for authorization.
- * 
+ *
  * @author Tim Quinn
  * @author Bhakti Mehta
  */
@@ -39,15 +39,15 @@ import org.jvnet.hk2.annotations.Service;
 public class JobAuthorizationAttributeProcessor implements AuthorizationPreprocessor {
 
     private final static String USER_ATTRIBUTE_NAME = "user";
-    
+
     public final static String JOB_RESOURCE_NAME_PREFIX_NO_SLASH = "jobs/job";
     public final static String JOB_RESOURCE_NAME_PREFIX = JOB_RESOURCE_NAME_PREFIX_NO_SLASH + '/';
-    
+
     public final static Pattern JOB_PATTERN = Pattern.compile("(?:" + JOB_RESOURCE_NAME_PREFIX_NO_SLASH + "(?:/(\\d*))?)");
-    
+
     @Inject
     private JobManagerService jobManager;
-    
+
     @Override
     public void describeAuthorization(Subject subject, String resourceName, String action, AdminCommand command, Map<String, Object> context, Map<String, String> subjectAttributes, Map<String, String> resourceAttributes, Map<String, String> actionAttributes) {
         final Matcher m = JOB_PATTERN.matcher(resourceName);
@@ -56,7 +56,7 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
         }
         if (m.groupCount() == 0) {
             /*
-             * The resource name pattern did not match for including a job ID, 
+             * The resource name pattern did not match for including a job ID,
              * so we will not be able to attach a user attribute to the resource.
              */
             return;
@@ -64,7 +64,7 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
         final String jobID = m.group(1);
         final Job job = jobManager.get(jobID);
         String userID = null;
-        
+
         /*
          * This logic might run before any validation in the command has run,
          * in which case the job ID would be invalid and the job manager and/or
@@ -79,8 +79,8 @@ public class JobAuthorizationAttributeProcessor implements AuthorizationPreproce
                         userID = jobInfo.user;
                     }
                 }
-        } 
-            
+        }
+
         if (userID != null) {
             resourceAttributes.put(USER_ATTRIBUTE_NAME, userID);
         }

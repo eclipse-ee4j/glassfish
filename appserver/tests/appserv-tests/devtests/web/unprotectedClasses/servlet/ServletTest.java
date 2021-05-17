@@ -35,7 +35,7 @@ public class ServletTest extends HttpServlet {
     private ServletContext context;
     private static String status = "EXPIRED:FAIL";
 
-   
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         System.out.println("[Servlet.init]");
@@ -46,7 +46,7 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
 
         PrintWriter out = response.getWriter();

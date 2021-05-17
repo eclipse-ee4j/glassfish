@@ -23,7 +23,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -51,10 +51,10 @@ public class IiopListenerTest extends BaseSeleniumTestClass {
         sleep(500);
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "c");
         clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:configs", iiopName, "col1");
         assertEquals(iiopName, getText(prefix + "col1:link"));
-        
+
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
         assertEquals(networkAddress, getValue("propertyForm:propertySheet:generalSettingsSetion:NetwkAddrProp:NetwkAddr", "value"));
@@ -67,7 +67,7 @@ public class IiopListenerTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertySheetSection:CertNicknameProp:CertNickname", certName);
         clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         assertEquals(certName, getValue("propertyForm:propertySheet:propertySheetSection:CertNicknameProp:CertNickname", "value"));
 
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
@@ -84,10 +84,10 @@ public class IiopListenerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:propertySheet:propertySectionTextField:TotalConnsProp:TotalConns", totalConn);
         Select select = new Select(driver.findElement(By.id("form1:propertySheet:propertySectionTextField:MaxMsgSizeProp:MaxMsgSize")));
         select.selectByVisibleText(maxMsgSize);
-        
+
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         assertEquals(totalConn, getValue("form1:propertySheet:propertySectionTextField:TotalConnsProp:TotalConns", "value"));
         assertEquals(maxMsgSize, getValue("form1:propertySheet:propertySectionTextField:MaxMsgSizeProp:MaxMsgSize", "value"));
     }

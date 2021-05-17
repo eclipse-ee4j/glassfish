@@ -25,16 +25,16 @@
         <jndi-name>ejb/ejb_ee_bmttx_BMTSession</jndi-name>
         <bean-cache>
             <max-cache-size>8</max-cache-size>
-	    <resize-quantity>4</resize-quantity>
+        <resize-quantity>4</resize-quantity>
         </bean-cache>
-	<checkpoint-at-end-of-method>
-	    <method>
-		<method-name>checkpoint</method-name>
-	    </method>
-	    <method>
-		<method-name>checkpoint2</method-name>
-	    </method>
-	</checkpoint-at-end-of-method>
+    <checkpoint-at-end-of-method>
+        <method>
+        <method-name>checkpoint</method-name>
+        </method>
+        <method>
+        <method-name>checkpoint2</method-name>
+        </method>
+    </checkpoint-at-end-of-method>
      </ejb>
    </enterprise-beans>
 </sun-ejb-jar>

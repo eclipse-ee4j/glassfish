@@ -46,23 +46,23 @@ public class DDTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
     }
-    
+
     public void testApplicationDD() throws Exception{
-        
+
         String tcName = "administered-object-definition-application-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-application.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The application.xml not found: "+ddFile,ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             ApplicationDeploymentDescriptorFile ddReader = new ApplicationDeploymentDescriptorFile();
             Application application = (Application) ddReader.read( ddIS);
-            
+
             Set<ResourceDescriptor> actualAODDs = application.getResourceDescriptors(JavaEEResourceType.AODD);
 
-            Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+            Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs =
                     new HashMap<String,AdministeredObjectDefinitionDescriptor>();
             AdministeredObjectDefinitionDescriptor desc;
 
@@ -74,7 +74,7 @@ public class DDTest extends TestCase {
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
-            
+
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setName("java:app/env/AdminObject");
             desc.setInterfaceName("jakarta.jms.Destination");
@@ -86,7 +86,7 @@ public class DDTest extends TestCase {
 
             TestUtil.compareAODD(expectedAODDs, actualAODDs);
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -100,18 +100,18 @@ public class DDTest extends TestCase {
     }
 
     public void testSessionEJBDD() throws Exception{
-        
+
         String tcName = "administered-object-definition-Session-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-session-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-session-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
-            
+
             for(EjbDescriptor ejbDescriptor : ejbBundle.getEjbs()){
                 ejbDescriptor.getResourceDescriptors(JavaEEResourceType.AODD);
                 if(ejbDescriptor.getName().equals("HelloStatefulEJB")){
@@ -122,9 +122,9 @@ public class DDTest extends TestCase {
                     fail("Unknown EJB descriptor: "+ejbDescriptor.getName());
                 }
             }
-            
+
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -136,7 +136,7 @@ public class DDTest extends TestCase {
 
         return;
     }
-    
+
     private void testStatefulSessionEJBDD(EjbDescriptor ejb) throws Exception{
         AdministeredObjectDefinitionDescriptor desc;
         Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = new HashMap<String,AdministeredObjectDefinitionDescriptor>();
@@ -149,7 +149,7 @@ public class DDTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in EJB DD");
         desc.setName("java:module/env/StatefulEJB_AdminObject");
@@ -169,9 +169,9 @@ public class DDTest extends TestCase {
         expectedAODDs.put(desc.getName(), desc);
 
         TestUtil.compareAODD(expectedAODDs, ejb.getResourceDescriptors(JavaEEResourceType.AODD));
-        
+
     }
-    
+
     private void testStatelessSessionEJBDD(EjbDescriptor ejb) throws Exception{
         AdministeredObjectDefinitionDescriptor desc;
         Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = new HashMap<String,AdministeredObjectDefinitionDescriptor>();
@@ -184,7 +184,7 @@ public class DDTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in EJB DD");
         desc.setName("java:module/env/HelloEJB_AdminObject");
@@ -204,18 +204,18 @@ public class DDTest extends TestCase {
         expectedAODDs.put(desc.getName(), desc);
 
         TestUtil.compareAODD(expectedAODDs, ejb.getResourceDescriptors(JavaEEResourceType.AODD));
-        
+
     }
-    
+
     public void testEntityEJBDD() throws Exception{
-        
+
         String tcName = "administered-object-definition-Entity-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-entity-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-entity-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
@@ -232,7 +232,7 @@ public class DDTest extends TestCase {
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
                 expectedAODDs.put(desc.getName(), desc);
-                
+
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/Entity_AdminObject");
@@ -255,7 +255,7 @@ public class DDTest extends TestCase {
             }
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -269,14 +269,14 @@ public class DDTest extends TestCase {
     }
 
     public void testMDBEJBDD() throws Exception{
-        
+
         String tcName = "administered-object-definition-MDB-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-mdb-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-mdb-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
@@ -293,7 +293,7 @@ public class DDTest extends TestCase {
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
                 expectedAODDs.put(desc.getName(), desc);
-                
+
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/MDB_AdminObject");
@@ -316,7 +316,7 @@ public class DDTest extends TestCase {
             }
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -330,14 +330,14 @@ public class DDTest extends TestCase {
     }
 
     public void testInterceptorEJBDD() throws Exception{
-        
+
         String tcName = "administered-object-definition-Interceptor-EJB-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-interceptor-ejb-jar.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-interceptor-ejb-jar.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             EjbDeploymentDescriptorFile ddReader = new EjbDeploymentDescriptorFile();
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ddReader.read( ddIS);
@@ -354,7 +354,7 @@ public class DDTest extends TestCase {
                 desc.setResourceAdapter("aod-ra");
                 desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
                 expectedAODDs.put(desc.getName(), desc);
-                
+
                 desc = new AdministeredObjectDefinitionDescriptor();
                 desc.setDescription("module-scope resource defined in EJB DD");
                 desc.setName("java:module/env/Interceptor_AdminObject");
@@ -377,7 +377,7 @@ public class DDTest extends TestCase {
             }
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -391,18 +391,18 @@ public class DDTest extends TestCase {
     }
 
     public void testWebDD() throws Exception{
-        
+
         String tcName = "administered-object-definition-Web-DD-test";
         InputStream ddIS=null;
         try{
             String ddFileName = "ut-web.xml";
             File ddFile = new File(descriptorDir, ddFileName);
             Assert.assertTrue("The ut-web.xml not found: "+ddFile, ddFile.exists());
-            
+
             ddIS = new FileInputStream(ddFile);
             WebDeploymentDescriptorFile ddReader = new WebDeploymentDescriptorFile();
             WebBundleDescriptor webBundle =  ddReader.read( ddIS);
-            
+
             AdministeredObjectDefinitionDescriptor desc;
             Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = new HashMap<String,AdministeredObjectDefinitionDescriptor>();
 
@@ -414,7 +414,7 @@ public class DDTest extends TestCase {
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
-            
+
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("application-scope resource defined in Web DD");
             desc.setName("java:app/env/AdminObject");
@@ -436,7 +436,7 @@ public class DDTest extends TestCase {
             TestUtil.compareAODD(expectedAODDs, webBundle.getResourceDescriptors(JavaEEResourceType.AODD));
 
             stat.addStatus(tcName, stat.PASS);
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;

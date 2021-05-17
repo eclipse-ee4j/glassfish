@@ -24,21 +24,21 @@ import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
  * @author  Piali Nag
  */
 public class LogHelperCmpCompiler {
-    
+
     /** The component name for this component
      */
     protected static final String componentName = "codegen.ejb.cmp"; // NOI18N
-    
+
     /** The class loader for this component
      */
-    protected static final ClassLoader loader = 
+    protected static final ClassLoader loader =
         LogHelperCmpCompiler.class.getClassLoader();
-    
+
     /** The bundle name for this component
      */
-    protected static final String bundleName = 
+    protected static final String bundleName =
         "com.sun.jdo.spi.persistence.support.ejb.codegen.Bundle"; // NOI18N
-    
+
     /** Return the logger for the codegen component
      */
     public static Logger getLogger() {

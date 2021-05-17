@@ -95,7 +95,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             if (!file.exists()) {
                 fis = getDefaultLoggingPropertiesInputStream();
             } else {
-                fis = new FileInputStream(file);            
+                fis = new FileInputStream(file);
             }
             fis = new BufferedInputStream(fis);
             props.load(fis);
@@ -118,7 +118,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             if (!file.exists()) {
                 fis = getDefaultLoggingPropertiesInputStream();
             } else {
-                fis = new FileInputStream(file);            
+                fis = new FileInputStream(file);
             }
             fis = new BufferedInputStream(fis);
             props.load(fis);
@@ -128,18 +128,18 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             }
         }
     }
-    
+
     private File getLoggingPropertiesFile() {
         return new File(loggingConfigDir, loggingPropertiesName);
     }
-    
+
     private File getLoggingPropertiesFile(String target) {
         String pathForLoggingFile = loggingConfigDir.getAbsolutePath() + File.separator + target;
         return new File(pathForLoggingFile, ServerEnvironmentImpl.kLoggingPropertiesFileName);
     }
-    
+
     private FileInputStream getDefaultLoggingPropertiesInputStream() throws IOException {
-        File defaultConfig = new File(env.getConfigDirPath(), 
+        File defaultConfig = new File(env.getConfigDirPath(),
                 ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
         return new FileInputStream(defaultConfig);
     }
@@ -163,7 +163,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             // nothing can be done about it...
         }
     }
-    
+
     private void closePropFile(String targetConfigName) throws IOException {
         OutputStream os = null;
         try {
@@ -171,8 +171,8 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             if (targetConfigName == null || targetConfigName.isEmpty()) {
                 file = getLoggingPropertiesFile();
             } else {
-                file = getLoggingPropertiesFile(targetConfigName);    
-            } 
+                file = getLoggingPropertiesFile(targetConfigName);
+            }
             File parentFile = file.getParentFile();
             if (!parentFile.exists() && !parentFile.mkdirs()) {
                 throw new IOException();
@@ -348,7 +348,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         Map<String, String> m = new HashMap<String, String>();
         try {
             loadLoggingProperties();
-            
+
             Enumeration e = props.propertyNames();
             while (e.hasMoreElements()) {
                 String key = (String) e.nextElement();
@@ -398,7 +398,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
       * @throws  IOException
       */
 
-    public synchronized void deleteLoggingProperties(Map<String, 
+    public synchronized void deleteLoggingProperties(Map<String,
             String> properties, String targetConfigName) throws IOException {
         loadLoggingProperties(targetConfigName);
 
@@ -656,7 +656,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         Properties propsLoggingTempleate = new Properties();
         Map<String, String> m = new HashMap<String, String>();
         try {
-            File loggingTemplateFile = new File(env.getConfigDirPath(), 
+            File loggingTemplateFile = new File(env.getConfigDirPath(),
                     ServerEnvironmentImpl.kDefaultLoggingPropertiesFileName);
             fisForLoggingTemplate = new java.io.FileInputStream(loggingTemplateFile);
             propsLoggingTempleate.load(fisForLoggingTemplate);

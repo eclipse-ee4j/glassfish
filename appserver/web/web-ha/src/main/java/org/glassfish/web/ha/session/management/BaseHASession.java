@@ -49,7 +49,7 @@ public abstract class BaseHASession extends StandardSession
     public BaseHASession(Manager manager) {
         super(manager);
     }
-    
+
     /**
      * Set the session identifier for this session.
      *
@@ -65,7 +65,7 @@ public abstract class BaseHASession extends StandardSession
             setNote(Globals.JREPLICA_SESSION_NOTE, jReplicaValue);
         }
 
-    } 
+    }
 
 
     /**
@@ -74,43 +74,43 @@ public abstract class BaseHASession extends StandardSession
      */
     public abstract boolean isDirty();
 
-    /** 
+    /**
      * this is deliberately a no-op
      * store framework calls this method
      * so it must be there but must not have
      * any effect
      * @param value
-     */    
+     */
     public abstract void setDirty(boolean value);
 
-    /** 
+    /**
      * is the session persistent
-     */    
+     */
     public boolean isPersistent() {
         return persistentFlag;
     }
-    
-    /** 
+
+    /**
      * this sets the persistent flag
-     */    
+     */
     public void setPersistent(boolean value) {
         persistentFlag = value;
-    }    
-    
-    /** 
+    }
+
+    /**
      * this returns the user name
-     */    
+     */
     public String getUserName() {
         return userName;
     }
-    
-    /** 
+
+    /**
      * this sets the user name
-     */    
+     */
     public void setUserName(String value) {
         userName = value;
     }
-    
+
     /**
      * Overriding the setPrincipal of StandardSession
      *
@@ -119,12 +119,12 @@ public abstract class BaseHASession extends StandardSession
     public void setPrincipal(Principal principal) {
         super.setPrincipal(principal);
         this.setDirty(true);
-    }   
+    }
 
     public boolean isPersistentFlag() {
         return persistentFlag;
     }
-    
+
 
     public void recycle() {
         super.recycle();
@@ -141,18 +141,18 @@ public abstract class BaseHASession extends StandardSession
     }
 
     public void sync() {
-        
+
         HttpSessionBindingEvent event = null;
         event = new HttpSessionBindingEvent
-                ((HttpSession) this, null, null);       
-        
+                ((HttpSession) this, null, null);
+
         // Notify special event listeners on sync()
         Manager manager = this.getManager();
         StandardContext stdContext = (StandardContext) manager.getContainer();
-        // fire container event       
+        // fire container event
         stdContext.fireContainerEvent("sessionSync", event);
     }
-    
+
     /**
      * Read a serialized version of this session object from the specified
      * object input stream.
@@ -170,8 +170,8 @@ public abstract class BaseHASession extends StandardSession
 
         // Deserialize the scalar instance variables (except Manager)
         userName = (String) stream.readObject();
-    }    
-    
+    }
+
     /**
      * Write a serialized version of this session object to the specified
      * object output stream.
@@ -196,7 +196,7 @@ public abstract class BaseHASession extends StandardSession
         // Write the scalar instance variables
         stream.writeObject(userName);
     }
-    
+
     /**
      * Return a string representation of this object.
      */
@@ -206,10 +206,10 @@ public abstract class BaseHASession extends StandardSession
         sb.append("BaseHASession[");
         sb.append(id);
         sb.append("]");
-        
+
         sb.append("\n");
         sb.append("isValid:" + this.isValid);
-        
+
         if (this.isValid) {
             Enumeration<String> attrNamesEnum = getAttributeNames();
             while(attrNamesEnum.hasMoreElements()) {
@@ -223,8 +223,8 @@ public abstract class BaseHASession extends StandardSession
 
         return sb.toString();
         // END S1AS
-    }    
-    
+    }
+
     public String toString() {
         StringBuffer sb = new StringBuffer(200);
         //sb.append(super.toString());
@@ -235,5 +235,5 @@ public abstract class BaseHASession extends StandardSession
         sb.append(" persistent: " + this.isPersistent());
         return sb.toString();
     }
-    
+
 }

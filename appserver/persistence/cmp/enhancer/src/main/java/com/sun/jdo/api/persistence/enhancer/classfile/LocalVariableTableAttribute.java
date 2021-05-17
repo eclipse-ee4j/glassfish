@@ -46,7 +46,7 @@ public class LocalVariableTableAttribute extends ClassAttribute {
    * Constructor for a local variable table
    */
   public LocalVariableTableAttribute(
-	ConstUtf8 nameAttr, Vector lvarTable) {
+    ConstUtf8 nameAttr, Vector lvarTable) {
     super(nameAttr);
     localTable = lvarTable;
   }
@@ -54,14 +54,14 @@ public class LocalVariableTableAttribute extends ClassAttribute {
   /* package local methods */
 
   static LocalVariableTableAttribute read(
-	ConstUtf8 attrName, DataInputStream data, CodeEnv env)
+    ConstUtf8 attrName, DataInputStream data, CodeEnv env)
     throws IOException {
     int nVars = data.readUnsignedShort();
     Vector lvarTable = new Vector();
     while (nVars-- > 0) {
       lvarTable.addElement(LocalVariable.read(data, env));
     }
-        
+
     return new LocalVariableTableAttribute(attrName, lvarTable);
   }
 

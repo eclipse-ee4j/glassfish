@@ -32,7 +32,7 @@
     <role-name>staff3</role-name>
     <principal-name>chief</principal-name>
   </security-role-mapping>
- 
+
   <security-role-mapping>
     <role-name>staff</role-name>
     <principal-name>testy</principal-name>

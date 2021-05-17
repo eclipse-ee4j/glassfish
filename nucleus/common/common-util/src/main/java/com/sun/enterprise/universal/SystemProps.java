@@ -40,8 +40,8 @@ public class SystemProps
         //Map sortedMap = new TreeMap(p);
         //Set sortedSet = sortedMap.entrySet();
         Set<Map.Entry<Object, Object>>  set  = p.entrySet();
-        List<Map.Entry>	list = new ArrayList<Map.Entry>(set);
-        
+        List<Map.Entry>    list = new ArrayList<Map.Entry>(set);
+
         Collections.sort(list, new Comparator<Map.Entry>()
         {
             public int compare(Map.Entry me1, Map.Entry me2)
@@ -49,33 +49,33 @@ public class SystemProps
                 return ((String)me1.getKey()).compareToIgnoreCase((String)me2.getKey());
             }
         });
-        
+
         return list;
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static String toStringStatic()
     {
-        int             longestKey	= 0;
-        List<Map.Entry>	list		= get();
-        StringBuffer	sb		= new StringBuffer();
-        
-        /* Go through the list twice.  
+        int             longestKey    = 0;
+        List<Map.Entry>    list        = get();
+        StringBuffer    sb        = new StringBuffer();
+
+        /* Go through the list twice.
          * The first time through gets the maximum length entry
          * The second time through uses that info for 'pretty printing'
          */
-        
+
         for(Map.Entry entry : list)
         {
             int len = ((String)entry.getKey()).length();
-            
+
             if(len > longestKey)
                 longestKey = len;
         }
-        
+
         longestKey += 1;
-        
+
         for(Map.Entry entry : list)
         {
             sb.append(StringUtils.padRight((String)entry.getKey(), longestKey));
@@ -83,18 +83,18 @@ public class SystemProps
             sb.append((String)entry.getValue());
             sb.append("\n");
         }
-        
+
         return sb.toString();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private SystemProps()
     {
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static void main(String[] args)
     {
         System.out.println(toStringStatic());

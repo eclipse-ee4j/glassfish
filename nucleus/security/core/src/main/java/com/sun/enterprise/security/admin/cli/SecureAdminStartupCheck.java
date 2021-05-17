@@ -24,7 +24,7 @@ import org.jvnet.hk2.annotations.Service;
  *
  * Starting in GlassFish 3.1.2, the DAS uses SSL to send admin requests to
  * instances regardless of whether the user has enabled secure admin.  For this to
- * work correctly when upgrading from earlier 3.x releases, there are some changes 
+ * work correctly when upgrading from earlier 3.x releases, there are some changes
  * to the configuration that must be in place.  This start-up service makes
  * sure that the config is correct as quickly as possible to avoid degrading
  * start-up performance. (Upgrades from 2.x are handled by the SecureAdminConfigUpgrade
@@ -35,17 +35,17 @@ import org.jvnet.hk2.annotations.Service;
  * {@code
  * <secure-admin special-admin-indicator="xxx">
  *   at least one <secure-admin-principal> element; if none, supply these defaults:
- * 
+ *
  *   <secure-admin-principal dn="dn-for-DAS"/>
  *   <secure-admin-principal dn="dn-for-instances"/>
  * }
  * </pre>
- * 
+ *
  * Further, the sec-admin-listener set-up needs to be added (if not already there)
  * for the non-DAS configurations.  Note that the work to configure the
  * listeners and related protocols are already implemented by SecureAdminCommand,
  * so this class delegates much of its work to that logic.
- * 
+ *
  * @author Tim Quinn
  */
 @Service
@@ -69,9 +69,9 @@ public class SecureAdminStartupCheck extends SecureAdminUpgradeHelper implements
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     private boolean isFormalUpgrade() {
         return Boolean.valueOf(startupArg("-upgrade"));
     }

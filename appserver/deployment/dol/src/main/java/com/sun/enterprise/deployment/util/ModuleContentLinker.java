@@ -44,20 +44,20 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
     // For standalone modules, this is either a directory or a jar file.
     // For .ears, this is the directory used by the j2ee classloader.
     protected ReadableArchive rootLocation_;
-    
+
     // records whether URL assignments should be calculated even if the URLs
-    // already have values. 
+    // already have values.
     private boolean forceWSDLURLs;
 
     public ModuleContentLinker(ReadableArchive rootLocation, boolean forceWSDLURLs) {
         rootLocation_ = rootLocation;
         this.forceWSDLURLs = forceWSDLURLs;
     }
-    
+
     public ModuleContentLinker(ReadableArchive rootLocation) {
         this(rootLocation, false);
     }
-    
+
     protected ModuleContentLinker() {
     }
 
@@ -95,7 +95,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         return moduleLocation;
     }
 
-    private URL internalGetUrl(ModuleDescriptor module, String uri) 
+    private URL internalGetUrl(ModuleDescriptor module, String uri)
         throws Exception {
         File moduleLocation = new File(getModuleLocation(module));
         URL url = getEntryAsUrl(moduleLocation, uri);
@@ -132,11 +132,11 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
 
     public void accept(ServiceReferenceDescriptor serviceRef) {
         try {
-            ModuleDescriptor moduleDesc = 
+            ModuleDescriptor moduleDesc =
                 serviceRef.getBundleDescriptor().getModuleDescriptor();
 
             if( serviceRef.hasWsdlFile() ) {
-                
+
                 String wsdlFileUri = serviceRef.getWsdlFileUri();
                 File tmpFile = new File(wsdlFileUri);
                 if(tmpFile.isAbsolute()) {
@@ -167,11 +167,11 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
                 File mappingFile = new File(getModuleLocation(moduleDesc), mappingFileUri);
                 serviceRef.setMappingFile(mappingFile);
 
-            } 
+            }
         } catch (java.net.MalformedURLException mex) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, "enterprise.deployment.backend.invalidWsdlURL",
-                new Object[] {serviceRef.getWsdlFileUri()});            
+                new Object[] {serviceRef.getWsdlFileUri()});
         } catch(Exception e) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
@@ -184,7 +184,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
             ModuleDescriptor moduleDesc =
                 webService.getBundleDescriptor().getModuleDescriptor();
             // If the web service has a WSDL file, assign its URL if it is not
-            // already assigned or if URLs are forced to be assigned.  
+            // already assigned or if URLs are forced to be assigned.
             if( webService.hasWsdlFile() && (webService.getWsdlFileUrl()==null || forceWSDLURLs) ) {
                 String wsdlFileUri = webService.getWsdlFileUri();
                 URL wsdlFileURL=null;
@@ -192,12 +192,12 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
                     URL url = new URL(wsdlFileUri);
                     if (url.getProtocol()!=null && !url.getProtocol().equalsIgnoreCase("file")) {
                         wsdlFileURL=url;
-                    } 
+                    }
                 } catch(java.net.MalformedURLException e) {
                     // ignore, it could just be a relate URI
                 }
                 if (wsdlFileURL==null) {
-                    File wsdlFile = new File(getModuleLocation(moduleDesc), wsdlFileUri);                        
+                    File wsdlFile = new File(getModuleLocation(moduleDesc), wsdlFileUri);
                     wsdlFileURL = wsdlFile.toURI().toURL();
                 }
                 webService.setWsdlFileUrl(wsdlFileURL);
@@ -206,11 +206,11 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
                 String mappingFileUri = webService.getMappingFileUri();
                 File mappingFile = new File(getModuleLocation(moduleDesc), mappingFileUri);
                 webService.setMappingFile(mappingFile);
-            } 
+            }
         } catch(Exception e) {
             DOLUtils.getDefaultLogger().log
                 (Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {webService.getName() , rootLocation_});
-        } 
+        }
     }
 }

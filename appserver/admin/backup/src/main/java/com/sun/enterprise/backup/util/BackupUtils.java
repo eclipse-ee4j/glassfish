@@ -25,7 +25,7 @@ public class BackupUtils {
 
     private BackupUtils() {
     }
-    
+
     public static boolean protect(File f) {
         if(!f.exists())
             return true;
@@ -33,11 +33,11 @@ public class BackupUtils {
         try {
             File[]   files = null;
             boolean  ret = true;
-            
+
             if(f.isDirectory()) {
                 // chmod to rwx------
                 // and chmod files inside dir to rw-------
-                // 6580444 -- make any subdirs drwxr-xr-x (0755) otherwise we 
+                // 6580444 -- make any subdirs drwxr-xr-x (0755) otherwise we
                 // can't delete the whole tree as non-root for some reason.
                 // notice that the original file, if a directory, WILL have 0700
                 // this is exactly the way the permissions exist in the original
@@ -46,7 +46,7 @@ public class BackupUtils {
                 if (!f.setExecutable(true, true)) {
                     ret = false;
                 }
-                
+
                 if (!f.setReadable(true, true)) {
                     ret = false;
                 }
@@ -54,9 +54,9 @@ public class BackupUtils {
                 if (!f.setWritable(true, true)) {
                     ret = false;
                 }
-                
+
                 files = f.listFiles();
-                
+
                 if(files == null || files.length < 1)
                     return ret;
             } else {
@@ -68,7 +68,7 @@ public class BackupUtils {
                     if (!file.setExecutable(true, false)) {
                         ret = false;
                     }
-                
+
                     if (!file.setReadable(true, false)) {
                         ret = false;
                     }
@@ -80,7 +80,7 @@ public class BackupUtils {
                     if (!file.setExecutable(false, false)) {
                         ret = false;
                     }
-                
+
                     if (!file.setReadable(true, true)) {
                         ret = false;
                     }
@@ -95,26 +95,26 @@ public class BackupUtils {
             return false;
         }
     }
-    
+
     /**
      **/
-    
+
     public static boolean makeExecutable(File f)
     {
         if(!OS.isUNIX())
-            return true;	// no such thing in Windows...
-        
+            return true;    // no such thing in Windows...
+
         if(!f.exists())
             return true; // no harm, no foul...
-        
+
         if(!f.isDirectory())
             return makeExecutable(new File[] { f} );
-        
+
         // if we get here -- f is a directory
-        
+
         return makeExecutable(f.listFiles());
     }
-    
+
     private static boolean makeExecutable(File[] files) {
 
         boolean ret = true;
@@ -122,15 +122,15 @@ public class BackupUtils {
         // WBN October 2005
         // dirspace bugfix -- what if there is a space in the dirname?  trouble!
         // changed the argument to a File array
-        
+
         // we are using a String here so that you can pass in a bunch
         // of space-separated filenames.  Doing it one at a time would be inefficient...
         // make it executable for ONLY the user
-        
+
         // Jan 19, 2005 -- rolled back the fix for 6206176.  It has been decided
         // that this is not a bug but rather a security feature.
-        
-        
+
+
         // BUGFIX: 6206176
         // permissions changed from 744 to 755.
         // The reason is that if user 'A' does a restore then user 'A' will be the only
@@ -138,15 +138,15 @@ public class BackupUtils {
         // needs to be based on the AppServer authentication mechanism (username-password) rather
         // than on the OS authentication mechanism.
         // This case actually is common:  user 'A' does the restore, root tries to start the restored domain.
-        
+
         if(files == null || files.length <= 0)
             return true;
-        
+
         for(File f : files) {
             if (!f.setExecutable(true, true)) {
                 ret = false;
             }
-                
+
             if (!f.setReadable(true, false)) {
                 ret = false;
             }

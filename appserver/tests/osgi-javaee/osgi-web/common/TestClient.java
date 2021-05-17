@@ -29,12 +29,12 @@ public class TestClient {
     int failCode = 3; // Fail code for runtime failure.
 
     private static Reporter reporter;
-    private static String testName; 
+    private static String testName;
 
     public static void main (String[] args) {
         TestClient client = new TestClient();
-	reporter = new Reporter(args[2]); //args[2] has testResult filename
-	testName = args[1];
+    reporter = new Reporter(args[2]); //args[2] has testResult filename
+    testName = args[1];
         client.doTest(args);
     }
 
@@ -44,8 +44,8 @@ public class TestClient {
         try {
             int code = invokeServlet(url);
             report(code);
-	} catch (Exception e) {
-	    fail();
+    } catch (Exception e) {
+        fail();
         }
     }
 
@@ -60,7 +60,7 @@ public class TestClient {
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.contains("failed"))
-		failed = true;
+        failed = true;
         }
         return code;
     }
@@ -69,12 +69,12 @@ public class TestClient {
         if(code != 200) {
             log("Incorrect return code: " + code);
             fail();
-            return; 
-	}
+            return;
+    }
         if(failed) {
             fail();
-            return; 
-	}
+            return;
+    }
         pass();
     }
 
@@ -84,11 +84,11 @@ public class TestClient {
 
     private void pass() {
         System.out.println("[TestClient]:: TestPassed");
-	reporter.printStatus(testName, passCode);
+    reporter.printStatus(testName, passCode);
     }
 
     private void fail() {
         System.out.println("[TestClient]:: TestFailed");
-	reporter.printStatus(testName, failCode);
+    reporter.printStatus(testName, failCode);
     }
 }

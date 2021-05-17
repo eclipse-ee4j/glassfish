@@ -33,7 +33,7 @@ public class WebTest{
 
     private static final SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main(String args[]) throws Exception {
 
         String host = args[0];
@@ -41,12 +41,12 @@ public class WebTest{
         String contextRoot = args[2];
 
         stat.addDescription("Ensure disabled HTTP listener gives ConnectException");
-            
+
         URL url = new URL("http://" + host  + ":" + port + contextRoot
                           + "/ServletTest");
         System.out.println("Invoking url: " + url.toString());
 
-        try {            
+        try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.getResponseCode();
             System.err.println("Expected java.net.ConnectException: "
@@ -56,6 +56,6 @@ public class WebTest{
             stat.addStatus(TEST_NAME, stat.PASS);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 }

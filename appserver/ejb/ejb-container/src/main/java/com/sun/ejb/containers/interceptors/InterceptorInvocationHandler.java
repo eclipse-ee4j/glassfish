@@ -28,12 +28,12 @@ import com.sun.ejb.containers.InvocationHandlerUtil;
 
 import com.sun.enterprise.container.common.spi.InterceptorInvoker;
 
-/** 
+/**
  *
  * @author Kenneth Saks
- */    
+ */
 
-public final class InterceptorInvocationHandler  
+public final class InterceptorInvocationHandler
     implements InvocationHandler, InterceptorInvoker {
 
     // The actual instance of the application class
@@ -102,18 +102,18 @@ public final class InterceptorInvocationHandler
     }
 
 
-    public Object invoke(Object proxy, Method method, Object[] args) 
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
 
         Class methodClass = method.getDeclaringClass();
         if( methodClass == java.lang.Object.class )  {
             return InvocationHandlerUtil.
-                invokeJavaObjectMethod(this, method, args);    
+                invokeJavaObjectMethod(this, method, args);
         }
 
         Object returnValue = null;
-      
+
         try {
 
 

@@ -25,11 +25,11 @@ public class DigestCredentials {
 
     private String realmName = "";
     private String username = "";
-    private DigestAlgorithmParameter [] params = null;    
+    private DigestAlgorithmParameter [] params = null;
 
     public DigestCredentials(String realmName, String username,DigestAlgorithmParameter [] params) {
         this.realmName = realmName;
-        this.username = username;        
+        this.username = username;
         this.params = params;
     }
 

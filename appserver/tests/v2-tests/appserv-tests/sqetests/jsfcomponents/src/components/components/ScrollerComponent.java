@@ -101,7 +101,7 @@ public class ScrollerComponent extends UICommand {
             default:
                 currentPage = actionInt;
                 break;
-        } 
+        }
         // from the currentPage, calculate the current row to scroll to.
         currentRow = (currentPage - 1) * getRowsPerPage(context);
         this.getAttributes().put("currentPage", new Integer(currentPage));
@@ -180,10 +180,10 @@ public class ScrollerComponent extends UICommand {
         return ("Scroller");
 
     }
-     
+
     //
     // Helper methods
-    // 
+    //
 
     /**
      * Write the markup to render a navigation widget.  Override this to
@@ -422,4 +422,4 @@ public class ScrollerComponent extends UICommand {
         }
         return uiData.getRows();
     }
-} 
+}

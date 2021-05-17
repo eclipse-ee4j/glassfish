@@ -60,8 +60,8 @@ import jakarta.inject.Inject;
 @TargetType({CommandTarget.DAS,CommandTarget.DOMAIN})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="update-password-alias", 
+        opType=RestEndpoint.OpType.POST,
+        path="update-password-alias",
         description="update-password-alias")
 })
 @AccessRequired(resource="domain/passwordAliases/passwordAlias/$aliasName", action="update")

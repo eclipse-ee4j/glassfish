@@ -285,7 +285,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
                                 return Thread.currentThread().getContextClassLoader();
                             }
                         });
-                userBundle = ResourceBundle.getBundle(USER_VALIDATION_MESSAGES, 
+                userBundle = ResourceBundle.getBundle(USER_VALIDATION_MESSAGES,
                         locale,
                         cl);
             } catch (MissingResourceException mre) {

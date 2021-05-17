@@ -35,9 +35,9 @@ public class ProbeClientInvokerFactory {
             new AtomicInteger();
 
     protected static int getNextId() {
-    	return clientMethodIdCounter.incrementAndGet();
+        return clientMethodIdCounter.incrementAndGet();
     }
-    
+
     public static ProbeClientInvoker createInvoker(Object target, Method method,
                                                    FlashlightProbe probe, String[] paramNames) {
         int invokerId = clientMethodIdCounter.incrementAndGet();

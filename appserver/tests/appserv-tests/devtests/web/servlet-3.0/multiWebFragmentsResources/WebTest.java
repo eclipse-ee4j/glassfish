@@ -46,7 +46,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for multi web fragments resources");
         WebTest webTest = new WebTest(args);
@@ -55,7 +55,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -65,7 +65,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot + "/index.jsp";
         System.out.println(url);
         HttpURLConnection conn = (HttpURLConnection)
@@ -120,7 +120,7 @@ public class WebTest {
 
             stat.addStatus(TEST_NAME,
                     ((status1 && status2 && status3) ? stat.PASS : stat.FAIL));
-        }    
+        }
     }
 
     private Set<String> parseResult(String line, String prefix) {

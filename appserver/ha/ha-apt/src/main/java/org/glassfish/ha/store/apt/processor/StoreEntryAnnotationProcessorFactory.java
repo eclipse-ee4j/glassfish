@@ -52,5 +52,5 @@ public class StoreEntryAnnotationProcessorFactory
         }
         return ap;
     }
-    
+
 }

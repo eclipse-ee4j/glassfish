@@ -40,7 +40,7 @@ import org.glassfish.grizzly.http.util.CharChunk;
 
 /**
  * The buffer used by Tomcat request. This is a derivative of the Tomcat 3.3
- * OutputBuffer, adapted to handle input instead of output. This allows 
+ * OutputBuffer, adapted to handle input instead of output. This allows
  * complete recycling of the facade objects (the ServletInputStream and the
  * BufferedReader).
  *
@@ -106,7 +106,7 @@ public class InputBuffer extends Reader
 
     /**
      * Associated Grizzly request.
-     * 
+     *
      * @param grizzlyRequest Associated Grizzly request
      */
     public void setRequest(Request grizzlyRequest) {
@@ -122,7 +122,7 @@ public class InputBuffer extends Reader
 
     /**
      * Get associated Grizzly request.
-     * 
+     *
      * @return the associated Grizzly request
      */
     public Request getRequest() {
@@ -151,7 +151,7 @@ public class InputBuffer extends Reader
 
     /**
      * Close the input buffer.
-     * 
+     *
      * @throws IOException An underlying IOException occurred
      */
     public void close()
@@ -169,17 +169,17 @@ public class InputBuffer extends Reader
     // ------------------------------------------------- Bytes Handling Methods
 
 
-    /** 
+    /**
      * Reads new bytes in the byte chunk.
-     * 
+     *
      * @param cbuf Byte buffer to be written to the response
      * @param off Offset
      * @param len Length
-     * 
+     *
      * @throws IOException An underlying IOException occurred
      */
     public int realReadBytes(byte cbuf[], int off, int len)
-	throws IOException {
+    throws IOException {
         return grizzlyInputBuffer.read(cbuf, off, len);
     }
 
@@ -222,7 +222,7 @@ public class InputBuffer extends Reader
                 } finally {
                     IS_READY_SCOPE.remove();
                 }
-                
+
             } else {
                 prevIsReady = true;  // Allow next .isReady() call to check underlying inputStream
             }
@@ -269,7 +269,7 @@ public class InputBuffer extends Reader
      * been read before, they are ignored. If a mark was set, then the
      * mark is lost.
      */
-    public void realWriteChars(char c[], int off, int len) 
+    public void realWriteChars(char c[], int off, int len)
         throws IOException {
         // START OF SJSAS 6231069
 //        initChar();
@@ -362,7 +362,7 @@ public class InputBuffer extends Reader
     }
 
 
-    public void checkConverter() 
+    public void checkConverter()
         throws IOException {
 
         grizzlyInputBuffer.processingChars();

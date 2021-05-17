@@ -43,7 +43,7 @@ public interface NetworkListeners extends ConfigBeanProxy, PropertyBag {
 
     @DuckTyped
     NetworkConfig getParent();
-    
+
     class Duck {
         public static NetworkConfig getParent(NetworkListeners listeners) {
             return listeners.getParent(NetworkConfig.class);

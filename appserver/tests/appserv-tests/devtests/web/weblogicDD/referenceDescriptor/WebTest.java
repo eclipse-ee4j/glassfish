@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for run-as-principal-name in weblogic.xml");
         WebTest webTest = new WebTest(args);
@@ -101,7 +101,7 @@ public class WebTest {
             }
         }
         if (!expectedResponse.equals(line)) {
-            System.out.println("Wrong response. Expected: " + 
+            System.out.println("Wrong response. Expected: " +
                 expectedResponse + ", received: " + line);
             testStatus = false;
         }

@@ -23,7 +23,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private static String appName;
@@ -32,10 +32,10 @@ public class Client {
 
     public static void main(String args[]) {
 
-	appName = args[0]; 
-	stat.addDescription(appName);
-	Client client = new Client(args);       
-        client.doTest();	
+    appName = args[0];
+    stat.addDescription(appName);
+    Client client = new Client(args);
+        client.doTest();
         stat.printSummary(appName + "ID");
     }
 
@@ -44,9 +44,9 @@ public class Client {
     public void doTest() {
         boolean failed = false;
         StringBuilder sb = new StringBuilder();
-	try {
+    try {
             InitialContext ic = new InitialContext();
-	    // non-portable global
+        // non-portable global
             for(String s : nonPortableJndiNames) {
                 try {
                     sb.append("About to lookup " + s);
@@ -58,9 +58,9 @@ public class Client {
                 }
             }
             System.out.println(sb);
-	    stat.addStatus("disable_nonportable_jndi", (failed ? stat.FAIL: stat.PASS));
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
+        stat.addStatus("disable_nonportable_jndi", (failed ? stat.FAIL: stat.PASS));
+    } catch(Exception e) {
+        e.printStackTrace();
+    }
     }
 }

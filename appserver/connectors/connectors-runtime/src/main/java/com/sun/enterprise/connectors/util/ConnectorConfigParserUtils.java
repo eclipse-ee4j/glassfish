@@ -31,8 +31,8 @@ import jakarta.resource.spi.ResourceAdapterAssociation;
 
 
 /**
- *  This is an util class containing methods for parsing connector 
- *  configurations present in ra.xml. 
+ *  This is an util class containing methods for parsing connector
+ *  configurations present in ra.xml.
  *
  *  @author Srikanth P
  *
@@ -49,12 +49,12 @@ public class ConnectorConfigParserUtils {
     }
 
     /**
-     *  Merges the properties obtained by introspecting the javabean and the 
+     *  Merges the properties obtained by introspecting the javabean and the
      *  properties present in ra.xml for the corresponding javabean.
      *
      *  @param ddVals Properties obtained from ra.xml for the javabean
      *  @param introspectedVals Properties obtained by introspecting javabean
-     *  @return Merged Properties present in ra.xml and introspected properties 
+     *  @return Merged Properties present in ra.xml and introspected properties
      *          of javabean.
      *
      */
@@ -79,22 +79,22 @@ public class ConnectorConfigParserUtils {
     }
 
     /**
-     *  Merges the datatype of properties obtained by introspecting the 
-     *  javabean and the datatypes of properties present in ra.xml for 
+     *  Merges the datatype of properties obtained by introspecting the
+     *  javabean and the datatypes of properties present in ra.xml for
      *  the corresponding javabean. It is a Properties object consisting of
      *  property name and the property data type.
      *
      *  @param ddVals Properties obtained from ra.xml for the javabean
-     *  @param introspectedVals Properties obtained by 
+     *  @param introspectedVals Properties obtained by
      *         introspecting javabean which consist of property name as key
-     *         and datatype as the value. 
-     *  @return Merged Properties present in ra.xml and introspected properties 
+     *         and datatype as the value.
+     *  @return Merged Properties present in ra.xml and introspected properties
      *          of javabean. Properties consist of property name as the key
      *          and datatype as the value.
      *
      */
 
-    public Properties mergePropsReturnTypes(Set ddVals, 
+    public Properties mergePropsReturnTypes(Set ddVals,
                                  Properties introspectedVals)
     {
         Properties mergedVals = new Properties(introspectedVals);
@@ -113,13 +113,13 @@ public class ConnectorConfigParserUtils {
 
         return mergedVals;
     }
-    
+
     public Properties introspectJavaBean(String className, Set ddPropsSet)
                             throws ConnectorRuntimeException {
         return introspectJavaBean(className, ddPropsSet, false, null);
     }
-    
-    public Properties introspectJavaBean(String className, Set ddPropsSet, 
+
+    public Properties introspectJavaBean(String className, Set ddPropsSet,
                     boolean associateResourceAdapter, String resourceAdapterName)
                        throws ConnectorRuntimeException {
         Class loadedClass = loadClass(className, resourceAdapterName);
@@ -136,7 +136,7 @@ public class ConnectorConfigParserUtils {
                     activeRA = ConnectorRegistry.getInstance().
                                   getActiveResourceAdapter(resourceAdapterName);
                 }
-                
+
                 //Associate RAR
                 if (activeRA instanceof ActiveOutboundResourceAdapter) {
                     ResourceAdapter raInstance =  activeRA.getResourceAdapter();
@@ -157,26 +157,26 @@ public class ConnectorConfigParserUtils {
         }
         return introspectJavaBean(loadedInstance, ddPropsSet);
     }
-    
-    
+
+
 
     /**
-     * Introspects the javabean and returns only the introspected properties 
-     * not present in the configuration in ra.xml for the corresponding 
-     * javabean. If no definite value is obtained while introspection of 
+     * Introspects the javabean and returns only the introspected properties
+     * not present in the configuration in ra.xml for the corresponding
+     * javabean. If no definite value is obtained while introspection of
      * a method empty string is taken as the  value.
      *
      * @param javaBeanInstance bean
      * @param ddPropsSet Set of Properties present in configuration in ra.xml for
      *                the corresponding javabean.
-     * @return Introspected properties not present in the configuration in 
+     * @return Introspected properties not present in the configuration in
      *         ra.xml for the corresponding javabean.
-     * @throws ConnectorRuntimeException if the Class could not be loaded 
-     *         or instantiated. 
+     * @throws ConnectorRuntimeException if the Class could not be loaded
+     *         or instantiated.
      */
 
     public Properties introspectJavaBean(
-        Object javaBeanInstance ,Set ddPropsSet) throws ConnectorRuntimeException 
+        Object javaBeanInstance ,Set ddPropsSet) throws ConnectorRuntimeException
     {
         Class loadedClass = javaBeanInstance.getClass();
 
@@ -194,7 +194,7 @@ public class ConnectorConfigParserUtils {
                 _logger.fine("Method -> " + methods[i].getName() + ":" + methods[i].getReturnType());
             }
             if(isProperty(methods[i]) && !presentInDDProps(methods[i],ddProps)
-                                      && isValid(methods[i], loadedClass)) {  
+                                      && isValid(methods[i], loadedClass)) {
                 name = getPropName(methods[i]);
                 value = getPropValue(methods[i], loadedClass, javaBeanInstance);
                 props.setProperty(name,value);
@@ -204,15 +204,15 @@ public class ConnectorConfigParserUtils {
     }
 
     /**
-     * Introspects the javabean and returns only the introspected properties 
-     * and their datatypes not present in the configuration in ra.xml for 
-     * the corresponding javabean.  
+     * Introspects the javabean and returns only the introspected properties
+     * and their datatypes not present in the configuration in ra.xml for
+     * the corresponding javabean.
      *
      * @param className Name of the class to be introspected.
      * @param ddPropsSet Set of Properties present in configuration in ra.xml for
      *                the corresponding javabean.
-     * @return Introspected properties and their datatype not present in the 
-     *         configuration in  ra.xml for the corresponding javabean. The 
+     * @return Introspected properties and their datatype not present in the
+     *         configuration in  ra.xml for the corresponding javabean. The
      *         properties consist of property name as the key and datatype as
      *         the value
      * @throws ConnectorRuntimeException if the Class could not be loaded
@@ -245,9 +245,9 @@ public class ConnectorConfigParserUtils {
     }
     /**
      * Checks whether the property pertaining to the method is already presenti
-     * in the array of Properties passed as second argument. 
-     * The properties already present in ra.xml for the corresponding 
-     * javabean is passed as the second argument. 
+     * in the array of Properties passed as second argument.
+     * The properties already present in ra.xml for the corresponding
+     * javabean is passed as the second argument.
      */
 
     private boolean presentInDDProps(Method method,Object[] ddProps) {
@@ -281,10 +281,10 @@ public class ConnectorConfigParserUtils {
 
     /**
      * Checks whether the method pertains to a valid javabean property.
-     * i.e it check whether the method starts with "set" and it has only 
-     * one parameter. It more than one parameter is present it is taken as 
+     * i.e it check whether the method starts with "set" and it has only
+     * one parameter. It more than one parameter is present it is taken as
      * not a property
-     * 
+     *
      */
 
     private boolean  isProperty(Method method) {
@@ -302,13 +302,13 @@ public class ConnectorConfigParserUtils {
     }
 
     /**
-     * Gets the property name of the method passed. It strips the first three 
-     * charaters (size of "set") of the method name and converts the first 
-     * character (for the string after stripping) to upper case and returns 
+     * Gets the property name of the method passed. It strips the first three
+     * charaters (size of "set") of the method name and converts the first
+     * character (for the string after stripping) to upper case and returns
      * that string.
      *
      */
-     
+
     private String getPropName(Method method) {
 
         if(method == null) {
@@ -316,32 +316,32 @@ public class ConnectorConfigParserUtils {
         }
         String methodName = method.getName();
         int length = "set".length();
-        String retValue = 
+        String retValue =
             methodName.substring(length,length+1).toUpperCase(Locale.getDefault()) +
             methodName.substring(length+1);
         return retValue;
     }
 
-    /** 
+    /**
      * Returns the getXXX() or isXXX() for the setXXX method passed.
      * XXX is the javabean property.
-     * Check is made if there are no parameters for the getXXX() and isXXX() 
+     * Check is made if there are no parameters for the getXXX() and isXXX()
      * methods. If there is any parameter, null is returned.
      */
 
-    private Method correspondingGetMethod(Method setMethod, 
+    private Method correspondingGetMethod(Method setMethod,
                                           Class loadedClass) {
 
         Method[] allMethods = loadedClass.getMethods();
         int length = "set".length();
         String methodName = setMethod.getName();
         Class[] parameterTypes = null;
-        String[] possibleGetMethodNames = new String[2]; 
+        String[] possibleGetMethodNames = new String[2];
         possibleGetMethodNames[0] = "is"+methodName.substring(length);
         possibleGetMethodNames[1] = "get"+methodName.substring(length);
 
         for(int i = 0;i < allMethods.length;++i) {
-            if(allMethods[i].getName().equals(possibleGetMethodNames[0]) || 
+            if(allMethods[i].getName().equals(possibleGetMethodNames[0]) ||
                allMethods[i].getName().equals(possibleGetMethodNames[1])) {
                 parameterTypes = allMethods[i].getParameterTypes();
                 if(parameterTypes.length == 0) {
@@ -353,12 +353,12 @@ public class ConnectorConfigParserUtils {
     }
 
     /**
-     * Invokes the method passed and returns the value obtained. If method 
-     * invocation fails empty string is returned. If the return type is not 
+     * Invokes the method passed and returns the value obtained. If method
+     * invocation fails empty string is returned. If the return type is not
      * of Wrapper class of the primitive types, empty string is returned.
      */
 
-    private String getPropValue(Method method, 
+    private String getPropValue(Method method,
                    Class loadedClass, Object loadedInstance) {
 
         Object retValue = null;
@@ -379,7 +379,7 @@ public class ConnectorConfigParserUtils {
                 }
             }
         }
-        return convertToString(retValue); 
+        return convertToString(retValue);
     }
 
     private String getPropType(Method method) {
@@ -388,7 +388,7 @@ public class ConnectorConfigParserUtils {
         if(parameterTypeClass.length != 1) {
             return null;
         }
-        if(parameterTypeClass[0].isPrimitive() || 
+        if(parameterTypeClass[0].isPrimitive() ||
                   parameterTypeClass[0].getName().equals("java.lang.String")) {
             return parameterTypeClass[0].getName();
         } else {
@@ -398,7 +398,7 @@ public class ConnectorConfigParserUtils {
 
     /**
      * Converts the object to String if it belongs to Wrapper class of primitive
-     * type or a string itself. For all other types empty String is returned. 
+     * type or a string itself. For all other types empty String is returned.
      */
 
     private String convertToString(Object obj) {
@@ -411,25 +411,25 @@ public class ConnectorConfigParserUtils {
         }else if( obj instanceof Integer ||
               obj instanceof Float   ||
               obj instanceof Long    ||
-              obj instanceof Double  || 
-              obj instanceof Character  || 
-              obj instanceof Boolean  || 
-              obj instanceof Byte  || 
-              obj instanceof Short ) {  
+              obj instanceof Double  ||
+              obj instanceof Character  ||
+              obj instanceof Boolean  ||
+              obj instanceof Byte  ||
+              obj instanceof Short ) {
             return String.valueOf(obj);
         } else {
             return "";
         }
     }
-  
+
 
     /**
-     * Loads and instantiates the class 
+     * Loads and instantiates the class
      * Throws ConnectorRuntimeException if loading or instantiation fails.
      */
 
     private Class loadClass(String className, String resourceAdapterName)
-                   throws ConnectorRuntimeException 
+                   throws ConnectorRuntimeException
     {
         Class loadedClass = null;
         try {
@@ -457,11 +457,11 @@ public class ConnectorConfigParserUtils {
         return loadedClass;
     }
     /**
-     * Instantiates the class 
+     * Instantiates the class
      */
 
-    private Object instantiate(Class loadedClass) 
-                   throws ConnectorRuntimeException 
+    private Object instantiate(Class loadedClass)
+                   throws ConnectorRuntimeException
     {
         try {
             return loadedClass.newInstance();
@@ -479,6 +479,6 @@ public class ConnectorConfigParserUtils {
             }
             throw new ConnectorRuntimeException(
                        "Couldnot access class : "+loadedClass.getName());
-        } 
+        }
     }
 }

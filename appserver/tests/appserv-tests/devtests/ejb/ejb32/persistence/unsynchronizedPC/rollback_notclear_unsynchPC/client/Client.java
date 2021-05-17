@@ -37,7 +37,7 @@ public class Client {
 
     public void doTest() {
         System.out.println("I am in client");
-        
+
         try {
             stat.addStatus("TestUnsynchPCIsCLearedAfterRollback", slessBean.doTest() ? stat.PASS : stat.FAIL);
         } catch (Exception e) {

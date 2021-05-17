@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -34,8 +34,8 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-session4ID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
 
@@ -57,9 +57,9 @@ public class Client {
     public void doTest() {
 
         try {
-	    InitialContext ic = new InitialContext();
+        InitialContext ic = new InitialContext();
 
-	    sful = (Sful) ic.lookup("ejb_ejb30_hello_session4_Sful#com.sun.s1asdev.ejb.ejb30.hello.session4.Sful");
+        sful = (Sful) ic.lookup("ejb_ejb30_hello_session4_Sful#com.sun.s1asdev.ejb.ejb30.hello.session4.Sful");
             System.out.println("invoking stateful");
             String sfulId = "1";
             sful.setId(sfulId);
@@ -73,7 +73,7 @@ public class Client {
             System.out.println("Expected id " + sfulId);
             System.out.println("Received id " + sful_2Id);
             if( !sful_2Id.equals(sfulId) ) {
-                throw new Exception("sful bean id mismatch " + 
+                throw new Exception("sful bean id mismatch " +
                                     sfulId + " , " + sful_2Id);
             }
 
@@ -83,7 +83,7 @@ public class Client {
 
             System.out.println("invoking stateless");
 
-	    sless = (Sless) ic.lookup("com.sun.s1asdev.ejb.ejb30.hello.session4.Sless");
+        sless = (Sless) ic.lookup("com.sun.s1asdev.ejb.ejb30.hello.session4.Sless");
             sless.hello();
 
             System.out.println("test complete");
@@ -94,8 +94,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+        return;
     }
 
 }

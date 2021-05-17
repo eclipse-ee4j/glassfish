@@ -34,29 +34,29 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
-        </antcall>      
+        </antcall>
     </target>
 
     <target name="build" depends="compile">
         <antcall target="mybuild">
            <param name="buildnum" value="1"/>
-        </antcall>      
+        </antcall>
         <antcall target="mybuild">
            <param name="buildnum" value="2"/>
-        </antcall>      
+        </antcall>
         <antcall target="mybuild">
            <param name="buildnum" value="3"/>
-        </antcall>      
+        </antcall>
         <antcall target="mybuild">
            <param name="buildnum" value="5"/>
-        </antcall>      
+        </antcall>
         <antcall target="mybuild">
            <param name="buildnum" value="10"/>
-        </antcall>      
+        </antcall>
     </target>
 
     <target name="mybuild" >
@@ -68,28 +68,28 @@
           <param name="sun-ejb-jar.xml" value="descriptor/sun-ejb-jar${buildnum}.xml"/>
           <param name="ejb.jar"
                  value="${assemble.dir}/ejb-stubs-stubcount${buildnum}-ejb.jar"/>
-</antcall>        
-    </target> 
-    
+</antcall>
+    </target>
+
     <target name="deploy">
         <antcall target="mydeploy">
            <param name="buildnum" value="1"/>
-        </antcall>      
+        </antcall>
         <antcall target="mydeploy">
            <param name="buildnum" value="2"/>
-        </antcall>      
+        </antcall>
         <antcall target="mydeploy">
            <param name="buildnum" value="3"/>
-        </antcall>      
+        </antcall>
         <antcall target="mydeploy">
            <param name="buildnum" value="5"/>
-        </antcall>      
+        </antcall>
         <antcall target="mydeploy">
            <param name="buildnum" value="10"/>
-        </antcall>      
+        </antcall>
     </target>
 
-    <target name="mydeploy" 
+    <target name="mydeploy"
             depends="init-common">
         <antcall target="deploy-jar-common">
             <param name="appname" value="ejb-stubs-stubcount${buildnum}"/>

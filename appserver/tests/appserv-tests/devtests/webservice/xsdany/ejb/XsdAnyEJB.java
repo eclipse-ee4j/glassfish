@@ -17,7 +17,7 @@
 package xsdanyejb;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -28,15 +28,15 @@ public class XsdAnyEJB implements SessionBean {
     private SessionContext sc;
 
     public XsdAnyEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In XsdAnyEJB::ejbCreate !!");
+    System.out.println("In XsdAnyEJB::ejbCreate !!");
     }
 
-    public int test1(int a, 
-                     xsdanyejb.SingleWildcardType c, 
-                     xsdanyejb.RepeatedWildcardType d) 
-        throws java.rmi.RemoteException 
+    public int test1(int a,
+                     xsdanyejb.SingleWildcardType c,
+                     xsdanyejb.RepeatedWildcardType d)
+        throws java.rmi.RemoteException
     {
         MessageContext msgContext = sc.getMessageContext();
         System.out.println("msgContext = " + msgContext);
@@ -57,16 +57,16 @@ public class XsdAnyEJB implements SessionBean {
 
         return a;
     }
-        
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 
 }

@@ -45,7 +45,7 @@ public class EmbeddedAdminCtrImpl implements EmbeddedAdminContainer {
 
     @Inject
     CommandRunner runner;
-    
+
     @Inject
     private InternalSystemAdministrator kernelIdentity;
 

@@ -37,12 +37,12 @@ public class SlessEJB implements Sless
         return timeoutWasCalled;
     }
 
-    @Timeout 
+    @Timeout
     private void timeout(Timer t) {
 
         System.out.println("in SlessEJB:timeout");
         timeoutWasCalled = true;
 
     }
-    
+
 }

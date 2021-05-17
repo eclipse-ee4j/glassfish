@@ -31,7 +31,7 @@ import org.glassfish.j2ee.statistics.Statistic;
  */
 
 public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, MutableCountStatistic {
-    
+
     private final BoundedRangeStatistic     initial;
     private long                            current;
     private long                            lastSampleTime;
@@ -53,7 +53,7 @@ public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, 
         this.lowWaterMark   = initial.getLowWaterMark();
         this.highWaterMark  = initial.getHighWaterMark();
     }
-    
+
     /** Resets to the initial state. It is guaranteed that following changes occur
      * to the statistic if this method is called:
      * <ul>
@@ -73,7 +73,7 @@ public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, 
         this.highWaterMark          = initial.getHighWaterMark();
         this.lowWaterMark           = initial.getLowWaterMark();
     }
-    
+
     /** Changes the current value of the encapsulated BoundedRangeStatistic to the given value.
      * Since this is the only mutator exposed here, here are the other side effects
      * of calling this method:
@@ -81,7 +81,7 @@ public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, 
      *  <li> lastSampleTime is set to <b> current time in milliseconds. </b> </li>
      *  <li> highWaterMark is accordingly adjusted. </li>
      *  <li> lowWaterMark is accordingly adjusted. </li>
-     * </ul> 
+     * </ul>
      * In a real-time system with actual probes for measurement, the lastSampleTime
      * could be different from the instant when this method is called, but that is deemed insignificant.
      * @param count         long that represents the current value of the Statistic.
@@ -89,16 +89,16 @@ public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, 
     public void setCount(long current) {
         this.current            = current;
         this.lastSampleTime     = System.currentTimeMillis();
-        
+
         this.lowWaterMark   = (current < this.lowWaterMark) ? (current) : (this.lowWaterMark);
         this.highWaterMark  = (current > this.highWaterMark) ? (current) : (this.highWaterMark);
-	this.lastSampleTime = System.currentTimeMillis();
+    this.lastSampleTime = System.currentTimeMillis();
     }
-    
+
     /** This method is the essence of this class. It provides the read-only view of encapsulated
      * Statistic. If the clients have to know the Statistic, this is what should
      * be called by actual data collecting component to return the value to them.
-     * The principle advantage is from the data collecting component's standpoint, in 
+     * The principle advantage is from the data collecting component's standpoint, in
      * that it does not have to create instances of BoundedRangeStatistic when its
      * current value is queried/measured.
      * @see #reset
@@ -119,49 +119,49 @@ public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, 
             this.lastSampleTime        // changes all the time!
         ));
     }
-    
+
     public String getDescription() {
-	return ( initial.getDescription());
+    return ( initial.getDescription());
     }
-    
+
     public long getLastSampleTime() {
-	return ( this.lastSampleTime );
+    return ( this.lastSampleTime );
     }
-    
+
     public String getName() {
-	return ( initial.getName() );
+    return ( initial.getName() );
     }
-    
+
     public long getStartTime() {
-	return ( initial.getStartTime() );
+    return ( initial.getStartTime() );
     }
-    
+
     public String getUnit() {
-	return ( initial.getUnit() );
+    return ( initial.getUnit() );
     }
-    
+
     public Statistic modifiableView() {
-	return ( this );
+    return ( this );
     }
-    
+
     public long getCurrent() {
-	return ( this.current );
+    return ( this.current );
     }
-    
+
     public long getHighWaterMark() {
-	return ( this.highWaterMark );
+    return ( this.highWaterMark );
     }
-    
+
     public long getLowWaterMark() {
-	return ( this.lowWaterMark );
+    return ( this.lowWaterMark );
     }
-    
+
     public long getLowerBound() {
-	return ( initial.getLowerBound() );
+    return ( initial.getLowerBound() );
     }
-    
+
     public long getUpperBound() {
-	return ( initial.getUpperBound() );
+    return ( initial.getUpperBound() );
     }
     /* hack: bug 5045413 */
     public void setDescription (final String s) {

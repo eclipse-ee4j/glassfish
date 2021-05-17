@@ -85,7 +85,7 @@ final class InstallerThread extends Thread {
         }
     }
 
-   
+
     /**
      * <p> Install the admingui.war file.</p>
      */

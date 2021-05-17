@@ -44,7 +44,7 @@ public class VerifyServlet extends HttpServlet {
     throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-	resp.setContentType("text/html");
+    resp.setContentType("text/html");
         String param = req.getQueryString();
 
         out.println("<html>");

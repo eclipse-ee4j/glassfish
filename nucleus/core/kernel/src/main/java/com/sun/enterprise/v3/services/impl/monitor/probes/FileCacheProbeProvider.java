@@ -22,7 +22,7 @@ import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 
 /**
  * Probe provider interface for file-cache related events.
- * 
+ *
  * @author Alexey Stashok
  */
 @ProbeProvider (moduleProviderName="glassfish", moduleName="kernel", probeProviderName="file-cache")

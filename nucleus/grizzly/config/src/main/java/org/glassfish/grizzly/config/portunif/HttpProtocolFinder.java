@@ -33,7 +33,7 @@ import org.glassfish.grizzly.portunif.ProtocolFinder;
  *
  * example: GET / HTTP/1.1
  *
- * The algorithm will try to find the protocol token. 
+ * The algorithm will try to find the protocol token.
  *
  * @author Jeanfrancois Arcand
  * @author Alexey Stashok
@@ -74,7 +74,7 @@ public class HttpProtocolFinder implements ProtocolFinder {
             position = parsingState.position;
             state = parsingState.state;
         }
-        
+
         byte c = 0;
         byte c2;
 
@@ -97,7 +97,7 @@ public class HttpProtocolFinder implements ProtocolFinder {
                             break _1;
                         }
                     }
-                    
+
                     return Result.NOT_FOUND;
                 case 1:
                     // Search for first ' '
@@ -126,7 +126,7 @@ public class HttpProtocolFinder implements ProtocolFinder {
                         if (parsingState != null) {
                             parsingStateAttribute.remove(connection);
                         }
-                        
+
                         return Result.FOUND;
                     }
                     break;
@@ -138,14 +138,14 @@ public class HttpProtocolFinder implements ProtocolFinder {
         if (position >= maxRequestLineSize) {
             return Result.NOT_FOUND;
         }
-        
+
         if (parsingState == null) {
             parsingStateAttribute.set(connection, new ParsingState(position, state));
         } else {
             parsingState.position = position;
             parsingState.state = state;
         }
-        
+
         return Result.NEED_MORE_DATA;
     }
 

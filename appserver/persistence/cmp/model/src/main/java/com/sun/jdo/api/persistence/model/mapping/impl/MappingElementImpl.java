@@ -31,57 +31,57 @@ import java.beans.*;
 import java.text.Collator;
 import java.util.ResourceBundle;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public abstract class MappingElementImpl implements MappingElement
 {
-	/** I18N message handler */
-	private static final ResourceBundle _messages = I18NHelper.loadBundle(
-		"com.sun.jdo.api.persistence.model.Bundle",		// NOI18N
-		MappingElementImpl.class.getClassLoader());
+    /** I18N message handler */
+    private static final ResourceBundle _messages = I18NHelper.loadBundle(
+        "com.sun.jdo.api.persistence.model.Bundle",        // NOI18N
+        MappingElementImpl.class.getClassLoader());
 
-	/** Property change support */
-	private PropertyChangeSupport _support;
+    /** Property change support */
+    private PropertyChangeSupport _support;
 
-	/** Vetoable change support */
-	private transient VetoableChangeSupport _vetoableSupport;
+    /** Vetoable change support */
+    private transient VetoableChangeSupport _vetoableSupport;
 
-	String _name;
+    String _name;
 
-	/** Create new MappingElementImpl with no corresponding name.  This 
-	 * constructor should only be used for cloning and archiving.
-	 */
-	public MappingElementImpl ()
-	{
-		this(null);
-	}
+    /** Create new MappingElementImpl with no corresponding name.  This
+     * constructor should only be used for cloning and archiving.
+     */
+    public MappingElementImpl ()
+    {
+        this(null);
+    }
 
-	/** Creates new MappingElementImpl with the corresponding name 
-	 * @param name the name of the element
-	 */
-	public MappingElementImpl (String name)
-	{
-		super();
-		_name = name;
-	}
+    /** Creates new MappingElementImpl with the corresponding name
+     * @param name the name of the element
+     */
+    public MappingElementImpl (String name)
+    {
+        super();
+        _name = name;
+    }
 
-	/** @return I18N message handler for this element
-	 */
-	protected static final ResourceBundle getMessages () { return _messages; }
+    /** @return I18N message handler for this element
+     */
+    protected static final ResourceBundle getMessages () { return _messages; }
 
-	/** Overrides Object's <code>toString</code> method to return the name 
-	 * of this mapping element.
-	 * @return a string representation of the object
-	 */
-	public String toString () { return getName(); }
+    /** Overrides Object's <code>toString</code> method to return the name
+     * of this mapping element.
+     * @return a string representation of the object
+     */
+    public String toString () { return getName(); }
 
     /** Overrides Object's <code>equals</code> method by comparing the name of this mapping element
      * with the name of the argument obj. The method returns <code>false</code> if obj does not have
      * the same dynamic type as this mapping element.
-	 * @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
+     * @return <code>true</code> if this object is the same as the obj argument; <code>false</code> otherwise.
      * @param obj the reference object with which to compare.
      */
     public boolean equals(Object obj)
@@ -94,7 +94,7 @@ public abstract class MappingElementImpl implements MappingElement
         // check for the right class and then do the name check by calling compareTo.
         return (getClass() == obj.getClass()) && (compareTo(obj) == 0);
     }
-    
+
     /** Overrides Object's <code>hashCode</code> method to return the hashCode of this mapping element's name.
      * @return a hash code value for this object.
      */
@@ -103,112 +103,112 @@ public abstract class MappingElementImpl implements MappingElement
         return (getName()==null) ? 0 : getName().hashCode();
     }
 
-	/** Fires property change event.
-	 * @param name property name
-	 * @param o old value
-	 * @param n new value
-	 */
-	protected void firePropertyChange (String name, Object o, Object n)
-	{
-		if (_support != null)
-			_support.firePropertyChange(name, o, n);
-	}
+    /** Fires property change event.
+     * @param name property name
+     * @param o old value
+     * @param n new value
+     */
+    protected void firePropertyChange (String name, Object o, Object n)
+    {
+        if (_support != null)
+            _support.firePropertyChange(name, o, n);
+    }
 
-	/** Fires vetoable change event.
-	 * @param name property name
-	 * @param o old value
-	 * @param n new value
-	 * @exception PropertyVetoException when the change is vetoed by a listener
-	 */
-	protected void fireVetoableChange (String name, Object o, Object n)
-		throws PropertyVetoException
-	{
-		if (_vetoableSupport != null)
-			_vetoableSupport.fireVetoableChange(name, o, n);
-	}
+    /** Fires vetoable change event.
+     * @param name property name
+     * @param o old value
+     * @param n new value
+     * @exception PropertyVetoException when the change is vetoed by a listener
+     */
+    protected void fireVetoableChange (String name, Object o, Object n)
+        throws PropertyVetoException
+    {
+        if (_vetoableSupport != null)
+            _vetoableSupport.fireVetoableChange(name, o, n);
+    }
 
-	//================= implementation of MappingElement ================
+    //================= implementation of MappingElement ================
 
-	/** Add a property change listener.
-	 * @param l the listener to add
-	 */
-	public synchronized void addPropertyChangeListener 
-		(PropertyChangeListener l)
-	{
-		// new test under synchronized block
-		if (_support == null)
-			_support = new PropertyChangeSupport(this);
+    /** Add a property change listener.
+     * @param l the listener to add
+     */
+    public synchronized void addPropertyChangeListener
+        (PropertyChangeListener l)
+    {
+        // new test under synchronized block
+        if (_support == null)
+            _support = new PropertyChangeSupport(this);
 
 
-		_support.addPropertyChangeListener(l);
-	}
+        _support.addPropertyChangeListener(l);
+    }
 
-	/** Remove a property change listener.
-	 * @param l the listener to remove
-	 */
-	public void removePropertyChangeListener (PropertyChangeListener l)
-	{
-		if (_support != null)
-			_support.removePropertyChangeListener(l);
-	}
+    /** Remove a property change listener.
+     * @param l the listener to remove
+     */
+    public void removePropertyChangeListener (PropertyChangeListener l)
+    {
+        if (_support != null)
+            _support.removePropertyChangeListener(l);
+    }
 
-	/** Add a vetoable change listener.
-	 * @param l the listener to add
-	 */
-	public synchronized void addVetoableChangeListener 
-		(VetoableChangeListener l)
-	{
-		if (_vetoableSupport == null)
-			_vetoableSupport = new VetoableChangeSupport(this);
+    /** Add a vetoable change listener.
+     * @param l the listener to add
+     */
+    public synchronized void addVetoableChangeListener
+        (VetoableChangeListener l)
+    {
+        if (_vetoableSupport == null)
+            _vetoableSupport = new VetoableChangeSupport(this);
 
-		_vetoableSupport.addVetoableChangeListener(l);
-	}
+        _vetoableSupport.addVetoableChangeListener(l);
+    }
 
-	/** Remove a vetoable change listener.
-	 * @param l the listener to remove
-	 */
-	public synchronized void removeVetoableChangeListener (
-		VetoableChangeListener l)
-	{
-		if (_vetoableSupport != null)
-			_vetoableSupport.removeVetoableChangeListener(l);
-	}
+    /** Remove a vetoable change listener.
+     * @param l the listener to remove
+     */
+    public synchronized void removeVetoableChangeListener (
+        VetoableChangeListener l)
+    {
+        if (_vetoableSupport != null)
+            _vetoableSupport.removeVetoableChangeListener(l);
+    }
 
-	/** Get the name of this mapping element.
-	 * @return the name
-	 */
-	public String getName () { return _name; }
+    /** Get the name of this mapping element.
+     * @return the name
+     */
+    public String getName () { return _name; }
 
-	/** Set the name of this mapping element.
-	 * @param name the name
-	 * @exception ModelException if impossible
-	 */
-	public void setName (String name) throws ModelException
-	{
-		String old = getName();
-		
-		try
-		{
-			fireVetoableChange(PROP_NAME, old, name);
-			_name = name;
-			firePropertyChange(PROP_NAME, old, name);
-		}
-		catch (PropertyVetoException e)
-		{
-			throw new ModelVetoException(e);
-		}
-	}
+    /** Set the name of this mapping element.
+     * @param name the name
+     * @exception ModelException if impossible
+     */
+    public void setName (String name) throws ModelException
+    {
+        String old = getName();
 
-	//================= implementation of Comparable ================
-    
-	/** Compares this object with the specified object for order. Returns a negative integer, zero, 
+        try
+        {
+            fireVetoableChange(PROP_NAME, old, name);
+            _name = name;
+            firePropertyChange(PROP_NAME, old, name);
+        }
+        catch (PropertyVetoException e)
+        {
+            throw new ModelVetoException(e);
+        }
+    }
+
+    //================= implementation of Comparable ================
+
+    /** Compares this object with the specified object for order. Returns a negative integer, zero,
      * or a positive integer as this object is less than, equal to, or greater than the specified object.
-     * The specified object must be mapping element, meaning it must be an instance of class 
+     * The specified object must be mapping element, meaning it must be an instance of class
      * MappingElementImpl or any subclass. If not a ClassCastException is thrown.
      * The order of MappingElementImpl objects is defined by the order of their names.
      * Mapping elements without name are considered to be less than any named mapping element.
      * @param o the Object to be compared.
-     * @return a negative integer, zero, or a positive integer as this object is less than, equal to, 
+     * @return a negative integer, zero, or a positive integer as this object is less than, equal to,
      * or greater than the specified object.
      * @exception ClassCastException - if the specified object is null or is not an instance of MappingElementImpl
      */
@@ -229,15 +229,15 @@ public abstract class MappingElementImpl implements MappingElement
         // if this is named and o does not have a name it should compare greater
         if (otherName == null)
             return 1;
-        // now we know that this and o are named mapping elements => 
-        // use locale-sensitive String comparison 
+        // now we know that this and o are named mapping elements =>
+        // use locale-sensitive String comparison
         int ret = Collator.getInstance().compare(thisName, otherName);
-        // if both names are equal, both objects might have different types. 
+        // if both names are equal, both objects might have different types.
         // If so order both objects by their type names (necessary to be consistent with equals)
         if ((ret == 0) && (getClass() != o.getClass()))
             ret = getClass().getName().compareTo(o.getClass().getName());
         return ret;
     }
-    
+
 }
 

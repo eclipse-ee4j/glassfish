@@ -32,14 +32,14 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
 
     @EJB private static Stles bean;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         stat.addDescription("ejb31-timer-schedule_on_ejb_timeout");
 
 
@@ -48,7 +48,7 @@ public class Client {
             System.out.println("Waiting timers to expire for schedule_on_ejb_timeout timer test");
             Thread.sleep(2000);
             System.out.println("Verifying timers for schedule_on_ejb_timeout timer test");
-            bean.verifyTimers(); 
+            bean.verifyTimers();
             stat.addStatus("schedule_on_ejb_timeout: ", stat.PASS );
 
         } catch(Exception e) {

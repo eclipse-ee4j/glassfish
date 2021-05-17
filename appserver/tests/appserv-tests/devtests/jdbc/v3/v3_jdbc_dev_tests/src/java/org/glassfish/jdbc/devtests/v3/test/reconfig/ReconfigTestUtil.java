@@ -38,7 +38,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 public class ReconfigTestUtil {
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
 
-    Map<String, Boolean> poolPropertyChangeTest(DataSource ds, PrintWriter out, 
+    Map<String, Boolean> poolPropertyChangeTest(DataSource ds, PrintWriter out,
             boolean throwException) {
         //Tests the property change of jdbc connection pool by asadmin set command.
         try {
@@ -49,11 +49,11 @@ public class ReconfigTestUtil {
             }
         } catch (Exception e) {
             resultsMap.put("pool-property-change-test", false);
-        } 
+        }
         return resultsMap;
     }
 
-    Map<String, Boolean> resourceAttributeChangeTest(DataSource ds, PrintWriter out, 
+    Map<String, Boolean> resourceAttributeChangeTest(DataSource ds, PrintWriter out,
             boolean throwException) {
         //Tests the attribute set of jdbc resource by asadmin set command.
         try {
@@ -64,8 +64,8 @@ public class ReconfigTestUtil {
             }
         } catch (Exception e) {
             resultsMap.put("resource-change-wrong-table-test", false);
-        } 
-        
+        }
+
         try {
             if(testJDBCResourceChangeCorrectTable(ds, out, !throwException)) {
                 resultsMap.put("resource-change-correct-table-test", true);
@@ -77,8 +77,8 @@ public class ReconfigTestUtil {
         }
         return resultsMap;
     }
-    
-    Map<String, Boolean> poolAttributeChangeTest(DataSource ds, PrintWriter out, 
+
+    Map<String, Boolean> poolAttributeChangeTest(DataSource ds, PrintWriter out,
             int maxPoolSize, boolean throwException) {
         //Tests the attribute set by asadmin set command.
         try {
@@ -93,7 +93,7 @@ public class ReconfigTestUtil {
         return resultsMap;
     }
 
-    private boolean testJDBCResourceChange(DataSource ds, PrintWriter out, 
+    private boolean testJDBCResourceChange(DataSource ds, PrintWriter out,
             boolean throwException) throws SystemException {
         HtmlUtil.printHR(out);
         out.println("<h4> Reconfig test : tablename : reconfigTestTable (reconfig-db)</h4>");
@@ -120,12 +120,12 @@ public class ReconfigTestUtil {
         } finally {
             try { con.close(); } catch ( Exception e ) {}
         }
-        
+
         HtmlUtil.printHR(out);
         return passed;
     }
 
-    private boolean testJDBCResourceChangeCorrectTable(DataSource ds, PrintWriter out, 
+    private boolean testJDBCResourceChangeCorrectTable(DataSource ds, PrintWriter out,
             boolean throwException) throws SystemException {
         HtmlUtil.printHR(out);
         out.println("<h4> Reconfig test : tableName : sampleTable (sample-db) </h4>");
@@ -152,13 +152,13 @@ public class ReconfigTestUtil {
         } finally {
             try { con.close(); } catch ( Exception e ) {}
         }
-        
+
         HtmlUtil.printHR(out);
-        return passed;        
+        return passed;
     }
-    
-    public boolean testMaxPoolSize(DataSource ds, PrintWriter out, 
-            int maxPoolSize, boolean throwException)  
+
+    public boolean testMaxPoolSize(DataSource ds, PrintWriter out,
+            int maxPoolSize, boolean throwException)
             throws SystemException {
         HtmlUtil.printHR(out);
         out.println("\n<h4> Reconfig - Attribute max-pool-size test </h4>");
@@ -205,7 +205,7 @@ public class ReconfigTestUtil {
         return passed;
     }
 
-    private boolean testPropertyChange(DataSource ds, PrintWriter out, 
+    private boolean testPropertyChange(DataSource ds, PrintWriter out,
             boolean throwException) throws SystemException {
         HtmlUtil.printHR(out);
         out.println("\n<h4> Reconfig - Pool property change test </h4>");
@@ -225,9 +225,9 @@ public class ReconfigTestUtil {
                 passed = false;
             }
         } finally {
-            try { con.close(); } catch ( Exception e ) {}            
+            try { con.close(); } catch ( Exception e ) {}
         }
         HtmlUtil.printHR(out);
-        return passed;        
+        return passed;
     }
 }

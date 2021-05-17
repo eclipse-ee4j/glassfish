@@ -29,7 +29,7 @@ public abstract class LeagueBean implements EntityBean {
 
     public abstract String getLeagueId();
     public abstract void setLeagueId(String id);
-    
+
     public abstract String getName();
     public abstract void setName(String name);
 
@@ -73,31 +73,31 @@ public abstract class LeagueBean implements EntityBean {
         setSport(sport);
         return null;
     }
-         
+
     public void ejbPostCreate (String id, String name, String sport)
         throws CreateException { }
 
     public void setEntityContext(EntityContext ctx) {
         context = ctx;
     }
-    
+
     public void unsetEntityContext() {
         context = null;
     }
-    
+
     public void ejbRemove() {
         Debug.print("LeagueBean ejbRemove");
     }
-    
+
     public void ejbLoad() {
         Debug.print("LeagueBean ejbLoad");
     }
-    
+
     public void ejbStore() {
         Debug.print("LeagueBean ejbStore");
     }
-    
+
     public void ejbPassivate() { }
-    
+
     public void ejbActivate() { }
 }

@@ -78,7 +78,7 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
             }
 
             ArrayList<String> serverNames = getInstanceDirs(serverDir);
-            for (String serverName: serverNames) 
+            for (String serverName: serverNames)
                 if (isRunning(serverDir, serverName))
                     throw new CommandException(strings.get("instance.is.running",
                             serverName));
@@ -229,5 +229,5 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
             throw new CommandException(strings.get("NoAdminPortEx", ex), ex);
         }
     }
-    
+
 }

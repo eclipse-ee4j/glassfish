@@ -136,7 +136,7 @@ public interface DiagnosticService extends ConfigBeanProxy, PropertyBag {
      *
      * Boolean attribute. If "true", application deployment descriptors in plain text are captured as part of diagnostic
      * report. If Deployment descriptors contain any confidential information, it's recommended to set it to false
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
@@ -172,7 +172,7 @@ public interface DiagnosticService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the maxLogEntries property.
      *
      * Max no. of log entries being captured as part of diagnostic report. A non negative value.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "500")

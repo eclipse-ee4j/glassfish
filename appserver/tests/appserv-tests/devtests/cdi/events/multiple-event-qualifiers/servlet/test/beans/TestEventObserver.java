@@ -36,17 +36,17 @@ public class TestEventObserver {
         System.out.println("TestEventObserver:afterDocumentUpdate");
         documentAfterDocumentUpdate++;
     }
-    
+
     public void onAnyBlogEvent(
             @Observes @Blog Document d) {
         System.out.println("TestEventObserver:onAnyBlogEvent");
         documentOnAnyBlogEvent++;
     }
-    
+
     public void onAnyDocumentEvent(@Observes Document d){
         System.out.println("TestEventObserver:onAnyDocumentEvent");
         documentOnAnyDocumentEvent++;
-        
+
     }
-    
+
 }

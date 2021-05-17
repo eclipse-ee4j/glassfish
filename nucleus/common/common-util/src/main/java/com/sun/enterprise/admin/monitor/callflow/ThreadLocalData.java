@@ -33,7 +33,7 @@ import java.util.Map;
  * @date August 21, 2005
  */
 public interface ThreadLocalData {
-    
+
     String getRequestId();
 
     String getMethodName();
@@ -41,12 +41,12 @@ public interface ThreadLocalData {
     String getApplicationName();
 
     String getModuleName();
-    
+
     String getComponentName();
-    
+
     String getComponentType();
-    
+
     String getTransactionId();
-    
+
     String getSecurityId();
 }

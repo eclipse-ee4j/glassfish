@@ -109,7 +109,7 @@ public class LocalTxManagedConnectionFactory
         if (!getBooleanWithGetBooleanAccessor()) {
             throw new ResourceException("Blackbox RAR : Get Boolean Accessor is false");
         }
-        
+
         if (!isBooleanWithIsBooleanAccessor()) {
             throw new ResourceException("Blackbox RAR : Is Boolean Accessor is false");
         }

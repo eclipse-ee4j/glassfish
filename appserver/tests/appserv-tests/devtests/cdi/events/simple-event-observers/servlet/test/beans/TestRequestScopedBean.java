@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
 public class TestRequestScopedBean {
     @Inject @Created Event<Document> docCreatedEvent;
     @Inject @Updated Event<Document> docUpdatedEvent;
-    
+
     public void fireEvents(){
         Document d = new Document("Test");
         docCreatedEvent.fire(d);

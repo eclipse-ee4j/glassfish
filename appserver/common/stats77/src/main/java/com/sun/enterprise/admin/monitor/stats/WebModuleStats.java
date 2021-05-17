@@ -19,7 +19,7 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
-/** 
+/**
  * Interface for querying web module statistics.
  */
 public interface WebModuleStats extends Stats {
@@ -112,5 +112,5 @@ public interface WebModuleStats extends Stats {
      * Resets this WebModuleStats.
      */
     public void reset();
-        
+
 }

@@ -42,7 +42,7 @@ public class HK2ContextBridge implements Context {
         if (!(contextual instanceof HK2CDIBean)) {
             return null;
         }
-        
+
         HK2CDIBean<T> hk2CdiBean = (HK2CDIBean<T>) contextual;
 
         ActiveDescriptor<T> descriptor = hk2CdiBean.getHK2Descriptor();

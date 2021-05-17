@@ -68,11 +68,11 @@ public class BSDPasswd extends Passwd {
                 "pw_dir", "pw_shell"));
         return fieldOrder;
     }
-    
+
     public void setPwGecos(String pw_gecos) {
         this.pw_gecos = pw_gecos;
     }
-    
+
     public void setPwDir(String pw_dir) {
         this.pw_dir = pw_dir;
     }

@@ -36,13 +36,13 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
  * This class is responsible for instantiating  runtime Descriptor classes
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class RuntimeDescriptorFactory {
 
-    
+
     static Map descriptorClasses;
-    
+
     /** This is a factory object no need for DescriptorFactory instance */
     protected RuntimeDescriptorFactory() {
     }
@@ -55,71 +55,71 @@ public class RuntimeDescriptorFactory {
         register(new XMLElement(RuntimeTagNames.RESOURCE_ENV_DESCRIPTION), ResourceEnvReferenceDescriptor.class);
         register(new XMLElement(RuntimeTagNames.EJB_REFERENCE_DESCRIPTION), EjbReference.class);
 
-	// connector related
-	register(new XMLElement(RuntimeTagNames.PRINCIPAL), Principal.class);
-	register(new XMLElement(RuntimeTagNames.BACKEND_PRINCIPAL), Principal.class);
-	register(new XMLElement(RuntimeTagNames.MAP_ELEMENT), MapElement.class);
-	register(new XMLElement(RuntimeTagNames.ROLE_MAP), RoleMap.class);
-	register(new XMLElement(RuntimeTagNames.RESOURCE_ADAPTER), ResourceAdapter.class);	
+    // connector related
+    register(new XMLElement(RuntimeTagNames.PRINCIPAL), Principal.class);
+    register(new XMLElement(RuntimeTagNames.BACKEND_PRINCIPAL), Principal.class);
+    register(new XMLElement(RuntimeTagNames.MAP_ELEMENT), MapElement.class);
+    register(new XMLElement(RuntimeTagNames.ROLE_MAP), RoleMap.class);
+    register(new XMLElement(RuntimeTagNames.RESOURCE_ADAPTER), ResourceAdapter.class);
 
     }
 
     /**
-     * register a new descriptor class handling a particular XPATH in the DTD. 
+     * register a new descriptor class handling a particular XPATH in the DTD.
      *
      * @param xmlPath absolute or relative XPath
      * @param clazz the descriptor class to use
      */
     public static void register(XMLElement  xmlPath, Class clazz) {
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {        
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
             DOLUtils.getDefaultLogger().fine("Register " + clazz + " to handle " + xmlPath.getQName());
         }
-	descriptorClasses.put(xmlPath.getQName(), clazz);
+    descriptorClasses.put(xmlPath.getQName(), clazz);
     }
-    
+
     /**
      * @return the descriptor tag for a particular XPath
      */
     public static Class getDescriptorClass(String xmlPath) {
-        String s = xmlPath;        
+        String s = xmlPath;
         do {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {            
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
                 DOLUtils.getDefaultLogger().finer("looking for " + xmlPath + " in " + descriptorClasses);
             }
             if (descriptorClasses.containsKey(xmlPath)) {
-                return (Class) descriptorClasses.get(xmlPath);            
+                return (Class) descriptorClasses.get(xmlPath);
             }
             if (xmlPath.indexOf('/')!=-1) {
                 xmlPath = xmlPath.substring(xmlPath.indexOf('/')+1);
             } else {
                 xmlPath=null;
-            }            
+            }
         } while (xmlPath!=null);
 
-	if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+    if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
             DOLUtils.getDefaultLogger().fine("No descriptor registered for " + s);
-	}
+    }
         return null;
     }
-    
+
     /**
-     * @return a new instance of a registered descriptor class for the 
+     * @return a new instance of a registered descriptor class for the
      * supplied XPath
      */
-    public static Object  getDescriptor(String xmlPath) {        
-        
+    public static Object  getDescriptor(String xmlPath) {
+
         try {
             Class c = getDescriptorClass(xmlPath);
-	    if (c!=null) {
+        if (c!=null) {
                 return c.newInstance();
             }
         } catch (Throwable t) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred", t);  
+            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred", t);
         }
         return null;
     }
-            
+
     static {
         initMapping();
-    }     
+    }
 }

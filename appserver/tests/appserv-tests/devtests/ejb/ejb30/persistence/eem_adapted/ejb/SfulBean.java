@@ -40,22 +40,22 @@ public class SfulBean
     implements Sful {
 
     private String name;
-    
+
     @EJB private AdaptedLocalHome home;
 
     private SfulDelegate delegate;
-    
+
     private @PersistenceContext(unitName="lib/ejb-ejb30-persistence-eem_adapted-par1.jar#em",
-                type=PersistenceContextType.EXTENDED) 
+                type=PersistenceContextType.EXTENDED)
             EntityManager extendedEM;
- 
+
     public void setName(String name) {
         this.name = name;
     }
 
     public Map<String, Boolean> doTests() {
         Person person = new Person(name);
-        
+
         String delegateName = "delgname_" + name;
         String delegateData= "delgdata: " + name;
         try {
@@ -69,11 +69,11 @@ public class SfulBean
 
         extendedEM.persist(person);
         Person foundPerson = delegate.find(name);
-        
+
         boolean delegateRemovedMe = delegate.remove(name);
-        
+
         boolean removedDelegate = removePerson(delegateName);
-        
+
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("findDelegateCreatedPerson", (dPerson != null));
         map.put("delegateFoundMe", (foundPerson != null));
@@ -101,5 +101,5 @@ public class SfulBean
         }
         return removed;
     }
-    
+
 }

@@ -30,7 +30,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.util.List;
 
-/* 
+/*
  * This is a derivation of the CookieStore which provides load and store
  * methods which allows the cookies to be stored to and retreived from
  * a file.
@@ -98,9 +98,9 @@ public class ClientCookieStore implements CookieStore {
 
     /**
      * Load the persisted cookies into the CookieStore.
-     * 
+     *
      * The store has this schema:
-     * 
+     *
      * COOKIE1=xxx; ... COOKIE2=yyy; ...
      **/
     public void load() throws IOException {
@@ -140,7 +140,7 @@ public class ClientCookieStore implements CookieStore {
     /**
      * Store the cookies in the CookieStore to the provided location. This method will overwrite the contents of the target
      * file.
-     * 
+     *
      **/
     public void store() throws IOException {
         PrintWriter out = null;

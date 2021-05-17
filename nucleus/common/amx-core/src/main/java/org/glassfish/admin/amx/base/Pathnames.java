@@ -41,11 +41,11 @@ public interface Pathnames extends AMXProxy, Utility, Singleton
     /** Resolve a path to an ObjectName.  Any aliasing, etc is dealt with.  Return null if failure. */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public ObjectName  resolvePath( final String path );
-    
+
     /** Paths that don't resolve result in a null entry */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public ObjectName[]  resolvePaths( final String[] paths );
-    
+
     /**
         An efficient way to get the list of MBeans from DomainRoot on down to the specified
         MBean.  The last entry will be the same as the parameter.
@@ -61,19 +61,19 @@ public interface Pathnames extends AMXProxy, Utility, Singleton
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public ObjectName[] ancestors( final String path );
-    
+
     /**
         List descendant ObjectNames.
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public ObjectName[]  listObjectNames( final String path, final boolean recursive);
-    
+
     /**
         List descendant paths.
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
     public String[] listPaths( final String path, boolean recursive );
-    
+
     @ManagedAttribute
     public String[] getAllPathnames();
 

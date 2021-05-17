@@ -62,13 +62,13 @@ public class BVIntegrationTestServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
         resp.setContentType("text/html");
         out.print("<html><head><title>SimpleBVServlet</title></head><body>");
-        
+
         jakarta.validation.Validator beanValidator = configureValidation(req, resp);
 
         out.print("<h1>");
         out.print("Validating person class using validateValue with valid property");
         out.print("</h1>");
-	
+
         List<String> listOfString = new ArrayList<String>();
         listOfString.add("one");
         listOfString.add("two");
@@ -76,7 +76,7 @@ public class BVIntegrationTestServlet extends HttpServlet {
 
         Set<ConstraintViolation<Person>> violations =
                 beanValidator.validateValue(Person.class, "listOfString", listOfString);
-        
+
         printConstraintViolations(out, violations, "case1");
 
         out.print("<h1>");
@@ -93,28 +93,28 @@ public class BVIntegrationTestServlet extends HttpServlet {
             out.print("</p>");
         }
         Person person = new Person();
-        
+
         out.print("<h1>");
         out.print("Validating invalid person instance using validate.");
         out.print("</h1>");
-        
+
         violations = beanValidator.validate(person);
-        
+
         printConstraintViolations(out, violations, "case3");
-        
+
         out.print("<h1>");
         out.print("Validating valid person.");
         out.print("</h1>");
-        
+
         person.setFirstName("John");
         person.setLastName("Yaya");
         person.setListOfString(listOfString);
-        
+
         violations = beanValidator.validate(person);
         printConstraintViolations(out, violations, "case4");
-        
+
         out.print("</body></html>");
-        
+
     }
 
     private void printConstraintViolations(PrintWriter out,

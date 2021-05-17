@@ -26,7 +26,7 @@ import java.rmi.Remote;
  *
  */
 public interface RemoteReferenceFactory {
- 
+
     /**
      * Create a remote reference for an EJBObject which can
      * be used for performing remote invocations.
@@ -36,15 +36,15 @@ public interface RemoteReferenceFactory {
      * This operation should not cause the ProtocolManager to maintain
      * any instance-specific state about the EJB instance.
      *
-     * @param instanceKey a unique identifier for the EJB instance 
-     *          which is unique across all EJB refs created using this 
+     * @param instanceKey a unique identifier for the EJB instance
+     *          which is unique across all EJB refs created using this
      *          RemoteReferenceFactory instance.
      * @return the protocol-specific stub of the proper derived type.
      *       It should not be necessary to narrow this stub again.
      */
     Remote createRemoteReference(byte[] instanceKey);
 
-   
+
     /**
      * Create a remote reference for an EJBHome which can
      * be used for performing remote invocations.
@@ -55,7 +55,7 @@ public interface RemoteReferenceFactory {
      * any instance-specific state about the EJB instance.
      *
      * @param homeKey a unique identifier for the EJB instance
-     *          which is unique across all EJB refs created using this 
+     *          which is unique across all EJB refs created using this
      *          RemoteReferenceFactory instance.
      * @return the protocol-specific stub of the proper derived type.
      *       It should not be necessary to narrow this stub again.
@@ -63,9 +63,9 @@ public interface RemoteReferenceFactory {
     Remote createHomeReference(byte[] homeKey);
 
     /**
-     * Destroy an EJBObject or EJBHome remote ref 
-     * so that it can no longer be used for remote invocations. 
-     * This operation should destroy any state such as "tie" objects 
+     * Destroy an EJBObject or EJBHome remote ref
+     * so that it can no longer be used for remote invocations.
+     * This operation should destroy any state such as "tie" objects
      * maintained by the ProtocolManager for the EJBObject or EJBHome.
      *
      * @param remoteRef the remote reference for the EJBObject/EJBHome
@@ -81,10 +81,10 @@ public interface RemoteReferenceFactory {
 
 
     public boolean hasSameContainerID(org.omg.CORBA.Object ref)
-	throws Exception;
+    throws Exception;
 
     public void setRepositoryIds(Class homeIntf, Class remoteIntf);
-    
+
     public void cleanupClass(Class clazz);
 
     public int getCSIv2PolicyType();

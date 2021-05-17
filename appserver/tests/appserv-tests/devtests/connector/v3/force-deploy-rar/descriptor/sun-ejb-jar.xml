@@ -25,7 +25,7 @@
     <ejb>
       <ejb-name>MyVersionChecker</ejb-name>
       <jndi-name>ejb/MyVersionChecker</jndi-name>
-<!--      
+<!--
     <ior-security-config>
         <transport-config>
           <integrity>supported</integrity>
@@ -42,10 +42,10 @@
           <caller-propagation>supported</caller-propagation>
         </sas-context>
       </ior-security-config>
--->    
+-->
       <resource-env-ref>
         <resource-env-ref-name>eis/testAdmin</resource-env-ref-name>
-	<jndi-name>eis/testAdmin</jndi-name>
+    <jndi-name>eis/testAdmin</jndi-name>
       </resource-env-ref>
       <gen-classes/>
     </ejb>

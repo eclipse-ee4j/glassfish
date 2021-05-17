@@ -22,7 +22,7 @@ import jakarta.ejb.*;
 public interface TimerSingletonRemote {
 
     public void startTest();
-    
+
     public boolean waitForTimeout(int seconds);
 
 }

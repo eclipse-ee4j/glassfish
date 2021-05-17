@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private String personName;
@@ -35,8 +35,8 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-persistence-contextID");
-    }  
-    
+    }
+
     public Client (String[] args) {
 
         personName = "duke";
@@ -46,7 +46,7 @@ public class Client {
         }
 
     }
-    
+
     private static @EJB Sless sless;
 
     public void doTest() {
@@ -84,8 +84,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+        return;
     }
 
 }

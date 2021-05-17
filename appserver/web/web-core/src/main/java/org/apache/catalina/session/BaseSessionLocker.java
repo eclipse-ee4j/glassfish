@@ -34,22 +34,22 @@ import jakarta.servlet.ServletRequest;
  * @author lwhite
  */
 public class BaseSessionLocker implements SessionLocker {
-    
+
     /** Creates a new instance of BaseSessionLocker */
     public BaseSessionLocker() {
     }
-    
+
     public void init(Context context) {
         _context = context;
     }
-    
+
     public boolean lockSession(ServletRequest req) throws ServletException {
         return true;
     }
-    
+
     public void unlockSession(ServletRequest req) {
     }
-    
+
     protected Context _context = null;
-    
+
 }

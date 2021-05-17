@@ -70,7 +70,7 @@ public final class ConfigModel {
      * Cache to map methods to properties
      */
     final Map<Method,Property> methodCache = new HashMap<Method,Property>();
-    
+
     /**
      * Contracts under which the inhabitant should be registered.
      */
@@ -127,7 +127,7 @@ public final class ConfigModel {
      * @see ConfigMetadata#KEY
      */
     public final String key;
-    
+
     private final ServiceLocator locator;
 
     /**
@@ -193,7 +193,7 @@ public final class ConfigModel {
             throw new IllegalArgumentException( "Illegal name: " + xmlName );
         }
         return cmp;
-    }    
+    }
 
     /**
      * Performs injection to the given object.
@@ -206,7 +206,7 @@ public final class ConfigModel {
             throw e;
         }
     }
-    
+
     public Map<String, List<String>>  getMetadata() {
         return injector.getMetadata();
     }
@@ -250,7 +250,7 @@ public final class ConfigModel {
         if (prop != null) {
             return prop;
         }
-        
+
         String name = method.getName();
 
         // check annotations first
@@ -305,7 +305,7 @@ public final class ConfigModel {
     }
 
     public static String camelCaseToXML(String camelCase) {
-        
+
         // tokenize by finding 'x|X' and 'X|Xx' then insert '-'.
         StringBuilder buf = new StringBuilder(camelCase.length()+5);
         for(String t : Dom.TOKENIZER.split(camelCase)) {
@@ -381,7 +381,7 @@ public final class ConfigModel {
 
         /**
          * Returns the config model for this Node
-         * 
+         *
          * @return
          */
         public ConfigModel getModel() {
@@ -646,7 +646,7 @@ public final class ConfigModel {
     static class AttributeLeaf extends Leaf {
 
         public final String dataType;
-        
+
         AttributeLeaf(String xmlName, String dataType) {
             super(xmlName);
             this.dataType = dataType;
@@ -728,7 +728,7 @@ public final class ConfigModel {
             }
 
             Class<?> type = Types.erasure(returnType);
-            
+
             // let's look first the fast way.
             Object candidate = dom.getHabitat().getService(type, id);
             if (candidate!=null) {
@@ -745,7 +745,7 @@ public final class ConfigModel {
             dom.attribute(xmlName, arg==null?null:target.getKey());
         }
     }
-    
+
     static final class SingleLeaf extends Leaf {
         SingleLeaf(String xmlName) {
             super(xmlName);
@@ -804,7 +804,7 @@ public final class ConfigModel {
             }
         }
     }
-    
+
     private final static String INDEX_KEY = "index";
 
     /**
@@ -822,7 +822,7 @@ public final class ConfigModel {
         this.injector = injector;
         this.classLoaderHolder = new SafeHk2Loader((injector.getLoader() == null) ?
                 new HK2LoaderImpl() : injector.getLoader() );
-        
+
         this.locator = locator;
         String targetTypeName=null,indexTypeName=null;
         String key = null;
@@ -939,12 +939,12 @@ public final class ConfigModel {
         for (String s  : values) {
             if (s.startsWith("@")) {
                  String annotationType = s.substring(1);
-                 prop.annotations.add(annotationType);               
+                 prop.annotations.add(annotationType);
             }
         }
         return prop;
     }
-    
+
     private static String getMetadataFieldKeyedAs(List<String> strings, String name) {
         if (strings == null || strings.size() == 0 || name == null)
             return ( null );
@@ -955,15 +955,15 @@ public final class ConfigModel {
                 break;
             }
         }
-        return ( dv );        
+        return ( dv );
     }
     private static List<String> getMetadataFromDescription(Map<String, List<String>> map, String key) {
         return map.get(key) == null ? Collections.EMPTY_LIST : map.get(key);
     }
-    
+
     private static class SafeHk2Loader implements HK2Loader {
         private final HK2Loader delegate;
-        
+
         private SafeHk2Loader(HK2Loader delegate) {
             this.delegate = delegate;
         }
@@ -979,9 +979,9 @@ public final class ConfigModel {
                 public Class<?> run() {
                     return delegate.loadClass(className);
                 }
-                
+
             });
         }
-        
+
     }
 }

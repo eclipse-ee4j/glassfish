@@ -22,7 +22,7 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 /**
- * This node handles the runtime deployment descriptor tag 
+ * This node handles the runtime deployment descriptor tag
  * mail-configuration.  Or at least it would, if there were
  * such a tag.  As far as I can tell, there isn't, and this
  * class is never used.
@@ -32,10 +32,10 @@ public class MailConfigurationNode extends DeploymentDescriptorNode {
     private String name = null;
     private String mail_from = null;
     private String mail_host = null;
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -48,11 +48,11 @@ public class MailConfigurationNode extends DeploymentDescriptorNode {
             mail_host = value;
         }
     }
-        
+
     /**
      * notification of the end of XML parsing for this node
      */
     public void postParsing() {
-        getParentNode().addDescriptor(new MailConfiguration(name, mail_from, mail_host));                    
+        getParentNode().addDescriptor(new MailConfiguration(name, mail_from, mail_host));
     }
 }

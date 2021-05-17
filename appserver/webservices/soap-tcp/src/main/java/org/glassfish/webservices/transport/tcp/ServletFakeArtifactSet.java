@@ -60,7 +60,7 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
         request = createRequest(requestURL, servletPath);
         response = createResponse();
     }
-    
+
     @com.sun.xml.ws.api.PropertySet.Property(MessageContext.SERVLET_RESPONSE)
     public HttpServletResponse getResponse() {
         return response;
@@ -321,7 +321,7 @@ public final class ServletFakeArtifactSet extends DistributedPropertySet {
 
         public void login(String s1, String s2) {
         }
-        
+
         public void logout() {
         }
 

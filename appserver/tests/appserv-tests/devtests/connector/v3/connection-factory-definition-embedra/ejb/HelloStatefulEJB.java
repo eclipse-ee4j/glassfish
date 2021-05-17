@@ -120,7 +120,7 @@ public class HelloStatefulEJB implements HelloStateful {
         lookupConnectionFactory("java:app/env/HelloEJB_DD_ConnectionFactory", true);
         lookupConnectionFactory("java:module/env/HelloEJB_DD_ConnectionFactory", true);
         lookupConnectionFactory("java:comp/env/HelloEJB_DD_ConnectionFactory", false);
-        
+
         System.out.println("StatefulEJB datasource-definitions Success");
 
     }

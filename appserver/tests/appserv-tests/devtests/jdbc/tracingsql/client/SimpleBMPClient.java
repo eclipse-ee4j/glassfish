@@ -29,34 +29,34 @@ public class SimpleBMPClient {
     public static void main(String[] args)
         throws Exception {
 
- 	SimpleReporterAdapter stat = new SimpleReporterAdapter();
-	String testSuite = "SqlTracing ";
+     SimpleReporterAdapter stat = new SimpleReporterAdapter();
+    String testSuite = "SqlTracing ";
 
     InitialContext ic = new InitialContext();
     Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
-	SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
+    SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
     javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
     SimpleBMP simpleBMP = simpleBMPHome.create();
     stat.addDescription("JDBC Sql Tracing Tests");
 
     /*if ( simpleBMP.statementTest() ) {
-	    stat.addStatus(testSuite+" statementTest : ", stat.PASS);
-	} else {
-	    stat.addStatus(testSuite+" statementTest : ", stat.FAIL);
-	}*/
+        stat.addStatus(testSuite+" statementTest : ", stat.PASS);
+    } else {
+        stat.addStatus(testSuite+" statementTest : ", stat.FAIL);
+    }*/
 
-	if ( simpleBMP.preparedStatementTest() ) {
-	    stat.addStatus(testSuite+" preparedStatementTest : ", stat.PASS);
-	} else {
-	    stat.addStatus(testSuite+" preparedStatementTest : ", stat.FAIL);
-	}
+    if ( simpleBMP.preparedStatementTest() ) {
+        stat.addStatus(testSuite+" preparedStatementTest : ", stat.PASS);
+    } else {
+        stat.addStatus(testSuite+" preparedStatementTest : ", stat.FAIL);
+    }
 
-	if( simpleBMP.compareRecords()) {
-	    stat.addStatus(testSuite+" Sql Tracing Test : ", stat.PASS);
-	} else {
-	    stat.addStatus(testSuite+" Sql Tracing Test : ", stat.FAIL);
-	}
+    if( simpleBMP.compareRecords()) {
+        stat.addStatus(testSuite+" Sql Tracing Test : ", stat.PASS);
+    } else {
+        stat.addStatus(testSuite+" Sql Tracing Test : ", stat.FAIL);
+    }
     /*if ( simpleBMP.callableStatementTest() ) {
         stat.addStatus(testSuite+" callableStatementTest : ", stat.PASS);
     } else {

@@ -30,11 +30,11 @@ import jakarta.interceptor.InterceptorBinding;
  * EJBs annotated with Secure are intercepted by SecurityInterceptor, ensuring
  * that the caller has the permissions to call an EJB method. May only be
  * applied to EJBs.
- * 
+ *
  * @author ifischer
- * 
+ *
  * @see SecurityInterceptor
- * 
+ *
  * @since 0.3
  */
 @Inherited

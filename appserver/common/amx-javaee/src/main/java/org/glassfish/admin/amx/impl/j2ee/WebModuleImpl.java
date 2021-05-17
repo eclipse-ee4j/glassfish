@@ -30,7 +30,7 @@ public final class WebModuleImpl extends J2EEModuleImplBase // implements WebMod
     public WebModuleImpl(final ObjectName parentObjectName, final Metadata meta) {
         super(parentObjectName, meta, INTF);
     }
-    
+
     public String[] getservlets() {
         return getChildrenAsStrings( J2EETypes.SERVLET );
     }

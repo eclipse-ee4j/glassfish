@@ -28,7 +28,7 @@ import org.glassfish.deployment.versioning.VersioningUtils;
  * This class describes a module information for an applicaiton module
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descriptor {
 
@@ -36,32 +36,32 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
      * type of the module, currently EJB, WEB...
      */
     private ArchiveType type;
-    
+
     /**
      * path for the module bundle
      */
     private String path;
-    
-    /** 
+
+    /**
      * alternate descriptor (if any) path
      */
     private String altDD;
-    
+
     /**
      * context-root if dealing with a web module
      */
     private String contextRoot;
-    
+
     /**
      * loaded deployment descriptor for this module
      */
     private T descriptor;
-    
+
     /**
      * manifest information for this module
      */
     private transient Manifest manifest;
-    
+
     /**
      * is it a standalone module, or part of a J2EE Application
      */
@@ -76,18 +76,18 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     public void setModuleType(ArchiveType type) {
         this.type = type;
     }
-    
-    
-    /** 
+
+
+    /**
      * @return the module type for this module
      */
     public ArchiveType getModuleType() {
         if (descriptor!=null) {
             return descriptor.getModuleType();
-        } 
+        }
         return type;
     }
-    
+
     /**
      * Sets the archive uri as defined in the application xml
      * or the full archive path for standalone modules
@@ -96,14 +96,14 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     public void setArchiveUri(String path) {
         this.path = path;
     }
-    
+
     /**
      * @return the archive uri for this module
      */
     public String getArchiveUri() {
         return path;
     }
-    
+
     /**
      * Sets the path to the alternate deployment descriptors
      * in the application archive
@@ -112,18 +112,18 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     public void setAlternateDescriptor(String altDD) {
         this.altDD = altDD;
     }
-    
+
     /**
-     * @return the alternate deployment descriptor path 
+     * @return the alternate deployment descriptor path
      * or null if this module does not use alternate
      * deployment descriptors
      */
     public String getAlternateDescriptor() {
         return altDD;
     }
-    
+
     /**
-     * Sets the @see BundleDescriptor descriptor for this 
+     * Sets the @see BundleDescriptor descriptor for this
      * module
      * @param descriptor the module descriptor
      */
@@ -131,22 +131,22 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
         this.descriptor = descriptor;
         descriptor.setModuleDescriptor(this);
     }
-    
+
     /**
      * @return the @see BundleDescriptor module descriptor
      */
     public T getDescriptor() {
         return descriptor;
-    } 
-    
-    /** 
-     * Sets the context root for Web module 
+    }
+
+    /**
+     * Sets the context root for Web module
      * @param contextRoot the contextRoot
      */
     public void setContextRoot(String contextRoot) {
         this.contextRoot = contextRoot;
-    } 
-    
+    }
+
     /**
      * @return the context root for a web module
      */
@@ -156,9 +156,9 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
 
     /**
      * Returns the value of the module-name element in the application.xml if
-     * it's defined. The default module name is the pathname of the module in 
-     * the ear file with any filename extension (.jar, .war, .rar) removed, 
-     * but with any directory names included. 
+     * it's defined. The default module name is the pathname of the module in
+     * the ear file with any filename extension (.jar, .war, .rar) removed,
+     * but with any directory names included.
      *
      * @return the module of this application
      */
@@ -181,13 +181,13 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     }
 
     /**
-     * @return the @see Manifest manifest information 
+     * @return the @see Manifest manifest information
      * for this module
      */
     public Manifest getManifest() {
         return manifest;
     }
-    
+
     /**
      * Sets the @see Manifest manifest information for this
      * module
@@ -195,14 +195,14 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     public void setManifest(Manifest m) {
         manifest = m;
     }
-    
+
     /**
      * @return true if this module is a standalone module
      */
     public boolean isStandalone() {
         return standalone;
     }
-    
+
     /**
      * Sets the standalone flag
      */
@@ -220,9 +220,9 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
         }
         return null;
     }
-    
-    
-    /** 
+
+
+    /**
      * @return a meaningful string about myself
      */
     public void print(StringBuffer toStringBuffer) {
@@ -231,31 +231,31 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
             toStringBuffer.append(" , ContextRoot = " + contextRoot);
         }
     }
-    
-    
+
+
     /**
      * Implementation of the serializable interface since ModuleType is not
      * serializable
      */
     private void writeObject(java.io.ObjectOutputStream out)
      throws IOException {
-                 
+
          // just write this intance fields...
          out.writeObject(path);
          out.writeObject(altDD);
          out.writeObject(contextRoot);
          out.writeObject(descriptor);
-         out.writeBoolean(standalone);         
+         out.writeBoolean(standalone);
     }
-    
+
     private void readObject(java.io.ObjectInputStream in)
      throws IOException, ClassNotFoundException {
-                
+
          // just read this intance fields...
          path = (String) in.readObject();
          altDD = (String) in.readObject();
          contextRoot = (String) in.readObject();
          descriptor = (T) in.readObject();
-         standalone = in.readBoolean();           
+         standalone = in.readBoolean();
     }
 }

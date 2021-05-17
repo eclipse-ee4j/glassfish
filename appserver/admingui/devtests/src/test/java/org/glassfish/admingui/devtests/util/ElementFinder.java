@@ -56,14 +56,14 @@ public class ElementFinder {
             public WebElement apply(WebDriver driver) {
                 WebElement element = null;
                 try {
-                    element = driver.findElement(locator); 
+                    element = driver.findElement(locator);
                 } catch (NoSuchElementException nse) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(ElementFinder.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    element = driver.findElement(locator); 
+                    element = driver.findElement(locator);
                 }
 
                 return element;

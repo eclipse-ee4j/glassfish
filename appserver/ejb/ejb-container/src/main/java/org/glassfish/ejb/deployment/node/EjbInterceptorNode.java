@@ -55,14 +55,14 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
     public EjbInterceptorNode() {
         super();
 
-        registerElementHandler(new XMLElement(EjbTagNames.AROUND_INVOKE_METHOD), AroundInvokeNode.class, "addAroundInvokeDescriptor");       
-        registerElementHandler(new XMLElement(EjbTagNames.AROUND_TIMEOUT_METHOD), AroundTimeoutNode.class, "addAroundTimeoutDescriptor");       
-        registerElementHandler(new XMLElement(EjbTagNames.POST_ACTIVATE_METHOD), LifecycleCallbackNode.class, "addPostActivateDescriptor");       
-        registerElementHandler(new XMLElement(EjbTagNames.PRE_PASSIVATE_METHOD), LifecycleCallbackNode.class, "addPrePassivateDescriptor");       
-        registerElementHandler(new XMLElement(EjbTagNames.AROUND_CONSTRUCT), LifecycleCallbackNode.class, "addAroundConstructDescriptor");       
+        registerElementHandler(new XMLElement(EjbTagNames.AROUND_INVOKE_METHOD), AroundInvokeNode.class, "addAroundInvokeDescriptor");
+        registerElementHandler(new XMLElement(EjbTagNames.AROUND_TIMEOUT_METHOD), AroundTimeoutNode.class, "addAroundTimeoutDescriptor");
+        registerElementHandler(new XMLElement(EjbTagNames.POST_ACTIVATE_METHOD), LifecycleCallbackNode.class, "addPostActivateDescriptor");
+        registerElementHandler(new XMLElement(EjbTagNames.PRE_PASSIVATE_METHOD), LifecycleCallbackNode.class, "addPrePassivateDescriptor");
+        registerElementHandler(new XMLElement(EjbTagNames.AROUND_CONSTRUCT), LifecycleCallbackNode.class, "addAroundConstructDescriptor");
 
         //jndiEnvironmentRefsGroup
-        registerElementHandler(new XMLElement(TagNames.POST_CONSTRUCT), LifecycleCallbackNode.class, "addPostConstructDescriptor");       
+        registerElementHandler(new XMLElement(TagNames.POST_CONSTRUCT), LifecycleCallbackNode.class, "addPostConstructDescriptor");
         registerElementHandler(new XMLElement(TagNames.PRE_DESTROY), LifecycleCallbackNode.class, "addPreDestroyDescriptor");
         registerElementHandler(new XMLElement(TagNames.DATA_SOURCE), DataSourceDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
@@ -71,7 +71,7 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
         registerElementHandler(new XMLElement(TagNames.JMS_CONNECTION_FACTORY), JMSConnectionFactoryDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
 
-        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), 
+        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY),
                EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
@@ -80,9 +80,9 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
         registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-               ResourceRefNode.class, "addResourceReferenceDescriptor");   
+               ResourceRefNode.class, "addResourceReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
-               ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");               
+               ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_CONTEXT_REF), EntityManagerReferenceNode.class, "addEntityManagerReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
@@ -106,18 +106,18 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
     }
 
     @Override
-    public void addDescriptor(Object  newDescriptor) {       
-        if (newDescriptor instanceof EjbReference) {            
+    public void addDescriptor(Object  newDescriptor) {
+        if (newDescriptor instanceof EjbReference) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
             }
             getDescriptor().addEjbReferenceDescriptor(
                         (EjbReference) newDescriptor);
-        } else if( newDescriptor instanceof 
+        } else if( newDescriptor instanceof
                    MessageDestinationReferenceDescriptor ) {
             MessageDestinationReferenceDescriptor msgDestRef =
                 (MessageDestinationReferenceDescriptor) newDescriptor;
-            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) 
+            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor)
                 getParentNode().getDescriptor();
             // EjbBundle might not be set yet on EjbInterceptor, so set it
             // explicitly here.
@@ -134,8 +134,8 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
         Node interceptorNode = appendChild(parent, nodeName);
 
         writeLocalizedDescriptions(interceptorNode, descriptor);
-       
-        appendTextChild(interceptorNode, EjbTagNames.INTERCEPTOR_CLASS, descriptor.getInterceptorClassName());     
+
+        appendTextChild(interceptorNode, EjbTagNames.INTERCEPTOR_CLASS, descriptor.getInterceptorClassName());
 
         if (descriptor.hasAroundInvokeDescriptor()) {
             EjbNode.writeAroundInvokeDescriptors(interceptorNode,

@@ -26,15 +26,15 @@ import org.jvnet.hk2.annotations.Contract;
 public interface WebContainerFeatureFactory {
 
     public WebContainerStartStopOperation getWebContainerStartStopOperation();
-    
+
     public HealthChecker getHADBHealthChecker(WebContainer webContainer);
-    
+
     public ReplicationReceiver getReplicationReceiver(EmbeddedWebContainer embedded);
 
     public VirtualServer getVirtualServer();
-    
-    public SSOFactory getSSOFactory();   
-    
+
+    public SSOFactory getSSOFactory();
+
     public String getSSLImplementationName();
 
     /**
@@ -65,7 +65,7 @@ public interface WebContainerFeatureFactory {
      *
      * @return true if first access log file and all subsequently rotated
      * ones are supposed to be date-stamped, and false if datestamp is to be
-     * added only starting with the first rotation. 
+     * added only starting with the first rotation.
      */
     public boolean getAddDateStampToFirstAccessLogFile();
 

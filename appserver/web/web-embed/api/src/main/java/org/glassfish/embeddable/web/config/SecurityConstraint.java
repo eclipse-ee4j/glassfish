@@ -59,7 +59,7 @@ public class SecurityConstraint {
      * security constrint
      *
      * @see WebResourceCollection
-     * 
+     *
      * @param webResourceCollection the web resource collection
      * for this constraint definition
      */
@@ -82,7 +82,7 @@ public class SecurityConstraint {
      * Sets the roles authorized to access the URL patterns and HTTP methods
      *
      * @param roleNames the roles authorized to access the url patterns
-     * and HTTP methods. 
+     * and HTTP methods.
      */
     public void setAuthConstraint(String... roleNames) {
         this.roleNames = roleNames;
@@ -131,12 +131,12 @@ public class SecurityConstraint {
      */
     public String toString() {
         StringBuffer toStringBuffer = new StringBuffer();
-	    toStringBuffer.append("SecurityConstraint: ");
-	    toStringBuffer.append(" webResourceCollections: ").append(webResourceCollection);
+        toStringBuffer.append("SecurityConstraint: ");
+        toStringBuffer.append(" webResourceCollections: ").append(webResourceCollection);
         for (String roleName : roleNames) {
-	        toStringBuffer.append(" authorizationConstraint ").append(roleName);
+            toStringBuffer.append(" authorizationConstraint ").append(roleName);
         }
-	    toStringBuffer.append(" userDataConstraint ").append(tg);
+        toStringBuffer.append(" userDataConstraint ").append(tg);
         return toStringBuffer.toString();
     }
 }

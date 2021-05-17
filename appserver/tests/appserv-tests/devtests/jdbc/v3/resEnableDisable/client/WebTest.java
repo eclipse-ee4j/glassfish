@@ -43,8 +43,8 @@ public class WebTest {
     }
 
     private static void goGet(String host, int port,
-                              String result, String contextPath, 
-			      String testStatus) {
+                              String result, String contextPath,
+                  String testStatus) {
 
         try {
             long time = System.currentTimeMillis();
@@ -75,12 +75,12 @@ public class WebTest {
                     if (status.equalsIgnoreCase("PASS")) {
                         stat.addStatus(TEST_NAME, stat.PASS);
                     } else {
-			if("FAIL".equalsIgnoreCase(testStatus)) {
-		            //Test is supposed to fail hence passed
-		            stat.addStatus(TEST_NAME, stat.PASS);
-			} else {
+            if("FAIL".equalsIgnoreCase(testStatus)) {
+                    //Test is supposed to fail hence passed
+                    stat.addStatus(TEST_NAME, stat.PASS);
+            } else {
                             stat.addStatus(TEST_NAME, stat.FAIL);
-			}
+            }
                     }
                 }
 

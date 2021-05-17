@@ -30,7 +30,7 @@ import java.util.Properties;
 import javax.management.MBeanServerConnection;
 
 public class TestDriver {
-    
+
     private String adminUser;
     private String adminPassword;
     private String adminHost;
@@ -41,7 +41,7 @@ public class TestDriver {
     private List<RemoteAdminQuicklookTest> tests;
     private MBeanServerConnection mbsc;
     private String      testfileName;
-    
+
     private static final String SCRIPT_COMMENT = "#"; //this is how comment is denoted, traditionally
     private static final SimpleReporterAdapter reporter = new SimpleReporterAdapter("devtests");
     private static final String DESC = "Admin Infrastructure Devtests";
@@ -50,7 +50,7 @@ public class TestDriver {
         tests           = new ArrayList<RemoteAdminQuicklookTest> ();
         //loadProperties();
         loadRmiProperties();
-	testFile = new File(testfileName);
+    testFile = new File(testfileName);
         initializeConnection();
         initializeTestClasses();
     }
@@ -90,7 +90,7 @@ public class TestDriver {
             } catch(final Exception e) {}
         }
     }
-    
+
     private RemoteAdminQuicklookTest c2T(final String testClass) throws RuntimeException {
         try {
             final Class c                       = Class.forName(testClass);
@@ -113,7 +113,7 @@ public class TestDriver {
                 reporter.addStatus(t.getName(), reporter.PASS);
             } catch(final Exception e) {
                 e.printStackTrace();
-                reporter.addStatus(t.getName(), reporter.FAIL);   
+                reporter.addStatus(t.getName(), reporter.FAIL);
                 total += t.getExecutionTime();
                 reporter.printSummary(getSummaryString(total));
                 System.out.println(getSummaryString(total));
@@ -133,7 +133,7 @@ public class TestDriver {
         final String status = t.test();
         //reporter.addStatus(t.getName(), status);
     }
-    
+
 
       private void loadRmiProperties() throws Exception {
         final Properties rmip = new Properties();
@@ -149,7 +149,7 @@ public class TestDriver {
     }
 /*
     private void loadProperties()
-    { 
+    {
         LocalStringsImpl lsi    = new LocalStringsImpl();
         useRmi              = lsi.getBoolean("useRmi",          true);
         adminUser           = lsi.getString("adminUser",        "admin");
@@ -160,6 +160,6 @@ public class TestDriver {
         testfileName        = lsi.getString("testfile",         "tests.list");
         isSecure            = bisSecure.toString();
     }
- */   
+ */
     ///// private methods /////
 }

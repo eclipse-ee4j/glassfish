@@ -50,7 +50,7 @@ import jakarta.inject.Inject;
  *   Operand is LB config: list all cluster-refs and server-refs for the LB config
  *   Operand is cluster  : list lb configs referencing the cluster
  *   Operand is instance : list all configs referencing the server instance
- * 
+ *
  * @author Yamini K B
  */
 @Service(name = "list-http-lb-configs")
@@ -59,8 +59,8 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=LbConfigs.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-http-lb-configs", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-http-lb-configs",
         description="list-http-lb-configs")
 })
 public final class ListLBConfigsCommand implements AdminCommand {
@@ -81,7 +81,7 @@ public final class ListLBConfigsCommand implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(ListLBConfigsCommand.class);
-    
+
     @Override
     public void execute(AdminCommandContext context) {
 
@@ -106,7 +106,7 @@ public final class ListLBConfigsCommand implements AdminCommand {
                         "http_lb_admin.NoLbConfigs", "No lb configs"));
                 return;
         }
-        
+
         if (list_target == null) {
             for (LbConfig lbc: lbconfigsList) {
                 ActionReport.MessagePart childPart = part.addChild();
@@ -115,7 +115,7 @@ public final class ListLBConfigsCommand implements AdminCommand {
         } else {
             // target is a cluster
             if (isCluster) {
-                
+
                 for (LbConfig lbc: lbconfigsList) {
                     List<ClusterRef> refs = lbc.getRefs(ClusterRef.class);
                     for (ClusterRef cRef:refs) {
@@ -129,7 +129,7 @@ public final class ListLBConfigsCommand implements AdminCommand {
 
             // target is a server
             } else if (domain.isServer(list_target)) {
-                
+
                 for (LbConfig lbc: lbconfigsList) {
                     List<ServerRef> refs = lbc.getRefs(ServerRef.class);
                     for (ServerRef sRef:refs) {
@@ -145,9 +145,9 @@ public final class ListLBConfigsCommand implements AdminCommand {
 
                 // target is a lb config
                 LbConfig lbConfig = lbconfigs.getLbConfig(list_target);
-                
+
                 if (lbConfig != null) {
-                    
+
                     List<ClusterRef> cRefs = lbConfig.getRefs(ClusterRef.class);
                     for (ClusterRef ref: cRefs) {
                         String s = localStrings.getLocalString("ClusterPrefix", "Cluster:");
@@ -160,9 +160,9 @@ public final class ListLBConfigsCommand implements AdminCommand {
                         String s = localStrings.getLocalString("ServerPrefix", "Server:");
                         ActionReport.MessagePart childPart = part.addChild();
                         childPart.setMessage(s + ref.getRef());
-                    }                    
+                    }
                 }
-            } 
+            }
         }
 
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);

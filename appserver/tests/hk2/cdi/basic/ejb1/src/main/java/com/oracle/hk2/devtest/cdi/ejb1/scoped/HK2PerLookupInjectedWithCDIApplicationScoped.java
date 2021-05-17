@@ -25,7 +25,7 @@ import org.jvnet.hk2.annotations.Service;
  * This is a per-lookup hk2 cdi service injected with an application scoped CDI
  * service, in order to test whether or not a normal scoped CDI service can
  * properly be injected into an hk2 service
- * 
+ *
  * @author jwells
  *
  */
@@ -33,7 +33,7 @@ import org.jvnet.hk2.annotations.Service;
 public class HK2PerLookupInjectedWithCDIApplicationScoped {
     @Inject
     private CountingApplicationScopedCDIService cdiApplicationScopedService;
-    
+
     public CountingApplicationScopedCDIService getCountingCDIService() {
         return cdiApplicationScopedService;
     }

@@ -25,7 +25,7 @@ import java.io.FilenameFilter;
 
 
 /**
- * ClassPath provides class file lookup according to a classpath 
+ * ClassPath provides class file lookup according to a classpath
  * specification.
  */
 
@@ -61,8 +61,8 @@ public class ClassPath {
     for (ClassPathElement e = path; e != null; e = e.next()) {
       ClassFileSource source = e.sourceOf(className);
       if (source != null) {
-	source.setSourceElement(e);
-	return source;
+    source.setSourceElement(e);
+    return source;
       }
     }
 
@@ -78,7 +78,7 @@ public class ClassPath {
     StringTokenizer parser = new StringTokenizer(className, "./", false);//NOI18N
     for (boolean first = true; parser.hasMoreElements(); first = false) {
       if (!first)
-	path.append(separator);
+    path.append(separator);
       path.append(parser.nextToken());
     }
     path.append(".class");//NOI18N
@@ -117,9 +117,9 @@ public class ClassPath {
       StringBuffer className = new StringBuffer();
       StringTokenizer parser = new StringTokenizer(fileName, "\\/", false);//NOI18N
       for (boolean first = true; parser.hasMoreElements(); first = false) {
-	if (!first)
-	  className.append('/');
-	className.append(parser.nextToken());
+    if (!first)
+      className.append('/');
+    className.append(parser.nextToken());
       }
       return className.toString();
     }
@@ -135,13 +135,13 @@ public class ClassPath {
     ClassPathElement prevElement = null;
     for (ClassPathElement cpe = firstElement; cpe != null; cpe = cpe.next()) {
       if (cpe.matches(directory)) {
-	matched = true;
-	if (prevElement == null)
-	  firstElement = cpe.next();
-	else
-	  prevElement.setNext(cpe.next());
+    matched = true;
+    if (prevElement == null)
+      firstElement = cpe.next();
+    else
+      prevElement.setNext(cpe.next());
       } else {
-	prevElement = cpe;
+    prevElement = cpe;
       }
     }
     theClassPath = firstElement;
@@ -166,9 +166,9 @@ public class ClassPath {
   }
 
   /**
-   * Return an enumeration of all of the class files in the specified 
+   * Return an enumeration of all of the class files in the specified
    * package in this class path.
-   * @param packageName specifies the VM format package name 
+   * @param packageName specifies the VM format package name
    *    to which class files must belong.
    * @return an Enumeration of the VM format class names which
    *    can be found.  Note that the Enumeration value is of type String
@@ -189,20 +189,20 @@ public class ClassPath {
   /* private accessors */
 
   private void parsePath() {
-    StringTokenizer parser = 
+    StringTokenizer parser =
       new StringTokenizer(theClassPathSpec,
-			  java.io.File.pathSeparator,
-			  false /* dont return delimiters */
-			  );
-    
+              java.io.File.pathSeparator,
+              false /* dont return delimiters */
+              );
+
     ClassPathElement lastElement = null;
     while (parser.hasMoreElements()) {
       ClassPathElement anElement = ClassPathElement.create(parser.nextToken());
 
       if (lastElement == null)
-	theClassPath = anElement;
+    theClassPath = anElement;
       else
-	lastElement.append(anElement);
+    lastElement.append(anElement);
 
       lastElement = anElement;
     }
@@ -218,7 +218,7 @@ public class ClassPath {
 class ClassPackageEnumeration implements Enumeration {
   /* The next class path element to look for matches in once
      the current enumeration is complete */
-  private ClassPathElement nextClassPathElement; 
+  private ClassPathElement nextClassPathElement;
 
   /* The package name */
   private String thePackageName;
@@ -239,15 +239,15 @@ class ClassPackageEnumeration implements Enumeration {
 
   public boolean hasMoreElements() {
     while ((currentElementEnumeration == null ||
-	    !currentElementEnumeration.hasMoreElements()) &&
-	   nextClassPathElement != null) {
-      currentElementEnumeration = 
-	nextClassPathElement.classesInPackage(thePackageName);
+        !currentElementEnumeration.hasMoreElements()) &&
+       nextClassPathElement != null) {
+      currentElementEnumeration =
+    nextClassPathElement.classesInPackage(thePackageName);
       nextClassPathElement = nextClassPathElement.next();
     }
 
     return (currentElementEnumeration != null &&
-	    currentElementEnumeration.hasMoreElements());
+        currentElementEnumeration.hasMoreElements());
   }
 
   public Object nextElement() {

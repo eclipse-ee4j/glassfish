@@ -110,7 +110,7 @@ public class SimpleStandard implements SimpleStandardMBean, NotificationEmitter
        throws ListenerNotFoundException {
          broadcaster.removeNotificationListener(listener, filter, handback);
     }
-    // </editor-fold> 
+    // </editor-fold>
 
     private synchronized long getNextSeqNumber() {
          return seqNumber++;
@@ -119,5 +119,5 @@ public class SimpleStandard implements SimpleStandardMBean, NotificationEmitter
     private long seqNumber;
     private final NotificationBroadcasterSupport broadcaster =
                new NotificationBroadcasterSupport();
-   
+
 }

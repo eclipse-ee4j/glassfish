@@ -49,9 +49,9 @@ public class WebTest {
          * body.
          * Counter in /dispatchTo gets incremented.
          */
-        success = doTest("http://" + hostPortRoot + "/dispatchTo", 
+        success = doTest("http://" + hostPortRoot + "/dispatchTo",
                          "RESPONSE-0");
-        
+
         if (success) {
             /*
              * Access /dispatchTo directly, expect "RESPONSE-1" in response
@@ -114,7 +114,7 @@ public class WebTest {
              */
             success = doTest("http://" + hostPortRoot + "/dispatchFrom?action=include",
                              "RESPONSE-4");
-        }        
+        }
 
         if (success) {
             /*
@@ -147,7 +147,7 @@ public class WebTest {
             conn.connect();
 
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.out.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 return false;

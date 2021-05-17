@@ -38,11 +38,11 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
     private static final String ELEMENT_APPLICATIONS = "treeForm:tree:applications:applications_link";
     private static final String ELEMENT_APPLICATION_RESOURCES_TAB = "propertyForm:appGeneralTabs:resourcesTab";
     private static final String ELEMENT_APP_RESOURCES_TABLE = "propertyForm:appScopedResources";
-    
+
     @Test
     public void testAppScopedResApp() {
         final String applicationName = generateRandomString();
-        deployApp(applicationName); 
+        deployApp(applicationName);
         undeployApp(applicationName);
     }
 
@@ -57,7 +57,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
 
         testJDBCResource(applicationName, "jdbcRes", "app");
         testJDBCResource(applicationName, "jdbcRes", "module");
-        
+
         undeployApp(applicationName);
         }catch(Exception e) {
             undeployApp(applicationName);
@@ -149,14 +149,14 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
             undeployApp(applicationName);
         }
     }
-    
+
     public void deployApp(String applicationName) {
-        
+
         StandaloneTest standaloneTest = new StandaloneTest();
         ClusterTest clusterTest = new ClusterTest();
         standaloneTest.deleteAllStandaloneInstances();
         clusterTest.deleteAllCluster();
-        
+
         clickAndWait("treeForm:tree:applications:applications_link");
         sleep(1000);
         int initCount = getTableRowCount(ELEMENT_DEPLOY_TABLE);
@@ -175,12 +175,12 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         driver.findElement(By.id("form:sheet1:section1:prop1:uploadRdBtn:uploadRdBtn_label"));
         File war = new File("src/test/resources/JavaEEApp.ear");
         driver.findElement(By.id(ELEMENT_FILE_FIELD)).sendKeys(war.getAbsoluteFile().toString());
-        
+
         assertEquals("JavaEEApp", getValue(ELEMENT_EARAPP_NAME, "value"));
 
         setFieldValue(ELEMENT_EARAPP_NAME, applicationName);
         clickAndWait(ELEMENT_UPLOAD_BUTTON);
-        
+
         //add some sleep time here to wait for the webdriver element located
         sleep(10000);
         gotoDasPage();
@@ -213,7 +213,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
 
     private void goToApplicationResourcesTab(String appName) {
         clickAndWait(ELEMENT_APPLICATIONS);
-        
+
         String prefix = getTableRowByValue(ELEMENT_DEPLOY_TABLE, appName, "col1");
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
@@ -262,7 +262,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -286,7 +286,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -310,7 +310,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("form1:basicTable", count);
-        
+
         clickAndWait("form1:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -333,7 +333,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("form:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("form:basicTable", count);
-        
+
         clickAndWait("form:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -347,16 +347,16 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         waitForElementPresent("TtlTxt_sun4", "Edit JavaMail Session");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:descProp:desc", resName+" description");
         int count = addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
-        
+
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col2:col1St", "property"+generateRandomString());
-        
+
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", "value");
-        
+
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -403,7 +403,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -426,7 +426,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
     }
 
@@ -447,7 +447,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
             clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
             assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
             assertTableRowCount("propertyForm:basicTable", count);
-            
+
             clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
         }
     }
@@ -471,7 +471,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
     }
 

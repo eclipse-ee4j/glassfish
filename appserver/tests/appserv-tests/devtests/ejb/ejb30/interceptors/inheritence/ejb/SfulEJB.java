@@ -38,11 +38,11 @@ import jakarta.ejb.Remote;
 
 @Interceptors({
 
-	LifecycleCallbackInterceptor.class,
+    LifecycleCallbackInterceptor.class,
 
-	BaseLifecycleInterceptor.class
+    BaseLifecycleInterceptor.class
 
-	})
+    })
 
 public class SfulEJB implements Sful
 
@@ -80,13 +80,13 @@ public class SfulEJB implements Sful
 
     private Object interceptCall(InvocationContext ctx)
 
-   	throws Exception
+       throws Exception
 
     {
 
-	System.out.println("**Beans AROUNDINVOKE++ [@AroundInvoke]: " + ctx.getMethod());
+    System.out.println("**Beans AROUNDINVOKE++ [@AroundInvoke]: " + ctx.getMethod());
 
-	count++;
+    count++;
 
         try {
 
@@ -112,7 +112,7 @@ public class SfulEJB implements Sful
 
     public int getCount() {
 
-	    return count;
+        return count;
 
     }
 
@@ -132,15 +132,15 @@ public class SfulEJB implements Sful
 
     public String computeMid(int min, int max)
 
-	    throws SwapArgumentsException
+        throws SwapArgumentsException
 
     {
 
-	    return sless.sayHello()
+        return sless.sayHello()
 
-		    	+ ", Midpoint of " + min + ", " + max + "; "
+                + ", Midpoint of " + min + ", " + max + "; "
 
-			+  sless.computeMidPoint(min, max);
+            +  sless.computeMidPoint(min, max);
 
     }
 
@@ -148,11 +148,11 @@ public class SfulEJB implements Sful
 
     public String callDummy()
 
-	    throws Exception
+        throws Exception
 
     {
 
-	    return dummy.dummy();
+        return dummy.dummy();
 
     }
 
@@ -174,7 +174,7 @@ public class SfulEJB implements Sful
 
     public int getPrePassivateCallbackCount() {
 
-	return LifecycleCallbackInterceptor.getPrePassivateCallbackCount();
+    return LifecycleCallbackInterceptor.getPrePassivateCallbackCount();
 
     }
 
@@ -182,7 +182,7 @@ public class SfulEJB implements Sful
 
     public int getPostActivateCallbackCount() {
 
-	return LifecycleCallbackInterceptor.getPostActivateCallbackCount();
+    return LifecycleCallbackInterceptor.getPostActivateCallbackCount();
 
     }
 
@@ -190,7 +190,7 @@ public class SfulEJB implements Sful
 
     public void resetLifecycleCallbackCounters() {
 
-	LifecycleCallbackInterceptor.resetLifecycleCallbackCounters();
+    LifecycleCallbackInterceptor.resetLifecycleCallbackCounters();
 
     }
 
@@ -218,51 +218,51 @@ public class SfulEJB implements Sful
 
     {
 
-		try {
+        try {
 
-			return dummy.isInterceptorCallCounOK();
+            return dummy.isInterceptorCallCounOK();
 
-		} catch (Exception ex) {
+        } catch (Exception ex) {
 
-			System.out.println("*********");
+            System.out.println("*********");
 
-			ex.printStackTrace();
+            ex.printStackTrace();
 
-			System.out.println("*********");
+            System.out.println("*********");
 
-		}
-
-
-
-		return null;
-
-	}
+        }
 
 
 
-	    public String isPostConstructCallCounOK()
+        return null;
 
-	    {
-
-			try {
-
-				return dummy.isPostConstructCallCounOK();
-
-			} catch (Exception ex) {
-
-				System.out.println("*********");
-
-				ex.printStackTrace();
-
-				System.out.println("*********");
-
-			}
+    }
 
 
 
-			return null;
+        public String isPostConstructCallCounOK()
 
-	}
+        {
+
+            try {
+
+                return dummy.isPostConstructCallCounOK();
+
+            } catch (Exception ex) {
+
+                System.out.println("*********");
+
+                ex.printStackTrace();
+
+                System.out.println("*********");
+
+            }
+
+
+
+            return null;
+
+    }
 
 
 

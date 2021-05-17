@@ -24,9 +24,9 @@ public final class PriceLoader {
 
     public static final PriceItemBean[] loadItems(String propsName) {
 
-       ResourceBundle priceBundle = 
+       ResourceBundle priceBundle =
            ResourceBundle.getBundle(propsName);
-  
+
        Enumeration bundleKeys = priceBundle.getKeys();
        ArrayList keyList = new ArrayList();
 
@@ -34,14 +34,14 @@ public final class PriceLoader {
            String key = (String)bundleKeys.nextElement();
            String value  = priceBundle.getString(key);
            keyList.add(value);
-       } 
+       }
 
-       PriceItemBean[] items = 
+       PriceItemBean[] items =
            (PriceItemBean[])Array.newInstance(PriceItemBean.class, keyList.size());
        int k = 0;
        for (Iterator it=keyList.iterator(); it.hasNext(); ) {
            String s = (String)it.next();
-           int commaIndex = s.indexOf(","); 
+           int commaIndex = s.indexOf(",");
            String name = s.substring(0, commaIndex).trim();
            String price = s.substring(commaIndex + 1, s.length()).trim();
            items[k] = new PriceItemBean(name, new BigDecimal(price));
@@ -49,5 +49,5 @@ public final class PriceLoader {
        }
 
        return items;
-   } 
-} 
+   }
+}

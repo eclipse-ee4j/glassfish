@@ -35,7 +35,7 @@ import javax.xml.parsers.*;
  * @see ConverterHome
  */
 public class ConverterBean implements SessionBean, TimedObject {
-    
+
     SessionContext sessionContext_;
 
     public String getParserFactoryClassName() {
@@ -66,7 +66,7 @@ public class ConverterBean implements SessionBean, TimedObject {
      * Loads the state of the bean from secondary storage. Required by EJB spec.
      */
     public void ejbActivate() {}
-    
+
     /**
      * Keeps the state of the bean to secondary storage. Required by EJB spec.
      */

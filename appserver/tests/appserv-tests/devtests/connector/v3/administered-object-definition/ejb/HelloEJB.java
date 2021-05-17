@@ -33,35 +33,35 @@ import jakarta.resource.AdministeredObjectDefinition;
                 properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
           ),
           @AdministeredObjectDefinition(
-               description = "global-scope resource defined by @AdministeredObjectDefinition", 
-               name = "java:global/env/HelloEJB_Annotation_AdminObject", 
+               description = "global-scope resource defined by @AdministeredObjectDefinition",
+               name = "java:global/env/HelloEJB_Annotation_AdminObject",
                interfaceName = "jakarta.jms.Destination",
                className = "connector.MyAdminObject",
                resourceAdapter="aod-ra",
                properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
           ),
-          
+
           @AdministeredObjectDefinition(
-               description = "application-scope resource defined by @AdministeredObjectDefinition", 
-               name = "java:app/env/HelloEJB_Annotation_AdminObject", 
+               description = "application-scope resource defined by @AdministeredObjectDefinition",
+               name = "java:app/env/HelloEJB_Annotation_AdminObject",
                interfaceName = "jakarta.jms.Destination",
                className = "connector.MyAdminObject",
                resourceAdapter="aod-ra",
                properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
           ),
-          
+
           @AdministeredObjectDefinition(
-               description = "module-scope resource defined by @AdministeredObjectDefinition", 
-               name = "java:module/env/HelloEJB_Annotation_AdminObject", 
+               description = "module-scope resource defined by @AdministeredObjectDefinition",
+               name = "java:module/env/HelloEJB_Annotation_AdminObject",
                interfaceName = "jakarta.jms.Destination",
                className = "connector.MyAdminObject",
                resourceAdapter="aod-ra",
                properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
           ),
-          
+
           @AdministeredObjectDefinition(
-               description = "component-scope resource defined by @AdministeredObjectDefinition", 
-               name = "java:comp/env/HelloEJB_Annotation_AdminObject", 
+               description = "component-scope resource defined by @AdministeredObjectDefinition",
+               name = "java:comp/env/HelloEJB_Annotation_AdminObject",
                interfaceName = "jakarta.jms.Destination",
                className = "connector.MyAdminObject",
                resourceAdapter="aod-ra",
@@ -109,7 +109,7 @@ public class HelloEJB implements Hello {
         lookupAdminObject("java:app/env/HelloEJB_DD_AdminObject", true);
         lookupAdminObject("java:module/env/HelloEJB_DD_AdminObject", true);
         lookupAdminObject("java:comp/env/HelloEJB_DD_AdminObject", true);
-        
+
         System.out.println("In HelloEJB::hello()");
     }
 
@@ -127,6 +127,6 @@ public class HelloEJB implements Hello {
             }
         }
     }
-    
+
 
 }

@@ -95,7 +95,7 @@ public class AddPropertyTest extends ConfigApiTest {
             ConfigBean domainBean = (ConfigBean) Dom.unwrap(domain);
             ConfigSupport.createAndSet(domainBean, Property.class, configChanges);
 
-            
+
             transactions.waitForDrain();
 
             assertTrue(events!=null);
@@ -123,5 +123,5 @@ public class AddPropertyTest extends ConfigApiTest {
         } finally {
             transactions.removeTransactionsListener(listener);
         }
-    }    
+    }
 }

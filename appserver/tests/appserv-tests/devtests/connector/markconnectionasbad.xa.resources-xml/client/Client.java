@@ -117,14 +117,14 @@ public class Client {
             stat.addStatus(" Mark-Connection-As-Bad [Local-XA -Shareable-Shareable - Read-Write] : ", stat.FAIL);
         }
 
-         if (simpleBMP.test11() && getMonitorablePropertyOfConnectionPool("java:app/jdbc-shareable-pool") == 15 && 
+         if (simpleBMP.test11() && getMonitorablePropertyOfConnectionPool("java:app/jdbc-shareable-pool") == 15 &&
                  getMonitorablePropertyOfConnectionPool("java:app/jdbc-local-pool") == 3) {
             stat.addStatus(" Mark-Connection-As-Bad [Local-XA -Shareable-Shareable - Read-Read] : ", stat.PASS);
         } else {
             stat.addStatus(" Mark-Connection-As-Bad [Local-XA -Shareable-Shareable - Read-Read] : ", stat.FAIL);
         }
 
-         if (simpleBMP.test12() && getMonitorablePropertyOfConnectionPool("java:app/jdbc-shareable-pool") == 16 && 
+         if (simpleBMP.test12() && getMonitorablePropertyOfConnectionPool("java:app/jdbc-shareable-pool") == 16 &&
                  getMonitorablePropertyOfConnectionPool("java:app/jdbc-local-pool") == 4) {
             stat.addStatus(" Mark-Connection-As-Bad [Local-XA -Shareable-Shareable - Write-Read] : ", stat.PASS);
         } else {
@@ -139,20 +139,20 @@ public class Client {
 
     public int getMonitorablePropertyOfConnectionPool(String poolName) throws Exception {
 
-	final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";    
+    final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
-	final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
-	final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
+    final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
+    final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName =
 //                new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-mon,name=resources/" + poolName);
 //                new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-mon,name=applications/jdbc-markconnectionasbad.xaApp/resources/"+ poolName);
                 new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-mon,name=\"applications/jdbc-markconnectionasbad.xaApp/resources//"+ poolName+"\"");
 
-	javax.management.openmbean.CompositeDataSupport returnValue = 
-		(javax.management.openmbean.CompositeDataSupport) 
-		connection.getAttribute(objectName, NUM_CON_DESTROYED_COUNT);
+    javax.management.openmbean.CompositeDataSupport returnValue =
+        (javax.management.openmbean.CompositeDataSupport)
+        connection.getAttribute(objectName, NUM_CON_DESTROYED_COUNT);
 
         return new Integer(returnValue.get("count").toString());
     }

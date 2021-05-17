@@ -23,9 +23,9 @@
     <artifactId>soteria</artifactId>
     <version>6.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    
+
     <name>Soteria ${project.version} Integration tests and examples</name>
-    
+
     <properties>
         <glassfish.version>5.0</glassfish.version>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -48,10 +48,10 @@
         <module>app-multiple-store-backup</module>
         <module>app-no-role-mapping</module>
         <module>app-bundled-ham-basic-login-config-form</module>
-        <module>app-caller-principal</module> 
+        <module>app-caller-principal</module>
         <module>app-no-application-caller-principal</module>
     </modules>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -68,20 +68,20 @@
         </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
-            <scope>test</scope>            
-        </dependency>      
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>javax.security.enterprise</groupId>
             <artifactId>javax.security.enterprise-api</artifactId>
@@ -108,7 +108,7 @@
             <systemPath>${APS_HOME}/lib/reporter.jar</systemPath>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
            <plugin>
@@ -131,7 +131,7 @@
                   <GLASSFISH_HOME>${env.S1AS_HOME}/..</GLASSFISH_HOME>
                 </environmentVariables>
               </configuration>
-            </plugin>       
+            </plugin>
         </plugins>
     </build>
    </project>

@@ -29,13 +29,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Creates an appropriate statement cache datastructure used in the 
+ * Creates an appropriate statement cache datastructure used in the
  * Resource Adapter.
- * 
+ *
  * @author Shalini M
  */
 public class CacheFactory {
-    protected final static Logger _logger = 
+    protected final static Logger _logger =
             LogDomains.getLogger(CacheFactory.class, LogDomains.RSR_LOGGER);
 
     protected final static StringManager localStrings =
@@ -54,7 +54,7 @@ public class CacheFactory {
         } else { // consider the value of cacheType as a className
             stmtCacheStructure = initCustomCacheStructurePrivileged(cacheType,
                     maxSize);
-        } 
+        }
         if(!stmtCacheStructure.isSynchronized()) {
             return new SynchronizedCache(stmtCacheStructure);
         }
@@ -71,10 +71,10 @@ public class CacheFactory {
                     result = initializeCacheStructure(className, cacheSize);
                 } catch (Exception e) {
                     _logger.log(Level.WARNING, localStrings.getString(
-                            "jdbc.statement-cache.datastructure.init.failure", 
+                            "jdbc.statement-cache.datastructure.init.failure",
                             className));
                     _logger.log(Level.WARNING, localStrings.getString(
-                            "jdbc.statement-cache.datastructure.init.failure.exception", 
+                            "jdbc.statement-cache.datastructure.init.failure.exception",
                             e));
                 }
                 return result;
@@ -88,7 +88,7 @@ public class CacheFactory {
         }
     }
 
-    private static Cache initializeCacheStructure(String className, 
+    private static Cache initializeCacheStructure(String className,
             int maxSize) throws Exception {
         Cache ds;
         Object[] constructorParameters = new Object[]{maxSize};

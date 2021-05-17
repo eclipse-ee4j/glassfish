@@ -40,7 +40,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerWrapper;
 
   /** Provides helper methods for CMP support implementation with the
-   * application server specific information. Calls corresponding methods 
+   * application server specific information. Calls corresponding methods
    * on the registered class which implements ContainerHelper interface.
    */
 public class CMPHelper {
@@ -68,15 +68,15 @@ public class CMPHelper {
    /** Register class that implements ContainerHelper interface
     * Should be called by a static method at class initialization time.
     *
-    * @param 	h 	application server specific implemetation of the ContainerHelper
-    * 			interface.
+    * @param     h     application server specific implemetation of the ContainerHelper
+    *             interface.
     */
     public static void registerContainerHelper (ContainerHelper h) {
         containerHelper = h;
     }
 
     /** Increments the counter and returns the value. Used to populate primary
-     * key columns for EJB with an unknown Primary Key Class. 
+     * key columns for EJB with an unknown Primary Key Class.
      * @return the next value for the counter.
      */
 
@@ -105,86 +105,86 @@ public class CMPHelper {
     }
 
     /** Called in a CMP supported environment to get an EJBObject reference for this
-     * primary key instance and Container object. 
+     * primary key instance and Container object.
      * The Container instance is acquired via #getContainer(Object).
-     *   
+     *
      * @see getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @return a corresponding EJBObject (as an Object) to be used by
      * the client.
-     */  
+     */
     public static EJBObject getEJBObject(Object pk, Object container) {
         return getContainerHelper().getEJBObject(pk, container);
     }
- 
+
     /** Called in a managed environment to get an EJBLocalObject reference for this
-     * primary key instance and Container object. 
+     * primary key instance and Container object.
      * The Container instance is acquired via #getContainer(Object).
-     *   
+     *
      * @see getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @return a corresponding EJBLocalObject (as an Object) to be used by
      * the client.
-     */   
+     */
     public static EJBLocalObject getEJBLocalObject(Object pk, Object container) {
-        return getContainerHelper().getEJBLocalObject(pk, container); 
+        return getContainerHelper().getEJBLocalObject(pk, container);
     }
- 
+
     /** Called in a managed environment to get an EJBLocalObject reference for this
      * primary key instance, Container object, and EJBContext of the calling bean.
      * Allows the container to check if this method is called during ejbRemove
      * that is part of a cascade-delete remove.
      * The Container instance is acquired via #getContainer(Object).
-     *   
+     *
      * @see getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
      * @param context an EJBContext of the calling bean.
      * @return a corresponding EJBLocalObject (as an Object) to be used by
      * the client.
-     */   
+     */
     public static EJBLocalObject getEJBLocalObject(Object pk, Object container,
         EJBContext context) {
-        return getContainerHelper().getEJBLocalObject(pk, container, context); 
+        return getContainerHelper().getEJBLocalObject(pk, container, context);
     }
- 
+
     /** Called in a managed environment to remove a bean for a given EJBLocalObject,
      * and Container instance.
      * The Container instance is acquired via #getContainer(Object).
-     *   
+     *
      * @see getContainer(Object)
      * @param ejb the EJBLocalObject for the bean to be removed.
-     * @param container a Container instance for the request. 
-     */  
+     * @param container a Container instance for the request.
+     */
     public static void removeByEJBLocalObject(EJBLocalObject ejb, Object container) {
-        getContainerHelper().removeByEJBLocalObject(ejb, container);  
+        getContainerHelper().removeByEJBLocalObject(ejb, container);
     }
- 
-    /** Called in a managed environment to remove a bean for a given primary key 
+
+    /** Called in a managed environment to remove a bean for a given primary key
      * and Container instance.
      * The Container instance is acquired via #getContainer(Object).
      *
      * @see getContainer(Object)
      * @param pk the primary key for the bean to be removed.
      * @param container a Container instance for the request.
-     */ 
+     */
     public static void removeByPK(Object pk, Object container) {
-        getContainerHelper().removeByPK(pk, container);  
+        getContainerHelper().removeByPK(pk, container);
     }
 
     /** Called in a managed environment to mark EntityContext of the
      * bean as already removed during cascade-delete operation.
-     * Called by the generated ejbRemove method before calling ejbRemove of the 
+     * Called by the generated ejbRemove method before calling ejbRemove of the
      * related beans (via removeByEJBLocalObject) that are to be cascade-deleted.
      *
      * The Container instance is acquired via #getContainer(Object).
-     *   
+     *
      * @param context the EntityContext of the bean beeing removed.
-     */  
+     */
     public static void setCascadeDeleteAfterSuperEJBRemove(EntityContext context) {
-        getContainerHelper().setCascadeDeleteAfterSuperEJBRemove(context);  
+        getContainerHelper().setCascadeDeleteAfterSuperEJBRemove(context);
     }
 
     /** Called in a CMP environment to lookup PersistenceManagerFactory
@@ -193,7 +193,7 @@ public class CMPHelper {
      *
      * @see getContainer(Object)
      * @param container a Container instance for the request.
-     */  
+     */
     public static PersistenceManagerFactory getPersistenceManagerFactory(Object container) {
         return getContainerHelper().getPersistenceManagerFactory(container);
     }
@@ -222,17 +222,17 @@ public class CMPHelper {
         getContainerHelper().assertValidRemoteObject(o, container);
     }
 
-    /** Called in a CMP supported environment. Notifies the container that 
+    /** Called in a CMP supported environment. Notifies the container that
      * ejbSelect had been called.
      * The Container instance is acquired via #getContainer(Object).
-     *   
+     *
      * @see getContainer(Object)
      * @param container a Container instance for the request.
-     */  
+     */
     public static void preSelect(Object container) {
         getContainerHelper().preSelect(container);
     }
- 
+
     /**
      * Called in CMP environment to get NumericConverter policy referenced
      * by this Container instance.
@@ -278,11 +278,11 @@ public class CMPHelper {
     }
 
     /** Called from read-only beans to suspend current transaction.
-     * This will guarantee that PersistenceManager is not bound to 
+     * This will guarantee that PersistenceManager is not bound to
      * any transaction.
      *
-     * @return jakarta.transaction.Transaction object representing 
-     * the suspended transaction. 
+     * @return jakarta.transaction.Transaction object representing
+     * the suspended transaction.
      * Returns null if the calling thread is not associated
      * with a transaction.
      */
@@ -294,7 +294,7 @@ public class CMPHelper {
      * This will guarantee that the transaction continues to run after
      * read-only bean accessed its PersistenceManager.
      *
-     * @param tx - The jakarta.transaction.Transaction object that 
+     * @param tx - The jakarta.transaction.Transaction object that
      * represents the transaction to be resumed.
      */
     public static void resumeCurrentTransaction(
@@ -311,7 +311,7 @@ public class CMPHelper {
         // flush updates to the database if transaction is active.
         if (tx != null && tx.isActive()) {
             PersistenceManagerWrapper pmw = (PersistenceManagerWrapper)pm;
-            PersistenceManagerImpl pmi = 
+            PersistenceManagerImpl pmi =
                     (PersistenceManagerImpl)pmw.getPersistenceManager();
             pmi.internalFlush();
         }
@@ -328,7 +328,7 @@ public class CMPHelper {
      * the corresponding method.
      * @return a ContainerHelper instance registered with this class.
      * @throws JDOFatalInternalException if the instance is null.
-     */  
+     */
     private static ContainerHelper getContainerHelper() {
         if (containerHelper == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(

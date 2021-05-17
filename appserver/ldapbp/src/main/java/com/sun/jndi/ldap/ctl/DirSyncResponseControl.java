@@ -48,7 +48,7 @@ final public class DirSyncResponseControl extends BasicControl {
      */
     public static final String OID = "1.2.840.113556.1.4.841";
 
-    /** 
+    /**
      * If flag is set to a non-zero value, it implies that there is more
      * data to retrieve.
      *
@@ -56,14 +56,14 @@ final public class DirSyncResponseControl extends BasicControl {
      */
     private int flag;
 
-    /** 
+    /**
      * The maximum length (in bytes) returned in a control response.
      *
      * @serial
      */
     private int maxReturnLength;
 
-    /** 
+    /**
      * A server-generated cookie.
      *
      * @serial
@@ -93,7 +93,7 @@ final public class DirSyncResponseControl extends BasicControl {
             ber.parseSeq(null);
             flag = ber.parseInt();
             maxReturnLength = ber.parseInt();
-	    cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
+        cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
         }
     }
 
@@ -112,7 +112,7 @@ final public class DirSyncResponseControl extends BasicControl {
      * @return true if more data is available.
      */
     public boolean hasMoreData() {
-	return (flag != 0);
+    return (flag != 0);
     }
 
     /**
@@ -131,10 +131,10 @@ final public class DirSyncResponseControl extends BasicControl {
      * @return A possibly null server-generated cookie.
      */
     public byte[] getCookie() {
-	if (cookie.length == 0) {
-	    return null;
-	} else {
+    if (cookie.length == 0) {
+        return null;
+    } else {
             return cookie;
-	}
+    }
     }
 }

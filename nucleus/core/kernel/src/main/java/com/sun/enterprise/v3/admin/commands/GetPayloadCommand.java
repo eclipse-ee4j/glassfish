@@ -37,12 +37,12 @@ import org.jvnet.hk2.annotations.Service;
 @I18n("getpayload")
 @AccessRequired(resource="jobs/job/$jobID", action="read")
 public class GetPayloadCommand implements AdminCommand {
-    
+
     private final static LocalStringManagerImpl strings = new LocalStringManagerImpl(GetPayloadCommand.class);
-    
+
     @Inject
     JobManager registry;
-    
+
     @Param(primary=true, optional=false, multiple=false)
     String jobID;
 
@@ -69,8 +69,8 @@ public class GetPayloadCommand implements AdminCommand {
             ar.setActionExitCode(ActionReport.ExitCode.FAILURE);
             ar.setMessage(strings.getLocalString("getPayload.unsupported", "Payload type is not supported. Can not download data."));
         }
-        
+
     }
-    
-    
+
+
 }

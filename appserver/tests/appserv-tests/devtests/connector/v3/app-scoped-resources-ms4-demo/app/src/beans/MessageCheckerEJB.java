@@ -40,7 +40,7 @@ public class MessageCheckerEJB implements SessionBean {
 
     public MessageCheckerEJB() {}
 
-    public void ejbCreate() 
+    public void ejbCreate()
         throws CreateException {
         System.out.println("bean created");
         heldCon = null;
@@ -126,11 +126,11 @@ public class MessageCheckerEJB implements SessionBean {
         try {
             synchronized (Controls.getLockObject()) {
                 //Tell the resource adapter the client is ready to run
-                Controls.getLockObject().notifyAll(); 
-                
+                Controls.getLockObject().notifyAll();
+
                 debug("NOTIFIED... START WAITING");
                 //Wait until being told to read from the database
-                Controls.getLockObject().wait(); 
+                Controls.getLockObject().wait();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -149,22 +149,22 @@ public class MessageCheckerEJB implements SessionBean {
     }
 
     public int getMessageCount() {
-	try {
+    try {
             Connection con = getFreshConnection();
             int count1 = getCount(con);
             con.close();
-            
-	    /*
+
+        /*
             synchronized(Controls.getLockObject()) {
                 Controls.getLockObject().notify();
             }
-	    */
-                
+        */
+
             return count1;
         } catch (Exception e) {
             e.printStackTrace(System.out);
             throw new EJBException(e);
-	}
+    }
     }
 
     private int getCount(Connection con) throws SQLException {
@@ -190,10 +190,10 @@ public class MessageCheckerEJB implements SessionBean {
             Context ic = new InitialContext();
             user = (String) ic.lookup("java:comp/env/user");
             password = (String) ic.lookup("java:comp/env/password");
-	    Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
-	    System.out.println("CALLING INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
-	    Controls.initialize();
-	    System.out.println("CALLED INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]" + Controls);
+        Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
+        System.out.println("CALLING INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]");
+        Controls.initialize();
+        System.out.println("CALLED INITILIZE ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]" + Controls);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -228,7 +228,7 @@ public class MessageCheckerEJB implements SessionBean {
             debug("Looked up Datasource\n");
             debug("Get JDBC connection, auto sign on");
             con = ds.getConnection();
-            
+
             if (con != null) {
                 return con;
             } else {
@@ -239,7 +239,7 @@ public class MessageCheckerEJB implements SessionBean {
             throw ex1;
         }
     }
-    
+
     private void closeConnection(Connection con) throws SQLException {
         if (heldCon != null) {
             return;

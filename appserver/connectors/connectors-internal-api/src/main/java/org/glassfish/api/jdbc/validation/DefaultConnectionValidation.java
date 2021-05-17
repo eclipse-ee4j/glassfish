@@ -27,7 +27,7 @@ import org.glassfish.api.jdbc.ConnectionValidation;
 /**
  * Default connection validation mechanism used by common database vendors to
  * perform connection validation.
- * 
+ *
  * @author Shalini M
  */
 public class DefaultConnectionValidation implements ConnectionValidation {

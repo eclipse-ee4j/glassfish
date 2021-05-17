@@ -42,7 +42,7 @@ import jakarta.annotation.Resource;
     @EJB private Hello1 hello1;
     @EJB private Hello2 hello2;
 
-    @Resource(name="jms/MyQueueConnectionFactory") 
+    @Resource(name="jms/MyQueueConnectionFactory")
     QueueConnectionFactory qcFactory;
 
     @Resource Queue clientQueue;
@@ -52,7 +52,7 @@ import jakarta.annotation.Resource;
 
         QueueConnection connection = null;
         try {
-            
+
             System.out.println("Calling hello1 stateless bean");
             hello1.hello("local ejb3.0 stateless");
             System.out.println("Calling hello2 stateful bean");

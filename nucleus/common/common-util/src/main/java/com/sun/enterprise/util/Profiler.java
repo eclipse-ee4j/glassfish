@@ -24,13 +24,13 @@ package com.sun.enterprise.util;
 /**
  * A easy-to-use class that wraps one global ProfilerImpl object.  Use it to begin
  * and end profiling in one 'profiling thread'.  I.e. use this object to get timing for
- * sub-operations.  Use separate ProfilerImpl objects to get timings for overlapping 
+ * sub-operations.  Use separate ProfilerImpl objects to get timings for overlapping
  * profile needs.
  *
- * <p> WARNING: Call reset at the end to avoid memory leaks. 
+ * <p> WARNING: Call reset at the end to avoid memory leaks.
  *
  * @author  bnevins
- * @version 
+ * @version
  */
 public class Profiler {
 
@@ -76,7 +76,7 @@ public class Profiler {
         endItem();
         beginItem(desc);
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////
     /**
      * @param notUsed  */

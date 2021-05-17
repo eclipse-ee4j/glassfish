@@ -31,9 +31,9 @@ import jakarta.ejb.TimerService;
 public class SingletonTimeoutEJB implements SingletonTimeoutLocal, SingletonTimeout {
     @Resource
     TimerService ts;
-    
+
     Timer t;
-    
+
     public TimerHandle createTimer(String info) {
         boolean created = false;
         for(Timer timer:ts.getTimers()) {

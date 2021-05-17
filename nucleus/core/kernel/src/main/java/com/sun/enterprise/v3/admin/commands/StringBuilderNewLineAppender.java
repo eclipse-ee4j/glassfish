@@ -20,7 +20,7 @@ import java.io.*;
 /**
  */
 class StringBuilderNewLineAppender {
-    
+
     private  StringBuilder sb;
     static final String SEP = System.getProperty("line.separator");
     /** Creates a new instance of StringBuilderNewLineAppender */
@@ -38,26 +38,26 @@ class StringBuilderNewLineAppender {
     public String toString(String... filterOut) {
         String sbString = sb.toString();
         BufferedReader in = new BufferedReader(new StringReader(sbString));
-		sb = new StringBuilder();
-		
-		try
-		{
-			readloop:
-			for(String s = in.readLine(); s != null; s = in.readLine()){
-				for(String filter : filterOut){
-					if(s.startsWith(filter))
-						continue readloop; // continue to outer loop
-				}
-				append(s);
-			}
-		}
-		catch(Exception e)
-		{
-			// bail
-			return sbString;
-		}
-        
-		return toString();
+        sb = new StringBuilder();
+
+        try
+        {
+            readloop:
+            for(String s = in.readLine(); s != null; s = in.readLine()){
+                for(String filter : filterOut){
+                    if(s.startsWith(filter))
+                        continue readloop; // continue to outer loop
+                }
+                append(s);
+            }
+        }
+        catch(Exception e)
+        {
+            // bail
+            return sbString;
+        }
+
+        return toString();
     }
 
 }

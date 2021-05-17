@@ -23,18 +23,18 @@ import com.sun.logging.*;
  * @author Mahesh Kannan
  */
 
-public final class ReadOnlyBeanLocalNotifierImpl 
-	implements com.sun.appserv.ejb.ReadOnlyBeanLocalNotifier
+public final class ReadOnlyBeanLocalNotifierImpl
+    implements com.sun.appserv.ejb.ReadOnlyBeanLocalNotifier
 {
 
     private ReadOnlyBeanContainer robContainer;
 
     public ReadOnlyBeanLocalNotifierImpl(ReadOnlyBeanContainer container) {
-		this.robContainer = container;
-	}
+        this.robContainer = container;
+    }
 
     public void refresh (Object primaryKey)  {
-		robContainer.setRefreshFlag(primaryKey);
+        robContainer.setRefreshFlag(primaryKey);
     }
 
     public void refreshAll() {

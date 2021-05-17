@@ -42,16 +42,16 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for CR 6233276");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() {
-     
+
         try {
 
             URL url = new URL("http://" + host  + ":" + port

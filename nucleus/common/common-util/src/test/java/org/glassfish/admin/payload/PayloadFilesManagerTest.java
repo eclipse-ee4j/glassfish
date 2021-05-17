@@ -289,7 +289,7 @@ public class PayloadFilesManagerTest {
             final File fileB = new File(origDir, FILE_B_NAME);
             desiredResults.add(new File(targetDir.toURI().resolve(FILE_B_PREFIX + FILE_B_NAME)));
             writeFile(fileB, "Here is File B", "which has an", "additional line");
-        
+
 
             new CommonPermTest() {
 
@@ -494,7 +494,7 @@ public class PayloadFilesManagerTest {
     public void simplePermanentDirWithNoSlashRemovalTest() throws Exception {
         final String DIR = "x/";
         final String DIR_WITH_NO_SLASH = "x";
-        
+
         final String FILE_A_PREFIX = DIR;
         final String FILE_A_NAME = "fileA.txt";
 
@@ -508,7 +508,7 @@ public class PayloadFilesManagerTest {
 
         final File dir = new File(origDir, DIR);
         dir.mkdir();
-        
+
         final File fileA = new File(dir, FILE_A_NAME);
 
         writeFile(fileA, "This is FileA", "with two lines of content");
@@ -1166,7 +1166,7 @@ public class PayloadFilesManagerTest {
             new Exception().printStackTrace();
         }
     }
-    
+
     private void writeFile(final File file, final String... content) throws FileNotFoundException {
         PrintStream ps = new PrintStream(file);
         for (String s : content) {
@@ -1203,7 +1203,7 @@ public class PayloadFilesManagerTest {
 //            fail("unexpected exception " + e.getMessage());
 //        }
 //    }
-    
+
     private abstract class CommonTest {
         protected final static String payloadType = "application/zip";
 
@@ -1246,7 +1246,7 @@ public class PayloadFilesManagerTest {
 
         }
     }
-    
+
     private abstract class CommonTempTest extends CommonTest {
 
         private List<PayloadFilesManager.Temp> tempInstances = new ArrayList<PayloadFilesManager.Temp>();

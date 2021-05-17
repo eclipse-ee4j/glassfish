@@ -23,7 +23,7 @@ import jakarta.annotation.security.DenyAll;
 
 @Stateful
 @AccessTimeout(0)
-public class SfulEJB implements 
+public class SfulEJB implements
     SfulBusiness, SfulRemoteBusiness, SfulRemoteBusiness2
 {
     int state = 0;
@@ -55,12 +55,12 @@ public class SfulEJB implements
     }
 
     public void sleepFor(int sec) {
-	try {
-	    for (int i=0 ; i<sec; i++) {
-		Thread.currentThread().sleep(1000);
-	    }
-	} catch (Exception ex) {
-	}
+    try {
+        for (int i=0 ; i<sec; i++) {
+        Thread.currentThread().sleep(1000);
+        }
+    } catch (Exception ex) {
+    }
     }
 
     public void ping() {

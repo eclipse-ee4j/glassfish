@@ -39,7 +39,7 @@
         <fileset dir="." includes="*.class"/>
       </delete>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -65,12 +65,12 @@
         <jar destfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}" includes="*.war"/>
         </jar>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest" fork="true">
           <sysproperty key="S1AS_HOME" value="${env.S1AS_HOME}"/>
@@ -85,10 +85,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

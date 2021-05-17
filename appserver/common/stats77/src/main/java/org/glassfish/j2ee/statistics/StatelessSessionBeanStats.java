@@ -17,7 +17,7 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies the statistics provided by a stateless session bean. 
+ * Specifies the statistics provided by a stateless session bean.
  */
 public interface StatelessSessionBeanStats extends SessionBeanStats {
 }

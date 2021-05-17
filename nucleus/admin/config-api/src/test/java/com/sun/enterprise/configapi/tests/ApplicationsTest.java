@@ -62,7 +62,7 @@ public class ApplicationsTest extends ConfigApiTest {
     /**
      * Test which is expecting an UnsupportedOperationException since we are
      * operating on a copy list of the original getModules() list.
-     * 
+     *
      * @throws TransactionFailure
      */
     @Test(expected = UnsupportedOperationException.class)

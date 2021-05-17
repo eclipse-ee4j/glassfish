@@ -39,7 +39,7 @@ public class Ejb2HK2ServiceFactory implements Factory<Ejb2HK2Service> {
             public String getComponentName() {
                 return HK2Service.EJB2;
             }
-            
+
         } ;
     }
 

@@ -24,7 +24,7 @@ public class InterceptorSuper {
 
     @AroundInvoke
     protected Object roundInvoke(InvocationContext c) throws Exception {
-	throw new RuntimeException("Should not reach here");
+    throw new RuntimeException("Should not reach here");
     }
 
 }

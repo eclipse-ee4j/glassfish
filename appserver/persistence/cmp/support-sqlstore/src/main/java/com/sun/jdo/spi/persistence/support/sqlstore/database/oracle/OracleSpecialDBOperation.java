@@ -30,14 +30,14 @@
  * - clean-oracle-special: cleans OracleSpecialDBOperation classes
  * - update-oracle-special: updates <cmp-basedir>/release/build/OracleSpecialDBOperation.jar
  *
- * Oracle's JDBC driver can be downloaded, e.g. the Oracle 
+ * Oracle's JDBC driver can be downloaded, e.g. the Oracle
  * 10.1.0.4 JDBC driver can be retrieved from the URL
  * http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/htdocs/jdbc101040.html
  * Please specify the Oracle JDBC driver location by defining
  * the property 'oracle-jdbc.jar' at the command line when
  * calling the ant targets.
  *
- * The complete instructions to update 
+ * The complete instructions to update
  * OracleSpecialDBOperation.jar (from <cmp-basedir>) are:
  *
  * 1. Compile the cmp module, e.g.

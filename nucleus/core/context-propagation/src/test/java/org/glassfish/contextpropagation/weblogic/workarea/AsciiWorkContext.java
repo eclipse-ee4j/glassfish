@@ -28,17 +28,17 @@ import java.io.Serializable;
 public class AsciiWorkContext implements PrimitiveWorkContext, Serializable
 {
   private String str;
-  
+
   public AsciiWorkContext() {
   }
-  
+
   /* package */ AsciiWorkContext(String str) {
     this.str = str;
   }
 
   public String toString() { return str; }
   public Object get() { return str; }
-  
+
   public boolean equals(Object obj) {
     if (obj instanceof AsciiWorkContext) {
       return ((AsciiWorkContext)obj).str.equals(str);
@@ -49,7 +49,7 @@ public class AsciiWorkContext implements PrimitiveWorkContext, Serializable
   public void writeContext(WorkContextOutput out) throws IOException {
     out.writeASCII(str);
   }
-  
+
   public void readContext(WorkContextInput in) throws IOException {
     str = in.readASCII();
   }

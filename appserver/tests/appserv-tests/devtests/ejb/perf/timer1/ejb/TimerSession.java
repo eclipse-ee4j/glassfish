@@ -22,6 +22,6 @@ import jakarta.ejb.*;
 public interface TimerSession {
 
     public void createTimer(int intervalInMillis, int numTimeouts);
-    
+
 }
 

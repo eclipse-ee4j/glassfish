@@ -36,7 +36,7 @@ import org.glassfish.internal.api.Globals;
  * @author Mahesh Kannan
  */
 public class EJBObjectInputStreamHandler
-	implements GlassFishInputStreamHandler
+    implements GlassFishInputStreamHandler
 {
     private static final Logger _ejbLogger =
        LogDomains.getLogger(EJBObjectInputStreamHandler.class, LogDomains.EJB_LOGGER);
@@ -46,8 +46,8 @@ public class EJBObjectInputStreamHandler
         throws IOException
     {
 
-	// Until we've identified a remote object, we can't assume the orb is
-	// available in the container.  If the orb is not present, this will be null.
+    // Until we've identified a remote object, we can't assume the orb is
+    // available in the container.  If the orb is not present, this will be null.
         ProtocolManager protocolMgr = getProtocolManager();
 
         try {
@@ -76,8 +76,8 @@ public class EJBObjectInputStreamHandler
      * this runtime.
      */
     private ProtocolManager getProtocolManager() {
-	GlassFishORBHelper orbHelper = Globals.getDefaultHabitat().getService(GlassFishORBHelper.class);
-	return orbHelper.isORBInitialized() ? orbHelper.getProtocolManager() : null;
+    GlassFishORBHelper orbHelper = Globals.getDefaultHabitat().getService(GlassFishORBHelper.class);
+    return orbHelper.isORBInitialized() ? orbHelper.getProtocolManager() : null;
     }
 
 }

@@ -24,7 +24,7 @@ import java.util.logging.Level;
 
 
 /**
- * <p>Rule implementation that saves a parameter for use by a surrounding 
+ * <p>Rule implementation that saves a parameter for use by a surrounding
  * <code>CallMethodRule<code>.</p>
  *
  * <p>This parameter may be:
@@ -33,9 +33,9 @@ import java.util.logging.Level;
  * See {@link #CallParamRule(int paramIndex, String attributeName)}
  * <li>from current the element body
  * See {@link #CallParamRule(int paramIndex)}
- * <li>from the top object on the stack. 
+ * <li>from the top object on the stack.
  * See {@link #CallParamRule(int paramIndex, boolean fromStack)}
- * <li>the current path being processed (separate <code>Rule</code>). 
+ * <li>the current path being processed (separate <code>Rule</code>).
  * See {@link PathCallParamRule}
  * </ul>
  * </p>
@@ -53,7 +53,7 @@ public class CallParamRule extends Rule {
      * @param digester The associated Digester
      * @param paramIndex The zero-relative parameter number
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #CallParamRule(int paramIndex)} instead.
      */
     public CallParamRule(Digester digester, int paramIndex) {
@@ -71,7 +71,7 @@ public class CallParamRule extends Rule {
      * @param paramIndex The zero-relative parameter number
      * @param attributeName The name of the attribute to save
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #CallParamRule(int paramIndex, String attributeName)} instead.
      */
     public CallParamRule(Digester digester, int paramIndex,
@@ -115,29 +115,29 @@ public class CallParamRule extends Rule {
      *
      * @param paramIndex The zero-relative parameter number
      * @param fromStack should this parameter be taken from the top of the stack?
-     */    
+     */
     public CallParamRule(int paramIndex, boolean fromStack) {
-    
-        this.paramIndex = paramIndex;  
+
+        this.paramIndex = paramIndex;
         this.fromStack = fromStack;
 
     }
-    
+
     /**
      * Constructs a "call parameter" rule which sets a parameter from the stack.
      * If the stack contains too few objects, then the parameter will be set to null.
      *
      * @param paramIndex The zero-relative parameter number
-     * @param stackIndex the index of the object which will be passed as a parameter. 
+     * @param stackIndex the index of the object which will be passed as a parameter.
      * The zeroth object is the top of the stack, 1 is the next object down and so on.
-     */    
+     */
     public CallParamRule(int paramIndex, int stackIndex) {
-    
-        this.paramIndex = paramIndex;  
+
+        this.paramIndex = paramIndex;
         this.fromStack = true;
         this.stackIndex = stackIndex;
     }
- 
+
     // ----------------------------------------------------- Instance Variables
 
 
@@ -157,13 +157,13 @@ public class CallParamRule extends Rule {
      * Is the parameter to be set from the stack?
      */
     protected boolean fromStack = false;
-    
+
     /**
      * The position of the object from the top of the stack
      */
     protected int stackIndex = 0;
 
-    /** 
+    /**
      * Stack is used to allow nested body text to be processed.
      * Lazy creation.
      */
@@ -180,31 +180,31 @@ public class CallParamRule extends Rule {
     public void begin(Attributes attributes) throws Exception {
 
         Object param = null;
-        
+
         if (attributeName != null) {
-        
+
             param = attributes.getValue(attributeName);
-            
+
         } else if(fromStack) {
-        
+
             param = digester.peek(stackIndex);
-            
+
             if (digester.log.isLoggable(Level.FINE)) {
-            
+
                 StringBuilder sb = new StringBuilder("[CallParamRule]{");
                 sb.append(digester.match);
                 sb.append("} Save from stack; from stack?").append(fromStack);
                 sb.append("; object=").append(param);
                 digester.log.fine(sb.toString());
-            }   
+            }
         }
-        
+
         // Have to save the param object to the param stack frame here.
         // Can't wait until end(). Otherwise, the object will be lost.
-        // We can't save the object as instance variables, as 
+        // We can't save the object as instance variables, as
         // the instance variables will be overwritten
         // if this CallParamRule is reused in subsequent nesting.
-        
+
         if(param != null) {
             Object parameters[] = (Object[]) digester.peekParams();
             parameters[paramIndex] = param;
@@ -230,7 +230,7 @@ public class CallParamRule extends Rule {
         }
 
     }
-    
+
     /**
      * Process any body texts now.
      */

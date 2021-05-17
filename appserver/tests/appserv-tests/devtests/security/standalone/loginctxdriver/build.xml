@@ -35,12 +35,12 @@
    &commonSecurity;
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes standalone login context driver tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes standalone login context driver tests)
+    </echo>
     </target>
-    
+
     <target name="all" depends="build, setup, deploy,run, undeploy, unsetup">
     </target>
 
@@ -101,7 +101,7 @@
 
     <target name="run-standalone-client" depends="init-common">
       <echo message="Running standalone client ..."/>
-   
+
       <java classname="LoginContextDriverTest"
         classpath="${admin.domain.dir}/../lib/appserv-rt.jar:${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar" fork="true">
         <jvmarg value="-Djava.security.auth.login.config=${admin.domain.dir}/../lib/appclient/appclientlogin.conf"/>

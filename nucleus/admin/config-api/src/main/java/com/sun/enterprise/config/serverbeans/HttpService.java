@@ -62,7 +62,7 @@ public interface HttpService extends ConfigBeanProxy, PropertyBag, ConfigExtensi
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getVirtualServer().add(newItem);
      * </pre>

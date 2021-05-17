@@ -32,11 +32,11 @@ import test.beans.artifacts.TestDatabase;
 @Preferred
 public class TestBean implements TestBeanInterface, Serializable{
     public static boolean testBeanInvoked = false;
-    
-    @Inject @TestDatabase 
+
+    @Inject @TestDatabase
     EntityManagerFactory emf;
 
-	//Inject a non-serializable resource
+    //Inject a non-serializable resource
     @Inject @TestDatabase
     EntityManager em;
 

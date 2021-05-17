@@ -212,7 +212,7 @@ public final class AMXStartupService
     /** also works as a loaded/not loaded flag: null if not yet loaded */
     private volatile ObjectName DOMAIN_ROOT_OBJECTNAME = null;
 
-    private synchronized ObjectName loadDomainRoot() {        
+    private synchronized ObjectName loadDomainRoot() {
         if (DOMAIN_ROOT_OBJECTNAME != null) {
             return DOMAIN_ROOT_OBJECTNAME;
         }
@@ -239,9 +239,9 @@ public final class AMXStartupService
 
         ObjectName systemInfoObjectName =
                 ObjectNameBuilder.buildChildObjectName(mMBeanServer, DOMAIN_ROOT_OBJECTNAME, SystemInfo.class);
-        
+
         systemInfoObjectName = mMBeanServer.registerMBean(systemInfo, systemInfoObjectName).getObjectName();
-        
+
         return systemInfoObjectName;
     }
 
@@ -339,7 +339,7 @@ public final class AMXStartupService
 
         return getDomainRoot();
     }
-    
+
 
     public synchronized void unloadAMXMBeans() {
         if (getDomainRoot() != null) {

@@ -53,7 +53,7 @@ public class CustomerEJB implements jakarta.ejb.EntityBean
 
   public String getAddress1()
   {
-    return address1; 
+    return address1;
   }
 
   public String getAddress2()
@@ -147,7 +147,7 @@ public class CustomerEJB implements jakarta.ejb.EntityBean
         System.out.println("SQL exception occured in ejbRemove method");
         e.printStackTrace();
       }
-    
+
   }
 
   public void ejbStore()
@@ -214,12 +214,12 @@ public class CustomerEJB implements jakarta.ejb.EntityBean
     } catch (SQLException e) {
       System.out.println("SQLException occurred in ejbLoad() method");
       e.printStackTrace();
-    }   
+    }
   }
 
   public void ejbActivate() {}
   public void ejbPassivate() {}
 }
-      
-    
-    
+
+
+

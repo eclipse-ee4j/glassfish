@@ -84,7 +84,7 @@ public class SimpleBMPBean
     }
 
     public boolean test3() {
-        //application auth + wrong user/pwd 
+        //application auth + wrong user/pwd
         System.out.println("-----------------Start test3--------------");
         Connection conn = null;
         boolean passed = false;

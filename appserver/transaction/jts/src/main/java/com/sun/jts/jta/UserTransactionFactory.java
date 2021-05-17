@@ -27,31 +27,31 @@ import javax.naming.spi.*;
  */
 public class UserTransactionFactory implements ObjectFactory {
 
-	/**
+    /**
      * @param obj Reference information that can be used in creating an object.
      * @param name of this object relative to nameCtx (optional).
      * @param nameCtx context relative to which the name parameter specified.
-     * 	If null, name is relative to the default initial context.
-	 * @param environment possibly null environment used in creating the object.
+     *     If null, name is relative to the default initial context.
+     * @param environment possibly null environment used in creating the object.
      *
      * @return object created; null if an object cannot be created.
      *
      * @exception java.lang.Exception if this object factory encountered
-     * 	an exception while attempting to create an object.
+     *     an exception while attempting to create an object.
      */
- 	public Object getObjectInstance(Object refObj, Name name,
-    	Context nameCtx, java.util.Hashtable env)
+     public Object getObjectInstance(Object refObj, Name name,
+        Context nameCtx, java.util.Hashtable env)
         throws Exception {
 
         if (refObj == null || !(refObj instanceof Reference))
-        	return null;
+            return null;
 
         Reference ref = (Reference) refObj;
 
         if (ref.getClassName().
-        	equals(UserTransactionImpl.class.getName())) {
+            equals(UserTransactionImpl.class.getName())) {
             // create a new object
-        	return new UserTransactionImpl();
+            return new UserTransactionImpl();
         }
 
         return null;

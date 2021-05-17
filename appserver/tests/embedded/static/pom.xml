@@ -29,9 +29,9 @@
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>static</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Static Embedded Tests</name>  
+    <name>GlassFish Static Embedded Tests</name>
     <modules>
-    	<module>ejb</module>
-        <module>web</module>      
+        <module>ejb</module>
+        <module>web</module>
     </modules>
 </project>

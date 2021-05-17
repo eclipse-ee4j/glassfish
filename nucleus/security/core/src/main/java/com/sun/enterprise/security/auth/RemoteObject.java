@@ -30,7 +30,7 @@ public class RemoteObject {
     private ORB orb;
 
     protected RemoteObject() {
-	//TODO:V3 commented, uncomment later orb = ORBManager.getORB();
+    //TODO:V3 commented, uncomment later orb = ORBManager.getORB();
     }
 
     protected void exportObject(java.rmi.Remote remote)
@@ -47,7 +47,7 @@ public class RemoteObject {
 
     java.rmi.Remote getStub(java.rmi.Remote remote)
     throws java.rmi.RemoteException {
-	return PortableRemoteObject.toStub(remote);
+    return PortableRemoteObject.toStub(remote);
     }
 }
 

@@ -119,7 +119,7 @@ private UserTransaction tx = null;
                              "', " + bal + ")");
         System.out.println("Account added Successfully in DB2...");
         stmt1.close();
-	    con1.close();
+        con1.close();
         stmt2.close();
         con2.close();
         tx.commit();
@@ -156,7 +156,7 @@ private UserTransaction tx = null;
             System.out.println("Got DB Connection Successfully...");
         } catch (Exception ex) {
             System.out.println("Exception in getConnection: " + ex.toString());
-	    ex.printStackTrace();
+        ex.printStackTrace();
         }
         return con;
     }

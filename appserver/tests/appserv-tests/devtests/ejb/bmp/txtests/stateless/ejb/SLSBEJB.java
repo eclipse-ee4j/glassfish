@@ -26,18 +26,18 @@ import javax.naming.*;
 import javax.rmi.PortableRemoteObject;
 
 public class SLSBEJB
-    implements SessionBean 
+    implements SessionBean
 {
-	private SessionContext sessionCtx;
+    private SessionContext sessionCtx;
 
-	public void ejbCreate() {}
+    public void ejbCreate() {}
 
-	public void setSessionContext(SessionContext sc) {
-		sessionCtx = sc;
-	}
+    public void setSessionContext(SessionContext sc) {
+        sessionCtx = sc;
+    }
 
-	// business method to create a timer
-	public boolean doRollbackTest(int id) {
+    // business method to create a timer
+    public boolean doRollbackTest(int id) {
         boolean retVal = false;
         boolean doneRollback = false;
         try {
@@ -48,7 +48,7 @@ public class SLSBEJB
 
             sessionCtx.getUserTransaction().begin();
             entityHome.create(id);
-            
+
             //This must be non null
             SimpleBMP entity = (SimpleBMP)
                 entityHome.findByPrimaryKey(new Integer(id));
@@ -78,8 +78,8 @@ public class SLSBEJB
             }
         }
 
-		return retVal;
-	}
+        return retVal;
+    }
 
     public boolean doReturnParamTest(int id) {
 
@@ -92,7 +92,7 @@ public class SLSBEJB
 
             sessionCtx.getUserTransaction().begin();
             entityHome.create(id);
-            
+
             //This must be non null
             SimpleBMP entity = (SimpleBMP)
                 entityHome.findByPrimaryKey(new Integer(id));
@@ -104,7 +104,7 @@ public class SLSBEJB
 
             CustomerInfo customerInfo = entity.getCustomerInfo();
             retVal = (foundID == customerInfo.getCustomerID());
-            
+
         } catch (Throwable th) {
             th.printStackTrace();
         } finally {
@@ -114,13 +114,13 @@ public class SLSBEJB
             }
         }
 
-		return retVal;
-	}
+        return retVal;
+    }
 
-	public void ejbRemove() {}
+    public void ejbRemove() {}
 
-	public void ejbActivate() {}
+    public void ejbActivate() {}
 
-	public void ejbPassivate() {}
+    public void ejbPassivate() {}
 
 }

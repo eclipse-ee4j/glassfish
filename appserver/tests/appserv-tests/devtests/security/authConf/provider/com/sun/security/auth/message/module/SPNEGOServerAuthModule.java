@@ -51,7 +51,7 @@ import org.apache.catalina.util.Base64;
 import com.sun.security.jgss.GSSUtil;
 
 /**
- * An implementation of this interface is used to validate received service 
+ * An implementation of this interface is used to validate received service
  * request messages, and to secure service response messages.
  *
  * @version %I%, %G%
@@ -65,16 +65,16 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
 
     private static String DEBUG_OPTIONS_KEY ="debug";
 
-    private static String ASSIGN_GROUPS_OPTIONS_KEY = 
+    private static String ASSIGN_GROUPS_OPTIONS_KEY =
         "assign.groups";
 
-    private static String POLICY_CONTEXT_OPTIONS_KEY = 
+    private static String POLICY_CONTEXT_OPTIONS_KEY =
         "jakarta.security.jacc.PolicyContext";
 
-    public static final String AUTH_TYPE_INFO_KEY = 
+    public static final String AUTH_TYPE_INFO_KEY =
         "jakarta.servlet.http.authType";
 
-    private static String IS_MANDATORY_INFO_KEY = 
+    private static String IS_MANDATORY_INFO_KEY =
         "jakarta.security.auth.message.MessagePolicy.isMandatory";
 
     private static String AUTHORIZATION_HEADER = "authorization";
@@ -85,12 +85,12 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
 
     private static String NTLM_INITIAL_TOKEN = "NTLMSSP";
 
-    private static Class[] supportedMessageTypes = new Class[] 
-    { 
-	jakarta.servlet.http.HttpServletRequest.class,
-	jakarta.servlet.http.HttpServletResponse.class 
-    };            
-    
+    private static Class[] supportedMessageTypes = new Class[]
+    {
+    jakarta.servlet.http.HttpServletRequest.class,
+    jakarta.servlet.http.HttpServletResponse.class
+    };
+
     private MessagePolicy requestPolicy;
 
     private MessagePolicy responsePolicy;
@@ -119,71 +119,71 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * <p> The request policy and the response policy must not both be null.
      *
      * @param requestPolicy The request policy this module must enforce,
-     *		or null.
+     *        or null.
      *
      * @param responsePolicy The response policy this module must enforce,
-     *		or null.
+     *        or null.
      *
      * @param handler CallbackHandler used to request information.
      *
      * @param options A Map of module-specific configuration properties.
      *
      * @exception AuthException If module initialization fails, including for
-     * the case where the options argument contains elements that are not 
+     * the case where the options argument contains elements that are not
      * supported by the module.
      */
 
     public void initialize(MessagePolicy requestPolicy,
-	       MessagePolicy responsePolicy,
-	       CallbackHandler handler,
-	       Map options)
-	throws AuthException {
+           MessagePolicy responsePolicy,
+           CallbackHandler handler,
+           Map options)
+    throws AuthException {
 
-	    this.requestPolicy = requestPolicy;
-	    this.responsePolicy = responsePolicy;
+        this.requestPolicy = requestPolicy;
+        this.responsePolicy = responsePolicy;
 
-	    this.isMandatory = requestPolicy.isMandatory();
+        this.isMandatory = requestPolicy.isMandatory();
 
-	    this.handler = handler;
-	    this.options = options;
-	   
-	    if (options != null) {
-		debug = options.containsKey(DEBUG_OPTIONS_KEY);
-		policyContextID = (String) 
-		    options.get(POLICY_CONTEXT_OPTIONS_KEY);
-	    } else {
-		debug = false;
-		policyContextID = null;
-	    }
+        this.handler = handler;
+        this.options = options;
 
-	    assignedGroups = getAssignedGroupNames();
+        if (options != null) {
+        debug = options.containsKey(DEBUG_OPTIONS_KEY);
+        policyContextID = (String)
+            options.get(POLICY_CONTEXT_OPTIONS_KEY);
+        } else {
+        debug = false;
+        policyContextID = null;
+        }
 
-	    debugLevel = (logger.isLoggable(Level.FINE) && !debug) ? 
-		Level.FINE : Level.INFO;
+        assignedGroups = getAssignedGroupNames();
 
-	    gssManager = GSSManager.getInstance(); 
+        debugLevel = (logger.isLoggable(Level.FINE) && !debug) ?
+        Level.FINE : Level.INFO;
+
+        gssManager = GSSManager.getInstance();
     }
 
     /**
-     * Get the one or more Class objects representing the message types 
+     * Get the one or more Class objects representing the message types
      * supported by the module.
      *
-     * @return An array of Class objects, with at least one element 
+     * @return An array of Class objects, with at least one element
      * defining a message type supported by the module.
      */
     public Class[] getSupportedMessageTypes() {
-	return supportedMessageTypes;
+    return supportedMessageTypes;
     }
 
     /**
      * Authenticate a received service request.
      *
-     * This method is called to transform the mechanism-specific request 
-     * message acquired by calling getRequestMessage (on messageInfo) 
-     * into the validated application message to be returned to the message 
-     * processing runtime. 
-     * If the received message is a (mechanism-specific) meta-message, 
-     * the method implementation must attempt to transform the meta-message 
+     * This method is called to transform the mechanism-specific request
+     * message acquired by calling getRequestMessage (on messageInfo)
+     * into the validated application message to be returned to the message
+     * processing runtime.
+     * If the received message is a (mechanism-specific) meta-message,
+     * the method implementation must attempt to transform the meta-message
      * into a corresponding mechanism-specific response message, or to the
      * validated application request message.
      * The runtime will bind a validated application message into the
@@ -192,27 +192,27 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * by returning an AuthStatus value or by throwing an AuthException.
      *
      * @param messageInfo A contextual object that encapsulates the
-     *          client request and server response objects, and that may be 
-     *          used to save state across a sequence of calls made to the 
-     *          methods of this interface for the purpose of completing a 
+     *          client request and server response objects, and that may be
+     *          used to save state across a sequence of calls made to the
+     *          methods of this interface for the purpose of completing a
      *          secure message exchange.
      *
-     * @param clientSubject A Subject that represents the source of the 
-     *          service 
+     * @param clientSubject A Subject that represents the source of the
+     *          service
      *          request.  It is used by the method implementation to store
-     *		Principals and credentials validated in the request.
+     *        Principals and credentials validated in the request.
      *
      * @param serviceSubject A Subject that represents the recipient of the
-     *		service request, or null.  It may be used by the method 
+     *        service request, or null.  It may be used by the method
      *          implementation as the source of Principals or credentials to
-     *          be used to validate the request. If the Subject is not null, 
-     *          the method implementation may add additional Principals or 
-     *          credentials (pertaining to the recipient of the service 
+     *          be used to validate the request. If the Subject is not null,
+     *          the method implementation may add additional Principals or
+     *          credentials (pertaining to the recipient of the service
      *          request) to the Subject.
      *
      * @return An AuthStatus object representing the completion status of
      *          the processing performed by the method.
-     *          The AuthStatus values that may be returned by this method 
+     *          The AuthStatus values that may be returned by this method
      *          are defined as follows:
      *
      * <ul>
@@ -221,16 +221,16 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * available by calling getRequestMessage on messageInfo.
      *
      * <li> AuthStatus.SEND_SUCCESS to indicate that validation/processing
-     * of the request message successfully produced the secured application 
-     * response message (in messageInfo). The secured response message is 
+     * of the request message successfully produced the secured application
+     * response message (in messageInfo). The secured response message is
      * available by calling getResponseMessage on messageInfo.
      *
      * <li> AuthStatus.SEND_CONTINUE to indicate that message validation is
      * incomplete, and that a preliminary response was returned as the
      * response message in messageInfo.
      *
-     * When this status value is returned to challenge an 
-     * application request message, the challenged request must be saved 
+     * When this status value is returned to challenge an
+     * application request message, the challenged request must be saved
      * by the authentication module such that it can be recovered
      * when the module's validateRequest message is called to process
      * the request returned for the challenge.
@@ -244,152 +244,152 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      *          establishing a failure response message (in messageInfo).
      */
     public AuthStatus validateRequest(MessageInfo messageInfo,
-			       Subject clientSubject,
-			       Subject serviceSubject) throws AuthException {
+                   Subject clientSubject,
+                   Subject serviceSubject) throws AuthException {
 
-	assert (messageInfo.getMap().containsKey(IS_MANDATORY_INFO_KEY) == 
-		this.isMandatory);
+    assert (messageInfo.getMap().containsKey(IS_MANDATORY_INFO_KEY) ==
+        this.isMandatory);
 
-	HttpServletRequest request = 
-	    (HttpServletRequest) messageInfo.getRequestMessage();
+    HttpServletRequest request =
+        (HttpServletRequest) messageInfo.getRequestMessage();
 
-	HttpServletResponse response = 
-	    (HttpServletResponse) messageInfo.getResponseMessage();
+    HttpServletResponse response =
+        (HttpServletResponse) messageInfo.getResponseMessage();
 
-	debugRequest(request);
+    debugRequest(request);
 
-	// should specify encoder
-	String authorization = request.getHeader(AUTHORIZATION_HEADER);
+    // should specify encoder
+    String authorization = request.getHeader(AUTHORIZATION_HEADER);
 
-	if (authorization != null && authorization.startsWith(NEGOTIATE)) {
+    if (authorization != null && authorization.startsWith(NEGOTIATE)) {
 
-	    authorization = authorization.substring(NEGOTIATE.length()+1);
+        authorization = authorization.substring(NEGOTIATE.length()+1);
 
-	    // should specify a decoder
-	    byte[] requestToken = Base64.decode(authorization.getBytes());
+        // should specify a decoder
+        byte[] requestToken = Base64.decode(authorization.getBytes());
 
-	    try {
+        try {
 
-		GSSContext gssContext = 
-		    gssManager.createContext((GSSCredential) null);
+        GSSContext gssContext =
+            gssManager.createContext((GSSCredential) null);
 
-		byte[] gssToken = gssContext.acceptSecContext
-		    (requestToken,0,requestToken.length);
-		
-		if (gssToken != null) {
+        byte[] gssToken = gssContext.acceptSecContext
+            (requestToken,0,requestToken.length);
 
-		    byte[] responseToken = Base64.encode(gssToken);
+        if (gssToken != null) {
 
-		    response.setHeader(AUTHENTICATION_HEADER,
-				       "Negotiate" + responseToken);
+            byte[] responseToken = Base64.encode(gssToken);
 
-		    debugToken("jmac.servlet.authentication.token",
-				   responseToken);
-		}
+            response.setHeader(AUTHENTICATION_HEADER,
+                       "Negotiate" + responseToken);
 
-		if (!gssContext.isEstablished()) {
+            debugToken("jmac.servlet.authentication.token",
+                   responseToken);
+        }
 
-		    if (debug || logger.isLoggable(Level.FINE)){
-			logger.log(debugLevel,"jmac.gss_dialog_continued");
-		    }
+        if (!gssContext.isEstablished()) {
 
-		    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-		    return AuthStatus.SEND_CONTINUE;
+            if (debug || logger.isLoggable(Level.FINE)){
+            logger.log(debugLevel,"jmac.gss_dialog_continued");
+            }
 
-		} else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return AuthStatus.SEND_CONTINUE;
 
-		    String mechID;
-		    try {
-			Oid oid = gssContext.getMech();
-			mechID = oid.toString();
-		    } catch (GSSException gsse) {
-			mechID = "Undefined GSS Mechanism";
+        } else {
 
-			if (debug || logger.isLoggable(Level.FINE)){
-			    logger.log(debugLevel,
-				       "jmac.gss_mechanism_undefined",gsse);
-			}
-		    } 
+            String mechID;
+            try {
+            Oid oid = gssContext.getMech();
+            mechID = oid.toString();
+            } catch (GSSException gsse) {
+            mechID = "Undefined GSS Mechanism";
 
-		    GSSName name = gssContext.getSrcName();
+            if (debug || logger.isLoggable(Level.FINE)){
+                logger.log(debugLevel,
+                       "jmac.gss_mechanism_undefined",gsse);
+            }
+            }
 
-		    if (!setCallerPrincipal(name,clientSubject)) {
+            GSSName name = gssContext.getSrcName();
 
-			return sendFailureMessage
-			    (response,
-			     HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-			     "Failed setting caller principal");
-		    }
+            if (!setCallerPrincipal(name,clientSubject)) {
 
-		    /* we may need to add something like a cookie to the 
-		     * response (that will be returned in subsequent requests).
-		     * At this point, I am presuming that the browser will
-		     * resend the authorization token.
-		     */
-		    messageInfo.getMap().put(AUTH_TYPE_INFO_KEY,mechID);
+            return sendFailureMessage
+                (response,
+                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                 "Failed setting caller principal");
+            }
 
-		    if (debug || logger.isLoggable(Level.FINE)){
-			logger.log(debugLevel,"jmac.gss_dialog_complete");
-		    }
+            /* we may need to add something like a cookie to the
+             * response (that will be returned in subsequent requests).
+             * At this point, I am presuming that the browser will
+             * resend the authorization token.
+             */
+            messageInfo.getMap().put(AUTH_TYPE_INFO_KEY,mechID);
 
-		}
+            if (debug || logger.isLoggable(Level.FINE)){
+            logger.log(debugLevel,"jmac.gss_dialog_complete");
+            }
 
-	    } catch (GSSException gsse) {
+        }
 
-		if (requestToken != null) {
+        } catch (GSSException gsse) {
 
-		    debugToken("jmac.servlet.authorization.token",
-			       requestToken);
+        if (requestToken != null) {
 
-		    if (isNTLMToken(requestToken)) {
+            debugToken("jmac.servlet.authorization.token",
+                   requestToken);
 
-			// until we add support for NTLM
-			return sendFailureMessage
-			    (response,
-			     HttpServletResponse.SC_NOT_IMPLEMENTED,
-			     "No support for NTLM");
-		    }
-		} 
+            if (isNTLMToken(requestToken)) {
 
-		if (debug || logger.isLoggable(Level.FINE)){
-		    logger.log(debugLevel,"jmac.gss_dialog_failed",gsse);
-		}
+            // until we add support for NTLM
+            return sendFailureMessage
+                (response,
+                 HttpServletResponse.SC_NOT_IMPLEMENTED,
+                 "No support for NTLM");
+            }
+        }
 
-		// for other errors throw an AuthException
+        if (debug || logger.isLoggable(Level.FINE)){
+            logger.log(debugLevel,"jmac.gss_dialog_failed",gsse);
+        }
 
-		AuthException ae = new AuthException();
-		ae.initCause(gsse);
-		throw ae;
-	    }
+        // for other errors throw an AuthException
 
-	} else if (this.isMandatory) {
+        AuthException ae = new AuthException();
+        ae.initCause(gsse);
+        throw ae;
+        }
 
-	    response.setHeader(AUTHENTICATION_HEADER,NEGOTIATE);
-	    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    } else if (this.isMandatory) {
 
-	    if (debug || logger.isLoggable(Level.FINE)){
-		logger.log(debugLevel,"jmac.sevlet_header_added_to_response",
-			   NEGOTIATE);
-	    }
+        response.setHeader(AUTHENTICATION_HEADER,NEGOTIATE);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-	    return AuthStatus.SEND_CONTINUE;
+        if (debug || logger.isLoggable(Level.FINE)){
+        logger.log(debugLevel,"jmac.sevlet_header_added_to_response",
+               NEGOTIATE);
+        }
 
-	} else {
+        return AuthStatus.SEND_CONTINUE;
 
-	    if (authorization != null) {
-		logger.warning("jmac.servlet_authorization_header_ignored");
-	    }
+    } else {
 
-	    if (!setCallerPrincipal(null,clientSubject)) {
-		return sendFailureMessage
-		    (response,
-		     HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-		     "Failed setting unauthenticated caller principal");
-	    }
+        if (authorization != null) {
+        logger.warning("jmac.servlet_authorization_header_ignored");
+        }
 
-	}
+        if (!setCallerPrincipal(null,clientSubject)) {
+        return sendFailureMessage
+            (response,
+             HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+             "Failed setting unauthenticated caller principal");
+        }
 
-	return AuthStatus.SUCCESS;
+    }
+
+    return AuthStatus.SUCCESS;
     }
 
     /**
@@ -402,33 +402,33 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * by returning an AuthStatus value or by throwing an AuthException.
      *
      * @param messageInfo A contextual object that encapsulates the
-     *          client request and server response objects, and that may be 
-     *          used to save state across a sequence of calls made to the 
-     *          methods of this interface for the purpose of completing a 
+     *          client request and server response objects, and that may be
+     *          used to save state across a sequence of calls made to the
+     *          methods of this interface for the purpose of completing a
      *          secure message exchange.
      *
-     * @param serviceSubject A Subject that represents the source of the 
+     * @param serviceSubject A Subject that represents the source of the
      *          service
      *          response, or null. It may be used by the method implementation
-     *          to retrieve Principals and credentials necessary to secure 
-     *          the response. If the Subject is not null, 
-     *          the method implementation may add additional Principals or 
-     *          credentials (pertaining to the source of the service 
+     *          to retrieve Principals and credentials necessary to secure
+     *          the response. If the Subject is not null,
+     *          the method implementation may add additional Principals or
+     *          credentials (pertaining to the source of the service
      *          response) to the Subject.
      *
      * @return An AuthStatus object representing the completion status of
-     *          the processing performed by the method. 
-     *          The AuthStatus values that may be returned by this method 
+     *          the processing performed by the method.
+     *          The AuthStatus values that may be returned by this method
      *          are defined as follows:
      *
      * <ul>
-     * <li> AuthStatus.SEND_SUCCESS when the application response 
+     * <li> AuthStatus.SEND_SUCCESS when the application response
      * message was successfully secured. The secured response message may be
      * obtained by calling getResponseMessage on messageInfo.
      *
-     * <li> AuthStatus.SEND_CONTINUE to indicate that the application response 
-     * message (within messageInfo) was replaced with a security message 
-     * that should elicit a security-specific response (in the form of a 
+     * <li> AuthStatus.SEND_CONTINUE to indicate that the application response
+     * message (within messageInfo) was replaced with a security message
+     * that should elicit a security-specific response (in the form of a
      * request) from the peer.
      *
      * This status value serves to inform the calling runtime that
@@ -437,7 +437,7 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * at least one additional request/response exchange (after having
      * sent the response message returned in messageInfo).
      *
-     * When this status value is returned, the application response must 
+     * When this status value is returned, the application response must
      * be saved by the authentication module such that it can be recovered
      * when the module's validateRequest message is called to process
      * the elicited response.
@@ -450,158 +450,158 @@ public class SPNEGOServerAuthModule implements ServerAuthModule {
      * @exception AuthException When the message processing failed without
      *          establishing a failure response message (in messageInfo).
      */
-    public AuthStatus secureResponse(MessageInfo messageInfo, 
-	Subject serviceSubject) throws AuthException { 
-	return AuthStatus.SEND_SUCCESS;
+    public AuthStatus secureResponse(MessageInfo messageInfo,
+    Subject serviceSubject) throws AuthException {
+    return AuthStatus.SEND_SUCCESS;
     }
 
     /**
      * Remove method specific principals and credentials from the subject.
      *
      * @param messageInfo a contextual object that encapsulates the
-     *          client request and server response objects, and that may be 
-     *          used to save state across a sequence of calls made to the 
-     *          methods of this interface for the purpose of completing a 
+     *          client request and server response objects, and that may be
+     *          used to save state across a sequence of calls made to the
+     *          methods of this interface for the purpose of completing a
      *          secure message exchange.
      *
-     * @param subject the Subject instance from which the Principals and 
+     * @param subject the Subject instance from which the Principals and
      *          credentials are to be removed.
      *
-     * @exception AuthException If an error occurs during the Subject 
+     * @exception AuthException If an error occurs during the Subject
      *          processing.
      */
 
     public void cleanSubject(MessageInfo messageInfo, Subject subject)
-	throws AuthException {
+    throws AuthException {
     }
 
     AuthStatus sendFailureMessage(HttpServletResponse response,
-				  int status, String message){
-	try {
-	    response.setStatus(status);
-	    response.sendError(status,message);
-	} catch (Throwable t) {
-	    // status code has been set, and proper AuthStatus will be returned
-	    logger.log(Level.WARNING,"jmac.servlet_failed_sending_failure",t);
-	} finally {
-	    return AuthStatus.SEND_FAILURE;
-	}
+                  int status, String message){
+    try {
+        response.setStatus(status);
+        response.sendError(status,message);
+    } catch (Throwable t) {
+        // status code has been set, and proper AuthStatus will be returned
+        logger.log(Level.WARNING,"jmac.servlet_failed_sending_failure",t);
+    } finally {
+        return AuthStatus.SEND_FAILURE;
+    }
     }
 
     private boolean setCallerPrincipal(GSSName name,Subject clientSubject) {
-	
-	Principal caller = null;
 
-	if (name != null) {
+    Principal caller = null;
 
-	    // create Subject with principals from name
-	    Subject s = GSSUtil.createSubject(name,null);
+    if (name != null) {
 
-	    Set principals = s.getPrincipals();
-       
-	    if (principals.size() > 0) {
+        // create Subject with principals from name
+        Subject s = GSSUtil.createSubject(name,null);
 
-		clientSubject.getPrincipals().addAll(principals);
+        Set principals = s.getPrincipals();
 
-		// if more than 1 prin, caller selection is unpredictable
+        if (principals.size() > 0) {
 
-		caller = (Principal) principals.iterator().next();
-	    } else if (debug || logger.isLoggable(Level.FINE)){
-		logger.log(debugLevel,"jmac.no_gss_caller_principal");
-	    }
-	}
+        clientSubject.getPrincipals().addAll(principals);
 
-	CallerPrincipalCallback cPCB = 
-	    new CallerPrincipalCallback(clientSubject,caller);
+        // if more than 1 prin, caller selection is unpredictable
 
-	GroupPrincipalCallback gPCB = new GroupPrincipalCallback
-	    (clientSubject,(caller == null ? null : assignedGroups));
+        caller = (Principal) principals.iterator().next();
+        } else if (debug || logger.isLoggable(Level.FINE)){
+        logger.log(debugLevel,"jmac.no_gss_caller_principal");
+        }
+    }
 
-	try {
-	    handler.handle(new Callback[] { cPCB, gPCB } );
-	    if (debug || logger.isLoggable(Level.FINE)){
-		logger.log(debugLevel,"jmac.caller_principal",
-			   new Object[] { caller } );
-	    }
-	    return true;
-	} catch (Exception e) {
-	    // should not happen
-	    logger.log(Level.WARNING,"jmac.failed_to_set_caller",e);
-	} 
+    CallerPrincipalCallback cPCB =
+        new CallerPrincipalCallback(clientSubject,caller);
 
-	return false;
+    GroupPrincipalCallback gPCB = new GroupPrincipalCallback
+        (clientSubject,(caller == null ? null : assignedGroups));
+
+    try {
+        handler.handle(new Callback[] { cPCB, gPCB } );
+        if (debug || logger.isLoggable(Level.FINE)){
+        logger.log(debugLevel,"jmac.caller_principal",
+               new Object[] { caller } );
+        }
+        return true;
+    } catch (Exception e) {
+        // should not happen
+        logger.log(Level.WARNING,"jmac.failed_to_set_caller",e);
+    }
+
+    return false;
     }
 
     boolean isNTLMToken(byte[] bytes) {
 
-	String s = new String(bytes);
-	return s.startsWith(NTLM_INITIAL_TOKEN);
+    String s = new String(bytes);
+    return s.startsWith(NTLM_INITIAL_TOKEN);
     }
 
     void debugToken(String message, byte[] bytes) {
 
-	if (debug || logger.isLoggable(Level.FINE)) {
+    if (debug || logger.isLoggable(Level.FINE)) {
 
-	    StringBuffer sb = new StringBuffer();
-	    sb.append("\n");
-	    sb.append("Token " + 
-		      (Base64.isArrayByteBase64(bytes) ? "is" : "is Not") +
-		      " Base64 encoded" + "\n");
-	    sb.append("bytes: " );
-	    boolean first = true;
-	    for (byte b : bytes) {
-		int i = b;
-		if (first) {
-		    sb.append(i);
-		    first = false;
-		} else {
-		    sb.append(", " + i);
-		}
-	    }
+        StringBuffer sb = new StringBuffer();
+        sb.append("\n");
+        sb.append("Token " +
+              (Base64.isArrayByteBase64(bytes) ? "is" : "is Not") +
+              " Base64 encoded" + "\n");
+        sb.append("bytes: " );
+        boolean first = true;
+        for (byte b : bytes) {
+        int i = b;
+        if (first) {
+            sb.append(i);
+            first = false;
+        } else {
+            sb.append(", " + i);
+        }
+        }
 
-	    logger.log(debugLevel,message,sb);
-	}
+        logger.log(debugLevel,message,sb);
+    }
     }
 
     void debugRequest(HttpServletRequest request) {
 
-	if (debug || logger.isLoggable(Level.FINE)){
-	    StringBuffer sb = new StringBuffer();
-	    sb.append("\n");
-	    try {
-		sb.append("Request: " +request.getRequestURL() + "\n");
-		sb.append("UserPrincipal: " + request.getUserPrincipal() + "\n");
-		sb.append("AuthType: " + request.getAuthType()+ "\n");
-		sb.append("Headers:" + "\n");
-		Enumeration names = request.getHeaderNames();
-		while (names.hasMoreElements()) {
-		    String name = (String) names.nextElement();
-		    sb.append("\t" + name + "\t" + request.getHeader(name) + "\n");
-		}
-		
-		logger.log(debugLevel,"jmac.servlet_request",sb);
+    if (debug || logger.isLoggable(Level.FINE)){
+        StringBuffer sb = new StringBuffer();
+        sb.append("\n");
+        try {
+        sb.append("Request: " +request.getRequestURL() + "\n");
+        sb.append("UserPrincipal: " + request.getUserPrincipal() + "\n");
+        sb.append("AuthType: " + request.getAuthType()+ "\n");
+        sb.append("Headers:" + "\n");
+        Enumeration names = request.getHeaderNames();
+        while (names.hasMoreElements()) {
+            String name = (String) names.nextElement();
+            sb.append("\t" + name + "\t" + request.getHeader(name) + "\n");
+        }
 
-	    } catch(Throwable t) {
-		logger.log(Level.WARNING,"jmac.servlet_debug_request",t);
-	    }
-	}
+        logger.log(debugLevel,"jmac.servlet_request",sb);
+
+        } catch(Throwable t) {
+        logger.log(Level.WARNING,"jmac.servlet_debug_request",t);
+        }
+    }
     }
 
     private String[] getAssignedGroupNames() {
-	String groupList = (String) 
-	    options.get(ASSIGN_GROUPS_OPTIONS_KEY);
-	String[] groups = null;
-	if (groupList != null) {
-	    StringTokenizer tokenizer = 
-		new StringTokenizer(groupList," ,:,;");
-	    int count = tokenizer.countTokens();
-	    if (count > 0) {
-		groups = new String[count];
-		for (int i = 0; i < count; i++) {
-		    groups[i] = tokenizer.nextToken();
-		}
-	    }
-	}
-	return groups;
+    String groupList = (String)
+        options.get(ASSIGN_GROUPS_OPTIONS_KEY);
+    String[] groups = null;
+    if (groupList != null) {
+        StringTokenizer tokenizer =
+        new StringTokenizer(groupList," ,:,;");
+        int count = tokenizer.countTokens();
+        if (count > 0) {
+        groups = new String[count];
+        for (int i = 0; i < count; i++) {
+            groups[i] = tokenizer.nextToken();
+        }
+        }
+    }
+    return groups;
     }
 }

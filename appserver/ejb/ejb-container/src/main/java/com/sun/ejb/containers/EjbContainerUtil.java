@@ -52,9 +52,9 @@ import org.glassfish.flashlight.provider.ProbeProviderFactory;
 @Contract
 public interface EjbContainerUtil {
 
-	// FIXME temporary constant for EJB Container's name - should get
-	// removed once Deployment teams changes to add ContainerType are complete
-	String EJB_CONTAINER_NAME = "ejb";
+    // FIXME temporary constant for EJB Container's name - should get
+    // removed once Deployment teams changes to add ContainerType are complete
+    String EJB_CONTAINER_NAME = "ejb";
 
     public static final String DEFAULT_THREAD_POOL_NAME = "__ejb-thread-pool";
 
@@ -65,7 +65,7 @@ public interface EjbContainerUtil {
     public String TIMER_SERVICE_UPGRADED = "ejb-timer-service-upgraded";
 
     public GlassFishORBHelper getORBHelper();
-    
+
     public ServiceLocator getServices();
 
     public  EjbTimerService getEjbTimerService(String target);
@@ -113,11 +113,11 @@ public interface EjbContainerUtil {
     public ServerEnvironmentImpl getServerEnvironment();
 
     public Agent getCallFlowAgent();
-    
+
     public Vector getBeans(Transaction jtx);
-    
+
     public Object getActiveTxCache(Transaction jtx);
-    
+
     public void setActiveTxCache(Transaction jtx, Object cache);
 
     public void addWork(Runnable task);
@@ -131,7 +131,7 @@ public interface EjbContainerUtil {
     public ProbeProviderFactory getProbeProviderFactory();
 
     public boolean isDas();
-    
+
     public ThreadPoolExecutor getThreadPoolExecutor(String poolName);
 
     public JavaEEIOUtils getJavaEEIOUtils();

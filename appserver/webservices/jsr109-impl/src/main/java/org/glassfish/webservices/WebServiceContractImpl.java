@@ -61,26 +61,26 @@ public class WebServiceContractImpl implements WebServicesContract{
     private Provider<Config> configProvider;
 
     @Inject @Optional
-	private Provider<ApplicationRegistry> applicationRegistryProvider;
+    private Provider<ApplicationRegistry> applicationRegistryProvider;
 
     @Inject @Optional
-	private IterableProvider<Adapter> adapters;
+    private IterableProvider<Adapter> adapters;
 
     @Inject @Optional
-	private Provider<InjectionManager> injectionManagerProvider;
-    
+    private Provider<InjectionManager> injectionManagerProvider;
+
     private  static WebServiceContractImpl wscImpl;
 
     private static final Logger logger = LogUtils.getLogger();
 
     public ComponentEnvManager getComponentEnvManager() {
-        return compEnvManager;  
+        return compEnvManager;
     }
 
     public Config getConfig() {
         return configProvider.get();
     }
-  
+
     public InvocationManager getInvocationManager() {
             return invManager;
     }
@@ -104,19 +104,19 @@ public class WebServiceContractImpl implements WebServicesContract{
         return logger;
     }
 
-	public ApplicationRegistry getApplicationRegistry() {
-		return applicationRegistryProvider.get();
-	}
+    public ApplicationRegistry getApplicationRegistry() {
+        return applicationRegistryProvider.get();
+    }
 
-	public ServerEnvironment getServerEnvironment() {
-		return env;
-	}
+    public ServerEnvironment getServerEnvironment() {
+        return env;
+    }
 
-	public Iterable<Adapter> getAdapters() {
-		return (adapters != null) ? adapters : Collections.EMPTY_LIST;
-	}
+    public Iterable<Adapter> getAdapters() {
+        return (adapters != null) ? adapters : Collections.EMPTY_LIST;
+    }
 
-	public InjectionManager getInjectionManager() {
-		return injectionManagerProvider.get();
-	}
+    public InjectionManager getInjectionManager() {
+        return injectionManagerProvider.get();
+    }
 }

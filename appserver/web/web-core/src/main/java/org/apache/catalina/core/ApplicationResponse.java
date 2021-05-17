@@ -179,7 +179,7 @@ public class ApplicationResponse extends ServletResponseWrapper {
         return (this.included);
 
     }
-    
+
     /**
     public boolean isIncluded() {
 

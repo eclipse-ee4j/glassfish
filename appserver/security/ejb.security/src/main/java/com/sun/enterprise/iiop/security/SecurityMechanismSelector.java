@@ -86,9 +86,9 @@ import jakarta.inject.Inject;
  * message based on target configuration and client policies. Note: This class can be called concurrently by multiple
  * client threads. However, none of its methods need to be synchronized because the methods either do not modify state
  * or are idempotent.
- * 
+ *
  * @author Nithya Subramanian
- * 
+ *
  */
 
 @Service
@@ -266,7 +266,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     /*
      * public String[] getServerTrustedHosts() { return serverTrustedHosts; }
-     * 
+     *
      * public void setServerTrustedHosts(String[] val) { this.serverTrustedHosts = val; }
      */
 
@@ -424,7 +424,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
     /**
      * Create the security context to be used by the CSIV2 layer to marshal in the service context of the IIOP message from
      * an appclient or standalone client.
-     * 
+     *
      * @return the security context.
      */
     public SecurityContext getSecurityContextForAppClient(ComponentInvocation ci, boolean sslUsed, boolean clientAuthOccurred, CompoundSecMech mechanism)
@@ -436,7 +436,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
     /**
      * Create the security context to be used by the CSIV2 layer to marshal in the service context of the IIOP message from
      * an web component or EJB invoking another EJB.
-     * 
+     *
      * @return the security context.
      */
     public SecurityContext getSecurityContextForWebOrEJB(ComponentInvocation ci, boolean sslUsed, boolean clientAuthOccurred, CompoundSecMech mechanism)
@@ -486,7 +486,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     /**
      * Get the security context to send username and password in the service context.
-     * 
+     *
      * @param whether username/password will be sent over plain IIOP or over IIOP/SSL.
      * @return the security context.
      * @exception SecurityMechanismException if there was an error.
@@ -514,7 +514,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     /**
      * Get the security context to propagate principal/distinguished name in the service context.
-     * 
+     *
      * @param clientAuth whether SSL client authentication has happened.
      * @return the security context.
      * @exception SecurityMechanismException if there was an error.
@@ -577,7 +577,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     /**
      * Return whether the server is trusted or not based on configuration information.
-     * 
+     *
      * @return true if the server is trusted.
      */
     /*
@@ -588,14 +588,14 @@ public final class SecurityMechanismSelector implements PostConstruct {
      * (); InetAddress adr = skt.getInetAddress (); // System.out.println (" Calling isServerTrusted"); //
      * System.out.println (" addres "+ adr.toString ()); return isDomainInTrustedList (adr, serverTrustedHosts); } return
      * false;
-     * 
+     *
      * }
      */
 
     /**
      * Checks if a given domain is trusted. e.g. domain = 123.203.1.1 is an IP address trusted list = *.com, *.eng should
      * say that the given domain is trusted.
-     * 
+     *
      * @param the InetAddress of the domain to be checked for
      * @param the array of trusted domains
      * @return true - if the given domain is trusted
@@ -607,7 +607,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
      * _logger.log(Level.SEVERE,"iiop.domain_lookup_failed",inetAddress.getHostAddress ()); return false; } if
      * (_logger.isLoggable(Level.FINE)) { _logger.log(Level.FINE, " Verifying if domain address ="+ inetAddress.toString ()
      * + " is in the Trusted list "); _logger.log(Level.FINE, " the domain name is = "+ domain); }
-     * 
+     *
      * String[] domainTok = TypeUtil.stringToArray (domain, dot); // now lets go through the list of trusted domains // one
      * at a time for (int i=0; i< trusted.length; i++){ // String to compare with String[] toksList = TypeUtil.stringToArray
      * (trusted[i], dot); // cannot compare *.eng to *.eng.sun if (toksList.length != domainTok.length){ isTrusted = false;
@@ -621,7 +621,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
     /**
      * Get the username and password either from the JAAS subject or from thread local storage. For appclients if login
      * has'nt happened this method would trigger login and popup a user interface to gather authentication information.
-     * 
+     *
      * @return the security context.
      */
     private SecurityContext getUsernameAndPassword(ComponentInvocation ci, CompoundSecMech mechanism) throws SecurityMechanismException {
@@ -710,7 +710,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
     /**
      * Get the principal/distinguished name from thread local storage.
-     * 
+     *
      * @return the security context.
      */
     private SecurityContext getIdentity() throws SecurityMechanismException {
@@ -939,7 +939,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
 
             /*
              * Check for conformance for using SSL usage.
-             * 
+             *
              * a. if SSL was used, then either the target must require or support SSL. In the latter case, SSL is used because of
              * client policy.
              *
@@ -1024,7 +1024,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
          * |------------|---------------------|---------------------|------------|
          *
          * Abbreviations: ETIC - EstablishTrusInClient
-         * 
+         *
          *************************************************************************/
 
         if ((ctx != null) && (ctx.authcls != null) && (ctx.subject != null))
@@ -1087,7 +1087,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
              * There is no need further checking here since SecServerRequestInterceptor code filters out the following: a.
              * IdentityAssertions of types other than those required by level 0 (for e.g. IdentityExtension) b. unsupported identity
              * types.
-             * 
+             *
              * The checks are done in SecServerRequestInterceptor rather than here to minimize code changes.
              */
             return true;
@@ -1103,7 +1103,7 @@ public final class SecurityMechanismSelector implements PostConstruct {
      * Each EjbIORConfigurationDescriptor corresponds to a single CompoundSecMechanism of the CSIv2 spec. A client is
      * considered to be conformant if a CompoundSecMechanism consistent with the client's actions is found i.e.
      * transport_mech, as_context_mech and sas_context_mech must all be consistent.
-     * 
+     *
      */
     private boolean evaluate_client_conformance(SecurityContext ctx, byte[] object_id, boolean ssl_used, X509Certificate[] certchain) {
         // Obtain the IOR configuration descriptors for the Ejb using

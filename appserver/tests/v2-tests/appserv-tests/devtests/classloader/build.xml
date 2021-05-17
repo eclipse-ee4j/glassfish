@@ -39,8 +39,8 @@
 
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the classloader devtests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the classloader devtests)
+    </echo>
     </target>
 </project>

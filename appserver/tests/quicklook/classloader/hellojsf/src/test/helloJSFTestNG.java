@@ -39,21 +39,21 @@ public class helloJSFTestNG {
 
     private static final String EXPECTED_RESPONSE =
         "SUCCESSFUL";
-    
+
     private String strContextRoot="hellojsf";
 
     static String result = "";
     String m_host="";
-    String m_port="";    
+    String m_port="";
     //HttpClient httpclient = new HttpClient();
-    
+
     //@Parameters({"host","port"})
     @BeforeMethod
     public void beforeTest(){
         m_host=System.getProperty("http.host");
         m_port=System.getProperty("http.port");
     }
-            
+
     /*
      *If tw
      o asserts are mentioned in one method, then last assert is taken in
@@ -65,7 +65,7 @@ public class helloJSFTestNG {
     @Test(groups ={ "pulse"} ) // test method
     //public void webtest(String host, String port, String contextroot) throws Exception{
     public void jsfAppDeployedFirstPagetest() throws Exception{
-        
+
         try{
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/index.jsp";
         URL url = new URL(testurl);
@@ -80,31 +80,31 @@ public class helloJSFTestNG {
 
         String line = null;
         boolean result=false;
-        String testLine = null;        
+        String testLine = null;
         while ((line = input.readLine()) != null) {
             //System.out.println("=================================");
             //System.out.println(line);
             //System.out.println("=================================");
             if(line.indexOf(EXPECTED_RESPONSE)!=-1){
-                result=true;            
+                result=true;
                 testLine = line;
             }
-            
-        }     
-                
+
+        }
+
         Assert.assertEquals(result, true,"Unexpected HTML");
-               
-        
+
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
 
     }
-    
-    
+
+
     public static void echo(String msg) {
         System.out.println(msg);
     }
-    
+
 }

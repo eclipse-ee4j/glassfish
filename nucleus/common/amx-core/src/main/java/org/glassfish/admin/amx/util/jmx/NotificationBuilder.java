@@ -114,15 +114,15 @@ public class NotificationBuilder
     Build a new Notification with one key/value for the Map.
     public Notification
     buildNew(
-    final String	    key,
-    final Serializable	value )
+    final String        key,
+    final Serializable    value )
     {
     if ( value instanceof Map )
     {
     throw new IllegalArgumentException("use buildNewWithMap" );
     }
 
-    final Notification	notif = buildNew();
+    final Notification    notif = buildNew();
 
     if ( key != null )
     {
@@ -140,7 +140,7 @@ public class NotificationBuilder
     final Serializable  value,
     final String        message )
     {
-    final Notification	notif = buildNew( message );
+    final Notification    notif = buildNew( message );
 
     if ( key != null )
     {

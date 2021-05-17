@@ -29,39 +29,39 @@ public class ApppermsTestNG {
 
     private static final String TEST_NAME =
         "app-perms";
-   
+
     private String strContextRoot="/appperms";
 
     static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
 
     @Test(groups = { "init" })
     public void singletonStartup() throws Exception{
-        boolean result=false;       
+        boolean result=false;
 
         try{
 
           result = test("Startup");
-	  Assert.assertEquals(result, true,"Unexpected Results");
+      Assert.assertEquals(result, true,"Unexpected Results");
 
         }catch(Exception e){
 
-	  e.printStackTrace();
-	  throw new Exception(e);
+      e.printStackTrace();
+      throw new Exception(e);
 
         }
     }
 
     @Test(dependsOnGroups = { "init.*" })
     public void singletonInjectLookup() throws Exception{
-        boolean result=false;        
+        boolean result=false;
 
         try{
 
-            result = test("InjectLookup");               
-  	    Assert.assertEquals(result, true,"Unexpected Results");
+            result = test("InjectLookup");
+          Assert.assertEquals(result, true,"Unexpected Results");
 
         }catch(Exception e){
             e.printStackTrace();
@@ -74,7 +74,7 @@ public class ApppermsTestNG {
         String EXPECTED_RESPONSE = "Test:Pass";
         String TEST_CASE = TEST_NAME + ":" + c;
         boolean result=false;
-        String url = "http://" + host + ":" + port + strContextRoot + 
+        String url = "http://" + host + ":" + port + strContextRoot +
                      "/test?tc=" + c;
         //System.out.println("url="+url);
 
@@ -83,19 +83,19 @@ public class ApppermsTestNG {
         int code = conn.getResponseCode();
         if (code != 200) {
             System.err.println("Unexpected return code: " + code);
-	} else {
+    } else {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
-	    String line = null;
-	    while ((line = input.readLine()) != null) {
-	      if (line.contains(EXPECTED_RESPONSE)) {
+        String line = null;
+        while ((line = input.readLine()) != null) {
+          if (line.contains(EXPECTED_RESPONSE)) {
                 // System.out.println("line="+line);
                 result = true;
-		break;
-	      }
-	    }
-        }    
-	return result;
+        break;
+          }
+        }
+        }
+    return result;
     }
 
     public static void echo(String msg) {

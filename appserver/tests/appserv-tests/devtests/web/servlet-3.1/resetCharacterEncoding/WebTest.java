@@ -24,11 +24,11 @@ import com.sun.ejte.ccl.reporter.*;
  * Test HttpServletResponse#reset and #setCharacterEncoding.
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "servlet-3.1-reset-character-encoding";
     private static final String EXPECTED_CONTENT_TYPE = "Content-Type: text/plain;charset=Big5";
     private static final String EXPECTED_RESPONSE="Done";
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -55,7 +55,7 @@ public class WebTest {
 
     private static boolean goGet(String host, int port, String contextPath,
             String expectedContentType) throws Exception {
-        
+
         boolean result = false;
         boolean hasExpectedContentType = (expectedContentType == null);
         boolean hasDone = false;
@@ -88,7 +88,7 @@ public class WebTest {
                 }
                 lineNum++;
             }
-            
+
             result = hasExpectedContentType && hasDone;
 
          } finally {

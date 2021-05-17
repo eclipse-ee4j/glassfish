@@ -60,7 +60,7 @@ public class Connector
     private static final ResourceBundle rb = log.getResourceBundle();
 
     // ---------------------------------------------- Adapter Configuration --//
-    
+
     // START SJSAS 6363251
     /**
      * Coyote Adapter class name.
@@ -70,7 +70,7 @@ public class Connector
         "org.apache.catalina.connector.CoyoteAdapter";
     // END SJSAS 6363251
 
-    
+
     // ----------------------------------------------------- Instance Variables
 
     /**
@@ -93,7 +93,7 @@ public class Connector
      * addresses on the server will be bound.
      */
     private String address = null;
-                                                                           
+
     /**
      * Do we allow TRACE ?
      */
@@ -176,7 +176,7 @@ public class Connector
      * Timeout value on the incoming connection during request processing.
      * Note : a value of 0 means no timeout.
      */
-    private int connectionUploadTimeout = 
+    private int connectionUploadTimeout =
         Constants.DEFAULT_CONNECTION_UPLOAD_TIMEOUT;
 
     /**
@@ -229,17 +229,17 @@ public class Connector
      * through this connector.
      */
     private boolean secure = false;
-    
-    // START SJSAS 6439313     
+
+    // START SJSAS 6439313
     /**
      * The blocking connection flag that will be set on all requests received
      * through this connector.
      */
     private boolean blocking = false;
-    // END SJSAS 6439313     
-    
-    /** For jk, do tomcat authentication if true, trust server if false 
-     */ 
+    // END SJSAS 6439313
+
+    /** For jk, do tomcat authentication if true, trust server if false
+     */
     private boolean tomcatAuthentication = true;
 
 
@@ -258,7 +258,7 @@ public class Connector
     private int maxKeepAliveRequests = 100;
 
     /**
-     * Maximum size of a POST which will be automatically parsed by the 
+     * Maximum size of a POST which will be automatically parsed by the
      * container. 2MB by default.
      */
     private int maxPostSize = 2 * 1024 * 1024;
@@ -299,7 +299,7 @@ public class Connector
      * Defaults to the Coyote HTTP/1.1 protocolHandler.
      */
     private String protocolHandlerClassName =
-    	"com.sun.enterprise.web.connector.grizzly.CoyoteConnectorLauncher";
+        "com.sun.enterprise.web.connector.grizzly.CoyoteConnectorLauncher";
 
     /**
      * Coyote protocol handler.
@@ -350,7 +350,7 @@ public class Connector
     private String selectorThreadImpl = null;
 
     private String jvmRoute;
-    
+
     // ------------------------------------------------------------- Properties
 
     /**
@@ -367,7 +367,7 @@ public class Connector
         properties.put(name, value);
     }
 
-    /** 
+    /**
      * remove a configured property.
      */
     public void removeProperty(String name) {
@@ -518,7 +518,7 @@ public class Connector
     public boolean getAllowTrace() {
         return allowTrace;
     }
-                                                                           
+
     /**
      * Set the allowTrace flag, to disable or enable the TRACE HTTP method.
      *
@@ -640,14 +640,14 @@ public class Connector
     public Mapper getMapper() {
         return mapper;
     }
-     
+
     /**
      * Set the {@link Mapper}.
      * @param mapper
      */
     public void setMapper(Mapper mapper){
         this.mapper = mapper;
-    }     
+    }
 
     /**
      * Return the minimum number of processors to start at initialization.
@@ -695,7 +695,7 @@ public class Connector
      * Set the maximum size of a POST which will be automatically
      * parsed by the container.
      *
-     * @param maxPostSize The new maximum size in bytes of a POST which will 
+     * @param maxPostSize The new maximum size in bytes of a POST which will
      * be automatically parsed by the container
      */
     public void setMaxPostSize(int maxPostSize) {
@@ -749,7 +749,7 @@ public class Connector
     public void setName(String name){
         this.name = name;
     }
-    
+
     /**
      * Gets the name of this Connector.
      */
@@ -760,7 +760,7 @@ public class Connector
 
     /**
      * Sets the instance name for this Connector.
-     * 
+     *
      * @param instanceName the instance name
      */
     public void setInstanceName(String instanceName) {
@@ -911,7 +911,7 @@ public class Connector
     public int getMaxHttpHeaderSize() {
       return maxHttpHeaderSize;
     }
-  
+
     /**
      * Set the maximum HTTP header size.
      */
@@ -937,7 +937,7 @@ public class Connector
     }
 
     /**
-     * Return the maximum number of Keep-Alive requests to honor 
+     * Return the maximum number of Keep-Alive requests to honor
      * per connection.
      */
     public int getMaxKeepAliveRequests() {
@@ -994,7 +994,7 @@ public class Connector
         setProperty("secure", String.valueOf(secure));
     }
 
-    // START SJSAS 6439313     
+    // START SJSAS 6439313
     /**
      * Return the blocking connection flag that will be assigned to requests
      * received through this connector.  Default value is "false".
@@ -1013,8 +1013,8 @@ public class Connector
         this.blocking = blocking;
         setProperty("blocking", String.valueOf(blocking));
     }
-    // END SJSAS 6439313     
-    
+    // END SJSAS 6439313
+
     public boolean getTomcatAuthentication() {
         return tomcatAuthentication;
     }
@@ -1023,7 +1023,7 @@ public class Connector
         this.tomcatAuthentication = tomcatAuthentication;
         setProperty("tomcatAuthentication", String.valueOf(tomcatAuthentication));
     }
-    
+
     /**
      * Return the TCP no delay flag value.
      */
@@ -1057,16 +1057,16 @@ public class Connector
      */
     @Override
     public void setURIEncoding(String uriEncoding) {
-    	if (Charset.isSupported(uriEncoding)) {
+        if (Charset.isSupported(uriEncoding)) {
         this.uriEncoding = uriEncoding;
         setProperty("uRIEncoding", uriEncoding);
-    	} else {
-			if (log.isLoggable(Level.WARNING)) {
-				log.log(Level.WARNING, uriEncoding
-						+ "is not supported .Setting default URLEncoding as "
-						+ this.uriEncoding);
-			}
-		}
+        } else {
+            if (log.isLoggable(Level.WARNING)) {
+                log.log(Level.WARNING, uriEncoding
+                        + "is not supported .Setting default URLEncoding as "
+                        + this.uriEncoding);
+            }
+        }
     }
 
     /**
@@ -1140,7 +1140,7 @@ public class Connector
 
     /**
      * Gets the ProxyHandler instance associated with this CoyoteConnector.
-     * 
+     *
      * @return ProxyHandler instance associated with this CoyoteConnector,
      * or null
      */
@@ -1151,7 +1151,7 @@ public class Connector
 
     /**
      * Sets the ProxyHandler implementation for this CoyoteConnector to use.
-     * 
+     *
      * @param proxyHandler ProxyHandler instance to use
      */
     @Override
@@ -1293,12 +1293,12 @@ public class Connector
         }
 
         this.initialized = true;
-                
-        // If the Mapper is null, do not fail and creates one by default. 
+
+        // If the Mapper is null, do not fail and creates one by default.
         if (mapper == null){
             mapper = new Mapper();
         }
-        
+
         if( oname == null && (container instanceof StandardEngine)) {
             try {
                 // we are loaded directly, via API - and no name was given to us
@@ -1312,7 +1312,7 @@ public class Connector
                 log.log(Level.FINE, "Creating name for connector " + oname);
             }
         }
-        
+
 
         //START SJSAS 6363251
         // Initializa handler
@@ -1323,14 +1323,14 @@ public class Connector
         if ( handler == null){
             try {
                 Class<?> clazz = Class.forName(defaultClassName);
-                Constructor constructor = 
+                Constructor constructor =
                         clazz.getConstructor(new Class<?>[]{Connector.class});
                 handler =
                         (HttpHandler)constructor.newInstance(new Object[]{this});
             } catch (Exception e) {
                 throw new LifecycleException
                     (rb.getString(LogFacade.FAILED_INSTANCIATE_HTTP_HANDLER_EXCEPTION), e);
-            } 
+            }
         }
         //END SJSAS 6363251
 
@@ -1353,12 +1353,12 @@ public class Connector
                     }
                 // START SJSAS 6439313
                 } else {
-                    Constructor constructor = 
+                    Constructor constructor =
                             clazz.getConstructor(new Class<?>[]{Boolean.TYPE,
                                                              Boolean.TYPE,
                                                              String.class});
 
-                    protocolHandler = (ProtocolHandler) 
+                    protocolHandler = (ProtocolHandler)
                         constructor.newInstance(secure, blocking,
                                                 selectorThreadImpl);
                 // END SJSAS 6439313
@@ -1423,7 +1423,7 @@ public class Connector
         while( keys.hasNext() ) {
             String name = keys.next();
             String value = properties.get(name);
-	    String trnName = translateAttributeName(name);
+        String trnName = translateAttributeName(name);
             IntrospectionUtils.setProperty(protocolHandler, trnName, value);
         }
 
@@ -1442,24 +1442,24 @@ public class Connector
      * internal protocol names.
      */
     private String translateAttributeName(String name) {
-	if ("clientAuth".equals(name)) {
-	    return "clientauth";
-	} else if ("keystoreFile".equals(name)) {
-	    return "keystore";
-	} else if ("randomFile".equals(name)) {
-	    return "randomfile";
-	} else if ("rootFile".equals(name)) {
-	    return "rootfile";
-	} else if ("keystorePass".equals(name)) {
-	    return "keypass";
-	} else if ("keystoreType".equals(name)) {
-	    return "keytype";
-	} else if ("sslProtocol".equals(name)) {
-	    return "protocol";
-	} else if ("sslProtocols".equals(name)) {
-	    return "protocols";
-	}
-	return name;
+    if ("clientAuth".equals(name)) {
+        return "clientauth";
+    } else if ("keystoreFile".equals(name)) {
+        return "keystore";
+    } else if ("randomFile".equals(name)) {
+        return "randomfile";
+    } else if ("rootFile".equals(name)) {
+        return "rootfile";
+    } else if ("keystorePass".equals(name)) {
+        return "keypass";
+    } else if ("keystoreType".equals(name)) {
+        return "keytype";
+    } else if ("sslProtocol".equals(name)) {
+        return "protocol";
+    } else if ("sslProtocols".equals(name)) {
+        return "protocols";
+    }
+    return name;
     }
 
     /**
@@ -1528,7 +1528,7 @@ public class Connector
         String prop = getProperty("clientauth");
         if (prop != null) {
             ret = Boolean.valueOf(prop).booleanValue();
-        } else {	
+        } else {
             ServerSocketFactory factory = this.getFactory();
             if (factory instanceof CoyoteServerSocketFactory) {
                 ret = ((CoyoteServerSocketFactory)factory).getClientAuth();
@@ -1752,21 +1752,21 @@ public class Connector
             ((CoyoteServerSocketFactory)factory).setProtocols(sslProtocols);
         }
     }
-    
+
     // START OF SJSAS 8.1 PE 6191830
     /**
      * Get the underlying WebContainer certificate for the request
      */
     @Override
     public X509Certificate[] getCertificates(org.apache.catalina.Request request) {
-        
+
         Request cRequest = null;
         if (request instanceof Request) {
             cRequest=(Request) request;
         } else {
             return null;
         }
-        
+
         X509Certificate certs[] = (X509Certificate[])
         cRequest.getAttribute(Globals.CERTIFICATES_ATTR);
         if ((certs == null) || (certs.length < 1)) {
@@ -1774,7 +1774,7 @@ public class Connector
             cRequest.getAttribute(Globals.SSL_CERTIFICATE_ATTR);
         }
         return certs;
-    }    
+    }
     // END OF SJSAS 8.1 PE 6191830
 
 
@@ -1836,15 +1836,15 @@ public class Connector
     public void setHandler(HttpHandler handler){
         this.handler = handler;
     }
-    
+
     /**
      * Get the <code>Adapter</code> used by this connector.
-     */    
+     */
     @Override
     public HttpHandler getHandler(){
         return handler;
     }
- 
+
     /**
      * Set the <code>ProtocolHandler</code> used by this connector.
      */
@@ -1854,7 +1854,7 @@ public class Connector
     // END SJSAS 6363251
 
     /**
-     * Get the underlying <code>SelectorThread</code> implementation, null if 
+     * Get the underlying <code>SelectorThread</code> implementation, null if
      * the default is used.
      */
     public String getSelectorThreadImpl() {
@@ -1862,9 +1862,9 @@ public class Connector
     }
 
     /**
-     * Set the underlying <code>SelectorThread</code> implementation  
-     */   
+     * Set the underlying <code>SelectorThread</code> implementation
+     */
     public void setSelectorThreadImpl(String selectorThreadImpl) {
         this.selectorThreadImpl = selectorThreadImpl;
-    } 
+    }
 }

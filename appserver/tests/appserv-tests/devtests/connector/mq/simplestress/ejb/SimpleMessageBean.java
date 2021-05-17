@@ -42,11 +42,11 @@ public class SimpleMessageBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In "
             + "SimpleMessageBean.setMessageDrivenContext()");
-	this.mdc = mdc;
+    this.mdc = mdc;
     }
 
     public void ejbCreate() {
-	System.out.println("In SimpleMessageBean.ejbCreate()");
+    System.out.println("In SimpleMessageBean.ejbCreate()");
         try {
             jndiContext = new InitialContext();
             connectionFactory = (ConnectionFactory)
@@ -67,18 +67,18 @@ public class SimpleMessageBean implements MessageDrivenBean,
                 msg = (TextMessage) inMessage;
                 System.out.println("MESSAGE BEAN: Message received: "
                     + msg.getText());
-		connection =
-	            connectionFactory.createConnection();
-		session =
-	            connection.createSession(false,
-		    Session.AUTO_ACKNOWLEDGE);
-		MessageProducer msgProducer= session.createProducer(queue);
-		TextMessage message = session.createTextMessage();
+        connection =
+                connectionFactory.createConnection();
+        session =
+                connection.createSession(false,
+            Session.AUTO_ACKNOWLEDGE);
+        MessageProducer msgProducer= session.createProducer(queue);
+        TextMessage message = session.createTextMessage();
 
-		message.setText("Reply for : " + msg.getText());
-		System.out.println("Sending message: " +
-		message.getText());
-		msgProducer.send(message);
+        message.setText("Reply for : " + msg.getText());
+        System.out.println("Sending message: " +
+        message.getText());
+        msgProducer.send(message);
             } else {
                 System.out.println("Message of wrong type: "
                     + inMessage.getClass().getName());

@@ -29,5 +29,5 @@ public interface Sful
 
     // defined on both remote business interfaces
     public void sameMethod();
-    
+
 }

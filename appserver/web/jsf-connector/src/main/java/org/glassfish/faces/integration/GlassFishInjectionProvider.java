@@ -77,7 +77,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
         invokeMgr = defaultServices.getService(InvocationManager.class);
         injectionManager = defaultServices.getService(InjectionManager.class);
         jcdiService = defaultServices.getService(JCDIService.class);
-        
+
     }
 
     @Override
@@ -88,7 +88,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
         Types types = dc.getTransientAppMetaData(Types.class.getName(), Types.class);
         Collection<Type> allTypes = types.getAllTypes();
         Collection<AnnotationModel> annotations = null;
-        Map<String, List<ScannedAnnotation>> classesByAnnotation = 
+        Map<String, List<ScannedAnnotation>> classesByAnnotation =
                 new HashMap<String, List<ScannedAnnotation>>();
         List<ScannedAnnotation> classesWithThisAnnotation = null;
         for (final Type cur : allTypes) {
@@ -142,13 +142,13 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
         }
         return classesByAnnotation;
     }
-    
+
     /**
      * <p>The implementation of this method must perform the following
      * steps:
      * <ul>
      * <li>Inject the supported resources per the Servlet 2.5
-     * specification into the provided object</li>    
+     * specification into the provided object</li>
      * </ul>
      * </p>
      *
@@ -162,7 +162,7 @@ public class GlassFishInjectionProvider extends DiscoverableInjectionProvider im
 
             if (jcdiService.isCurrentModuleJCDIEnabled()) {
                 jcdiService.injectManagedObject(managedBean, getBundle());
-  
+
             }
 
         } catch (InjectionException ie) {

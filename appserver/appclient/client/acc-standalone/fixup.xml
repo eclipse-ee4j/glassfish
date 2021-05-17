@@ -37,7 +37,7 @@
     <property name="aix.additions" value="../modules/aixporting-repackaged.jar"/>
     <property name="entitybean-container.additions" value="../modules/entitybean-container.jar"/>
     <property name="weld.classpath.additions" value="../modules/weld-osgi-bundle.jar"/>
-    
+
     <property name="classpath.additions" value=" ${resources-runtime.classpath.additions} ${mail-connector.classpath.additions} ${mail-runtime.classpath.additions} ${mq.classpath.additions} ${ds-jdbcra.classpath.additions} ${cp-jdbcra.classpath.additions} ${xa-jdbcra.classpath.additions} ${dm-jdbcra.classpath.additions} ${derby.jar.classpath.additions} ${jaxr-ra.classpath.additions} ${entitybean-container.additions} ${jdbc-runtime.classpath.additions} ${jdbc-config.classpath.additions} ${weld.classpath.additions}"/>
     <property name="classpath.conditional.additions" value="${aix.additions}"/>
     <target name="fixup.library">
@@ -60,8 +60,8 @@
                 The jakarta.mail JAR will reference activation.jar, because it is
                 built to work with Java SE 1.4 and later. Prior to Java SE 6
                 activation was separate from the Java SE libraries and so
-                mail must refer to it explicitly.  But GlassFish requires 
-                Java SE 11 and there will be no activation.jar. 
+                mail must refer to it explicitly.  But GlassFish requires
+                Java SE 11 and there will be no activation.jar.
                 So remove it so jar indexing (which would help
                 optimize Java Web Start) will not fail due to a missing JAR.
             -->

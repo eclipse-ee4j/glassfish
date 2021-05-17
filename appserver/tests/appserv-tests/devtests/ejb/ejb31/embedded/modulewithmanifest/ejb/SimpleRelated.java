@@ -27,34 +27,34 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 public class SimpleRelated {
-    
-    @Id 
+
+    @Id
     @GeneratedValue
     private int id;
     private String name;
 
     @OneToOne(fetch=LAZY)
     private SimpleEntity entity;
-    
+
     public SimpleRelated(String name) {
         setName(name);
     }
-    
+
     public SimpleRelated() {
     }
-    
+
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public SimpleEntity getEntity() {
         return entity;
     }
     public void setEntity(SimpleEntity entity) {
         this.entity = entity;
     }
-    
+
 }

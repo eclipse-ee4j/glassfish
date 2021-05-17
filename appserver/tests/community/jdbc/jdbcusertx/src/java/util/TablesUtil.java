@@ -57,7 +57,7 @@ public class TablesUtil {
             }
         }
     }
-        
+
     public static void deleteTables(DataSource ds1, PrintWriter out, String tableName) {
         Connection con = null;
         Statement stmt = null;

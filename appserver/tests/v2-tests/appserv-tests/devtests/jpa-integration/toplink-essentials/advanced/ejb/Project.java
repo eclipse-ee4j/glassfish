@@ -42,8 +42,8 @@ import static jakarta.persistence.FetchType.*;
 @DiscriminatorColumn(name="PROJ_TYPE")
 @DiscriminatorValue("P")
 @NamedQuery(
-	name="findProjectByName",
-	query="SELECT OBJECT(project) FROM Project project WHERE project.name = :name"
+    name="findProjectByName",
+    query="SELECT OBJECT(project) FROM Project project WHERE project.name = :name"
 )
 public class Project implements Serializable {
     public int pre_update_count = 0;
@@ -53,76 +53,76 @@ public class Project implements Serializable {
     public int pre_persist_count = 0;
     public int post_persist_count = 0;
     public int post_load_count = 0;
-    
-	private Integer id;
-	private int version;
-	private String name;
-	private String description;
-	private Employee teamLeader;
-	private Collection<Employee> teamMembers;
 
-	public Project () {
+    private Integer id;
+    private int version;
+    private String name;
+    private String description;
+    private Employee teamLeader;
+    private Collection<Employee> teamMembers;
+
+    public Project () {
         this.teamMembers = new Vector<Employee>();
-	}
+    }
 
-	@Id
+    @Id
     @GeneratedValue(strategy=SEQUENCE, generator="PROJECT_SEQUENCE_GENERATOR")
-	@SequenceGenerator(name="PROJECT_SEQUENCE_GENERATOR", sequenceName="PROJECT_SEQ", allocationSize=10)
-	@Column(name="PROJ_ID")
-	public Integer getId() {
-        return id; 
-    }
-    
-	public void setId(Integer id) {
-        this.id = id; 
+    @SequenceGenerator(name="PROJECT_SEQUENCE_GENERATOR", sequenceName="PROJECT_SEQ", allocationSize=10)
+    @Column(name="PROJ_ID")
+    public Integer getId() {
+        return id;
     }
 
-	@Version
-	@Column(name="VERSION")
-	public int getVersion() {
-        return version; 
-    }
-    
-	protected void setVersion(int version) { 
-        this.version = version; 
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-	@Column(name="PROJ_NAME")
-	public String getName() { 
-        return name; 
-    }
-    
-	public void setName(String name) { 
-        this.name = name; 
+    @Version
+    @Column(name="VERSION")
+    public int getVersion() {
+        return version;
     }
 
-	@Column(name="DESCRIP")
-	public String getDescription() { 
-        return description; 
-    }
-    
-	public void setDescription(String description) { 
-        this.description = description; 
+    protected void setVersion(int version) {
+        this.version = version;
     }
 
-	@OneToOne
-	@JoinColumn(name="LEADER_ID")
-	public Employee getTeamLeader() {
-        return teamLeader; 
-    }
-    
-	public void setTeamLeader(Employee teamLeader) { 
-        this.teamLeader = teamLeader; 
+    @Column(name="PROJ_NAME")
+    public String getName() {
+        return name;
     }
 
-	@ManyToMany(mappedBy="projects")
-	public Collection<Employee> getTeamMembers() { 
-        return teamMembers; 
+    public void setName(String name) {
+        this.name = name;
     }
-    
-	public void setTeamMembers(Collection<Employee> employees) {
-		this.teamMembers = employees;
-	}
+
+    @Column(name="DESCRIP")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @OneToOne
+    @JoinColumn(name="LEADER_ID")
+    public Employee getTeamLeader() {
+        return teamLeader;
+    }
+
+    public void setTeamLeader(Employee teamLeader) {
+        this.teamLeader = teamLeader;
+    }
+
+    @ManyToMany(mappedBy="projects")
+    public Collection<Employee> getTeamMembers() {
+        return teamMembers;
+    }
+
+    public void setTeamMembers(Collection<Employee> employees) {
+        this.teamMembers = employees;
+    }
 
     public void addTeamMember(Employee employee) {
         getTeamMembers().add(employee);
@@ -138,39 +138,39 @@ public class Project implements Serializable {
 
         return sbuff.toString();
     }
-    
+
     @PrePersist
-	public void prePersist() {
+    public void prePersist() {
         ++pre_persist_count;
-	}
+    }
 
-	@PostPersist
-	public void postPersist() {
+    @PostPersist
+    public void postPersist() {
         ++post_persist_count;
-	}
+    }
 
-	@PreRemove
-	public void preRemove() {
+    @PreRemove
+    public void preRemove() {
         ++pre_remove_count;
-	}
+    }
 
-	@PostRemove
-	public void postRemove() {
+    @PostRemove
+    public void postRemove() {
         ++post_remove_count;
-	}
+    }
 
-	@PreUpdate
-	public void preUpdate() {
+    @PreUpdate
+    public void preUpdate() {
         ++pre_update_count;
-	}
+    }
 
-	@PostUpdate
-	public void postUpdate() {
+    @PostUpdate
+    public void postUpdate() {
         ++post_update_count;
-	}
+    }
 
-	@PostLoad
-	public void postLoad() {
+    @PostLoad
+    public void postLoad() {
         ++post_load_count;
-	}
+    }
 }

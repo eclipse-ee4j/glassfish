@@ -23,10 +23,10 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for prefer-web-inf-classes in weblogic.xml.
  */
 public class WebTest {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -40,16 +40,16 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             goGet(host, port, "delegate-flag", contextRoot + "/ServletTest" );
-            
+
         } catch (Throwable t) {
             System.out.println(t.getMessage());
         }
         if (count != EXPECTED_COUNT){
             stat.addStatus("delegate", stat.FAIL);
-        }           
+        }
 
         stat.printSummary("web/delegateFlag---> expect " + EXPECTED_COUNT + " PASS");
     }
@@ -63,7 +63,7 @@ public class WebTest {
         System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
         os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;
@@ -75,18 +75,18 @@ public class WebTest {
                 System.out.println(lineNum + ":  " + line);
                 if (index != -1) {
                     String status = line.substring(index+2);
-                    
+
                     if (status.equalsIgnoreCase("PASS")){
                         stat.addStatus(result +": " + line.substring(0,index), stat.PASS);
                     } else {
-                        stat.addStatus(result +": " + line.substring(0,index), stat.FAIL);                       
+                        stat.addStatus(result +": " + line.substring(0,index), stat.FAIL);
                     }
                     count++;
-                } 
+                }
                 lineNum++;
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
          }
    }

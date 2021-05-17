@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for IT GLASSFISH-16768");
@@ -79,7 +79,7 @@ public class WebTest {
             sb.append("?").append(param);
         }
         URL url = new URL(sb.toString());
-     
+
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

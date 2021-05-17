@@ -66,7 +66,7 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
      * user-defined. round-robin is the default. For weighted-round-robin, the weights of the instance are considered while
      * load balancing. For user-defined, the policy is implemented by a shared library which is loaded by the load balancer
      * and the instance selected is delegated to the loaded module.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "round-robin")
@@ -102,7 +102,7 @@ public interface ClusterRef extends ConfigBeanProxy, Ref, Payload {
      * Gets the value of the healthChecker property.
      *
      * Each cluster would be configured for a ping based health check mechanism.
-     * 
+     *
      * @return possible object is {@link HealthChecker }
      */
     @Element

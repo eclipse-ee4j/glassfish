@@ -20,26 +20,26 @@ package com.sun.enterprise.web.connector.grizzly;
 /**
  * Dummy Connector Launcher that doesn't start any listener like Grizzly
  * or Coyote.
- * 
+ *
  * @author Jean-Francois Arcand
  */
-public class DummyConnectorLauncher extends CoyoteConnectorLauncher {    
+public class DummyConnectorLauncher extends CoyoteConnectorLauncher {
 
     // ------------------------------------------------------- Constructor --//
-    
-    public DummyConnectorLauncher(boolean secure, boolean blocking, 
-                               String selectorThreadImpl) {
-        super(secure,blocking,selectorThreadImpl);     
-    }   
 
-    /** 
+    public DummyConnectorLauncher(boolean secure, boolean blocking,
+                               String selectorThreadImpl) {
+        super(secure,blocking,selectorThreadImpl);
+    }
+
+    /**
      * Start the protocol
      */
     @Override
     public void init() throws Exception {
     }
-    
-    
+
+
     @Override
     public void start() throws Exception {
     }
@@ -48,8 +48,8 @@ public class DummyConnectorLauncher extends CoyoteConnectorLauncher {
     @Override
     public void destroy() throws Exception {
     }
-    
-    
-  
+
+
+
 }
 

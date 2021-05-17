@@ -40,7 +40,7 @@ import jakarta.xml.ws.WebServiceException;
 
 
 public final class InstanceResolverImpl<T> extends InstanceResolver<T> {
-   
+
     //delegate to this InstanceResolver
     private  InstanceResolver<T> resolver;
     private  T instance;
@@ -88,7 +88,7 @@ public final class InstanceResolverImpl<T> extends InstanceResolver<T> {
             throw new WebServiceException(e);
         }
     }
-    
+
     private ResourceInjector getResourceInjector(WSEndpoint endpoint) {
         ResourceInjector ri = endpoint.getContainer().getSPI(ResourceInjector.class);
         if (ri == null) {
@@ -96,12 +96,12 @@ public final class InstanceResolverImpl<T> extends InstanceResolver<T> {
         }
         return ri;
     }
-    
+
      /**
      * Wraps this {@link InstanceResolver} into an {@link Invoker}.
      */
-	public  //TODO - make this package private.  Cannot do it until this method is removed from base
-		//       class com.sun.xml.ws.api.server.InstanceResolver
+    public  //TODO - make this package private.  Cannot do it until this method is removed from base
+        //       class com.sun.xml.ws.api.server.InstanceResolver
      @Override
      @NotNull Invoker createInvoker() {
         return new Invoker() {

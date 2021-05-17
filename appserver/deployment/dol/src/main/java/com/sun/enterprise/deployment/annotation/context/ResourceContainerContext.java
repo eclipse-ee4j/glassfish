@@ -34,7 +34,7 @@ public interface ResourceContainerContext extends ServiceReferenceContainerConte
      * @param the ejb reference
      */
     public void addEjbReferenceDescriptor(EjbReference ejbReference);
-                                                                               
+
     /**
      * Looks up an ejb reference with the given name.
      * Return null if it is not found.
@@ -48,9 +48,9 @@ public interface ResourceContainerContext extends ServiceReferenceContainerConte
      *
      * @param the resource reference
      */
-    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor 
+    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor
                                                resReference);
-                                                                               
+
     /**
      * Looks up an resource reference with the given name.
      * Return null if it is not found.
@@ -66,8 +66,8 @@ public interface ResourceContainerContext extends ServiceReferenceContainerConte
      */
     public void addMessageDestinationReferenceDescriptor
         (MessageDestinationReferenceDescriptor msgDestRef);
-                                               
-                                                                               
+
+
     /**
      * Looks up a message-destination-ref with the given name.
      * Return null if it is not found.
@@ -102,8 +102,8 @@ public interface ResourceContainerContext extends ServiceReferenceContainerConte
      * @param the env-entry
      */
     public void addEnvEntryDescriptor(EnvironmentProperty envEntry);
-                                               
-                                                                               
+
+
     /**
      * Looks up an env-entry with the given name.
      * Return null if it is not found.
@@ -115,19 +115,19 @@ public interface ResourceContainerContext extends ServiceReferenceContainerConte
 
     public void addEntityManagerFactoryReferenceDescriptor
         (EntityManagerFactoryReferenceDescriptor emfRefDesc);
-                                                                               
+
     /**
      * Looks up an entity manager factory reference with the given name.
      * Return null if it is not found.
      *
      * @param the name of the emf reference
      */
-    public EntityManagerFactoryReferenceDescriptor 
+    public EntityManagerFactoryReferenceDescriptor
         getEntityManagerFactoryReference(String name);
 
     public void addEntityManagerReferenceDescriptor
         (EntityManagerReferenceDescriptor emRefDesc);
-                                                                               
+
     /**
      * Looks up an entity manager reference with the given name.
      * Return null if it is not found.

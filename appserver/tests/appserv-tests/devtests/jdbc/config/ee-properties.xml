@@ -18,26 +18,26 @@
 
 <property environment="env"/>
 
-<target name="init-common" 
-	depends="setdefaultmode, setToolProperty,setS1ASclassPath,setS1AS80classPath,setS1WSclassPath,
-			setJWSDPclassPath,setTimeStamp">
+<target name="init-common"
+    depends="setdefaultmode, setToolProperty,setS1ASclassPath,setS1AS80classPath,setS1WSclassPath,
+            setJWSDPclassPath,setTimeStamp">
 
     <exec executable="uname" outputproperty="hostname">
        <arg line="-n"/>
-    </exec>    
+    </exec>
     <exec executable="uname" outputproperty="osname">
        <arg line="-s"/>
     </exec>
-    
+
    <property name="pe" value="Platform Edition of S1AS"/>
 
 <!-- Appserv properties -->
    <property name="classpathsuffix.file" value="classpathsuffix.txt"/>
    <property name="apptype" value="application"/>
    <property name="appuser" value="j2ee"/>
-   <property name="apppwd" value="j2ee"/>   
+   <property name="apppwd" value="j2ee"/>
    <property name="authrealmname" value="file"/>
-   <property name="serverinstance.name" value="test-server"/>  
+   <property name="serverinstance.name" value="test-server"/>
    <echo  file="${admin.password.file}"  append="false"/>
    <property name="as.props"
      value="--user ${admin.user} --passwordfile ${admin.password.file} --host ${admin.host} --port ${admin.port} --echo=true --terse=true"/>
@@ -52,7 +52,7 @@
     <property name="jms.factory.type" value="jakarta.jms.QueueConnectionFactory"/>
     <property name="jms.resource.name" value="jms/SampleQueue"/>
     <property name="jms.resource.type" value="jakarta.jms.Queue"/>
-    <property name="jms.factory.type" 
+    <property name="jms.factory.type"
               value="jakarta.jms.QueueConnectionFactory" />
     <property name="queue.property.name" value="imqDestinationName" />
     <property name="queue.property.value" value="SampleQueue" />
@@ -81,7 +81,7 @@
     <property name="mqadmin.password" value="admin"/>
 
     <!-- pointbase properties -->
-    <!-- Changed to derby properties 
+    <!-- Changed to derby properties
     <property file="${env.APS_HOME}/devtests/jdbc/config/pointbase.properties"/>
     <property name="db.root" value="${env.S1AS_HOME}/pointbase"/>
     <property name="db.classpath" value="${db.root}/lib/pbtools.jar:${db.root}/lib/pbclient.jar:${db.root}/lib/pbembedded.jar"/>-->
@@ -91,7 +91,7 @@
 
 <!-- Test Harness properties -->
     <property name="glassfish-acc.xml" value="${env.S1AS_HOME}/domains/domain1/config/glassfish-acc.xml"/>
-    <property name="build.base.dir" 
+    <property name="build.base.dir"
         value="${env.APS_HOME}/build/${execution.mode}/${os.arch}_${hostname}_${osname}/${module}"/>
     <property name="build.classes.dir" value="${build.base.dir}/classes"/>
     <property name="assemble.dir" value="${build.base.dir}/archive"/>
@@ -117,14 +117,14 @@
     <property name="component.name" value="${appname}App"/>
 
     <property name="test.base" value="pe"/>
-    <property name="base.report.dir" 
-	value="${env.APS_HOME}/reports/${test.base}-${execution.mode}"/>
+    <property name="base.report.dir"
+    value="${env.APS_HOME}/reports/${test.base}-${execution.mode}"/>
 <!--
-    <property name="results.golden.list.file" 
-	value="${env.APS_HOME}/build-config/results_baseline.properties"/>
+    <property name="results.golden.list.file"
+    value="${env.APS_HOME}/build-config/results_baseline.properties"/>
     <property name="results.analysis.file" value="test_analysis"/>
-    <property name="results.list.file" 
-	value="${env.rPS_HOME}/build-config/results.properties"/>
+    <property name="results.list.file"
+    value="${env.rPS_HOME}/build-config/results.properties"/>
     <property name="results.summary.file" value="summaryreport"/>
 -->
 <!-- Test Harness properties for WebTest ============ -->
@@ -151,8 +151,8 @@
     <fileset dir="${env.APS_HOME}/lib" includes="**/*.jar,**/*.zip"/>
     <fileset dir="${env.ANT_HOME}/lib" includes="*.jar"/>
   </path>
-  <pathconvert pathsep=":" 
-    property="s1as.classpath" 
+  <pathconvert pathsep=":"
+    property="s1as.classpath"
     refid="s1as_classpath_jars"/>
 </target>
 
@@ -169,11 +169,11 @@
 
 <target name="setS1WSclassPath" if="isS1WS">
   <path id="s1ws_classpath_jars">
-    <fileset dir="${env.IWS_SERVER_HOME}/bin/https/jar" 
+    <fileset dir="${env.IWS_SERVER_HOME}/bin/https/jar"
 includes="*.jar"/>
   </path>
-  <pathconvert pathsep=":" 
-    property="s1ws.classpath" 
+  <pathconvert pathsep=":"
+    property="s1ws.classpath"
     refid="s1ws_classpath_jars"/>
 </target>
 
@@ -187,11 +187,11 @@ includes="*.jar"/>
     refid="jwsdp_classpath_jars"/>
 </target>
 
-<target name="setToolProperty" 
+<target name="setToolProperty"
   depends="setOSConditions,setToolWin,setToolUnix">
 </target>
 
-<target name="setOSConditions">  
+<target name="setOSConditions">
   <condition property="isUnix">
     <os family="unix"/>
   </condition>
@@ -200,7 +200,7 @@ includes="*.jar"/>
   </condition>
 </target>
 
-<target name="setToolWin" if="isWindows">  
+<target name="setToolWin" if="isWindows">
   <property name="APPCLIENT" value="${env.S1AS_HOME}/bin/appclient.bat"/>
   <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin.bat"/>
   <property name="IMQCMD" value="${env.S1AS_HOME}/imq/bin/imqcmd.exe"/>
@@ -218,7 +218,7 @@ includes="*.jar"/>
   <property name="WSCOMPILE" value="${env.S1AS_HOME}/bin/wscompile.bat"/>
 </target>
 
-<target name="setToolUnix" if="isUnix">  
+<target name="setToolUnix" if="isUnix">
   <property name="APPCLIENT" value="${env.S1AS_HOME}/bin/appclient"/>
   <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin"/>
   <property name="IMQCMD" value="${env.S1AS_HOME}/imq/bin/imqcmd"/>

@@ -28,7 +28,7 @@ public class XmlInputObject extends InputObject {
 
     /**
      * Construct a XmlInputObjectfrom a input stream.
-     * 
+     *
      * @param inputstream an input stream
      * @exception InputException If there is a syntax error in the source input stream or a duplicate key.
      */
@@ -38,7 +38,7 @@ public class XmlInputObject extends InputObject {
 
     /**
      * Construct a XmlInputObjectfrom a XML text string.
-     * 
+     *
      * @param source A XML text string
      * @exception InputException If there is a syntax error in the source string or a duplicated key.
      */
@@ -53,7 +53,7 @@ public class XmlInputObject extends InputObject {
 
     /**
      * Construct and returns a map of input key-value pairs
-     * 
+     *
      * @throws InputException If there is a syntax error in the source string or a duplicated key.
      */
     @Override
@@ -70,7 +70,7 @@ public class XmlInputObject extends InputObject {
 
     /**
      * Scan the content following the named tag, attaching it to the context.
-     * 
+     *
      * @param x The XmlInputReader containing the source string.
      * @param context The XmlInputObject that will include the new material.
      * @param name The tag name.

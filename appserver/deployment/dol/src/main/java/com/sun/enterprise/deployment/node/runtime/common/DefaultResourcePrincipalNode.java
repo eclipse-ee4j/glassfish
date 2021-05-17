@@ -27,35 +27,35 @@ import java.util.Map;
  * This node handles all the role mapping information
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode {
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.NAME, "setName");
         table.put(RuntimeTagNames.PASSWORD, "setPassword");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, DefaultResourcePrincipal descriptor) {  
+     */
+    public Node writeDescriptor(Node parent, String nodeName, DefaultResourcePrincipal descriptor) {
         Node ejbRef = appendChild(parent, nodeName);
-	appendTextChild(ejbRef, RuntimeTagNames.NAME, descriptor.getName());
-	appendTextChild(ejbRef, RuntimeTagNames.PASSWORD, descriptor.getPassword());
+    appendTextChild(ejbRef, RuntimeTagNames.NAME, descriptor.getName());
+    appendTextChild(ejbRef, RuntimeTagNames.PASSWORD, descriptor.getPassword());
         return ejbRef;
-    }    
+    }
 }

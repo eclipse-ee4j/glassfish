@@ -65,7 +65,7 @@ public class PwcCoyoteRequest extends Request {
             // the StandardEngineValve
             return;
         }
-        
+
         super.setContext(ctx);
         Response response = (Response) getResponse();
         // Assert response!=null
@@ -102,7 +102,7 @@ public class PwcCoyoteRequest extends Request {
         if (enc != null) {
             return enc;
         }
-    
+
         boolean encodingFound = setRequestEncodingFromSunWebXml();
         if (encodingFound) {
             return super.getCharacterEncoding();
@@ -134,7 +134,7 @@ public class PwcCoyoteRequest extends Request {
             cookie.setSecure(isSecure());
         }
     }
-    
+
 
     // START SJSAS 6346738
     @Override
@@ -144,7 +144,7 @@ public class PwcCoyoteRequest extends Request {
         sunWebXmlChecked = false;
     }
     // END SJSAS 6346738
-            
+
 
     /**
      * Determines and sets the request charset using the request-encoding in
@@ -217,8 +217,8 @@ public class PwcCoyoteRequest extends Request {
 
         return encoding;
     }
-        
-    
+
+
     private String getPostDataEncoding(String formHintField) {
 
         if (!getMethod().equalsIgnoreCase("POST")) {
@@ -288,7 +288,7 @@ public class PwcCoyoteRequest extends Request {
 
         String encoding = null;
 
-        formHintField += "=";            
+        formHintField += "=";
         int index = paramsString.indexOf(formHintField);
         if (index != -1) {
             int endIndex = paramsString.indexOf('&', index);
@@ -319,7 +319,7 @@ public class PwcCoyoteRequest extends Request {
             return formData;
         } else {
             return super.getPostBody();
-        } 
+        }
     }
     // END SJSAS 6346738
 

@@ -24,7 +24,7 @@ import jakarta.faces.el.ValueBinding;
 import jakarta.faces.webapp.UIComponentTag;
 
 /**
- * <p><strong>ChartItemTag</strong> is the tag handler that processes the 
+ * <p><strong>ChartItemTag</strong> is the tag handler that processes the
  * <code>chartItem</code> custom tag.</p>
  */
 
@@ -38,7 +38,7 @@ public class ChartItemTag extends UIComponentTag {
     // Class methods
     //
 
-    // 
+    //
     // Accessors
     //
 
@@ -63,7 +63,7 @@ public class ChartItemTag extends UIComponentTag {
     public void setItemColor(String color) {
         this.itemColor = color;
     }
-    
+
     /**
      * <p>The value for this item.</p>
      */
@@ -137,7 +137,7 @@ public class ChartItemTag extends UIComponentTag {
                 chartItem.setItemLabel(itemLabel);
             }
         }
-        
+
         if (null != itemColor) {
             if (isValueReference(itemColor)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -147,7 +147,7 @@ public class ChartItemTag extends UIComponentTag {
                 chartItem.setItemColor(itemColor);
             }
         }
-        
+
         if (null != itemValue) {
             if (isValueReference(itemValue)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()

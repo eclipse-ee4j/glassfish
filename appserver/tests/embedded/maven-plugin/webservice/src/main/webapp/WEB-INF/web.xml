@@ -20,7 +20,7 @@
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          version="3.0">
-     
+
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>

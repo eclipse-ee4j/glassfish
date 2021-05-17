@@ -46,7 +46,7 @@ public class TestClient {
         try {
             int code = invokeServlet(url);
             report(code);
-	} catch (Exception e) {
+    } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -60,7 +60,7 @@ public class TestClient {
         InputStream is = c1.getInputStream();
         BufferedReader input = new BufferedReader (new InputStreamReader(is));
         String line = null;
-       
+
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.indexOf("So the RESULT OF HELLO SERVICE IS") != -1)

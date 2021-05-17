@@ -26,10 +26,10 @@ import org.glassfish.j2ee.statistics.BoundaryStatistic;
  */
 
 public final class BoundaryStatisticImpl extends StatisticImpl implements BoundaryStatistic {
-    
+
     private final long lowerBound;
     private final long upperBound;
-	
+
     /** Constructs the instance of BoundaryStatistic that is immutable.
      * @param upper     The upper limit of this statistic
      * @param lower     The lower limit of this statistic
@@ -42,23 +42,23 @@ public final class BoundaryStatisticImpl extends StatisticImpl implements Bounda
     public BoundaryStatisticImpl(long lower, long upper, String name,
                                  String unit, String desc, long startTime,
                                  long sampleTime) {
-        
+
         super(name, unit, desc, startTime, sampleTime);
         upperBound = upper;
         lowerBound = lower;
     }
-    
+
     /**
      * Returns the lowest possible value, that this statistic is permitted to attain
-	 * @return		long the lowest permissible value
+     * @return        long the lowest permissible value
      */
     public long getLowerBound() {
         return lowerBound;
     }
-    
+
     /**
      * Return the highest possible value, that this statistic is permitted to attain
-	 * @return		long the highest permissible value
+     * @return        long the highest permissible value
      */
     public long getUpperBound() {
         return upperBound;

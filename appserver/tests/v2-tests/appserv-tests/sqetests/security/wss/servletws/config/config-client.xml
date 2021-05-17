@@ -19,7 +19,7 @@
 
 <configuration
   xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
-  <wsdl 
+  <wsdl
       location="wsdl/TaxCalServletService.wsdl"
       packageName="com.sun.appserv.sqe.security.wss.servletws.taxcal.client"/>
 </configuration>

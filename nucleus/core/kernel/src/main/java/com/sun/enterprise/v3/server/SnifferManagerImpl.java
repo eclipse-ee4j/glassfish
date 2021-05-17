@@ -67,7 +67,7 @@ public class SnifferManagerImpl implements SnifferManager {
             public int compare(Sniffer o1, Sniffer o2) {
                 return o1.getModuleType().compareTo(o2.getModuleType());
             }
-        });            
+        });
 
         return sniffers;
     }
@@ -115,7 +115,7 @@ public class SnifferManagerImpl implements SnifferManager {
         // in their natural order.
         // scan for registered annotations and retrieve applicable sniffers
         List<Sniffer> appSniffers = this.getApplicableSniffers(context, uris, types, regularSniffers, true);
-        
+
         // call handles method of the sniffers
         for (Sniffer sniffer : regularSniffers) {
             if ( !appSniffers.contains(sniffer) && sniffer.handles(context)) {
@@ -134,7 +134,7 @@ public class SnifferManagerImpl implements SnifferManager {
 
         List<T> result = new ArrayList<T>();
         for (T sniffer : sniffers) {
-            if (archiveType != null && 
+            if (archiveType != null &&
                 !sniffer.supportsArchiveType(archiveType)) {
                 continue;
             }
@@ -169,7 +169,7 @@ public class SnifferManagerImpl implements SnifferManager {
             String[] incompatTypes = sniffer.getIncompatibleSnifferTypes();
             if (incompatTypes==null)
                 return;
-            for (String type : incompatTypes) { 
+            for (String type : incompatTypes) {
                 for (Sniffer sniffer2 : snifferCol) {
                     if (sniffer2.getModuleType().equals(type)) {
                         throw new IllegalArgumentException(

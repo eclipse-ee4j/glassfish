@@ -29,7 +29,7 @@
     changed at startup. Issue: 3033. If changed to test an
     end to end scenario, please change this message. -->
 <project name="security-authConf" basedir="." default="usage">
-  
+
   &commonSetup;
   &commonBuild;
   &commonRun;
@@ -43,15 +43,15 @@
     <!-- stop server -->
     <antcall target="stopDomain"/>
     <sleep seconds="15"/>
-    
+
     <!-- add auth.conf file and provider jar -->
     <copy file="conffile/auth.conf"
         todir="${admin.domain.dir}/${admin.domain}/config"/>
     <antcall target="build-provider-jar"/>
-    
+
     <!-- start server -->
     <antcall target="startDomain"/>
-    
+
     <!-- quick diff of auth conf file -->
     <length file="conffile/auth.conf" property="length.original"/>
     <length file="${admin.domain.dir}/${admin.domain}/config/auth.conf"
@@ -69,7 +69,7 @@
       </condition>
     </fail>
     <echo message="files are of same length. OK"/>
-    
+
     <!-- stop server, clean up, and restart -->
     <antcall target="stopDomain"/>
     <sleep seconds="15"/>
@@ -77,7 +77,7 @@
     <delete file="${provider.jar}"/>
     <antcall target="startDomain"/>
   </target>
-  
+
   <!-- build and copy the provider jar file to GF/lib -->
   <target name="build-provider-jar" depends="clean">
     <antcall target="compile-common">
@@ -85,10 +85,10 @@
     </antcall>
     <jar destfile="${provider.jar}" basedir="${build.classes.dir}"/>
   </target>
-  
+
   <target name="clean" depends="init-common">
     <delete dir="${build.classes.dir}"/>
     <delete dir="${assemble.dir}"/>
   </target>
-  
+
 </project>

@@ -26,13 +26,13 @@
     To learn more on JDBC resources, pl. refer to JDBC resources chapter of admin guide.
     http://docs.sun.com/app/docs/doc/819-3658/6n5s5nklk?a=view
 
-    For detailed explanation of attributes and elements of this resources xml 
+    For detailed explanation of attributes and elements of this resources xml
     pl. refer to sun-resources_1_3.dtd
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="sybase_dd_pool" 
+    <jdbc-connection-pool
+        name="sybase_dd_pool"
         datasource-classname="com.sun.sql.jdbcx.sybase.SybaseDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -43,9 +43,9 @@
         <property name="databaseName" value="DATABASE_NAME"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/sybase_dd_resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/sybase_dd_resource"
+        object-type="user"
         pool-name="sybase_dd_pool"/>
-</resources> 
+</resources>

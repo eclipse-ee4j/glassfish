@@ -71,9 +71,9 @@
 
 <target name="create-user">
         <antcall target="create-user-common">
-	    <param name="user" value="harpreet"/>
-	    <param name="password" value="harpreet"/>
-	    <param name="groups" value="employee"/>
+        <param name="user" value="harpreet"/>
+        <param name="password" value="harpreet"/>
+        <param name="groups" value="employee"/>
        </antcall>
 </target>
 

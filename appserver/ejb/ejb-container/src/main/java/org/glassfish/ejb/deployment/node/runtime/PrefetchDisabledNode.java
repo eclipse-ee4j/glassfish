@@ -29,7 +29,7 @@ import org.glassfish.ejb.deployment.descriptor.runtime.PrefetchDisabledDescripto
 import org.w3c.dom.Node;
 
 /**
- * This node handles the prefetch-disabled runtime deployment descriptors 
+ * This node handles the prefetch-disabled runtime deployment descriptors
  *
  */
 public class PrefetchDisabledNode extends DeploymentDescriptorNode<PrefetchDisabledDescriptor> {
@@ -61,23 +61,23 @@ public class PrefetchDisabledNode extends DeploymentDescriptorNode<PrefetchDisab
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-        PrefetchDisabledDescriptor prefetchDisabledDescriptor) {    
-	Node prefetchDisabledNode = super.writeDescriptor(parent, nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
+        PrefetchDisabledDescriptor prefetchDisabledDescriptor) {
+    Node prefetchDisabledNode = super.writeDescriptor(parent, nodeName,
             prefetchDisabledDescriptor);
-        ArrayList methodDescs = 
+        ArrayList methodDescs =
             prefetchDisabledDescriptor.getConvertedMethodDescs();
         if (!methodDescs.isEmpty()) {
             MethodNode methodNode = new MethodNode();
             for (Iterator methodIterator = methodDescs.iterator();
                 methodIterator.hasNext();) {
-                MethodDescriptor methodDesc = 
+                MethodDescriptor methodDesc =
                     (MethodDescriptor) methodIterator.next();
-                methodNode.writeQueryMethodDescriptor(prefetchDisabledNode, 
+                methodNode.writeQueryMethodDescriptor(prefetchDisabledNode,
                     RuntimeTagNames.QUERY_METHOD, methodDesc);
             }
         }
 
-	return prefetchDisabledNode;
+    return prefetchDisabledNode;
     }
 }

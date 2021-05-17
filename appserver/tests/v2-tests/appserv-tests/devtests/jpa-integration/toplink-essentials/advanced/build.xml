@@ -69,10 +69,10 @@
                  includes="oracle/toplink/essentials/testing/models/cmp3/advanced/*.class"
               />
         </jar>
-    </target> 
+    </target>
 
     <target name="build" depends="compile">
-    </target> 
+    </target>
 
     <path id="run.cp">
 <!-- ${build.classes.dir} not defined during run target???

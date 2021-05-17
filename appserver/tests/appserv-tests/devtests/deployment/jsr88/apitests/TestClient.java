@@ -54,7 +54,7 @@ public class TestClient {
         log("All expected applications have been reported");
         return(true);
     }
-    
+
     private boolean checkReportedApps(String[] args, Boolean state)
                                                     throws Exception {
         log("Checking if application names reported are valid");
@@ -135,7 +135,7 @@ public class TestClient {
 
             /*
              *We expect two events, one corresponding to the start operation entering the "running" state and
-             *one for the operation completing.  If the race condition has occurred, then we won't see both of 
+             *one for the operation completing.  If the race condition has occurred, then we won't see both of
              *the events.  We're going to look at the first one, expecting it to be the "running" event.
              */
             if (receivedEvents.length < 2) {
@@ -170,7 +170,7 @@ public class TestClient {
             }
         }
     }
-        
+
     private int testStartStop(String[] args) {
         try {
             log("Stopping all Applications");
@@ -209,7 +209,7 @@ public class TestClient {
 
             HashMap set = new HashMap();
             set.put(args[4], "app");
-            
+
             boolean ret = checkIfAppsArePresent(apps, set);
             if(!ret)
                 return(-1);

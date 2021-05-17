@@ -39,59 +39,59 @@ import jakarta.inject.Singleton;
 
 /**
  * This is used by JAXWSContainer to return proper 196 security and
- *  app server monitoing pipes to the StandAlonePipeAssembler and 
+ *  app server monitoing pipes to the StandAlonePipeAssembler and
  *  TangoPipeAssembler
  */
 @Service
 @Singleton
 public class GFServerPipeCreator extends org.glassfish.webservices.ServerPipeCreator {
-    
-    private static final String SECURITY_POLICY_NAMESPACE_URI_SUBMISSION = 
+
+    private static final String SECURITY_POLICY_NAMESPACE_URI_SUBMISSION =
             "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy";
-    private static final String SECURITY_POLICY_NAMESPACE_URI_SPECVERSION= 
-            "http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702";       
-    
+    private static final String SECURITY_POLICY_NAMESPACE_URI_SPECVERSION=
+            "http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702";
+
     public GFServerPipeCreator(){
         super();
     }
-    
+
     public void init(WebServiceEndpoint ep) {
         super.init(ep);
     }
     public Pipe createSecurityPipe(PolicyMap map, SEIModel sei,
             WSDLPort port, WSEndpoint owner, Pipe tail) {
 
-	HashMap props = new HashMap();
+    HashMap props = new HashMap();
 
-	props.put(PipeConstants.POLICY,map);
-	props.put(PipeConstants.SEI_MODEL,sei);
-	props.put(PipeConstants.WSDL_MODEL,port);
-	props.put(PipeConstants.ENDPOINT,owner);
-	props.put(PipeConstants.SERVICE_ENDPOINT,endpoint);
-	props.put(PipeConstants.NEXT_PIPE,tail);
+    props.put(PipeConstants.POLICY,map);
+    props.put(PipeConstants.SEI_MODEL,sei);
+    props.put(PipeConstants.WSDL_MODEL,port);
+    props.put(PipeConstants.ENDPOINT,owner);
+    props.put(PipeConstants.SERVICE_ENDPOINT,endpoint);
+    props.put(PipeConstants.NEXT_PIPE,tail);
         props.put(PipeConstants.CONTAINER, owner.getContainer());
         if (isSecurityEnabled(map, port)) {
-		endpoint.setSecurePipeline();
+        endpoint.setSecurePipeline();
         }
 
         return new CommonServerSecurityPipe(props, tail, isHttpBinding);
-    }    
-    
+    }
+
 //    @Override
 //    public @NotNull
 //    Tube createSecurityTube(ServerTubelineAssemblyContext ctxt) {
 //        HashMap props = new HashMap();
 //
 //        /*TODO V3 enable
-//	props.put(PipeConstants.POLICY,map);
-//	props.put(PipeConstants.SEI_MODEL,sei);
-//	props.put(PipeConstants.WSDL_MODEL,port);
-//	props.put(PipeConstants.ENDPOINT,owner);
-//	props.put(PipeConstants.SERVICE_ENDPOINT,endpoint);
-//	props.put(PipeConstants.NEXT_PIPE,tail);
+//    props.put(PipeConstants.POLICY,map);
+//    props.put(PipeConstants.SEI_MODEL,sei);
+//    props.put(PipeConstants.WSDL_MODEL,port);
+//    props.put(PipeConstants.ENDPOINT,owner);
+//    props.put(PipeConstants.SERVICE_ENDPOINT,endpoint);
+//    props.put(PipeConstants.NEXT_PIPE,tail);
 //        props.put(PipeConstants.CONTAINER, owner.getContainer());
 //        if (isSecurityEnabled(map, port)) {
-//		endpoint.setSecurePipeline();
+//        endpoint.setSecurePipeline();
 //        }*/
 //
 //        return new CommonServerSecurityTube(props, ctxt.getTubelineHead(), isHttpBinding);
@@ -114,7 +114,7 @@ public class GFServerPipeCreator extends org.glassfish.webservices.ServerPipeCre
             PolicyMapKey endpointKey = policyMap.createWsdlEndpointScopeKey(wsdlPort.getOwner().getName(),
                     wsdlPort.getName());
             Policy policy = policyMap.getEndpointEffectivePolicy(endpointKey);
-            
+
             if ((policy != null) && (policy.contains(SECURITY_POLICY_NAMESPACE_URI_SPECVERSION) ||
                     policy.contains(SECURITY_POLICY_NAMESPACE_URI_SUBMISSION))) {
                 return true;

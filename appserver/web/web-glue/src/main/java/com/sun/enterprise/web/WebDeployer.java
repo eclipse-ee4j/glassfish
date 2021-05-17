@@ -91,7 +91,7 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
             // 1. User specified value through DeployCommand
             // 2. Context root value specified through sun-web.xml
             // 3. Context root from last deployment if applicable
-            // 4. The default context root which is the archive name 
+            // 4. The default context root which is the archive name
             //    minus extension
             DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
             String contextRoot = params.contextroot;
@@ -115,15 +115,15 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
             // set the context root to deployment context props so this value
             // will be persisted in domain.xml
             dc.getAppProps().setProperty(ServerTags.CONTEXT_ROOT, contextRoot);
-        } 
+        }
 
         return null;
     }
 
     private WebModuleConfig loadWebModuleConfig(DeploymentContext dc) {
-        
+
         WebModuleConfig wmInfo = new WebModuleConfig();
-        
+
         try {
             DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
             wmInfo.setDescriptor(dc.getModuleMetaData(WebBundleDescriptorImpl.class));
@@ -135,22 +135,22 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
             msg = MessageFormat.format(msg, wmInfo.getName());
             logger.log(Level.WARNING, msg, ex);
         }
-        
+
         return wmInfo;
-        
+
     }
-    
+
     @Override
-    protected void generateArtifacts(DeploymentContext dc) 
+    protected void generateArtifacts(DeploymentContext dc)
         throws DeploymentException {
         DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
         if (params.precompilejsp) {
-            //call JSPCompiler... 
+            //call JSPCompiler...
             runJSPC(dc);
         }
     }
 
-         
+
     @Override
     public WebApplication load(WebContainer container, DeploymentContext dc) {
         super.load(container, dc);
@@ -166,11 +166,11 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
         return webApp;
     }
 
-    
+
     public void unload(WebApplication webApplication, DeploymentContext dc) {
 
     }
-        
+
     /**
      * This method setups the in/outDir and classpath and invoke
      * JSPCompiler.
@@ -190,9 +190,9 @@ public class WebDeployer extends JavaEEDeployer<WebContainer, WebApplication>{
             classpath.append(File.pathSeparatorChar);
             classpath.append(ASClassLoaderUtil.getModuleClassPath(
                     sc.getDefaultServices(),
-                    wbd.getApplication().getName(), 
+                    wbd.getApplication().getName(),
                     dc.getCommandParameters(
-                        DeployCommandParameters.class).libraries)); 
+                        DeployCommandParameters.class).libraries));
             classpath.append(File.pathSeparatorChar);
             classpath.append(super.getModuleClassPath(dc));
             JSPCompiler.compile(inDir, outDir, wbd, classpath.toString(), sc);

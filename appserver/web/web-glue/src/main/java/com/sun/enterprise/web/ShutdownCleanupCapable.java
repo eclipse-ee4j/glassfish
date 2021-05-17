@@ -29,11 +29,11 @@ import java.sql.Connection;
  * @author  lwhite
  */
 public interface ShutdownCleanupCapable {
-    
+
     public int doShutdownCleanup();
-    
+
     public void doCloseCachedConnection();
-    
-    public void putConnection(Connection conn);    
-    
+
+    public void putConnection(Connection conn);
+
 }

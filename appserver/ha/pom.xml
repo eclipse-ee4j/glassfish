@@ -29,7 +29,7 @@
     <artifactId>ha</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish HA modules</name>
-    
+
     <developers>
         <developer>
             <id>mk111283</id>
@@ -42,7 +42,7 @@
             </roles>
         </developer>
     </developers>
-    
+
     <modules>
         <module>ha-file-store</module>
         <module>ha-shoal-cache-bootstrap</module>

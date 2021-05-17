@@ -43,8 +43,8 @@
                 <res-ref-name>DataSource</res-ref-name>
                 <res-type>javax.sql.DataSource</res-type>
                 <res-auth>Container</res-auth>
-		<res-sharing-scope>Unshareable</res-sharing-scope>
-		     </resource-ref>
+        <res-sharing-scope>Unshareable</res-sharing-scope>
+             </resource-ref>
 
         </entity>
     </enterprise-beans>

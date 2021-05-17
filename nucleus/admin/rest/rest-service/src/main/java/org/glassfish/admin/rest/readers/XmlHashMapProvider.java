@@ -52,7 +52,7 @@ public class XmlHashMapProvider extends ProviderUtil implements MessageBodyReade
             map.put("error", "Entity Parsing Error: " + exception.getMessage());
 
             return map;
-            ///throw new RuntimeException(exception); 
+            ///throw new RuntimeException(exception);
         }
     }
 }

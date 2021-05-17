@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  * This class represents the types float and double.
  *
  * @author  Michael Bouschen
@@ -41,7 +41,7 @@ public class FloatingPointType
 
     /**
      * Converts the specified value into a value of this numeric type.
-     * E.g. an Integer is converted into a Double, if this represents 
+     * E.g. an Integer is converted into a Double, if this represents
      * the numeric type double.
      * @param value value to be converted
      * @return converted value
@@ -61,7 +61,7 @@ public class FloatingPointType
     }
 
     /**
-     * Returns -value. 
+     * Returns -value.
      * @param value value to be negated
      * @return -value
      */

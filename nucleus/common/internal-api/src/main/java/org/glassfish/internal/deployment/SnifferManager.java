@@ -50,7 +50,7 @@ public interface SnifferManager {
      *
      * @return Collection (possibly empty but never null) of Sniffer
      */
-    public Collection<Sniffer> getSniffers();    
+    public Collection<Sniffer> getSniffers();
 
     /**
      * Returns a collection of sniffers that recognized some parts of the

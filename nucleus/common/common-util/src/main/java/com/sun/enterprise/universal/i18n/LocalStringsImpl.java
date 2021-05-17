@@ -27,20 +27,20 @@ import java.util.ResourceBundle;
 import java.text.MessageFormat;
 
 /**
- * This class makes getting localized strings super-simple.  This is the companion 
+ * This class makes getting localized strings super-simple.  This is the companion
  * class to Strings.  Use this class when performance may be an issue.  I.e. Strings
  * is all-static and creates a ResourceBundle on every call.  This class is instantiated
  * once and can be used over and over from the same package.
  * <p>Specifics:
  * <ul>
- *    <li>Your calling code should have a file named LocalStrings.properties in its 
+ *    <li>Your calling code should have a file named LocalStrings.properties in its
  * package directory.
  *    <li>If your localized string has no arguments call get(String) to get the localized
  *    String value.
  *    <li>If you have a parameterized string, call get(String, Object...)
  * </ul>
  * <p>Note: <b>You can not get an Exception out of calling this code!</b>  If the String
- * or the properties file does not exist, it will return the String that you gave 
+ * or the properties file does not exist, it will return the String that you gave
  * in the first place as the argument.
  * <p>Example:
  * <ul>
@@ -49,13 +49,13 @@ import java.text.MessageFormat;
  * <li>String s = sh.get("xyz", new Date(), 500, "something", 2.00003);
  * <li>String s = sh.get("xyz", "something", "foo", "whatever");
  * </ul>
- * 
+ *
  * @author bnevins
  */
 public class LocalStringsImpl {
 
     /**
-     * Create a LocalStringsImpl instance.  
+     * Create a LocalStringsImpl instance.
      * Automatically discover the caller's LocalStrings.properties file
      */
     public LocalStringsImpl() {
@@ -63,7 +63,7 @@ public class LocalStringsImpl {
     }
 
     /**
-     * Create a LocalStringsImpl instance.  
+     * Create a LocalStringsImpl instance.
      * use the proffered class object to find LocalStrings.properties.
      * This is the constructor to use if you are concerned about getting
      * the fastest performance.
@@ -73,9 +73,9 @@ public class LocalStringsImpl {
     }
 
     /**
-     * Create a LocalStringsImpl instance.  
+     * Create a LocalStringsImpl instance.
      * use the proffered String.  The String is the FQN of the properties file,
-     * without the '.properties'.  E.g. 'com.elf.something.LogStrings' 
+     * without the '.properties'.  E.g. 'com.elf.something.LogStrings'
      */
     public LocalStringsImpl(String packageName, String propsName) {
         this.propsName = propsName;
@@ -141,7 +141,7 @@ public class LocalStringsImpl {
     /**
      * Get an integer from the caller's package's LocalStrings.properties
      * @param indexString The string index into the localized string file
-     * @return the integer value from LocalStrings or the supplied default if 
+     * @return the integer value from LocalStrings or the supplied default if
      * it doesn't exist or is bad.
      */
     public int getInt(String indexString, int defaultValue) {
@@ -158,7 +158,7 @@ public class LocalStringsImpl {
     /**
      * Get a boolean from the caller's package's LocalStrings.properties
      * @param indexString The string index into the localized string file
-     * @return the integer value from LocalStrings or the supplied default if 
+     * @return the integer value from LocalStrings or the supplied default if
      * it doesn't exist or is bad.
      */
     public boolean getBoolean(String indexString, boolean defaultValue) {

@@ -29,139 +29,139 @@ import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.spi.persistence.utility.generator.JavaFileWriter;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriter;
 
-/** 
- * This implementation of the {@link JavaFileWriter} interface is based on 
- * {@link java.io.File} and simple {@link java.lang.StringBuffer} "println" 
+/**
+ * This implementation of the {@link JavaFileWriter} interface is based on
+ * {@link java.io.File} and simple {@link java.lang.StringBuffer} "println"
  * type statements.
  *<p>
- * Use this interface in conjunction with one or more {@link JavaClassWriter} 
+ * Use this interface in conjunction with one or more {@link JavaClassWriter}
  * instances to describe the class(es) in a java file.
  *
  * @author raccah
  */
 public class IOJavaFileWriter implements JavaFileWriter
 {
-	/** I18N message handler */
-	private static final ResourceBundle _messages = 
-		I18NHelper.loadBundle(IOJavaFileWriter.class);
+    /** I18N message handler */
+    private static final ResourceBundle _messages =
+        I18NHelper.loadBundle(IOJavaFileWriter.class);
 
-	private File _file;
-	private String _packageBlock;
-	private List _importStatements = new ArrayList();
-	private List _classes = new ArrayList();
+    private File _file;
+    private String _packageBlock;
+    private List _importStatements = new ArrayList();
+    private List _classes = new ArrayList();
 
-	/** Creates a new instance of IOJavaFileWriter.
-	 * @param file The file object which will be used at save time. 
-	 */
-	public IOJavaFileWriter (File file)
-	{
-		_file = file;
-	}
-	
-	/** @return I18N message handler for this element
-	 */
-	protected static final ResourceBundle getMessages () { return _messages; }
+    /** Creates a new instance of IOJavaFileWriter.
+     * @param file The file object which will be used at save time.
+     */
+    public IOJavaFileWriter (File file)
+    {
+        _file = file;
+    }
 
-	/** Sets the package for this file.  Note that the package name format 
-	 * must be package style (that is - it can contain . but not / or $).
-	 * @param packageName The name of the package for this source file.
-	 * @param comments The comments shown just above the package statement.
-	 * The comments are passed as an array so the line separators can be added
-	 * by the implementation.  Note that not all implementations will choose
-	 * to make use of this comment.
-	 */	
-	public void setPackage (final String packageName, final String[] comments) 
-	{
-		final FormattedWriter writerHelper =  new FormattedWriter();
+    /** @return I18N message handler for this element
+     */
+    protected static final ResourceBundle getMessages () { return _messages; }
 
-		writerHelper.writeComments(comments);
-		if (packageName != null  &&  packageName.length() > 0)
-		{
-			writerHelper.writeln("package " + packageName + ';');	// NOI18N
-			writerHelper.writeln();
-		}
+    /** Sets the package for this file.  Note that the package name format
+     * must be package style (that is - it can contain . but not / or $).
+     * @param packageName The name of the package for this source file.
+     * @param comments The comments shown just above the package statement.
+     * The comments are passed as an array so the line separators can be added
+     * by the implementation.  Note that not all implementations will choose
+     * to make use of this comment.
+     */
+    public void setPackage (final String packageName, final String[] comments)
+    {
+        final FormattedWriter writerHelper =  new FormattedWriter();
 
-		_packageBlock = writerHelper.toString();
-	}
+        writerHelper.writeComments(comments);
+        if (packageName != null  &&  packageName.length() > 0)
+        {
+            writerHelper.writeln("package " + packageName + ';');    // NOI18N
+            writerHelper.writeln();
+        }
 
-	/** Adds an import statement for this source file.
-	 * @param importName Name of the class or package (including the *) to be
-	 * imported.  This string should not contain "import" or the ;
-	 * @param comments The comments shown just above the import statement.
-	 * The comments are passed as an array so the line separators can be added
-	 * by the implementation.  Note that not all implementations will choose
-	 * to make use of this comment.
-	 */	
-	public void addImport (final String importName, final String[] comments)
-	{
-		final FormattedWriter writerHelper =  new FormattedWriter();
+        _packageBlock = writerHelper.toString();
+    }
 
-		writerHelper.writeComments(comments);
-		if (importName != null && importName.length() > 0)
-			writerHelper.writeln("import " + importName + ';');		// NOI18N
+    /** Adds an import statement for this source file.
+     * @param importName Name of the class or package (including the *) to be
+     * imported.  This string should not contain "import" or the ;
+     * @param comments The comments shown just above the import statement.
+     * The comments are passed as an array so the line separators can be added
+     * by the implementation.  Note that not all implementations will choose
+     * to make use of this comment.
+     */
+    public void addImport (final String importName, final String[] comments)
+    {
+        final FormattedWriter writerHelper =  new FormattedWriter();
 
-		_importStatements.add(writerHelper.toString());
-	}
+        writerHelper.writeComments(comments);
+        if (importName != null && importName.length() > 0)
+            writerHelper.writeln("import " + importName + ';');        // NOI18N
 
-	/** Adds a class to this source file.
-	 * @param classWriter The definition of the class.
-	 */	
-	public void addClass (final JavaClassWriter classWriter)
-	{
-		if (classWriter != null)
-			_classes.add(classWriter);
-	}
+        _importStatements.add(writerHelper.toString());
+    }
 
-	/** Saves the file by writing out the source contents to whatever 
-	 * file (or alternate representation) was specified (usually by the 
-	 * constructor of the implementation class.
-	 * @throws IOException If the file cannot be saved.
-	 */	
-	public void save () throws IOException
-	{
-		if (_file != null)
-		{
-			final File directory = _file.getParentFile();
-			final FileWriter fileWriter;
+    /** Adds a class to this source file.
+     * @param classWriter The definition of the class.
+     */
+    public void addClass (final JavaClassWriter classWriter)
+    {
+        if (classWriter != null)
+            _classes.add(classWriter);
+    }
 
-			if (directory != null)
-			{
-				if (!directory.exists() && !directory.mkdirs())
-				{
-					throw new IOException(I18NHelper.getMessage(getMessages(), 
-						"utility.unable_create_destination_directory",	// NOI18N
-						directory.getPath()));
-				}
-			}
-			
-			fileWriter = new FileWriter(_file);
+    /** Saves the file by writing out the source contents to whatever
+     * file (or alternate representation) was specified (usually by the
+     * constructor of the implementation class.
+     * @throws IOException If the file cannot be saved.
+     */
+    public void save () throws IOException
+    {
+        if (_file != null)
+        {
+            final File directory = _file.getParentFile();
+            final FileWriter fileWriter;
 
-			try
-			{
-				fileWriter.write(toString());
-			}
-			finally
-			{
-				fileWriter.close();
-			}
-		}
-	}
+            if (directory != null)
+            {
+                if (!directory.exists() && !directory.mkdirs())
+                {
+                    throw new IOException(I18NHelper.getMessage(getMessages(),
+                        "utility.unable_create_destination_directory",    // NOI18N
+                        directory.getPath()));
+                }
+            }
 
-	/** Returns a string representation of this object.
-	 * @return The string representation of the generated file.
-	 */	
-	public String toString ()
-	{
-		final FormattedWriter writerHelper =  new FormattedWriter();
+            fileWriter = new FileWriter(_file);
 
-		// package block
-		writerHelper.writeln();
-		if (_packageBlock != null)
-			writerHelper.write(_packageBlock);
+            try
+            {
+                fileWriter.write(toString());
+            }
+            finally
+            {
+                fileWriter.close();
+            }
+        }
+    }
 
-		writerHelper.writeList(_importStatements);		// imports
-		writerHelper.writeList(_classes);				// classes
+    /** Returns a string representation of this object.
+     * @return The string representation of the generated file.
+     */
+    public String toString ()
+    {
+        final FormattedWriter writerHelper =  new FormattedWriter();
 
-		return writerHelper.toString();
-	}
+        // package block
+        writerHelper.writeln();
+        if (_packageBlock != null)
+            writerHelper.write(_packageBlock);
+
+        writerHelper.writeList(_importStatements);        // imports
+        writerHelper.writeList(_classes);                // classes
+
+        return writerHelper.toString();
+    }
 }

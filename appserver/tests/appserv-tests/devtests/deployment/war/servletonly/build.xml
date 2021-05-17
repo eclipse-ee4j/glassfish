@@ -65,8 +65,8 @@ public class ChangeableClass {
         <jar destfile="${deployplan.jar}">
             <fileset dir="${basedir}" includes="glassfish-web.xml,sun-web.xml"/>
         </jar>
-        
-        <!-- 
+
+        <!--
              The manifest in the next task specifies a Main-Class.  It is not used except
              to make sure the app client sniffer does not claim the web
              module simply because it has a Main-Class setting.
@@ -113,16 +113,16 @@ public class ChangeableClass {
         </antcall>
     </target>
 
-    <target name="enable.asadmin"> 
+    <target name="enable.asadmin">
         <antcall target="common.enable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
 
     <target name="disable.asadmin">
         <antcall target="common.disable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>

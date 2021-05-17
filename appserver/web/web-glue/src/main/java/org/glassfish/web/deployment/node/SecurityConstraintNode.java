@@ -32,22 +32,22 @@ import org.w3c.dom.Node;
 import java.util.Enumeration;
 import java.util.Map;
 
-/** 
+/**
  * This node handles the security-contraint xml tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityConstraintImpl> {
 
     public SecurityConstraintNode() {
         super();
-        registerElementHandler(new XMLElement(WebTagNames.USERDATA_CONSTRAINT), 
+        registerElementHandler(new XMLElement(WebTagNames.USERDATA_CONSTRAINT),
                     UserDataConstraintNode.class, "setUserDataConstraint");
-        registerElementHandler(new XMLElement(WebTagNames.AUTH_CONSTRAINT),         
+        registerElementHandler(new XMLElement(WebTagNames.AUTH_CONSTRAINT),
                     AuthConstraintNode.class, "setAuthorizationConstraint");
-        registerElementHandler(new XMLElement(WebTagNames.WEB_RESOURCE_COLLECTION),         
-                    WebResourceCollectionNode.class, "addWebResourceCollection");        
+        registerElementHandler(new XMLElement(WebTagNames.WEB_RESOURCE_COLLECTION),
+                    WebResourceCollectionNode.class, "addWebResourceCollection");
     }
 
     protected SecurityConstraintImpl descriptor = null;
@@ -64,24 +64,24 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
     }
 
     /**
-     * all sub-implementation of this class can use a dispatch table to map 
+     * all sub-implementation of this class can use a dispatch table to map
      * xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
-     * @return the map with the element name as a key, the setter method as a 
+     * method name on the descriptor class for setting the element value.
+     *
+     * @return the map with the element name as a key, the setter method as a
      * value
      */
     @Override
-    protected Map<String, String> getDispatchTable() {    
+    protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.NAME, "setName");
-	return table;
+    return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
@@ -90,28 +90,28 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
     public Node writeDescriptor(Node parent, String nodeName, SecurityConstraintImpl descriptor) {
         Node myNode = appendChild(parent, nodeName);
         appendTextChild(myNode, WebTagNames.NAME, descriptor.getName());
-        
+
         // web-resource-collection+
         WebResourceCollectionNode wrcNode = new WebResourceCollectionNode();
         for (WebResourceCollection webResource: descriptor.getWebResourceCollections()) {
                 wrcNode.writeDescriptor(myNode, WebTagNames.WEB_RESOURCE_COLLECTION,
                     (WebResourceCollectionImpl) webResource);
         }
-        
+
         // auth-constaint?
         AuthorizationConstraintImpl aci = (AuthorizationConstraintImpl) descriptor.getAuthorizationConstraint();
         if (aci!=null) {
             AuthConstraintNode acNode = new AuthConstraintNode();
             acNode.writeDescriptor(myNode, WebTagNames.AUTH_CONSTRAINT, aci);
         }
-        
+
         // user-data-constraint?
         UserDataConstraintImpl udci = (UserDataConstraintImpl) descriptor.getUserDataConstraint();
         if (udci!=null) {
             UserDataConstraintNode udcn = new UserDataConstraintNode();
             udcn.writeDescriptor(myNode, WebTagNames.USERDATA_CONSTRAINT, udci);
         }
-        return myNode;        
+        return myNode;
     }
-    
+
 }

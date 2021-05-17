@@ -29,9 +29,9 @@ import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
 public class ErrorPageDecorator extends ErrorPage {
 
     private ErrorPageDescriptor decoree;
-    
+
     private String location;
-    
+
     public ErrorPageDecorator(ErrorPageDescriptor decoree){
         this.decoree = decoree;
         if (decoree.getErrorCode() > 0) {

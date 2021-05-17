@@ -26,7 +26,7 @@ import java.io.*;
    ConstString strictly speaking is not a ConstantValue in the
    Java VM sense.  However, the compiler generates ConstantValue attributes
    which refer to ConstString entries.  This occurs for initialized static
-   final String fields.  I've changed ConstString to be a ConstValue for 
+   final String fields.  I've changed ConstString to be a ConstValue for
    now as a simplification.
 */
 
@@ -63,7 +63,7 @@ public class ConstString extends ConstValue {
   }
 
   /**
-   * A printable representation 
+   * A printable representation
    */
   public String toString () {
       return "CONSTANTString(" + indexAsString() + "): " + //NOI18N

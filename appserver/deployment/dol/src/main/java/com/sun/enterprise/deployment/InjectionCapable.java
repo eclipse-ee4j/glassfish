@@ -34,12 +34,12 @@ public interface InjectionCapable {
      * both.
      */
     public boolean isInjectable();
-    
+
     /**
      * @return the set of injection targets for this resource dependency
      */
     public Set<InjectionTarget> getInjectionTargets();
-    
+
     /**
      * Add a new injection target for this dependency
      */
@@ -56,5 +56,5 @@ public interface InjectionCapable {
      */
     public String getInjectResourceType();
     public void setInjectResourceType(String resourceType);
-    
+
 }

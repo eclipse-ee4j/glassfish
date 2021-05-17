@@ -31,7 +31,7 @@ import com.sun.enterprise.util.i18n.StringManager;
  *  The reason for creating this class instead of directly
  *  invoking NetworkServerControl from the StartDatabaseCommand
  *  class is so that a separate JVM is launched when starting the
- *  database and the control is return to CLI.  
+ *  database and the control is return to CLI.
  *  @author <a href="mailto:jane.young@sun.com">Jane Young</a>
  *  @version  $Revision: 1.13 $
  */
@@ -47,7 +47,7 @@ public final class DerbyControl
     final private String derbyPassword;
 
 
-        //constructor 
+        //constructor
     public DerbyControl(final String dc, final String dht, final String dp,
                         final String redirect, final String dhe, final String duser, final String dpwd)
     {
@@ -55,23 +55,23 @@ public final class DerbyControl
         this.derbyHost = dht;
         this.derbyPort = dp;
         this.derbyHome = dhe;
-	this.redirect = Boolean.valueOf(redirect).booleanValue();
+    this.redirect = Boolean.valueOf(redirect).booleanValue();
         this.derbyUser = duser;
         this.derbyPassword = dpwd;
 
-	    if (this.redirect) {
+        if (this.redirect) {
 
-	        try {
+            try {
                 String dbLog = "";
                 if (this.derbyHome == null) {
                     // if derbyHome is null then redirect the output to a temporary file
                     // which gets deleted after the jvm exists.
-		            dbLog = createTempLogFile();
+                    dbLog = createTempLogFile();
                 }
-		    else {
-		        dbLog = createDBLog(this.derbyHome);
-		    }
-            
+            else {
+                dbLog = createDBLog(this.derbyHome);
+            }
+
                 //redirect stdout and stderr to a file
                 try (PrintStream printStream = new PrintStream(new FileOutputStream(dbLog, true), true)) {
                     System.setOut(printStream);
@@ -79,25 +79,25 @@ public final class DerbyControl
                 }
             }
             catch (Throwable t) {
-	            t.printStackTrace();
-	            //exit with an error code of 2
-	            Runtime.getRuntime().exit(2);
+                t.printStackTrace();
+                //exit with an error code of 2
+                Runtime.getRuntime().exit(2);
             }
         }
         //do not set derby.system.home if derbyHome is empty
         if (this.derbyHome!=null && this.derbyHome.length()>0) {
             System.setProperty("derby.system.home", this.derbyHome);
         }
-	    //set the property to not overwrite log file
-	    System.setProperty("derby.infolog.append", "true");
+        //set the property to not overwrite log file
+        System.setProperty("derby.infolog.append", "true");
     }
-    
+
         //constructor
     public DerbyControl(final String dc, final String dht, final String dp)
     {
         this(dc,dht,dp,"true", null, null, null);
     }
-    
+
         //constructor
     public DerbyControl(final String dc, final String dht, final String dp, final String redirect)
     {
@@ -131,12 +131,12 @@ public final class DerbyControl
             } else {
                 paramObj = new Object[]{new String[]{derbyCommand, "-h", derbyHost, "-p", derbyPort, "-user", derbyUser, "-password", derbyPassword}};
             }
-           
+
             networkServerMethod.invoke(networkServer, paramObj);
         }
         catch (Throwable t) {
-	        t.printStackTrace();
-	        Runtime.getRuntime().exit(2);
+            t.printStackTrace();
+            Runtime.getRuntime().exit(2);
         }
     }
 
@@ -151,20 +151,20 @@ public final class DerbyControl
     {
         //dbHome must exist and  have write permission
         final File fDBHome = new File(dbHome);
-	    String dbLogFileName = "";
+        String dbLogFileName = "";
 
         final StringManager lsm = StringManager.getManager(DerbyControl.class);
         if (fDBHome.isDirectory() && fDBHome.canWrite()) {
             final File fDBLog = new File(dbHome, DB_LOG_FILENAME);
-	        dbLogFileName = fDBLog.toString();
+            dbLogFileName = fDBLog.toString();
 
             //if the file exists, check if it is writeable
             if (fDBLog.exists() && !fDBLog.canWrite()) {
-	        System.out.println(lsm.getString("UnableToAccessDatabaseLog", dbLogFileName));
-	        System.out.println(lsm.getString("ContinueStartingDatabase"));
-	        //if exist but not able to write then create a temporary 
-	        //log file and persist on starting the database
-	        dbLogFileName = createTempLogFile();
+            System.out.println(lsm.getString("UnableToAccessDatabaseLog", dbLogFileName));
+            System.out.println(lsm.getString("ContinueStartingDatabase"));
+            //if exist but not able to write then create a temporary
+            //log file and persist on starting the database
+            dbLogFileName = createTempLogFile();
             }
             else if (!fDBLog.exists()) {
                 //create log file
@@ -175,10 +175,10 @@ public final class DerbyControl
         }
         else {
             System.out.println(lsm.getString("InvalidDBDirectory", dbHome));
-	        System.out.println(lsm.getString("ContinueStartingDatabase"));
-	        //if directory does not exist then create a temporary log file
-	        //and persist on starting the database
-	        dbLogFileName = createTempLogFile();
+            System.out.println(lsm.getString("ContinueStartingDatabase"));
+            //if directory does not exist then create a temporary log file
+            //and persist on starting the database
+            dbLogFileName = createTempLogFile();
         }
         return dbLogFileName;
     }
@@ -192,23 +192,23 @@ public final class DerbyControl
         try {
             final File fTemp = File.createTempFile("foo", null);
             fTemp.deleteOnExit();
-	        tempFileName = fTemp.toString();
-	    }
-	    catch (IOException ioe) {
+            tempFileName = fTemp.toString();
+        }
+        catch (IOException ioe) {
             final StringManager lsm = StringManager.getManager(DerbyControl.class);
-	        throw new CommandException(lsm.getString("UnableToAccessDatabaseLog", tempFileName));
-	    }
+            throw new CommandException(lsm.getString("UnableToAccessDatabaseLog", tempFileName));
+        }
         return tempFileName;
-    }    
-    
+    }
+
     public static void main(String[] args) {
-        
+
         if (args.length<3){
             System.out.println("paramters not specified.");
             System.out.println("DerbyControl <derby command> <derby host> <derby port> <derby home> <redirect output>");
             System.exit(1);
         }
-        
+
         DerbyControl derbyControl = null;
         if (args.length == 3)
             derbyControl = new DerbyControl(args[0], args[1], args[2]);
@@ -224,4 +224,4 @@ public final class DerbyControl
 }
 
 
-    
+

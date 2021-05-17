@@ -46,7 +46,7 @@
     <network-listeners>
         <thread-pool name="defaultThreadPool"/>
         <thread-pool name="customThreadPool" classname="org.glassfish.grizzly.config.CustomExecutorService"/>
-        
+
         <network-listener name="https-lazy-listener-1" port="38082" transport="tcp" protocol="https-lazy"
                           thread-pool="defaultThreadPool"/>
         <network-listener name="https-listener-1" port="38083" transport="tcp" protocol="https"

@@ -32,19 +32,19 @@ import samples.jms.soaptojms.ServiceLocatorException;
  */
 public class ServiceLocator {
 
-    private InitialContext ic;    
+    private InitialContext ic;
 
     public ServiceLocator() throws ServiceLocatorException  {
       try {
-        ic = new InitialContext();       
+        ic = new InitialContext();
       } catch (NamingException ne) {
             throw new ServiceLocatorException(ne);
       } catch (Exception e) {
             throw new ServiceLocatorException(e);
-      } 
+      }
     }
 
-    
+
    /**
      * This method helps in obtaining the topic factory
      * @return the factory for the factory to get topic connections from
@@ -52,7 +52,7 @@ public class ServiceLocator {
     public  TopicConnectionFactory getTopicConnectionFactory(String topicConnFactoryName) throws ServiceLocatorException {
       TopicConnectionFactory factory = null;
       try {
-        factory = (TopicConnectionFactory) ic.lookup(topicConnFactoryName);        
+        factory = (TopicConnectionFactory) ic.lookup(topicConnFactoryName);
       } catch (NamingException ne) {
           ne.printStackTrace();
           throw new ServiceLocatorException(ne);
@@ -62,8 +62,8 @@ public class ServiceLocator {
       }
       return factory;
     }
-    
-   
+
+
     /**
      * This method obtains the topc itself for a caller
      * @return the Topic Destination to send messages to

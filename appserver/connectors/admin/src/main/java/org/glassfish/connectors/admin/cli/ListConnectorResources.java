@@ -35,7 +35,7 @@ import java.util.Collection;
 
 /**
  * List Connector Resources command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE,
         CommandTarget.CLUSTERED_INSTANCE })
@@ -46,14 +46,14 @@ import java.util.Collection;
 @I18n("list.connector.resources")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-connector-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-connector-resources",
         description="List Connector Resources")
 })
 public class ListConnectorResources implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListConnectorResources.class);    
- 
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListConnectorResources.class);
+
     @Inject
     private Domain domain;
 

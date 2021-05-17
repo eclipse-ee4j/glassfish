@@ -21,9 +21,9 @@
 <!--
 
     Template file to create URL Object provider custom resources.
-    By specifying the built-in "factory-class" as 
+    By specifying the built-in "factory-class" as
     org.glassfish.resources.custom.factory.URLObjectFactory,
-    "res-type" as java.net.URL 
+    "res-type" as java.net.URL
     and any of the following combination of parameters to the Constructor
      * protocol, host, port, file
      * spec
@@ -33,12 +33,12 @@
     To learn more on custom resources,refer :
 
     http://docs.sun.com/app/docs/doc/819-2554/ablld?l=en&a=view
-    
+
     http://docs.sun.com/app/docs/doc/820-4332/create-custom-resource-1?a=view
 
     http://docs.sun.com/app/docs/doc/820-4332/delete-custom-resource-1?a=view
 
-    http://docs.sun.com/app/docs/doc/820-4332/list-custom-resources-1?a=view 
+    http://docs.sun.com/app/docs/doc/820-4332/list-custom-resources-1?a=view
 
     For detailed explanation of attributes and elements of this resources xml
     pl. refer to sun-resources_1_3.dtd
@@ -47,7 +47,7 @@
     =========================================SAMPLE============================================
 
 
-    In the sample configuration below, 
+    In the sample configuration below,
     custom-resource will provide a URL (java.net.URL) upon lookup
 
     Applications can do  :
@@ -66,7 +66,7 @@
           <property name="host" value="java.sun.com" />
           <property name="file" value="/index.html" />
         </custom-resource>
-    </resources> 
+    </resources>
 
 
     =========================================SAMPLE============================================

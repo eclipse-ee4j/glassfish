@@ -20,16 +20,16 @@ package com.oracle.hk2.devtest.cdi.ejb1.scoped;
  * Since this service does NOT have a constructor marked
  * with {@link Inject} and does NOT have a zero-arg constructor
  * CDI will NOT consider this to be one of its own beans
- * 
+ *
  * @author jwells
  *
  */
 public class HK2ServiceImpl implements HK2Service {
     private final int jobValue;
-    
+
     /**
      * Doing THIS makes this NOT a CDI service!
-     * 
+     *
      * @param jobValue
      */
     public HK2ServiceImpl(int jobValue) {

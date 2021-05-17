@@ -32,7 +32,7 @@ import org.glassfish.internal.grizzly.V3Mapper;
  * context endpoints.
  *
  * @author jluehe
- */ 
+ */
 public class WebConnector extends PECoyoteConnector {
 
     /**
@@ -50,7 +50,7 @@ public class WebConnector extends PECoyoteConnector {
             v3Mapper = new V3Mapper();
             mapper = v3Mapper;
         }
-        
+
         super.initialize();
 
         if (v3Mapper != null) {
@@ -59,5 +59,5 @@ public class WebConnector extends PECoyoteConnector {
             ((V3Mapper) mapper).setHttpHandler(getHandler());
         }
     }
-    
+
 }

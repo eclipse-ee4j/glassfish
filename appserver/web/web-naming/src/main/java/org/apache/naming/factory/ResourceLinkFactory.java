@@ -31,7 +31,7 @@ import org.apache.naming.ResourceLinkRef;
 
 /**
  * <p>Object factory for resource links.</p>
- * 
+ *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:07 $
  */
@@ -57,7 +57,7 @@ public class ResourceLinkFactory
 
     /**
      * Set the global context (note: can only be used once).
-     * 
+     *
      * @param newGlobalContext new global context value
      */
     public static void setGlobalContext(Context newGlobalContext) {
@@ -77,13 +77,13 @@ public class ResourceLinkFactory
 
     /**
      * Create a new DataSource instance.
-     * 
+     *
      * @param obj The reference object describing the DataSource
      */
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
                                     Hashtable<?,?> environment)
         throws NamingException {
-        
+
         if (!(obj instanceof ResourceLinkRef))
             return null;
 
@@ -103,7 +103,7 @@ public class ResourceLinkFactory
 
         return (null);
 
-        
+
     }
 
 

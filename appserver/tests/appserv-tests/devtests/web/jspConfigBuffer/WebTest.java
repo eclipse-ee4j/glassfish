@@ -42,25 +42,25 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for jsp:attribute with omit");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() {
 
         BufferedReader bis = null;
-        try { 
+        try {
             URL url = new URL("http://" + host  + ":" + port
                               + contextRoot + "/jsp/test.jsp");
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.err.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 stat.addStatus(TEST_NAME, stat.FAIL);

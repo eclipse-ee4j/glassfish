@@ -38,11 +38,11 @@ public class HAStatefulSessionStoreStatsImpl
     implements com.sun.enterprise.admin.monitor.stats.HAStatefulSessionStoreStats
 {
 
-    private MutableCountStatisticImpl		checkpointCount;
-    private MutableCountStatisticImpl		checkpointSuccessCount;
-    private MutableCountStatisticImpl		checkpointErrorCount;
-    private MutableAverageRangeStatisticImpl	checkpointSize;
-    private MutableAverageRangeStatisticImpl	checkpointTime;
+    private MutableCountStatisticImpl        checkpointCount;
+    private MutableCountStatisticImpl        checkpointSuccessCount;
+    private MutableCountStatisticImpl        checkpointErrorCount;
+    private MutableAverageRangeStatisticImpl    checkpointSize;
+    private MutableAverageRangeStatisticImpl    checkpointTime;
 
     private Object checkpointCountLock = new Object();
     private Object checkpointSizeLock = new Object();
@@ -53,122 +53,122 @@ public class HAStatefulSessionStoreStatsImpl
     private long    checkpointErrorCountVal;
 
     public HAStatefulSessionStoreStatsImpl(
-	MonitorableSFSBStoreManager provider)
+    MonitorableSFSBStoreManager provider)
     {
-	super(provider, "com.sun.enterprise.admin.monitor.stats.HAStatefulSessionStoreStats");
-	initialize();
+    super(provider, "com.sun.enterprise.admin.monitor.stats.HAStatefulSessionStoreStats");
+    initialize();
     }
 
     protected void initialize() {
-	super.initialize();
+    super.initialize();
 
-	synchronized (checkpointCountLock) {
-	    checkpointCount = new MutableCountStatisticImpl(
-		new CountStatisticImpl("CheckpointCount"));
-	    checkpointSuccessCount = new MutableCountStatisticImpl(
-		new CountStatisticImpl("CheckpointSuccessCount"));
-	    checkpointErrorCount = new MutableCountStatisticImpl(
-		new CountStatisticImpl("CheckpointErrorCount"));
-	}
+    synchronized (checkpointCountLock) {
+        checkpointCount = new MutableCountStatisticImpl(
+        new CountStatisticImpl("CheckpointCount"));
+        checkpointSuccessCount = new MutableCountStatisticImpl(
+        new CountStatisticImpl("CheckpointSuccessCount"));
+        checkpointErrorCount = new MutableCountStatisticImpl(
+        new CountStatisticImpl("CheckpointErrorCount"));
+    }
 
-	synchronized (checkpointTimeLock) {
-	    checkpointTime = new MutableAverageRangeStatisticImpl(
-	    	new BoundedRangeStatisticImpl(0, 0, 0,
+    synchronized (checkpointTimeLock) {
+        checkpointTime = new MutableAverageRangeStatisticImpl(
+            new BoundedRangeStatisticImpl(0, 0, 0,
                                      0, 0, "CheckpointTime",
                                      "millis", "Time spent on checkpointing", 0, 0)
-	    );
-	}
+        );
+    }
 
-	synchronized (checkpointSizeLock) {
-	    checkpointSize = new MutableAverageRangeStatisticImpl(
-	    	new BoundedRangeStatisticImpl(0, 0, 0,
+    synchronized (checkpointSizeLock) {
+        checkpointSize = new MutableAverageRangeStatisticImpl(
+            new BoundedRangeStatisticImpl(0, 0, 0,
                                      0, 0, "CheckpointSize",
                                      "millis", "Number of bytes checkpointed", 0, 0)
-	    );
-	}
+        );
+    }
     }
 
     /**
      * Returns the total number of sessions checkpointed into the store
      */
     public CountStatistic getCheckpointCount() {
-	synchronized (checkpointCountLock) {
-	    checkpointCount.setCount(checkpointCountVal);
-	   return (CountStatistic) checkpointCount.unmodifiableView();
-	}
+    synchronized (checkpointCountLock) {
+        checkpointCount.setCount(checkpointCountVal);
+       return (CountStatistic) checkpointCount.unmodifiableView();
+    }
     }
 
     /**
      * Returns the total number of sessions successfully Checkpointed into the store
      */
     public CountStatistic getCheckpointSuccessCount() {
-	synchronized (checkpointCountLock) {
-	    checkpointSuccessCount.setCount(checkpointSuccessCountVal);
-	    return (CountStatistic) checkpointSuccessCount.unmodifiableView();
-	}
+    synchronized (checkpointCountLock) {
+        checkpointSuccessCount.setCount(checkpointSuccessCountVal);
+        return (CountStatistic) checkpointSuccessCount.unmodifiableView();
+    }
     }
 
     /**
      * Returns the total number of sessions that couldn't be Checkpointed into the store
      */
     public CountStatistic getCheckpointErrorCount() {
-	synchronized (checkpointCountLock) {
-	    checkpointErrorCount.setCount(checkpointErrorCountVal);
-	    return (CountStatistic) checkpointErrorCount.unmodifiableView();
-	}
+    synchronized (checkpointCountLock) {
+        checkpointErrorCount.setCount(checkpointErrorCountVal);
+        return (CountStatistic) checkpointErrorCount.unmodifiableView();
+    }
     }
 
     /**
      * Returns the number of bytes checkpointed
      */
     public AverageRangeStatistic getCheckpointedBeanSize() {
-	synchronized (checkpointTimeLock) {
-	    return (AverageRangeStatistic) checkpointSize.unmodifiableView();
-	}
+    synchronized (checkpointTimeLock) {
+        return (AverageRangeStatistic) checkpointSize.unmodifiableView();
+    }
     }
 
     /**
      * Returns the time spent on passivating beans to the store including total, min, max
      */
     public AverageRangeStatistic getCheckpointTime() {
-	synchronized (checkpointTimeLock) {
-	    return (AverageRangeStatistic) checkpointTime.unmodifiableView();
-	}
+    synchronized (checkpointTimeLock) {
+        return (AverageRangeStatistic) checkpointTime.unmodifiableView();
+    }
     }
 
     public void incrementCheckpointCount(boolean success) {
-	synchronized (checkpointCountLock) {
-	    checkpointCountVal++;
-	    if (success) {
-		checkpointSuccessCountVal++;
-	    } else {
-		checkpointErrorCountVal++;
-	    }
-	}     
+    synchronized (checkpointCountLock) {
+        checkpointCountVal++;
+        if (success) {
+        checkpointSuccessCountVal++;
+        } else {
+        checkpointErrorCountVal++;
+        }
+    }
     }
 
     public void setCheckpointSize(long val) {
-	synchronized (checkpointSizeLock) {
-	    checkpointSize.setCount(val);
-	}
+    synchronized (checkpointSizeLock) {
+        checkpointSize.setCount(val);
+    }
     }
 
     public void setCheckpointTime(long val) {
-	synchronized (checkpointTimeLock) {
-	    checkpointTime.setCount(val);
-	}
+    synchronized (checkpointTimeLock) {
+        checkpointTime.setCount(val);
+    }
     }
 
     protected void appendStats(StringBuffer sbuf) {
-	super.appendStats(sbuf);
-	sbuf.append("CheckpointCount: ").append(checkpointCountVal)
-	    .append("; ")
-	    .append("CheckpointSuccessCount: ").append(checkpointSuccessCountVal)
-	    .append("; ")
-	    .append("CheckpointErrorCount: ").append(checkpointErrorCountVal)
-	    .append("; ");
+    super.appendStats(sbuf);
+    sbuf.append("CheckpointCount: ").append(checkpointCountVal)
+        .append("; ")
+        .append("CheckpointSuccessCount: ").append(checkpointSuccessCountVal)
+        .append("; ")
+        .append("CheckpointErrorCount: ").append(checkpointErrorCountVal)
+        .append("; ");
 
-	appendTimeStatistic(sbuf, "CheckpointTime", checkpointTime);
+    appendTimeStatistic(sbuf, "CheckpointTime", checkpointTime);
     }
 
 }

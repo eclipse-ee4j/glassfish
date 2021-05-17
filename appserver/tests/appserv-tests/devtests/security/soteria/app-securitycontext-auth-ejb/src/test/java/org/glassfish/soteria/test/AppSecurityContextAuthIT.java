@@ -43,19 +43,19 @@ public class AppSecurityContextAuthIT extends ArquillianBase {
     public static void printSummary(){
         stat.printSummary();
     }
-    
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();
     }
-    
+
     @Test
     public void testAuthenticatedStatus() {
         assertTrue(
             readFromServer("/servlet?name=reza")
                 .contains("Authenticated with status: SUCCESS"));
     }
-    
+
     /**
      * The name "rezax" will cause the custom authentication provider
      * to throw an auth exception, which should ultimately result in
@@ -67,7 +67,7 @@ public class AppSecurityContextAuthIT extends ArquillianBase {
             readFromServer("/servlet?name=rezax")
                 .contains("Authenticated with status: SEND_FAILURE"));
     }
-    
+
     /**
      * The name "unknown" will cause the custom authentication provider
      * to return SEND_FAILURE, which should ultimately result in
@@ -119,14 +119,14 @@ public class AppSecurityContextAuthIT extends ArquillianBase {
                 "/protectedServlet",
                 readFromServer("/servlet?name=reza"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
     }
-    
-  
-    
+
+
+
 
 }

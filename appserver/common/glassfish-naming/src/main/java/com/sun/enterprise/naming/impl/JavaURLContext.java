@@ -136,7 +136,7 @@ public final class JavaURLContext implements Context, Cloneable {
             } else {
                 // It's either an application-defined dependency in a java:
                 // namespace or a special EE platform object.
-                // Check for EE platform objects first to prevent overriding.  
+                // Check for EE platform objects first to prevent overriding.
                 obj = NamedNamingObjectManager.tryNamedProxies(name);
                 if (obj == null) {
                     // try GlassfishNamingManager
@@ -197,7 +197,7 @@ public final class JavaURLContext implements Context, Cloneable {
                 }
 
                 return obj;
-               
+
             }
 
             throw ex;
@@ -524,7 +524,7 @@ public final class JavaURLContext implements Context, Cloneable {
     public String getNameInNamespace() throws NamingException {
         return myName;
     }
-    
+
 
   private boolean isLookingUpEnv(String fullName) {
     boolean result = false;

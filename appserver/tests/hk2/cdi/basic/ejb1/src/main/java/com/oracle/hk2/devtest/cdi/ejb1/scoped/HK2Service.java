@@ -21,17 +21,17 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * This service is created by hk2 and the implemetation
  * will be in a customized scope
- * 
+ *
  * @author jwells
  *
  */
 @Contract
 public interface HK2Service {
     public static final int RETURN_VALUE = 381;
-    
+
     /**
      * This method should always return RETURN_VALUE
-     * 
+     *
      * @return This method will always return RETURN_VALUE
      */
     public int doAJob();

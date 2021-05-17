@@ -94,7 +94,7 @@ public class EventsTest extends ConfigApiTest {
             return;
         }
         habitat  = super.getHabitat();
-        
+
         Server server = habitat.getService(Server.class, "server");
         ActiveDescriptor<Server> descriptor = BuilderHelper.createConstantDescriptor(server,
                 ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
@@ -147,7 +147,7 @@ public class EventsTest extends ConfigApiTest {
     public static List<EventTypes> asynchonousEvents() {
         ArrayList<EventTypes> events = new ArrayList<EventTypes>();
         events.add(Deployment.DEPLOYMENT_START);
-        events.add(Deployment.DEPLOYMENT_SUCCESS);        
+        events.add(Deployment.DEPLOYMENT_SUCCESS);
         events.add(Deployment.UNDEPLOYMENT_START);
         events.add(Deployment.UNDEPLOYMENT_SUCCESS);
         events.add(Deployment.UNDEPLOYMENT_FAILURE);
@@ -229,8 +229,8 @@ public class EventsTest extends ConfigApiTest {
             }
         }
         for (EventTypes et : asyncEvents) {
-            System.out.println("Asynchronous event " + et.type() + " was not received");    
+            System.out.println("Asynchronous event " + et.type() + " was not received");
         }
-        Assert.assertTrue(asyncEvents.size()==0);        
+        Assert.assertTrue(asyncEvents.size()==0);
     }
 }

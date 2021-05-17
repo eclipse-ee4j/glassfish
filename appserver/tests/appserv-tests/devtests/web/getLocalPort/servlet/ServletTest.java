@@ -23,13 +23,13 @@ import jakarta.servlet.http.*;
 public class ServletTest extends HttpServlet {
 
     private ServletContext context;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("[Servlet.init]");        
+        System.out.println("[Servlet.init]");
         context = config.getServletContext();
         System.out.println("[Servlet.init] " + context.getMajorVersion());
-        
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,12 +37,12 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        
+
         out.println("getLocalPort:" + request.getLocalPort());
         out.flush();
         out.close();

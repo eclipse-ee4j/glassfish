@@ -28,10 +28,10 @@ import java.io.Serializable;
 public class LongWorkContext implements PrimitiveWorkContext, Serializable
 {
   private long longValue;
-  
+
   public LongWorkContext() {
   }
-  
+
   /* package */ LongWorkContext(long l) {
     longValue = l;
   }
@@ -39,7 +39,7 @@ public class LongWorkContext implements PrimitiveWorkContext, Serializable
   public Object get() {
     return new Long(longValue());
   }
-  
+
   public String toString() {
     return "" + longValue;
   }
@@ -54,11 +54,11 @@ public class LongWorkContext implements PrimitiveWorkContext, Serializable
   public long longValue() {
     return longValue;
   }
-  
+
   public void writeContext(WorkContextOutput out) throws IOException {
     out.writeLong(longValue);
   }
-  
+
   public void readContext(WorkContextInput in) throws IOException {
     longValue = in.readLong();
   }

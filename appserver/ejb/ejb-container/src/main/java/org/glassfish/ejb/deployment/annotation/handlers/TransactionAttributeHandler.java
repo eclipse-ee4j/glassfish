@@ -58,14 +58,14 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler
 
     private final static LocalStringManagerImpl localStrings =
              new LocalStringManagerImpl(TransactionAttributeHandler.class);
- 
+
     public TransactionAttributeHandler() {
     }
 
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
-        
-        TransactionAttribute taAn = 
+
+        TransactionAttribute taAn =
             (TransactionAttribute) ainfo.getAnnotation();
 
         for (EjbContext ejbContext : ejbContexts) {
@@ -77,7 +77,7 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler
                 ejbContext.addPostProcessInfo(ainfo, this);
             } else {
                 Method annMethod = (Method) ainfo.getAnnotatedElement();
-                
+
                 Set txBusMethods = ejbDesc.getTxBusinessMethodDescriptors();
                 for (Object next : txBusMethods) {
                     MethodDescriptor nextDesc = (MethodDescriptor) next;
@@ -107,21 +107,21 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler
                                         if (sd.isStateful() && containerTransaction != null) {
                                             String tattr = containerTransaction.getTransactionAttribute();
                                             if (tattr != null
-                                                && !tattr.equals(ContainerTransaction.REQUIRES_NEW) 
+                                                && !tattr.equals(ContainerTransaction.REQUIRES_NEW)
                                                 && !tattr.equals(ContainerTransaction.NOT_SUPPORTED)) {
                                                 logger.log(Level.WARNING, localStrings.getLocalString(
-                                                  "enterprise.deployment.annotation.handlers.sfsblifecycletxnattrtypewarn", 
-                                                  "Stateful session bean {0} lifecycle callback method {1} has transaction " + 
+                                                  "enterprise.deployment.annotation.handlers.sfsblifecycletxnattrtypewarn",
+                                                  "Stateful session bean {0} lifecycle callback method {1} has transaction " +
                                                   "attribute {2} with container-managed transaction demarcation. " +
                                                   "The transaction attribute should be either REQUIRES_NEW or NOT_SUPPORTED",
                                                   new Object[]{(sd.getName() == null ? "" : sd.getName()), m.getName(), tattr}));
-                                            }    
+                                            }
                                         }
                                         // override by xml
                                         ejbDesc.setContainerTransactionFor(md, containerTransaction);
                                         if (logger.isLoggable(Level.FINE)) {
                                             logger.log(Level.FINE,
-                                                "Found matching callback method " + ejbDesc.getEjbClassName() 
+                                                "Found matching callback method " + ejbDesc.getEjbClassName()
                                                  + "<>" + md + " : " + containerTransaction);
                                         }
                                     }
@@ -174,16 +174,16 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {
-        
+
         return new Class[] {
             MessageDriven.class, Stateful.class, Stateless.class, Singleton.class,
                 Timeout.class, TransactionManagement.class};
-                
+
     }
 
     protected boolean supportTypeInheritance() {
@@ -197,7 +197,7 @@ public class TransactionAttributeHandler extends AbstractAttributeHandler
     public void postProcessAnnotation(AnnotationInfo ainfo, EjbContext ejbContext)
             throws AnnotationProcessorException {
         EjbDescriptor ejbDesc = (EjbDescriptor) ejbContext.getDescriptor();
-        TransactionAttribute taAn = 
+        TransactionAttribute taAn =
             (TransactionAttribute) ainfo.getAnnotation();
         ContainerTransaction containerTransaction =
             getContainerTransaction(taAn.value());

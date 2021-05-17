@@ -105,10 +105,10 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes set of ejb-ejb32 tests in a full profile)
-			ant lite (Executes set of the ejb-ejb32 tests in a lite profile)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes set of ejb-ejb32 tests in a full profile)
+            ant lite (Executes set of the ejb-ejb32 tests in a lite profile)
+    </echo>
     </target>
 </project>

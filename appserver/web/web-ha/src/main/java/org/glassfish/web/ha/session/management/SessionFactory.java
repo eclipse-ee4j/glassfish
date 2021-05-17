@@ -30,7 +30,7 @@ import org.apache.catalina.Session;
  * @author  lwhite
  */
 public interface SessionFactory {
-    
+
     public Session createSession(Manager mgr);
-    
+
 }

@@ -22,7 +22,7 @@ import org.glassfish.admin.restconnector.Constants;
 
 /**
  * Adapter for REST management interface
- * 
+ *
  * @author Rajeshwar Patil , Ludovic Champenois
  * @author sanjeeb.sahoo@oracle.com
  */

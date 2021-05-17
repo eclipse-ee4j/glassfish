@@ -37,12 +37,12 @@ import static org.glassfish.grizzly.http.server.StaticHttpHandlerBase.sendFile;
 /**
  * {@link StaticHttpHandler}, which additionally can check registered
  * {@link AlternateDocBase}s to serve requested resources.
- * 
+ *
  * @author Alexey Stashok
  */
 public class ADBAwareHttpHandler extends StaticHttpHandler {
     private static final Logger LOGGER = Grizzly.logger(ADBAwareHttpHandler.class);
-    
+
     private final List<AlternateDocBase> alternateDocBases =
             new ArrayList<AlternateDocBase>();
 
@@ -50,16 +50,16 @@ public class ADBAwareHttpHandler extends StaticHttpHandler {
         // make sure the default "." docRoot won't be added
         super((Set<String>) null);
     }
-    
+
     /**
      * Add {@link AlternateDocBase} to be checked for requested resources.
-     * 
+     *
      * @param urlPattern
      * @param docBase absolute path
      */
     public void addAlternateDocBase(final String urlPattern,
             final String docBase) {
-        
+
         if (urlPattern == null) {
             throw new IllegalArgumentException("The urlPattern argument can't be null");
         } else if (docBase == null) {
@@ -70,7 +70,7 @@ public class ADBAwareHttpHandler extends StaticHttpHandler {
         alternateDocBase.setUrlPattern(urlPattern);
         alternateDocBase.setDocBase(docBase);
         alternateDocBase.setBasePath(getBasePath(docBase));
-        
+
         alternateDocBases.add(alternateDocBase);
     }
 
@@ -85,7 +85,7 @@ public class ADBAwareHttpHandler extends StaticHttpHandler {
             serveFile(file, request, response);
             return true;
         }
-        
+
         return super.handle(uri, request, response);
     }
 
@@ -110,11 +110,11 @@ public class ADBAwareHttpHandler extends StaticHttpHandler {
         }
 
         pickupContentType(response, file.getPath());
-        
+
         addToFileCache(request, response, file);
         sendFile(response, file);
     }
-    
+
     private File lookupInADB(final String uri) {
         final AlternateDocBase adb = AlternateDocBase.findMatch(
                 uri, alternateDocBases);
@@ -133,7 +133,7 @@ public class ADBAwareHttpHandler extends StaticHttpHandler {
                 return file;
             }
         }
-        
+
         return null;
     }
 }

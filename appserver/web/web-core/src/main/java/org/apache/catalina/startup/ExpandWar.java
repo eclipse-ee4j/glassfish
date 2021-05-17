@@ -178,7 +178,7 @@ public class ExpandWar {
             throw e;
         } finally {
             if (!success) {
-                // If something went wrong, delete expanded dir to keep things 
+                // If something went wrong, delete expanded dir to keep things
                 // clean
                 deleteDir(docBase);
             }
@@ -228,7 +228,7 @@ public class ExpandWar {
             appBase = new File(System.getProperty("catalina.base"),
                                host.getAppBase());
         }
-        
+
         File docBase = new File(appBase, pathname);
 
         // Calculate the document base directory
@@ -277,9 +277,9 @@ public class ExpandWar {
      * @param dest File object representing the destination
      */
     public static boolean copy(File src, File dest) {
-        
+
         boolean result = true;
-        
+
         String files[] = null;
         if (src.isDirectory()) {
             files = src.list();
@@ -325,10 +325,10 @@ public class ExpandWar {
             }
         }
         return result;
-        
+
     }
-    
-    
+
+
     /**
      * Delete the specified directory, including all of its contents and
      * sub-directories recursively. Any failure will be logged.
@@ -365,7 +365,7 @@ public class ExpandWar {
         return result;
      }
 
-    
+
     /**
      * Delete the specified directory, including all of its contents and
      * sub-directories recursively. Any failure will be logged.
@@ -407,11 +407,11 @@ public class ExpandWar {
         } else {
             result = true;
         }
-        
+
         if (logFailure && !result) {
             log.log(Level.SEVERE, LogFacade.DELETE_DIR_EXCEPTION, dir.getAbsolutePath());
         }
-        
+
         return result;
     }
 
@@ -447,7 +447,7 @@ public class ExpandWar {
         throws IOException {
         BufferedOutputStream output = null;
         try {
-            output = 
+            output =
                 new BufferedOutputStream(new FileOutputStream(file));
             byte buffer[] = new byte[2048];
             while (true) {

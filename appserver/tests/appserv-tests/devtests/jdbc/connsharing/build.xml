@@ -23,7 +23,7 @@
 ]>
 
 <project name="jdbc" default="usage" basedir=".">
-	
+
     &eeCommon;
     &eeCommonProperties;
 
@@ -32,24 +32,24 @@
     <target name="all">
       <antcall target="${execution.mode}-all"/>
     </target>
-    
+
     <target name="pe-all">
         <delete>
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="connsharing.output" action="start" />
-	  <ant dir="nonxa" target="all"/>
-	  <ant dir="xa" target="all"/>
+      <ant dir="nonxa" target="all"/>
+      <ant dir="xa" target="all"/>
         <record name="connsharing.output" action="stop" />
     </target>
-    
+
     <target name="ee-all">
         <delete>
            <fileset dir="." includes="*.output"/>
         </delete>
         <record name="connsharing.output" action="start" />
-	  <ant dir="nonxa" target="all"/>
-	  <ant dir="xa" target="all"/>
+      <ant dir="nonxa" target="all"/>
+      <ant dir="xa" target="all"/>
         <record name="connsharing.output" action="stop" />
     </target>
 
@@ -65,9 +65,9 @@
         <record name="xa.output" action="stop" />
     </target>
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the jdbc tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the jdbc tests)
+    </echo>
     </target>
 </project>

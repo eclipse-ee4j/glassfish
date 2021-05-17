@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-jts-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console JTS Plugin</name>
     <description>Transaction Service plugin bundle for GlassFish Admin Console</description>
 

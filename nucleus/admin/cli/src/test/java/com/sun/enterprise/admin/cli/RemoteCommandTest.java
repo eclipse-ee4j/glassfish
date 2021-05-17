@@ -31,7 +31,7 @@ public class RemoteCommandTest {
     public void fake() {
         System.out.println("Tests Suspended Temporarily");
     }
-    
+
   /*************
     private RemoteCommand rc = null;
 
@@ -49,7 +49,7 @@ public class RemoteCommandTest {
             //return false
         assertFalse(rc.getUploadFile("yes", "dummy", null));
             //return true
-        assertTrue(rc.getUploadFile("true", "dummy", null));                    
+        assertTrue(rc.getUploadFile("true", "dummy", null));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class RemoteCommandTest {
         }
         catch(java.io.IOException ioe) {}
     }
-    
+
     @Before
     public void setup() {
         rc = new RemoteCommand();

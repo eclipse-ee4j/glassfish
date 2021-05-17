@@ -224,7 +224,7 @@ where p.position = ?1 and p.name = ?2</ejb-ql>
           <method-name>findNotOnTeam</method-name>
           <method-params/>
         </query-method>
-        <ejb-ql>select object(p) from Player p 
+        <ejb-ql>select object(p) from Player p
 where p.teams is empty</ejb-ql>
       </query>
       <query>

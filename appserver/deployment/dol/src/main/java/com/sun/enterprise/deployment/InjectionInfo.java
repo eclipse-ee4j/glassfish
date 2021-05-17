@@ -22,7 +22,7 @@ import java.util.List;
 
 public class InjectionInfo {
 
-    private List<InjectionCapable> injectionResources; 
+    private List<InjectionCapable> injectionResources;
 
     // Name of post-consturct method.  Set to null if there is no post-construct
     // method for this class.
@@ -58,10 +58,10 @@ public class InjectionInfo {
             injectionResources = new LinkedList<InjectionCapable>();
         }
         return injectionResources;
-    } 
+    }
 
     public void setInjectionResources(List<InjectionCapable> resources) {
-        injectionResources = resources; 
+        injectionResources = resources;
     }
 
     public String getPostConstructMethodName() {

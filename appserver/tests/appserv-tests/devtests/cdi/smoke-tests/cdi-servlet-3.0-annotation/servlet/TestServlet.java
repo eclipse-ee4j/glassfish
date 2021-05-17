@@ -35,8 +35,8 @@ public class TestServlet extends HttpServlet {
     @Inject TestBean tb;
     @Inject BeanManager bm;
     BeanManager bm1;
-    
-    @Inject 
+
+    @Inject
     private transient org.jboss.logging.Logger log;
 
     public void service(HttpServletRequest req, HttpServletResponse res)
@@ -55,7 +55,7 @@ public class TestServlet extends HttpServlet {
             msg += "BeanManager Injection via component environment lookup failed";
         }
         if (bm1 == null) msg += "BeanManager Injection via component environment lookup failed";
-        
+
         System.out.println("BeanManager is " + bm);
         System.out.println("BeanManager via lookup is " + bm1);
         writer.write("initParams: " + msg + "\n");

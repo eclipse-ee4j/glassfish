@@ -33,7 +33,7 @@ import org.junit.Test;
 
 @Ignore
 public class WirePropagationTest {
-  
+
 //  @BeforeClass
 //  public static void setup() throws InsufficientCredentialException {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());

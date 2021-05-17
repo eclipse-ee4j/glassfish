@@ -84,7 +84,7 @@ public class RosterServlet extends HttpServlet{
                                             RosterHome.class);
 
            Roster myRoster = home.create();
-            
+
            // deleting all exisiting DB-entries
            myRoster.cleanUp();
 

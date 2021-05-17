@@ -42,7 +42,7 @@ import com.sun.logging.LogDomains;
  * the beans can be called during before/afterCompletion.
  *
  * This class also provides special methods for PersistenceManager Sync and
- * Timer objects which must be called AFTER the containers during 
+ * Timer objects which must be called AFTER the containers during
  * before/afterCompletion.
  *
  */
@@ -63,13 +63,13 @@ final class ContainerSynchronization implements Synchronization
     SFSBTxCheckpointCoordinator sfsbTxCoordinator;
 
     // Note: this must be called only after a Tx is begun.
-    ContainerSynchronization(Transaction tx, 
-			     EjbContainerUtil ejbContainerUtilImpl)
+    ContainerSynchronization(Transaction tx,
+                 EjbContainerUtil ejbContainerUtilImpl)
     {
         this.tx = tx;
         this.ejbContainerUtilImpl = ejbContainerUtilImpl;
     }
-    
+
     Vector  getBeanList(){
         Vector vec = new Vector();
         for (Iterator iter = beans.iterator(); iter.hasNext(); ) {
@@ -77,23 +77,23 @@ final class ContainerSynchronization implements Synchronization
         }
         return vec;
     }
-    
+
     void addBean(EJBContextImpl bean)
     {
         beans.add(bean);
     }
-    
+
     void removeBean(EJBContextImpl bean)
     {
         beans.remove(bean);
     }
-    
+
     void addPMSynchronization(Synchronization sync)
     {
         pmSyncs.add(sync);
     }
 
-    // Set synchronization object for a particular timer.  
+    // Set synchronization object for a particular timer.
     void addTimerSynchronization(TimerPrimaryKey timerId, Synchronization sync)
     {
         timerSyncs.put(timerId, sync);
@@ -117,27 +117,27 @@ final class ContainerSynchronization implements Synchronization
             try {
                 if( container != null ) {
                     boolean allowTxCompletion = true;
-		    if (container.isUndeployed()) {
+            if (container.isUndeployed()) {
                         if (context instanceof SessionContextImpl) {
                             allowTxCompletion = ((SessionContextImpl) context).getInLifeCycleCallback();
                         } else {
                             allowTxCompletion = false;
-		            _logger.log(Level.WARNING, "Marking Tx for rollback "
-        		        + " because container for " + container
-        		        + " is undeployed");
+                    _logger.log(Level.WARNING, "Marking Tx for rollback "
+                        + " because container for " + container
+                        + " is undeployed");
                         }
                     }
 
                     if (!allowTxCompletion) {
-			try {
-			    tx.setRollbackOnly();
-			} catch (SystemException sysEx) {
-			    _logger.log(Level.FINE, "Error while trying to "
-				+ "mark for rollback", sysEx);
-			}
-		    } else {
-			container.beforeCompletion(context);
-		    }
+            try {
+                tx.setRollbackOnly();
+            } catch (SystemException sysEx) {
+                _logger.log(Level.FINE, "Error while trying to "
+                + "mark for rollback", sysEx);
+            }
+            } else {
+            container.beforeCompletion(context);
+            }
                 } else {
                     // Might be null if bean was removed.  Just skip it.
                     _logger.log(Level.FINE, "context with empty container in " +
@@ -182,7 +182,7 @@ final class ContainerSynchronization implements Synchronization
     }
 
     public void afterCompletion(int status)
-    {	
+    {
         for ( int i=0; i<pmSyncs.size(); i++ ) {
             Synchronization sync = (Synchronization)pmSyncs.elementAt(i);
             try {
@@ -214,12 +214,12 @@ final class ContainerSynchronization implements Synchronization
             sfsbTxCoordinator.doTxCheckpoint();
         }
 
-        for ( Iterator iter = timerSyncs.values().iterator(); 
+        for ( Iterator iter = timerSyncs.values().iterator();
               iter.hasNext(); ) {
             Synchronization timerSync = (Synchronization) iter.next();
             try {
                 timerSync.afterCompletion(status);
-            } catch ( Exception ex ) { 
+            } catch ( Exception ex ) {
                 _logger.log(Level.SEVERE, "ejb.after_completion_error", ex);
             }
         }

@@ -92,7 +92,7 @@ public class
     private String appNameFromMainClass(final Class c) {
         return c.getName();
     }
-    
+
 //    private ReadableArchive createArchive(final ClassLoader loader,
 //            final Class mainClass) throws IOException, URISyntaxException {
 //        Manifest mf = new Manifest();
@@ -166,7 +166,7 @@ public class
              * having to set the URI to some fake URI that the archivist
              * factory would understand.
              */
-            archivist = completeInit((AppClientArchivist) 
+            archivist = completeInit((AppClientArchivist)
                     af.getArchivist(DOLUtils.carType()));
         }
         return archivist;

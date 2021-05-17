@@ -27,7 +27,7 @@ public interface TimerSession extends EJBObject {
 
     public void migrateTimersFrom(String owner) throws RemoteException;
 
-    public void createTimerInOtherServer(String owner, String timerId, 
+    public void createTimerInOtherServer(String owner, String timerId,
                                          long initialExpiration,
                                          long intervalDuration, String info)
         throws RemoteException;

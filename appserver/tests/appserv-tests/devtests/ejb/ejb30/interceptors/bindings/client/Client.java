@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -33,11 +33,11 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-interceptors-bindingsID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB Sful sful;
     private static @EJB Sful2 sful2;
     private static @EJB Sless3 sless3;
@@ -101,10 +101,10 @@ public class Client {
 
             sless6.ag();
             sless6.ag(1);
-            
+
             sless6.bg();
             sless6.bg(1);
-            
+
             sless6.cg();
             sless6.cg(1);
             sless6.cg("foo", 1.0);
@@ -124,8 +124,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+        return;
     }
 
 }

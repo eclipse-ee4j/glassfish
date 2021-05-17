@@ -29,31 +29,31 @@ import org.jvnet.hk2.config.types.HK2DomConfigTypesUtilities;
 
 /**
  * Tests for specialized config types
- * 
+ *
  * @author jwells
  *
  */
 public class ConfigTypesTest {
-    
+
     /**
      * Tests that the enable verb works
      */
     @Test
     public void testConfigTypesUtilities() {
         ServiceLocator locator = ServiceLocatorFactory.getInstance().create(null);
-        
+
         Assert.assertNull(locator.getService(ConfigInjector.class));
-        
+
         HK2DomConfigTypesUtilities.enableHK2DomConfigurationConfigTypes(locator, null);
-        
+
         // Twice to test idempotence
         HK2DomConfigTypesUtilities.enableHK2DomConfigurationConfigTypes(locator, null);
-        
+
         List<ActiveDescriptor<?>> injectors = locator.getDescriptors(BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
         Assert.assertEquals(1, injectors.size());
-        
+
         ActiveDescriptor<?> propInjectDesc = injectors.get(0);
-        
+
         Assert.assertEquals("org.jvnet.hk2.config.types.PropertyInjector", propInjectDesc.getImplementation());
     }
 }

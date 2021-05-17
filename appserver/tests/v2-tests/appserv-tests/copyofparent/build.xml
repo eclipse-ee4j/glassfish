@@ -35,7 +35,7 @@
     &run;
     &mail;
 
-    <target name="all"> 
+    <target name="all">
         <antcall target="sqetests"/>
     </target>
 
@@ -68,8 +68,8 @@
             <ant dir="sqetests" target="run-eesqe-target"/>
             <antcall target="stopee"/>
             <antcall target="stopDerby"/>
-	    <antcall target="create-report"/>
-	    <antcall target="mail"/>
+        <antcall target="create-report"/>
+        <antcall target="mail"/>
             <antcall target="report-java"/>
         <record name="runtest.output" action="stop"/>
     <record name="appserv-tests.log" action="stop"/>
@@ -118,7 +118,7 @@
          Executing web/subclassing [Total :3]
          ===========================================
         </echo>
-        
+
     </target>
 
     <target name="sqetests">
@@ -130,11 +130,11 @@
     <target name="setupMQ" depends="setup-mq-common" />
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant sqetests (Executes all sqetests tests)
-			ant all (Executes all sqetests)
+    <echo>
+        Usage:
+            ant sqetests (Executes all sqetests tests)
+            ant all (Executes all sqetests)
             ant show-list (Lists all test suites)
-	</echo>
+    </echo>
     </target>
 </project>

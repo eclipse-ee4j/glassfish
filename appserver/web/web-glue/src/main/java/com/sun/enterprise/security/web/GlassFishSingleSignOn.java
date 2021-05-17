@@ -39,9 +39,9 @@ import java.util.logging.Logger;
  * A <strong>Valve</strong> that supports a "single sign on" user experience,
  * where the security identity of a user who successfully authenticates to one
  * web application is propogated to other web applications in the same
- * security domain. 
+ * security domain.
  *
- * @author Jyri Virkki (first implementation) 
+ * @author Jyri Virkki (first implementation)
  * @author Jean-Francois Arcand
  */
 public class GlassFishSingleSignOn
@@ -69,7 +69,7 @@ public class GlassFishSingleSignOn
      * The background thread completion semaphore.
      */
     private boolean threadDone = false;
-        
+
     /**
      * The interval (in seconds) between checks for expired sessions.
      */
@@ -84,17 +84,17 @@ public class GlassFishSingleSignOn
     private int ssoMaxInactive = 300;
 
     //-------------------------------------------------------------- Monitoring
-    
+
     /**
      * Number of cache hits
      */
     private AtomicInteger hitCount = new AtomicInteger(0);
-    
+
     /**
      * Number of cache misses
      */
     private AtomicInteger missCount = new AtomicInteger(0);
-    
+
     // ------------------------------------------------------------- Properties
 
 
@@ -102,12 +102,12 @@ public class GlassFishSingleSignOn
      * Return expire thread interval (seconds)
      */
     public int getReapInterval() {
-        
+
         return this.ssoReapInterval;
-        
+
     }
 
-        
+
     /**
      * Set expire thread interval (seconds)
      */
@@ -122,7 +122,7 @@ public class GlassFishSingleSignOn
      * Return max idle time for SSO entries (seconds)
      */
     public int getMaxInactive() {
-        
+
         return this.ssoMaxInactive;
 
     }
@@ -216,7 +216,7 @@ public class GlassFishSingleSignOn
         if (ssoId == null) {
             return;
         }
-  
+
         // Was the session destroyed as the result of a timeout?
         // If so, we'll just remove the expired session from the
         // SSO.  If the session was logged out, we'll log out
@@ -225,7 +225,7 @@ public class GlassFishSingleSignOn
             removeSession(ssoId, session);
         } else {
             // The session was logged out.
-            // Deregister this single session id, invalidating 
+            // Deregister this single session id, invalidating
             // associated sessions
             deregister(ssoId);
         }
@@ -280,7 +280,7 @@ public class GlassFishSingleSignOn
             logger.log(Level.FINE, LogFacade.REQUEST_PROCESSED, neutralizeForLog(hreq.getRequestURI()));
         }
         if (hreq.getUserPrincipal() != null) {
-            //S1AS8 6155481 START            
+            //S1AS8 6155481 START
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.PRINCIPAL_ALREADY_AUTHENTICATED, neutralizeForLog(hreq.getUserPrincipal().getName()));
             }
@@ -314,7 +314,7 @@ public class GlassFishSingleSignOn
             }
         }
         if (cookie == null) {
-            //S1AS8 6155481 START    
+            //S1AS8 6155481 START
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.SSO_COOKIE_NOT_PRESENT);
             }
@@ -330,42 +330,42 @@ public class GlassFishSingleSignOn
         // If there is no realm available, do not process SSO.
         Realm realm = request.getContext().getRealm();
         if (realm == null) {
-            //S1AS8 6155481 START             
+            //S1AS8 6155481 START
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.NO_REALM_CONFIGURED);
             }
-            //S1AS8 6155481 END            
+            //S1AS8 6155481 END
             // START OF IASRI 4665318
             // context.invokeNext(request, response);
             // return;
             return INVOKE_NEXT;
             // END OF IASRI 4665318
         }
-         
+
         String realmName = realm.getRealmName();
         if (realmName == null) {
-            //S1AS8 6155481 START             
+            //S1AS8 6155481 START
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.NO_REALM_CONFIGURED);
             }
-            //S1AS8 6155481 END            
+            //S1AS8 6155481 END
             // START OF IASRI 4665318
             // context.invokeNext(request, response);
             // return;
             return INVOKE_NEXT;
             // END OF IASRI 4665318
         }
-         
+
         if (debug >= 1) {
-            //S1AS8 6155481 START             
+            //S1AS8 6155481 START
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.APP_REALM);
             }
          }
-        //S1AS8 6155481 END         
+        //S1AS8 6155481 END
 
         // Look up the cached Principal associated with this cookie value
-        //S1AS8 6155481 START         
+        //S1AS8 6155481 START
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, LogFacade.CHECKING_CACHED_PRINCIPAL);
         }
@@ -380,7 +380,7 @@ public class GlassFishSingleSignOn
                 logger.log(Level.FINE, LogFacade.FOUND_CACHED_PRINCIPAL,
                         new Object[]{entry.getPrincipal().getName(), entry.getAuthType(), entry.getRealmName()});
             }
-            //S1AS8 6155481 END            
+            //S1AS8 6155481 END
 
             // only use this SSO identity if it was set in the same realm
             if (entry.getRealmName().equals(realmName)) {
@@ -397,7 +397,7 @@ public class GlassFishSingleSignOn
                 // update hit atomic counter
                 hitCount.incrementAndGet();
             } else {
-                //S1AS8 6155481 START                 
+                //S1AS8 6155481 START
                 if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, LogFacade.IGNORING_SSO, realmName);
                 }
@@ -435,11 +435,11 @@ public class GlassFishSingleSignOn
      */
     protected void deregister(String ssoId) {
 
-        //S1AS8 6155481 START        
+        //S1AS8 6155481 START
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, LogFacade.DEREGISTER_SSO);
         }
-        //S1AS8 6155481 END 
+        //S1AS8 6155481 END
         // Look up and remove the corresponding SingleSignOnEntry
         SingleSignOnEntry sso = null;
         synchronized (cache) {
@@ -476,9 +476,9 @@ public class GlassFishSingleSignOn
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, LogFacade.SSO_EXPIRATION_STARTED, cache.size());
         }
-        //S1AS8 6155481 END 
+        //S1AS8 6155481 END
         ArrayList<String> removals = new ArrayList<String>(cache.size()/2);
-        
+
         // build list of removal targets
 
         // Note that only those SSO entries which are NOT associated with
@@ -500,14 +500,14 @@ public class GlassFishSingleSignOn
             }
 
             int removalCount = removals.size();
-            //S1AS8 6155481 START            
+            //S1AS8 6155481 START
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, LogFacade.SSO_CACHE_EXPIRE, removalCount);
             }
             //S1AS8 6155481 END
             // deregister any elegible sso entries
             for (int i=0; i < removalCount; i++) {
-                //S1AS8 6155481 START                
+                //S1AS8 6155481 START
                 if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, LogFacade.SSO_EXPRIRATION_REMOVING_ENTRY, removals.get(i));
                 }
@@ -534,7 +534,7 @@ public class GlassFishSingleSignOn
 
     }
 
-        
+
    /**
      * Start the background thread that will periodically check for
      * SSO timeouts.
@@ -590,7 +590,7 @@ public class GlassFishSingleSignOn
         }
 
     }
-        
+
     /**
      * Remove a single Session from a SingleSignOn.  Called when
      * a session is timed out and no longer active.
@@ -618,9 +618,9 @@ public class GlassFishSingleSignOn
             deregister(ssoId);
         }
     }
-    
+
     //-------------------------------------------------- Monitoring Support
-    
+
     /**
      * Gets the number of sessions participating in SSO
      *
@@ -630,7 +630,7 @@ public class GlassFishSingleSignOn
         return cache.size();
     }
 
-    
+
     /**
      * Gets the number of SSO cache hits
      *
@@ -640,7 +640,7 @@ public class GlassFishSingleSignOn
         return hitCount.intValue();
     }
 
-    
+
     /**
      * Gets the number of SSO cache misses
      *

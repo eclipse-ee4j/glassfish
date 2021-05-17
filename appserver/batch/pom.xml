@@ -29,7 +29,7 @@
     <groupId>org.glassfish.main.batch</groupId>
     <artifactId>batch</artifactId>
     <packaging>pom</packaging>
-    
+
     <name>Batch runtime modules for Glassfish</name>
 
     <modules>

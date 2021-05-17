@@ -64,7 +64,7 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
     public String getName() {
         return "jsfTld";
     }
- 
+
     /**
      * Gets a mapping from JAR files to their TLD resources.
      */
@@ -84,7 +84,7 @@ public class GlassFishTldProvider implements TldProvider, PostConstruct {
             for (Map.Entry<URI, List<String>> entry : entrySet) {
                 /*
                  * In the case of JSF, the only TLD that declares any
-                 * listener is META-INF/jsf_core.tld 
+                 * listener is META-INF/jsf_core.tld
                  */
                 if (entry.getValue().contains("META-INF/jsf_core.tld")) {
                     tldListenerMap.put(entry.getKey(), entry.getValue());

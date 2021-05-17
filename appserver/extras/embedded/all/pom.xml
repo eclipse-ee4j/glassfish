@@ -749,7 +749,7 @@
             <optional>true</optional>
         </dependency>
 
-	<!-- additional grizzly modules package which includes websockets -->
+    <!-- additional grizzly modules package which includes websockets -->
         <dependency>
             <groupId>org.glassfish.main.grizzly</groupId>
             <artifactId>glassfish-grizzly-extra-all</artifactId>

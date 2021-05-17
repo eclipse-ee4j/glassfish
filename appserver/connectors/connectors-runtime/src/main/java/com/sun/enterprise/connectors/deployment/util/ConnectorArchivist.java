@@ -43,7 +43,7 @@ import jakarta.inject.Inject;
  * This class is responsible for handling J2EE Connector archive files.
  *
  * @author Sheetal Vartak
- * @version  
+ * @version
  */
 @Service
 @PerLookup
@@ -57,17 +57,17 @@ public class ConnectorArchivist extends Archivist<ConnectorDescriptor> {
     private RarType rarType;
 
     /**
-     * @return the  module type handled by this archivist 
+     * @return the  module type handled by this archivist
      * as defined in the application DTD
      *
      */
     @Override
     public ArchiveType getModuleType() {
         return rarType;
-    }        
-          
+    }
 
-    
+
+
     /**
      * @return the DeploymentDescriptorFile responsible for handling
      * standard deployment descriptor
@@ -75,11 +75,11 @@ public class ConnectorArchivist extends Archivist<ConnectorDescriptor> {
     @Override
     public DeploymentDescriptorFile getStandardDDFile() {
         if (standardDD == null) {
-            standardDD = new ConnectorDeploymentDescriptorFile(); 
+            standardDD = new ConnectorDeploymentDescriptorFile();
         }
         return standardDD;
     }
-    
+
     /**
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
@@ -131,7 +131,7 @@ public class ConnectorArchivist extends Archivist<ConnectorDescriptor> {
 
     }
 
-    @Override    
+    @Override
     protected String getArchiveExtension() {
         return CONNECTOR_EXTENSION;
     }
@@ -165,7 +165,7 @@ public class ConnectorArchivist extends Archivist<ConnectorDescriptor> {
             return;
         }
         descriptor.setClassLoader(cl);
-        descriptor.visit(connectorValidator);        
+        descriptor.visit(connectorValidator);
     }
 
 }

@@ -79,7 +79,7 @@
     </target>
 
     <target name="undeploy" depends="init-common">
-	<antcall target="execute-sql-common">
+    <antcall target="execute-sql-common">
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
 
@@ -100,13 +100,13 @@
             <param name="jdbc.resource.name" value="jdbc/jdbc-stmtcaching_hit_miss"/>
         </antcall>
 
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc/jdbc-stmtcaching_hit_miss-pool.statement_cache_size=5"/>
         </antcall>
 
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc/jdbc-stmtcaching_hit_miss-pool.wrap_jdbc_objects=true"/>

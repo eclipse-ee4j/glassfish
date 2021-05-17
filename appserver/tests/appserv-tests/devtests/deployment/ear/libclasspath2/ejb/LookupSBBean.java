@@ -31,7 +31,7 @@ import libclasspath2.ResourceHelper;
  */
 @Stateless()
 public class LookupSBBean implements LookupSBRemote {
-    
+
     public ResourceHelper.Result runTests(String[] tests, ResourceHelper.TestType testType) throws IOException {
         return ResourceHelper.checkAll(tests, testType);
     }

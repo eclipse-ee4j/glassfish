@@ -39,7 +39,7 @@ public class JpaServlet extends ServletUtil {
     private EntityManagerFactory emf;
     private EntityManager em;
     private @Resource UserTransaction utx;
-    
+
 
     private final int customerId = 1;
     private final String customerName = "Joe Smith";
@@ -50,31 +50,31 @@ public class JpaServlet extends ServletUtil {
 
 
     public boolean processParams(HttpServletRequest request) {
-      try {	
-	if (request.getParameter("case") != null) {
-	   tc = request.getParameter("case");
-	} 
-	return true;
+      try {
+    if (request.getParameter("case") != null) {
+       tc = request.getParameter("case");
+    }
+    return true;
      } catch(Exception ex) {
-	System.err.println("Exception when processing the request params");
-	ex.printStackTrace();
-	return false;
+    System.err.println("Exception when processing the request params");
+    ex.printStackTrace();
+    return false;
      }
 
-    }	
+    }
 
     public EntityManager getEntityManager()
     {
-	return  emf.createEntityManager();
+    return  emf.createEntityManager();
     }
 
     public boolean testInsert() {
         boolean result = false;
 
-	try {
+    try {
         utx.begin();
         //out.println("createEM  EntityManager=" + em);
-	em = getEntityManager();
+    em = getEntityManager();
         // Create new customer
         Customer customer0 = new Customer();
         customer0.setId(customerId);
@@ -102,31 +102,31 @@ public class JpaServlet extends ServletUtil {
 
         customer0.getOrders().add(order2);
         order2.setCustomer(customer0);
-	utx.commit();
+    utx.commit();
         result = true;
      }catch(Exception ex){
         ex.printStackTrace();
       } finally {
-	if (em != null) {
-	   em.close();
-	}
-      }	
+    if (em != null) {
+       em.close();
+    }
+      }
       return result;
     }
 
 
     public boolean testDelete() {
       boolean result = false;
-      try {  
+      try {
         utx.begin();
-	em = getEntityManager();
+    em = getEntityManager();
         Customer c = findCustomer(customerName);
         Customer c0 = em.merge(c);
-        em.remove(c0); 
+        em.remove(c0);
         utx.commit();
         result = true;
       } catch(Exception ex){
-	ex.printStackTrace();
+    ex.printStackTrace();
       } finally {
         if (em != null) {
            em.close();
@@ -134,13 +134,13 @@ public class JpaServlet extends ServletUtil {
       }
       return result;
     }
-   
+
      public boolean verifyInsert() {
         boolean result = false;
 
-	try {
+    try {
         em = getEntityManager();
-	System.out.println("Customer name in verifyInsert:"+customerName);
+    System.out.println("Customer name in verifyInsert:"+customerName);
         Customer c = findCustomer(customerName);
 
         Collection<Order> orders = c.getOrders();
@@ -150,9 +150,9 @@ public class JpaServlet extends ServletUtil {
         }
         result = true;
         } finally {
-	if (em != null) {
+    if (em != null) {
            em.close();
-	   }
+       }
         }
         return result;
     }
@@ -165,14 +165,14 @@ public class JpaServlet extends ServletUtil {
       Query q = em.createQuery("select c from Customer c");
       List results = q.getResultList();
       if (results == null || results.size() != 0) {
-	throw new RuntimeException("Unexpected number of customers after delete");
+    throw new RuntimeException("Unexpected number of customers after delete");
       }
 
       q = em.createQuery("select o from Order o");
       results = q.getResultList();
 
       if (results == null || results.size() != 0) {
-	throw new RuntimeException("Unexpected number of orders after delete");
+    throw new RuntimeException("Unexpected number of orders after delete");
       }
       result = true;
      } finally {
@@ -189,5 +189,5 @@ public class JpaServlet extends ServletUtil {
       Customer c = (Customer)q.getSingleResult();
       return c;
     }
-    
+
 }

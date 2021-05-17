@@ -24,45 +24,45 @@ import org.jvnet.hk2.config.Element;
 /**
  * Corresponds to the context-param element for customizing the configuration
  * of web apps.
- * 
+ *
  * @author tjquinn
  */
 @Configured
 public interface ContextParam extends ConfigBeanProxy {
-    
+
     /**
      * Returns the context-param description.
      * @return description
      */
     @Element
     public String getDescription();
-    
+
     /**
      * Sets the context-param description.
      * @param value new description value
      */
     public void setDescription(String value);
-    
+
     /**
      * Returns the context-param parameter name.
      * @return parameter name
      */
     @Element(required=true,key=true)
     public String getParamName();
-    
+
     /**
      * Sets the context-param parameter name.
      * @param value
      */
     public void setParamName(String value);
-    
+
     /**
      * Returns the context-param parameter value.
      * @return parameter value
      */
     @Element
     public String getParamValue();
-    
+
     /**
      * Sets the context-param parameter value.
      * @param value new value

@@ -27,7 +27,7 @@ package com.sun.enterprise.web;
  * @author  lwhite
  */
 public interface MonitorStatsCapable {
-    
-    public void resetMonitorStats();    
-    
+
+    public void resetMonitorStats();
+
 }

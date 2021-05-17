@@ -34,10 +34,10 @@ public class TestValve2 implements GlassFishValve {
         if (testProperty == null) {
             request.getRequest().setAttribute("valve6", "null_value");
         }
-	else if ("".equals(testProperty)) {
+    else if ("".equals(testProperty)) {
             request.getRequest().setAttribute("valve5", "empty_value");
         }
-	else {
+    else {
             request.getRequest().setAttribute("valve4", testProperty);
         }
         return GlassFishValve.INVOKE_NEXT;

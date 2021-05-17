@@ -25,7 +25,7 @@
       <display-name>LeagueEJB</display-name>
       <ejb-name>LeagueEJB</ejb-name>
       <home>team.LeagueHome</home>
-      <remote>team.League</remote>      
+      <remote>team.League</remote>
       <local-home>team.LocalLeagueHome</local-home>
       <local>team.LocalLeague</local>
       <ejb-class>team.LeagueBean</ejb-class>
@@ -143,7 +143,7 @@
         </query-method>
         <result-type-mapping>Remote</result-type-mapping>
         <ejb-ql>select Object(p) from League l, in(l.teams) as t, in(t.players) p where l = ?1</ejb-ql>
-      </query>      
+      </query>
     </entity>
     <entity>
       <display-name>TeamEJB</display-name>
@@ -246,7 +246,7 @@
           </method-params>
         </query-method>
         <ejb-ql>select distinct t.name from Team t where LOCATE(?1, t.name) &gt; 0 AND LOCATE(?1, t.name) &lt; LENGTH(t.name)</ejb-ql>
-      </query>      
+      </query>
     </entity>
     <entity>
       <display-name>PlayerEJB</display-name>
@@ -288,7 +288,7 @@
           <method-name>findNotOnTeam</method-name>
           <method-params />
         </query-method>
-        <ejb-ql>select object(p) from Player p 
+        <ejb-ql>select object(p) from Player p
 where p.teams is empty</ejb-ql>
       </query>
       <query>
@@ -474,7 +474,7 @@ where p.name = ?1</ejb-ql>
           </method-params>
         </query-method>
         <ejb-ql>select object(p) from Player p where p.salary = SQRT(?1)</ejb-ql>
-      </query>      
+      </query>
     </entity>
   </enterprise-beans>
   <relationships>

@@ -119,5 +119,5 @@ public class Jdbc40ObjectsFactory extends JdbcObjectsFactory {
                 initJDBC30Connection = true;
             }
         }
-    }    
+    }
 }

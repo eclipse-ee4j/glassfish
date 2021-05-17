@@ -41,7 +41,7 @@ public class VMOp implements VMConstants {
   /* public accessors */
 
   /**
-   * Return the opcode value 
+   * Return the opcode value
    */
   final public int opcode() {
     return opcodeValue;
@@ -87,9 +87,9 @@ public class VMOp implements VMConstants {
   /**
    * constructor for a VMOp
    */
-   
+
   public VMOp(int theOpcode, String theOpcodeName, int nArgs, int nResults,
-	      String argDescr, String resultDescr) {
+          String argDescr, String resultDescr) {
     opcodeValue = theOpcode;
     opcodeName = theOpcodeName;
     stackArgs = nArgs;
@@ -518,9 +518,9 @@ public class VMOp implements VMConstants {
           throw new InsnError ("bad opcode for " + i);//NOI18N
 
       if (1 == 0) {
-	/* check arg/result data */
-	checkTypes(op.argTypes(), op.nStackArgs(), op);
-	checkTypes(op.resultTypes(), op.nStackResults(), op);
+    /* check arg/result data */
+    checkTypes(op.argTypes(), op.nStackArgs(), op);
+    checkTypes(op.resultTypes(), op.nStackResults(), op);
       }
     }
   }
@@ -529,11 +529,11 @@ public class VMOp implements VMConstants {
     for (int i=0; i<types.length(); i++) {
       char c = types.charAt(i);
       if (c == '?')
-	return;
+    return;
       if (c == 'J' || c == 'X' || c == 'D')
-	n -= 2;
+    n -= 2;
       else
-	n -= 1;
+    n -= 1;
     }
     if (n != 0)
         throw new InsnError ("Bad arg/result for VMOp " + op.opcodeName);//NOI18N

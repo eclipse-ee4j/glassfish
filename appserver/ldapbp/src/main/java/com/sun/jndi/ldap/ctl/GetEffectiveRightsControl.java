@@ -32,7 +32,7 @@ import javax.naming.directory.DirContext;
  * The JNDI context methods {@link javax.naming.directory.DirContext#getAttributes(String name, String[] attrIds) DirContext.getAttributes}
  * and {@link javax.naming.directory.DirContext#search(Name name, Attributes matchingAttributes, String[] attributesToReturn) DirContext.search}
  * can be used to retrieve the effective rights.
- * 
+ *
  * <p>
  * The object identifier for the GetEffectiveRights control is
  * 1.3.6.1.4.1.42.2.27.9.5.2 and the control value consists of the
@@ -49,9 +49,9 @@ import javax.naming.directory.DirContext;
  *                          ; "dn:" means get anonymous user's rights.
  *          attributes  SEQUENCE OF AttributeType
  *                          ; additional attribute type for which rights
- *			    information is requested.
+ *                information is requested.
  *                          ; NULL means just the ones returned with the
- *			    search operation.
+ *                search operation.
  *     }
  *
  * </pre>
@@ -64,7 +64,7 @@ import javax.naming.directory.DirContext;
  *     String dn = "dn:" + authzId;
  *
  *    // create a GetEffectiveRights control to return effective
- *    // rights for authzId on the search result entries and attributes 
+ *    // rights for authzId on the search result entries and attributes
  *    Control[] reqControls = new Control[] {
  *               new GetEffectiveRightsControl(dn, null, true)
  *    };
@@ -79,7 +79,7 @@ import javax.naming.directory.DirContext;
  *    // Get the entry level effective rights for all the
  *    // entries in the search result
  *    NamingEnumeration results =
- * 			ctx.search(entryName, null, attrsToReturn);
+ *             ctx.search(entryName, null, attrsToReturn);
  *
  *    printEffectiveRights(results);
  *
@@ -102,33 +102,33 @@ public class GetEffectiveRightsControl extends BasicControl {
      * Constructs a control to request the rights which are in effect
      * for the given user.
      *
-     * @param	authzId The authorization identity. 
-     * @param	attributes Additional attributes for which rights information
-     * 		is requested.
-     * @param	criticality The control's criticality setting.
+     * @param    authzId The authorization identity.
+     * @param    attributes Additional attributes for which rights information
+     *         is requested.
+     * @param    criticality The control's criticality setting.
      * @exception IOException If a BER encoding error occurs.
      */
     public GetEffectiveRightsControl(String authzId, String[] attributes,
-	    boolean criticality) throws IOException {
+        boolean criticality) throws IOException {
 
-	super(OID, criticality, null);
-	value = setEncodedValue(authzId, attributes);
+    super(OID, criticality, null);
+    value = setEncodedValue(authzId, attributes);
     }
 
 
     private static byte[] setEncodedValue(String authzId, String[] attrs)
-	    throws IOException {
+        throws IOException {
 
-	// build the ASN.1 encoding
-	BerEncoder ber = new BerEncoder(256);
+    // build the ASN.1 encoding
+    BerEncoder ber = new BerEncoder(256);
 
-	ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-	    ber.encodeString(authzId, true);
-	    ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-		ber.encodeStringArray(attrs, true);
-	    ber.endSeq();
-	ber.endSeq();
+    ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.encodeString(authzId, true);
+        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.encodeStringArray(attrs, true);
+        ber.endSeq();
+    ber.endSeq();
 
-	return ber.getTrimmedBuf();
+    return ber.getTrimmedBuf();
     }
 }

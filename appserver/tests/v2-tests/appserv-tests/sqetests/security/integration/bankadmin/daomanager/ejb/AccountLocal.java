@@ -20,7 +20,7 @@ import jakarta.ejb.EJBLocalObject;
 
 public interface AccountLocal extends jakarta.ejb.EJBLocalObject
 {
-	public AccountDataObject getDAO();
-	
+    public AccountDataObject getDAO();
+
 
 }

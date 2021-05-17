@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  * form-hint-field if form action contains query parameters.
  */
 public class WebTest {
-    
+
     private static SimpleReporterAdapter stat
         = new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME
@@ -49,8 +49,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             run();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -66,10 +66,10 @@ public class WebTest {
         // Construct body
         String body = URLEncoder.encode("j_encoding", "UTF-8")
             + "=" + URLEncoder.encode("Shift_JIS", "UTF-8");
-    
+
         // Create a socket to the host
         Socket socket = new Socket(host, new Integer(port).intValue());
-    
+
         // Send header
         BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(
             socket.getOutputStream(), "UTF8"));
@@ -78,7 +78,7 @@ public class WebTest {
         wr.write("Content-Length: " + body.length() + "\r\n");
         wr.write("Content-Type: application/x-www-form-urlencoded\r\n");
         wr.write("\r\n");
-    
+
         // Send body
         wr.write(body);
         wr.flush();
@@ -101,5 +101,5 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.PASS);
         }
    }
-  
+
 }

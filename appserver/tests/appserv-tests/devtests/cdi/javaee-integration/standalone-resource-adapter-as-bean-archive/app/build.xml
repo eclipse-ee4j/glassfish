@@ -36,8 +36,8 @@
   <target name="all" depends="init-common, clean-common">
    <ant dir="src" inheritAll="false" target="all"/>
    <antcall target="ear-common">
-	<param name="appname" value="simplemdb"/>
-	<param name="application.xml" value="META-INF/application.xml"/>
+    <param name="appname" value="simplemdb"/>
+    <param name="application.xml" value="META-INF/application.xml"/>
    </antcall>
   </target>
 
@@ -55,7 +55,7 @@
 
       <antcall target="execute-sql-connector">
         <param name="sql.file" value="createdb.sql"/>
-      </antcall>	
+      </antcall>
   </target>
 
   <target name="unsetJdbc" depends="init-common">

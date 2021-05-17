@@ -34,7 +34,7 @@ import java.beans.PropertyVetoException;
 
 /**
  *
- * The managed executor service manager allows you to create and delete 
+ * The managed executor service manager allows you to create and delete
  * the managed-executor-service config element
  */
 @Service (name=ServerTags.MANAGED_EXECUTOR_SERVICE)
@@ -66,12 +66,12 @@ public class ManagedExecutorServiceManager extends ManagedExecutorServiceBaseMan
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        return super.isValid(resources, validateResourceRef, target); 
+        return super.isValid(resources, validateResourceRef, target);
     }
 
     protected ManagedExecutorServiceBase createConfigBean(Resources param, Properties properties) throws PropertyVetoException, TransactionFailure {
         ManagedExecutorService managedExecutorService = param.createChild(ManagedExecutorService.class);
-        setAttributesOnConfigBean(managedExecutorService, properties); 
+        setAttributesOnConfigBean(managedExecutorService, properties);
         managedExecutorService.setMaximumPoolSize(maximumPoolSize);
         managedExecutorService.setTaskQueueCapacity(taskQueueCapacity);
         return managedExecutorService;

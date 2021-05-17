@@ -57,7 +57,7 @@ public class SnifferAdapter extends HttpHandler {
     ModulesRegistry modulesRegistry;
 
     private static final Logger LOGGER = KernelLoggerInfo.getLogger();
-    
+
     private Sniffer sniffer;
     private ContainerMapper mapper;
     private HttpHandler adapter;
@@ -131,7 +131,7 @@ public class SnifferAdapter extends HttpHandler {
                 mappingData.recycle();
 
                 adapter = mapper.mapUriWithSemicolon(req, decodedURI, 0, null);
-                // If a SnifferAdapter doesn't do it's job, avoid recursion 
+                // If a SnifferAdapter doesn't do it's job, avoid recursion
                 // and throw a Runtime exception.
                 if (adapter.equals(this)) {
                     adapter = null;

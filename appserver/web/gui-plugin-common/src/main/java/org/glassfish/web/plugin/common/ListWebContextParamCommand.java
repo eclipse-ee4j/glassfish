@@ -38,8 +38,8 @@ import org.glassfish.hk2.api.PerLookup;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-web-context-param", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-web-context-param",
         description="list-web-context-param",
         params={
             @RestParam(name="name", value="$parent")

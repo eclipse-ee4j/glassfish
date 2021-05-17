@@ -48,9 +48,9 @@ public class ContextTest {
 
     @Rule
     public TestWatcher reportWatcher=new ReportWatcher(stat, "Naming::naming2::ContextTest");
-    
+
     @Rule public TestName testName = new TestName();
-    
+
     @BeforeClass public static void setUpClass() {
         ejbContainer = EJBContainer.createEJBContainer();
     }
@@ -80,34 +80,34 @@ public class ContextTest {
         System.out.println("TestBean from lookup: " + b);
         System.out.println("DataSource from lookup: " + ds);
     }
-    
+
     @Test public void listEmptyString2() throws NamingException {
         System.out.println(testBean.listEmptyString().toString());
     }
-    
+
     @Test public void listEmptyString() throws NamingException {
         Context context = ejbContainer.getContext();
         NamingEnumeration<NameClassPair> list = context.list("");
         assertNotNull(list);
         System.out.println("Got NameClassPair: " + toString(list));
     }
-    
+
     @Test public void listBindingsEmptyString2() throws NamingException {
         System.out.println(testBean.listBindingsEmptyString().toString());
     }
- 
+
     @Test public void listBindingsEmptyString() throws NamingException {
         Context context = ejbContainer.getContext();
         NamingEnumeration<Binding> list = context.listBindings("");
         assertNotNull(list);
         System.out.println("Got Binding: " + toString(list));
     }
-    
+
     @Ignore
     @Test public void listGlobal2() throws NamingException {
         System.out.println(testBean.listGlobal().toString());
     }
-    
+
     @Ignore //got null componentId
     @Test public void listGlobal() throws NamingException {
         Context context = ejbContainer.getContext();
@@ -115,12 +115,12 @@ public class ContextTest {
         assertNotNull(list);
         System.out.println("Got NameClassPair: " + toString(list));
     }
-    
+
     @Ignore
     @Test public void listBindingsGlobal2() throws NamingException {
         System.out.println(testBean.listBindingsGlobal().toString());
     }
-    
+
     @Ignore
     @Test public void listBindingsGlobal() throws NamingException {
         Context context = ejbContainer.getContext();
@@ -128,54 +128,54 @@ public class ContextTest {
         assertNotNull(list);
         System.out.println("Got Binding: " + toString(list));
     }
-    
+
     @Test public void listJavaComp() throws NamingException {
         System.out.println(testBean.listJavaComp().toString());
     }
-    
+
     @Test public void listBindingsJavaComp() throws NamingException {
         System.out.println(testBean.listBindingsJavaComp().toString());
     }
-    
+
     @Test public void listJavaModule() throws NamingException {
         System.out.println(testBean.listJavaModule().toString());
     }
-    
+
     @Test public void listBindingsJavaModule() throws NamingException {
         System.out.println(testBean.listBindingsJavaModule().toString());
     }
-    
+
     @Test public void listJavaApp() throws NamingException {
         System.out.println(testBean.listJavaApp().toString());
     }
-    
+
     @Test public void listBindingsJavaApp() throws NamingException {
         System.out.println(testBean.listBindingsJavaApp().toString());
     }
-    
+
     @Test public void closeNamingEnumerations() throws NamingException {
         testBean.closeNamingEnumerations();
     }
-    
-	@Test
-	public void getIsInAppClientContainerFromEJB() throws NamingException {
-		Boolean isACC = testBean.getIsInAppClientContainer();
-		assertFalse(isACC);
-		System.out.println("get java:comp/InAppClientContainer from EJB:"
-				+ isACC);
-	}
-	
-	@Test
-	public void getIsInAppClientContainerFromSEClient() throws NamingException {
-		String jndiname = "java:comp/InAppClientContainer";
-		Context context = new InitialContext();
-		Boolean isACC = (Boolean) context.lookup(jndiname);
-		assertFalse(isACC);
-		System.out
-				.println("get "+jndiname+" from java SE client:"
-						+ isACC);
-	}
-	
+
+    @Test
+    public void getIsInAppClientContainerFromEJB() throws NamingException {
+        Boolean isACC = testBean.getIsInAppClientContainer();
+        assertFalse(isACC);
+        System.out.println("get java:comp/InAppClientContainer from EJB:"
+                + isACC);
+    }
+
+    @Test
+    public void getIsInAppClientContainerFromSEClient() throws NamingException {
+        String jndiname = "java:comp/InAppClientContainer";
+        Context context = new InitialContext();
+        Boolean isACC = (Boolean) context.lookup(jndiname);
+        assertFalse(isACC);
+        System.out
+                .println("get "+jndiname+" from java SE client:"
+                        + isACC);
+    }
+
     private String toString(NamingEnumeration<? extends NameClassPair> n) throws NamingException {
         StringBuilder sb = new StringBuilder();
         sb.append(n.toString()).append(NL);
@@ -185,5 +185,5 @@ public class ContextTest {
         }
         return sb.toString();
     }
-    
+
 }

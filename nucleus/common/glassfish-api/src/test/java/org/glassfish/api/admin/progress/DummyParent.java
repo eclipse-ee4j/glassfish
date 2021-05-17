@@ -21,12 +21,12 @@ package org.glassfish.api.admin.progress;
  * @author mmares
  */
 public class DummyParent extends ProgressStatusImpl {
-    
+
     public ProgressStatusEvent lastEvent;
-        
+
     @Override
     protected void fireEvent(ProgressStatusEvent event) {
         lastEvent = event;
     }
-        
+
 }

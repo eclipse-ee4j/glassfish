@@ -29,7 +29,7 @@ public class AuthConfigFileFactory extends BaseAuthConfigFactory {
      * to specialize the defaultEntries passed to the RegStoreFileParser
      * constructor, create another subclass of BaseAuthconfigFactory, that is
      * basically a copy of this class, with a change to the third argument
-     * of the call to new ResSToreFileParser. 
+     * of the call to new ResSToreFileParser.
      * to ensure runtime use of the the associated regStore, make sure that
      * the new subclass also contains an implementation of the getRegStore method.
      * As done within this class, use the locks defined in

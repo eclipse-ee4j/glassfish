@@ -28,7 +28,7 @@ public class SingletonBeanA {
 
     Bar bar;
 
-    @Inject 
+    @Inject
     public SingletonBeanA(Bar bar) {
         this.bar = bar;
     }
@@ -36,10 +36,10 @@ public class SingletonBeanA {
     @PostConstruct
     public void init() {
         System.out.println("In SingletonBeanA::init()");
-	if( bar == null ) {
-	    throw new EJBException("bar is null");
-	}
-	System.out.println("bar inject = " + bar);
+    if( bar == null ) {
+        throw new EJBException("bar is null");
+    }
+    System.out.println("bar inject = " + bar);
     }
 
     @PreDestroy

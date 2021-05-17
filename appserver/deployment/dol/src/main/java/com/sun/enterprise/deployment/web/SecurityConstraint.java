@@ -23,14 +23,14 @@ import com.sun.enterprise.deployment.MetadataSource;
 
 public interface SecurityConstraint {
 
-	/** The collection of URL pattern plus HTTP methods that are constrained. */
+    /** The collection of URL pattern plus HTTP methods that are constrained. */
     public Set<WebResourceCollection> getWebResourceCollections();
     public void addWebResourceCollection(WebResourceCollection webResourceCollection);
-	/** The authorization constraint. */
+    /** The authorization constraint. */
     public AuthorizationConstraint getAuthorizationConstraint();
     public void setAuthorizationConstraint(AuthorizationConstraint authorizationConstraint);
-    
-	/** The user data constraint. */
+
+    /** The user data constraint. */
     public UserDataConstraint getUserDataConstraint();
     public void setUserDataConstraint(UserDataConstraint userDataConstraint);
 

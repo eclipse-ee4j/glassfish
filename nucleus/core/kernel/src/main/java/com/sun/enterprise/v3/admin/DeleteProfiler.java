@@ -60,8 +60,8 @@ import org.glassfish.api.admin.*;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Profiler.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-profiler", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-profiler",
         description="Delete Profiler")
 })
 public class DeleteProfiler implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -80,7 +80,7 @@ public class DeleteProfiler implements AdminCommand, AdminCommandSecurity.Preaut
     @AccessRequired.To("update")
     private JavaConfig javaConfig;
 
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         config = CLIUtil.chooseConfig(targetService, config, target);
@@ -103,12 +103,12 @@ public class DeleteProfiler implements AdminCommand, AdminCommandSecurity.Preaut
                    if (param.getProfiler() != null) {
                        param.setProfiler(null);
                        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-			return param;
+            return param;
                    }
                    // not found
                    report.setMessage(localStrings.getLocalString("delete.profiler.notfound", "delete failed, profiler not found"));
                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-		    return null;
+            return null;
                }
            }, javaConfig);
        } catch(TransactionFailure e) {

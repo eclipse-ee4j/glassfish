@@ -30,12 +30,12 @@ public final class ReadOnlyContextImpl
     extends EntityContextImpl
 {
     private int pkLevelSequenceNum;
-    private long lastRefreshedAt;   
+    private long lastRefreshedAt;
     private boolean removed = false;
 
     // only non-null when associated with a primary-key
     transient private ReadOnlyBeanInfo robInfo;
-    
+
     ReadOnlyContextImpl(EnterpriseBean ejb, BaseContainer container) {
         super(ejb, container);
     }
@@ -55,19 +55,19 @@ public final class ReadOnlyContextImpl
     public long getLastRefreshedAt() {
         return lastRefreshedAt;
     }
-    
+
     public void setLastRefreshedAt(long time) {
         lastRefreshedAt = time;
     }
-    
+
     public boolean isRemoved() {
         return removed;
     }
-    
+
     public void setRemoved(boolean value) {
         removed = value;
     }
-    
+
     public void setReadOnlyBeanInfo(ReadOnlyBeanInfo info) {
         robInfo = info;
 

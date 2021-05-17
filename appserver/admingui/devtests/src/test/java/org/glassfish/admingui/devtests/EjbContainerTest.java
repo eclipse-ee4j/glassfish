@@ -149,7 +149,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         clickAndWaitForButtonEnabled("form1:propertyContentPage:loadDefaultsButton");
 
         assertEquals(location, getFieldValue("form1:propertySheet:generalPropertySection:SessionStoreProp:SessionStore"));
-        
+
         assertEquals(true, isChecked("form1:propertySheet:generalPropertySection:commitOptionProp:optB"));
         assertEquals("0", getFieldValue("form1:propertySheet:poolSettingSection:MinSizeProp:MinSize"));
         assertEquals("32", getFieldValue("form1:propertySheet:poolSettingSection:MaxSizeProp:MaxSize"));

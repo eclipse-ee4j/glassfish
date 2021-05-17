@@ -35,7 +35,7 @@ import java.util.Map;
  * Time: 8:50:42 PM
  */
 public class DirectAccessTest extends ConfigPersistence {
-    
+
     ServiceLocator habitat = Utils.instance.getHabitat(this);
 
     /**
@@ -53,12 +53,12 @@ public class DirectAccessTest extends ConfigPersistence {
     public ServiceLocator getBaseServiceLocator() {
         return habitat;
     }
-        
+
     @Override
     public ServiceLocator getHabitat() {
-    	return getBaseServiceLocator();
+        return getBaseServiceLocator();
     }
-    
+
     public void doTest() throws TransactionFailure {
         NetworkConfig networkConfig = habitat.getService(NetworkConfig.class);
         final NetworkListener listener = networkConfig.getNetworkListeners()

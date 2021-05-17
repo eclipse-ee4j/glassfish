@@ -74,7 +74,7 @@ public class ServerRemoteAdminCommand extends RemoteAdminCommand {
         /*
          * Always use secure communication to another server process.
          * Return a connector address that uses a cert to authenticate this
-         * process as a client only if a cert, rather than an admin username 
+         * process as a client only if a cert, rather than an admin username
          * and password, is used for process-to-process authentication.
          */
         try {

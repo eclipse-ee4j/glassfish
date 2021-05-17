@@ -133,7 +133,7 @@ public class MsgSecurityTest extends BaseSeleniumTestClass {
         String cp = getTableRowByValue("propertyForm:configs", configName, "col1");
         deleteRow("propertyForm:configs:topActionsGroup1:button1", "propertyForm:configs", configName);
     }
-    
+
 
     @Test
     public void testCreateAdditionalProviders() {
@@ -161,11 +161,11 @@ public class MsgSecurityTest extends BaseSeleniumTestClass {
 
         setFieldValue("propertyForm:propertySheet:providerConfSection:ProviderIdTextProp:ProviderIdText", providerName2);
         markCheckbox("propertyForm:propertySheet:providerConfSection:DefaultProviderProp:def");
-	selectDropdownOption("propertyForm:propertySheet:providerConfSection:ProviderTypeProp:ProviderType", "server");
+    selectDropdownOption("propertyForm:propertySheet:providerConfSection:ProviderTypeProp:ProviderType", "server");
         setFieldValue("propertyForm:propertySheet:providerConfSection:ClassNameProp:ClassName", "CLASSNAME");
         selectDropdownOption("propertyForm:propertySheet:requestPolicySection:AuthSourceProp:AuthSource", "sender");
-	selectDropdownOption("propertyForm:propertySheet:requestPolicySection:AuthRecipientProp:AuthRecipient", "before-content");
-	selectDropdownOption("propertyForm:propertySheet:responsePolicySection:AuthSourceProp:AuthSource", "content");
+    selectDropdownOption("propertyForm:propertySheet:requestPolicySection:AuthRecipientProp:AuthRecipient", "before-content");
+    selectDropdownOption("propertyForm:propertySheet:responsePolicySection:AuthSourceProp:AuthSource", "content");
         addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col2:col1St", propertyName);
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", "value");
@@ -182,7 +182,7 @@ public class MsgSecurityTest extends BaseSeleniumTestClass {
 
         assertEquals(getSelectedValue("propertyForm:propertySheet:requestPolicySection:AuthSourceProp:AuthSource"), "sender");
         assertEquals(getSelectedValue("propertyForm:propertySheet:requestPolicySection:AuthRecipientProp:AuthRecipient"), "before-content");
-	assertEquals(getSelectedValue("propertyForm:propertySheet:responsePolicySection:AuthSourceProp:AuthSource"), "content");
+    assertEquals(getSelectedValue("propertyForm:propertySheet:responsePolicySection:AuthSourceProp:AuthSource"), "content");
         assertEquals(getSelectedValue("propertyForm:propertySheet:responsePolicySection:AuthRecipientProp:AuthRecipient"), "");
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton",TRIGGER_PROVIDER_CONFIGURATION);
 
@@ -208,15 +208,15 @@ public class MsgSecurityTest extends BaseSeleniumTestClass {
         if (isDefault){
             markCheckbox("propertyForm:propertySheet:providerConfSection:DefaultProviderProp:def");
         }
-	selectDropdownOption("propertyForm:propertySheet:providerConfSection:ProviderTypeProp:ProviderType", type);
-	setFieldValue("propertyForm:propertySheet:providerConfSection:ClassNameProp:ClassName", "CLASSNAME");
+    selectDropdownOption("propertyForm:propertySheet:providerConfSection:ProviderTypeProp:ProviderType", type);
+    setFieldValue("propertyForm:propertySheet:providerConfSection:ClassNameProp:ClassName", "CLASSNAME");
         addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col2:col1St", propertyName);
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", "value");
-	setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "DESC");
-	clickAndWait("propertyForm:propertyContentPage:topButtons:newButton", TRIGGER_MESSAGE_SECURITY_CONFIGURATIONS);
+    setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "DESC");
+    clickAndWait("propertyForm:propertyContentPage:topButtons:newButton", TRIGGER_MESSAGE_SECURITY_CONFIGURATIONS);
     }
-    
+
 
 
     public void copyConfig(String srcName, String newConfigName) {

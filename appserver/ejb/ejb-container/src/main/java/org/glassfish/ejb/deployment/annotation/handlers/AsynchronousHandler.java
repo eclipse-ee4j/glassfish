@@ -54,7 +54,7 @@ public class AsynchronousHandler extends AbstractAttributeHandler
 
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
-        
+
         for (EjbContext ejbContext : ejbContexts) {
             EjbDescriptor ejbDesc = (EjbDescriptor) ejbContext.getDescriptor();
 
@@ -70,15 +70,15 @@ public class AsynchronousHandler extends AbstractAttributeHandler
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {
-        
+
         return new Class[] {
             Local.class, Remote.class, Stateful.class, Stateless.class, Singleton.class};
-                
+
     }
 
     protected boolean supportTypeInheritance() {
@@ -88,8 +88,8 @@ public class AsynchronousHandler extends AbstractAttributeHandler
     /**
      * Set the default value (from class type annotation) on all
      * methods that don't have a value.
-     * Class type annotation applies to all EJB 3.x Local/Remote/no-interface 
-     * views in which  that  business method is exposed for that bean. 
+     * Class type annotation applies to all EJB 3.x Local/Remote/no-interface
+     * views in which  that  business method is exposed for that bean.
      */
     public void postProcessAnnotation(AnnotationInfo ainfo, EjbContext ejbContext)
             throws AnnotationProcessorException {
@@ -137,7 +137,7 @@ public class AsynchronousHandler extends AbstractAttributeHandler
 
         // There is no way to "turn off" the asynchronous designation in the
         // deployment descriptor, so we don't need to do any override checks
-        // here.  Just always add any async methods.  
+        // here.  Just always add any async methods.
         sessionDesc.addAsynchronousMethod(methodDesc);
 
     }

@@ -40,8 +40,8 @@ import com.sun.enterprise.config.serverbeans.Domain;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="start-cluster", 
+        opType=RestEndpoint.OpType.POST,
+        path="start-cluster",
         description="Start Cluster",
         params={
             @RestParam(name="id", value="$parent")

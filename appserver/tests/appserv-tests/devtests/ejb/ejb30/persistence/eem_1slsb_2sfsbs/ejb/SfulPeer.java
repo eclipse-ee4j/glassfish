@@ -28,7 +28,7 @@ public interface SfulPeer {
     Person find(String name);
 
     boolean remove(String name);
-    
+
     EntityManager getEM();
 
 }

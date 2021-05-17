@@ -19,20 +19,20 @@
  *
  * Created on March 7, 2000, 5:09 PM
  */
- 
+
 package com.sun.jdo.api.persistence.support;
 
 import java.lang.String;
 import java.io.PrintWriter;
 import java.sql.Connection;
 
-/** 
+/**
  *
  * @author  Craig Russell
  * @version 0.1
  */
 public interface ConnectionFactory {
-  
+
   /**
    * Returns java.sql.Connection
    * @return      connection as java.sql.Connection
@@ -50,7 +50,7 @@ public interface ConnectionFactory {
    * @return      driver name
    */
   String getDriverName ();
-  
+
   /**
    * Sets JDBC connection URL
    * @param URL   connection URL
@@ -62,7 +62,7 @@ public interface ConnectionFactory {
    * @return      connection URL
    */
   String getURL ();
-  
+
   /**
    * Sets database user
    * @param userName      database user
@@ -74,13 +74,13 @@ public interface ConnectionFactory {
    * @return      current database user name
    */
   String getUserName ();
-  
+
   /**
    * Sets database user password
    * @param password      database user password
    */
   void setPassword (char[] password);
-  
+
   /**
    * Sets minimum number of connections in the connection pool
    * @param minPool       minimum number of connections
@@ -92,7 +92,7 @@ public interface ConnectionFactory {
    * @return      connection minPool
    */
   int getMinPool ();
-  
+
   /**
    * Sets maximum number of connections in the connection pool
    * @param maxPool       maximum number of connections
@@ -104,7 +104,7 @@ public interface ConnectionFactory {
    * @return      connection maxPool
    */
   int getMaxPool ();
-  
+
   /**
    * Sets the amount of time, in milliseconds, between the connection
    * manager's attempts to get a pooled connection.
@@ -120,7 +120,7 @@ public interface ConnectionFactory {
    * @return      the length of the interval between tries in milliseconds
    */
   int getMsInterval ();
-  
+
   /**
    * Sets the number of milliseconds to wait for an available connection
    * from the connection pool before throwing an exception
@@ -134,7 +134,7 @@ public interface ConnectionFactory {
    * @return      number in milliseconds
    */
   int getMsWait ();
-  
+
   /**
    * Sets the LogWriter to which messages should be sent
    * @param logWriter
@@ -146,7 +146,7 @@ public interface ConnectionFactory {
    * @return      logWriter
    */
   PrintWriter getLogWriter ();
- 
+
   /**
    * Sets the number of seconds to wait for a new connection to be
    * established to the data source
@@ -163,10 +163,10 @@ public interface ConnectionFactory {
 
   /**
    * Sets transaction isolation level for all connections of this ConnectionFactory.
-   * All validation is done by java.sql.Connection itself, so e.g. while Oracle 
-   * will not allow to set solation level to TRANSACTION_REPEATABLE_READ, this method 
+   * All validation is done by java.sql.Connection itself, so e.g. while Oracle
+   * will not allow to set solation level to TRANSACTION_REPEATABLE_READ, this method
    * does not have any explicit restrictions
-   * 
+   *
    * @param level - one of the java.sql.Connection.TRANSACTION_* isolation values
    */
   void setTransactionIsolation (int level);

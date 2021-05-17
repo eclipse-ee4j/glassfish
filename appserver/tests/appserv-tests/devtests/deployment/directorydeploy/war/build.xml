@@ -22,20 +22,20 @@
 ]>
 
 <!--
-  Test directory deployment for war with directory structure such 
+  Test directory deployment for war with directory structure such
   as bar
 -->
- 
+
 <project name="directoryDeploy-War" default="all" basedir=".">
 
- 	&commonBuild;
+     &commonBuild;
 
     <property name="testName" value="dirDeployWar"/>
     <property name="contextRoot" value="foo"/>
-    <property name="web.build.dir" 
+    <property name="web.build.dir"
               value="${build}/${testName}"/>
     <property name="client.build.dir" value="${build}/client"/>
-        
+
     <target name="prepare" depends="init">
        <mkdir dir="${build}" />
        <mkdir dir="${web.build.dir}" />
@@ -56,11 +56,11 @@
             </classpath>
           </javac>
     </target>
-                                                                                
+
     <target name="assemble" depends="compile">
             <copy file="descriptor/web.xml" todir="${web.build.dir}/WEB-INF"/>
-            <copy file="descriptor/sun-web.xml" 
-                  todir="${web.build.dir}/WEB-INF" 
+            <copy file="descriptor/sun-web.xml"
+                  todir="${web.build.dir}/WEB-INF"
                   failonerror="false"/>
     </target>
 
@@ -77,7 +77,7 @@
                    value="--name ${testName} ${build}/${testName}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="undeploy.asadmin">
         <antcall target="common.undeploy.asadmin">
             <param name="arg.list"
@@ -86,7 +86,7 @@
     </target>
 
    <target name="run" depends="run.positive"/>
-                                                                                
+
     <target name="run.positive" depends="setHttpPort">
         <property name="url" value="http://${http.host}:${depltest.port}/${contextRoot}/servletonly"/>
         <antcall target="runclient">
@@ -94,7 +94,7 @@
             <param name="log.id" value="${log.id}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="run.negative" depends="setHttpPort">
         <property name="url" value="http://${http.host}:${depltest.port}/${contextRoot}/${testName}"/>
         <antcall target="runclient">
@@ -102,7 +102,7 @@
             <param name="log.id" value="${log.id}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="runclient" depends="init">
         <echo message="TestClient ${arg.list}"/>
         <javaWithResult
@@ -114,21 +114,21 @@
             resultproperty="result">
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-                                                                                
+
             <classpath>
                 <path refid="gfv3.classpath"/>
                 <path location="${client.build.dir}"/>
             </classpath>
-                                                                                
+
             <arg line="${arg.list}"/>
         </javaWithResult>
-                                                                                
+
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="private-all">
         <antcall target="assemble"/>
        <antcall target="declare-test">
@@ -136,7 +136,7 @@
         </antcall>
         <antcall target="deploydir.asadmin"/>
         <antcall target="run.positive"><param name="log.id" value="1"/></antcall>
-                                                                                
+
         <antcall target="declare-test">
             <param name="description" value="directorydeploy/war Test asadmin redeploydir"/>
         </antcall>
@@ -153,5 +153,5 @@
         <delete dir="${build}"/>
     </target>
 
-    
+
 </project>

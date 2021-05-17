@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public interface HttpRequestInfo {
     /**
      * Return the Http request instance
-     * 
+     *
      * @return the http request
      */
     HttpServletRequest getRequest();

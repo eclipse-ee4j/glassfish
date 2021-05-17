@@ -25,12 +25,12 @@
          domain="Catalina"
          group="Listener"
          type="org.apache.catalina.startup.ContextConfig">
-    
+
     <attribute name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute name="debug"
                description="The debugging detail level for this component"
                type="int"/>
@@ -46,7 +46,7 @@
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute name="debug"
                description="The debugging detail level for this component"
                type="int"/>
@@ -58,7 +58,7 @@
          domain="Catalina"
          group="Listener"
          type="org.apache.catalina.startup.HostConfig">
-    
+
     <attribute name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
@@ -71,7 +71,7 @@
     <attribute name="contextClass"
                description="The Java class name of the Context implementation we should use"
                type="java.lang.String"/>
-      
+
     <attribute   name="debug"
                description="The debugging detail level for this component"
                type="int"/>

@@ -20,40 +20,40 @@
 <project name="security-basicauth" default="default" basedir=".">
     <property file="build.properties"/>
     <property file="${ws.root}/gfproject/${deploy.platform}-config.properties"/>
-   
-    
+
+
     <description>Builds, tests, and runs the project ${project.name}</description>
-    <import file="${ws.root}/gfproject/build-impl.xml"/>   
+    <import file="${ws.root}/gfproject/build-impl.xml"/>
     <import file="${ws.root}/gfproject/${deploy.platform}-targets.xml"/>
-    
+
     <target name="all" depends="build,deploy,runtest,undeploy"/>
     <target name="build-deploy" depends="build,deploy" />
-   
+
     <target name="build">
         <antcall target="setup"/>
         <antcall target="build-impl"/>
         <antcall target="compile-tests"/>
     </target>
-    
+
     <target name="deploy">
         <antcall target="deploy-${deploy.platform}-impl"/>
     </target>
-    
-    <target  name="runtest"> 
+
+    <target  name="runtest">
         <antcall target="runtest-impl">
         <param name="contextroot" value="basicauth"/>
         <param name="testng.test.name" value="${testng.test.name}"/>
         <param name="testng.testclient" value="BasicAuthTestNG"/>
         </antcall>
-        
+
     </target>
-    
+
     <target name="undeploy">
         <antcall target="undeploy-${deploy.platform}-impl"/>
         <antcall target="unsetup"/>
     </target>
-    
-    
+
+
     <target name="setup">
       <antcall target="create-user-common-${deploy.platform}-impl">
         <param name="user" value="testuser3"/>
@@ -71,7 +71,7 @@
         <param name="groups" value="testgroup10"/>
       </antcall>
     </target>
-        
+
     <target name="unsetup">
       <!-- remove test users, just cleanup. -->
       <antcall target="delete-user-common-${deploy.platform}-impl">
@@ -83,6 +83,6 @@
       <antcall target="delete-user-common-${deploy.platform}-impl">
         <param name="user" value="j2ee"/>
       </antcall>
-    </target>    
-    
+    </target>
+
 </project>

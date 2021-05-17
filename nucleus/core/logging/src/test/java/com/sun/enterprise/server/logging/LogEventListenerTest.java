@@ -35,9 +35,9 @@ import org.junit.Test;
 public class LogEventListenerTest {
 
     private static final String FILE_SEP = System.getProperty("file.separator");
-    
+
     private static final String USER_DIR = System.getProperty("user.dir");
-    
+
     private static final String BASE_PATH = USER_DIR + FILE_SEP + "target";
 
     private static final String TEST_EVENTS_LOG =  BASE_PATH + FILE_SEP + "test-events.log";
@@ -47,13 +47,13 @@ public class LogEventListenerTest {
     private static final String LOGGER_NAME = "jakarta.enterprise.test.logging.events";
 
     private static final Logger LOGGER = Logger.getLogger(LOGGER_NAME);
-    
+
     @BeforeClass
     public static void initializeLoggingAnnotationsTest() throws Exception {
         File basePath = new File(BASE_PATH);
         basePath.mkdirs();
         File testLog = new File(TEST_EVENTS_LOG);
-        
+
         // Add a file handler with UniformLogFormatter
         gfFileHandler = new GFFileHandler();
         gfFileHandler.changeFileName(testLog);
@@ -71,7 +71,7 @@ public class LogEventListenerTest {
     }
 
     private static TestLogEventListener logEventListener;
-    
+
     @Test
     public void testLogEventListenerNotifications() throws Exception {
         String msg = "Test message for testLogEventListenerNotifications";
@@ -80,26 +80,26 @@ public class LogEventListenerTest {
         assertEquals(msg, event.getMessage());
         System.out.println("Test testLogEventListenerNotifications passed.");
     }
-    
+
     @AfterClass
     public static void cleanupLoggingAnnotationsTest() throws Exception {
         logEventListener.logEvents.clear();
-        LOGGER.removeHandler(gfFileHandler);        
+        LOGGER.removeHandler(gfFileHandler);
         // Flush and Close the handler
         gfFileHandler.flush();
         gfFileHandler.close();
         gfFileHandler.preDestroy();
     }
-    
+
     private static class TestLogEventListener implements LogEventListener {
-        
+
         private BlockingQueue<LogEvent> logEvents = new ArrayBlockingQueue<LogEvent>(100);
 
         @Override
         public void messageLogged(LogEvent event) {
             logEvents.add(event);
         }
-        
+
     }
-    
+
 }

@@ -52,5 +52,5 @@
           </message-security>
         </message-security-binding>
       </webservice-endpoint>
-    </servlet>    
+    </servlet>
 </sun-web-app>

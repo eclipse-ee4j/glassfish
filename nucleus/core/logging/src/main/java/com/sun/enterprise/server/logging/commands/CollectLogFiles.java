@@ -60,8 +60,8 @@ import java.util.logging.Logger;
 @I18n("collect.log.files")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="collect-log-files", 
+        opType=RestEndpoint.OpType.POST,
+        path="collect-log-files",
         description="collect-log-files")
 })
 public class CollectLogFiles implements AdminCommand {
@@ -448,7 +448,7 @@ public class CollectLogFiles implements AdminCommand {
         // Playing with outbound payload to attach zip file..
         Payload.Outbound outboundPayload = context.getOutboundPayload();
         // GLASSFISH-17627: pass to DownloadServlet
-        boolean retrieveFiles = false; 
+        boolean retrieveFiles = false;
         if (outboundPayload == null) {
             outboundPayload = PayloadImpl.Outbound.newInstance();
             retrieveFiles = true;

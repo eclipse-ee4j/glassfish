@@ -33,7 +33,7 @@
 
     <target name="clean" depends="init-common">
     </target>
-       
+
     <target name="compile" depends="clean">
     </target>
 
@@ -42,11 +42,11 @@
             srcdir="."
             classpath="${env.APS_HOME}/lib/reportbuilder.jar"
             includes="WebTest.java"/>
-   </target> 
+   </target>
 
     <target name="deploy" depends="init-common">
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
           <arg value="${http.host}"/>
@@ -58,9 +58,9 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

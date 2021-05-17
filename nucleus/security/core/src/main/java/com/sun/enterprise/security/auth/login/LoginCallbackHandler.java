@@ -25,14 +25,14 @@ import com.sun.enterprise.security.GUILoginDialog;
 
 /**
  * This is the default callback handler provided by the application
- * client container. The container tries to use the application specified 
+ * client container. The container tries to use the application specified
  * callback handler (if provided). If there is no callback handler or if
  * the handler cannot be instantiated then this default handler is used.
  *
  * Note: User-defined Callback Handlers which intend to indicate cancel
  * status must extend this class and set the ThreadLocal cancelStatus.
  */
-public class LoginCallbackHandler implements CallbackHandler 
+public class LoginCallbackHandler implements CallbackHandler
 {
     private boolean isGUI;
     private static final LocalStringManagerImpl localStrings =
@@ -65,11 +65,11 @@ public class LoginCallbackHandler implements CallbackHandler
      * @param the callback object instances supported by the login module.
      */
     public void handle(Callback[] callbacks) throws IOException,
-					UnsupportedCallbackException
+                    UnsupportedCallbackException
     {
         if(isGUI) {
             String user = localStrings.getLocalString("login.user", "user");
-	    new GUILoginDialog(user, callbacks);
+        new GUILoginDialog(user, callbacks);
             for (int i = 0; i < callbacks.length; i++) {
                 if (callbacks[i] instanceof NameCallback) {
                     cancelStatus.set(((NameCallback) callbacks[i]).getName() == null);
@@ -77,7 +77,7 @@ public class LoginCallbackHandler implements CallbackHandler
                 }
             }
         } else {
-	    new TextLoginDialog(callbacks);
+        new TextLoginDialog(callbacks);
         }
     }
 }

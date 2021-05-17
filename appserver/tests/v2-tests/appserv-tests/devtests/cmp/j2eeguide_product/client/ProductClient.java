@@ -35,10 +35,10 @@ public class ProductClient {
            Context initial = new InitialContext();
            Object objref = initial.lookup("java:comp/env/MyProduct");
 
-           ProductHome home = 
-               (ProductHome)PortableRemoteObject.narrow(objref, 
+           ProductHome home =
+               (ProductHome)PortableRemoteObject.narrow(objref,
                                             ProductHome.class);
-	    System.out.println("START");
+        System.out.println("START");
             stat.addDescription("j2eeguide_product");
 
            Product duke = home.create("123", "Ceramic Dog", 10.00);
@@ -61,7 +61,7 @@ public class ProductClient {
               Product product = (Product)i.next();
               String productId = (String)product.getPrimaryKey();
               String description = product.getDescription();
-              double price = product.getPrice(); 
+              double price = product.getPrice();
               System.out.println(productId + ": " + description + " " + price);
            }
 
@@ -71,7 +71,7 @@ public class ProductClient {
            while (i.hasNext()) {
               Product product = (Product)i.next();
               String productId = (String)product.getPrimaryKey();
-              double price = product.getPrice(); 
+              double price = product.getPrice();
               System.out.println(productId + ": " + price);
            }
             stat.addStatus("ejbclient j2eeguide_product", stat.PASS);
@@ -83,5 +83,5 @@ public class ProductClient {
             stat.addStatus("ejbclient j2eeguide_product", stat.FAIL);
        }
           stat.printSummary("j2eeguide_product");
-   } 
-} 
+   }
+}

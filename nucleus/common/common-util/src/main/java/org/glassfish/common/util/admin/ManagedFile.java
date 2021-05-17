@@ -68,7 +68,7 @@ public class ManagedFile {
             new LocalStringManagerImpl(ParamTokenizer.class);
 
     public interface ManagedLock extends java.util.concurrent.locks.Lock {
-        public RandomAccessFile getLockedFile();    
+        public RandomAccessFile getLockedFile();
     }
     /**
      * Creates a new managed file.
@@ -195,8 +195,8 @@ public class ManagedFile {
                     public void run() {
                         try {
                             if (fl.isValid()) {
-                                logger.log(Level.SEVERE, 
-                                        CULoggerInfo.fileLockNotReleased, 
+                                logger.log(Level.SEVERE,
+                                        CULoggerInfo.fileLockNotReleased,
                                         file.getPath());
                                 release(fl);
                             }

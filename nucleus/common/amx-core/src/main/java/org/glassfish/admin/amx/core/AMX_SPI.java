@@ -34,12 +34,12 @@ public interface AMX_SPI {
     @ManagedAttribute
     @Description("Name of this MBean, can differ from name in ObjectName")
     public String getName();
-    
+
     /** Return the ObjectName of the parent.  Must not be null (except for DomainRoot) */
     @ManagedAttribute
     @Description("Parent of this MBean, non-null except for DomainRoot")
     public ObjectName getParent();
-    
+
     /**
         If no children are possible (a leaf node), an AttributeNotFoundException should be thrown.
      */

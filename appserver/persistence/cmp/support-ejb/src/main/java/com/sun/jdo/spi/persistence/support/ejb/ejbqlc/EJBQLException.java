@@ -22,12 +22,12 @@
 
 package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
-/** 
+/**
  * This class represents errors reported by the EJBQL compiler.
- * 
+ *
  * @author  Michael Bouschen
  */
-public class EJBQLException 
+public class EJBQLException
     extends RuntimeException
 {
     /** The Throwable that caused this EJBQLException. */
@@ -36,35 +36,35 @@ public class EJBQLException
     /**
      * Creates a new <code>EJBQLException</code> without detail message.
      */
-    public EJBQLException() 
+    public EJBQLException()
     {
     }
 
     /**
-     * Constructs a new <code>EJBQLException</code> with the specified 
+     * Constructs a new <code>EJBQLException</code> with the specified
      * detail message.
      * @param msg the detail message.
      */
-    public EJBQLException(String msg) 
+    public EJBQLException(String msg)
     {
         super(msg);
     }
-    
+
     /**
-      * Constructs a new <code>EJBQLException</code> with the specified 
+      * Constructs a new <code>EJBQLException</code> with the specified
       * detail message and cause.
       * @param msg the detail message.
       * @param cause the cause <code>Throwable</code>.
       */
-    public EJBQLException(String msg, Throwable cause) 
+    public EJBQLException(String msg, Throwable cause)
     {
         super(msg);
         this.cause = cause;
     }
-    
+
     /**
-     * Returns the cause of this <code>EJBQLException</code> or 
-     * <code>null</code> if the cause is nonexistent or unknown.  
+     * Returns the cause of this <code>EJBQLException</code> or
+     * <code>null</code> if the cause is nonexistent or unknown.
      * @return the cause of this or <code>null</code> if the
      * cause is nonexistent or unknown.
      */
@@ -73,10 +73,10 @@ public class EJBQLException
         return cause;
     }
 
-    /** 
+    /**
      * The <code>String</code> representation includes the name of the class,
      * the descriptive comment (if any),
-     * and the <code>String</code> representation of the cause 
+     * and the <code>String</code> representation of the cause
      * <code>Throwable</code> (if any).
      * @return the <code>String</code>.
      */
@@ -92,5 +92,5 @@ public class EJBQLException
             sb.append(cause.toString());
         }
         return sb.toString();
-    }    
+    }
 }

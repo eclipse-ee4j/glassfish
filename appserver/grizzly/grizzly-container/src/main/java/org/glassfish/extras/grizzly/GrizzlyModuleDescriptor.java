@@ -90,7 +90,7 @@ public class GrizzlyModuleDescriptor {
         }
         tuples.put(contextRoot, className);
     }
-        
+
     public Map<String, String> getAdapters() {
         return tuples;
     }

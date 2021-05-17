@@ -101,7 +101,7 @@ public final class NotificationServiceTest
             mReceived.add(notif);
             mLatch.countDown();
         }
-        
+
         public boolean await( final long amt, final TimeUnit units )
             throws InterruptedException
         {
@@ -152,7 +152,7 @@ public final class NotificationServiceTest
             //trace( "testListen: FAILED TIMEOUT" );
             assert false : "NotificationServiceTest.testListen():  TIMED OUT waiting for Notifications";
         }
-        
+
         //trace( "testListen: NOT FAILED" );
         assert (myListener.getCount() == 2);
 

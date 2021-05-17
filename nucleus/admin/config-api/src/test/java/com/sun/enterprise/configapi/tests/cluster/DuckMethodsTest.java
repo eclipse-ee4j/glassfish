@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
  * Test a number of cluster related {@link org.jvnet.hk2.config.DuckTyped}
  * methods implementation
  *
- * @author Jerome Dochez 
+ * @author Jerome Dochez
  */
 public class DuckMethodsTest extends ConfigApiTest {
     ServiceLocator habitat;
@@ -43,7 +43,7 @@ public class DuckMethodsTest extends ConfigApiTest {
 
     @Before
     public void setup() {
-        habitat = Utils.instance.getHabitat(this);        
+        habitat = Utils.instance.getHabitat(this);
     }
 
 

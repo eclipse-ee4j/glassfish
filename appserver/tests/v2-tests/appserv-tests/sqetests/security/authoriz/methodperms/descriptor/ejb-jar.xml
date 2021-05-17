@@ -70,7 +70,7 @@
           <method-param>java.lang.String</method-param>
           <method-param>int</method-param>
         </method-params>
-      </method>	
+      </method>
       <method>
         <ejb-name>MethodPermissionsBean</ejb-name>
         <method-intf>Remote</method-intf>

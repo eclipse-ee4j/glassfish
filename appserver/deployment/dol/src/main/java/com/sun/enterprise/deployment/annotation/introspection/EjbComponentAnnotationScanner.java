@@ -36,15 +36,15 @@ import java.util.Set;
 public class EjbComponentAnnotationScanner implements AnnotationScanner {
 
     private Set<String> annotations=null;
-    
+
     /** Creates a new instance of DefaultAnnotationScanner */
     public EjbComponentAnnotationScanner() {}
-        
+
     /**
-     * Test if the passed constant pool string is a reference to 
+     * Test if the passed constant pool string is a reference to
      * a Type.TYPE annotation of a J2EE component
      *
-     * @String the constant pool info string 
+     * @String the constant pool info string
      * @return true if it is a J2EE annotation reference
      */
     public boolean isAnnotation(String value) {
@@ -56,7 +56,7 @@ public class EjbComponentAnnotationScanner implements AnnotationScanner {
         }
         return annotations.contains(value);
     }
-    
+
     private void init() {
         annotations = new HashSet();
         annotations.add("Ljakarta/ejb/Stateless;");

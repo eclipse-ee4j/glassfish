@@ -64,7 +64,7 @@ public class WebTest extends BaseDevTest {
         user = args[5];
         password = args[6];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 1933");
@@ -152,7 +152,7 @@ public class WebTest extends BaseDevTest {
             // follow the redirect
             int cA1 = go(port1, new URL(redirect).getPath(), "A");
             int cB1 = go(port1, contextRootPrefix + "-b/index.jsp", "B");
-            
+
             // stop inst1
             asadmin("stop-local-instance", instancename1);
 
@@ -208,7 +208,7 @@ public class WebTest extends BaseDevTest {
             System.out.println(sb);
 
             os.write("\n\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -231,7 +231,7 @@ public class WebTest extends BaseDevTest {
             close(os);
             close(br);
             close(is);
-        } 
+        }
 
         if (count == -1) {
             throw new Exception("Failed to access index.jsp");

@@ -15,7 +15,7 @@
  */
 
 package com.sun.cb;
- 
+
 public class OrderConfirmation {
 
   private OrderBean ob;
@@ -25,14 +25,14 @@ public class OrderConfirmation {
      this.ob = ob;
      this.cb = cb;
   }
-  
+
   public OrderBean getOrderBean() {
     return ob;
   }
-  
+
   public ConfirmationBean getConfirmationBean() {
     return cb;
-  } 
+  }
 }
 
 

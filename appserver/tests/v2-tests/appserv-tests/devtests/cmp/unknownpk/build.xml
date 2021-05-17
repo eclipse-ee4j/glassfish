@@ -34,12 +34,12 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
         </antcall>
-        
+
         <echo message="Copying dbschema file to ejb classes dir" />
         <copy file="${dbschema}" todir="${build.classes.dir}/unknownpk" failonerror="false"/>
         <antcall target="compile-common">
@@ -49,14 +49,14 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/A**.class, **/unknownpk.dbschema" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/A1Home.class,**/A1.class,**/A2Home.class,**/A2.class,**/*Client*.class" />
         </antcall>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/unknownpk_derby.sql"/>
@@ -75,22 +75,22 @@
           <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
         </antcall>
     </target>
- 
+
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
            <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_unknownpk_derby.sql"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant all
         </echo>
     </target>

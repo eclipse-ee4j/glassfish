@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  * way to use this class (or its instances) is to initialize it with default constructor and then apply various mutators
  * to configure the service. Finally, callers should make sure that the configuration is valid, before attempting to
  * create the service in the Solaris platform.
- * 
+ *
  * @since SJSAS 9.0
  * @see #isConfigValid
  * @see SMFServiceHandler
@@ -152,7 +152,7 @@ public final class SMFService extends ServiceAdapter {
 
     /**
      * Sets timeout in seconds before the master boot restarter should give up starting this service.
-     * 
+     *
      * @param number a non-negative integer representing timeout. A value of zero implies infinite timeout.
      */
     public void setTimeoutSeconds(final int number) {
@@ -168,7 +168,7 @@ public final class SMFService extends ServiceAdapter {
      * Sets the OS-level user-id who should start and own the processes started by this service. This user is the same as
      * the value returned by System.getProperty("user.name"). The idea is that the method is called by the user who actually
      * wants to own the service.
-     * 
+     *
      * @throws IllegalArgumentException if the user can not modify MANIFEST_HOME
      * @throws IllegalArgumentException if solaris.smf.modify Authorization is not implied by the authorizations available
      * for the user.
@@ -188,7 +188,7 @@ public final class SMFService extends ServiceAdapter {
 
     /**
      * Returns the additional properties of the Service.
-     * 
+     *
      * @return String representing addtional properties of the service. May return default properties as well.
      */
     public String getServiceProperties() {
@@ -197,7 +197,7 @@ public final class SMFService extends ServiceAdapter {
 
     /**
      * Sets the additional service properties that are specific to it.
-     * 
+     *
      * @param must be a colon separated String, if not null. No effect, if null is passed.
      */
     public void setServiceProperties(final String cds) {
@@ -222,7 +222,7 @@ public final class SMFService extends ServiceAdapter {
      * configuration is done by the users via various mutator methods of this class. This method must be called to guard
      * against some abnormal failures before creating the service. It makes sure that the caller has set all the necessary
      * parameters reasonably. Note that it does not validate the actual values.
-     * 
+     *
      * @throws RuntimeException if the configuration is not valid
      * @return true if the configuration is valid, an exception is thrown otherwise
      */
@@ -251,7 +251,7 @@ public final class SMFService extends ServiceAdapter {
 
     /**
      * Returns the tokens and values of the service as a map. Note that a copy is returned.
-     * 
+     *
      * @return a copy of tokens and values
      */
     public Map<String, String> tokensAndValues() {
@@ -296,7 +296,7 @@ public final class SMFService extends ServiceAdapter {
     /**
      * Returns a String representation of the SMFService. It contains a new-line separated "name=value" String that contains
      * the name and value of each of of the tokens that were set in the service.
-     * 
+     *
      * @return a String according to above description, never returns null
      */
     public String toString() {

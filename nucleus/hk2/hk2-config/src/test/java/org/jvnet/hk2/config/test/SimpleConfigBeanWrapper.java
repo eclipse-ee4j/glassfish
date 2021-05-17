@@ -52,7 +52,7 @@ public final class SimpleConfigBeanWrapper extends ConfigBean {
     }
 
     public SimpleConfigBeanWrapper(ServiceLocator habitat, DomDocument document, SimpleConfigBeanWrapper parent, ConfigModel model, XMLStreamReader in) {
-        super(habitat, document, parent, model, in);                
+        super(habitat, document, parent, model, in);
     }
 
     public SimpleConfigBeanWrapper(Dom source, Dom parent) {
@@ -83,7 +83,7 @@ public final class SimpleConfigBeanWrapper extends ConfigBean {
     public void initializationCompleted() {
         super.initializationCompleted();
     }
-    
+
     public String toString() {
         //final Set<String> attrNames = getAttributeNames();
         return "GlassFishConfigBean." + getProxyType().getName();

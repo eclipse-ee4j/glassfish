@@ -29,7 +29,7 @@ import org.apache.catalina.deploy.MessageDestinationRef;
 public final class MessageDestinationRefDecorator extends MessageDestinationRef {
 
     private MessageDestinationReferenceDescriptor decoree;
-    
+
     public MessageDestinationRefDecorator(
                                 MessageDestinationReferenceDescriptor decoree){
         this.decoree = decoree;
@@ -41,12 +41,12 @@ public final class MessageDestinationRefDecorator extends MessageDestinationRef 
         return decoree.getDescription();
     }
 
- 
+
     public String getLink() {
         return decoree.getMessageDestinationLinkName();
     }
 
- 
+
     public String getName() {
         return decoree.getName();
     }
@@ -55,7 +55,7 @@ public final class MessageDestinationRefDecorator extends MessageDestinationRef 
         return decoree.getDestinationType();
     }
 
- 
+
     public String getUsage() {
         return decoree.getUsage();
     }

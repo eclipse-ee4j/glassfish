@@ -19,7 +19,7 @@ package com.sun.connector.cciblackbox;
 import jakarta.resource.cci.ResourceAdapterMetaData;
 
 /**
- * this implementation class provides info about the capabilities of a 
+ * this implementation class provides info about the capabilities of a
  * resource adapter implementation.
  * @author Sheetal Vartak
  */
@@ -88,12 +88,12 @@ public class CciResourceAdapterMetaData implements ResourceAdapterMetaData {
   public boolean supportsExecuteWithInputAndOutputRecord() {
 
     /* Method method;
-      Class interactionClass = 
+      Class interactionClass =
     Class.forName("jakarta.resource.cci.Interaction");
     try {
-          method = 
+          method =
       interactionClass.getDeclaredMethod(InteractionSpec,Record,Record);
-    }catch(NoSuchMethodException e) { 
+    }catch(NoSuchMethodException e) {
     return false;
     }
     if(method != null) {
@@ -106,12 +106,12 @@ public class CciResourceAdapterMetaData implements ResourceAdapterMetaData {
 
   public boolean supportsExecuteWithInputRecordOnly() {
     /*  Method method;
-      Class interactionClass = 
+      Class interactionClass =
     Class.forName("jakarta.resource.cci.Interaction");
     try {
           method =
       interactionClass.getDeclaredMethod(InteractionSpec,Record);
-    }catch(NoSuchMethodException e) { 
+    }catch(NoSuchMethodException e) {
     return false;
     }
     if(method != null) {

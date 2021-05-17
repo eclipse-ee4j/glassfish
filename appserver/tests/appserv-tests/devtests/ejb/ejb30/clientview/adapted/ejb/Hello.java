@@ -38,15 +38,15 @@ public interface Hello
     boolean checkSlessLocalReferences();
 
     boolean checkSfulLocalReferences();
-    
+
     public boolean checkSlessRemoteReferences();
-    
+
     public boolean checkSfulRemoteReferences();
 
     public DummyRemote getSfulRemoteBusiness(int num);
-    
+
     public DummyRemote2 getSfulRemoteBusiness2(int num);
-    
+
     public boolean compareRemoteRefs(Object ref1, Object ref2);
-    
+
 }

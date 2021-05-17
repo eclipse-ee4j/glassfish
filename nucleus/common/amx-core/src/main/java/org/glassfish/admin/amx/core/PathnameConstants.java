@@ -36,10 +36,10 @@ import org.glassfish.admin.amx.base.Pathnames;
 public final class PathnameConstants
 {
     private PathnameConstants() {}
-    
+
     /** delimiter between parts of a path */
     public static final char SEPARATOR = '/';
-    
+
     /**
         Wildcard charcter, the '*' (not a regex expression).
         Usage is similar to usage in a shell, the '*' means "zero or more
@@ -50,22 +50,22 @@ public final class PathnameConstants
     public static final char SUBSCRIPT_LEFT = '[';
     /** subscript right character, subscripts must be a character pair for grammar reasons */
     public static final char SUBSCRIPT_RIGHT = ']';
-    
+
     /**
         The characters legal to use as the type portion of a pathname,
         expressed as regex compatible string, but without enclosing square brackets.
     */
     public static final String LEGAL_CHAR_FOR_TYPE = "$a-zA-Z0-9._-";
-    
+
     /** Regex pattern for one legal character (in square braces). */
     public static final String LEGAL_CHAR_FOR_TYPE_PATTERN = "[**" + LEGAL_CHAR_FOR_TYPE + "]";
-    
+
     /** Regex pattern for one legal character (in square braces), wildcard allowed */
    // public static final String LEGAL_CHAR_FOR_TYPE_WILD_PATTERN = "[" + LEGAL_CHAR_FOR_TYPE + "*]";
-    
+
      /** regex pattern denoting a legal type, grouping () surrounding it */
     public static final String LEGAL_TYPE_PATTERN = "(" + LEGAL_CHAR_FOR_TYPE_PATTERN + LEGAL_CHAR_FOR_TYPE_PATTERN + "*)";
-    
+
      /** regex pattern denoting a legal type, with wildcards, grouping () surrounding it */
    // public static String LEGAL_TYPE_WILD_PATTERN = "(" + LEGAL_CHAR_FOR_TYPE_WILD_PATTERN + "*)";
 
@@ -88,7 +88,7 @@ public final class PathnameConstants
 
      /** regex pattern denoting a legal name, with wildcards */
    // public static final String LEGAL_NAME_WILD_PATTERN = LEGAL_CHAR_FOR_NAME_WILD_PATTERN + "*";
-    
+
 }
 
 

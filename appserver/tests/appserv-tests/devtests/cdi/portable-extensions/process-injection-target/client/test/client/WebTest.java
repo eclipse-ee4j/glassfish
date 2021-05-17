@@ -27,8 +27,8 @@ public class WebTest {
 
     private static SimpleReporterAdapter stat
         = new SimpleReporterAdapter("appserv-tests");
-    private static final String TEST_NAME = 
-		"portable-extensions-process-injection-target";
+    private static final String TEST_NAME =
+        "portable-extensions-process-injection-target";
     private static final String EXPECTED_RESPONSE = "Hello from Servlet 3.0.";
 
     private final String host;
@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for process injection target extension");
         WebTest webTest = new WebTest(args);
@@ -49,7 +49,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -68,7 +68,7 @@ public class WebTest {
         if (EXPECTED_RESPONSE.equals(line)) {
             stat.addStatus(TEST_NAME, stat.PASS);
         } else {
-            System.out.println("Wrong response. Expected: " + 
+            System.out.println("Wrong response. Expected: " +
                         EXPECTED_RESPONSE + ", received: " + line);
             stat.addStatus(TEST_NAME, stat.FAIL);
         }

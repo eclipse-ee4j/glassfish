@@ -30,7 +30,7 @@ import org.glassfish.hk2.api.PostConstruct;
 /**
  * Bootstraps secure admin on a new instance by downloading the minimum files
  * required for the client to offer client authentication using a cert.
- * 
+ *
  * @author Tim Quinn
  */
 @Service(name="_bootstrap-secure-admin")
@@ -38,8 +38,8 @@ import org.glassfish.hk2.api.PostConstruct;
 @ExecuteOn(value={RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_bootstrap-secure-admin", 
+        opType=RestEndpoint.OpType.POST,
+        path="_bootstrap-secure-admin",
         description="_bootstrap-secure-admin")
 })
 public class BootstrapSecureAdminCommand implements AdminCommand, PostConstruct {
@@ -51,8 +51,8 @@ public class BootstrapSecureAdminCommand implements AdminCommand, PostConstruct 
 
     @Inject
     private ServerEnvironment env;
-    
-    
+
+
     @Override
     public void postConstruct() {
         bootstrappedFiles = new File[] {

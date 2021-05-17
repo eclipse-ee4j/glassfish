@@ -88,9 +88,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ejb30-persistence tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the ejb-ejb30-persistence tests)
+    </echo>
     </target>
 </project>

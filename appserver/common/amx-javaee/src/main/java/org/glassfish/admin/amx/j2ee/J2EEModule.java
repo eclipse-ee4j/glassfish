@@ -22,14 +22,14 @@ import org.glassfish.admin.amx.annotation.ManagedAttribute;
  */
 public interface J2EEModule extends J2EEDeployedObject
 {
-		
-	/**
-		Note that the Attribute name is case-sensitive
-		"javaVM" as defined by JSR 77.
-		
-	 	@return String[] of ObjectName
-	 */
- 	@ManagedAttribute
-	public String[]	getjavaVMs();
-	
+
+    /**
+        Note that the Attribute name is case-sensitive
+        "javaVM" as defined by JSR 77.
+
+         @return String[] of ObjectName
+     */
+     @ManagedAttribute
+    public String[]    getjavaVMs();
+
 }

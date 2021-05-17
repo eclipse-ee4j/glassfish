@@ -258,7 +258,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
      * <code>X500Principal</code> object returns an empty string ("").
      *
      * @return an <code>X500Principal</code> representing the subject
-     *		distinguished name from thr first certificate, in the
+     *        distinguished name from thr first certificate, in the
      *          client certificate chain;
      */
     protected X500Principal getX500Principal() {

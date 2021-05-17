@@ -32,21 +32,21 @@ public class Client {
         static HelloEJBService service;
 
         public static void main(String[] args) {
-	    stat.addDescription("msgctxt-invocationhandlerctxt");
+        stat.addDescription("msgctxt-invocationhandlerctxt");
             Client client = new Client();
             client.doTest(args);
-	    stat.printSummary("msgctxt-invocationhandlerctxt");
+        stat.printSummary("msgctxt-invocationhandlerctxt");
        }
 
        public void doTest(String[] args) {
             try {
                 Hello port = service.getHelloEJBPort();
                 String ret = port.sayHello("Appserver Tester !");
-		if(ret == null) {
+        if(ret == null) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus("msgctxt-invocationhandlerctxt", stat.FAIL);
                     return;
-		}
+        }
                 System.out.println(ret);
                 stat.addStatus("msgctxt-invocationhandlerctxt", stat.PASS);
             } catch(Exception e) {

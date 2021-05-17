@@ -91,7 +91,7 @@ public class WebTest {
                 } catch(Exception ex) {
                 }
             }
-            
+
             stat.addStatus(TEST_NAME, ((expected) ? stat.PASS : stat.FAIL));
         } catch(Exception ex) {
             ex.printStackTrace();

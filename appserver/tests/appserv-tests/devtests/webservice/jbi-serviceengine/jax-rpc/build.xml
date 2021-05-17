@@ -25,6 +25,6 @@
 
     <target name="all">
         <ant dir="consumer" target="all"/>
-	<ant dir="provider" target="all"/>
+    <ant dir="provider" target="all"/>
     </target>
 </project>

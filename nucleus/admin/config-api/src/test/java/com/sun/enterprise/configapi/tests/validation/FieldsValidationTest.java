@@ -35,7 +35,7 @@ public class FieldsValidationTest extends ConfigApiTest {
 
     public String getFileName() {
         return "DomainTest";
-    }    
+    }
 
     @Test
     public void testNotNullField() {

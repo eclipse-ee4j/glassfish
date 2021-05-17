@@ -51,4 +51,4 @@ public abstract class AbstractBaseEJB<T> {
     abstract public void doSomething5(List<T> t);
 
     abstract public void doSomething6(List<List<T>> t);
-} 
+}

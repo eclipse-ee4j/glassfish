@@ -19,12 +19,12 @@ package com.sun.s1peqe.selfmanagement.tmonitor.action;
 import javax.management.*;
 import java.io.*;
 
-public class GaugeLow implements NotificationListener, 
+public class GaugeLow implements NotificationListener,
      com.sun.s1peqe.selfmanagement.tmonitor.action.GaugeLowMBean {
         private final String JMX_MONITOR_GAUGE_LOW = "jmx.monitor.gauge.low";
         public GaugeLow() {
         }
-        
+
         public synchronized void handleNotification(Notification notification,
                         Object handback) {
           try {

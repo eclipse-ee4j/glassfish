@@ -35,11 +35,11 @@ public class EjbLiteConsolePlugin implements ConsoleProvider {
 
 /**
  *  <p> Returns the URL of the Integration Point configuration file
- *	console-config.xml </p>
+ *    console-config.xml </p>
  *
  *  @return URL of configration file.
  */
-    public URL getConfiguration(){ 
+    public URL getConfiguration(){
             return null;
     }
 }

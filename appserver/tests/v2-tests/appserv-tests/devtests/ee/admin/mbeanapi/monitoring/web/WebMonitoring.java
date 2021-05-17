@@ -54,13 +54,13 @@ public class WebMonitoring extends AMXMonitoringTestBase {
     private static String VS = "VIRTUAL SERVER";
 
     public WebMonitoring(final String host, final int port, final String serverName,
-            final String adminUser, final String adminPassword, 
+            final String adminUser, final String adminPassword,
             final boolean useTLS) throws IOException {
         super(host, port, adminUser,adminPassword,useTLS);
         this.serverName = serverName;
     }
-    
-    
+
+
     public void  test(final String applicationName, final String webModule) {
         if(isEmbeddedWebModule(applicationName, webModule)) {
             testEmbeddedWebModules(getWebModules(applicationName));
@@ -68,7 +68,7 @@ public class WebMonitoring extends AMXMonitoringTestBase {
             testStandAloneWebModule(webModule);
         }
     }
-    
+
 
     /**
      *
@@ -79,8 +79,8 @@ public class WebMonitoring extends AMXMonitoringTestBase {
             assert(webMap != null && webMap.size() > 0) : "FAILURE!";
             testEmbeddedWebModules(webMap);
     }
-    
-    
+
+
     /**
      *
      */
@@ -91,10 +91,10 @@ public class WebMonitoring extends AMXMonitoringTestBase {
         Iterator itr = webModules.values().iterator();
         while(itr.hasNext()) {
             WebModuleVirtualServerMonitor webMonitor = (WebModuleVirtualServerMonitor)itr.next();
-            if (!webMonitor.getName().equals("//__asadmin/adminapp") 
+            if (!webMonitor.getName().equals("//__asadmin/adminapp")
                     && !webMonitor.getName().equals("//__asadmin/admingui")
                     && !webMonitor.getName().equals("//__asadmin/com_sun_web_ui")) {
-                System.out.println("\nStats for WebModule [" + 
+                System.out.println("\nStats for WebModule [" +
                 webMonitor.getName() + "]");
                 testWebModuleServlets(webMonitor.getServletMonitorMap());
             }
@@ -116,11 +116,11 @@ public class WebMonitoring extends AMXMonitoringTestBase {
             System.out.println("  |");
             System.out.println("  |");
             System.out.println("  ---- SERVLET [" + sltMonitor.getName() + "]");
-            listStats(sltMonitor); 
+            listStats(sltMonitor);
         }
     }
-    
-    
+
+
     /**
      *
      */
@@ -128,21 +128,21 @@ public class WebMonitoring extends AMXMonitoringTestBase {
         return getApplicationMonitor(serverName, applicationName).
             getWebModuleVirtualServerMonitorMap();
     }
-    
-    
+
+
     /**
      *
      */
     private boolean isEmbeddedWebModule(final String applicationName,
             final String webModuleName) {
-        final ApplicationMonitor appMtr = 
+        final ApplicationMonitor appMtr =
             getApplicationMonitor(serverName, applicationName);
         final Map webMgr = appMtr.getWebModuleVirtualServerMonitorMap();
-        return (webMgr.get(webModuleName) != null 
+        return (webMgr.get(webModuleName) != null
             || "".equals(webMgr.get(webModuleName)));
     }
-     
-    
+
+
 
     /**
      *
@@ -157,18 +157,18 @@ public class WebMonitoring extends AMXMonitoringTestBase {
                 System.getProperty("ADMIN_USER", "admin"),
                 System.getProperty("ADMIN_PASSWORD", "adminadmin"),
                 Boolean.getBoolean(System.getProperty("USE_TLS", "false")));
-         
+
             WebMonitoring.printArgs(args);
-            
+
             if(args.length < 3) {
                 webMtr.test(null,null);
             } else {
-                webMtr.test(args[1], args[2]); 
+                webMtr.test(args[1], args[2]);
             }
-            
+
         } catch( Throwable t ) {
             ExceptionUtil.getRootCause( t ).printStackTrace();
         }
     }
-    
+
 }

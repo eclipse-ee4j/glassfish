@@ -48,6 +48,6 @@ public class JSR322Work extends DeliveryWork implements WorkContextProvider {
 
     public void run(){
         super.run();
-        
+
     }
 }

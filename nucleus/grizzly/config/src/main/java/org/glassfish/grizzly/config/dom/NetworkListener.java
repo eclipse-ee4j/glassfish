@@ -41,7 +41,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
     String DEFAULT_CONFIGURATION_FILE = "${com.sun.aas.instanceRoot}/config/glassfish-jk.properties";
     String TYPE_PATTERN = "(standard|proxy)";
     String DEFAULT_TYPE = "standard";
-    
+
 
     /**
      * IP address to listen on
@@ -89,7 +89,7 @@ public interface NetworkListener extends ConfigBeanProxy, PropertyBag {
     String getType();
 
     void setType(String type);
-    
+
     /**
      * Port to listen on
      */

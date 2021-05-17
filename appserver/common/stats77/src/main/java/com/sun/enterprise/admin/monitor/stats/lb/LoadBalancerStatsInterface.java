@@ -16,25 +16,25 @@
 
 package com.sun.enterprise.admin.monitor.stats.lb;
 
-// 
+//
 // This interface has all of the bean info accessor methods.
-// 
+//
 
 public interface LoadBalancerStatsInterface {
-	public void setClusterStats(com.sun.enterprise.admin.monitor.stats.lb.ClusterStats[] value);
+    public void setClusterStats(com.sun.enterprise.admin.monitor.stats.lb.ClusterStats[] value);
 
-	public void setClusterStats(int index, com.sun.enterprise.admin.monitor.stats.lb.ClusterStats value);
+    public void setClusterStats(int index, com.sun.enterprise.admin.monitor.stats.lb.ClusterStats value);
 
-	public int addClusterStats(com.sun.enterprise.admin.monitor.stats.lb.ClusterStats value);
+    public int addClusterStats(com.sun.enterprise.admin.monitor.stats.lb.ClusterStats value);
 
-	public com.sun.enterprise.admin.monitor.stats.lb.ClusterStats[] getClusterStats();
+    public com.sun.enterprise.admin.monitor.stats.lb.ClusterStats[] getClusterStats();
 
-	public int removeClusterStats(com.sun.enterprise.admin.monitor.stats.lb.ClusterStats value);
+    public int removeClusterStats(com.sun.enterprise.admin.monitor.stats.lb.ClusterStats value);
 
-	public java.util.List fetchClusterStatsList();
+    public java.util.List fetchClusterStatsList();
 
-	public int sizeClusterStats();
+    public int sizeClusterStats();
 
-	public com.sun.enterprise.admin.monitor.stats.lb.ClusterStats getClusterStats(int index);
+    public com.sun.enterprise.admin.monitor.stats.lb.ClusterStats getClusterStats(int index);
 
 }

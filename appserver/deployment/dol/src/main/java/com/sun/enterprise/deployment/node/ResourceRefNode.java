@@ -25,9 +25,9 @@ import org.w3c.dom.Node;
 
 /**
  * This node handles all resource-ref xml tag elements
- * 
+ *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ResourceRefNode  extends DeploymentDescriptorNode<ResourceReferenceDescriptor> {
 
@@ -35,7 +35,7 @@ public class ResourceRefNode  extends DeploymentDescriptorNode<ResourceReference
 
     public ResourceRefNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
                                 InjectionTargetNode.class, "addInjectionTarget");
     }
 
@@ -50,7 +50,7 @@ public class ResourceRefNode  extends DeploymentDescriptorNode<ResourceReference
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(TagNames.RESOURCE_REFERENCE_NAME, "setName");
-        table.put(TagNames.RESOURCE_TYPE, "setType");        
+        table.put(TagNames.RESOURCE_TYPE, "setType");
         table.put(TagNames.RESOURCE_AUTHORIZATION, "setAuthorization");
         table.put(TagNames.RESOURCE_SHARING_SCOPE, "setSharingScope");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
@@ -59,14 +59,14 @@ public class ResourceRefNode  extends DeploymentDescriptorNode<ResourceReference
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor descriptor) {
         Node ejbResNode = appendChild(parent, nodeName);
         writeLocalizedDescriptions(ejbResNode, descriptor);
-        
-        appendTextChild(ejbResNode, TagNames.RESOURCE_REFERENCE_NAME, descriptor.getName());      
-        appendTextChild(ejbResNode, TagNames.RESOURCE_TYPE, descriptor.getType());      
-        appendTextChild(ejbResNode, TagNames.RESOURCE_AUTHORIZATION, descriptor.getAuthorization());               
-        appendTextChild(ejbResNode, TagNames.RESOURCE_SHARING_SCOPE, descriptor.getSharingScope());  
+
+        appendTextChild(ejbResNode, TagNames.RESOURCE_REFERENCE_NAME, descriptor.getName());
+        appendTextChild(ejbResNode, TagNames.RESOURCE_TYPE, descriptor.getType());
+        appendTextChild(ejbResNode, TagNames.RESOURCE_AUTHORIZATION, descriptor.getAuthorization());
+        appendTextChild(ejbResNode, TagNames.RESOURCE_SHARING_SCOPE, descriptor.getSharingScope());
         appendTextChild(ejbResNode, TagNames.MAPPED_NAME, descriptor.getMappedName());
         if( descriptor.isInjectable() ) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
@@ -75,7 +75,7 @@ public class ResourceRefNode  extends DeploymentDescriptorNode<ResourceReference
             }
         }
         appendTextChild(ejbResNode, TagNames.LOOKUP_NAME, descriptor.getLookupName());
-            
+
         return ejbResNode;
     }
 }

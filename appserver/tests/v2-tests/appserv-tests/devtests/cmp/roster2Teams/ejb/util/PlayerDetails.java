@@ -23,7 +23,7 @@ public class PlayerDetails implements java.io.Serializable {
     private String position;
     private double salary;
 
-    public PlayerDetails (String id, String name, String position, 
+    public PlayerDetails (String id, String name, String position,
         double salary) {
 
         this.id = id;

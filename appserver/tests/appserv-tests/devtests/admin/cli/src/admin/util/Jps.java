@@ -45,7 +45,7 @@ public class Jps {
 
     /**
      * return the platform-specific process-id of a JVM
-     * @param mainClassName The main class - this is how we identify the right JVM.  
+     * @param mainClassName The main class - this is how we identify the right JVM.
      * You can pass in a fully-qualified name or just the classname.
      * E.g. com.sun.enterprise.glassfish.bootstrap.ASMain and ASMain work the same.
      * @return the process id if possible otherwise 0

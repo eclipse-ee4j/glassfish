@@ -457,7 +457,7 @@ public class ForeignFieldDesc extends FieldDesc {
 
                 sqlProperties &= ~(FieldDesc.PROP_IN_CONCURRENCY_CHECK);
             } else if (!useJoinTable()) {
-                // This side will write relationship updates to the database. 
+                // This side will write relationship updates to the database.
                 // Mark the local fields as part of the foreign key.
                 for (int i = 0; i < localFields.size(); i++) {
                     ((LocalFieldDesc)localFields.get(i)).sqlProperties |= FieldDesc.PROP_FOREIGN_KEY_FIELD;

@@ -58,12 +58,12 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Delete virtual server command
- * 
+ *
  */
 @Service(name="delete-virtual-server")
 @PerLookup
 @I18n("delete.virtual.server")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})  
+@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 public class DeleteVirtualServer implements AdminCommand {
 
@@ -71,7 +71,7 @@ public class DeleteVirtualServer implements AdminCommand {
 
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     String target;
-    
+
     @Param(name="virtual_server_id", primary=true)
     String vsid;
 
@@ -145,16 +145,16 @@ public class DeleteVirtualServer implements AdminCommand {
             report.setFailureCause(e);
         }
     }
-    
+
     private boolean exists() {
         if ((vsid == null) || (httpService == null))
             return false;
-        
+
         List<VirtualServer> list = httpService.getVirtualServer();
-        
+
         for(VirtualServer vs : list) {
             String currId = vs.getId();
-         
+
             if(currId != null && currId.equals(vsid))
                 return true;
         }
@@ -164,10 +164,10 @@ public class DeleteVirtualServer implements AdminCommand {
     private String getReferencingListener() {
         if (networkConfig != null) {
             List<NetworkListener> list = networkConfig.getNetworkListeners().getNetworkListener();
-        
+
             for(NetworkListener listener: list) {
                 String virtualServer = listener.findHttpProtocol().getHttp().getDefaultVirtualServer();
-         
+
                 if(virtualServer != null && virtualServer.equals(vsid)) {
                     return listener.getName();
                 }

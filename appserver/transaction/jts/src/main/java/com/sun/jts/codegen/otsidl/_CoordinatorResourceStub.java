@@ -177,8 +177,8 @@ public class _CoordinatorResourceStub extends org.omg.CORBA.portable.ObjectImpl 
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:otsidl/CoordinatorResource:1.0", 
-    "IDL:omg.org/CosTransactions/SubtransactionAwareResource:1.0", 
+    "IDL:otsidl/CoordinatorResource:1.0",
+    "IDL:omg.org/CosTransactions/SubtransactionAwareResource:1.0",
     "IDL:omg.org/CosTransactions/Resource:1.0"};
 
   public String[] _ids ()

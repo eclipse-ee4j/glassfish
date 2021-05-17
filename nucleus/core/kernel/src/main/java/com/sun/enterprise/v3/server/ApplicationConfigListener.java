@@ -85,16 +85,16 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
         for (PropertyChangeEvent event : changes) {
             Object oldValue = event.getOldValue();
             Object newValue = event.getNewValue();
-            if (event.getSource() instanceof Applications) { 
+            if (event.getSource() instanceof Applications) {
                 if (event.getPropertyName().equals(ServerTags.APPLICATION)) {
                     if (oldValue == null || newValue == null) {
-                        // we are adding/removing application element here 
+                        // we are adding/removing application element here
                         // and updating existing attribute
                         isUpdatingAttribute = false;
                         break;
                     }
                 }
-            } else if (event.getSource() instanceof Server || 
+            } else if (event.getSource() instanceof Server ||
                     event.getSource() instanceof Cluster) {
                 if (event.getPropertyName().equals(
                         ServerTags.APPLICATION_REF)) {
@@ -109,18 +109,18 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
         }
 
         if (!isUpdatingAttribute) {
-            // if we are not updating existing attribute, we should 
+            // if we are not updating existing attribute, we should
             // skip the config listener
             return;
         }
 
         for (PropertyChangeEvent event : changes) {
-            if (event.getSource() instanceof Application || 
+            if (event.getSource() instanceof Application ||
                 event.getSource() instanceof ApplicationRef) {
                 Object oldValue = event.getOldValue();
                 Object newValue = event.getNewValue();
-                if (oldValue != null && newValue != null && 
-                    oldValue instanceof String && 
+                if (oldValue != null && newValue != null &&
+                    oldValue instanceof String &&
                     newValue instanceof String &&
                     !((String)oldValue).equals((String)newValue)) {
                     // if it's an attribute change of the application
@@ -139,11 +139,11 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
                     }
                     if (event.getPropertyName().equals(ServerTags.ENABLED)) {
                         // enable or disable application accordingly
-                        handleAppEnableChange(event.getSource(), 
+                        handleAppEnableChange(event.getSource(),
                             appName, Boolean.valueOf((String)newValue));
                     } else if (event.getPropertyName().equals(ServerTags.CONTEXT_ROOT) || event.getPropertyName().equals(ServerTags.VIRTUAL_SERVERS) || event.getPropertyName().equals(ServerTags.AVAILABILITY_ENABLED)) {
                         // for other changes, reload the application
-                        handleOtherAppConfigChanges(event.getSource(), 
+                        handleOtherAppConfigChanges(event.getSource(),
                             appName);
                     }
                 }
@@ -156,10 +156,10 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
     }
 
     public void postConstruct() {
-        Properties arguments = startupContext.getArguments(); 
+        Properties arguments = startupContext.getArguments();
         if (arguments != null) {
             boolean isUpgrade = Boolean.valueOf(
-                arguments.getProperty(UPGRADE_PARAM));  
+                arguments.getProperty(UPGRADE_PARAM));
             if (isUpgrade) {
                 // we don't want to register this listener for the upgrade
                 // start up
@@ -169,7 +169,7 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
         transactions.addTransactionsListener(this);
     }
 
-    private void handleAppEnableChange(Object parent, 
+    private void handleAppEnableChange(Object parent,
         String appName, boolean enabled) {
         Application application = applications.getApplication(appName);
         if (application.isLifecycleModule()) {
@@ -191,36 +191,36 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
         if (application.isLifecycleModule()) {
             return;
         }
-        // reload the application for other application related 
+        // reload the application for other application related
         // config changes if the application is in enabled state
-        if (isCurrentInstanceMatchingTarget(parent) && 
+        if (isCurrentInstanceMatchingTarget(parent) &&
             deployment.isAppEnabled(application)) {
-            disableApplication(appName); 
+            disableApplication(appName);
             enableApplication(appName);
         }
     }
 
 
     private boolean isCurrentInstanceMatchingTarget(Object parent) {
-        // DAS receive all the events, so we need to figure out 
+        // DAS receive all the events, so we need to figure out
         // whether we should take action on DAS depending on the event
         if (parent instanceof ApplicationRef) {
             Object grandparent = ((ApplicationRef)parent).getParent();
             if (grandparent instanceof Server) {
-                Server gpServer = (Server)grandparent;      
+                Server gpServer = (Server)grandparent;
                 if ( ! server.getName().equals(gpServer.getName())) {
-                    return false; 
+                    return false;
                 }
             } else if (grandparent instanceof Cluster) {
                 if (server.isDas()) {
-                    return false; 
+                    return false;
                 }
             }
         }
         return true;
     }
 
-    private void enableApplication(String appName) {        
+    private void enableApplication(String appName) {
         Application app = applications.getApplication(appName);
         ApplicationRef appRef = domain.getApplicationRefInServer(server.getName(), appName);
         // if the application does not exist or application is not referenced
@@ -229,7 +229,7 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
             return;
         }
 
-        // if the application is not in enable state, do not load 
+        // if the application is not in enable state, do not load
         if (!deployment.isAppEnabled(app)) {
             return;
         }
@@ -239,7 +239,7 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
             return;
         }
 
-        long operationStartTime = 
+        long operationStartTime =
             Calendar.getInstance().getTimeInMillis();
 
         try {
@@ -248,7 +248,7 @@ public class ApplicationConfigListener implements TransactionListener, PostConst
             deployment.enable(server.getName(), app, appRef, report, logger);
 
             if (report.getActionExitCode().equals(ActionReport.ExitCode.SUCCESS)) {
-                logger.log(Level.INFO, KernelLoggerInfo.loadingApplicationTime, 
+                logger.log(Level.INFO, KernelLoggerInfo.loadingApplicationTime,
                         new Object[] { appName, (Calendar.getInstance().getTimeInMillis() - operationStartTime)});
             } else if (report.getActionExitCode().equals(ActionReport.ExitCode.WARNING)){
                 logger.log(Level.WARNING, KernelLoggerInfo.loadingApplicationWarning,

@@ -55,7 +55,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6861682");
         WebTest webTest = new WebTest(args);
@@ -63,8 +63,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeServlet("/portal/directory",
                 EXPECTED_LOCATION_RESPONSE_HEADER);
             stat.addStatus(TEST_NAME, stat.PASS);
@@ -78,7 +78,7 @@ public class WebTest {
 
     private void invokeServlet(String uri, String expectedRedirect)
             throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port + uri);
         System.out.println("Connecting to: " + url.toString());
 

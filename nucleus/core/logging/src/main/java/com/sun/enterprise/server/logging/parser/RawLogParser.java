@@ -29,7 +29,7 @@ import com.sun.enterprise.server.logging.LogFacade;
 public class RawLogParser implements LogParser {
 
     private String streamName;
-    
+
     public RawLogParser(String name) {
         streamName = name;
     }
@@ -53,10 +53,10 @@ public class RawLogParser implements LogParser {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    LogFacade.LOGGING_LOGGER.log(Level.FINE, "Got exception while clsoing reader "+ streamName, e); 
+                    LogFacade.LOGGING_LOGGER.log(Level.FINE, "Got exception while clsoing reader "+ streamName, e);
                 }
             }
-        }                
+        }
 
     }
 

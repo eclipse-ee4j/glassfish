@@ -69,8 +69,8 @@ import java.lang.annotation.Target;
  * <LI>It will have a metadata entry with the {@link Decorate#targetType()} value with key METHOD_ACTUAL</LI>
  * <LI>It will have a metadata entry with the {@link Decorate#methodName()} value with key METHOD_NAME</LI>
  * <LI>It will have a metadata entry with the name of the parent {@link Configured} class with key PARENT_CONFGIURED</LI>
- * </UL> 
- * 
+ * </UL>
+ *
  * @author jwells
  */
 @Documented
@@ -82,40 +82,40 @@ public @interface GenerateServiceFromMethod {
      * method where the user-supplied annotation has been placed
      */
     public final static String METHOD_ACTUAL = "MethodListActual";
-    
+
     /**
      * This is the key in the metadata that will contain the name of the method where the user-supplied
      * annotation has been placed
      */
     public final static String METHOD_NAME = "MethodName";
-    
+
     /**
      * This is the key in the metadata that will contain the fully qualified class name of the class marked
      * {@link Configured} that contains this annotation
      */
     public final static String PARENT_CONFIGURED = "ParentConfigured";
-    
+
     /**
      * This must have the fully qualified class name of the implementation that is to be used in the
      * generated descriptor
-     * 
+     *
      * @return The fully qualified class name of the implementation
      */
     public String implementation();
-    
+
     /**
      * The set of fully qualified class names of the advertised contracts that are to be used in
      * the generated descriptor.  Note that the implementation class is not automatically added
      * to this list
-     * 
+     *
      * @return The fully qualified class names of the advertised contracts the generated descriptor
      * should take
      */
     public String[] advertisedContracts();
-    
+
     /**
      * The scope that the descriptor should take.  Defaults to PerLookup
-     * 
+     *
      * @return The fully qualified class names of the scope the descriptor should take
      */
     public String scope() default "org.glassfish.hk2.api.PerLookup";

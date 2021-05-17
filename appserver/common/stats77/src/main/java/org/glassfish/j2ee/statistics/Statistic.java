@@ -17,32 +17,32 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * The Statistic model and its sub-models specify the data models which are requried to be used to provide the performance data described by the specific attributes in the Stats models. 
+ * The Statistic model and its sub-models specify the data models which are requried to be used to provide the performance data described by the specific attributes in the Stats models.
  */
 public interface Statistic {
     /**
-     * The name of this Statistic. 
+     * The name of this Statistic.
      */
     String getName();
 
     /**
      * The unit of measurement for this Statistic.
-     * Valid values for TimeStatistic measurements are "HOUR", "MINUTE", "SECOND", "MILLISECOND", "MICROSECOND" and "NANOSECOND". 
+     * Valid values for TimeStatistic measurements are "HOUR", "MINUTE", "SECOND", "MILLISECOND", "MICROSECOND" and "NANOSECOND".
      */
     String getUnit();
 
     /**
-     * A human-readable description of the Statistic. 
+     * A human-readable description of the Statistic.
      */
     String getDescription();
 
     /**
-     * The time of the first measurement represented as a long, whose value is the number of milliseconds since January 1, 1970, 00:00:00. 
+     * The time of the first measurement represented as a long, whose value is the number of milliseconds since January 1, 1970, 00:00:00.
      */
     long getStartTime();
 
     /**
-     * The time of the last measurement represented as a long, whose value is the number of milliseconds since January 1, 1970, 00:00:00. 
+     * The time of the last measurement represented as a long, whose value is the number of milliseconds since January 1, 1970, 00:00:00.
      */
     long getLastSampleTime();
 }

@@ -70,7 +70,7 @@ public class FilePath {
      */
     String absolutePath = getAbsolutePath(file);
     Vector components = new Vector();
-    StringTokenizer parser = 
+    StringTokenizer parser =
       new StringTokenizer(absolutePath, File.separator, true);
     while (parser.hasMoreElements())
       components.addElement(parser.nextToken());
@@ -79,44 +79,44 @@ public class FilePath {
     while (editted) {
       editted = false;
       for (int i=1; i<components.size() && !editted; i++) {
-	String s = (String)components.elementAt(i);
-	if (s.equals(".")) {//NOI18N
-	  components.removeElementAt(i);
-	  components.removeElementAt(i-1);
-	  editted = true;
-	} else if (s.equals("..")) {//NOI18N
-	  components.removeElementAt(i);
-	  components.removeElementAt(i-1);
-	  if (i > 2) {
-	    if (!((String)components.elementAt(i-2)).equals(File.separator) &&
-		((String)components.elementAt(i-3)).equals(File.separator)) {
-	      components.removeElementAt(i-2);
-	      components.removeElementAt(i-3);
-	    }
-	  }
-	  editted = true;
-	}
+    String s = (String)components.elementAt(i);
+    if (s.equals(".")) {//NOI18N
+      components.removeElementAt(i);
+      components.removeElementAt(i-1);
+      editted = true;
+    } else if (s.equals("..")) {//NOI18N
+      components.removeElementAt(i);
+      components.removeElementAt(i-1);
+      if (i > 2) {
+        if (!((String)components.elementAt(i-2)).equals(File.separator) &&
+        ((String)components.elementAt(i-3)).equals(File.separator)) {
+          components.removeElementAt(i-2);
+          components.removeElementAt(i-3);
+        }
+      }
+      editted = true;
+    }
       }
     }
 
     /* Special case for Windows */
     String cwd = getCwdAbsolute();
     if (cwd.length() > 2 &&
-	cwd.charAt(0) != File.separatorChar &&
-	cwd.charAt(1) == ':') {
+    cwd.charAt(0) != File.separatorChar &&
+    cwd.charAt(1) == ':') {
       /* probably a drive letter */
       if (((String)components.elementAt(0)).equals(File.separator) &&
-	  (components.size() == 1 ||
-	   !((String)components.elementAt(1)).equals(File.separator))) {
-	String drive = cwd.substring(0,2);
-	components.insertElementAt(drive, 0);
+      (components.size() == 1 ||
+       !((String)components.elementAt(1)).equals(File.separator))) {
+    String drive = cwd.substring(0,2);
+    components.insertElementAt(drive, 0);
       }
     }
 
     /* Remove a trailing File.separatorChar */
     if (components.size() > 0 &&
-	((String)components.elementAt(components.size()-1)).equals(
-		File.separator))
+    ((String)components.elementAt(components.size()-1)).equals(
+        File.separator))
       components.removeElementAt(components.size()-1);
 
     StringBuffer result = new StringBuffer();
@@ -133,8 +133,8 @@ public class FilePath {
     boolean equal;
     String cwd = getCwdAbsolute();
     if (cwd.length() > 2 &&
-	cwd.charAt(0) != File.separatorChar &&
-	cwd.charAt(1) == ':') {
+    cwd.charAt(0) != File.separatorChar &&
+    cwd.charAt(1) == ':') {
       equal = f1.equalsIgnoreCase(f2);
     }
     else

@@ -42,7 +42,7 @@ import jakarta.inject.Inject;
 
 /**
  * List JDBC Connection Pools command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @Service(name="list-jdbc-connection-pools")
@@ -52,13 +52,13 @@ import jakarta.inject.Inject;
 @I18n("list.jdbc.connection.pools")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jdbc-connection-pools", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jdbc-connection-pools",
         description="List JDBC Connection Pools")
 })
 public class ListJdbcConnectionPools implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListJdbcConnectionPools.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListJdbcConnectionPools.class);
 
     @Inject
     private Domain domain;

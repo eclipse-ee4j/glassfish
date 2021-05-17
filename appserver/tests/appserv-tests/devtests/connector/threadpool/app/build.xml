@@ -34,8 +34,8 @@
   <target name="all" depends="init-common, clean-common">
    <ant dir="src" inheritAll="false" target="all"/>
    <antcall target="ear-common">
-	<param name="appname" value="worktest"/>
-	<param name="application.xml" value="META-INF/application.xml"/>
+    <param name="appname" value="worktest"/>
+    <param name="application.xml" value="META-INF/application.xml"/>
    </antcall>
   </target>
 

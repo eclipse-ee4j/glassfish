@@ -20,6 +20,6 @@ import java.rmi.RemoteException;
 import jakarta.ejb.FinderException;
 
 public interface CustomerRefreshHome extends jakarta.ejb.EJBHome {
-    public CustomerRefresh findByPrimaryKey(String SSN) throws FinderException, RemoteException; 
+    public CustomerRefresh findByPrimaryKey(String SSN) throws FinderException, RemoteException;
 }
 

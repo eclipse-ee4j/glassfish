@@ -36,6 +36,6 @@ public class CheckAccessLog extends HttpServlet {
                     }
                 }
             }
-        }    
+        }
     }
 }

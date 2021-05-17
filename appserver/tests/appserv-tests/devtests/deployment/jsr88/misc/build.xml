@@ -24,11 +24,11 @@
 <project name="miscellaneousTestForJSR88" default="usage" basedir=".">
 
     &commonBuild;
-    
+
     <property name="appClientName" value="appclienttest"/>
     <property name="appClientJarFile" value="${build}/${appClientName}.jar"/>
     <property name="appClientModuleName" value="testAppClient"/>
-    
+
     <property name="webServicesWorkaroundCheckWarFile" value="exampleFromJ2EETutorial/cb/provided-wars/jaxrpc-coffee-distributor.war"/>
 
     <path id="jsr88.exec.classpath">
@@ -47,7 +47,7 @@
                includes="*.java"
                debug="on"
                failonerror="true">
-            <classpath> 
+            <classpath>
                 <path refid="gfv3.classpath"/>
                 <path refid="test.compile.classpath"/>
                 <pathelement location="../../util/build"/> <!-- need this to find the JSR88Deployer -->
@@ -56,7 +56,7 @@
     </target>
 
 <!--
-	Run all the tests.
+    Run all the tests.
 -->
     <target name="run" depends="compile,assemble">
         <antcall target="runTestProgressObjectImpl"/>
@@ -86,7 +86,7 @@
              <pathelement path="${build}"/>
           </classpath>
         </javaWithResult>
-        
+
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/TestProgressObjectImpl.log"/>
@@ -108,7 +108,7 @@
             <fileset dir="${basedir}" includes="**/application-client.xml **/sun-application-client.xml"/>
         </jar>
     </target>
-    
+
     <!--
         To test the ability to get information about the modules through JSR88, first deploy an app client
         (which exposed a bug), then use JSR88 to retrieve information about app client components, then undeploy
@@ -125,7 +125,7 @@
         <antcall target="common.deploy.asadmin">
                 <param name="arg.list" value="--name ${appClientModuleName} ${appClientJarFile}"/>
         </antcall>
-        
+
          <javaWithResult
             fork="true"
             failonerror="false"
@@ -164,14 +164,14 @@
             <param name="log" value="${build}/GetModulesTest.log"/>
         </antcall>
     </target>
-    
+
     <!--
-        This test checks on a workaround that avoids a bug in J2SE that opens a jar file but never closes it.  
+        This test checks on a workaround that avoids a bug in J2SE that opens a jar file but never closes it.
         This happens during web services compilation during deployment (in some cases) and the open jar file
         prevents the app server from completely undeploying the app.  A later attempt to deploy the app
         again fails because of the open jar file.  The administrator must shut down and restart the app
         server to clear the open jar and permit the later deployment to succeed.
-        
+
         Deployment has worked around this problem, and this test makes sure the workaround continues to work.
     -->
     <target name="runOpenJarWorkaroundTest" depends="init">
@@ -180,7 +180,7 @@
         </antcall>
 
         <!--
-            Run the test program that deploys, undeploys, and deploys again.  
+            Run the test program that deploys, undeploys, and deploys again.
         -->
          <javaWithResult
             fork="true"
@@ -216,7 +216,7 @@
         </antcall>
 
     </target>
-    
+
     <target name="private-all">
         <antcall target="run"/>
     </target>

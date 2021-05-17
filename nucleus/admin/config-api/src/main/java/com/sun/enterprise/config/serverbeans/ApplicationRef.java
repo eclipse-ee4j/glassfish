@@ -71,7 +71,7 @@ public interface ApplicationRef extends ConfigBeanProxy, Payload {
     /**
      * Gets the value of the lbEnabled property. A boolean flag that causes any and all load-balancers using this
      * application to consider this application unavailable to them.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)

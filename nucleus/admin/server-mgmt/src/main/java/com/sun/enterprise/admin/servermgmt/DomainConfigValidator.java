@@ -62,7 +62,7 @@ public abstract class DomainConfigValidator extends Validator {
 
     /**
      * Constructs a new DomainConfigValidator object.
-     * 
+     *
      * @param entries An array of required DomainConfigEntryInfo objects. Must be supplied by subclasses.
      */
     protected DomainConfigValidator(DomainConfigEntryInfo[] entries) {
@@ -79,7 +79,7 @@ public abstract class DomainConfigValidator extends Validator {
      * Validates the domainConfig. For each required domain config entry in the entries, gets the value from the
      * domainConfig object and invokes the validator of that entry. Skips the validation of an entry if no validator is
      * specified for that entry.
-     * 
+     *
      * @param domainConfig The domainConfig object that needs to be validated. A domainConfig object is valid if it
      * <ul>
      * is of type DomainConfig contains the required set of DomainConfig keys the value for each required key is valid.

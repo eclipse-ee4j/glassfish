@@ -30,7 +30,7 @@
     <artifactId>runner</artifactId>
 
     <name>HK2 CDI EAR Test Runner</name>
-    
+
     <build>
         <plugins>
             <plugin>

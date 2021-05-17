@@ -40,9 +40,9 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * Performs a single auto-undeploy operation for a single file.
  * <p>
  * Note - Use the newInstance static method to obtain a fully-injected operation;
- * it is safer and more convenient than using the no-arg constructor and then 
+ * it is safer and more convenient than using the no-arg constructor and then
  * invoking init yourself.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -54,7 +54,7 @@ public class AutoUndeploymentOperation extends AutoOperation {
 
     /**
      * Creates a new, injected, and initialized AutoUndeploymentOperation object.
-     * 
+     *
      * @param habitat
      * @param appFile
      * @param name
@@ -63,26 +63,26 @@ public class AutoUndeploymentOperation extends AutoOperation {
      */
     static AutoUndeploymentOperation newInstance(
             ServiceLocator habitat,
-            File appFile, 
+            File appFile,
             String name,
             String target) {
-        AutoUndeploymentOperation o = 
+        AutoUndeploymentOperation o =
                 (AutoUndeploymentOperation) habitat.getService(AutoUndeploymentOperation.class);
-        
+
         o.init(appFile, name, target);
         return o;
     }
 
     private String name;
-    
+
     private static final String COMMAND_NAME = "undeploy";
-    
+
     @Inject
     private AutodeployRetryManager retryManager;
 
     @Inject @Named(COMMAND_NAME)
     private AdminCommand undeployCommand;
-    
+
     @LogMessageInfo(message = "Attempt to create file {0} failed; no further information.", level="WARNING")
     private static final String CREATE_FAILED = "NCLS-DEPLOYMENT-02039";
 
@@ -94,18 +94,18 @@ public class AutoUndeploymentOperation extends AutoOperation {
      * @return the AutoUndeployOperation for convenience
      */
     protected AutoUndeploymentOperation init(
-            File appFile, 
+            File appFile,
             String name,
             String target) {
         super.init(
-                appFile, 
-                prepareUndeployActionProperties(name, target), 
-                COMMAND_NAME, 
+                appFile,
+                prepareUndeployActionProperties(name, target),
+                COMMAND_NAME,
                 undeployCommand);
         this.name = name;
         return this;
     }
-    
+
     private Properties prepareUndeployActionProperties(String archiveName, String target) {
         DeploymentProperties dProps = new DeploymentProperties();
 
@@ -127,14 +127,14 @@ public class AutoUndeploymentOperation extends AutoOperation {
         return (Properties)dProps;
     }
 
-    
+
     /**
      * {@inheritDoc}
      */
     protected String getMessageString(AutodeploymentStatus ds, File file) {
         return localStrings.getLocalString(
-                ds.undeploymentMessageKey, 
-                ds.undeploymentDefaultMessage, 
+                ds.undeploymentMessageKey,
+                ds.undeploymentDefaultMessage,
                 file);
     }
 
@@ -143,14 +143,14 @@ public class AutoUndeploymentOperation extends AutoOperation {
      */
     protected void markFiles(AutodeploymentStatus ds, File file) {
         /*
-         * Before managing the marker file for the app, see if 
+         * Before managing the marker file for the app, see if
          * the autodeployer is responsible for deleting this app
          * file and, if so, delete it.
-         * 
+         *
          * Normally users will delete the application file themselves.  Especially
          * in the case of directories, though, users may create the file
          * ${fileName}_undeployRequested and have the autodeployer delete the
-         * file.  
+         * file.
          * <p>
          * This avoids problems if the user-initiated deletion of a large
          * file or directory takes longer than the autodeployer cycle time.  If
@@ -158,10 +158,10 @@ public class AutoUndeploymentOperation extends AutoOperation {
          * will see the updated timestamp on the directory and can only decide
          * that this is a new file - at least a newer file - to be autodeployed.
          * <p>
-         * By allowing the auto-deployer to manage the deletion of the file the 
+         * By allowing the auto-deployer to manage the deletion of the file the
          * user can avoid this whole scenario and, thereby, avoid accidental
          * attempts to deploy an application that the user wants gone.
-         * 
+         *
          */
         if (undeployedByRequestFile(file)) {
             cleanupAppAndRequest(file);
@@ -175,7 +175,7 @@ public class AutoUndeploymentOperation extends AutoOperation {
             retryManager.recordFailedUndeployment(file);
         }
     }
-    
+
     private void markUndeployed(File f) {
         try {
             deleteAllMarks(f);
@@ -185,11 +185,11 @@ public class AutoUndeploymentOperation extends AutoOperation {
                                CREATE_FAILED,
                                undeployedFile.getAbsolutePath());
             }
-        } catch (Exception e) { 
-            //ignore 
+        } catch (Exception e) {
+            //ignore
         }
     }
-    
+
     private void markUndeployFailed(File f) {
         try {
             deleteAllMarks(f);
@@ -199,15 +199,15 @@ public class AutoUndeploymentOperation extends AutoOperation {
                                CREATE_FAILED,
                                undeployFailedFile.getAbsolutePath());
             }
-        } catch (Exception e) { 
-            //ignore 
+        } catch (Exception e) {
+            //ignore
         }
     }
-    
+
     private boolean undeployedByRequestFile(File f) {
         return f instanceof AutoDeployedFilesManager.UndeployRequestedFile;
     }
-    
+
     private void cleanupAppAndRequest(File f) {
         boolean logFine = deplLogger.isLoggable(Level.FINE);
 
@@ -225,7 +225,7 @@ public class AutoUndeploymentOperation extends AutoOperation {
             }
             FileUtils.deleteFile(f);
         }
-        
+
         /*
          * Remove the undeploy request file.
          */
@@ -235,6 +235,6 @@ public class AutoUndeploymentOperation extends AutoOperation {
         }
         FileUtils.deleteFile(requestFile);
     }
-    
-    
+
+
 }

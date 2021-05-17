@@ -18,47 +18,47 @@ package com.sun.enterprise.util.zip;
 
 import java.io.File;
 
-/** 
+/**
  * This class encapsulates the two pieces of information required to make a
  * ZipEntry -- the "real" path, and the path you want to appear in the zip file
  */
-public class ZipItem 
+public class ZipItem
 {
-	/** 
+    /**
      * Construct a ZipItem
      *
-	 * @param file The actual file
-	 * @param name The zip entry name - i.e. the relative path in the zip file
-	 * @throws ZipFileException
-	 */	
-	public ZipItem(File file, String name) throws ZipFileException
-	{
-		//if(!file.exists())
-		//	throw new ZipFileException("File doesn't exist: " + file);
-		if(name == null || name.length() <= 0)
-			throw new ZipFileException("null or empty name for ZipItem");
-		
-		this.file = file;
-		this.name = name;
-	}
+     * @param file The actual file
+     * @param name The zip entry name - i.e. the relative path in the zip file
+     * @throws ZipFileException
+     */
+    public ZipItem(File file, String name) throws ZipFileException
+    {
+        //if(!file.exists())
+        //    throw new ZipFileException("File doesn't exist: " + file);
+        if(name == null || name.length() <= 0)
+            throw new ZipFileException("null or empty name for ZipItem");
 
-	/** 
+        this.file = file;
+        this.name = name;
+    }
+
+    /**
      * Returns a String represenation of the real filename and the zip entry
      * name.
      *
-	 * @return String with the path and the zip entry name
-	 */	
-	public String toString()
-	{
-		return "File: " + file.getPath() + ", name: " + name;
-	}
+     * @return String with the path and the zip entry name
+     */
+    public String toString()
+    {
+        return "File: " + file.getPath() + ", name: " + name;
+    }
 
     /**
-     * Returns the zip entry name 
-     * 
+     * Returns the zip entry name
+     *
      * @return   the zip entry name
      */
-    public String getName() 
+    public String getName()
     {
         return this.name;
     }
@@ -68,13 +68,13 @@ public class ZipItem
      *
      * @return  the actual file
      */
-    public File getFile() 
+    public File getFile()
     {
         return this.file;
     }
-	
-	///////////////////////////////////////////////////////////////////////////
 
-	File	file;
-	String	name;
+    ///////////////////////////////////////////////////////////////////////////
+
+    File    file;
+    String    name;
 }

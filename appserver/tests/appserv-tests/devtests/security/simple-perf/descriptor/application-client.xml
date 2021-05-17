@@ -24,7 +24,7 @@
     <env-entry-name>times</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
     <env-entry-value>5000</env-entry-value>
-  </env-entry>  
+  </env-entry>
   <ejb-ref>
     <ejb-ref-name>ejb/SSLSimpleConverter</ejb-ref-name>
     <ejb-ref-type>Session</ejb-ref-type>

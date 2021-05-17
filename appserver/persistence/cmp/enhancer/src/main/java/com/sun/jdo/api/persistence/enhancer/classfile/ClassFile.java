@@ -41,7 +41,7 @@ final public class ClassFile implements VMConstants {
     new short[]{47, 0}, // jdk 1.3
     new short[]{48, 0}, // jdk 1.4
     new short[]{49, 0}, // jdk 1.5
-    new short[]{50, 0}  // jdk 1.6      
+    new short[]{50, 0}  // jdk 1.6
   };
   public static final List jdkVersions =
     convertMajorMinorVersions(jdkMajorMinorVersions);
@@ -217,8 +217,8 @@ final public class ClassFile implements VMConstants {
     for (Enumeration e = methods().elements(); e.hasMoreElements();) {
       ClassMethod method = (ClassMethod) e.nextElement();
       if (method.name().asString().equals(methodName) &&
-	  method.signature().asString().equals(methodSig))
-	return method;
+      method.signature().asString().equals(methodSig))
+    return method;
     }
     return null;
   }
@@ -237,7 +237,7 @@ final public class ClassFile implements VMConstants {
     for (Enumeration e = fields().elements(); e.hasMoreElements();) {
       ClassField field = (ClassField) e.nextElement();
       if (field.name().asString().equals(fieldName))
-	return field;
+    return field;
     }
     return null;
   }
@@ -335,7 +335,7 @@ final public class ClassFile implements VMConstants {
           thisClassName.asString() + ".class";//NOI18N
       System.err.println("Writing class to file " + filename);
       DataOutputStream stream = new DataOutputStream(
-	  new java.io.FileOutputStream(filename));
+      new java.io.FileOutputStream(filename));
       write(stream);
       stream.close();
     }
@@ -406,7 +406,7 @@ final public class ClassFile implements VMConstants {
       int interfaceIndex = data.readUnsignedShort();
       ConstClass ci = null;
       if (interfaceIndex != 0)
-	ci = (ConstClass) constantPool.constantAt(interfaceIndex);
+    ci = (ConstClass) constantPool.constantAt(interfaceIndex);
       classInterfaces.addElement(ci);
     }
   }
@@ -417,7 +417,7 @@ final public class ClassFile implements VMConstants {
       ConstClass ci = (ConstClass) classInterfaces.elementAt(i);
       int interfaceIndex = 0;
       if (ci != null)
-	interfaceIndex = ci.getIndex();
+    interfaceIndex = ci.getIndex();
       data.writeShort(interfaceIndex);
     }
   }
@@ -507,8 +507,8 @@ abstract class ArraySorter {
       swap(start, (start+end)/2);
       int last = start;
       for (int i = start+1; i<=end; i++) {
-	if (compare(i, start) < 0)
-	  swap (++last, i);
+    if (compare(i, start) < 0)
+      swap (++last, i);
       }
       swap(start, last);
       sortArray(start, last-1);
@@ -530,7 +530,7 @@ class InterfaceArraySorter extends ArraySorter {
   /* return -1 if o1 < o2, 0 if o1 == o2, 1 if o1 > o2 */
   int compare(int o1Index, int o2Index) {
     return theArray[o1Index].asString().compareTo(
-	theArray[o2Index].asString());
+    theArray[o2Index].asString());
   }
 
   /* Swap the elements at index o1Index and o2Index */
@@ -554,7 +554,7 @@ class FieldArraySorter extends ArraySorter {
   /* return -1 if o1 < o2, 0 if o1 == o2, 1 if o1 > o2 */
   int compare(int o1Index, int o2Index) {
     return theArray[o1Index].name().asString().compareTo(
-	theArray[o2Index].name().asString());
+    theArray[o2Index].name().asString());
   }
 
   /* Swap the elements at index o1Index and o2Index */
@@ -578,10 +578,10 @@ class MethodArraySorter extends ArraySorter {
   /* return -1 if o1 < o2, 0 if o1 == o2, 1 if o1 > o2 */
   int compare(int o1Index, int o2Index) {
     int cmp = theArray[o1Index].name().asString().compareTo(
-	theArray[o2Index].name().asString());
+    theArray[o2Index].name().asString());
     if (cmp == 0) {
       cmp = theArray[o1Index].signature().asString().compareTo(
-	theArray[o2Index].signature().asString());
+    theArray[o2Index].signature().asString());
     }
     return cmp;
   }

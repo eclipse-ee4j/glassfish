@@ -32,7 +32,7 @@ import org.glassfish.internal.api.Globals;
 
 
 /**
- * An implementation of a LoginDialog that presents a swing based 
+ * An implementation of a LoginDialog that presents a swing based
  * GUI for querying username and password.
  * @author Harish Prabandham
  * @author Harpreet Singh
@@ -41,34 +41,34 @@ public final class GUILoginDialog implements LoginDialog  {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    private String	entity;
+    private String    entity;
     private PassphraseDialog passphraseDialog;
     private CertificateDialog certDialog;
     private static final LocalStringManagerImpl localStrings =
-	new LocalStringManagerImpl(GUILoginDialog.class);
+    new LocalStringManagerImpl(GUILoginDialog.class);
 
     /**
      */
-    public GUILoginDialog () { 
-	this (localStrings.getLocalString("enterprise.security.defaultEntity", "user"));
+    public GUILoginDialog () {
+    this (localStrings.getLocalString("enterprise.security.defaultEntity", "user"));
     }
-    
+
     /**
      */
     public GUILoginDialog (String entity) {
-	this.entity = entity;
-	JFrame f = new JFrame();
-	String phrase = localStrings.getLocalString("enterprise.security.loginPhrase", "Login for ");
-	passphraseDialog = new PassphraseDialog(f, phrase + entity + ":");
-	passphraseDialog.setVisible(true);
+    this.entity = entity;
+    JFrame f = new JFrame();
+    String phrase = localStrings.getLocalString("enterprise.security.loginPhrase", "Login for ");
+    passphraseDialog = new PassphraseDialog(f, phrase + entity + ":");
+    passphraseDialog.setVisible(true);
     }
 
     public GUILoginDialog(String entity, Callback[] callbacks) {
         this.entity = entity;
-	String phrase = localStrings.getLocalString("enterprise.security.loginPhrase", "Login for ");
-	JFrame f = new JFrame();
-	passphraseDialog = new PassphraseDialog(f, phrase + entity + ":", callbacks);
-	passphraseDialog.setVisible(true);
+    String phrase = localStrings.getLocalString("enterprise.security.loginPhrase", "Login for ");
+    JFrame f = new JFrame();
+    passphraseDialog = new PassphraseDialog(f, phrase + entity + ":", callbacks);
+    passphraseDialog.setVisible(true);
     }
 
 
@@ -76,7 +76,7 @@ public final class GUILoginDialog implements LoginDialog  {
      * @return The username of the user.
      */
     public String getUserName() {
-	return passphraseDialog.username;
+    return passphraseDialog.username;
     }
 
     /**
@@ -92,23 +92,23 @@ public final class GUILoginDialog implements LoginDialog  {
 /**
  * Create a popup dialog box to ask for the passphrase.
  */
-class PassphraseDialog extends JDialog 
+class PassphraseDialog extends JDialog
 {
     private NameCallback nameCallback = null;;
     private PasswordCallback passwordCallback = null;
     private ChoiceCallback choiceCallback = null;
-    private JTextField	userField;
-    private JPasswordField	passField;
-    private JList	choiceList;
+    private JTextField    userField;
+    private JPasswordField    passField;
+    private JList    choiceList;
     private JFrame frame;
-    private JButton	okButton;
-    private JButton	cancelButton;
+    private JButton    okButton;
+    private JButton    cancelButton;
     // buttons for keystore password
     private JButton     okForKP;
     private JButton     cancelForKP;
 
     private static LocalStringManagerImpl localStrings =
-	new LocalStringManagerImpl(PassphraseDialog.class);
+    new LocalStringManagerImpl(PassphraseDialog.class);
     String username = "";
     char[] passphrase = null;
 
@@ -131,9 +131,9 @@ class PassphraseDialog extends JDialog
      */
     protected PassphraseDialog (JFrame frame, String title) {
         super(frame, title, true);
-	this.frame = frame;
+    this.frame = frame;
         super.dialogInit();
-	initbox();
+    initbox();
     }
 
     /**
@@ -143,185 +143,185 @@ class PassphraseDialog extends JDialog
      * @param title The dialog box title.
      */
     protected PassphraseDialog (JFrame frame,
-				String title,
-				Callback[] callbacks) {
+                String title,
+                Callback[] callbacks) {
 
         super(frame, title, true);
-	this.frame = frame;
+    this.frame = frame;
         super.dialogInit();
 
-	for(int i = 0; i < callbacks.length; i++) {
-	    if(callbacks[i] instanceof NameCallback) {
-		nameCallback = (NameCallback) callbacks[i];
-	    } else if(callbacks[i] instanceof PasswordCallback) {
-		passwordCallback = (PasswordCallback) callbacks[i];
-	    } else if(callbacks[i] instanceof ChoiceCallback) {
-		choiceCallback = (ChoiceCallback) callbacks[i];
-	    }
-	}
-	initbox();
+    for(int i = 0; i < callbacks.length; i++) {
+        if(callbacks[i] instanceof NameCallback) {
+        nameCallback = (NameCallback) callbacks[i];
+        } else if(callbacks[i] instanceof PasswordCallback) {
+        passwordCallback = (PasswordCallback) callbacks[i];
+        } else if(callbacks[i] instanceof ChoiceCallback) {
+        choiceCallback = (ChoiceCallback) callbacks[i];
+        }
     }
-  
+    initbox();
+    }
+
     private void initbox() {
-	GridBagLayout gridbag = new GridBagLayout();
-	GridBagConstraints c = new GridBagConstraints();
-	pnl2.setLayout(gridbag);
-	getContentPane ().setLayout (new CardLayout ());
-	int gridx = 0;
-	int gridy = 0;
-	
-	passField = new JPasswordField(20);
-	userField = new JTextField(20);
-	choiceList = new JList();
+    GridBagLayout gridbag = new GridBagLayout();
+    GridBagConstraints c = new GridBagConstraints();
+    pnl2.setLayout(gridbag);
+    getContentPane ().setLayout (new CardLayout ());
+    int gridx = 0;
+    int gridy = 0;
 
-	
-	if(nameCallback != null) {
-	    c.gridx = gridx++;
-	    c.gridy = gridy;
-	    c.anchor = GridBagConstraints.CENTER;
-	    c.insets = new Insets(20, 10, 10, 2);
-	    JLabel jl = new JLabel(nameCallback.getPrompt()+": ");
-	    gridbag.setConstraints(jl, c);
-	    pnl2.add(jl);
-	    c.gridx = gridx++;
-	    c.gridy = gridy++;
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.insets = new Insets(20, 3, 10, 10);
+    passField = new JPasswordField(20);
+    userField = new JTextField(20);
+    choiceList = new JList();
+
+
+    if(nameCallback != null) {
+        c.gridx = gridx++;
+        c.gridy = gridy;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(20, 10, 10, 2);
+        JLabel jl = new JLabel(nameCallback.getPrompt()+": ");
+        gridbag.setConstraints(jl, c);
+        pnl2.add(jl);
+        c.gridx = gridx++;
+        c.gridy = gridy++;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(20, 3, 10, 10);
             userField.setText(nameCallback.getDefaultName());
-	    gridbag.setConstraints(userField, c);
+        gridbag.setConstraints(userField, c);
             userField.selectAll();
-	    pnl2.add(userField);
-	}
+        pnl2.add(userField);
+    }
 
-	// passField.setEchoChar ('*');
+    // passField.setEchoChar ('*');
 
-	if(passwordCallback != null) {
-	    gridx = 0;
-	    c.gridx = gridx++;
-	    c.gridy = gridy;
-	    c.anchor = GridBagConstraints.CENTER;
-	    c.insets = new Insets(20, 10, 10, 2);
-	    JLabel l = new JLabel(passwordCallback.getPrompt());
-	    gridbag.setConstraints(l, c);
-	    pnl2.add(l);
-	    c.gridx = gridx++;
-	    c.gridy = gridy++;
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.insets = new Insets(20, 3, 10, 10);
-	    gridbag.setConstraints(passField, c);
-	    pnl2.add(passField);
-	}
-	if(choiceCallback != null) {
-	    /* 
-	     * For getting the KeyStore Password from the user
-	     */
-	    lbl =  new JLabel
-		(localStrings.getLocalString
-		 ("enterprise.security.keystore",
-		  "Enter the KeyStore Password "));
-	    // adding the password field
-	    keystorePassword = new JPasswordField (20);
-	    kpPanel.add (lbl);
-	    kpPanel.add (keystorePassword);
-	    /* get the keystore password */
-	    final SSLUtils sslUtils = Globals.get(SSLUtils.class);
-	    // ok button For keystore password
-	    okForKP = new
-		JButton(localStrings.getLocalString
-			( "enterprise.security.ok", " OK "));
-	    okForKP.setActionCommand ("ok");
-	
-	    okForKP.addActionListener (new ActionListener() {
-		public void actionPerformed(ActionEvent ae) {
-		    char[] passKPFromUser = keystorePassword.getPassword();
-		    if (sslUtils.verifyMasterPassword(passKPFromUser)) {
-			okForKP.setEnabled (false);
-			cancelForKP.setEnabled (false);
-			keystorePassword.setEditable (false);
-			CardLayout cl = (CardLayout) (getContentPane ()).getLayout ();
-			cl.show (getContentPane (), pnlCertificateList);
-		    } else {
-			String errmessage = localStrings.getLocalString("enterprise.security.IncorrectKeystorePassword","Incorrect Keystore Password");
-			GUIErrorDialog guierr = new GUIErrorDialog(errmessage);
-			guierr.setVisible(true);
-		    }
+    if(passwordCallback != null) {
+        gridx = 0;
+        c.gridx = gridx++;
+        c.gridy = gridy;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(20, 10, 10, 2);
+        JLabel l = new JLabel(passwordCallback.getPrompt());
+        gridbag.setConstraints(l, c);
+        pnl2.add(l);
+        c.gridx = gridx++;
+        c.gridy = gridy++;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(20, 3, 10, 10);
+        gridbag.setConstraints(passField, c);
+        pnl2.add(passField);
+    }
+    if(choiceCallback != null) {
+        /*
+         * For getting the KeyStore Password from the user
+         */
+        lbl =  new JLabel
+        (localStrings.getLocalString
+         ("enterprise.security.keystore",
+          "Enter the KeyStore Password "));
+        // adding the password field
+        keystorePassword = new JPasswordField (20);
+        kpPanel.add (lbl);
+        kpPanel.add (keystorePassword);
+        /* get the keystore password */
+        final SSLUtils sslUtils = Globals.get(SSLUtils.class);
+        // ok button For keystore password
+        okForKP = new
+        JButton(localStrings.getLocalString
+            ( "enterprise.security.ok", " OK "));
+        okForKP.setActionCommand ("ok");
+
+        okForKP.addActionListener (new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+            char[] passKPFromUser = keystorePassword.getPassword();
+            if (sslUtils.verifyMasterPassword(passKPFromUser)) {
+            okForKP.setEnabled (false);
+            cancelForKP.setEnabled (false);
+            keystorePassword.setEditable (false);
+            CardLayout cl = (CardLayout) (getContentPane ()).getLayout ();
+            cl.show (getContentPane (), pnlCertificateList);
+            } else {
+            String errmessage = localStrings.getLocalString("enterprise.security.IncorrectKeystorePassword","Incorrect Keystore Password");
+            GUIErrorDialog guierr = new GUIErrorDialog(errmessage);
+            guierr.setVisible(true);
+            }
                     Arrays.fill(passKPFromUser, ' ');
-		}
-	    });            
+        }
+        });
 
-	    cancelForKP = new 
-		JButton (localStrings.getLocalString
-			 ( "enterprise.security.cancel", "Cancel"));
-	    
-	    cancelForKP.setActionCommand ("cancel");
-	    cancelForKP.addActionListener (new ActionListener() {
-		public void actionPerformed(ActionEvent ae) {
-		    if (choiceCallback != null)
-			choiceCallback.setSelectedIndex (-1);
-		    frame.dispose();
-		}
-	    }
-					      );
-	    bpanel.add (okForKP);
-	    bpanel.add (cancelForKP);
-	    pnl.add (kpPanel);
-	    pnl.add (bpanel);
-	    // Adding the certificate lists.
-	    gridx = 0;
-	    c.gridx = gridx++;
-	    c.gridy = gridy;
-	    c.anchor = GridBagConstraints.CENTER;
-	    c.insets = new Insets(20, 10, 10, 2);
-	    JLabel l = new JLabel(choiceCallback.getPrompt());
-	    gridbag.setConstraints(l, c);
-	    pnl2.add(l);
-	    c.gridx = gridx++;
-	    c.gridy = gridy++;
-	    c.fill = GridBagConstraints.HORIZONTAL;
-	    c.insets = new Insets(20, 3, 10, 10);
+        cancelForKP = new
+        JButton (localStrings.getLocalString
+             ( "enterprise.security.cancel", "Cancel"));
 
-	    String[] choices = choiceCallback.getChoices();
-	    choiceList.setListData(choices);
-	    
-	    gridbag.setConstraints(choiceList, c);
-	    pnl2.add(choiceList);
-	}
+        cancelForKP.setActionCommand ("cancel");
+        cancelForKP.addActionListener (new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+            if (choiceCallback != null)
+            choiceCallback.setSelectedIndex (-1);
+            frame.dispose();
+        }
+        }
+                          );
+        bpanel.add (okForKP);
+        bpanel.add (cancelForKP);
+        pnl.add (kpPanel);
+        pnl.add (bpanel);
+        // Adding the certificate lists.
+        gridx = 0;
+        c.gridx = gridx++;
+        c.gridy = gridy;
+        c.anchor = GridBagConstraints.CENTER;
+        c.insets = new Insets(20, 10, 10, 2);
+        JLabel l = new JLabel(choiceCallback.getPrompt());
+        gridbag.setConstraints(l, c);
+        pnl2.add(l);
+        c.gridx = gridx++;
+        c.gridy = gridy++;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(20, 3, 10, 10);
 
-	okButton = new
-	    JButton(localStrings.getLocalString
-		    ( "enterprise.security.ok", " OK "));
-	// XXX I18N
-	okButton.setActionCommand ("ok");
-	okButton.addActionListener (new ActionListener() {
-	    public void actionPerformed(ActionEvent ae) {
-		username = userField.getText();
-		if(username.trim().length() > 0)
-		    nameCallback.setName(username);
-		if(passwordCallback != null) {
+        String[] choices = choiceCallback.getChoices();
+        choiceList.setListData(choices);
+
+        gridbag.setConstraints(choiceList, c);
+        pnl2.add(choiceList);
+    }
+
+    okButton = new
+        JButton(localStrings.getLocalString
+            ( "enterprise.security.ok", " OK "));
+    // XXX I18N
+    okButton.setActionCommand ("ok");
+    okButton.addActionListener (new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+        username = userField.getText();
+        if(username.trim().length() > 0)
+            nameCallback.setName(username);
+        if(passwordCallback != null) {
                     char[] pass = passField.getPassword();
-		    //if(passphrase.trim().length() > 0) {
-		    passwordCallback.setPassword(pass);
-		    //}
-		}
-		if(choiceCallback != null) {
-		    int idx = choiceList.getSelectedIndex();
-		    if(idx != -1)
-			choiceCallback.setSelectedIndex(idx);
-		}
+            //if(passphrase.trim().length() > 0) {
+            passwordCallback.setPassword(pass);
+            //}
+        }
+        if(choiceCallback != null) {
+            int idx = choiceList.getSelectedIndex();
+            if(idx != -1)
+            choiceCallback.setSelectedIndex(idx);
+        }
                 frame.dispose();
-	    }
-	}
-	    
-				       );
+        }
+    }
 
-	cancelButton = new JButton
-	    (localStrings.getLocalString
-	     ( "enterprise.security.cancel", "Cancel"));
-	cancelButton.setActionCommand ("cancel");
-	cancelButton.addActionListener (new ActionListener() {
-	    public void actionPerformed(ActionEvent ae) {
-		if (choiceCallback!=null) {
-		    choiceCallback.setSelectedIndex (-1);
+                       );
+
+    cancelButton = new JButton
+        (localStrings.getLocalString
+         ( "enterprise.security.cancel", "Cancel"));
+    cancelButton.setActionCommand ("cancel");
+    cancelButton.addActionListener (new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+        if (choiceCallback!=null) {
+            choiceCallback.setSelectedIndex (-1);
                 } else {
                     username = null;
                     if (passphrase != null) {
@@ -329,54 +329,54 @@ class PassphraseDialog extends JDialog
                     }
                     frame.dispose();
                 }
-	    }
-	}
-	);
+        }
+    }
+    );
 
-	super.addWindowListener(new WindowAdapter() {
-	    public void windowClosing(WindowEvent we) {
-		//System.out.println("IN WINDOW CLOSING");
-		//_logger.log(Level.FINE,"IN WINDOW CLOSING");
-		// send a fail back
-		if (choiceCallback != null)
-		    choiceCallback.setSelectedIndex (-1);
-		frame.dispose();
-	    }
-	});
+    super.addWindowListener(new WindowAdapter() {
+        public void windowClosing(WindowEvent we) {
+        //System.out.println("IN WINDOW CLOSING");
+        //_logger.log(Level.FINE,"IN WINDOW CLOSING");
+        // send a fail back
+        if (choiceCallback != null)
+            choiceCallback.setSelectedIndex (-1);
+        frame.dispose();
+        }
+    });
 
-	JPanel buttonPanel = new JPanel();
-	buttonPanel.setLayout(gridbag);
-	c.insets = new Insets(5,0,5,15);
-	c.gridx = 0;
-	c.gridy = 0;
-	c.anchor = GridBagConstraints.CENTER;
-	c.fill = GridBagConstraints.NONE;
-	gridbag.setConstraints(okButton, c);
-	buttonPanel.add(okButton);
-	c.gridx = 2;
-	c.insets = new Insets(5,15,5,0);
-	gridbag.setConstraints(cancelButton, c);
-	buttonPanel.add(cancelButton);
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(gridbag);
+    c.insets = new Insets(5,0,5,15);
+    c.gridx = 0;
+    c.gridy = 0;
+    c.anchor = GridBagConstraints.CENTER;
+    c.fill = GridBagConstraints.NONE;
+    gridbag.setConstraints(okButton, c);
+    buttonPanel.add(okButton);
+    c.gridx = 2;
+    c.insets = new Insets(5,15,5,0);
+    gridbag.setConstraints(cancelButton, c);
+    buttonPanel.add(cancelButton);
 
-	c.gridx = 0;
-	c.gridy = gridy++;
-	c.gridwidth = 2;
-	c.insets = new Insets(0,0,5,0);
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.anchor = GridBagConstraints.WEST;
-	gridbag.setConstraints(buttonPanel, c);
-	pnl2.add(buttonPanel);
-	getContentPane ().add (pnl, pnlKeyStorePassword);
-	getContentPane ().add (pnl2, pnlCertificateList);
-	CardLayout cl = (CardLayout) (getContentPane ()).getLayout ();
-	if (choiceCallback != null){
-	    /* first get the password to the keystore */
-	    cl.show (getContentPane (), pnlKeyStorePassword);
-	} else {
-	    cl.show (getContentPane (), pnlCertificateList);
-	}
-	pack ();
-	setSize (getPreferredSize ());
+    c.gridx = 0;
+    c.gridy = gridy++;
+    c.gridwidth = 2;
+    c.insets = new Insets(0,0,5,0);
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.anchor = GridBagConstraints.WEST;
+    gridbag.setConstraints(buttonPanel, c);
+    pnl2.add(buttonPanel);
+    getContentPane ().add (pnl, pnlKeyStorePassword);
+    getContentPane ().add (pnl2, pnlCertificateList);
+    CardLayout cl = (CardLayout) (getContentPane ()).getLayout ();
+    if (choiceCallback != null){
+        /* first get the password to the keystore */
+        cl.show (getContentPane (), pnlKeyStorePassword);
+    } else {
+        cl.show (getContentPane (), pnlCertificateList);
+    }
+    pack ();
+    setSize (getPreferredSize ());
     }
 
 }
@@ -384,15 +384,15 @@ class PassphraseDialog extends JDialog
 /**
  * Create a popup dialog box to ask for the passphrase.
  */
-class CertificateDialog extends JDialog 
+class CertificateDialog extends JDialog
 {
-    private JTextField	userField;
-    private JList	certList;
+    private JTextField    userField;
+    private JList    certList;
     private JFrame frame;
-    private JButton	okButton;
-    private JButton	cancelButton;
+    private JButton    okButton;
+    private JButton    cancelButton;
     private static LocalStringManagerImpl localStrings =
-	new LocalStringManagerImpl(CertificateDialog.class);
+    new LocalStringManagerImpl(CertificateDialog.class);
     String username = "";
     char[] passphrase = new char[0];
 
@@ -404,127 +404,127 @@ class CertificateDialog extends JDialog
      */
     protected CertificateDialog (JFrame frame, String title) {
         super(frame, title, true);
-	this.frame = frame;
+    this.frame = frame;
         super.dialogInit();
-	initbox();
+    initbox();
     }
-  
+
     private void initbox() {
-	GridBagLayout gridbag = new GridBagLayout();
-	GridBagConstraints c = new GridBagConstraints();
-	getContentPane().setLayout(gridbag);
+    GridBagLayout gridbag = new GridBagLayout();
+    GridBagConstraints c = new GridBagConstraints();
+    getContentPane().setLayout(gridbag);
 
-	int gridx = 0;
-	int gridy = 0;
+    int gridx = 0;
+    int gridy = 0;
 
-	String[] list = null;
-	/**/
-	list = new String[5];
-	list[0] = "foo";
-	list[1] = "bar";
-	list[2] = "abc";
-	list[3] = "def";
-	list[4] = "ghi";
-	/**/
+    String[] list = null;
+    /**/
+    list = new String[5];
+    list[0] = "foo";
+    list[1] = "bar";
+    list[2] = "abc";
+    list[3] = "def";
+    list[4] = "ghi";
+    /**/
 
-	certList = new JList(list);
-	userField = new JTextField(20);
+    certList = new JList(list);
+    userField = new JTextField(20);
 
-	c.gridx = gridx++;
-	c.gridy = gridy;
-	c.anchor = GridBagConstraints.CENTER;
-	c.insets = new Insets(20, 10, 10, 2);
-	JLabel jl = new JLabel(localStrings.getLocalString("enterprise.security.login.username",
-				"Enter username:"));
-	gridbag.setConstraints(jl, c);
-	getContentPane().add(jl);
-	c.gridx = gridx++;
-	c.gridy = gridy++;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.insets = new Insets(20, 3, 10, 10);
-	gridbag.setConstraints(userField, c);
-	getContentPane().add(userField);
+    c.gridx = gridx++;
+    c.gridy = gridy;
+    c.anchor = GridBagConstraints.CENTER;
+    c.insets = new Insets(20, 10, 10, 2);
+    JLabel jl = new JLabel(localStrings.getLocalString("enterprise.security.login.username",
+                "Enter username:"));
+    gridbag.setConstraints(jl, c);
+    getContentPane().add(jl);
+    c.gridx = gridx++;
+    c.gridy = gridy++;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.insets = new Insets(20, 3, 10, 10);
+    gridbag.setConstraints(userField, c);
+    getContentPane().add(userField);
 
-	gridx = 0;
-	c.gridx = gridx++;
-	c.gridy = gridy;
-	c.anchor = GridBagConstraints.CENTER;
-	c.insets = new Insets(20, 10, 10, 2);
-	JLabel l = new JLabel(localStrings.getLocalString("enterprise.security.login.password",
-				"Select a certificate:"));
-	gridbag.setConstraints(l, c);
-	getContentPane().add(l);
-	c.gridx = gridx++;
-	c.gridy = gridy++;
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.insets = new Insets(20, 3, 10, 10);
-	gridbag.setConstraints(certList, c);
-	getContentPane().add(certList);
+    gridx = 0;
+    c.gridx = gridx++;
+    c.gridy = gridy;
+    c.anchor = GridBagConstraints.CENTER;
+    c.insets = new Insets(20, 10, 10, 2);
+    JLabel l = new JLabel(localStrings.getLocalString("enterprise.security.login.password",
+                "Select a certificate:"));
+    gridbag.setConstraints(l, c);
+    getContentPane().add(l);
+    c.gridx = gridx++;
+    c.gridy = gridy++;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.insets = new Insets(20, 3, 10, 10);
+    gridbag.setConstraints(certList, c);
+    getContentPane().add(certList);
 
-	okButton = new JButton(localStrings.getLocalString( "enterprise.security.ok", " OK "));		// XXX I18N
-	okButton.setActionCommand ("ok");
-	okButton.addActionListener (new ActionListener() {
-	    public void actionPerformed(ActionEvent ae) {
-		// System.out.println("OK Action");
-		//_logger.log(Level.FINE,"OK Action");
-		username = userField.getText();
-		//int index = certList.getSelectedIndex();
+    okButton = new JButton(localStrings.getLocalString( "enterprise.security.ok", " OK "));        // XXX I18N
+    okButton.setActionCommand ("ok");
+    okButton.addActionListener (new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+        // System.out.println("OK Action");
+        //_logger.log(Level.FINE,"OK Action");
+        username = userField.getText();
+        //int index = certList.getSelectedIndex();
 
-		if((username.trim().length() > 0) &&
-		   (passphrase.length > 0)) {
-		    setVisible(false);
-		}
-	    }
-	}
-	);
+        if((username.trim().length() > 0) &&
+           (passphrase.length > 0)) {
+            setVisible(false);
+        }
+        }
+    }
+    );
 
-	cancelButton = new JButton(localStrings.getLocalString( "enterprise.security.cancel", "Cancel"));		// XXX I18N
-	cancelButton.setActionCommand ("cancel");
-	cancelButton.addActionListener (new ActionListener() {
-	    public void actionPerformed(ActionEvent ae) {
-		// System.out.println("Cancel Action");
+    cancelButton = new JButton(localStrings.getLocalString( "enterprise.security.cancel", "Cancel"));        // XXX I18N
+    cancelButton.setActionCommand ("cancel");
+    cancelButton.addActionListener (new ActionListener() {
+        public void actionPerformed(ActionEvent ae) {
+        // System.out.println("Cancel Action");
                 // _logger.log(Level.FINE,"Cancel Action");
-		// username = null;
-		// passphrase = null;
-		// setVisible(false);
-		java.awt.Toolkit.getDefaultToolkit().beep();
-	    }
-	}
-	);
+        // username = null;
+        // passphrase = null;
+        // setVisible(false);
+        java.awt.Toolkit.getDefaultToolkit().beep();
+        }
+    }
+    );
 
-	super.addWindowListener(new WindowAdapter() {
-	    public void windowClosing(WindowEvent we) {
-		// System.out.println("IN WINDOW CLOSING");
-		// _logger.log(Level.FINE,"IN WINDOW CLOSING");
-		frame.dispose();
-	    }
-	});
+    super.addWindowListener(new WindowAdapter() {
+        public void windowClosing(WindowEvent we) {
+        // System.out.println("IN WINDOW CLOSING");
+        // _logger.log(Level.FINE,"IN WINDOW CLOSING");
+        frame.dispose();
+        }
+    });
 
-	JPanel buttonPanel = new JPanel();
-	buttonPanel.setLayout(gridbag);
-	c.insets = new Insets(5,0,5,15);
-	c.gridx = 0;
-	c.gridy = 0;
-	c.anchor = GridBagConstraints.CENTER;
-	c.fill = GridBagConstraints.NONE;
-	gridbag.setConstraints(okButton, c);
-	buttonPanel.add(okButton);
-	c.gridx = 2;
-	c.insets = new Insets(5,15,5,0);
-	gridbag.setConstraints(cancelButton, c);
-	buttonPanel.add(cancelButton);
+    JPanel buttonPanel = new JPanel();
+    buttonPanel.setLayout(gridbag);
+    c.insets = new Insets(5,0,5,15);
+    c.gridx = 0;
+    c.gridy = 0;
+    c.anchor = GridBagConstraints.CENTER;
+    c.fill = GridBagConstraints.NONE;
+    gridbag.setConstraints(okButton, c);
+    buttonPanel.add(okButton);
+    c.gridx = 2;
+    c.insets = new Insets(5,15,5,0);
+    gridbag.setConstraints(cancelButton, c);
+    buttonPanel.add(cancelButton);
 
-	c.gridx = 0;
-	c.gridy = gridy++;
-	c.gridwidth = 2;
-	c.insets = new Insets(0,0,5,0);
-	c.fill = GridBagConstraints.HORIZONTAL;
-	c.anchor = GridBagConstraints.WEST;
-	gridbag.setConstraints(buttonPanel, c);
-	getContentPane().add(buttonPanel);
+    c.gridx = 0;
+    c.gridy = gridy++;
+    c.gridwidth = 2;
+    c.insets = new Insets(0,0,5,0);
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.anchor = GridBagConstraints.WEST;
+    gridbag.setConstraints(buttonPanel, c);
+    getContentPane().add(buttonPanel);
 
-	pack ();
-	setSize (getPreferredSize ());
+    pack ();
+    setSize (getPreferredSize ());
     }
 
 }

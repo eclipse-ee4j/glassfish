@@ -23,14 +23,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author jeremylv
  *
  */
 public class LifecycleModulesTest extends BaseSeleniumTestClass {
 
     public static final String ID_LIFECYCLE_TABLE = "propertyForm:deployTable";
-    
+
     @Test
     public void testLifecycleModules() {
         final String lifecycleName = "TestLifecycle"+generateRandomString();
@@ -48,14 +48,14 @@ public class LifecycleModulesTest extends BaseSeleniumTestClass {
         } catch (Error e) {
             verificationErrors.append(e.toString());
         };
-        
-        //test Disable button and add some property 
+
+        //test Disable button and add some property
         String clickId = getTableRowByValue(ID_LIFECYCLE_TABLE, lifecycleName, "col1")+"col0:select";
         testDisableButton(clickId, prefix);
-        
+
         //test Enable button and delete some property
         testEnableButton(clickId, prefix);
-        
+
         //delete the lifecycle
         testDeleteButton(clickId);
     }
@@ -81,7 +81,7 @@ public class LifecycleModulesTest extends BaseSeleniumTestClass {
         clickByIdAction("propertyForm:deployTable:topActionsGroup1:button2");
         isCheckboxSelected(clickId);
         clickByIdAction(prefix + "col1:link");
-        
+
         //delete property
         isElementPresent("propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         clickByIdAction("propertyForm:basicTable:rowGroup1:0:col1:select");
@@ -89,14 +89,14 @@ public class LifecycleModulesTest extends BaseSeleniumTestClass {
         clickByIdAction("propertyForm:propertyContentPage:topButtons:saveButton");
         assertEquals(true, driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:statusEdit:status")).isSelected());
     }
-    
+
     private void testDisableButton(String clickId, String prefix) {
         clickByIdAction(clickId);
         isElementPresent("propertyForm:deployTable:topActionsGroup1:button3");
         clickByIdAction("propertyForm:deployTable:topActionsGroup1:button3");
         isCheckboxSelected(clickId);
         clickByIdAction(prefix + "col1:link");
-        
+
         //add property and verify
         isElementPresent("propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         int lifecyclePropCount = addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");

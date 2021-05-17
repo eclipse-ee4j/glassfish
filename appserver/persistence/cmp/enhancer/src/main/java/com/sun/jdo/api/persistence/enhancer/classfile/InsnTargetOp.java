@@ -63,14 +63,14 @@ public class InsnTargetOp extends Insn {
   public InsnTarget target() {
     return targetOp;
   }
-    
+
   /* package local methods */
 
   void print (PrintStream out, int indent) {
     ClassPrint.spaces(out, indent);
     /* print offset in non-relative form for readability */
     out.println(offset() + "  " + opName(opcode()) + "  " + //NOI18N
-		targetOp.offset());
+        targetOp.offset());
   }
 
   int store(byte[] buf, int index) {

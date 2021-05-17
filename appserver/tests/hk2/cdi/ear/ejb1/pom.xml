@@ -30,7 +30,7 @@
     <artifactId>ejb1</artifactId>
 
     <name>HK2 CDI EAR Test Ejb1</name>
-    
+
     <build>
       <plugins>
           <plugin>

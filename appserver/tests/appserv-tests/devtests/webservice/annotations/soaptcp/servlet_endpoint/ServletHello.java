@@ -20,8 +20,8 @@ import jakarta.jws.WebService;
 
 @WebService
 public class ServletHello {
-	
+
     public String sayServletHello(String param) {
-	return "WebSvcTest-Servlet-Hello " + param;
+    return "WebSvcTest-Servlet-Hello " + param;
     }
 }

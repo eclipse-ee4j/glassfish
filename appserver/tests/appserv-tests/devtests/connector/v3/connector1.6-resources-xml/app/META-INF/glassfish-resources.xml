@@ -73,4 +73,4 @@
     <jdbc-resource enabled="true" jndi-name="java:app/jdbc/XAPointbase" object-type="user" pool-name="java:app/jdbc-pointbase-pool1"/>
 
 
-</resources> 
+</resources>

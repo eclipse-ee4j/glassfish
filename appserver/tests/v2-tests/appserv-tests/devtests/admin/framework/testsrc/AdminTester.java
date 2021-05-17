@@ -34,16 +34,16 @@ public class AdminTester
    static int COMPARESAMPLES_MODE   = 0;
    static int CREATESAMPLES_MODE    = 1;
    static int PRINT_MODE            = 2;
-   
+
    static int _mode = COMPARESAMPLES_MODE;
    static String SAMPLES_DIR = "samples";
-   
+
     TestCase _caller;
     MBeanRegistry _registry;
     ConfigContext _configContext;
     static PrintWriter      _printStream; //for CREATESAMPLES_MODE only
     static LineNumberReader _compareStream; //for COMPARE_MODE only
- 
+
     public AdminTester(TestCase caller, int mode, MBeanRegistry registry, ConfigContext configContext, String testpath)
     {
         _caller = caller;
@@ -68,7 +68,7 @@ public class AdminTester
            _printStream.println(str);
        else if(_mode==PRINT_MODE)
             System.out.println(str);
-       if(_mode==COMPARESAMPLES_MODE)    
+       if(_mode==COMPARESAMPLES_MODE)
        {
 if(_compareStream==null)
 {
@@ -88,13 +88,13 @@ if(_compareStream==null)
     {
         println("\n\n************* " + str + " *******************");
     }
-    
+
     public static void printObj(String title, String pref, Object obj) throws Exception
     {
             println(title);
             printObj(pref, obj);
     }
-    
+
     public static void printObj(String pref, Object obj) throws Exception
     {
         if(pref==null)
@@ -144,20 +144,20 @@ if(_compareStream==null)
     {
             printObj(title, pref, mbean.getAttributes(new String[]{""}));
     }
-    
+
     public static void printAllProperties(String title, String pref, DynamicMBean mbean) throws Exception
     {
-        Object ret = mbean.invoke("getProperties", null, null);    
+        Object ret = mbean.invoke("getProperties", null, null);
 //            retObject = mbean.invoke("deployApplication", new Object[]{"testName", "testLocation", null, null, null}, new String[]{"java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String", "java.lang.String"});
         printObj(title, pref, ret);
     }
     public static Object getConfigMbeanProperty(String name, DynamicMBean mbean) throws Exception
     {
-        return mbean.invoke("getPropertyValue", new Object[]{name}, new String[]{"java.lang.String"});    
+        return mbean.invoke("getPropertyValue", new Object[]{name}, new String[]{"java.lang.String"});
     }
     public static void setConfigMbeanProperty(String name, Object value, DynamicMBean mbean) throws Exception
     {
-        Object ret = mbean.invoke("setProperty", new Object[]{new Attribute(name, value)}, new String[]{"javax.management.Attribute"});    
+        Object ret = mbean.invoke("setProperty", new Object[]{new Attribute(name, value)}, new String[]{"javax.management.Attribute"});
     }
 
     public String runTestCase(String testName, String sampleName) throws Exception
@@ -225,7 +225,7 @@ if(_compareStream==null)
     BaseAdminMBean mbean;
     AttributeList attrs;
     Object retObject;
-    
+
     public void testMBeanRegistry() throws Exception
     {
         _registry.sortRegistryEntries(_registry.SORT_BY_NAME);
@@ -245,31 +245,31 @@ if(_compareStream==null)
             _caller.assertEquals(str, obj, sample);
     }
     //***********************************************************************************************
-    
-    
+
+
     public void testMBeansInstantiation() throws Exception
     {
         //***********************************************************************************************
         title("ejb-container INSTANTIATION (type+location)");
         location = new String[]{"testdomain", "server-config"};
-        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext);
         assertNull("MBean Instaniation: mbean==null", mbean);
         println(""+mbean.getAttribute("cache_resize_quantity"));
         assertEquals("not equal", mbean.getAttribute("cache_resize_quantity"), new Integer(33));
         //***********************************************************************************************
         title("ejb-container INSTANTIATION (ObjectName)");
-        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=ejb-container,config=server-config,category=config"), 
-                    null, _configContext); 
+        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=ejb-container,config=server-config,category=config"),
+                    null, _configContext);
         println(""+mbean.getAttribute("cache_resize_quantity"));
         //***********************************************************************************************
         title("ejb-container INSTANTIATION (ObjectName)");
-        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=ejb-container,config=server-config,category=config"), 
-                    null, _configContext); 
+        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=ejb-container,config=server-config,category=config"),
+                    null, _configContext);
         println(""+mbean.getAttribute("cache_resize_quantity"));
         //***********************************************************************************************
         title("config INSTANTIATION By ObjectName");
-        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=config,name=server-config,category=config"), 
-                    null, _configContext); 
+        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=config,name=server-config,category=config"),
+                    null, _configContext);
         println("" + ((mbean!=null)?"ok":"failed"));
     }
     public void testMBeansInfo() throws Exception
@@ -280,7 +280,7 @@ if(_compareStream==null)
         //***********************************************************************************************
         title("ejb-container INSTANTIATION");
         location = new String[]{"testdomain", "server-config"};
-        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext);
         println(""+mbean.getAttribute("cache_resize_quantity"));
 
         //***********************************************************************************************
@@ -295,8 +295,8 @@ if(_compareStream==null)
             //***********************************************************************************************
             title("resources Instantiate()");
             location = new String[]{"testdomain"};
-            mbean = _registry.instantiateMBean("resources", location, null, _configContext); 
-            
+            mbean = _registry.instantiateMBean("resources", location, null, _configContext);
+
             //***********************************************************************************************
             title("resources-> getCustomResource()");
             retObject = mbean.invoke("getCustomResource", null, null); //new Object[]{}, new String[]{});
@@ -309,15 +309,15 @@ if(_compareStream==null)
             attrs.add(new Attribute("res_type", "testResType2"));
             attrs.add(new Attribute("factory_class", "testFactoryClass2"));
             printObj("Input Attributes:", "   ", attrs);
-//          retObject = mbean.invoke("createCustomResource", new Object[]{attrs, null, null}, 
-//                      new String[]{attrs.getClass().getName(),"java.util.Properties","java.lang.String"});                                
+//          retObject = mbean.invoke("createCustomResource", new Object[]{attrs, null, null},
+//                      new String[]{attrs.getClass().getName(),"java.util.Properties","java.lang.String"});
             retObject = mbean.invoke("createCustomResource", new Object[]{attrs}, new String[]{attrs.getClass().getName()});
             printObj("Returned object:", "      ", retObject);
             //***********************************************************************************************
             title("resources-> getCustomResourceByJndiName(testJndiName2)");
             retObject = mbean.invoke("getCustomResourceByJndiName", new Object[]{"testJndiName2"}, new String[]{"java.lang.String"});
             printObj("Returned object:", "      ", retObject);
-            
+
             //***********************************************************************************************
             title("resources-> getCustomResource()");
             retObject = mbean.invoke("getCustomResource", null, null); //new Object[]{}, new String[]{});
@@ -325,51 +325,51 @@ if(_compareStream==null)
 
             //***********************************************************************************************
             title("custom-resource-> Instantiate(testJndiName2)");
-            mbean = _registry .instantiateMBean("custom-resource", new String[]{"testdomain","testJndiName2"}, null, _configContext); 
+            mbean = _registry .instantiateMBean("custom-resource", new String[]{"testdomain","testJndiName2"}, null, _configContext);
             printObj("returned custom-resource[testJndiName2] mbean:",mbean);
-            
+
             //***********************************************************************************************
             title("custom-resource[testJndiName2]-> getAttributes()");
             printAllAttributes("Attributes:", "   ", mbean);
 
             //***********************************************************************************************
             title("custom-resource-> Instantiate(testJndiName2) using ObjectName");
-            mbean = _registry .instantiateConfigMBean(new ObjectName("testdomain:type=custom-resource,jndi-name=testJndiName2,category=config"), null, _configContext); 
+            mbean = _registry .instantiateConfigMBean(new ObjectName("testdomain:type=custom-resource,jndi-name=testJndiName2,category=config"), null, _configContext);
             printObj("returned custom-resource[testJndiName2] mbean:",mbean);
-            
+
             //***********************************************************************************************
             title("custom-resource[testJndiName2]-> getAttributes()");
             printAllAttributes("Attributes:", "   ", mbean);
             title("resources-> getCustomResource()");
             location = new String[]{"testdomain"};
-            mbean = _registry .instantiateMBean("resources", location, null, _configContext); 
+            mbean = _registry .instantiateMBean("resources", location, null, _configContext);
             retObject = mbean.invoke("getCustomResource", null, null); //new Object[]{}, new String[]{});
             printObj("Returned object:","  ",retObject);
             title("resources-> removeCustomResourceByJndiName(testJndiName2)");
             retObject = mbean.invoke("removeCustomResourceByJndiName", new Object[]{"testJndiName2"}, new String[]{"java.lang.String"});
             printObj("Returned object:", "      ", retObject);
-            
+
             //***********************************************************************************************
             title("resources-> getCustomResource()");
             location = new String[]{"testdomain"};
-            mbean = _registry .instantiateMBean("resources", location, null, _configContext); 
+            mbean = _registry .instantiateMBean("resources", location, null, _configContext);
             retObject = mbean.invoke("getCustomResource", null, null); //new Object[]{}, new String[]{});
             printObj("Returned object:","  ",retObject);
-            
+
     }
     public void testPropertiesOperations() throws Exception
     {
             //***********************************************************************************************
             title("Domain MBean Instantiate()");
             location = new String[]{"testdomain"};
-            mbean = _registry.instantiateMBean("domain", location, null, _configContext); 
+            mbean = _registry.instantiateMBean("domain", location, null, _configContext);
             //***********************************************************************************************
             title("Domain -> setProperty()");
             setConfigMbeanProperty("testPropName1", "testPropValue1", mbean);
             setConfigMbeanProperty("testPropName2", "testPropValue2", mbean);
             setConfigMbeanProperty("testPropName3", "testPropValue3", mbean);
             setConfigMbeanProperty("testPropName4", "testPropValue4", mbean);
-            
+
             //***********************************************************************************************
             title("Domain -> getProperties()");
             printAllProperties("Properties:", "      ", mbean);
@@ -383,7 +383,7 @@ if(_compareStream==null)
             //***********************************************************************************************
             title("Domain MBean Instantiate()");
             location = new String[]{"testdomain"};
-            mbean = _registry.instantiateMBean("domain", location, null, _configContext); 
+            mbean = _registry.instantiateMBean("domain", location, null, _configContext);
 /* NEEDS TO BE INVESTIGATED for FCS why not working
             printObj("Returned object:","  ",mbean);
             title("getDefaultAttributeValues('http-listener', null) test");
@@ -399,7 +399,7 @@ if(_compareStream==null)
             //***********************************************************************************************
             title("thread-pools Instantiate()");
             location = new String[]{"testdomain", "server-config"};
-            mbean = _registry.instantiateMBean("thread-pools", location, null, _configContext); 
+            mbean = _registry.instantiateMBean("thread-pools", location, null, _configContext);
             printObj("Returned object:","  ",mbean);
             title("thread-pools-> createThreadPool");
             attrs = new AttributeList();
@@ -412,5 +412,5 @@ if(_compareStream==null)
             retObject = mbean.invoke("createThreadPool", new Object[]{attrs}, new String[]{attrs.getClass().getName()});
             printObj("Returned object:", "      ", retObject);
     }
-            
+
 }

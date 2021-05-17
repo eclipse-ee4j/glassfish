@@ -28,7 +28,7 @@ public class FooBean {
     @InjectViaAtEJB
     @NoInterfaceBeanView
     TestBeanInterface testBeanEJB;
-    
+
     public TestBeanInterface getBean(){
         return testBeanEJB;
     }

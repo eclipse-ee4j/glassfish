@@ -237,7 +237,7 @@ public abstract class ForwardingJMSContext implements JMSContext {
     }
 
     private IllegalStateRuntimeException getUnsupportedException() {
-        return new IllegalStateRuntimeException(localStrings.getLocalString("JMSContext.injection.not.supported", 
+        return new IllegalStateRuntimeException(localStrings.getLocalString("JMSContext.injection.not.supported",
                                       "This method is not permitted on a container-managed (injected) JMSContext."));
     }
 }

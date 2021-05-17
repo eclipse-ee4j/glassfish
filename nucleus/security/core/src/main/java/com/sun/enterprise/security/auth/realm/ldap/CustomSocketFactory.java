@@ -36,10 +36,10 @@ import org.glassfish.internal.api.SharedSecureRandom;
  * Custom socket factory for ldaps (SSL).
  *
  * The comparator only works in JDK 1.6 onwards. Due to a bug in JDK 1.6
- * compare method invocation fails with a classcast exception. The caller is 
- * trying to pass java.lang.String when it should have passed 
+ * compare method invocation fails with a classcast exception. The caller is
+ * trying to pass java.lang.String when it should have passed
  * javax.net.SocketFactory
- * 
+ *
  * @see com.sun.enterprise.security.auth.realm.ldap.LDAPRealm
  *
  */
@@ -62,9 +62,9 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
             socketFactory = sc.getSocketFactory();
         } catch (Exception ex) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.securityExceptionError, ex);
-        }        
+        }
     }
-    
+
     /**
      * @see javax.net.SocketFactory#createSocket(java.lang.String, int)
      */
@@ -72,14 +72,14 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
             UnknownHostException {
         return socketFactory.createSocket(arg0, arg1);
     }
-    
+
     /**
      * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int)
      */
     public Socket createSocket(InetAddress arg0, int arg1) throws IOException {
         return socketFactory.createSocket(arg0, arg1);
     }
-    
+
     /**
      * @see javax.net.SocketFactory#createSocket(java.lang.String, int,
      *      java.net.InetAddress, int)
@@ -88,7 +88,7 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     throws IOException, UnknownHostException {
         return socketFactory.createSocket(arg0, arg1, arg2, arg3);
     }
-    
+
     /**
      * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int,
      *      java.net.InetAddress, int)
@@ -105,6 +105,6 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     public static SocketFactory getDefault() {
         return customSocketFactory;
     }
-    
-    
+
+
 }

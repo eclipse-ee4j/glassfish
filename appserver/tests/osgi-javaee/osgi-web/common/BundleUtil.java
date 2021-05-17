@@ -46,8 +46,8 @@ public class BundleUtil {
     public static void main(String args[]) {
         BundleUtil bundleUtil = new BundleUtil();
         if(args.length == 2) {
-	    testName = args[0];
-            reporter = new Reporter(args[1]);	    
+        testName = args[0];
+            reporter = new Reporter(args[1]);
             //uninstall the previously installed bundle
             bundleUtil.uninstall();
         } else if(args.length == 3) {
@@ -95,9 +95,9 @@ public class BundleUtil {
             String line = null;
             while ((line = input.readLine()) != null) {
                 log(line);
-		if(line.contains("FAIL")){
- 		    fail();
-  		}
+        if(line.contains("FAIL")){
+             fail();
+          }
             }
 
             if (code != 200) {

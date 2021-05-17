@@ -25,7 +25,7 @@ public class SupplierImpl implements SupplierIF {
 
          Date tomorrow = com.sun.cb.DateHelper.addDays(new Date(), 1);
          ConfirmationBean confirmation =
-             new ConfirmationBean(order.getId(), 
+             new ConfirmationBean(order.getId(),
                  DateHelper.dateToCalendar(tomorrow));
          return confirmation;
     }
@@ -43,7 +43,7 @@ public class SupplierImpl implements SupplierIF {
        Date endDate = DateHelper.addDays(today, 30);
 
        PriceItemBean[] priceItems = PriceLoader.loadItems(propsName);
-       PriceListBean priceList = 
+       PriceListBean priceList =
            new PriceListBean(DateHelper.dateToCalendar(today),
                DateHelper.dateToCalendar(endDate), priceItems);
 

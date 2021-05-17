@@ -161,7 +161,7 @@ public class ConnectorClassLoader extends ASURLClassLoader
             rarModuleClassLoaders.remove(moduleName);
             _logger.log(
                     Level.WARNING,
-                    "enterprise_util.remove_connector", 
+                    "enterprise_util.remove_connector",
                     moduleName);
         }
     }

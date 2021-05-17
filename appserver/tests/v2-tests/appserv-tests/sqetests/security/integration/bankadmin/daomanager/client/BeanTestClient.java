@@ -35,7 +35,7 @@ import com.sun.ejte.ccl.reporter.*;
  * @version 1.0
  */
 
-public class BeanTestClient 
+public class BeanTestClient
 {
   private Properties beanprops=null;
   private javax.naming.Context jndi=null;
@@ -54,12 +54,12 @@ public class BeanTestClient
     this.beanprops=p;
   }
 
-  public void setupJNDIContext(Properties p) 
+  public void setupJNDIContext(Properties p)
   {
       try
       {
           jndi=new javax.naming.InitialContext();
-      }catch(Exception e) 
+      }catch(Exception e)
       {
           e.printStackTrace();
       }
@@ -79,13 +79,13 @@ public class BeanTestClient
     return (EJBHome)ejbHome;
   }
 
-  
+
   public EJBObject getRemoteInterface(EJBHome ejbHome) {
       System.out.println("inside getting remote interface");
       try{
           ejbObject=((CustomerRemoteHome)ejbHome).createCustomer(customerID,customerID);
-	  System.out.println("Remote interface of Customer Bean"+ejbObject.getClass().getName());
-          
+      System.out.println("Remote interface of Customer Bean"+ejbObject.getClass().getName());
+
       }catch(jakarta.ejb.DuplicateKeyException e) {
           System.out.println("Exception:Customer already exists");
       }
@@ -94,66 +94,66 @@ public class BeanTestClient
       }
       return (EJBObject)ejbObject;
   }
-  
-  public void runTestClient() 
+
+  public void runTestClient()
   {
-	  try
-	  {
-		  Object obj=(CustomerRemoteHome)jndi.lookup("java:comp/env/ejb/CustomerBean");
-		  ejbHome=(CustomerRemoteHome)PortableRemoteObject.narrow(obj,com.sun.s1peqe.security.integration.bankadmin.daomanager.CustomerRemoteHome.class);
-		  System.out.println("Home interface of Customer Bean"+ejbHome.getClass().getName());
-	  }catch(Throwable e)
-	  {
-		  e.printStackTrace();
-	  }
-	  System.out.println("inside getting remote interface");
-	  try{
-		  try{ejbObject=((CustomerRemoteHome)ejbHome).findByPrimaryKey(customerID);
-		  }catch(jakarta.ejb.ObjectNotFoundException e){System.out.println("customer does not exist");}
-		  if(ejbObject==null)
-		  {
-			  System.out.println("Creating customer..."+customerID);
-			  ejbObject=((CustomerRemoteHome)ejbHome).createCustomer(customerID,customerID);
-		  }
-		  System.out.println("Remote interface of Customer Bean"+ejbObject.getClass().getName());
-		  boolean ret=ejbObject.TestCallerInRole();
-		  if(ret==true)
-			  stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.PASS);
-		  else if(ret==false)
-			  stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
-		  else
-		  {
-			  stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
-			  System.out.println("Test did not get run");
-		  }
+      try
+      {
+          Object obj=(CustomerRemoteHome)jndi.lookup("java:comp/env/ejb/CustomerBean");
+          ejbHome=(CustomerRemoteHome)PortableRemoteObject.narrow(obj,com.sun.s1peqe.security.integration.bankadmin.daomanager.CustomerRemoteHome.class);
+          System.out.println("Home interface of Customer Bean"+ejbHome.getClass().getName());
+      }catch(Throwable e)
+      {
+          e.printStackTrace();
+      }
+      System.out.println("inside getting remote interface");
+      try{
+          try{ejbObject=((CustomerRemoteHome)ejbHome).findByPrimaryKey(customerID);
+          }catch(jakarta.ejb.ObjectNotFoundException e){System.out.println("customer does not exist");}
+          if(ejbObject==null)
+          {
+              System.out.println("Creating customer..."+customerID);
+              ejbObject=((CustomerRemoteHome)ejbHome).createCustomer(customerID,customerID);
+          }
+          System.out.println("Remote interface of Customer Bean"+ejbObject.getClass().getName());
+          boolean ret=ejbObject.TestCallerInRole();
+          if(ret==true)
+              stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.PASS);
+          else if(ret==false)
+              stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
+          else
+          {
+              stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
+              System.out.println("Test did not get run");
+          }
 
-	  }catch (Throwable e) {
-		  e.printStackTrace();
-	  }
+      }catch (Throwable e) {
+          e.printStackTrace();
+      }
 
-	  try {
-		  System.out.println("created customer from client"+customerID);
-		  boolean ret=ejbObject.TestCallerInRole();
-		  if(ret==true)
-			  stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.PASS);
-		  else if(ret==false)
-			  stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
-		  else
-		  {
-			stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
-			System.out.println("Test did not get run");
-		  }
-			  
-	  }catch(Throwable e) {
-		  stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
-		  e.printStackTrace();
-	  }
+      try {
+          System.out.println("created customer from client"+customerID);
+          boolean ret=ejbObject.TestCallerInRole();
+          if(ret==true)
+              stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.PASS);
+          else if(ret==false)
+              stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
+          else
+          {
+            stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
+            System.out.println("Test did not get run");
+          }
+
+      }catch(Throwable e) {
+          stat.addStatus("JACC:cmp_cmp isCallerInRole",stat.FAIL);
+          e.printStackTrace();
+      }
   }
-  
+
   public void cleanupTests(){
       stat.printSummary("cmp_cmpID");
   }
-  
+
   public void run() {
       try {
           logger.info("inside run method");
@@ -171,7 +171,7 @@ public class BeanTestClient
       Properties p=null;// we are testing locally only, no properties to test
       BeanTestClient testClient=new BeanTestClient(p);
       testClient.run();
-      
+
   }
-  
+
 }

@@ -75,6 +75,6 @@ public class OverrideTestServlet extends HttpServlet
 
         } catch(Exception ex) {
             throw new IllegalStateException("Cannot get login timeout: " + ex);
-        } 
+        }
     }
 }

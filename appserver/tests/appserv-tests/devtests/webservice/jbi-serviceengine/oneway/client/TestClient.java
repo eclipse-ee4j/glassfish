@@ -30,7 +30,7 @@ public class TestClient {
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-	private static String testId = "jbi-serviceengine/oneway";
+    private static String testId = "jbi-serviceengine/oneway";
     public boolean found1 = false;
 
     public static void main (String[] args) {
@@ -44,12 +44,12 @@ public class TestClient {
 
         String url = args[0];
         try {
-			//for(int i=0; i<100; i++) {
+            //for(int i=0; i<100; i++) {
             int code = invokeServlet(url);
             report(code);
-			//}
-	} catch (Exception e) {
-	    fail();
+            //}
+    } catch (Exception e) {
+        fail();
         }
     }
 
@@ -65,7 +65,7 @@ public class TestClient {
             log(line);
             //if(line.indexOf("Exception thrown Successfully") != -1)
             if(line.indexOf("Endpoint is invoked successfully") != -1)
-		found1 = true;
+        found1 = true;
         }
         return code;
     }

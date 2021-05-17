@@ -266,7 +266,7 @@ delete_workspace(){
     rm ${WORKSPACE}/servlettck.zip > /dev/null || true
     rm -rf ${WORKSPACE}/javaee-smoke > /dev/null || true
     rm ${WORKSPACE}/javaee-smoke-7.0_latest.zip > /dev/null || true
-} 
+}
 
 OPT=${1}
 TEST_ID=${2}

@@ -30,22 +30,22 @@ import org.glassfish.jdbc.devtests.v3.util.TablesUtil;
 
 /**
  * Tests if statement-timeout (query-timeout) is being set on all types of
- * statements created in an application : Statement, PreparedStatement, 
+ * statements created in an application : Statement, PreparedStatement,
  * CallableStatement.
- * 
+ *
  * Assumes that statement-timeout attribute is set on the pool to 30.
- * 
+ *
  * @author shalini
  */
 public class StatementTimeoutTest implements SimpleTest {
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
 
     public Map<String, Boolean> runTest(DataSource ds, PrintWriter out) {
-        
+
         //Create required tables and insert entry into them
         String tableName = "CUSTOMER";
         String columnName = "name";
-        TablesUtil.createTables(ds, out, tableName, columnName);        
+        TablesUtil.createTables(ds, out, tableName, columnName);
         TablesUtil.insertEntry(ds, out, tableName, "abcd");
         TablesUtil.insertEntry(ds, out, tableName, "pqrs");
 
@@ -58,7 +58,7 @@ public class StatementTimeoutTest implements SimpleTest {
         } catch (Exception e) {
             resultsMap.put("statement-test", false);
         }
-        
+
         try {
             if (preparedStatementTest(ds, out, tableName)) {
                 resultsMap.put("prepared-statement-test", true);
@@ -85,14 +85,14 @@ public class StatementTimeoutTest implements SimpleTest {
     }
 
     /**
-     * Tests if statement-timeout is being set on a CallableStatement created 
+     * Tests if statement-timeout is being set on a CallableStatement created
      * in the application.
      * @param ds
      * @param out
      * @param tableName
      * @return boolean result
      */
-    private boolean callableStatementTest(DataSource ds, PrintWriter out, 
+    private boolean callableStatementTest(DataSource ds, PrintWriter out,
             String tableName) {
         boolean result = false;
         Connection conFromDS = null;
@@ -103,7 +103,7 @@ public class StatementTimeoutTest implements SimpleTest {
             conFromDS = ds.getConnection();
             out.print("<br> Preparing a CallableStatement");
             stmt = conFromDS.prepareCall("select * from " + tableName);
-            
+
             out.println("<br> getQueryTimeout() on the statement");
             if(stmt.getQueryTimeout() == 30) {
                 out.println("<br> Timeout = 30");
@@ -128,7 +128,7 @@ public class StatementTimeoutTest implements SimpleTest {
             }
             out.println("<br> Test result : " + result);
             return result;
-        }                
+        }
     }
 
     /**
@@ -139,19 +139,19 @@ public class StatementTimeoutTest implements SimpleTest {
      * @param tableName
      * @return boolean result
      */
-    private boolean preparedStatementTest(DataSource ds, PrintWriter out, 
+    private boolean preparedStatementTest(DataSource ds, PrintWriter out,
             String tableName) {
         boolean result = false;
         Connection conFromDS = null;
         PreparedStatement stmt = null;
         out.println("<h4> Prepared Statement Test </h4>");
-        
+
         try {
             out.println("<br> Getting a connection...");
             conFromDS = ds.getConnection();
             out.println("<br>Creating a PreparedStatement query");
             stmt = conFromDS.prepareStatement("select * from " + tableName);
-            
+
             out.println("<br>getQueryTimeout() on the statement");
             if(stmt.getQueryTimeout() == 30) {
                 out.println("<br>Timeout = 30");
@@ -176,7 +176,7 @@ public class StatementTimeoutTest implements SimpleTest {
             }
             out.println("<br> Test result : " + result);
             return result;
-        }        
+        }
     }
 
     /**
@@ -196,7 +196,7 @@ public class StatementTimeoutTest implements SimpleTest {
             conFromDS = ds.getConnection();
             out.print("<br>Creating a Statement");
             stmt = conFromDS.createStatement();
-            
+
             out.println("<br> Getting the queryTimeout on the statement");
             if(stmt.getQueryTimeout() == 30) {
                 out.println("<br>Timeout = 30");

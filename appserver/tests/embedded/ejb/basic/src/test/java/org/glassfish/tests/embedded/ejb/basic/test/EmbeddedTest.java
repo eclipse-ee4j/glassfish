@@ -40,7 +40,7 @@ public class EmbeddedTest {
     public static void main(String[] args) {
         EmbeddedTest test = new EmbeddedTest();
         System.setProperty("basedir", System.getProperty());
-        test.test();        
+        test.test();
     }
 */
 
@@ -75,7 +75,7 @@ public class EmbeddedTest {
 
         glassfish.stop();
         glassfish.dispose();
-        
+
         System.out.println("EmbeddedTest completed.");
 
     }

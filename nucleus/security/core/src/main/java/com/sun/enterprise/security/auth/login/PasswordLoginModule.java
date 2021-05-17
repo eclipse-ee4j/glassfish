@@ -40,7 +40,7 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule
      *
      * <P>Note that this method is called after the authentication
      * has succeeded. If authentication failed do not call this method.
-     * 
+     *
      * <P>A lot of the RI behavior is still present here. Some of the
      * most notable points to remember:
      * <ul>
@@ -50,7 +50,7 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule
      * @param password Password of this user.
      * @param theRealm Current Realm object for this authentication.
      * @param groups String array of group memberships for user (could be
-     *     empty). 
+     *     empty).
      * @returns void
      *
      */

@@ -62,7 +62,7 @@ import javax.naming.*;
                 ),
 
                 // only user should be considered.
-                // incorrect values for : className, portNumber, url, properties which should be ignored 
+                // incorrect values for : className, portNumber, url, properties which should be ignored
                 @DataSourceDefinition(name = "java:global/env/HelloStatefulEJB_DD_DataSource",
                         minPoolSize = 0,
                         initialPoolSize = 0,

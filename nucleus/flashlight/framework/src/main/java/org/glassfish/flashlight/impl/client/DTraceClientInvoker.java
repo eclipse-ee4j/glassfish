@@ -93,7 +93,7 @@ public class DTraceClientInvoker implements ProbeClientInvoker{
             else
                 fixedArgs[i] = args[i];
         }
-        
+
         return fixedArgs;
     }
 

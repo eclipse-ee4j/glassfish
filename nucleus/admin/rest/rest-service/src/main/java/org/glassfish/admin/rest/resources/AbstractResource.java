@@ -62,7 +62,7 @@ public abstract class AbstractResource {
 
     /**
      * This method will return the authenticated user associated with the current request.
-     * 
+     *
      * @return
      */
     protected String getAuthenticatedUser() {

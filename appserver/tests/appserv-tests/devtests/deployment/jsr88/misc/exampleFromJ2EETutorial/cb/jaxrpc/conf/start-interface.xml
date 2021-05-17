@@ -19,10 +19,10 @@
 
 <configuration
   xmlns="http://java.sun.com/xml/ns/jax-rpc/ri/config">
-  <service 
-      name="Supplier" 
-      targetNamespace="urn:Foo" 
-      typeNamespace="urn:Foo" 
+  <service
+      name="Supplier"
+      targetNamespace="urn:Foo"
+      typeNamespace="urn:Foo"
       packageName="com.sun.cb">
       <interface name="com.sun.cb.SupplierIF"/>
       <typeMappingRegistry>

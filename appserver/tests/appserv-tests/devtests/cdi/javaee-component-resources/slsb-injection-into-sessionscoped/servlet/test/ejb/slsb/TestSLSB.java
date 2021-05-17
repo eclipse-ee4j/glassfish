@@ -26,9 +26,9 @@ public class TestSLSB {
 
     public TestSLSB() {
     }
-    
+
     public boolean statelessMethod1(){
         return true;
     }
- 
+
 }

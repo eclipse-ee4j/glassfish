@@ -38,10 +38,10 @@ import org.glassfish.contextpropagation.internal.Entry.ContextType;
  *  - validating the data
  *  - notifying LifecycleListeners of the following events: context
  *    added*, changed or removed.
- *  * records the object to notify so that the ContextMapPropagator may send 
+ *  * records the object to notify so that the ContextMapPropagator may send
  *    the notifications after we are done reading all the contexts.
  */
-public class SimpleMap { 
+public class SimpleMap {
   private final LoggerAdapter logger = ContextBootstrap.getLoggerAdapter();
   HashMap<String, Entry> map = new HashMap<String, Entry>();
   private List<ContextLifecycle> addedContexts;
@@ -59,7 +59,7 @@ public class SimpleMap {
     addedContexts = new LinkedList<ContextLifecycle>();
   }
 
-  protected List<ContextLifecycle> getAddedContextLifecycles() { 
+  protected List<ContextLifecycle> getAddedContextLifecycles() {
     List<ContextLifecycle> result = addedContexts;
     addedContexts = null;
     return result;
@@ -72,7 +72,7 @@ public class SimpleMap {
 
   @SuppressWarnings("unchecked")
   private <T> T extractResult(String key, Entry entry, String operation) {
-    T result =  (T) (entry == null ? null : entry.value); 
+    T result =  (T) (entry == null ? null : entry.value);
     if (logger.isLoggable(Level.DEBUG)) {
       logger.log(Level.DEBUG, MessageID.OPERATION, operation, key, result);
     }
@@ -86,7 +86,7 @@ public class SimpleMap {
     Entry oldEntry = map.put(key, entry);
     if (oldEntry != null && (oldEntry.getValue() instanceof ContextLifecycle)) {
       ((ContextLifecycle) oldEntry.value).contextChanged(value);
-    } 
+    }
     if (entry.getValue() instanceof ContextLifecycle) {
       ContextLifecycle ctx = (ContextLifecycle) entry.getValue();
       if (addedContexts == null) {
@@ -94,7 +94,7 @@ public class SimpleMap {
       } else {
         addedContexts.add(ctx);
       }
-    }    
+    }
     if (logger.isLoggable(Level.DEBUG)) {
       logger.log(Level.DEBUG, MessageID.PUT, key, value, oldEntry == null ? null : oldEntry.value);
     }
@@ -137,7 +137,7 @@ public class SimpleMap {
 
   public Iterator<Map.Entry<String, Entry>> iterator(final Filter filter, final PropagationMode mode) {
     return new Iterator<Map.Entry<String, Entry>>() {
-      Iterator<Map.Entry<String, Entry>> it = map.entrySet().iterator(); 
+      Iterator<Map.Entry<String, Entry>> it = map.entrySet().iterator();
       Map.Entry<String, Entry> next;
       Map.Entry<String, Entry> last;
 
@@ -149,7 +149,7 @@ public class SimpleMap {
       @Override
       public Map.Entry<String, Entry> next() {
         if (next == null && !findNext()) {
-          throw new NoSuchElementException(); 
+          throw new NoSuchElementException();
         } else {
           last = next;
           next = null;

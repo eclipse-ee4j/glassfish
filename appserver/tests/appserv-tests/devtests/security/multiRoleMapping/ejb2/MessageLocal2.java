@@ -24,5 +24,5 @@ import jakarta.ejb.Local;
 @Local
 public interface MessageLocal2 {
     String getMessage();
-    
+
 }

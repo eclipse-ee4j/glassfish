@@ -20,7 +20,7 @@ import com.sun.enterprise.util.io.FileUtils;
 import java.io.*;
 
 /**
- * Baseclass for BackupManager and RestoreManager.  Common code between 
+ * Baseclass for BackupManager and RestoreManager.  Common code between
  * the two goes in here.
  * @author  Byron Nevins
  */
@@ -29,33 +29,33 @@ abstract class BackupRestoreManager {
 
     public BackupRestoreManager(BackupRequest req) throws BackupException {
         if(req == null)
-            throw new BackupException("backup-res.InternalError", 
+            throw new BackupException("backup-res.InternalError",
                 getClass().getName() + ".ctor: null BackupRequest object");
-		
+
         this.request = req;
         init();
         LoggerHelper.finest("Request DUMP **********\n" + req);
     }
-	
+
     void init() throws BackupException {
 
         // only do once!
         if(wasInitialized)
             return;
-		
+
         if(request == null)
             throw new BackupException("backup-res.InternalError",
                                       "null BackupRequest reference");
-		
+
         // add a timestamp
         request.timestamp = System.currentTimeMillis();
-                
+
         // validate domains dir
         if (request.domainsDir == null ||
             !FileUtils.safeIsDirectory(request.domainsDir))
             throw new BackupException("backup-res.NoDomainsDir",
                                       request.domainsDir);
-				
+
         if (request.domainName != null)
             request.domainDir = new File(request.domainsDir, request.domainName);
 
@@ -64,7 +64,7 @@ abstract class BackupRestoreManager {
 
     /**
      * If both the backupDir and backupConfig are not set then this method
-     * behaves as it did in v2.  It returns a path to the 
+     * behaves as it did in v2.  It returns a path to the
      * domainDir + BACKUP_DIR (backups).
      * If a backupConfig has been associated with the request and the
      * backupDir is not set then it returns a path to domainDir + backupConfig.

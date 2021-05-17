@@ -22,7 +22,7 @@ import jakarta.servlet.ServletContext;
 
 /**
  *
- * 
+ *
  */
 public final class JaspicUtils {
 
@@ -32,7 +32,7 @@ public final class JaspicUtils {
     /**
      * Registers the given SAM using the standard JASPIC {@link AuthConfigFactory} but using a small set of wrappers that just
      * pass the calls through to the SAM.
-     * 
+     *
      * @param serverAuthModule
      */
     public static void registerSAM(ServletContext context, ServerAuthModule serverAuthModule) {

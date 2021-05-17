@@ -24,26 +24,26 @@ import com.oracle.hk2.devtest.cdi.ejb1.BasicEjb;
 
 /**
  * Has a main so it can be used to invoke the EJB from a client
- * 
+ *
  * @author jwells
  *
  */
 public class Main {
     private final static String BASIC_EJB_JNDI_NAME = "java:global/ejb1/EjbInjectedWithServiceLocator!" +
             BasicEjb.class.getName();
-    
+
     private static int go() throws NamingException {
         Context context = new InitialContext();
-        
+
         BasicEjb basic = (BasicEjb) context.lookup(BASIC_EJB_JNDI_NAME);
-        
+
         boolean ret = basic.cdiManagerInjected();
-        
+
         System.out.println("EJB#cdiManagerInjected invoked with result " + ret);
-        
+
         return 0;
     }
-    
+
     public static void main(String argc[]) {
         try {
             go();
@@ -53,6 +53,6 @@ public class Main {
             th.printStackTrace();
             System.exit(1);
         }
-        
+
     }
 }

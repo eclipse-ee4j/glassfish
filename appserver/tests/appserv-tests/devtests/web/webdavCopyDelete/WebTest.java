@@ -42,7 +42,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for WebDAV copy and delete");
         WebTest webTest = new WebTest(args);
@@ -54,7 +54,7 @@ public class WebTest {
         try {
             String tmplate = "/data.html";
             String page = "/index.html";
-            invoke(new String[] { "COPY " + contextRoot + tmplate + " HTTP/1.1", 
+            invoke(new String[] { "COPY " + contextRoot + tmplate + " HTTP/1.1",
                     "Destination: http://" + host + ":" + port + contextRoot + page }, null, false);
 
             boolean status = invoke(new String[] { "GET " + contextRoot + page  + " HTTP/1.1"}, EXPECTED, false);
@@ -92,7 +92,7 @@ public class WebTest {
         for (String reqLine : reqLines) {
             System.out.println(reqLine);
             os.write((reqLine + "\n").getBytes());
-        }   
+        }
 
         os.write("Host: localhost\n".getBytes());
         os.write("Connection: close\n".getBytes());

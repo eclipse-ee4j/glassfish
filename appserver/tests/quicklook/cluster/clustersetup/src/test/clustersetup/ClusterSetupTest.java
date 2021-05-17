@@ -36,7 +36,7 @@ public class ClusterSetupTest extends AdminBaseDevTest {
         final String i2name = "eein2";
         String i1url = "http://localhost:"+port1;
         String i2url = "http://localhost:"+port2;
-        
+
         public boolean retStatus = false, ret1 = false,ret2 = false;
 
     @Test
@@ -67,7 +67,7 @@ public class ClusterSetupTest extends AdminBaseDevTest {
         report(tn + "start-local-instance1", asadmin("start-local-instance", i1name));
         report(tn + "start-local-instance2", asadmin("start-local-instance", i2name));
         System.out.println("Waiting for 5 sec...");
-	Thread.currentThread().sleep(5000);
+    Thread.currentThread().sleep(5000);
         // check that the instances are there
         report(tn + "list-instances", asadmin("list-instances"));
         report(tn + "getindex1", matchString("GlassFish Server", getURL(i1url)));

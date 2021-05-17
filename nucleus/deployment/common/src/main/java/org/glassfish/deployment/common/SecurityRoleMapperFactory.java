@@ -25,28 +25,28 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface SecurityRoleMapperFactory {
-    
+
      /**
      * Returns a RoleMapper corresponding to the AppName.
      * @param The Application Name of this RoleMapper.
      */
     public SecurityRoleMapper getRoleMapper(String appName);
-    
+
     /**
      * remove the RoleMapping associated with this application
      * @param the application name for this RoleMapper
      */
     public void removeRoleMapper(String appName);
-    
+
     /**
      * Sets a new RoleMapper for a particular Application
      * @param the application name
      * @param the new role mapper
      */
     public void setRoleMapper(String appName, SecurityRoleMapper rmap);
-    
+
     /**
-     * Returns the appname for this particular context id. Used in 
+     * Returns the appname for this particular context id. Used in
      * context of a web application
      */
     public String getAppNameForContext(String contextId);
@@ -55,7 +55,7 @@ public interface SecurityRoleMapperFactory {
      * context of a web application
      */
     public void setAppNameForContext(String appName, String contextId);
-    
+
     /**
      * removes the link between contextId and the appname
      */

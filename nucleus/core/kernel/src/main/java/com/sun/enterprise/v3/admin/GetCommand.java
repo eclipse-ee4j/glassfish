@@ -55,8 +55,8 @@ import org.jvnet.hk2.config.types.Property;
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get", 
+        opType=RestEndpoint.OpType.GET,
+        path="get",
         description="Get")
 })
 public class GetCommand extends V2DottedNameSupport implements AdminCommand,
@@ -84,9 +84,9 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
             new LocalStringManagerImpl(GetCommand.class);
 
     private ActionReport report;
-    
+
     private List<Map.Entry> matchingNodesSorted;
-    
+
     private String prefix;
 
     @Inject
@@ -101,12 +101,12 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
             return preAuthorizationForNonMonitoring(context);
         }
     }
-    
+
     private boolean preAuthorizationForMonitoring(final AdminCommandContext context) {
         mr.prepareGet(context, pattern, aggregateDataOnly);
         return true;
     }
-    
+
     private boolean preAuthorizationForNonMonitoring(final AdminCommandContext context) {
         report = context.getActionReport();
 
@@ -131,7 +131,7 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
             return getAccessChecksForNonMonitoring();
         }
     }
-    
+
     private Collection<? extends AccessCheck> getAccessChecksForNonMonitoring() {
         final Collection<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
         for (Map.Entry entry : matchingNodesSorted) {
@@ -139,7 +139,7 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
         }
         return accessChecks;
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
 
@@ -187,14 +187,14 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
     }
 
     private void getMonitorAttributes(AdminCommandContext ctxt) {
-        
+
         Logger l = KernelLoggerInfo.getLogger();
         if (l.isLoggable(Level.FINE)) {
             l.log(Level.FINE, "Get Command: {0}", mr.toString());
         }
         mr.execute();
     }
-    
+
     private List<Map.Entry> findSortedMatchingNodes() {
 
         if (!monitor) {
@@ -245,7 +245,7 @@ public class GetCommand extends V2DottedNameSupport implements AdminCommand,
             // last element from the pattern.
             matchingNodes = getMatchingNodes(dottedNames, pattern.substring(0, pattern.lastIndexOf(".")));
         }
-        
+
         //No matches found - report the failure and return
         if (matchingNodes.isEmpty()) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);

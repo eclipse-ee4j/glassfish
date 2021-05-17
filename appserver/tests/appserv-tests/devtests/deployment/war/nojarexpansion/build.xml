@@ -191,11 +191,11 @@ Current setting of result is ${result}.
 File to check is ${file.to.check}</echo>
         <available file="${file.to.check}" property="result" value="1"/>
         <echo>After available check, result is now ${result}</echo>
-	  <condition property="result" value="0">
-		<not>
-			<isset property="result"/>
-		</not>
-	  </condition>
+      <condition property="result" value="0">
+        <not>
+            <isset property="result"/>
+        </not>
+      </condition>
         <echo>After final check of results, value is now ${result}</echo>
         <antcall target="processResult">
         </antcall>
@@ -265,7 +265,7 @@ File to check is ${file.to.check}</echo>
 
     <target name="xx" depends="init">
       <antcall target="ensure.no.file">
-		<param name="file" value="${file.to.check}"/>
+        <param name="file" value="${file.to.check}"/>
       </antcall>
     </target>
 </project>

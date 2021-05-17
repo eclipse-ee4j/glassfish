@@ -70,7 +70,7 @@ public class SerialContext implements Context {
 
     private static final String JAVA_GLOBAL_URL = "java:global";
 
-    // Sets unmanaged SerialContext in test mode to prevent attempts to contact server. 
+    // Sets unmanaged SerialContext in test mode to prevent attempts to contact server.
     static final String INITIAL_CONTEXT_TEST_MODE = "com.sun.enterprise.naming.TestMode";
 
     private static final NameParser myParser = new SerialNameParser();
@@ -106,7 +106,7 @@ public class SerialContext implements Context {
     private String targetPort;
 
     private ORB orb = null ;
-    
+
     // True if we're running in the server and no orb,host, or port
     // properties have been explicitly set in the properties
     // Allows special optimized intra-server naming service access
@@ -225,7 +225,7 @@ public class SerialContext implements Context {
                 }
             }
         }
-        
+
         if( testMode ) {
             processType = ProcessType.Server;
         } else {
@@ -235,7 +235,7 @@ public class SerialContext implements Context {
                 services.inject(processEnv);
                 services.postConstruct(processEnv);
             }
-            
+
             processType = processEnv.getProcessType();
         }
 
@@ -261,7 +261,7 @@ public class SerialContext implements Context {
             (targetHostFromEnv == null) && (targetPortFromEnv == null);
 
         // Set target host / port from env.  If only one of the two is set, fill in the
-        // other with the default.  
+        // other with the default.
         if( targetHostFromEnv != null ) {
             targetHost = targetHostFromEnv;
             if( targetPortFromEnv == null ) {
@@ -380,7 +380,7 @@ public class SerialContext implements Context {
             } else {
                 provider = cachedProvider;
             }
-                       
+
         }
 
         return provider;

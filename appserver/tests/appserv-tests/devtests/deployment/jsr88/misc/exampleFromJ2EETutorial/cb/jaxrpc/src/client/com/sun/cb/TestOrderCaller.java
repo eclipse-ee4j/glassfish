@@ -33,7 +33,7 @@ public class TestOrderCaller {
             LineItemBean itemC = new LineItemBean("wakeup call", new BigDecimal("0.5"), new BigDecimal("10.00"));
             LineItemBean[] lineItems = {itemA, itemB, itemC};
 
-            OrderBean order = new OrderBean(address, customer, "123", lineItems, 
+            OrderBean order = new OrderBean(address, customer, "123", lineItems,
                 new BigDecimal("55.67"));
 
             OrderCaller oc = new OrderCaller(args[0]);

@@ -31,44 +31,44 @@ import org.glassfish.j2ee.statistics.RangeStatistic;
  */
 
 public interface ThreadPoolStats extends Stats {
-    
+
     /** Returns the statistical information about the number of Threads in the associated ThreaPool, as an instance of BoundedRangeStatistic.
      * This returned value gives an idea about how the pool is changing.
-     * @return		an instance of {@link BoundedRangeStatistic}
+     * @return        an instance of {@link BoundedRangeStatistic}
      */
     public BoundedRangeStatistic getCurrentNumberOfThreads();
-    
+
     /** Returns the total number of available threads, as an instance of {@link CountStatistic}.
-     * @return		an instance of {@link CountStatistic}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getNumberOfAvailableThreads();
-    
+
     /** Returns the number of busy threads, as an instance of {@link CountStatistic}.
-     * @return		an instance of {@link CountStatistic}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getNumberOfBusyThreads();
-    
+
     /**
      * Returns the statistical information about the average completion time of a work item in milliseconds.
-     * @return	an instance of {@link RangeStatistic}
+     * @return    an instance of {@link RangeStatistic}
      */
     public RangeStatistic getAverageWorkCompletionTime();
-    
+
     /** Returns the the total number of work items added so far to the work queue associated with threadpool.
-     * @return		an instance of {@link CountStatistic}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getTotalWorkItemsAdded();
-    
+
     /**
      * Returns average time in milliseconds a work item waited in the work queue before getting processed.
-     * @return		an instance of {@link RangeStatistic}
+     * @return        an instance of {@link RangeStatistic}
      */
     public RangeStatistic getAverageTimeInQueue();
-    
+
     /**
      * Returns the work items in queue
-     * @return	an instance of {@link BoundedRangeStatistic}
+     * @return    an instance of {@link BoundedRangeStatistic}
      */
     public BoundedRangeStatistic getNumberOfWorkItemsInQueue();
-    
+
 }

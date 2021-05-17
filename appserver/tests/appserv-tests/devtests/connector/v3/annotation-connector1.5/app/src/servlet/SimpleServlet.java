@@ -44,17 +44,17 @@ public class SimpleServlet extends HttpServlet {
 
     public String doTest(HttpServletRequest request, HttpServletResponse response) throws IOException{
         System.out.println("This is to test connector 1.5 "+
-	             "contracts.");
+                 "contracts.");
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
         String res = "NOT RUN";
-	debug("doTest() ENTER...");
+    debug("doTest() ENTER...");
         boolean pass = false;
         try {
             res  = "ALL TESTS PASSED";
-	    int testCount = 1;
+        int testCount = 1;
             out.println("Starting the test");
             out.flush();
             while (!done(out)) {
@@ -70,18 +70,18 @@ public class SimpleServlet extends HttpServlet {
                         res = "SOME TESTS FAILED";
                         System.out.println("ID Connector 1.5 test - " + testCount + " FAIL");
                         out.println("TEST:FAIL");
-                        
+
                     } else {
                         System.out.println("ID Connector 1.5 test - " + testCount + " PASS");
                         out.println("TEST:PASS");
-		            }
+                    }
                 } else {
                     out.println("END_OF_EXECUTION");
                     break;
                 }
             }
             out.println("END_OF_EXECUTION");
-            
+
 
         } catch (Exception ex) {
             System.out.println("Importing transaction test failed.");

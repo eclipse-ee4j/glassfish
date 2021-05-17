@@ -33,29 +33,29 @@ import com.sun.appserv.management.DomainRoot;
  * @version $Revision: 1.2 $
  */
 public class AMXConnector {
-    private final DomainRoot			mDomainRoot;
-    private final AppserverConnectionSource	mAppserverConnectionSource;
-    private HandshakeCompletedListenerImpl	mHandshakeCompletedListener;
+    private final DomainRoot            mDomainRoot;
+    private final AppserverConnectionSource    mAppserverConnectionSource;
+    private HandshakeCompletedListenerImpl    mHandshakeCompletedListener;
 
-    private final static String	TRUST_STORE_FILE		= "./keystore";
-    private final static String	TRUST_STORE_PASSWORD	= "changeme";
+    private final static String    TRUST_STORE_FILE        = "./keystore";
+    private final static String    TRUST_STORE_PASSWORD    = "changeme";
 
-    // currently it defaults to using rmi transport. 
+    // currently it defaults to using rmi transport.
     public AMXConnector(
-        final String	host,
-        final int		port,
-        final String	user,
-        final String	password,
-        final boolean	useTLS )
+        final String    host,
+        final int        port,
+        final String    user,
+        final String    password,
+        final boolean    useTLS )
         throws IOException
     {
-        mHandshakeCompletedListener	= null;
+        mHandshakeCompletedListener    = null;
 
-        TLSParams	tlsParams	= null;
+        TLSParams    tlsParams    = null;
 
         if ( useTLS )
         {
-            tlsParams	= createTLSParams( );
+            tlsParams    = createTLSParams( );
         }
 
         final String info = "host=" + host + ", port=" + port +
@@ -64,12 +64,12 @@ public class AMXConnector {
 
         info( "Connecting: " + info );
 
-        mAppserverConnectionSource	=
+        mAppserverConnectionSource    =
             new AppserverConnectionSource( AppserverConnectionSource.PROTOCOL_RMI,
             host, port, user, password, tlsParams, null);
 
 
-        mDomainRoot	= mAppserverConnectionSource.getDomainRoot();
+        mDomainRoot    = mAppserverConnectionSource.getDomainRoot();
 
         info( "Connection established successfully: " + info );
         if ( useTLS )
@@ -81,15 +81,15 @@ public class AMXConnector {
 
     private TLSParams createTLSParams()
     {
-        final File trustStore	= new File( TRUST_STORE_FILE );
-        final char[] trustStorePassword	= TRUST_STORE_PASSWORD.toCharArray();
+        final File trustStore    = new File( TRUST_STORE_FILE );
+        final char[] trustStorePassword    = TRUST_STORE_PASSWORD.toCharArray();
 
-        mHandshakeCompletedListener	= new HandshakeCompletedListenerImpl();
+        mHandshakeCompletedListener    = new HandshakeCompletedListenerImpl();
         final TrustStoreTrustManager trustMgr =
             new TrustStoreTrustManager( trustStore, trustStorePassword);
         trustMgr.setPrompt( true );
 
-        final TLSParams	tlsParams = new TLSParams( trustMgr, mHandshakeCompletedListener );
+        final TLSParams    tlsParams = new TLSParams( trustMgr, mHandshakeCompletedListener );
 
         return( tlsParams );
     }

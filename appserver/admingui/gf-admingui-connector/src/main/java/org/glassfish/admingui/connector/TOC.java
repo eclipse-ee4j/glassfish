@@ -25,33 +25,33 @@ import java.util.List;
 
 
 /**
- *  <p>	This class is configured via XML (i.e. a console-config.xml file).
- *  	This is done via the HK2 <code>ConfigParser</code>.</p>
+ *  <p>    This class is configured via XML (i.e. a console-config.xml file).
+ *      This is done via the HK2 <code>ConfigParser</code>.</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen    (ken.paulsen@sun.com)
  */
 @Configured(name="toc")
 public class TOC {
     /**
-     *	<p> Accessor for child {@link TOCItem}s.</p>
+     *    <p> Accessor for child {@link TOCItem}s.</p>
      */
     public List<TOCItem> getTOCItems() {
-	return this.tocItems;
+    return this.tocItems;
     }
 
     /**
-     *	<p> {@link IntegrationPoint}s setter.</p>
+     *    <p> {@link IntegrationPoint}s setter.</p>
      */
     @Element("tocitem")
     public void setTOCItems(List<TOCItem> tocItems) {
-	this.tocItems = tocItems;
+    this.tocItems = tocItems;
     }
 
     /**
      *
      */
     public String getVersion() {
-	return this.version;
+    return this.version;
     }
 
     /**
@@ -59,7 +59,7 @@ public class TOC {
      */
     @Attribute(required=true)
     public void setVersion(String version) {
-	this.version = version;
+    this.version = version;
     }
 
 

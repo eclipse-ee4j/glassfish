@@ -44,12 +44,12 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugzilla 31171");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() {
@@ -64,7 +64,7 @@ public class WebTest {
             System.out.println("GET " + requestUri + " HTTP/1.0");
             os.write(("GET " + requestUri + " HTTP/1.0\n").getBytes());
             os.write("\n".getBytes());
-        
+
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             String line = null;
@@ -74,7 +74,7 @@ public class WebTest {
                     break;
                 }
             }
-   
+
             if (line != null) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {

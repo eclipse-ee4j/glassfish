@@ -30,9 +30,9 @@ public final class LoginInfo implements Comparable<LoginInfo> {
     private int    port;
     private String user;
     private char[] password;
-    
+
     /**
-     * Creates an Immutable instance of a LoginInfo from given 4-tuple. 
+     * Creates an Immutable instance of a LoginInfo from given 4-tuple.
      * The host, user and password may not be null.
      * The port may not be a negative integer.
      * @param host String representing host
@@ -78,14 +78,14 @@ public final class LoginInfo implements Comparable<LoginInfo> {
         this.user     = user;
         this.password = password;
     }
-    
+
     public String toString() {
         return ( host + port + user + (password != null ? new String(password) : null));
     }
 
     public int compareTo(final LoginInfo that) {
         final String thisKey = this.user + this.host + this.port;
-        final String thatKey = that.user + that.host + that.port;        
+        final String thatKey = that.user + that.host + that.port;
         return ( thisKey.compareTo(thatKey) );
     }
 }

@@ -37,7 +37,7 @@ import java.util.List;
 public class ResourcesCompositeSniffer extends GenericSniffer {
 
     //TODO ASR package name change ?
-    
+
     final String[] containerNames = {"org.glassfish.resources.module.ResourcesContainer"};
 
     @Inject ServiceLocator locator;

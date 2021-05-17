@@ -26,14 +26,14 @@ import org.glassfish.j2ee.statistics.RangeStatistic;
  */
 
 public final class RangeStatisticImpl extends StatisticImpl implements RangeStatistic {
-    
+
     private final long currentVal;
     private final long highWaterMark;
     private final long lowWaterMark;
-    
+
     /** Constructs an immutable instance of RangeStatistic.
      * @param curVal    The current value of this statistic
-     * @param highMark  The highest value of this statistic, since measurement 
+     * @param highMark  The highest value of this statistic, since measurement
      *                  started
      * @param lowMark   The lowest value of this statistic, since measurement
      *                  started
@@ -42,43 +42,43 @@ public final class RangeStatisticImpl extends StatisticImpl implements RangeStat
      * @param desc      A brief description of the statistic
      * @param startTime Time in milliseconds at which the measurement was started
      * @param sampleTime Time at which the last measurement was done.
-	 */
-    public RangeStatisticImpl(long curVal, long highMark, long lowMark, 
-                              String name, String unit, String desc, 
+     */
+    public RangeStatisticImpl(long curVal, long highMark, long lowMark,
+                              String name, String unit, String desc,
                               long startTime, long sampleTime) {
-        
+
         super(name, unit, desc, startTime, sampleTime);
         currentVal = curVal;
         highWaterMark = highMark;
         lowWaterMark = lowMark;
     }
-    
+
     /**
      * Returns the current value of this statistic.
-	 * @return long indicating the current value
+     * @return long indicating the current value
      */
     public long getCurrent() {
         return currentVal;
     }
-    
+
     /**
      * Returns the highest value of this statistic, since measurement started.
-	 * @return long indicating high water mark
+     * @return long indicating high water mark
      */
     public long getHighWaterMark() {
         return highWaterMark;
     }
-    
+
     /**
      * Returns the lowest value of this statistic, since measurement started.
-	 * @return long indicating low water mark
+     * @return long indicating low water mark
      */
     public long getLowWaterMark() {
         return lowWaterMark;
     }
-    
+
     public final String toString() {
-        return super.toString() + NEWLINE + 
+        return super.toString() + NEWLINE +
             "Current: " + getCurrent() + NEWLINE +
             "LowWaterMark: " + getLowWaterMark() + NEWLINE +
             "HighWaterMark: " + getHighWaterMark();

@@ -15,7 +15,7 @@
  */
 
 /*
- * @(#)SimpleTestImpl.java	1.3 02/04/05
+ * @(#)SimpleTestImpl.java    1.3 02/04/05
  */
 
 package rpclit;
@@ -37,7 +37,7 @@ public class SimpleTestImpl implements SessionBean {
 
     public SimpleTestImpl(){}
 
-    public EchoStringType echoString(StringResponseNameType v) 
+    public EchoStringType echoString(StringResponseNameType v)
         throws RemoteException
     {
         return null;  //for now

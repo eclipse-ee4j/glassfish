@@ -22,5 +22,5 @@
 <sun-web-app>
   <jsp-config>
     <property name="modificationTestInterval" value="60" />
-  </jsp-config> 
+  </jsp-config>
 </sun-web-app>

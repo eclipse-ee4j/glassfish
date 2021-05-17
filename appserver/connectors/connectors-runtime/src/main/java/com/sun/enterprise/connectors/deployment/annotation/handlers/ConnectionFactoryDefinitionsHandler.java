@@ -40,11 +40,11 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 @Service
 @AnnotationHandlerFor(ConnectionFactoryDefinitions.class)
 public class ConnectionFactoryDefinitionsHandler extends AbstractResourceHandler {
-    
+
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(ConnectionFactoryDefinitionsHandler.class);
 
-    
+
     public ConnectionFactoryDefinitionsHandler() {
     }
 
@@ -82,7 +82,7 @@ public class ConnectionFactoryDefinitionsHandler extends AbstractResourceHandler
         return getDefaultProcessedResult();
     }
 
-    
+
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();
     }

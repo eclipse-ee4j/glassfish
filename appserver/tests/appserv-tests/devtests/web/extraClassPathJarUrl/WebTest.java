@@ -23,8 +23,8 @@ import com.sun.ejte.ccl.reporter.*;
  * (Add support for nested JAR files to <sun-web-app><class-loader>'s
  *  extra-class-path attribute and to "asadmin deploy --libraries"):
  *
- * This unit adds "jar:file:/tmp/abc.jar!/" to the extra-class-path in 
- * sun-web.xml, and expects the servlet to be able to instantiate the 
+ * This unit adds "jar:file:/tmp/abc.jar!/" to the extra-class-path in
+ * sun-web.xml, and expects the servlet to be able to instantiate the
  * aaa.bbb.ccc.Test class from this JAR file.
  *
  * Notice that because of 4735639 ("URLClassLoader does not work with
@@ -48,7 +48,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish 2917");
@@ -61,11 +61,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/TestServlet");
         System.out.println("Connecting to: " + url.toString());
@@ -84,10 +84,10 @@ public class WebTest {
             if (EXPECTED_RESPONSE.equals(line)) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {
-                System.err.println("Wrong response. Expected: " + 
+                System.err.println("Wrong response. Expected: " +
                                    EXPECTED_RESPONSE + ", received: " + line);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
-        }    
+        }
     }
 }

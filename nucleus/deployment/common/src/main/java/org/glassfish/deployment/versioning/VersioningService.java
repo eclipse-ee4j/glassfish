@@ -117,7 +117,7 @@ public class VersioningService {
         }
         return enabledVersionsInTargets;
     }
-    
+
     /**
      * Search the enabled versions on the referenced targets of the given version.
      * This method is designed to be used with domain target. As different
@@ -129,7 +129,7 @@ public class VersioningService {
      */
     public Map<String,Set<String>> getEnabledVersionsInReferencedTargets(String versionIdentifier)
             throws VersioningSyntaxException {
-        
+
         Map<String,Set<String>> enabledVersionsInTargets =
                 new HashMap<String, Set<String>>();
 
@@ -185,12 +185,12 @@ public class VersioningService {
         // no enabled version found
         return null;
     }
-    
+
     /**
      * Process the expression matching operation of the given application name.
      *
      * @param name the application name containing the version expression
-     * @param target the target we are looking for the verisons 
+     * @param target the target we are looking for the verisons
      * @return a List of all expression matched versions, return empty list
      * if no version is registered on this target
      * or if getUntaggedName throws an exception
@@ -207,7 +207,7 @@ public class VersioningService {
                 throw new VersioningException(
                         VersioningUtils.LOCALSTRINGS.getLocalString("versioning.deployment.application.noversion",
                         "Application {0} has no version registered",
-                        untagged));  
+                        untagged));
             }
             return Collections.EMPTY_LIST;
         }
@@ -231,7 +231,7 @@ public class VersioningService {
         Set<String> versionsToDisable = Collections.EMPTY_SET;
 
         if (DeploymentUtils.isDomainTarget(target)) {
-            // retrieve the enabled versions on each target in the domain 
+            // retrieve the enabled versions on each target in the domain
             Map<String,Set<String>> enabledVersions =
                     getEnabledVersionsInReferencedTargets(appName);
 

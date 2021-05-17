@@ -20,6 +20,6 @@
 
 <sun-application-client>
   <java-web-start-access>
-     <jnlp-doc>myLaunch.jnlp</jnlp-doc> 
+     <jnlp-doc>myLaunch.jnlp</jnlp-doc>
   </java-web-start-access>
 </sun-application-client>

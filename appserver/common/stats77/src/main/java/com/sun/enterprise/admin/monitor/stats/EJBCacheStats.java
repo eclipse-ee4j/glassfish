@@ -29,49 +29,49 @@ import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
  * @version 1.0
  */
 public interface EJBCacheStats extends Stats {
-    
+
     /**
      * Returns the number of times a user request fails to find an EJB in associated EJB cache instance, as a CountStatistic.
-     * @return		an instance of {@link BoundedRangeStatistic}
+     * @return        an instance of {@link BoundedRangeStatistic}
      */
     public BoundedRangeStatistic getCacheMisses();
-    
+
     /**
      * Returns the number of times a user request hits an EJB in associated EJB cache instance, as a CountStatistic.
-	 * @return		an instance of {@link BoundedRangeStatistic}
+     * @return        an instance of {@link BoundedRangeStatistic}
      */
     public BoundedRangeStatistic getCacheHits();
-    
-    /** Returns total number of EJBs in the associated EJB Cache, as a BoundedRangeStatistic. 
-	 * Note that this returns the various statistical values like maximum and minimum value attained
-	 * as a part of the return value.
-	 * @return		an instance of {@link BoundedRangeStatistic}
+
+    /** Returns total number of EJBs in the associated EJB Cache, as a BoundedRangeStatistic.
+     * Note that this returns the various statistical values like maximum and minimum value attained
+     * as a part of the return value.
+     * @return        an instance of {@link BoundedRangeStatistic}
      */
     public BoundedRangeStatistic getNumBeansInCache();
-    
+
     /**
      * Returns the number of passivations of a Stateful Session Bean, as a CountStatistic.
-	 * @return		an instance of {@link CountStatistic}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getNumPassivations();
-    
+
     /**
      * Returns the number of errors in passivating a Stateful Session Bean, as a CountStatistic.
-	 * Must be less than or equal to {@link #getNumPassivations}
-	 * @return		an instance of {@link CountStatistic}
+     * Must be less than or equal to {@link #getNumPassivations}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getNumPassivationErrors();
-    
+
     /**
      * Returns the number of removed Expired Sessions as a CountStatistic.
-	 * @return		an instance of {@link CountStatistic}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getNumExpiredSessionsRemoved();
-    
+
     /**
      * Returns the number of errors in passivating a Stateful Session Bean, as a CountStatistic.
-	 * Must be less than or equal to {@link #getNumPassivations}
-	 * @return		an instance of {@link CountStatistic}
+     * Must be less than or equal to {@link #getNumPassivations}
+     * @return        an instance of {@link CountStatistic}
      */
     public CountStatistic getNumPassivationSuccess();
 }

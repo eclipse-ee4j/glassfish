@@ -25,7 +25,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
 
 /**
  * This interface is used by the Container to manage access to EJBs.
- * The container has a reference to an implementation of this 
+ * The container has a reference to an implementation of this
  * interface.
  * @author Harish Prabandham
  */
@@ -38,13 +38,13 @@ public interface SecurityManager {
     public boolean authorize(ComponentInvocation inv);
 
     /**
-     * @return The Principal of the client who made the current 
+     * @return The Principal of the client who made the current
      * invocation.
      */
     public Principal getCallerPrincipal();
 
     /**
-     * @return A boolean true/false depending on whether or not the caller 
+     * @return A boolean true/false depending on whether or not the caller
      * has the specified role.
      * @param The EJB developer specified "logical role".
      */
@@ -59,7 +59,7 @@ public interface SecurityManager {
 
     /**
      * This method is used by the  Invocation Manager to remove
-     * the run-as identity information that was set up using the 
+     * the run-as identity information that was set up using the
      * preInvoke
      * @param ComponentInvocation
      */
@@ -86,17 +86,17 @@ public interface SecurityManager {
      * Purge ThreadLocals held by jakarta.security.jacc.PolicyContext
      */
     public void resetPolicyContext();
-    
-    
+
+
     /* This method is used by SecurityUtil runMethod to run the
      * action as the subject encapsulated in the cuurent
      * SecurityContext.
      */
-      
-    public Object doAsPrivileged(PrivilegedExceptionAction pea) 
- 	throws Throwable;
+
+    public Object doAsPrivileged(PrivilegedExceptionAction pea)
+     throws Throwable;
 
     public Object invoke(Method beanClassMethod, boolean isLocal, Object o, Object[] oa)
             throws Throwable;
-     
+
 }

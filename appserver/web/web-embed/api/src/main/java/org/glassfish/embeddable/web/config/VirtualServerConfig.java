@@ -32,7 +32,7 @@ public class VirtualServerConfig {
     private String denyRemoteAddress;
     private String allowRemoteHost;
     private String denyRemoteHost;
-    private String hostNames = "${com.sun.aas.hostName}";    
+    private String hostNames = "${com.sun.aas.hostName}";
 
     /**
      * Enables or disables Single-Sign-On.
@@ -86,7 +86,7 @@ public class VirtualServerConfig {
      * Gets the location of the default web.xml configuration file.
      *
      * @return the location of the default web.xml configuration file, or
-     * <tt>null</tt> if <tt>setDefaultWebXml</tt> was never called on this 
+     * <tt>null</tt> if <tt>setDefaultWebXml</tt> was never called on this
      * <tt>VirtualServerConfig</tt>
      */
     public String getDefaultWebXml() {
@@ -157,7 +157,7 @@ public class VirtualServerConfig {
      *
      * @return the comma-separated list of regular expression patterns that
      * the remote client's IP address is compared to, or <tt>null</tt>
-     * if <tt>setAllowRemoteAddress</tt> was never called on this 
+     * if <tt>setAllowRemoteAddress</tt> was never called on this
      * <tt>VirtualServerConfig</tt>
      */
     public String getAllowRemoteAddress() {
@@ -187,7 +187,7 @@ public class VirtualServerConfig {
      *
      * @return the comma-separated list of regular expression patterns that
      * the remote client's IP address is compared to, or <tt>null</tt>
-     * if <tt>setDenyRemoteAddress</tt> was never called on this 
+     * if <tt>setDenyRemoteAddress</tt> was never called on this
      * <tt>VirtualServerConfig</tt>
      */
     public String getDenyRemoteAddress() {
@@ -267,7 +267,7 @@ public class VirtualServerConfig {
      * <tt>VirtualServerConfig</tt> separated by commas.
      *
      * @param hostNames the host names
-     */ 
+     */
     public void setHostNames(String hostNames) {
         this.hostNames = hostNames;
     }

@@ -31,7 +31,7 @@
         <module>mail-runtime</module>
   </modules>
   <dependencies>
-	<dependency>
+    <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
         </dependency>

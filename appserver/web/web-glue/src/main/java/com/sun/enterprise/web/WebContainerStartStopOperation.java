@@ -34,10 +34,10 @@ import java.util.ArrayList;
  * @author  lwhite
  */
 public interface WebContainerStartStopOperation {
-    
+
     public ArrayList doPreStop();
-    
+
     public void doPostStop(ArrayList list);
-    
+
     public void init(EmbeddedWebContainer embedded);
 }

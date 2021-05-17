@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for IT 12891, 17377");
@@ -63,8 +63,8 @@ public class WebTest {
 
         InputStream is = null;
         BufferedReader input = null;
-       
-        try {     
+
+        try {
             URL url = new URL("http://" + host  + ":" + port +
                 contextRoot + "/" + path);
             System.out.println("Connecting to: " + url.toString());

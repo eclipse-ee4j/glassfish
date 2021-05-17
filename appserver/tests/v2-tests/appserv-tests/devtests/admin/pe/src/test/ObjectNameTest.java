@@ -32,11 +32,11 @@ import javax.management.ObjectName;
 public class ObjectNameTest implements RemoteAdminQuicklookTest {
 
     private MBeanServerConnection mbsc;
-    
+
     private static final String BACKEND_MBEAN_ON = "com.sun.appserv:category=config,type=applications";
     private static final String SS_CUSTOM_MBEAN_CLASS = "testmbeans.SimpleStandard";
     private long start, end;
-    
+
     /** Creates a new instance of ObjectNameTest */
     public ObjectNameTest() {
     }
@@ -73,11 +73,11 @@ public class ObjectNameTest implements RemoteAdminQuicklookTest {
         final String target1 = "server"; //the DAS
         final Map<String, String> params = new HashMap<String, String> ();
         params.put(CustomMBeanConstants.IMPL_CLASS_NAME_KEY, SS_CUSTOM_MBEAN_CLASS);
-        
+
         //invalid domain
         String invalidDomainNameON = "foo:bar=baz";
         params.put(CustomMBeanConstants.OBJECT_NAME_KEY, invalidDomainNameON);
-        
+
         try {
             invokeCustomMBeanCreationMethod(target1, params, new HashMap<String, String> ());
         } catch (final Exception e) {
@@ -87,41 +87,41 @@ public class ObjectNameTest implements RemoteAdminQuicklookTest {
         //use of pattern
         invalidDomainNameON = "foo:bar=*,name=baz";
         params.put(CustomMBeanConstants.OBJECT_NAME_KEY, invalidDomainNameON);
-        
+
         try {
             invokeCustomMBeanCreationMethod(target1, params, new HashMap<String, String> ());
         } catch (final Exception e) {
             //exception should be thrown and should be squelched as test passes in that case.
             System.out.println(e.getMessage());
-        }        
+        }
     }
-    
+
     private void testDuplicateObjectNames() throws Exception {
         final String target1 = "server"; //the DAS
         final Map<String, String> params = new HashMap<String, String> ();
         params.put(CustomMBeanConstants.IMPL_CLASS_NAME_KEY, SS_CUSTOM_MBEAN_CLASS);
-        
+
         final String name = "custom" + System.currentTimeMillis();
         params.put(CustomMBeanConstants.NAME_KEY, name);
 
         String on = "user:bar=baz" + System.currentTimeMillis();
         params.put(CustomMBeanConstants.OBJECT_NAME_KEY, on);
-        
+
         invokeCustomMBeanCreationMethod(target1, params, new HashMap<String, String> ());
-        
+
         try {
             invokeCustomMBeanCreationMethod(target1, params, new HashMap<String, String> ());
         } catch (final Exception e) {
             //exception should be thrown and should be squelched as test passes in that case.
             System.out.println(e.getMessage());
-        }        
+        }
     }
 
     private void testEquivalentObjectNames() throws Exception {
         final String target1 = "server"; //the DAS
         final Map<String, String> params = new HashMap<String, String> ();
         params.put(CustomMBeanConstants.IMPL_CLASS_NAME_KEY, SS_CUSTOM_MBEAN_CLASS);
-        
+
         final String name = "custom" + System.currentTimeMillis();
         params.put(CustomMBeanConstants.NAME_KEY, name);
 
@@ -129,9 +129,9 @@ public class ObjectNameTest implements RemoteAdminQuicklookTest {
         final String p2 = "baz=bar" + System.currentTimeMillis();
         String on = "user:" + p1 + "," + p2;
         params.put(CustomMBeanConstants.OBJECT_NAME_KEY, on);
-        
+
         invokeCustomMBeanCreationMethod(target1, params, new HashMap<String, String> ());
-        
+
         try {
             on = "user:"+ p2 + "," + p1; //this is same as previous, hence the following should fail
             params.put(CustomMBeanConstants.OBJECT_NAME_KEY, on);
@@ -140,7 +140,7 @@ public class ObjectNameTest implements RemoteAdminQuicklookTest {
         } catch (final Exception e) {
             //exception should be thrown and should be squelched as test passes in that case.
             System.out.println(e.getMessage());
-        }        
+        }
     }
 
     private String invokeCustomMBeanCreationMethod(final String target, final Map<String, String> params, final Map<String, String> attributes) throws Exception {
@@ -163,7 +163,7 @@ public class ObjectNameTest implements RemoteAdminQuicklookTest {
         final Object[] operParams   = new Object[]{ target, name };
         final String[] operSign     = new String[]{ String.class.getName(), String.class.getName() };
         return ( (String) mbsc.invoke(on, oper, operParams, operSign) );
-        
+
     }
     ///// Private /////
 }

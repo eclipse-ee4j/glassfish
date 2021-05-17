@@ -23,19 +23,19 @@ import java.util.*;
 
 /**
  * This class contains the deployment extensions element for a particular
- * xml node. It can contains sub elements (other ExtensionElementDescriptor 
+ * xml node. It can contains sub elements (other ExtensionElementDescriptor
  * instances) or final leafs like attribute or string elements.
  *
  * @author Jerome Dochez
  */
 public class ExtensionElementDescriptor extends Descriptor implements Observer {
-    
+
     private List elementNames;
     private Map elementValues;
     private DynamicAttributesDescriptor attributes;
-    
+
     /**
-     * @return the value holder for all sub elements of 
+     * @return the value holder for all sub elements of
      * this deployment extension element
      */
     public Iterator getElementNames() {
@@ -44,7 +44,7 @@ public class ExtensionElementDescriptor extends Descriptor implements Observer {
         }
         return null;
     }
-    
+
     public void addElement(String elementName, Object value) {
         if (elementNames==null) {
             elementNames = new LinkedList();
@@ -53,16 +53,16 @@ public class ExtensionElementDescriptor extends Descriptor implements Observer {
         elementNames.add(elementName);
         elementValues.put(elementName, value);
     }
-    
+
     public Object getElement(String elementName) {
         if (elementValues!=null) {
             return elementValues.get(elementName);
         }
         return null;
     }
-    
+
     /**
-     * @return a value holder for all attributes of 
+     * @return a value holder for all attributes of
      * this deployment extension elements
      */
     public DynamicAttributesDescriptor getAttributes() {
@@ -71,15 +71,15 @@ public class ExtensionElementDescriptor extends Descriptor implements Observer {
             attributes.addObserver(this);
         }
         return attributes;
-    }    
-    
+    }
+
     /**
      * @return true if the deployment extension contains attributes
      */
     public boolean hasAttributes() {
         return attributes!=null;
     }
-    
+
     /**
      * notification of changed from our attributes/elements
      * storage
@@ -88,7 +88,7 @@ public class ExtensionElementDescriptor extends Descriptor implements Observer {
         setChanged();
         notifyObservers();
     }
-    
+
     /**
      * @return a meaningful string describing myself
      */

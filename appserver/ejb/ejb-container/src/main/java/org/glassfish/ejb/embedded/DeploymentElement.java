@@ -160,7 +160,7 @@ public class DeploymentElement {
                             if (_logger.isLoggable(Level.INFO)) {
                                 _logger.info("[DeploymentElement] adding library to ScatteredArchive " + m.element.getName());
                             }
-        
+
                             sa.addClassPath(m.element);
                         }
                     }
@@ -217,14 +217,14 @@ public class DeploymentElement {
                 }
 
                 File base = (m.isEJBModule)? resultFile : lib;
-                if (!f.isDirectory() && m.isEJBModule) { 
+                if (!f.isDirectory() && m.isEJBModule) {
                     File out = new File(base, FileUtils.makeFriendlyFilename(name));
                     if (_logger.isLoggable(Level.FINE)) {
                         _logger.fine("[DeploymentElement] Exploding jar to: " + out);
                     }
                     ModuleExploder.explodeJar(f, out);
                 } else {
-                    if (f.isDirectory()) { 
+                    if (f.isDirectory()) {
                         name = name + (m.isWebApp? "_war" : (m.isEJBModule? "_jar" : ".jar"));
                     }
                     File out = new File(base, name);

@@ -27,6 +27,6 @@ public interface InterceptorInjectionRemote {
     public static final String RemoteJNDIName =  InterceptorInjection.class.getSimpleName() + "/remote";
 
     public void sendMessage(String text);
-    
+
     public boolean checkMessageAndScoped(String text);
 }

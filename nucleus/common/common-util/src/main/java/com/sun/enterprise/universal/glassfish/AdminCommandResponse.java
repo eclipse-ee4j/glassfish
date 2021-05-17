@@ -28,7 +28,7 @@ import java.util.jar.*;
  * central place where we are aware of all the details so that callers don't
  * have to be.  If the format changes or the returned Object type changes then
  * this class will be the thing to change.
- * 
+ *
  * @author bnevins
  */
 public class AdminCommandResponse {
@@ -41,7 +41,7 @@ public class AdminCommandResponse {
     public static final String SUCCESS = "Success";
     public static final String WARNING = "Warning";
     public static final String FAILURE = "Failure";
-    
+
     public AdminCommandResponse(InputStream inStream) throws IOException {
         Manifest m = new Manifest(inStream);
         m.read(inStream);
@@ -53,11 +53,11 @@ public class AdminCommandResponse {
     public boolean isGeneratedHelp() {
         return isGeneratedHelp;
     }
-    
+
     public String getMainMessage() {
         return mainMessage;
     }
-    
+
     public boolean wasSuccess() {
         return exitCode == 0;
     }
@@ -65,7 +65,7 @@ public class AdminCommandResponse {
     public boolean wasWarning() {
         return exitCode == 1;
     }
-    
+
     public boolean wasFailure() {
         return exitCode == 2;
     }
@@ -79,7 +79,7 @@ public class AdminCommandResponse {
     public List<NameValue<String,String>> getMainKeys() {
         return mainKeys;
     }
-    
+
     public String getValue(String key) {
         for(NameValue<String,String> nv : mainKeys) {
             if(nv.getName().equals(key))
@@ -87,12 +87,12 @@ public class AdminCommandResponse {
         }
         return null;
     }
-    
+
     public List<NameValue<String,String>> getKeys(Map<String,String> map) {
         List<NameValue<String,String>> list = new LinkedList<NameValue<String,String>>();
-        
+
         String keysString = map.get("keys");
-        
+
         if(ok(keysString)) {
             String[] keys = keysString.split(";");
 
@@ -110,7 +110,7 @@ public class AdminCommandResponse {
                 list.add(new NameValue<String,String>(name, value));
             }
         }
-        
+
         return list;
     }
 
@@ -118,7 +118,7 @@ public class AdminCommandResponse {
         // keep the child elements in order
         Map<String,Map<String,String>> children = new LinkedHashMap<String,Map<String,String>>();
         String kidsString = map.get("children");
-        
+
         if(ok(kidsString)) {
             String[] kids = kidsString.split(";");
 
@@ -148,7 +148,7 @@ public class AdminCommandResponse {
         cause = mainRaw.get("cause");
         makeMainKeys();
     }
-    
+
     /**
      *  Format:
      * (1) Main Attributes usually have the bulk of the data.  Say you have 3 items
@@ -163,7 +163,7 @@ public class AdminCommandResponse {
      */
     private void makeMainKeys() {
         mainKeys = getKeys(mainRaw);
-        
+
         for(NameValue<String,String> nv : mainKeys) {
             if(nv.getName().equals(GENERATED_HELP)) {
                 isGeneratedHelp = Boolean.parseBoolean(nv.getValue());
@@ -174,7 +174,7 @@ public class AdminCommandResponse {
     }
 
     private boolean ok(String s) {
-        return s != null && s.length() > 0 && !s.equals("null"); 
+        return s != null && s.length() > 0 && !s.equals("null");
     }
 
     private Map<String, Map<String, String>> allRaw;

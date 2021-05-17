@@ -36,8 +36,8 @@ is divided into following sections:
 <project name="EntApp-ejb-impl" default="build" basedir=".." xmlns:ejbjarproject3="http://www.netbeans.org/ns/j2ee-ejbjarproject/3" xmlns:ejbjarproject2="http://www.netbeans.org/ns/j2ee-ejbjarproject/2" xmlns:ejbjarproject1="http://www.netbeans.org/ns/j2ee-ejbjarproject/1" xmlns:jaxws="http://www.netbeans.org/ns/jax-ws/1">
     <import file="ant-deploy.xml"/>
     <target name="default" depends="dist,javadoc" description="Build whole project."/>
-    <!-- 
-                INITIALIZATION SECTION 
+    <!--
+                INITIALIZATION SECTION
             -->
     <target name="-pre-init">
         <!-- Empty placeholder for easier customization. -->

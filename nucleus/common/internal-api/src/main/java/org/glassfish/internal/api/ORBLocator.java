@@ -68,5 +68,5 @@ public interface ORBLocator {
 
     public int getORBPort(ORB orb);
 
-    public String getORBHost(ORB orb);    
+    public String getORBHost(ORB orb);
 }

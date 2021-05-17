@@ -50,8 +50,8 @@ public class ACCAgentClassLoader extends URLClassLoader {
     public ACCAgentClassLoader(ClassLoader parent) {
         /*
          * This constructor is used by the VM to create a system class loader (as specified by -Djava.system.class.loader on the
-         * java command created from the appclient script). 
-         * 
+         * java command created from the appclient script).
+         *
          * Actually create two new loaders. One will handle the GlassFish
          * system JARs and the second will temporarily handle the application resources - typically for a splash screen.
          */
@@ -90,7 +90,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.loadClass(name);
         }
-        
+
         return getParent().loadClass(name);
     }
 
@@ -99,7 +99,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.getResource(name);
         }
-        
+
         return getParent().getResource(name);
     }
 
@@ -108,7 +108,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (isActive && isStillActive()) {
             return super.getResources(name);
         }
-        
+
         return getParent().getResources(name);
     }
 
@@ -117,14 +117,14 @@ public class ACCAgentClassLoader extends URLClassLoader {
             String propValue = System.getProperty("org.glassfish.appclient.acc.agentLoaderDone");
             isActive = (propValue != null);
         }
-        
+
         return isActive;
     }
 
     private static URL[] userClassPath() {
         URI GFSystemURI = GFSystemURI();
         List<URL> classPathURLs = classPathToURLs(System.getProperty("java.class.path"));
-        
+
         for (ListIterator<URL> classPathURLsIterator = classPathURLs.listIterator(); classPathURLsIterator.hasNext();) {
             URL classPathURL = classPathURLsIterator.next();
             try {
@@ -164,7 +164,7 @@ public class ACCAgentClassLoader extends URLClassLoader {
         if (classPath == null) {
             return emptyList();
         }
-        
+
         List<URL> classPathURLs = new ArrayList<>();
         try {
             for (String classPathElement : classPath.split(pathSeparator)) {

@@ -38,7 +38,7 @@
         <ant dir="basic" target="all"/>
         <record name="basic.output" action="stop" />
     </target>
-    
+
     <target name="mixedScoped">
         <record name="mixedScoped.output" action="start" />
         <ant dir="mixedScoped" target="all"/>
@@ -46,11 +46,11 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all    		(Executes all the jmsContext injection tests)
-			ant basic  		(Executes all the basic jmsContext injection tests)
-			ant mixedScoped  	(Executes all the mixed jmsContext injection tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all            (Executes all the jmsContext injection tests)
+            ant basic          (Executes all the basic jmsContext injection tests)
+            ant mixedScoped      (Executes all the mixed jmsContext injection tests)
+    </echo>
     </target>
 </project>

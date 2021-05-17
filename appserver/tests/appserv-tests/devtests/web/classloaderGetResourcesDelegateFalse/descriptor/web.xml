@@ -28,6 +28,6 @@
         <servlet-name>TestServlet</servlet-name>
         <url-pattern>/test</url-pattern>
     </servlet-mapping>
-     
+
 </web-app>
 

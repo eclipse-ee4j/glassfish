@@ -41,10 +41,10 @@ import org.glassfish.security.common.FileRealmHelper;
  * The change-admin-password command. The remote command implementation presents a different interface (set of options)
  * than the local command. This special local implementation adapts the local interface to the requirements of the
  * remote command.
- * 
+ *
  * The remote command is different in that it accepts the user name as an operand. This command accepts it via the
  * --user parameter. If the --user option isn't specified, this command prompts for the user name.
- * 
+ *
  * Another difference is that the local command will prompt for the old password only once. The default behavior
  * for @Param for passwords is to prompt for the password twice. *
  *

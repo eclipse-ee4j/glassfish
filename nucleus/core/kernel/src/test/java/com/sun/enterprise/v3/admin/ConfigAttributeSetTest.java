@@ -41,7 +41,7 @@ import java.beans.PropertyChangeEvent;
  * @author Jerome Dochez
  */
 // Ignored temporarily because it fails to inject CommandRunnerImpl as ModulesRegistry is not available
-@Ignore 
+@Ignore
 public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigListener {
 
     ServiceLocator habitat = Utils.instance.getHabitat(this);
@@ -59,7 +59,7 @@ public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigList
      */
     public String getFileName() {
         return "DomainTest";
-    }     
+    }
 
     @Test
      public void simpleAttributeSetTest() {
@@ -76,7 +76,7 @@ public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigList
                 break;
             }
         }
-        assertNotNull(listener);        
+        assertNotNull(listener);
 
         // Let's register a listener
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(listener);
@@ -89,14 +89,14 @@ public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigList
 
         // execute the set command.
         runner.getCommandInvocation("set", new HTMLActionReporter(), adminSubject()).parameters(parameters).execute();
-                                                                                                                                                                                                                           
+
         // check the result.
         String port = listener.getPort();
         assertEquals(port, "8090");
 
         // ensure events are delivered.
         habitat.<Transactions>getService(Transactions.class).waitForDrain();
-        
+
         // finally
         bean.removeListener(this);
 
@@ -105,7 +105,7 @@ public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigList
         assertEquals("8080", event.getOldValue());
         assertEquals("8090", event.getNewValue());
         assertEquals("port", event.getPropertyName());
-        
+
     }
 
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {

@@ -52,11 +52,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/test.jsp");
         System.out.println("Connecting to: " + url.toString());
@@ -64,7 +64,7 @@ public class WebTest {
         conn.connect();
 
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             System.err.println("Wrong response code. Expected: 200"
                                + ", received: " + responseCode);
             stat.addStatus(TEST_NAME, stat.FAIL);

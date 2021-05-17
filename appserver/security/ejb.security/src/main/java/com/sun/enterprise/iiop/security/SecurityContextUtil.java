@@ -44,7 +44,7 @@ import jakarta.inject.Singleton;
 /**
  * This class provides has the helper methods to deal with the SecurityContext .This represents the SecurityServiceImpl
  * of V2
- * 
+ *
  * @author Nithya Subramanian
  */
 
@@ -82,7 +82,7 @@ public class SecurityContextUtil implements PostConstruct {
 
     /**
      * This is called by the CSIv2 interceptor on the client before sending the IIOP message.
-     * 
+     *
      * @param the effective_target field of the PortableInterceptor ClientRequestInfo object.
      * @return a SecurityContext which is marshalled into the IIOP msg by the CSIv2 interceptor.
      */
@@ -116,7 +116,7 @@ public class SecurityContextUtil implements PostConstruct {
 
     /**
      * This is called by the CSIv2 interceptor on the client after a reply is received.
-     * 
+     *
      * @param the reply status from the call. The reply status field could indicate an authentication retry. The following
      * is the mapping of PI status to the reply_status field PortableInterceptor::SUCCESSFUL -> STATUS_PASSED
      * PortableInterceptor::SYSTEM_EXCEPTION -> STATUS_FAILED PortableInterceptor::USER_EXCEPTION -> STATUS_PASSED
@@ -145,7 +145,7 @@ public class SecurityContextUtil implements PostConstruct {
      * This is called by the CSIv2 interceptor on the server after receiving the IIOP message. If authentication fails a
      * FAILED status is returned. If a FAILED status is returned the CSIV2 interceptor will marshall the MessageError
      * service context and throw the NO_PERMISSION exception.
-     * 
+     *
      * @param the SecurityContext which arrived in the IIOP message.
      * @return the status
      */
@@ -233,7 +233,7 @@ public class SecurityContextUtil implements PostConstruct {
 
     /**
      * This is called by the CSIv2 interceptor on the server before sending the reply.
-     * 
+     *
      * @param the SecurityContext which arrived in the IIOP message.
      */
     public void sendingReply(SecurityContext context) {

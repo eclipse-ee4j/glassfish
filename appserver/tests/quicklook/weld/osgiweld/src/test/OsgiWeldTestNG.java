@@ -23,7 +23,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * Test Weld Osgi Bundle Integrity 
+ * Test Weld Osgi Bundle Integrity
  *
  * @author Santiago.PericasGeertsen@oracle.com
  * @author Roger.Kitain@oracle.com

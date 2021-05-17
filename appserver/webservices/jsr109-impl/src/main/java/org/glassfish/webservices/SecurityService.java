@@ -31,11 +31,11 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface SecurityService {
     Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc);
-    
+
     boolean doSecurity(HttpServletRequest hreq, EjbRuntimeEndpointInfo ejbEndpoint, String realmName, WebServiceContextImpl context);
     Principal getUserPrincipal(boolean isWeb);
     boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role);
-    
+
     void resetSecurityContext();
     void resetPolicyContext();
     ClientPipelineHook getClientPipelineHook(ServiceReferenceDescriptor ref);

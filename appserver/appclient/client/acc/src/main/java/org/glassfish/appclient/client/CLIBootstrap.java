@@ -36,16 +36,16 @@ import com.sun.enterprise.util.OS;
 /**
  * Constructs a java command to launch the ACC with the correct agent and command line arguments, based on the current
  * operating environment and the user's own command-line arguments.
- * 
+ *
  * <p>
  * The user might have specified JVM options as well as ACC options as well as arguments to be passed to the client.
  * Further, we need to make sure that the GlassFish extension libraries directories directories are included regardless
  * of whether the user specified any explicitly.
- * 
+ *
  * <p>
  * This program emits a java command line that will run the ACC so that it will launch the client. The emitted command
  * will need to look like this:
- * 
+ *
  * <pre>
  * {@code
  * java \
@@ -55,14 +55,14 @@ import com.sun.enterprise.util.OS;
  *   (arguments to be passed to the client)
  * }
  * </pre>
- * 
+ *
  * <p>
  * The general design of this class uses several inner classes, CommandLineElement and its extensions. These classes
  * have slightly different behavior depending on the specific type of command line element each represents. Each has a
  * regex pattern which it uses to decide whether it recognizes a particular command line element or not. Each also
  * implements (or inherits) the processValue method which actually consumes the command line element being handled --
  * and sometimes the next one as well if the element takes a value (such as -classpath).
- * 
+ *
  * @author Tim Quinn
  */
 public class CLIBootstrap {
@@ -86,55 +86,55 @@ public class CLIBootstrap {
     private JavaInfo java = new JavaInfo();
     private GlassFishInfo gfInfo = new GlassFishInfo();
     private UserVMArgs userVMArgs = new UserVMArgs(System.getProperty(ENV_VAR_PROP_PREFIX + "VMARGS"));
-    
+
     /**
      * Set up with various sub-types of command line elements
      */
-    private CommandLineElement 
+    private CommandLineElement
         /** options to the ACC that take a value */
-        accValuedOptions = new ACCValuedOption("-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver"), 
-        
+        accValuedOptions = new ACCValuedOption("-mainclass|-name|-xml|-configxml|-user|-password|-passwordfile|-targetserver"),
+
         /** options to the ACC that take no value */
-        accUnvaluedOptions = new ACCUnvaluedOption("-textauth|-noappinvoke|-usage|-help"), 
-        
-        jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions), 
-        jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings), 
-        otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions), 
+        accUnvaluedOptions = new ACCUnvaluedOption("-textauth|-noappinvoke|-usage|-help"),
+
+        jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions),
+        jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings),
+        otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions),
         arguments = new CommandLineElement(".*", Pattern.DOTALL);
-    
+
     /** Records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
-    
+
     /** command line elements from most specific to least specific matching pattern */
-    private CommandLineElement[] elementsInScanOrder = new CommandLineElement[] { 
+    private CommandLineElement[] elementsInScanOrder = new CommandLineElement[] {
             accValuedOptions,   // collects options into "agentArgs"
             accUnvaluedOptions, // collects options into "agentArgs"
             jvmValuedOptions,
             jvmPropertySettings,
-            jvmMainSetting, 
-            otherJVMOptions, 
+            jvmMainSetting,
+            otherJVMOptions,
             arguments };
 
     /**
      * Command line elements in the order they should appear on the generated command line
      * Add the elements in this order so they appear in the generated java command in the correct positions.
      */
-    private CommandLineElement[] elementsInOutputOrder = new CommandLineElement[] { 
-            jvmValuedOptions, 
-            jvmPropertySettings, 
+    private CommandLineElement[] elementsInOutputOrder = new CommandLineElement[] {
+            jvmValuedOptions,
+            jvmPropertySettings,
             otherJVMOptions,
-            jvmMainSetting, 
+            jvmMainSetting,
             arguments };
- 
+
 
     /** Arguments passed to the ACC Java agent, collected by "accValuedOptions" and "accUnvaluedOptions"  */
     private final AgentArgs agentArgs = new AgentArgs();
-   
 
-    
+
+
     // #### Main() Methods
-    
-    
+
+
     /**
      * @param args the command line arguments
      */
@@ -145,7 +145,7 @@ public class CLIBootstrap {
              */
             envToProps();
             CLIBootstrap boot = new CLIBootstrap();
-            
+
             /*
              * Because of how Windows passes arguments, the calling Windows script assigned the input arguments to an environment
              * variable. Parse that variable's value into the actual arguments.
@@ -153,15 +153,15 @@ public class CLIBootstrap {
             if (INPUT_ARGS != null) {
                 args = convertInputArgsVariable(INPUT_ARGS);
             }
-            
+
             String outputCommandLine = boot.run(args);
             if (isDebug) {
                 System.err.println(outputCommandLine);
             }
-            
+
             /*
              * Write the generated java command to System.out. The calling shell script will execute this command.
-             * 
+             *
              * Using print instead of println seems to work better. Using println added a \r to the end of the last command-line
              * argument on Windows under cygwin.
              */
@@ -185,7 +185,7 @@ public class CLIBootstrap {
             }
         }
     }
-    
+
     private static String[] convertInputArgsVariable(String inputArgs) {
         /*
          * The pattern matches a quoted string (double quotes around a string containing no double quote) or a non-quoted string
@@ -205,19 +205,19 @@ public class CLIBootstrap {
         return argList.toArray(new String[argList.size()]);
     }
 
-    
-    
-    
+
+
+
     // #### Instance methods
     CLIBootstrap() throws UserError {
     }
-    
-    
-    
+
+
+
     JavaInfo initJava() {
         return new JavaInfo();
     }
-    
+
     /**
      * Processes the user-provided command-line elements and creates the resulting output string.
      *
@@ -273,10 +273,10 @@ public class CLIBootstrap {
 
         return command.toString();
     }
-    
+
     /**
      * Adds JVM properties for various ACC settings.
-     * 
+     *
      * @param command
      */
     private void addProperties(final StringBuilder command) {
@@ -288,30 +288,30 @@ public class CLIBootstrap {
         command.append(' ').append(SYSTEM_CLASS_LOADER_PROPERTY_EXPR);
         command.append(' ').append(SECURITY_AUTH_LOGIN_CONFIG_PROPERTY_EXPR).append(quote(gfInfo.loginConfig().getAbsolutePath()));
     }
-    
+
     /**
      * Adds the -javaagent option to the command line.
-     * 
+     *
      */
     private void addAgentOption() throws UserError {
         otherJVMOptions.processValue(new String[] { "-javaagent:" + quote(gfInfo.agentJarPath()) + agentOptionsFromFile() }, 0);
     }
-    
+
     private boolean processCommandElement(StringBuilder command, CommandLineElement commandLineElement, boolean needSep) {
         if (needSep) {
             command.append(' ');
         }
-        
+
         return commandLineElement.format(command);
     }
-    
-    
-    
+
+
+
     // #### Static utility methods
 
     /**
      * Places double quote marks around a string if the string is not already so enclosed.
-     * 
+     *
      * @param string
      * @return the string wrapped in double quotes if not already that way; the original string otherwise
      */
@@ -319,7 +319,7 @@ public class CLIBootstrap {
         if (string.length() > 2 && string.charAt(0) != '"' && string.charAt(string.length() - 1) != '"') {
             return '\"' + string + '\"';
         }
-        
+
         return string;
     }
 
@@ -334,7 +334,7 @@ public class CLIBootstrap {
     private static String quoteSuppressTokenSubst(String string) {
         return (OS.isWindows() ? quote(string) : quote(string.replace("$", "\\$")));
     }
-    
+
     /**
      * Replaces commas in an argument value (which can confuse the ACC agent argument parsing because shells strip out
      * double-quotes) with a special sequence.
@@ -345,7 +345,7 @@ public class CLIBootstrap {
     public static String encodeArg(String string) {
         return string.replace(",", COMMA_IN_ARG_PLACEHOLDER);
     }
-    
+
     /**
      * Replaces occurrences of comma encoding with commas.
      *
@@ -355,7 +355,7 @@ public class CLIBootstrap {
     public static String decodeArg(String string) {
         return string.replace(COMMA_IN_ARG_PLACEHOLDER, ",");
     }
-    
+
 
     /**
      * Manages the arguments which will be passed to the ACC Java agent.
@@ -373,7 +373,7 @@ public class CLIBootstrap {
 
         /**
          * Adds an item to the Java agent arguments.
-         * 
+         *
          * @param item
          */
         final void add(String item) {
@@ -382,7 +382,7 @@ public class CLIBootstrap {
 
         /**
          * Adds an ACC argument to the Java agent arguments.
-         * 
+         *
          * @param accArg
          */
         final void addACCArg(String accArg) {
@@ -394,11 +394,11 @@ public class CLIBootstrap {
             return args.toString();
         }
     }
-    
-    
-    
+
+
+
     // #### Base classes uses for the concrete elements
-    
+
 
     /**
      * A command-line element. Various subtypes have some different behavior for some of the methods.
@@ -434,7 +434,7 @@ public class CLIBootstrap {
          * Processes the command line element at args[slot].
          * <p>
          * Subclass implementations might consume the next element as well.
-         * 
+         *
          * @param args
          * @param slot
          * @return next slot to be processed
@@ -449,13 +449,13 @@ public class CLIBootstrap {
             } else {
                 slot++;
             }
-            
+
             return slot;
         }
 
         /**
          * Returns whether there is a next argument.
-         * 
+         *
          * @param args
          * @param currentSlot
          * @return
@@ -510,7 +510,7 @@ public class CLIBootstrap {
         /**
          * Returns the separator character to be inserted in the emitted command line between values stored in the same instance
          * of this command line element.
-         * 
+         *
          * @return
          */
         char valueSep() {
@@ -519,7 +519,7 @@ public class CLIBootstrap {
 
         /**
          * Adds a representation for the specified value to the output command line, quoting the value if required and
-         * 
+         *
          * @param commandLine
          * @param useQuotes
          * @param v
@@ -530,7 +530,7 @@ public class CLIBootstrap {
                 commandLine.append(' ');
             }
             commandLine.append((useQuotes ? quoteSuppressTokenSubst(v) : v));
-            
+
             return commandLine;
         }
     }
@@ -582,13 +582,13 @@ public class CLIBootstrap {
             return !optValues.isEmpty();
         }
     }
-    
-    
-    
+
+
+
     // #### Concrete elements
-    
-    
-    
+
+
+
     /**
      * ACC options can appear until "-jar xxx" on the command line.
      */
@@ -619,7 +619,7 @@ public class CLIBootstrap {
             return false;
         }
     }
-    
+
     /**
      * ACC options match anywhere on the command line unless and until we see "-jar xxx" in which case we impose the
      * Java-style restriction that anything which follows the specification of the main class is an argument to be passed to
@@ -654,7 +654,7 @@ public class CLIBootstrap {
             return false;
         }
     }
-    
+
     private class JVMValuedOption extends ValuedOption {
 
         JVMValuedOption(final String patternString, final CommandLineElement vmargsJVMValuedOption) {
@@ -669,7 +669,7 @@ public class CLIBootstrap {
             return (!jvmMainSetting.isJarSetting()) && super.matches(element);
         }
     }
-    
+
     /**
      * A JVM command-line option. Only JVM options which appear before the main class setting are propagated to the output
      * command line as JVM options. If they appear after the main class setting then they are treated as arguments to the
@@ -794,7 +794,7 @@ public class CLIBootstrap {
                     Manifest manifest = jarFile.getManifest();
                     Attributes mainAttributes = manifest.getMainAttributes();
                     String mainClass = mainAttributes.getValue("Main-Class");
-                    
+
                     return mainClass == null ? "" : mainClass;
                 }
             } catch (IOException e) {
@@ -841,7 +841,7 @@ public class CLIBootstrap {
         PrintStream ps = new PrintStream(argsFile);
         ps.println(agentArgs.toString());
         ps.close();
-        
+
         return argsFile;
     }
 
@@ -890,7 +890,7 @@ public class CLIBootstrap {
             if (configXMLFile.canRead()) {
                 return configXMLFile;
             }
-            
+
             File sunACCXMLFile = new File(new File(home, ACC_CONFIG_PREFIX), "sun-acc.xml");
             if (sunACCXMLFile.canRead()) {
                 return sunACCXMLFile;
@@ -921,7 +921,7 @@ public class CLIBootstrap {
             return new File(libAppclient, "appclientlogin.conf");
         }
     }
-    
+
 
     /**
      * Collects information about the current Java implementation.
@@ -986,11 +986,11 @@ public class CLIBootstrap {
 
     /**
      * Handles user-specified VM arguments passed by the environment variable VMARGS.
-     * 
+     *
      * <p>
      * This is very much like the handling of the arguments on the more general command line, except that we expect only
      * valid VM arguments here.
-     * 
+     *
      * <p>
      * Some of the "main" CommandLineElements processed earlier in the class will use the inner command line elements here
      * to augment the values they process.
@@ -1002,7 +1002,7 @@ public class CLIBootstrap {
         private CommandLineElement evOtherJVMOptions;
 
         private final List<CommandLineElement> evElements = new ArrayList<CommandLineElement>();
-        
+
         UserVMArgs(String vmargs) throws UserError {
 
             if (isDebug) {

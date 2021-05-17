@@ -32,8 +32,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private SLSBHome home;
@@ -46,11 +46,11 @@ public class Client {
         client.doTest();
         System.out.println("[txtests] DONE doTest()...");
         stat.printSummary("txtests");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
         initSLSB();       //create MAX_TIMERS
 
@@ -106,4 +106,4 @@ public class Client {
     }
 
 }
-    
+

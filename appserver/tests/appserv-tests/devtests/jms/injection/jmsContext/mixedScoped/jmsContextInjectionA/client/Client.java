@@ -46,7 +46,7 @@ public class Client {
             String context2 = beanRemote.sendMessage2(text);
             System.out.println("context1:"+context1);
             System.out.println("context1:"+context2);
-            
+
             if (context1.indexOf(transactionScope) != -1){
                 System.out.println("The context variables used in the first call are in transaction scope.");
             }else{
@@ -54,7 +54,7 @@ public class Client {
                 STAT.addStatus(ejbName, STAT.FAIL);
                 return ;
             }
-            
+
             if (context2.indexOf(transactionScope) != -1){
                  System.out.println("The context variables used in the second call are in transaction scope.");
             }else{
@@ -62,10 +62,10 @@ public class Client {
                 STAT.addStatus(ejbName, STAT.FAIL);
                 return ;
             }
-            
+
             String context1Annotation = context1.substring(context1.indexOf(preIdentical),context1.indexOf(transactionScope));
             String context2Annotation = context2.substring(context2.indexOf(preIdentical),context2.indexOf(transactionScope));
-            
+
             if(context1Annotation.equals(context2Annotation)){
                 System.out.println("The context variables in the first and second calls to context.send() injected are using identical annotations.");
             }else{
@@ -73,7 +73,7 @@ public class Client {
                 STAT.addStatus(ejbName, STAT.FAIL);
                 return ;
             }
-            
+
             if (context1.substring(context1.indexOf(transactionScope)).equals(context2.substring(context2.indexOf(transactionScope)))) {
                 System.out.println("The context variables used in the first and second calls to context.send() take place in the same transaction.");
                 STAT.addStatus(ejbName, STAT.FAIL);
@@ -82,12 +82,12 @@ public class Client {
                 System.out.println("The context variables used in the first and second calls to context.send() take place in the different transaction.");
             }
             STAT.addStatus(ejbName, STAT.PASS);
-            
+
 
         } catch(Exception e) {
             e.printStackTrace();
             STAT.addStatus(ejbName, STAT.FAIL);
         }
     }
-    
+
 }

@@ -23,7 +23,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class SimpleMessageClient {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class SimpleMessageClient {
         QueueSender             queueSender = null;
         TextMessage             message = null;
         final int               NUM_MSGS = 3;
-	boolean                 passed = true;
+    boolean                 passed = true;
 
         try {
             jndiContext = new InitialContext();
@@ -77,33 +77,33 @@ public class SimpleMessageClient {
 
             for (int i = 0; i < NUM_MSGS; i++) {
                 message.setText("This is message " + (i + 1));
-		message.setIntProperty("Id",i);
+        message.setIntProperty("Id",i);
                 System.out.println("Sending message: " +
                     message.getText());
                 queueSender.send(message);
             }
-	   
-		for (int i=0; i< args.length; i++)
-			System.out.println("Client: "+ args[i]);
+
+        for (int i=0; i< args.length; i++)
+            System.out.println("Client: "+ args[i]);
 
            Thread.sleep(10000);
-	    Class.forName(args[0]);
-	    String url = args[1];
-	    java.sql.Connection con = DriverManager.getConnection(url,args[2],args[3]);
-	    ResultSet rs = con.createStatement().executeQuery("select exCount from mq_cmt_excpt");
-	    int count = 0;
-	    while (rs.next()){
-	        count = rs.getInt(1);
-	    }
+        Class.forName(args[0]);
+        String url = args[1];
+        java.sql.Connection con = DriverManager.getConnection(url,args[2],args[3]);
+        ResultSet rs = con.createStatement().executeQuery("select exCount from mq_cmt_excpt");
+        int count = 0;
+        while (rs.next()){
+            count = rs.getInt(1);
+        }
             rs.close();
-	    con.close();
-	    if (count != 15) {
-	       throw new Exception("test failed because the exception count was " + count);
-	    }
-	    System.out.println("Each message got redelivered " + (count/NUM_MSGS -1) + " times successfully and then stopped delivery");
+        con.close();
+        if (count != 15) {
+           throw new Exception("test failed because the exception count was " + count);
+        }
+        System.out.println("Each message got redelivered " + (count/NUM_MSGS -1) + " times successfully and then stopped delivery");
         } catch (Throwable e) {
             System.out.println("Exception occurred: " + e.toString());
-	    passed = false;
+        passed = false;
             stat.addStatus("simple mdb main", stat.FAIL);
         } finally {
             if (queueConnection != null) {

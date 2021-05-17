@@ -29,16 +29,16 @@ public class HelloWeb extends HttpServlet {
     public HelloWeb() {
         System.out.println("Servlet WEB-HELLO initialized");
     }
-   
+
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
 
         PrintWriter pw = res.getWriter();
         try {
-			pw.println("Hello World !");
-  		} catch(Exception e) {
-        	e.printStackTrace();
+            pw.println("Hello World !");
+          } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 }

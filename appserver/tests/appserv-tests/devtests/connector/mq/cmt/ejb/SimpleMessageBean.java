@@ -37,18 +37,18 @@ public class SimpleMessageBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In "
             + "SimpleMessageBean.setMessageDrivenContext()");
-	this.mdc = mdc;
+    this.mdc = mdc;
     }
 
     public void ejbCreate() {
-	System.out.println("In SimpleMessageBean.ejbCreate()");
+    System.out.println("In SimpleMessageBean.ejbCreate()");
     }
 
     public void onMessage(Message inMessage) {
         TextMessage msg = null;
 
         System.out.println("MQ-CMT about to updateDB");
-	updateDB();
+    updateDB();
         System.out.println("MQ-CMT after updateDB");
 
         try {
@@ -65,32 +65,32 @@ public class SimpleMessageBean implements MessageDrivenBean,
         } catch (Throwable te) {
             te.printStackTrace();
         }
-	throw new RuntimeException("Test exception");
+    throw new RuntimeException("Test exception");
     }  // onMessage
 
     private void updateDB() {
         synchronized(lock){
         try {
-	    //Class.forName("com.inet.ora.OraDriver");
-	    Class.forName("org.apache.derby.jdbc.ClientDriver");
+        //Class.forName("com.inet.ora.OraDriver");
+        Class.forName("org.apache.derby.jdbc.ClientDriver");
             //String url = "jdbc:inetora::wrx.india.sun.com:1521:dbsmpl1";
             String url = "jdbc:derby://localhost:1527/testdb;create=true;";
-	    java.sql.Connection con = DriverManager.getConnection(url,"dbuser", "dbpassword");
+        java.sql.Connection con = DriverManager.getConnection(url,"dbuser", "dbpassword");
             ResultSet rs = con.createStatement().executeQuery("select exCount from mq_cmt_excpt");
-	    int count = 0;
-	    while (rs.next()){
-	        count = rs.getInt(1);
+        int count = 0;
+        while (rs.next()){
+            count = rs.getInt(1);
                 System.out.println("MQ-CMT updateDB : " + count);
-	    }
-	    rs.close();
-	    count++;
-	    String qry = "update mq_cmt_excpt set exCount="+ count ;
+        }
+        rs.close();
+        count++;
+        String qry = "update mq_cmt_excpt set exCount="+ count ;
             System.out.println("MQ-CMT updateDB : query : " + qry);
-	    con.createStatement().executeUpdate(qry);
-	    con.close();
-	} catch(Exception e) {
+        con.createStatement().executeUpdate(qry);
+        con.close();
+    } catch(Exception e) {
            System.out.println("Error:" + e.getMessage());
-	} 
+    }
         }
     }
 

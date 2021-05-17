@@ -258,7 +258,7 @@ public final class InstanceSupport {
 
         InstanceEvent event = new InstanceEvent(wrapper, filter, type,
                                                 request, response, exception);
-        /* SJSAS 6374619        
+        /* SJSAS 6374619
         InstanceListener interested[] = null;
         synchronized (listeners) {
             interested = (InstanceListener[]) listeners.clone();

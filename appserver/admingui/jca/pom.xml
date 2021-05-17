@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-jca-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console Connectors Plugin</name>
     <description>Connectors plugin bundle for GlassFish Admin Console</description>
 

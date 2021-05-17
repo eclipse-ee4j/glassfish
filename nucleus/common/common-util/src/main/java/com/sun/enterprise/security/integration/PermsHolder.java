@@ -28,12 +28,12 @@ public class PermsHolder {
 
 
     /**
-     * The PermissionCollection for each CodeSource 
+     * The PermissionCollection for each CodeSource
      */
     private ConcurrentHashMap<String, PermissionCollection> loaderPC =
         new ConcurrentHashMap<String, PermissionCollection>();
 
-    
+
     /**
      * EE permissions for  a module
      */
@@ -45,50 +45,50 @@ public class PermsHolder {
     private PermissionCollection declaredPermissionCollection = null;
 
     public PermsHolder() {
-        
+
     }
 
-    public PermsHolder(PermissionCollection eePC, 
+    public PermsHolder(PermissionCollection eePC,
             PermissionCollection declPC,
             PermissionCollection restrictPC) {
-     
+
         setEEPermissions(eePC);
         setDeclaredPermissions(declPC);
         setRestrictPermissions(restrictPC);
     }
 
-    public void setEEPermissions(PermissionCollection eePc) {        
+    public void setEEPermissions(PermissionCollection eePc) {
         eePermissionCollection = eePc;
     }
 
 
-    public void setDeclaredPermissions(PermissionCollection declaredPc) {        
+    public void setDeclaredPermissions(PermissionCollection declaredPc) {
         declaredPermissionCollection = declaredPc;
     }
-    
+
     public void setRestrictPermissions(PermissionCollection restrictPC) {
     }
     public PermissionCollection getCachedPerms(CodeSource codesource) {
 
         if (codesource == null)
             return null;
-        
+
         String codeUrl = codesource.getLocation().toString();
-        
+
         return loaderPC.get(codeUrl);
     }
-    
-    public PermissionCollection getPermissions(CodeSource codesource, 
+
+    public PermissionCollection getPermissions(CodeSource codesource,
             PermissionCollection parentPC ) {
 
         String codeUrl = codesource.getLocation().toString();
         PermissionCollection cachedPermissons = loaderPC.get(codeUrl);
 
         if (cachedPermissons != null)
-            return cachedPermissons;        
-        else 
+            return cachedPermissons;
+        else
             cachedPermissons = new Permissions();
-        
+
         PermissionCollection pc = parentPC;
 
         if (pc != null) {
@@ -98,8 +98,8 @@ public class PermsHolder {
                 cachedPermissons.add(p);
             }
         }
-        
-            
+
+
         if (declaredPermissionCollection != null) {
             Enumeration<Permission> dperms =  this.declaredPermissionCollection.elements();
             while (dperms.hasMoreElements()) {
@@ -107,22 +107,22 @@ public class PermsHolder {
                 cachedPermissons.add(p);
             }
         }
-        
+
         if (eePermissionCollection != null) {
             Enumeration<Permission> eeperms =  eePermissionCollection.elements();
             while (eeperms.hasMoreElements()) {
                 Permission p = eeperms.nextElement();
                 cachedPermissons.add(p);
             }
-            
+
         }
- 
-        PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl, cachedPermissons);                
+
+        PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl, cachedPermissons);
         if (tmpPc != null) {
             cachedPermissons = tmpPc;
         }
 
         return cachedPermissons;
-        
+
     }
 }

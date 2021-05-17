@@ -66,7 +66,7 @@ public class ClassFileSource
      */
      /*
     public ArchiveEntry getArchiveEntry() {
-	return archiveEntry;
+    return archiveEntry;
     }
     */
 
@@ -80,11 +80,11 @@ public class ClassFileSource
 /*
       //@yury: added ArchiveEntry processing [[[[
       if ((null == getArchiveEntry()) ^ (null == getArchiveEntry())) {
-	  return false;
+      return false;
       }
 
       if (null != getArchiveEntry() ) {
-	  return getArchiveEntry().getName().equals(other.getArchiveEntry().getName());
+      return getArchiveEntry().getName().equals(other.getArchiveEntry().getName());
       }
       //@yury: added ArchiveEntry processing ]]]]]
 */
@@ -92,7 +92,7 @@ public class ClassFileSource
     //^olsen: simplify control flow
     if (isZipped())
       return (other.isZipped() &&
-	      other.zipFile.getName().equals(zipFile.getName()));
+          other.zipFile.getName().equals(zipFile.getName()));
     else if (other.isZipped())
       return false;
     else if (other.classFile != null && classFile != null)
@@ -168,9 +168,9 @@ public class ClassFileSource
      */
 /*
     public ClassFileSource(String className, ArchiveEntry entry) {
-	archiveEntry = entry;
-	theExpectedClassName = className;
-	theOriginalExpectedClassName = className;
+    archiveEntry = entry;
+    theExpectedClassName = className;
+    theOriginalExpectedClassName = className;
     }
 */
 
@@ -192,7 +192,7 @@ public class ClassFileSource
    * Constructor
    * @param className The expected name of the class
    * @param byteCodeStream containing the class file.
-   * 
+   *
    */
   //@olsen: added constructor
   public ClassFileSource(String className, InputStream byteCodeStream) {
@@ -223,7 +223,7 @@ public class ClassFileSource
 /*
       //@yury: ArchiveEntry case sanity check
       if ( null != archiveEntry) {
-	  throw new IllegalArgumentException("----- Not implemented yet");
+      throw new IllegalArgumentException("----- Not implemented yet");
       }
 */
 
@@ -232,7 +232,7 @@ public class ClassFileSource
     else {
       String fullPath = FilePath.getAbsolutePath(classFile);
       File dir = new File(fullPath.substring(
-	   0, fullPath.lastIndexOf(File.separatorChar)+1));
+       0, fullPath.lastIndexOf(File.separatorChar)+1));
       File f = new File(dir, unpackagedName(className) + ".class");//NOI18N
       return new ClassFileSource(className, f);
     }
@@ -248,16 +248,16 @@ public class ClassFileSource
 /*
       //@yury: ArchiveEntry case sanity check
       if ( null != archiveEntry) {
-	  return new DataInputStream(new BufferedInputStream(archiveEntry.createInputStream()));
+      return new DataInputStream(new BufferedInputStream(archiveEntry.createInputStream()));
       }
 */
     //@olsen: cosmetics
     if (isZipped()) {
       ZipEntry entry =
-	zipFile.getEntry(ClassPath.zipFileNameOf(theExpectedClassName));
+    zipFile.getEntry(ClassPath.zipFileNameOf(theExpectedClassName));
       if (entry == null)
-	throw new FileNotFoundException(
-	"The zip file member " + theExpectedClassName + " was not found.");
+    throw new FileNotFoundException(
+    "The zip file member " + theExpectedClassName + " was not found.");
       return new DataInputStream(zipFile.getInputStream(entry));
     }
     //@olsen: added case
@@ -266,7 +266,7 @@ public class ClassFileSource
     }
     return new DataInputStream(
       new BufferedInputStream(
-	new FileInputStream(classFile)));
+    new FileInputStream(classFile)));
   }
 
   /**
@@ -278,21 +278,21 @@ public class ClassFileSource
   public long modificationDate() throws FileNotFoundException {
     if (cachedModDate == 0) {
 /*
-	//@yury: ArchiveEntry case sanity check
-	if ( null != archiveEntry) {
-	    throw new IllegalArgumentException("----- Not implemented yet");
-	}
+    //@yury: ArchiveEntry case sanity check
+    if ( null != archiveEntry) {
+        throw new IllegalArgumentException("----- Not implemented yet");
+    }
 */
 
       if (isZipped()) {
-	ZipEntry entry =
-	  zipFile.getEntry(ClassPath.zipFileNameOf(theOriginalExpectedClassName));
-	if (entry == null)
-	  throw new FileNotFoundException("The zip file member was not found.");
-	cachedModDate = entry.getTime();
+    ZipEntry entry =
+      zipFile.getEntry(ClassPath.zipFileNameOf(theOriginalExpectedClassName));
+    if (entry == null)
+      throw new FileNotFoundException("The zip file member was not found.");
+    cachedModDate = entry.getTime();
       }
       else if (classFile != null)
-	cachedModDate = classFile.lastModified();
+    cachedModDate = classFile.lastModified();
     }
 
     return cachedModDate;
@@ -326,17 +326,17 @@ public class ClassFileSource
         = new StringTokenizer(theExpectedClassName, "/", false);//NOI18N
     while (parser.hasMoreTokens()) {
       if (prevToken != null) {
-	buf.append(File.separatorChar);
-	buf.append(prevToken);
+    buf.append(File.separatorChar);
+    buf.append(prevToken);
 
-	File currDir = new File(buf.toString());
-	if (!currDir.isDirectory()) {
-	  if (!currDir.mkdir())
+    File currDir = new File(buf.toString());
+    if (!currDir.isDirectory()) {
+      if (!currDir.mkdir())
             //@olsen: support for I18N
             throw new UserException(
                 getI18N("enhancer.unable_to_create_dir",//NOI18N
                       currDir.getPath()));
-	}
+    }
       }
       prevToken = parser.nextToken();
     }
@@ -352,19 +352,19 @@ public class ClassFileSource
   public File computeDestination(File destDir)
       throws IOException, FileNotFoundException {
       if (destDir != null) {
-	File finalDestDir = computeDestinationDir(destDir);
-	String theFinalClassComponent = "";//NOI18N
-	StringTokenizer parser =
+    File finalDestDir = computeDestinationDir(destDir);
+    String theFinalClassComponent = "";//NOI18N
+    StringTokenizer parser =
             new StringTokenizer(theExpectedClassName, "/", false);//NOI18N
-	while (parser.hasMoreTokens())
-	  theFinalClassComponent = parser.nextToken();
-	return new File(finalDestDir, theFinalClassComponent + ".class");//NOI18N
+    while (parser.hasMoreTokens())
+      theFinalClassComponent = parser.nextToken();
+    return new File(finalDestDir, theFinalClassComponent + ".class");//NOI18N
       }
       else
-	/* Note: this is wrong when repackaging occurs but we currently
-	   require a destination directory to be specified, so it doesn't
-	   matter. */
-	return classFile;
+    /* Note: this is wrong when repackaging occurs but we currently
+       require a destination directory to be specified, so it doesn't
+       matter. */
+    return classFile;
   }
 
   /**
@@ -375,7 +375,7 @@ public class ClassFileSource
 /*
       //@yury: ArchiveEntry case sanity check
       if ( null != archiveEntry) {
-	  throw new IllegalArgumentException("----- Must never call here");
+      throw new IllegalArgumentException("----- Must never call here");
       }
 */
 

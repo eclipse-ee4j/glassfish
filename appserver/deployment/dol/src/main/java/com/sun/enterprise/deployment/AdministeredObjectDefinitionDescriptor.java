@@ -30,12 +30,12 @@ public class AdministeredObjectDefinitionDescriptor extends AbstractConnectorRes
     // the <description> element will be processed by base class
     private String interfaceName;
     private String className;
-    
+
     public AdministeredObjectDefinitionDescriptor() {
         super();
         setResourceType(AODD);
     }
-    
+
     public String getInterfaceName() {
         return interfaceName;
     }

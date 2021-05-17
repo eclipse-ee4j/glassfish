@@ -56,7 +56,7 @@ public class IdmService implements PostConstruct, IdentityManagement {
 
     @Inject
     private volatile ServerEnvironmentImpl env = null;
-    
+
     private char[] masterPassword;
 
     private static final String FIXED_KEY = "master-password"; //the fixed key for master-password file
@@ -80,14 +80,14 @@ public class IdmService implements PostConstruct, IdentityManagement {
             masterPassword = "changeit".toCharArray(); //the default;
         }
     }
-    
+
     @Override
     public char[] getMasterPassword() {
         return Arrays.copyOf(masterPassword, masterPassword.length);
     }
 
     ///// All Private
-    
+
     private boolean setFromMasterPasswordFile() {
         try {
             File mp = env.getMasterPasswordFile();

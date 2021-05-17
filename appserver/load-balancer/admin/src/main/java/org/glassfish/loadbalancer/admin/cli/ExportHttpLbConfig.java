@@ -63,12 +63,12 @@ import jakarta.inject.Inject;
 @I18n("export.http.lb.config")
 @RestEndpoints({
     @RestEndpoint(configBean=LbConfig.class,
-        opType=RestEndpoint.OpType.POST, // TODO: Should probable be GET 
-        path="export-http-lb-config", 
+        opType=RestEndpoint.OpType.POST, // TODO: Should probable be GET
+        path="export-http-lb-config",
         description="export-http-lb-config"),
     @RestEndpoint(configBean=LoadBalancer.class,
-        opType=RestEndpoint.OpType.POST, // TODO: Should probable be GET 
-        path="export-http-lb-config", 
+        opType=RestEndpoint.OpType.POST, // TODO: Should probable be GET
+        path="export-http-lb-config",
         description="export-http-lb-config",
         params={
             @RestParam(name="lbname", value="$parent")
@@ -150,7 +150,7 @@ public class ExportHttpLbConfig implements AdminCommand {
             if (!loadbalancerDir.exists()) {
                 boolean isMkdirSuccess = loadbalancerDir.mkdir();
                 if(!isMkdirSuccess){
-                	String msg = LbLogUtil.getStringManager().getString(
+                    String msg = LbLogUtil.getStringManager().getString(
                             "directoryCreationFailed");
                     throw new Exception(msg);
                 }
@@ -201,7 +201,7 @@ public class ExportHttpLbConfig implements AdminCommand {
                 }
             }
         }
-    
+
 
     private void retrieveLbConfig(AdminCommandContext context, File lbConfigFile,
                                   File tmpLbXmlFile) throws Exception {

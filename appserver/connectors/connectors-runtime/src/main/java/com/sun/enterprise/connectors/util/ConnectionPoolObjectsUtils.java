@@ -344,7 +344,7 @@ public final class ConnectionPoolObjectsUtils {
             moduleNameFromPoolName = poolName.substring(0, patternStart);
         }
 
-        // If pool name contains more than 2 #, return false as the 
+        // If pool name contains more than 2 #, return false as the
         // default system pool will have exacly one # for a standalone rar
         // and exactly two #s for an embedded rar
         ResourcesUtil resUtil = ResourcesUtil.createInstance();

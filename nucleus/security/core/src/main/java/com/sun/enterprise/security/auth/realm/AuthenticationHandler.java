@@ -20,8 +20,8 @@ import java.security.Principal;
 import com.sun.enterprise.security.auth.*;
 
 /**
- * This interface is used by the Authentication Service to have the 
- * Principal authenticated by the realm. A realm provides an 
+ * This interface is used by the Authentication Service to have the
+ * Principal authenticated by the realm. A realm provides an
  * implementation of this interface.
  * @author Harish Prabandham
  * @author Harpreet Singh
@@ -35,7 +35,7 @@ public interface AuthenticationHandler {
     public Realm getRealm();
 
     /**
-     * This method authenticates the given principal using the specified 
+     * This method authenticates the given principal using the specified
      * authentication data and the Principal's Credentials. The result of
      * the authentication is returned back.
      * @param The principal (user) being authenticated.
@@ -44,5 +44,5 @@ public interface AuthenticationHandler {
      * authentication.
      */
     public boolean doAuthentication(String principalName,
-				    byte[] authData);
+                    byte[] authData);
 }

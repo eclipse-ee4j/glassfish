@@ -37,7 +37,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -49,13 +49,13 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*Bean*.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common">
         <antcall target="deploy-jms-common"/>
         <antcall target="create-jms-resource-common">
@@ -73,16 +73,16 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common" >
         <antcall target="test-send-receive-message"/>
         <antcall target="test-send-recreate-fail"/>
         <antcall target="test-send-create-newdomain"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup" depends="init-common">
         <antcall target="undeploy-jms-common"/>
@@ -103,67 +103,67 @@
             <param name="userPassword" value="password1"/>
             <param name="jmsServer" value=""/>
             <param name="vardir" value=""/>
-	</antcall>
+    </antcall>
         <antcall target="runclient-common">
-            <param name="appclient.application.args" 
-	           value="TestNewUser SENDRECEIVE VERIFY user1 password1"/>
-	</antcall>
+            <param name="appclient.application.args"
+               value="TestNewUser SENDRECEIVE VERIFY user1 password1"/>
+    </antcall>
     </target>
 
     <target name="test-send-recreate-fail">
         <antcall target="runclient-common">
-            <param name="appclient.application.args" 
-	           value="SettingupLooseMessageOnRecreate SEND NOVERIFY user1 password1"/>
-	</antcall>
-	<antcall target="start-clean-server"/>
-	<antcall target="setup"/>
-	<antcall target="deploy-common"/>
+            <param name="appclient.application.args"
+               value="SettingupLooseMessageOnRecreate SEND NOVERIFY user1 password1"/>
+    </antcall>
+    <antcall target="start-clean-server"/>
+    <antcall target="setup"/>
+    <antcall target="deploy-common"/>
         <antcall target="create-jms-user">
             <param name="userName" value="user1"/>
             <param name="userPassword" value="password1"/>
             <param name="jmsServer" value=""/>
             <param name="vardir" value=""/>
             <param name="FAILONERR" value="true"/>
-	</antcall>
+    </antcall>
         <antcall target="runclient-common">
-            <param name="appclient.application.args" 
-	           value="TestLooseMessageOnRecreate RECEIVE NOVERIFY user1 password1"/>
-	</antcall>
+            <param name="appclient.application.args"
+               value="TestLooseMessageOnRecreate RECEIVE NOVERIFY user1 password1"/>
+    </antcall>
     </target>
     <target name="test-send-create-newdomain">
-	<antcall target="stopDomain"/>
-	<antcall target="create-domain-common">
+    <antcall target="stopDomain"/>
+    <antcall target="create-domain-common">
             <param name="admin.domain" value="domain2"/>
             <param name="http.port" value="48080"/>
-	    <param name="orb.port" value="43700"/>			
-	</antcall>
-	<antcall target="startDomain">
+        <param name="orb.port" value="43700"/>
+    </antcall>
+    <antcall target="startDomain">
             <param name="admin.domain" value="domain2"/>
-	</antcall>
+    </antcall>
         <antcall target="create-jms-user">
             <param name="userName" value="user1"/>
             <param name="userPassword" value="password1"/>
             <param name="jmsServer" value=""/>
             <param name="vardir" value="-varhome ${env.S1AS_HOME}/domains/domain2/imq"/>
             <param name="FAILONERR" value="true"/>
-	</antcall>
-	<antcall target="setup"/>
+    </antcall>
+    <antcall target="setup"/>
         <antcall target="runclient-common">
-            <param name="appclient.application.args" 
-	           value="SendMessageToNewDomainMQStore SEND NOVERIFY user1 password1"/>
-	</antcall>
-	<antcall target="deploy-common"/>
+            <param name="appclient.application.args"
+               value="SendMessageToNewDomainMQStore SEND NOVERIFY user1 password1"/>
+    </antcall>
+    <antcall target="deploy-common"/>
         <antcall target="runclient-common">
-            <param name="appclient.application.args" 
-	           value="TestReceiveNewDomainMQStore RECEIVE VERIFY user1 password1"/>
-	</antcall>
-	<antcall target="stopDomain">
+            <param name="appclient.application.args"
+               value="TestReceiveNewDomainMQStore RECEIVE VERIFY user1 password1"/>
+    </antcall>
+    <antcall target="stopDomain">
             <param name="admin.domain" value="domain2"/>
-	</antcall>
-	<antcall target="delete-domain-common">
+    </antcall>
+    <antcall target="delete-domain-common">
             <param name="admin.domain" value="domain2"/>
-	</antcall>
-	<antcall target="startDomain"/>
+    </antcall>
+    <antcall target="startDomain"/>
     </target>
 
     <target name="create-jms-user" depends="init-common">

@@ -117,7 +117,7 @@ public class AdminMain {
      * Get set of JAR files that is used to locate local commands (CLICommand). Results can contain JAR files or directories
      * where all JAR files are used. It must return all JARs or directories with acceptable CLICommands excluding
      * admin-cli.jar. Default implementation returns INSTALL_ROOT_PROPERTY/lib/asadmin
-     * 
+     *
      * @return set of JAR files or directories with JAR files
      */
     protected Set<File> getExtensions() {
@@ -404,7 +404,7 @@ public class AdminMain {
 
     /**
      * Returns source JAR file for given class.
-     * 
+     *
      * @param cls Must be classic class - NOT inner class
      */
     public static File getJarForClass(Class cls) {

@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -47,7 +47,7 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         //Delete the property used to test after the test finished
         gotoDasPage();
         clickAndWait(ID_AVAILABILITY_SERVICE_TREE_NODE);
@@ -58,7 +58,7 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
     }
 
-//    //TODO:the test need to be finished after the issue of GLASSFISH-20810 had to be resolved! 
+//    //TODO:the test need to be finished after the issue of GLASSFISH-20810 had to be resolved!
 //    @Test
 //    public void testWebContainerAvailability() {
 //        gotoDasPage();
@@ -94,7 +94,7 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
 //        setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", generateRandomString());
 //        clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
 //        assertTableRowCount("propertyForm:basicTable", count);
-//        
+//
 //    }
 
     @Test
@@ -107,21 +107,21 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
 
         ClusterTest ct = new ClusterTest();
         ct.createCluster(clusterName);
-        
+
         clickAndWait("treeForm:tree:configurations:" + clusterName + "-config:availabilityService:availabilityService_link");
         clickAndWait("propertyForm:availabilityTabs:jmsAvailabilityTab");
 
         if (!driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:AvailabilityEnabledProp:avail")).isSelected()) {
             clickAndWait("propertyForm:propertySheet:propertSectionTextField:AvailabilityEnabledProp:avail:avail_label");
         }
-        
+
         isElementPresent("propertyForm:propertySheet:propertSectionTextField:ConfigStoreTypeProp:ConfigStoreType");
         Select select = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:ConfigStoreTypeProp:ConfigStoreType")));
         select.selectByVisibleText("masterbroker");
         isElementPresent("propertyForm:propertySheet:propertSectionTextField:MessageStoreTypeProp:MessageStoreType");
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:MessageStoreTypeProp:MessageStoreType")));
         select1.selectByVisibleText("file");
-        
+
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:DbVendorProp:DbVendor", DB_VENDOR);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:DbUserNameProp:DbUserName", DB_USER);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:DbPasswordProp:DbPassword", DB_PASSWORD);
@@ -133,7 +133,7 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", generateRandomString());
         sleep(500);
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", generateRandomString());
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
 
@@ -149,7 +149,7 @@ public class AvailabilityServiceTest extends BaseSeleniumTestClass {
         assertEquals(DB_PASSWORD, getValue("propertyForm:propertySheet:propertSectionTextField:DbPasswordProp:DbPassword", "value"));
         assertEquals(DB_URL, getValue("propertyForm:propertySheet:propertSectionTextField:DbUrlProp:DbUrl", "value"));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         //Delete the property used to test after the test finished
         clickByIdAction("propertyForm:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("propertyForm:basicTable:topActionsGroup1:button1");

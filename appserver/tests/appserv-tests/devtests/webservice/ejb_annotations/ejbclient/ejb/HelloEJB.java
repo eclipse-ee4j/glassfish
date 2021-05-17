@@ -22,18 +22,18 @@ import jakarta.xml.ws.WebServiceRef;
 import endpoint.WebServiceEJBService;
 import endpoint.WebServiceEJB;
 
-@Stateless 
+@Stateless
 public class HelloEJB implements Hello {
 
 
    @WebServiceRef
    WebServiceEJBService webService;
- 
+
     public String invoke(String string) {
-        System.out.println("invoked with " + string); 
-	System.out.println("getting the port now from " + webService);
-	WebServiceEJB ejb = webService.getWebServiceEJBPort();
-	System.out.println("got " + ejb);
-	return ejb.sayHello(string);
+        System.out.println("invoked with " + string);
+    System.out.println("getting the port now from " + webService);
+    WebServiceEJB ejb = webService.getWebServiceEJBPort();
+    System.out.println("got " + ejb);
+    return ejb.sayHello(string);
    }
 }

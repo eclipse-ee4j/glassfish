@@ -33,7 +33,7 @@ public class InterceptorG {
 
     @AroundInvoke
     Object aroundInvoke(InvocationContext ctx)
-	        throws Exception {
+            throws Exception {
         Common.aroundInvokeCalled(ctx, "G");
         Object instance = ctx.getTarget();
         if( instance instanceof SlessEJB6 ) {
@@ -41,5 +41,5 @@ public class InterceptorG {
         }
         return ctx.proceed();
     }
-   
+
 }

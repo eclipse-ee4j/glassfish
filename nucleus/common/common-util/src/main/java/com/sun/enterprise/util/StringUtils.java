@@ -130,14 +130,14 @@ public class StringUtils {
             return "";
         }
 
-        s = s.replace('\\', '/');	// make life easier for the next steps...
+        s = s.replace('\\', '/');    // make life easier for the next steps...
 
         int index = s.lastIndexOf('/');
 
         if (index < 0) {
-            return "";	// can't happen!!!
+            return "";    // can't happen!!!
         }
-        s = s.substring(0, index);	// this will truncate the last '/'
+        s = s.substring(0, index);    // this will truncate the last '/'
 
         index = s.lastIndexOf('/');
 
@@ -201,7 +201,7 @@ public class StringUtils {
         int end = 0;
 
         for (end = s.indexOf('\n', start); end >= 0 && start < s.length(); end = s.indexOf('\n', start)) {
-            v.addElement(s.substring(start, end));	// does NOT include the '\n'
+            v.addElement(s.substring(start, end));    // does NOT include the '\n'
             start = end + 1;
         }
 
@@ -649,7 +649,7 @@ public class StringUtils {
         }
         return result.toString();
     }
-    
+
     /** If given {@code String} is {@code null} then returns empty {@code String}
      * otherwise returns given {@code String}
      */

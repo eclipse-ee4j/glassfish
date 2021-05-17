@@ -21,12 +21,12 @@ import java.io.Serializable;
 /**
  * An interface that creates an Object that was serialized using
  * IndirectlySerializable
- * 
+ *
  * @author Mahesh Kannan
  */
 
 public interface SerializableObjectFactory extends Serializable {
 
-	public Object createObject() throws java.io.IOException;
+    public Object createObject() throws java.io.IOException;
 
 }

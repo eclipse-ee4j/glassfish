@@ -28,10 +28,10 @@ import org.glassfish.logging.annotation.LoggerInfo;
 /* Module private */
 public class InternalLoggerInfo {
     public static final String LOGMSG_PREFIX = "NCLS-COM";
-    
+
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.internal.api.LogMessages";
-    
+
     @LoggerInfo(subsystem = "COMMON", description = "Internal API", publish = true)
     public static final String INT_LOGGER = "jakarta.enterprise.system.tools.util";
     private static final Logger intLogger = Logger.getLogger(
@@ -48,21 +48,21 @@ public class InternalLoggerInfo {
 
     @LogMessageInfo(
             message = "Unknown property {0} found unresolving {1}.",
-            cause = "No value was found for a property. This indicates a software problem.", 
+            cause = "No value was found for a property. This indicates a software problem.",
             action = "Check the server logs and contact Oracle support.",
             level = "SEVERE")
     public static final String unknownProperty = LOGMSG_PREFIX + "-01002";
 
     @LogMessageInfo(
             message = "System property reference missing trailing \"'}'\" at {0} in domain.xml.",
-            cause = "A system property reference in domain.xml is invalid.", 
+            cause = "A system property reference in domain.xml is invalid.",
             action = "Check the domain.xml file for an invalid system property reference.",
             level = "SEVERE")
     public static final String referenceMissingTrailingDelim = LOGMSG_PREFIX + "-01003";
 
     @LogMessageInfo(
             message = "System property reference missing starting \"$'{'\" at {0} in domain.xml.",
-            cause = "A system property reference in domain.xml is invalid.", 
+            cause = "A system property reference in domain.xml is invalid.",
             action = "Check the domain.xml file for an invalid system property reference.",
             level = "SEVERE")
     public static final String referenceMissingStartingDelim = LOGMSG_PREFIX + "-01004";

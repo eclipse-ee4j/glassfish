@@ -26,7 +26,7 @@ import java.io.IOException;
 
 /**
  * General SOAP/TCP WebService Adapter for GFv3
- * 
+ *
  * @author Alexey Stashok
  */
 public abstract class TCP109Adapter extends TCPAdapter {

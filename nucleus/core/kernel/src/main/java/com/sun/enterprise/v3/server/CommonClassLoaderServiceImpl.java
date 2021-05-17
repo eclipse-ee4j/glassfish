@@ -49,7 +49,7 @@ import org.jvnet.hk2.annotations.Service;
  * just like WEB-INF/classes is searched first before WEB-INF/lib/*.jar.
  * DERBY_DRIVERS are added to this class loader, because GlassFish ships with Derby database by default
  * and it makes them available to users by default. Earlier, they used to be available to applications via
- * launcher classloader, but now they are available via this class loader (see issue 13612 for more details on this). 
+ * launcher classloader, but now they are available via this class loader (see issue 13612 for more details on this).
  *
  * It applies a special rule while handling jars in install_root/lib.
  * In order to maintain file layout compatibility (see  issue #9526),
@@ -131,7 +131,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
                 }
                 cp.append(f.getAbsolutePath());
             } catch (MalformedURLException e) {
-                logger.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry, 
+                logger.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry,
                         new Object[] {f, e});
             }
         }
@@ -160,19 +160,19 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     private List<File> findDerbyClient() {
         final String DERBY_HOME_PROP = "AS_DERBY_INSTALL";
         StartupContext startupContext = env.getStartupContext();
-		Properties arguments = null;
-		
-		if (startupContext != null) {
-		  arguments = startupContext.getArguments();
-		}
-		
-		String derbyHome = null;
-		
-		if (arguments != null) {
-		   derbyHome = arguments.getProperty(DERBY_HOME_PROP,
+        Properties arguments = null;
+
+        if (startupContext != null) {
+          arguments = startupContext.getArguments();
+        }
+
+        String derbyHome = null;
+
+        if (arguments != null) {
+           derbyHome = arguments.getProperty(DERBY_HOME_PROP,
                 System.getProperty(DERBY_HOME_PROP));
-		}
-		
+        }
+
         File derbyLib = null;
         if (derbyHome != null) {
             derbyLib = new File(derbyHome, "lib");

@@ -61,8 +61,8 @@ public abstract class JarArchive implements Archive {
             }
         }
         return entries.elements();
-    } 
-    
+    }
+
    /**
      * Returns the name portion of the archive's URI.
      * <p>
@@ -76,7 +76,7 @@ public abstract class JarArchive implements Archive {
      * <li>/x/y/z.html -> z
      * </ul>
      * @return the name of the archive
-     * 
+     *
      */
     public String getName() {
          return JarArchive.getName(getURI());

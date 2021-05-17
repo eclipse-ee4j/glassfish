@@ -189,7 +189,7 @@ public class ComponentEnvManagerImpl
 
             namingManager.bindToAppNamespace(DOLUtils.getApplicationName(env), bindings);
         } else {
-            
+
             boolean treatComponentAsModule = DOLUtils.getTreatComponentAsModule(env);
 
             // Bind dependencies to the namespace for this component
@@ -281,7 +281,7 @@ public class ComponentEnvManagerImpl
         } else if(dependencyAppliesToScope(desc, ScopeType.APP)){
             resourceId = DOLUtils.getApplicationName(env)  ;
         }
-        
+
         return resourceId;
 
     }
@@ -497,7 +497,7 @@ public class ComponentEnvManagerImpl
             String name = descriptorToLogicalJndiName(resourceRef);
             Object value = null;
             String physicalJndiName = resourceRef.getJndiName();
-            
+
             // the jndi-name of URL resource can be either the actual URL value,
             // or another jndi-name that can be looked up
             if (resourceRef.isURLResource()) {
@@ -620,7 +620,7 @@ public class ComponentEnvManagerImpl
             if(next.getMappedName() != null) {
                 next.setName(next.getMappedName());
             }
-            
+
             String name = descriptorToLogicalJndiName(next);
             WebServiceRefProxy value = new WebServiceRefProxy(next);
             jndiBindings.add(new CompEnvBinding(name,value))  ;
@@ -724,7 +724,7 @@ public class ComponentEnvManagerImpl
     }
 
     private boolean dependencyAppliesToScope(Descriptor descriptor, ScopeType scope) {
-      
+
         String name = descriptor.getName();
 
         return dependencyAppliesToScope(name, scope);
@@ -755,7 +755,7 @@ public class ComponentEnvManagerImpl
         return appliesToScope;
     }
 
-   
+
     /**
      * Generate the name of an environment dependency in the java:
      * namespace.  This is the lookup string used by a component to access
@@ -782,17 +782,17 @@ public class ComponentEnvManagerImpl
     }
     return id;
     }
-    
+
     @Override
     public ApplicationEnvironment getCurrentApplicationEnvironment() {
         return invMgr.peekAppEnvironment();
     }
 
-   
 
-   
 
-  
+
+
+
 
     private class FactoryForEntityManagerWrapper
         implements NamingObjectProxy {
@@ -836,7 +836,7 @@ public class ComponentEnvManagerImpl
             }
 
             if (ejbRefMgr != null) {
-                result = ejbRefMgr.getEJBContextObject(contextType);    
+                result = ejbRefMgr.getEJBContextObject(contextType);
             }
 
             if( result == null ) {

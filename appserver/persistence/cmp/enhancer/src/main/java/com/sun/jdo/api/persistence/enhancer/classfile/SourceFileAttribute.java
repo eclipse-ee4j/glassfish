@@ -56,13 +56,13 @@ public class SourceFileAttribute extends ClassAttribute {
 
   /* package local methods */
   static SourceFileAttribute read(ConstUtf8 attrName,
-				  DataInputStream data, ConstantPool pool)
+                  DataInputStream data, ConstantPool pool)
     throws IOException {
     int index = 0;
     index = data.readUnsignedShort();
 
     return new SourceFileAttribute(attrName,
-				   (ConstUtf8) pool.constantAt(index));
+                   (ConstUtf8) pool.constantAt(index));
   }
 
   void write(DataOutputStream out) throws IOException {

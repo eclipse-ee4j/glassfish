@@ -21,14 +21,14 @@
     <filter>
         <filter-name>FilterTest</filter-name>
         <filter-class>test.FilterTest</filter-class>
-    </filter>    
-        
+    </filter>
+
     <filter-mapping>
         <filter-name>FilterTest</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
-        <dispatcher>FORWARD</dispatcher>  
-        <dispatcher>ERROR</dispatcher> 
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 </web-app>

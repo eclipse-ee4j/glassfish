@@ -46,11 +46,11 @@ public class GroupInfoServiceObserverImpl implements GroupInfoServiceObserver {
     public GroupInfoServiceObserverImpl(GroupInfoService gis,
         RoundRobinPolicy rr ) {
 
-	this.gis = gis;
+    this.gis = gis;
         this.rr = rr ;
     }
 
-    // This method is called for internally forced updates: 
+    // This method is called for internally forced updates:
     // see SerialInitContextFactory.getInitialContext.
     public void forceMembershipChange() {
         doMembershipChange();

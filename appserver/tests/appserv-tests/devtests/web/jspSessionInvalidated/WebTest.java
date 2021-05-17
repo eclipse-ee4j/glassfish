@@ -23,23 +23,23 @@ import com.sun.ejte.ccl.reporter.*;
  * "Cannot find attribute when session invalidated"
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "jsp-session-invalidated";
     private static final String EXPECTED_RESPONSE = "SUCCESS";
-    
+
     private static SimpleReporterAdapter stat
             = new SimpleReporterAdapter("appserv-tests");
-    
+
     private String host;
     private String port;
     private String contextRoot;
-    
+
     public WebTest(String[] args) {
         host = args[0];
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for CR 6362293");
         WebTest webTest = new WebTest(args);
@@ -51,7 +51,7 @@ public class WebTest {
         }
         stat.printSummary();
     }
-    
+
     /*
     public void doTest() {
         try {
@@ -60,7 +60,7 @@ public class WebTest {
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
-     
+
             int responseCode = conn.getResponseCode();
             if (responseCode != 200) {
                 System.err.println("Wrong response code. Expected: 200"
@@ -85,7 +85,7 @@ public class WebTest {
         }
     }
      */
-    
+
     public void doTest() throws Exception {
         BufferedReader input = null;
         try {

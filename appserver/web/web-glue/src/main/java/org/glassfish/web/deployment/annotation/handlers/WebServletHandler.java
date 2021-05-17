@@ -51,7 +51,7 @@ public class WebServletHandler extends AbstractWebHandler {
     }
 
     @Override
-    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo) 
+    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
             throws AnnotationProcessorException {
 
         AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
@@ -105,7 +105,7 @@ public class WebServletHandler extends AbstractWebHandler {
             webCompDesc = createWebComponentDescriptor(servletName, webCompClass,
                     webBundleContext.getDescriptor());
         }
-        
+
         HandlerProcessingResult result = processAnnotation(ainfo, webCompDesc);
         if (result.getOverallResult() == ResultType.PROCESSED) {
             WebComponentContext webCompContext = new WebComponentContext(webCompDesc);
@@ -151,7 +151,7 @@ public class WebServletHandler extends AbstractWebHandler {
                 messageKey = "web.deployment.annotation.handlers.servletimpljspdontmatch";
                 defaultMessage = "The servlet ''{0}'' is a jsp ''{1}'' in xml. It does not match with ''{2}'' from annotation @{3}.";
             }
-            
+
             log(Level.SEVERE, ainfo,
                 localStrings.getLocalString(messageKey, defaultMessage,
                 new Object[] { webCompDesc.getCanonicalName(), webCompImpl, webCompClass.getName(),

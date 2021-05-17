@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.*;
  *   dynamically reconfigurable"):
  *
  * This unit test sets the sso-enabled property of http-service to false and
- * restarts the server. It then removes the sso-enabled property of 
+ * restarts the server. It then removes the sso-enabled property of
  * virtual server "server", so that the sso-enabled property of http-service
  * (previously set to false) will take effect. It then sets that property to
  * true, and tests whether SSO has been enabled for virtual server "server".
@@ -54,7 +54,7 @@ public class WebTest {
         adminUser = args[3];
         adminPassword = args[4];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 2911");
@@ -67,7 +67,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void run() throws Exception {
@@ -94,7 +94,7 @@ public class WebTest {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -130,7 +130,7 @@ public class WebTest {
         String cookie = "Cookie: " + jsessionId + "\n";
         os.write(cookie.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -165,7 +165,7 @@ public class WebTest {
         String cookie = "Cookie: " + jsessionId + "\n";
         os.write(cookie.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 

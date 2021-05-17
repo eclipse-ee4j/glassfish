@@ -40,8 +40,8 @@ public class ProgrammaticLookupInEARServlet extends HttpServlet {
     protected String myString;
 
     private Hello singleton1;
-    
-    @Inject 
+
+    @Inject
     Instance<TestBean> programmaticLookup;
 
     private String msg = "";
@@ -91,7 +91,7 @@ public class ProgrammaticLookupInEARServlet extends HttpServlet {
         }
 
         singleton1.hello();
-        
+
         checkForNull(programmaticLookup.get(), "programmatic lookup of session scoped bean in war failed");
 
         out.println(msg);

@@ -29,11 +29,11 @@ import java.rmi.RemoteException;
  */
 
 public class ProfileInfoBean implements SessionBean {
-    
+
     private String name;
-    
+
     private SessionContext sc = null;
-    
+
     /** Creates a new instance of ProfieInfo */
     public void ejbCreate(String name) {
         this.name = name;
@@ -46,24 +46,24 @@ public class ProfileInfoBean implements SessionBean {
     public String getSecretInfo() {
         return "Keep It Secret!";
     }
-    
+
     public void ejbActivate() {
         System.out.println("In ShoppingCart ejbActivate");
     }
-    
-    
+
+
     public void ejbPassivate() {
         System.out.println("In ShoppingCart ejbPassivate");
     }
-    
-    
+
+
     public void ejbRemove()  {
         System.out.println("In ShoppingCart ejbRemove");
     }
-    
-    
+
+
     public void setSessionContext(jakarta.ejb.SessionContext sessionContext) {
         sc = sessionContext;
     }
-    
+
 }

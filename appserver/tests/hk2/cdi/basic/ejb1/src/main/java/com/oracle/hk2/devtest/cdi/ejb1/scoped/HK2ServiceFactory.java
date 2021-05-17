@@ -25,7 +25,7 @@ import org.jvnet.hk2.annotations.Service;
  * This is an HK2 factory for an HK2Service.  A Factory is used
  * for the HK2Service so that we can FORCE HK2Service to NOT
  * be a recognizable bean to CDI
- * 
+ *
  * @author jwells
  *
  */
@@ -40,7 +40,7 @@ public class HK2ServiceFactory implements Factory<HK2Service> {
 
     @Override
     public void dispose(HK2Service instance) {
-        
+
     }
 
 }

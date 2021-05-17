@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.*;
  * see http://issues.apache.org/bugzilla/show_bug.cgi?id=33223.
  *
  * This test case used to throw a java.lang.StringIndexOutOfBoundsException
- * when reconstructing the URI of a JSP that is the target of a 
+ * when reconstructing the URI of a JSP that is the target of a
  * RequestDispatcher.include() from the jakarta.servlet.include.XXX
  * request attributes.
  */
@@ -45,7 +45,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugzilla 33223");
         WebTest webTest = new WebTest(args);
@@ -53,8 +53,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);

@@ -35,7 +35,7 @@ public class EarClassLoader extends ASURLClassLoader
     boolean isPreDestroyCalled = false;
 
     public EarClassLoader(ClassLoader classLoader) {
-        super(classLoader); 
+        super(classLoader);
     }
 
     public void addModuleClassLoader(String moduleName, ClassLoader cl) {
@@ -60,13 +60,13 @@ public class EarClassLoader extends ASURLClassLoader
         try {
             for (ClassLoaderHolder clh : moduleClassLoaders) {
                 // destroy all the module classloaders
-                if ( !(clh.loader instanceof EarLibClassLoader) &&  
-                     !(clh.loader instanceof EarClassLoader) && 
+                if ( !(clh.loader instanceof EarLibClassLoader) &&
+                     !(clh.loader instanceof EarClassLoader) &&
                      !isRARCL(clh.loader)) {
                     try {
                         PreDestroy.class.cast(clh.loader).preDestroy();
                     } catch (Exception e) {
-                        // ignore, the class loader does not need to be 
+                        // ignore, the class loader does not need to be
                         // explicitly stopped.
                     }
                 }
@@ -81,7 +81,7 @@ public class EarClassLoader extends ASURLClassLoader
                 try {
                     PreDestroy.class.cast(cf).preDestroy();
                 } catch (Exception e) {
-                    // ignore, the class loader does not need to be 
+                    // ignore, the class loader does not need to be
                     // explicitly stopped.
                 }
             }

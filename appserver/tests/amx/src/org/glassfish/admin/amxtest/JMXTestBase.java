@@ -60,12 +60,12 @@ public class JMXTestBase
     public static synchronized void setGlobalConnection(final MBeanServerConnection conn) {
         _GlobalMBeanServerConnection = conn;
     }
-    
+
     public static synchronized MBeanServerConnection
     getGlobalMBeanServerConnection() {
         return _GlobalMBeanServerConnection;
     }
-    
+
     public static MBeanServerConnection
     getMBeanServerConnection() {
         return getGlobalMBeanServerConnection();
@@ -227,8 +227,8 @@ public class JMXTestBase
     quote(final Object o) {
         return (StringUtil.quote(SmartStringifier.toString(o)));
     }
-    
-    
+
+
         protected boolean
     getVerbose() {
         /*

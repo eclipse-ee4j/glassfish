@@ -81,7 +81,7 @@ public class SimpleBMPBean
     }
 
     public boolean test3() {
-        //application auth + wrong user/pwd 
+        //application auth + wrong user/pwd
         Connection conn = null;
         boolean passed = false;
         try {
@@ -136,7 +136,7 @@ public class SimpleBMPBean
     public boolean test5() {
         //application auth + user/pwd  specified - right initial
         //ensure that connection with same username is returned in both the cases.
-        
+
         Connection conn = null;
         Connection conn2 = null;
         boolean passed = false;

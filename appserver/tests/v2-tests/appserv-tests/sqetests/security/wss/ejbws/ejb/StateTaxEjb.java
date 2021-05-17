@@ -17,7 +17,7 @@
 package com.sun.appserv.sqe.security.wss.ejbws.taxcal;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -37,12 +37,12 @@ public class StateTaxEjb implements SessionBean {
      */
     private SessionContext sc;
     private static final double STATE_TAX_RATE = 0.3;
-    
+
     public StateTaxEjb() {
     }
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In StateTaxEjb::ejbCreate !!");
+    System.out.println("In StateTaxEjb::ejbCreate !!");
     }
 
     // Business method implementation.
@@ -50,16 +50,16 @@ public class StateTaxEjb implements SessionBean {
         return ((income -  deductions) * STATE_TAX_RATE);
     }
 
-    public void setSessionContext(SessionContext sc) {	
+    public void setSessionContext(SessionContext sc) {
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {
     }
-    
+
     public void ejbActivate() {
     }
-    
+
     public void ejbPassivate() {
     }
 }

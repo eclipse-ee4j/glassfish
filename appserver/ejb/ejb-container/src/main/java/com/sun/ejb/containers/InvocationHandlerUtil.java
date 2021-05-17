@@ -28,12 +28,12 @@ public final class InvocationHandlerUtil {
     InvocationHandlerUtil() {}
 
     public static Object invokeJavaObjectMethod(InvocationHandler handler,
-                                         Method method, Object[] args) 
+                                         Method method, Object[] args)
         throws EJBException {
 
         Object returnValue = null;
 
-        // Can only be one of : 
+        // Can only be one of :
         //     boolean java.lang.Object.equals(Object)
         //     int     java.lang.Object.hashCode()
         //     String  java.lang.Object.toString()
@@ -64,7 +64,7 @@ public final class InvocationHandlerUtil {
     }
 
     public static boolean isDeclaredException(Throwable t,
-                                       Class[] declaredExceptions) 
+                                       Class[] declaredExceptions)
     {
         boolean declaredException = false;
 
@@ -80,8 +80,8 @@ public final class InvocationHandlerUtil {
     }
 
     public static void throwLocalException(Throwable t,
-                                    Class[] declaredExceptions) 
-        throws Throwable 
+                                    Class[] declaredExceptions)
+        throws Throwable
     {
         Throwable toThrow;
 
@@ -91,15 +91,15 @@ public final class InvocationHandlerUtil {
         } else {
             toThrow = new EJBException(t.getMessage());
             toThrow.initCause(t);
-        } 
-        
+        }
+
         throw toThrow;
 
     }
 
     public static void throwRemoteException(Throwable t,
                                      Class[] declaredExceptions)
-        throws Throwable 
+        throws Throwable
     {
         Throwable toThrow;
 
@@ -111,6 +111,6 @@ public final class InvocationHandlerUtil {
             toThrow = new RemoteException(t.getMessage(), t);
         }
 
-        throw toThrow;        
+        throw toThrow;
     }
 }

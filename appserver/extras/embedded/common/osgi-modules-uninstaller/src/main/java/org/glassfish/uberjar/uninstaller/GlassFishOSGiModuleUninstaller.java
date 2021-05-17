@@ -66,7 +66,7 @@ public class GlassFishOSGiModuleUninstaller implements BundleActivator, BundleLi
 
 /*
                 // Make sure the OSGI cache is cleaned up.
-                
+
                 // PackageAdmin throws NoClassDefFoundException possibly
                 // because the felix classes are bundled in uber.jar -- check with Sahoo.
 

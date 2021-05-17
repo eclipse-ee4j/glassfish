@@ -24,17 +24,17 @@ import jakarta.ejb.EJBException;
 import jakarta.annotation.PostConstruct;
 
 @Interceptors({
-	com.sun.s1asdev.ejb.ejb30.interceptors.session.BaseInterceptor.class,
-	com.sun.s1asdev.ejb.ejb30.interceptors.session.BlockingInterceptor.class
+    com.sun.s1asdev.ejb.ejb30.interceptors.session.BaseInterceptor.class,
+    com.sun.s1asdev.ejb.ejb30.interceptors.session.BlockingInterceptor.class
 })
 
 @Stateless
 public class DummyEJB
-	implements Dummy
+    implements Dummy
 {
     int interceptorId;
     private boolean createCalled = false;
-    
+
     @PostConstruct
     private void afterCreate()
     {
@@ -43,9 +43,9 @@ public class DummyEJB
     }
 
     public String dummy()
-	throws CallBlockedException
+    throws CallBlockedException
     {
-	    return "Dummy!!";
+        return "Dummy!!";
     }
 
     public void setInterceptorId(int val) {
@@ -55,10 +55,10 @@ public class DummyEJB
 
         this.interceptorId = val;
     }
-    
+
     @AroundInvoke
     private Object interceptCall(InvocationContext ctx)
-        throws Exception { 
+        throws Exception {
         return ctx.proceed();
     }
 }

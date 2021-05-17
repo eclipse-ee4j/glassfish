@@ -29,7 +29,7 @@ import org.glassfish.ejb.deployment.descriptor.runtime.FlushAtEndOfMethodDescrip
 import org.w3c.dom.Node;
 
 /**
- * This node handles the flush-at-end-of-method runtime deployment descriptors 
+ * This node handles the flush-at-end-of-method runtime deployment descriptors
  *
  */
 public class FlushAtEndOfMethodNode extends DeploymentDescriptorNode<FlushAtEndOfMethodDescriptor> {
@@ -37,7 +37,7 @@ public class FlushAtEndOfMethodNode extends DeploymentDescriptorNode<FlushAtEndO
     private FlushAtEndOfMethodDescriptor descriptor;
 
     public FlushAtEndOfMethodNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.METHOD), MethodNode.class);   
+        registerElementHandler(new XMLElement(RuntimeTagNames.METHOD), MethodNode.class);
     }
 
     @Override
@@ -61,19 +61,19 @@ public class FlushAtEndOfMethodNode extends DeploymentDescriptorNode<FlushAtEndO
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-        FlushAtEndOfMethodDescriptor flushMethodDescriptor) {    
-	Node flushMethodNode = super.writeDescriptor(parent, nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
+        FlushAtEndOfMethodDescriptor flushMethodDescriptor) {
+    Node flushMethodNode = super.writeDescriptor(parent, nodeName,
             flushMethodDescriptor);
         ArrayList methodDescs = flushMethodDescriptor.getConvertedMethodDescs();
         if (!methodDescs.isEmpty()) {
             MethodNode methodNode = new MethodNode();
             for (Iterator methodIterator = methodDescs.iterator();
                 methodIterator.hasNext();) {
-                MethodDescriptor methodDesc = 
+                MethodDescriptor methodDesc =
                     (MethodDescriptor) methodIterator.next();
                 // do not write out ejb-name element for the method
-                methodNode.writeDescriptor(flushMethodNode, 
+                methodNode.writeDescriptor(flushMethodNode,
                     RuntimeTagNames.METHOD, methodDesc, null);
             }
         }

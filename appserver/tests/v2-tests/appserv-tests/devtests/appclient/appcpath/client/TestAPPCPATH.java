@@ -26,7 +26,7 @@ import javax.sound.midi.SysexMessage;
  * @author tjquinn
  */
 public class TestAPPCPATH {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -35,7 +35,7 @@ public class TestAPPCPATH {
      */
     public TestAPPCPATH() {
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -53,9 +53,9 @@ public class TestAPPCPATH {
             stat.printSummary("APPCPATH");
             System.exit(status);
         }
-        
+
     }
-    
+
     private void run(String[] args) throws Throwable {
         /*
          *Use a class in the other jar file.  The APPCPATH env. var.

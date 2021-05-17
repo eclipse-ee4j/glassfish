@@ -343,7 +343,7 @@ public class WebPermissionUtil {
                 addToRoleMap(map, roleName, new WebResourcePermission(name, actions));
             }
         }
-        
+
         // handle explicit methods, skip roles that were handled above
         BitSet methods = m.getMethodSet();
         if (!methods.isEmpty()) {

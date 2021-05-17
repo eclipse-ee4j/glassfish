@@ -23,7 +23,7 @@ import java.beans.VetoableChangeSupport;
 
 /**
  * Support class for sending vetoable events.
- * 
+ *
  * @author Jerome Dochez
  */
 public class TypedVetoableChangeSupport extends VetoableChangeSupport {

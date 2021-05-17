@@ -45,14 +45,14 @@ import org.glassfish.hk2.api.ServiceHandle;
 public abstract class ConfigApiTest {
 
     public static final Logger logger = Logger.getAnonymousLogger();
-    
+
     private final Subject adminSubject = prepareAdminSubject();
-    
+
     private Subject prepareAdminSubject() {
         final ServiceLocator locator = getBaseServiceLocator();
         if (locator != null) {
-            final List<ServiceHandle<? extends Object>> adminIdentities = 
-/*                
+            final List<ServiceHandle<? extends Object>> adminIdentities =
+/*
                     (List<ServiceHandle<? extends Object>>) getBaseServiceLocator().getAllServices(
                     new Filter() {
 
@@ -65,13 +65,13 @@ public abstract class ConfigApiTest {
                     return (contracts == null ? false : contracts.contains("org.glassfish.internal.api.InternalSystemAdmin"));
                 }
             });
-*/            
+*/
                 AccessController.doPrivileged(new PrivilegedAction<List<ServiceHandle<? extends Object>>>() {
                     public List<ServiceHandle<? extends Object>> run() {
-                        
+
                         List<ServiceHandle<? extends Object>> identities = (List<ServiceHandle<? extends Object>>)getBaseServiceLocator().getAllServices(
                            new Filter() {
-        
+
                                 @Override
                                 public boolean matches(Descriptor d) {
                                    if (d == null) {
@@ -81,13 +81,13 @@ public abstract class ConfigApiTest {
                                 return (contracts == null ? false : contracts.contains("org.glassfish.internal.api.InternalSystemAdmin"));
                               }
                            });
-                        
+
                         return identities;
 
                     }
                 });
 
-            
+
             if ( ! adminIdentities.isEmpty()) {
                 final Object adminIdentity = adminIdentities.get(0);
                 try {
@@ -104,10 +104,10 @@ public abstract class ConfigApiTest {
         s.getPrincipals().add(new PrincipalImpl("_InternalSystemAdministrator_"));
         return s;
     }
-    
+
     private static class PrincipalImpl implements Principal {
         private final String name;
-        
+
         private PrincipalImpl(final String name) {
             this.name = name;
         }
@@ -116,7 +116,7 @@ public abstract class ConfigApiTest {
             return name;
         }
     }
-    
+
     protected Subject adminSubject() {
         return adminSubject;
     }
@@ -127,18 +127,18 @@ public abstract class ConfigApiTest {
      *
      * @return the configuration file name
      */
-    public String getFileName() {        
+    public String getFileName() {
         return getClass().getName().substring(getClass().getName().lastIndexOf('.')+1);
     }
 
     /**
      * Returns a configured Habitat with the configuration.
-     * 
+     *
      * @return a configured Habitat
      */
     public ServiceLocator getHabitat() {
         ServiceLocator habitat = Utils.instance.getHabitat(this);
-        
+
         assertNotNull("Transactions service from Configuration subsystem is null", habitat.getService(Transactions.class));
         return habitat;
     }
@@ -163,7 +163,7 @@ public abstract class ConfigApiTest {
         public TestDocument(ServiceLocator habitat) {
             super(habitat);
         }
-        
+
         @Override
         public ConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader,
                 ConfigBean dom, ConfigModel configModel) {
@@ -171,9 +171,9 @@ public abstract class ConfigApiTest {
         }
     }
 
-    /* 
+    /*
      * Decorate the habitat after parsing.  This is called on the habitat
      * just after parsing of the XML file is complete.
      */
-    public void decorate(ServiceLocator habitat) {}  
+    public void decorate(ServiceLocator habitat) {}
 }

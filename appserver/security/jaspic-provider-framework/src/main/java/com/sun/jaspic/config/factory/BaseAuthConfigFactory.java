@@ -68,7 +68,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      * layer and application context.
      *
      * @param layer a String identifying the message layer
-     *		for which the registered AuthConfigProvider is
+     *        for which the registered AuthConfigProvider is
      *          to be returned. This argument may be null.
      *
      * @param appContext a String that identifies the application messaging
@@ -85,7 +85,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      *          or null if no AuthConfigProvider is selected.
      *
      * <p>All factories shall employ the following precedence rules to select
-     * the registered AuthConfigProvider that matches (via matchConstructors) the 
+     * the registered AuthConfigProvider that matches (via matchConstructors) the
      * layer and appContext arguments:
      *<ul>
      * <li> The provider that is specifically registered for both the
@@ -109,7 +109,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
     @Override
     public AuthConfigProvider
             getConfigProvider(String layer, String appContext,
-	    RegistrationListener listener) {
+        RegistrationListener listener) {
         AuthConfigProvider provider = null;
         if (listener == null) {
             rLock.lock();
@@ -164,7 +164,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      *          type String.
      *
      * @param layer a String identifying the message layer
-     *		for which the provider will be registered at the factory.
+     *        for which the provider will be registered at the factory.
      *          A null value may be passed as an argument for this parameter,
      *          in which case, the provider is registered at all layers.
      *
@@ -182,16 +182,16 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      *          used to remove the registration from the provider.
      *
      * @exception SecurityException if the caller does not have
-     *		permission to register a provider at the factory.
+     *        permission to register a provider at the factory.
      *
      * @exception AuthException if the provider
      *          construction or registration fails.
      */
     @Override
     public String registerConfigProvider(String className,
-					 Map properties,
-					 String layer, String appContext,
-					 String description) {
+                     Map properties,
+                     String layer, String appContext,
+                     String description) {
         //XXX factory must check permission
         SecurityManager sm = System.getSecurityManager();
         if (sm != null) {
@@ -212,7 +212,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
         if (sm != null) {
             sm.checkPermission(AuthConfigFactory.providerRegistrationSecurityPermission);
         }
-	return _register(provider,null,layer,appContext,description,false);
+    return _register(provider,null,layer,appContext,description,false);
     }
 
     /**
@@ -227,7 +227,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      *          invalid.
      *
      * @exception SecurityException if the caller does not have
-     *		permission to unregister the provider at the factory.
+     *        permission to unregister the provider at the factory.
      *
      */
     @Override
@@ -258,7 +258,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      *          the listener was not removed from any registrations.
      *
      * @exception SecurityException if the caller does not have
-     *		permission to detach the listener from the factory.
+     *        permission to detach the listener from the factory.
      *
      */
     @Override
@@ -342,12 +342,12 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      */
     @Override
     public RegistrationContext getRegistrationContext(String registrationID) {
-	rLock.lock();
+    rLock.lock();
         try {
-	    return id2RegisContextMap.get(registrationID);
-	} finally {
-	    rLock.unlock();
-	}
+        return id2RegisContextMap.get(registrationID);
+    } finally {
+        rLock.unlock();
+    }
     }
 
    /**
@@ -362,7 +362,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
      *          reinitialization.
      *
      * @exception SecurityException if the caller does not have permission
-     *		to refresh the factory.
+     *        to refresh the factory.
      */
     @Override
     public void refresh() {
@@ -387,9 +387,9 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
     }
 
     private AuthConfigProvider
-	getConfigProviderUnderLock(String layer, String appContext, 
+    getConfigProviderUnderLock(String layer, String appContext,
             RegistrationListener listener) {
-	AuthConfigProvider provider = null;
+    AuthConfigProvider provider = null;
         String regisID = getRegistrationID(layer, appContext);
         String matchedID = null;
         boolean providerFound = false;
@@ -528,7 +528,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
         Map<String, List<RegistrationListener>> listenerMap;
         wLock.lock();
         try {
-        	prevRegisContext = id2RegisContextMap.get(regisID);
+            prevRegisContext = id2RegisContextMap.get(regisID);
             AuthConfigProvider prevProvider = id2ProviderMap.get(regisID);
 
             // handle the persistence first - so that any exceptions occur before
@@ -590,7 +590,7 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
             }
             if (regisIDs == null || regisIDs.isEmpty()) {
                 provider2IdsMap.remove(provider);
-            }            
+            }
             if (!rvalue) {
                 return false;
             }
@@ -640,16 +640,16 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
         }
     }
 
-	/**
-	 * Initialize the static maps in a static method
-	 */
-	private static void initializeMaps() {
-		id2ProviderMap = new HashMap<String, AuthConfigProvider>();
-		id2RegisContextMap = new HashMap<String, RegistrationContext>();
-		id2RegisListenersMap =
-		        new HashMap<String, List<RegistrationListener>>();
-		provider2IdsMap = new HashMap<AuthConfigProvider, List<String>>();
-	}
+    /**
+     * Initialize the static maps in a static method
+     */
+    private static void initializeMaps() {
+        id2ProviderMap = new HashMap<String, AuthConfigProvider>();
+        id2RegisContextMap = new HashMap<String, RegistrationContext>();
+        id2RegisListenersMap =
+                new HashMap<String, List<RegistrationListener>>();
+        provider2IdsMap = new HashMap<AuthConfigProvider, List<String>>();
+    }
 
     private static String _loadRegistration(AuthConfigProvider provider,
             String layer,
@@ -693,24 +693,24 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
         if (p != null) {
             className = p.getClass().getName();
         }
-		if (propertiesContainAnyNonStringValues(properties)) {
-			throw new IllegalArgumentException("AuthConfigProvider cannot be registered - properties must all be of type String.");
-		}
+        if (propertiesContainAnyNonStringValues(properties)) {
+            throw new IllegalArgumentException("AuthConfigProvider cannot be registered - properties must all be of type String.");
+        }
         if (ctx.isPersistent()) {
             getRegStore().store(className, ctx, properties);
         }
     }
 
     private boolean propertiesContainAnyNonStringValues(Map<String,Object> props) {
-    	if (props != null) {
-	    	for(Map.Entry<String, Object> entry : props.entrySet()) {
-	    		if (!(entry.getValue() instanceof String)) {
-	    			return true;
-	    		}
-	    	}
-    	}
-    	return false;
-	}
+        if (props != null) {
+            for(Map.Entry<String, Object> entry : props.entrySet()) {
+                if (!(entry.getValue() instanceof String)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     private void _deleteStoredRegistration(String regId,
             RegistrationContext ctx) {
@@ -757,8 +757,8 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
     }
 
     private static void notifyListeners(Map<String, List<RegistrationListener>> map) {
-    	Set<Map.Entry<String, List<RegistrationListener>>> entrySet = map.entrySet();
-    	for (Map.Entry<String, List<RegistrationListener>> entry : entrySet) {
+        Set<Map.Entry<String, List<RegistrationListener>>> entrySet = map.entrySet();
+        for (Map.Entry<String, List<RegistrationListener>> entry : entrySet) {
             List<RegistrationListener> listeners = map.get(entry.getKey());
 
             if (listeners != null && listeners.size() > 0) {
@@ -768,6 +768,6 @@ public abstract class BaseAuthConfigFactory extends AuthConfigFactory {
                     listener.notify(dIds[0], dIds[1]);
                 }
             }
-    	}
+        }
     }
 }

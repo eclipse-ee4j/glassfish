@@ -23,9 +23,9 @@
 //
 // Product:     com.sun.jts.CosTransactions
 //
-// Author: Simon Holdsworth 
+// Author: Simon Holdsworth
 //
-// Date:        March, 1997 
+// Date:        March, 1997
 //----------------------------------------------------------------------------
 
 package com.sun.jts.CosTransactions;
@@ -89,11 +89,11 @@ public class Configuration extends Object {
    (Related class: com.sun.jts.trace.TraceUtil)
    - kannan.srinivasan@Sun.COM 27Nov2001
 */
-	
-	/*
-		Logger to log transaction messages
-	*/
-	static Logger _logger = LogDomains.getLogger(Configuration.class, LogDomains.TRANSACTION_LOGGER);
+
+    /*
+        Logger to log transaction messages
+    */
+    static Logger _logger = LogDomains.getLogger(Configuration.class, LogDomains.TRANSACTION_LOGGER);
 
    private static boolean traceOn = false;
 
@@ -261,26 +261,26 @@ public class Configuration extends Object {
                 result[0] = DEFAULT_INVALID;
             }
         }
-	if(_logger.isLoggable(Level.FINE))
-	{
-		String dirType="";
-		switch(result[0]){
-		case DEFAULT_INVALID:
-			dirType="used default, but is invalid";
-			break;
-		case DEFAULT_USED :
-			dirType="used default";
-			break;
-		case DIRECTORY_OK:
-			dirType="provided in configuration";
-			break;
-		default:
-			dirType="invalid type";
-			break;
-		}
-		_logger.logp(Level.FINE,"Configuration","getDirectory()",
-				"Using directory = " + envValue + " : "+dirType);
-	}
+    if(_logger.isLoggable(Level.FINE))
+    {
+        String dirType="";
+        switch(result[0]){
+        case DEFAULT_INVALID:
+            dirType="used default, but is invalid";
+            break;
+        case DEFAULT_USED :
+            dirType="used default";
+            break;
+        case DIRECTORY_OK:
+            dirType="provided in configuration";
+            break;
+        default:
+            dirType="invalid type";
+            break;
+        }
+        _logger.logp(Level.FINE,"Configuration","getDirectory()",
+                "Using directory = " + envValue + " : "+dirType);
+    }
 
         return envValue;
     }
@@ -298,15 +298,15 @@ public class Configuration extends Object {
         // Store the server name.
 
         serverName = name;
-	      serverNameByteArray = (name == null) ? null : serverName.getBytes();
+          serverNameByteArray = (name == null) ? null : serverName.getBytes();
         recoverable = recoverableServer;
         if(recoverable) {
             RecoveryManager.createRecoveryFile(serverName);
         }
 
         if(_logger.isLoggable(Level.FINE)) {
-	    _logger.logp(Level.FINE,"Configuration" ,"setServerName()",
-		    " serverName = " + serverName + "; isRecoverable = " + recoverable);
+        _logger.logp(Level.FINE,"Configuration" ,"setServerName()",
+            " serverName = " + serverName + "; isRecoverable = " + recoverable);
         }
     }
 
@@ -394,10 +394,10 @@ public class Configuration extends Object {
         else if (newProp != null)
             prop.putAll(newProp);
 
-	if(_logger.isLoggable(Level.FINE)) {
-	      String propertiesList = LogFormatter.convertPropsToString(prop);			   
+    if(_logger.isLoggable(Level.FINE)) {
+          String propertiesList = LogFormatter.convertPropsToString(prop);
          _logger.logp(Level.FINE,"Configuration","setProperties()",
-		 		" Properties set are :"+ propertiesList);
+                 " Properties set are :"+ propertiesList);
         }
         if (prop != null) {
             dbLogResource = prop.getProperty(DB_LOG_RESOURCE);
@@ -428,15 +428,15 @@ public class Configuration extends Object {
 
         String result = null;
         if( prop != null )
-		{
+        {
             result = prop.getProperty(envValue);
-		    if(_logger.isLoggable(Level.FINE))
+            if(_logger.isLoggable(Level.FINE))
             {
-				_logger.log(Level.FINE,"Property :"+ envValue +
-						" has the value : " + result);
+                _logger.log(Level.FINE,"Property :"+ envValue +
+                        " has the value : " + result);
 
             }
-		}
+        }
 
         return result;
     }
@@ -673,13 +673,13 @@ public class Configuration extends Object {
 
     public static final void enableTrace() {
 
-	traceOn = true;
+    traceOn = true;
 
     }
 
     public static final void disableTrace() {
 
-	traceOn = false;
+    traceOn = false;
 
     }
 
@@ -716,11 +716,11 @@ public class Configuration extends Object {
    public static boolean isDBLoggingEnabled() {
        return (dbLogResource != null);
    }
-   
+
    public static void disableFileLogging() {
        disableFileLogging = true;
    }
- 
+
    public static boolean isFileLoggingDisabled() {
        return disableFileLogging;
    }

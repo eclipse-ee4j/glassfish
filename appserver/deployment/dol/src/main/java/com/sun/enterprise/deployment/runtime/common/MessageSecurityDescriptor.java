@@ -34,7 +34,7 @@ public class MessageSecurityDescriptor extends RuntimeDescriptor {
     public void addMessageDescriptor(MessageDescriptor messageDesc) {
        messageDescs.add(messageDesc);
     }
-    
+
     public ArrayList getMessageDescriptors() {
         return messageDescs;
     }
@@ -55,7 +55,7 @@ public class MessageSecurityDescriptor extends RuntimeDescriptor {
         responseProtectionDesc = proDesc;
     }
 
-    // return all the methods defined in the message elements inside this 
+    // return all the methods defined in the message elements inside this
     // message-security element
     public ArrayList getAllMessageMethods() {
         //FIXME

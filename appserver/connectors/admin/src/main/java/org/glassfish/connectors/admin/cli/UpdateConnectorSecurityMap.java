@@ -53,12 +53,12 @@ import jakarta.inject.Inject;
 @I18n("update.connector.security.map")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="update-connector-security-map", 
+        opType=RestEndpoint.OpType.POST,
+        path="update-connector-security-map",
         description="update-connector-security-map")
 })
 public class UpdateConnectorSecurityMap extends ConnectorSecurityMap implements AdminCommand {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(UpdateConnectorSecurityMap.class);
 
     @Param(optional = true)
@@ -355,7 +355,7 @@ public class UpdateConnectorSecurityMap extends ConnectorSecurityMap implements 
                     " " + tfe.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(tfe);
-        }        
+        }
     }
 
     /**

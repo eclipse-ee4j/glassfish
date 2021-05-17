@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.*;
  *     container-descriptor:index-directory-sort-by
  */
 public class WebTest {
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -34,7 +34,7 @@ public class WebTest {
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("WeblogicDD: index-directory-enabled, index-directory-sort-by");
 
         String host = args[0];
@@ -43,10 +43,10 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             boolean ok = goGet(host, port, "", contextRoot + "/" );
-            
+
             stat.addStatus("wl-web-directoryListing",
                     ((ok)? stat.PASS : stat.FAIL));
         } catch (Throwable t) {
@@ -72,7 +72,7 @@ public class WebTest {
             System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
             os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
             os.write("\n".getBytes());
-            
+
             InputStream is = s.getInputStream();
             BufferedReader bis = new BufferedReader(new InputStreamReader(is));
             String line = null;
@@ -94,11 +94,11 @@ public class WebTest {
             }
             System.out.println("a, b, c: " + a + ", " + b + ", " + c);
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         }
 
         return (listDir && (b < c) && (c < a));
    }
-  
+
 }

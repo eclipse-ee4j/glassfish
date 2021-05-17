@@ -23,7 +23,7 @@ import jakarta.inject.Inject;
 /**
  * This is a statless EJB that is injected with a service
  * that has final methods in its superclass
- * 
+ *
  * @author jwells
  *
  */
@@ -31,7 +31,7 @@ import jakarta.inject.Inject;
 public class StatelessEjbWithInjectionPoint {
     @Inject
     private IExtendAClassWithFinalMethods extender;
-    
+
     @SuppressWarnings("unused")
     @PostConstruct
     private void postConstruct() {

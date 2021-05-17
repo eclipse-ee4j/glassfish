@@ -106,7 +106,7 @@ public class HandleDelegateUtil {
     /**
      * Internal method for accessing jndi properties override. We only look for properties file at most once, whether it is
      * present or not.
-     * 
+     *
      */
     private static Properties getJndiProperties() throws Exception {
         synchronized (HandleDelegateUtil.class) {

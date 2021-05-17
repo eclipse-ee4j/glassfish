@@ -105,7 +105,7 @@ public final class ConfigBeansUtilities {
      * Returns the list of system-applications that are referenced from the given server. A server references an
      * application, if the server has an element named &lt;application-ref> in it that points to given application. The
      * given server is a &lt;server> element inside domain.
-     * 
+     *
      * @param sn the string denoting name of the server
      * @return List of system-applications for that server, an empty list in case there is none
      */
@@ -182,7 +182,7 @@ public final class ConfigBeansUtilities {
 
     /**
      * Lists the app refs for non-system apps assigned to the specified server
-     * 
+     *
      * @param sn server name
      * @return List of ApplicationRef for non-system apps assigned to the specified server
      */
@@ -192,7 +192,7 @@ public final class ConfigBeansUtilities {
 
     /**
      * Lists the app refs for apps assigned to the specified server, excluding system apps from the result if requested.
-     * 
+     *
      * @param sn server name to check
      * @param excludeSystemApps whether system apps should be excluded
      * @return List of ApplicationRef for apps assigned to the specified server

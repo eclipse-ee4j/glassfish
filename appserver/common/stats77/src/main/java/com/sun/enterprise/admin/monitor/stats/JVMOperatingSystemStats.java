@@ -20,30 +20,30 @@ import org.glassfish.j2ee.statistics.CountStatistic;
 import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
 /**
- * A Stats interface, to expose information 
+ * A Stats interface, to expose information
  * about the Operating system on which the JVM is running
  * @since 8.1
  */
 public interface JVMOperatingSystemStats extends Stats {
-    
+
     /**
      * Returns the operating system architecture
-     * @return StringStatistic 
+     * @return StringStatistic
      */
     public StringStatistic getArch();
-    
+
     /**
      * Returns the number of processors available to the JVM
      * @return CountStatistic
      */
     public CountStatistic getAvailableProcessors();
-    
+
     /**
      * Returns the operating system name
      * @return StringStatistic
      */
     public StringStatistic getName();
-    
+
     /**
      * Returns the operating system version
      * @return StringStatistic

@@ -24,13 +24,13 @@ import java.io.File;
  */
 
 public interface DirectoryScanner{
-    
+
      public File[] getAllDeployableModules(File autodeployDir, boolean includeSubDir);
      public boolean hasNewDeployableEntity(File autodeployDir);
      public File[] getAllFilesForUndeployment(File autodeployDir, boolean includeSubdir);
      public void deployedEntity(File autodeployDir, File deployedEntity);
      public void undeployedEntity(File autodeployDir, File undeployedEntity);
-    
+
 
 }
 

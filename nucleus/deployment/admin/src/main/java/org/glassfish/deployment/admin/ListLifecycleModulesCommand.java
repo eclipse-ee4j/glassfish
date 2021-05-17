@@ -56,19 +56,19 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-lifecycle-modules", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-lifecycle-modules",
         description="List Lifecycle Modules",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-lifecycle-modules", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-lifecycle-modules",
         description="List Lifecycle Modules"),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-lifecycle-modules", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-lifecycle-modules",
         description="List Lifecycle Modules",
         params={
             @RestParam(name="target", value="$parent")
@@ -85,11 +85,11 @@ public class ListLifecycleModulesCommand implements AdminCommand {
 
     @Inject
     Domain domain;
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListLifecycleModulesCommand.class);
-   
+
     public void execute(AdminCommandContext context) {
-        
+
         ActionReport report = context.getActionReport();
         ActionReport.MessagePart part = report.getTopMessagePart();
 

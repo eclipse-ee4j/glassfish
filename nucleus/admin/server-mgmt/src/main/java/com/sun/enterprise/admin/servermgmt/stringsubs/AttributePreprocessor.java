@@ -28,7 +28,7 @@ public interface AttributePreprocessor {
      * replacement ("after") value. <br/>
      * E.g. &lt;change-pair id="pair1" before="@JAVA_HOME" after="$JAVA_HOME$"/&gt;
      * </p>
-     * 
+     *
      * @param beforeValue The before value of change-pair.
      * @return Substituted String.
      * @see ChangePair#getBefore()
@@ -42,7 +42,7 @@ public interface AttributePreprocessor {
      * replacement ("after") value. <br/>
      * E.g. &lt;change-pair id="pair1" before="@JAVA_HOME" after="$JAVA_HOME$"/&gt;
      * </p>
-     * 
+     *
      * @param afterValue The after value of change-pair.
      * @return Substituted String.
      * @see ChangePair#getAfter()
@@ -58,7 +58,7 @@ public interface AttributePreprocessor {
      * <p>
      * Note: A file-entry defines a text file or set of files where substitution has to be performed.<br/>
      * </p>
-     * 
+     *
      * @param path The file path.
      * @return Substituted String.
      * @see FileEntry#getName()

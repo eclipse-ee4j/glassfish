@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 @SuppressWarnings("unchecked")
 final class DomProxyCreator<T extends ConfigBeanProxy> implements Creator<T> {
     private final Class<? extends T> type;
-    
+
     private final Dom dom;
 
     private volatile T proxyInstance;

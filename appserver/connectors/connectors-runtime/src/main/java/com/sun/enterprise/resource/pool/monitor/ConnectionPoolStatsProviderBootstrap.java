@@ -46,22 +46,22 @@ import java.util.logging.Logger;
 
 /**
  * Bootstrap operations of stats provider objects are done by this class.
- * Registering of provider to the StatsProviderManager, adding pools to the 
- * PoolLifeCycle listeners are done during the bootstrap. 
+ * Registering of provider to the StatsProviderManager, adding pools to the
+ * PoolLifeCycle listeners are done during the bootstrap.
  * Depending on the lifecycle of the pool - creation/destroy, the listeners
  * are added or removed and providers registered/unregistered.
- * 
- * This is an implementation of PoolLifeCycle. All pool creation or destroy 
- * events are got and based on the type, provider is registered for a pool if pool 
- * is created or provider is unregistered if pool is destroyed. Monitoring 
+ *
+ * This is an implementation of PoolLifeCycle. All pool creation or destroy
+ * events are got and based on the type, provider is registered for a pool if pool
+ * is created or provider is unregistered if pool is destroyed. Monitoring
  * levels when changed from HIGH-> OFF or
  * OFF->HIGH are taken care and appropriate monitoring levels are set.
- * 
+ *
  * @author Shalini M
  */
 @Service
 @Singleton
-public class ConnectionPoolStatsProviderBootstrap implements PostConstruct, 
+public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         PoolLifeCycle {
 
     protected final static Logger logger =
@@ -92,7 +92,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         poolEmitters = new HashMap<PoolInfo, ConnectionPoolEmitterImpl>();
         poolRegistries = new HashMap<PoolInfo, PoolLifeCycleListenerRegistry>();
         runtime = ConnectorRuntime.getRuntime();
-        
+
     }
 
     public void addToPoolEmitters(PoolInfo poolInfo, ConnectionPoolEmitterImpl emitter) {
@@ -101,13 +101,13 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
 
     /**
      * All Jdbc Connection pools are added to the pool life cycle listener so as
-     * to listen to creation/destroy events. If the JdbcPoolTree is not built, 
+     * to listen to creation/destroy events. If the JdbcPoolTree is not built,
      * by registering to the StatsProviderManager, its is done here.
      */
     public void registerProvider() {
         registerPoolLifeCycleListener();
     }
-    
+
     public void postConstruct() {
         if(logger.isLoggable(Level.FINEST)) {
             logger.finest("[Monitor]In the ConnectionPoolStatsProviderBootstrap");
@@ -117,7 +117,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     }
 
     /**
-     * Registers the pool lifecycle listener for this pool by creating a 
+     * Registers the pool lifecycle listener for this pool by creating a
      * new ConnectionPoolEmitterImpl object for this pool.
      * @param poolInfo
      * @return registry of pool lifecycle listeners
@@ -159,10 +159,10 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     }
 
     /**
-     * Register connector connection pool to the StatsProviderManager. 
-     * Add the pool lifecycle listeners for the pool to receive events on 
-     * change of any of the monitoring attribute values. 
-     * Finally, add this provider to the list of connector connection pool 
+     * Register connector connection pool to the StatsProviderManager.
+     * Add the pool lifecycle listeners for the pool to receive events on
+     * change of any of the monitoring attribute values.
+     * Finally, add this provider to the list of connector connection pool
      * providers maintained.
      * @param poolInfo
      */
@@ -181,7 +181,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
             PoolLifeCycleListenerRegistry registry = registerPool(
                     poolInfo, getProbeProviderUtil().getJcaProbeProvider());
             ccPoolStatsProvider.setPoolRegistry(registry);
-            
+
             ccStatsProviders.add(ccPoolStatsProvider);
 
             if(!ConnectorsUtil.isApplicationScopedResource(poolInfo)){
@@ -219,7 +219,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
                 }
 
                 /* no need to create multiple probe provider instances, one per pool will
-                   work for multiple stats providers 
+                   work for multiple stats providers
                 PoolLifeCycleListenerRegistry poolLifeCycleListenerRegistry = registerPool(
                         poolInfo, getProbeProviderUtil().getJcaProbeProvider());
                 */
@@ -231,7 +231,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     }
 
     /**
-     * Register <code> this </code> to PoolLifeCycleRegistry so as to listen to 
+     * Register <code> this </code> to PoolLifeCycleRegistry so as to listen to
      * PoolLifeCycle events - pool creation or destroy.
      */
     private void registerPoolLifeCycleListener() {
@@ -251,7 +251,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         if(ccStatsProviders != null) {
             Iterator i = ccStatsProviders.iterator();
             while (i.hasNext()) {
-                ConnectorConnPoolStatsProvider ccPoolStatsProvider = 
+                ConnectorConnPoolStatsProvider ccPoolStatsProvider =
                         (ConnectorConnPoolStatsProvider) i.next();
                 if (poolInfo.equals(ccPoolStatsProvider.getPoolInfo())) {
                     //Get registry and unregister this pool from the registry
@@ -288,10 +288,10 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     }
 
     /**
-     * Find if the monitoring is enabled based on the monitoring level : 
+     * Find if the monitoring is enabled based on the monitoring level :
      * <code> strEnabled </code>
      * @param strEnabled
-     * @return 
+     * @return
      */
     public boolean getEnabledValue(String strEnabled) {
         if ("OFF".equals(strEnabled)) {
@@ -327,7 +327,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     }
 
     /**
-     * When a pool is destroyed, the pool should be unregistered from the 
+     * When a pool is destroyed, the pool should be unregistered from the
      * StatsProviderManager. Also, the pool's lifecycle listener
      * should be unregistered.
      * @param poolInfo

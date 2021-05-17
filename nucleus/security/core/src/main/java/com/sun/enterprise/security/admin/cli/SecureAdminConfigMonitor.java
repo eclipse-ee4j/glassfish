@@ -57,7 +57,7 @@ public class SecureAdminConfigMonitor implements ConfigListener {
 
     private Logger logger = SecurityLoggerInfo.getLogger();
 
-    
+
     @Override
     public UnprocessedChangeEvents changed(final PropertyChangeEvent[] events) {
         return ConfigSupport.sortAndDispatch(

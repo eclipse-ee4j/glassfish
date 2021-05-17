@@ -47,7 +47,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6419659");
         WebTest webTest = new WebTest(args);
@@ -69,7 +69,7 @@ public class WebTest {
         os.write(get.getBytes());
         os.write("Host: loadbalancer:9999\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 

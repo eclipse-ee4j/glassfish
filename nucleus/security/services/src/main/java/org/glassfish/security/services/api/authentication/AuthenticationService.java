@@ -32,14 +32,14 @@ import org.glassfish.security.services.api.SecurityService;
 public interface AuthenticationService extends SecurityService {
     /**
      * Log in a user with username and password.
-     * 
+     *
      * @param username The username.
      * @param password The password.
      * @param subject An optional Subject to receive principals and credentials for the logged in user.
      * If provided, it will be returned as the return value; if not, a new Subject will be returned.
-     * 
+     *
      * @return A Subject representing the logged in user.
-     * 
+     *
      * @throws LoginException
      */
     public Subject login(String username, char[] password, Subject subject)
@@ -48,13 +48,13 @@ public interface AuthenticationService extends SecurityService {
     /**
      * Authenticate using a CallbackHandler to provider username/password, X.509 certificate, or
      * Secure Admin token.
-     * 
+     *
      * @param cbh  The CallbackHandler.
      * @param subject An optional Subject to receive principals and credentials for the logged in user.
      * If provided, it will be returned as the return value; if not, a new Subject will be returned.
-     * 
+     *
      * @return A Subject representing the logged in user.
-     * 
+     *
      * @throws LoginException
      */
     public Subject login(CallbackHandler cbh, Subject subject) throws LoginException;
@@ -62,10 +62,10 @@ public interface AuthenticationService extends SecurityService {
     /**
      * Impersonate a user, specifying the user and group principal names that
      * should be established in the resulting Subject.
-     * 
+     *
      * Note that, that this method always behaves as if <bold>virtual</bold> were true in the case
      * that the underlying user store provider does not support user lookup.
-     * 
+     *
      * @param user The username.
      * @param groups An array of group names.  If <bold>virtual</bold> is true, group principals will be created
      * using this array.  If <bold>virtual</bold> is false and groups is non-null, it will be used to filter the
@@ -75,9 +75,9 @@ public interface AuthenticationService extends SecurityService {
      * @param virtual  If true, simply create a subject with the given user and group names.  If false, configured
      * UserStoreProvider will be queried for the given username and a Subject created only if the user exists.  Groups
      * will be populated with the intersection of the groups parameter and the groups returned by the UserStoreProvider.
-     * 
+     *
      * @return A Subject representing the impersonated user.
-     * 
+     *
      * @throws LoginException
      */
     public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)

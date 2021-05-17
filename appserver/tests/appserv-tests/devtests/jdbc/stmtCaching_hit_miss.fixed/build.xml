@@ -69,7 +69,7 @@
     </target>
 
     <target name="undeploy" depends="init-common">
-	<antcall target="execute-sql-common">
+    <antcall target="execute-sql-common">
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
 
@@ -92,18 +92,18 @@
 
 
 
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching_hit_miss-pool.statement_cache_size=5"/>
         </antcall>
 
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching_hit_miss-pool.statement_cache_type=FIXED"/>
         </antcall>
-	<antcall target="asadmin-common">
+    <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching_hit_miss-pool.wrap_jdbc_objects=true"/>
@@ -115,10 +115,10 @@
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching_hit_miss-pool.idle_timeout_in_seconds=3000"/>
    </antcall>
-	<!--<antcall target="asadmin-common">
+    <!--<antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
-		    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching_hit_miss-pool.property.StatementCacheType="/>
+            value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-stmtcaching_hit_miss-pool.property.StatementCacheType="/>
     </antcall>-->
     </target>
 

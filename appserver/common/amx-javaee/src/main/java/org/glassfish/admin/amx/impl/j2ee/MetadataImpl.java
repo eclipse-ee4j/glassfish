@@ -24,7 +24,7 @@ import javax.management.ObjectName;
 
 public final class MetadataImpl implements Metadata {
     private final ConcurrentMap<String,Object>  mData;
-    
+
     public MetadataImpl(final Map<String,Object> data )
     {
         mData = new ConcurrentHashMap<String,Object>(data);
@@ -49,18 +49,18 @@ public final class MetadataImpl implements Metadata {
     {
         mData.put( key, value);
     }
-    
+
     public void remove( final String key)
     {
         mData.remove( key );
     }
-    
+
 
     public void setCorrespondingConfig( final ObjectName config)
     {
         add( CORRESPONDING_CONFIG, config);
     }
-    
+
     public ObjectName getCorrespondingConfig()
     {
         return getMetadata( CORRESPONDING_CONFIG, ObjectName.class);
@@ -75,7 +75,7 @@ public final class MetadataImpl implements Metadata {
     {
         add( CORRESPONDING_REF, config);
     }
-    
+
     public String getDeploymentDescriptor()
     {
         return getMetadata( DEPLOYMENT_DESCRIPTOR, String.class);
@@ -88,11 +88,11 @@ public final class MetadataImpl implements Metadata {
         }
         add( DEPLOYMENT_DESCRIPTOR, desc);
     }
-    
+
     public <T> T getMetadata(final String name, final Class<T> clazz)
     {
         final Object value = mData.get(name);
-        
+
         return clazz.cast(value);
     }
 }

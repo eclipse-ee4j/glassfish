@@ -30,10 +30,10 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
  * @author tjquinn
  */
 public class ClassFileAppClientInfo extends AppClientInfo {
-    
+
     /** the class file name specified on the command line */
     private String classFileFromCommandLine;
-    
+
     /**
      *Creates a new instance of the class file app client info.
      *@param isJWS whether Java Web Start was used to launch the app client
@@ -44,7 +44,7 @@ public class ClassFileAppClientInfo extends AppClientInfo {
      *@param classFileFromCommandLine the class file name from the command line arguments
      */
     protected ClassFileAppClientInfo(
-            boolean isJWS, Logger logger, String mainClassFromCommandLine, 
+            boolean isJWS, Logger logger, String mainClassFromCommandLine,
             String classFileFromCommandLine) {
         super(isJWS, logger, mainClassFromCommandLine);
         this.classFileFromCommandLine = classFileFromCommandLine;

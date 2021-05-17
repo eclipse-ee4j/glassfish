@@ -118,7 +118,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             publish = true)
     private static final String RAR_LOAD_WORK_CONTEXT_ERROR = "AS-RAR-05006";
 
-    
+
     /**
      * checks whether the container can handle the exact context type provided
      *
@@ -587,7 +587,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
         }
         return groupsMap;
     }
-    
+
     /**
      * notify the work-context-listener that the context setup has failed
      * Error code provides specific information

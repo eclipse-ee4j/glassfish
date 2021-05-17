@@ -22,8 +22,8 @@ import jakarta.ejb.EJBHome;
  * @author  swchan2
  */
 public interface ProfileInfoHome extends EJBHome{
-    
-    public ProfileInfoRemote create(String name) 
+
+    public ProfileInfoRemote create(String name)
         throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

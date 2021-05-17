@@ -26,17 +26,17 @@ package org.glassfish.security.common;
 public class Group extends PrincipalImpl {
     /** Creates a new Group attribute */
     public Group(String name) {
-	super(name);
+    super(name);
     }
 
     public boolean equals(Object other) {
-	if(other instanceof Group) {
-	    return getName().equals(((Group)other).getName());
-	} else {
-	    return false;
-	}
+    if(other instanceof Group) {
+        return getName().equals(((Group)other).getName());
+    } else {
+        return false;
+    }
     }
     public int hashCode() {
-	return getName().hashCode();
+    return getName().hashCode();
     }
 }

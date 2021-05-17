@@ -39,9 +39,9 @@
             <fileset dir="." includes="*.class"/>
         </delete>
     </target>
-       
+
     <target name="build" depends="clean">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
         </antcall>
@@ -52,11 +52,11 @@
     </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
           <arg value="${http.host}"/>
@@ -68,10 +68,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

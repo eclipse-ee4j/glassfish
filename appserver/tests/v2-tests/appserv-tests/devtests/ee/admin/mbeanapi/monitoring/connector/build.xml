@@ -61,7 +61,7 @@
     <target name="build" depends="compile"
         description="Build entire component" />
 
-    <!-- compile-common -->    
+    <!-- compile-common -->
     <target name="compile-common" depends="init">
         <javac  srcdir="${src.dir}/appserv-tests/devtests/ee/admin/mbeanapi/common"
                 destdir="${build}"
@@ -74,7 +74,7 @@
             <include name="**/AMXMonitoringTestBase.java"/>
         </javac>
     </target>
-        
+
     <!-- compile -->
     <target name="compile" depends="init, compile-common">
         <javac  srcdir="${src.dir}/appserv-tests/devtests/ee/admin/mbeanapi/monitoring/connector"

@@ -169,10 +169,10 @@ public interface MinorCode  {
      * that the TransactionService could not be created.
      */
     public static int TSCreateFailed = 0x0109;
-	
+
     /**
      * This minor code is used on the INVALID_TRANSACTION exception.
-     * <p> It indicates 
+     * <p> It indicates
      * that recreating a imported transaction has failed.
      */
     public static int TX_RECREATE_FAILED = 0x010A;
@@ -182,5 +182,5 @@ public interface MinorCode  {
      * <p> It indicates
      * that concurrent activity within a transaction is disallowed.
      */
-    public static int TX_CONCURRENT_WORK_DISALLOWED = 0x010B;        
+    public static int TX_CONCURRENT_WORK_DISALLOWED = 0x010B;
 }

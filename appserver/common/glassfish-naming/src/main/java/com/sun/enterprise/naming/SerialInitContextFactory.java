@@ -34,7 +34,7 @@ import java.util.Hashtable;
  */
 
 public class SerialInitContextFactory implements InitialContextFactory {
- 
+
     private com.sun.enterprise.naming.impl.SerialInitContextFactory delegate =
         new com.sun.enterprise.naming.impl.SerialInitContextFactory();
 

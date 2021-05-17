@@ -50,21 +50,21 @@ import jakarta.xml.ws.handler.Handler;
 @Service
 @Singleton
 public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
-    
-    
+
+
     private static final Logger logger = LogUtils.getLogger();
 
-    // Ejb service endpoint info.  
+    // Ejb service endpoint info.
     private final Map<String, EjbRuntimeEndpointInfo> webServiceEjbEndpoints = new ConcurrentHashMap<String, EjbRuntimeEndpointInfo>();
 
     // Derived set of all ejb web service related context roots.  Used
-    // to optimize the check that determines whether an HTTP request is 
+    // to optimize the check that determines whether an HTTP request is
     // for an ejb.  NOTE that ejb endpoints may share the same context
-    // root, but that context root must not be used by any web application.  
+    // root, but that context root must not be used by any web application.
     // So if the context root portion of the request is in this set, we know
     // the call is for an ejb.
     private Set<String> ejbContextRoots = new HashSet<String>();
-    
+
 
     // This keeps the list for each service
     private final Map<String, ServletAdapterList> adapterListMap = new HashMap<String, ServletAdapterList>();
@@ -112,13 +112,13 @@ public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
         synchronized(webServiceEjbEndpoints) {
             String uriRaw = endpointAddressUri;
             String uri = (uriRaw.charAt(0)=='/') ? uriRaw.substring(1) : uriRaw;
-            
+
             ServletAdapterList list = adapterListMap.get(uri);
             if (list != null) {
-            	//bug12540102: remove only the data related to the endpoint that is unregistered
-            	//since we are using the uri in the adapterListMap 
+                //bug12540102: remove only the data related to the endpoint that is unregistered
+                //since we are using the uri in the adapterListMap
                 for (ServletAdapter x :list)  {
-                	x.getEndpoint().dispose();
+                    x.getEndpoint().dispose();
                         for (Handler handler : x.getEndpoint().getBinding().getHandlerChain()) {
                         try {
                             WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
@@ -154,7 +154,7 @@ public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
     /**
      * Creates a new EjbRuntimeEndpointInfo instance depending on the type
      * and version of the web service implementation.
-     * @param   
+     * @param
      */
     public EjbRuntimeEndpointInfo createEjbEndpointInfo(WebServiceEndpoint webServiceEndpoint,
                                   EjbEndpointFacade ejbContainer,

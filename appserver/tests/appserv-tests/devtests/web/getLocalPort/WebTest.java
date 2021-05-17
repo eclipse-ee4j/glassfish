@@ -22,10 +22,10 @@ import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest
 {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -34,7 +34,7 @@ public class WebTest
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Test for getLocalName() getLocalPort Servlet 2.4 new Features");
 
 
@@ -44,13 +44,13 @@ public class WebTest
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             goGet(host, port, "getLocalPort", contextRoot + "/ServletTest" );
-            
+
             if (count != EXPECTED_COUNT){
                 stat.addStatus("localPort getLocalPort UNPREDICTED-FAILURE", stat.FAIL);
-            }           
+            }
         } catch (Throwable t) {
             System.out.println(t.getMessage());
             stat.addStatus("localPort getLocalPort UNPREDICTED-FAILURE", stat.FAIL);
@@ -72,7 +72,7 @@ public class WebTest
         os.write(("GET " + contextPath + " HTTP/1.1\n").getBytes());
         os.write("Host: localhost\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = s.getInputStream();
         System.out.println("Time: " + (System.currentTimeMillis() - time));
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
@@ -87,19 +87,19 @@ public class WebTest
                 if (index != -1) {
                     index = line.indexOf(":");
                     String status = line.substring(index+1);
-                    
+
                     if (status.equalsIgnoreCase(String.valueOf(port))){
                         stat.addStatus("web-localPort: " + line.substring(0,index), stat.PASS);
                     } else {
-                        stat.addStatus("web-localPort: " + line.substring(0,index), stat.FAIL);                       
+                        stat.addStatus("web-localPort: " + line.substring(0,index), stat.FAIL);
                     }
                     count++;
-                } 
+                }
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("localPort getLocalPort UNPREDICTED-FAILURE");
          }
    }
-  
+
 }

@@ -17,11 +17,11 @@
 package org.glassfish.persistence.ejb.entitybean.container.distributed;
 
 /**
- * An instance of DistributedReadOnlyBeanNotifier is used to notify other server 
- *  instances to refresh a ReadOnly Bean. An instance of 
+ * An instance of DistributedReadOnlyBeanNotifier is used to notify other server
+ *  instances to refresh a ReadOnly Bean. An instance of
  *  ReadOnlyBeanRefreshEventHandler is used to handle requests received from
  *  other server instances.
- *  
+ *
  *  @author Mahesh Kannan
  *  @see ReadOnlyBeanRefreshEventHandler
  */
@@ -29,7 +29,7 @@ public interface DistributedReadOnlyBeanNotifier {
 
     /**
      * This is called by the container after it has called refresh
-     * 
+     *
      * @param ejbID the ejbID that uniquely identifies the container
      * @param pk The primary key of the bean(s) that is to be refreshed
      */
@@ -37,7 +37,7 @@ public interface DistributedReadOnlyBeanNotifier {
 
     /**
      * This is called by the container after it has called refresh
-     * 
+     *
      * @param ejbID the ejbID that uniquely identifies the container
      * @param pk The primary key of the bean(s) that is to be refreshed
      */

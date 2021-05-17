@@ -22,7 +22,7 @@ public class Foo {
 
     @EJB Hello hello;
     @jakarta.inject.Inject TestBean tb;
-    
+
     public boolean testInjection(){
         return tb != null;
     }

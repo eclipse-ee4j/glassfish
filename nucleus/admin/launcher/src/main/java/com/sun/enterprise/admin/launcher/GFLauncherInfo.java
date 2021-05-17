@@ -38,7 +38,7 @@ import com.sun.enterprise.util.HostAndPort;
  */
 public class GFLauncherInfo {
 
-    // BUG TODO get the def. domains dir from asenv 3/14/2008. Will this ever be done? 24/05/2020 
+    // BUG TODO get the def. domains dir from asenv 3/14/2008. Will this ever be done? 24/05/2020
     private final static String DEFAULT_DOMAIN_PARENT_DIR = "domains";
     private final static String CONFIG_DIR = "config";
     private final static String CONFIG_FILENAME = "domain.xml";
@@ -160,7 +160,7 @@ public class GFLauncherInfo {
 
     /**
      * Starts the server in suspended debug mode
-     * 
+     *
      * @param suspend
      */
     public void setSuspend(boolean suspend) {

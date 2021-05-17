@@ -80,7 +80,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
     private StringBuilder libExtensionElementsForMainDocument = null;
 
-    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     /**
@@ -101,7 +101,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
     /** recognizes expanded directory names for submodules */
     private static final Pattern submoduleURIPattern = Pattern.compile("(.*)__([wcrj]ar)$");
-    
+
     private final ClientArtifactsManager clientArtifactsManager;
 
     private boolean isTopLevelPopulated = false;
@@ -148,7 +148,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     public String appLibraryExtensions() {
-        return (libExtensionElementsForMainDocument == null ? 
+        return (libExtensionElementsForMainDocument == null ?
             "" : libExtensionElementsForMainDocument.toString());
     }
 
@@ -189,10 +189,10 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
             JavaWebStartInfo.createAndAddDynamicContent(
                     tHelper, dynamicContent, libJNLPRelPath(alias),
                 LIBRARY_DOCUMENT_TEMPLATE);
-            
+
             libExtensionElementsForMainDocument.append(extensionElement(alias, libJNLPRelPath(alias)));
         }
-        
+
         tHelper.setProperty(JavaWebStartInfo.APP_LIBRARY_EXTENSION_PROPERTY_NAME,
                 libExtensionElementsForMainDocument.toString());
     }
@@ -221,9 +221,9 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
     /**
      * Adds a file to the EAR-level group facade JAR.
-     * 
+     *
      * @param clientFacadeArchive - ignored for nested app clients
-     * @throws IOException 
+     * @throws IOException
      */
     @Override
     protected void copyFileToTopLevelJAR(OutputJarArchive clientFacadeArchive, File f, String path) throws IOException {
@@ -237,8 +237,8 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
             isTopLevelPopulated = true;
         }
     }
-    
-    
+
+
     private String libJARRelPath(final URI absURI) {
         return JavaWebStartInfo.relativeURIForProvidedOrGeneratedAppFile(dc(), absURI, this).toASCIIString();
     }
@@ -720,7 +720,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
      */
     private Artifact newArtifact(
             final URI canonicalArtifactURIWithinEAR) throws IOException {
-        
+
         Artifact result = null;
 
         /*
@@ -730,7 +730,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
             /*
              * We need to have an actual JAR file to download but none
              * exists, because this is a directory deployment and the URI
-             * refers to a submodule. 
+             * refers to a submodule.
              */
             result = new VirtualJARArtifact(canonicalArtifactURIWithinEAR);
         } else {
@@ -824,10 +824,10 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
          * @return FullAndPartURIs object for this artifact's download data
          */
         Artifacts.FullAndPartURIs downloadInfo() {
-            return new FullAndPartURIs(physicalFile.toURI(), 
+            return new FullAndPartURIs(physicalFile.toURI(),
                     earDirUserURI(dc()).resolve(canonicalURIWithinEAR()));
         }
-        
+
         File physicalFile() {
             return physicalFile;
         }
@@ -856,12 +856,12 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
      */
     private abstract class RealArtifact extends Artifact {
         private final URI uriWithinEAR;
-        
+
         RealArtifact(final File artifactFile) {
             super(artifactFile);
             uriWithinEAR = earURI.relativize(artifactFile.toURI());
         }
-        
+
         @Override
         URI canonicalURIWithinEAR() {
             return uriWithinEAR;
@@ -993,7 +993,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                 final JarFile dependentJar = new JarFile(physicalFile());
                 try {
                   jarManifest = dependentJar.getManifest();
-                } finally 
+                } finally
                 {
                   dependentJar.close();
                 }
@@ -1009,7 +1009,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                  * Ignore it.
                  */
                 return;
-            } 
+            }
 
             final Attributes mainAttrs = jarManifest.getMainAttributes();
             if (mainAttrs == null) {

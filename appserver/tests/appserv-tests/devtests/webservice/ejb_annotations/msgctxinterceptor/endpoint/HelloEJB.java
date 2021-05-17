@@ -40,7 +40,7 @@ public class HelloEJB implements Hello {
 
     @AroundInvoke
     private Object interceptBusinessMethod(InvocationContext invCtx) {
-	try {
+    try {
             System.out.println("ContextData" + invCtx.getContextData());
             //This is just to get the invocation trace
             //remove once bug is fixed
@@ -53,7 +53,7 @@ public class HelloEJB implements Hello {
            } else {
                   return null;
            }
-	} catch(Throwable t) { t.printStackTrace();}
+    } catch(Throwable t) { t.printStackTrace();}
         return null;
     }
 }

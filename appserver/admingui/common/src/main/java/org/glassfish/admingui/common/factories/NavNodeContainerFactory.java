@@ -43,15 +43,15 @@ import jakarta.faces.context.FacesContext;
 public class NavNodeContainerFactory extends ComponentFactoryBase {
 
     /**
-     *	<p> This is the factory method responsible for creating the
-     *	    <code>UIComponent</code>.</p>
+     *    <p> This is the factory method responsible for creating the
+     *        <code>UIComponent</code>.</p>
      *
-     *	@param	context	    The <code>FacesContext</code>
-     *	@param	descriptor  The {@link LayoutComponent} descriptor associated
-     *			    with the requested <code>UIComponent</code>.
-     *	@param	parent	    The parent <code>UIComponent</code>
+     *    @param    context        The <code>FacesContext</code>
+     *    @param    descriptor  The {@link LayoutComponent} descriptor associated
+     *                with the requested <code>UIComponent</code>.
+     *    @param    parent        The parent <code>UIComponent</code>
      *
-     *	@return	The newly created <code>Tree</code>.
+     *    @return    The newly created <code>Tree</code>.
      */
     public UIComponent create(FacesContext context, LayoutComponent descriptor, UIComponent parent) {
         // Create the UIComponent
@@ -84,9 +84,9 @@ public class NavNodeContainerFactory extends ComponentFactoryBase {
         return comp;
     }
     /**
-     *	<p> The <code>UIComponent</code> type that must be registered in the
-     *	    <code>faces-config.xml</code> file mapping to the UIComponent class
-     *	    to use for this <code>UIComponent</code>.</p>
+     *    <p> The <code>UIComponent</code> type that must be registered in the
+     *        <code>faces-config.xml</code> file mapping to the UIComponent class
+     *        to use for this <code>UIComponent</code>.</p>
      */
     public static final String COMPONENT_TYPE = "com.sun.webui.jsf.Tree";
 }

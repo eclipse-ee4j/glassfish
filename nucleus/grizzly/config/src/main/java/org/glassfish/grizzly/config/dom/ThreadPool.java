@@ -31,7 +31,7 @@ import java.util.List;
 public interface ThreadPool extends ConfigBeanProxy, PropertyBag {
     String DEFAULT_THREAD_POOL_CLASS_NAME =
             "org.glassfish.grizzly.threadpool.GrizzlyExecutorService";
-    
+
     int IDLE_THREAD_TIMEOUT = 900;
     int MAX_QUEUE_SIZE = 4096;
 

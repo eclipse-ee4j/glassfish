@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.slsb;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -34,11 +34,11 @@ public class SimpleSLSBBean
     }
 
     public void ejbCreate() throws RemoteException {
-	    System.out.println("In SimpleSLSBHome::ejbCreate !!");
+        System.out.println("In SimpleSLSBHome::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-	    this.sc = sc;
+        this.sc = sc;
     }
 
     public boolean doSomething(int timeout) {
@@ -51,7 +51,7 @@ public class SimpleSLSBBean
             long deadline = System.currentTimeMillis() + (timeout * 1000);
             for (int n = 1; true; n = n << 1) {
                 long now = System.currentTimeMillis();
-    
+
                 if (now > deadline) {
                     break;
                 }
@@ -60,7 +60,7 @@ public class SimpleSLSBBean
                         + "; time left = " + ((deadline - now) / 1000)
                         + " seconds. result: " + result);
                 sortArray(1024);
-                try {Thread.sleep(5 * 1000);} catch (Exception ex) {} 
+                try {Thread.sleep(5 * 1000);} catch (Exception ex) {}
             }
 
             result = sc.getRollbackOnly();

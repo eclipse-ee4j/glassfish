@@ -50,12 +50,12 @@ public class JspStatsProvider {
         "Total number of errors triggered by JSP page invocations";
 
     private String moduleName;
-    private String vsName; 
+    private String vsName;
     private RangeStatisticImpl jspCount;
     private CountStatisticImpl totalJspCount;
     private CountStatisticImpl jspReloadedCount;
     private CountStatisticImpl jspErrorCount;
-    
+
     public JspStatsProvider(String moduleName, String vsName) {
         this.moduleName = moduleName;
         this.vsName = vsName;
@@ -97,7 +97,7 @@ public class JspStatsProvider {
     public CountStatistic getJspErrorCount() {
         return jspErrorCount;
     }
-    
+
     @ProbeListener("glassfish:web:jsp:jspLoadedEvent")
     public void jspLoadedEvent(
             @ProbeParam("jspUri") String jspUri,
@@ -148,11 +148,11 @@ public class JspStatsProvider {
     public String getModuleName() {
         return moduleName;
     }
-    
+
     public String getVSName() {
         return vsName;
     }
-    
+
     private boolean isValidEvent(String mName, String hostName) {
         //Temp fix, get the appname from the context root
         if ((moduleName == null) || (vsName == null)) {
@@ -161,7 +161,7 @@ public class JspStatsProvider {
         if ((moduleName.equals(mName)) && (vsName.equals(hostName))) {
             return true;
         }
-        
+
         return false;
     }
 }

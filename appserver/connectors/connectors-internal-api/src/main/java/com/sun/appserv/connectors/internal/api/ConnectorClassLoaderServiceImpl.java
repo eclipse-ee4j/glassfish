@@ -36,7 +36,7 @@ import jakarta.inject.Provider;
  * Java EE 5 specific behavior.
  * 2. An application has visbility to only those standalone RARs that it
  * depends on. This is the new behavior defined in Java EE 6 as well as
- * JCA 1.6 spec. 
+ * JCA 1.6 spec.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
@@ -123,7 +123,7 @@ public class ConnectorClassLoaderServiceImpl implements ConnectorClassLoaderServ
         for(DelegatingClassLoader.ClassFinder cf : appsSpecificCCLUtil.getSystemRARClassLoaders()){
             appSpecificConnectorClassLoader.addDelegate(cf);
         }
-        
+
         for(String raName : appsSpecificCCLUtil.getRARsReferredByApplication(appName)){
             addRarClassLoader(appName, appSpecificConnectorClassLoader, raName);
         }
@@ -134,7 +134,7 @@ public class ConnectorClassLoaderServiceImpl implements ConnectorClassLoaderServ
         return appSpecificConnectorClassLoader;
     }
 
-    private void addRarClassLoader(String appName, DelegatingClassLoader appSpecificConnectorClassLoader, 
+    private void addRarClassLoader(String appName, DelegatingClassLoader appSpecificConnectorClassLoader,
                                    String raName) {
         if(logger.isLoggable(Level.FINEST)){
                 logger.finest("raName for app [ "+appName+" ] : " + raName);

@@ -47,8 +47,8 @@ import org.glassfish.hk2.api.PerLookup;
 @Service(name="_dump-hk2")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_dump-hk2", 
+        opType=RestEndpoint.OpType.POST,
+        path="_dump-hk2",
         description="_dump-hk2")
 })
 @AccessRequired(resource="domain", action="dump")
@@ -56,7 +56,7 @@ public class DumpHK2Command implements AdminCommand {
 
     @Inject
     ModulesRegistry modulesRegistry;
-    
+
     public void execute(AdminCommandContext context) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -66,10 +66,10 @@ public class DumpHK2Command implements AdminCommand {
         ActionReport report = context.getActionReport();
         report.setActionExitCode(ExitCode.SUCCESS);
         String msg = baos.toString();
-        
+
         // the proper way to do this is to check the user-agent of the caller,
-        // but I can't access that -- so I'll just check the type of the 
-        // ActionReport.  If we are sending back to CLI then linefeeds will 
+        // but I can't access that -- so I'll just check the type of the
+        // ActionReport.  If we are sending back to CLI then linefeeds will
         // cause problems.  Manifest.write() is OK but Manifest.read() explodes!
         if(report instanceof PropsFileActionReporter) {
             msg = ManifestUtils.encode(msg);

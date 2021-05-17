@@ -58,7 +58,7 @@ public interface Resources extends ConfigBeanProxy {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      *    get(CustomResource Or ExternalJndiResource Or JdbcResource Or MailResource Or AdminObjectResource Or
      *    ConnectorResource Or ResourceAdapterConfig Or JdbcConnectionPool Or ConnectorConnectionPool).add(newItem);

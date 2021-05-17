@@ -75,6 +75,6 @@ public class MySimpleTag extends SimpleTagSupport {
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new JspException(ex);
-        } 
+        }
     }
 }

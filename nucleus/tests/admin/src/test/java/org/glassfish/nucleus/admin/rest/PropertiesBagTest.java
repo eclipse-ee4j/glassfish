@@ -162,7 +162,7 @@ public class PropertiesBagTest extends RestTestBase {
         assertTrue(value.equals(newProp.get("value")));
         assertTrue(description.equals(newProp.get("description")));
     }
-    
+
     // This operation is taking a REALLY long time from the console, probably due
     // to improper properties handling when create the RA config.  However, when
     // updating the config's properties, we need to verfiy that only the changed
@@ -236,11 +236,11 @@ public class PropertiesBagTest extends RestTestBase {
         payload.put("persistenceFrequency","web-method");
         payload.put("persistenceStoreHealthCheckEnabled","false");
         payload.put("ssoFailoverEnabled","false");
-        
+
         final String wcaUri = "/domain/configs/config/default-config/availability-service/web-container-availability";
         Response r = post(wcaUri, payload);
         assertTrue(isSuccess(r));
-        
+
         assertTrue(isSuccess(get(wcaUri)));
 
         r = getClient()
@@ -248,10 +248,10 @@ public class PropertiesBagTest extends RestTestBase {
                 request(getResponseType())
                 .post(Entity.json(new JSONArray()), Response.class);
         assertTrue(isSuccess(r));
-        
+
         assertTrue(isSuccess(get(wcaUri)));
     }
-    
+
     protected String buildPropertyList(List<Map<String, String>> props) {
         StringBuilder sb = new StringBuilder();
         String sep = "";
@@ -282,7 +282,7 @@ public class PropertiesBagTest extends RestTestBase {
     protected Map<String, String> createProperty(final String name, final String value) {
         return createProperty(name, value, null);
     }
-    
+
     protected Map<String, String> createProperty(final String name, final String value, final String description) {
         return new HashMap<String, String>() {{
                 put ("name", name);

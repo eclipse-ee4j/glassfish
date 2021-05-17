@@ -33,7 +33,7 @@ public class BookstoreMessages_en_US extends ListResourceBundle {
         { "TitleCashier", "Cashier" },
         { "TitleBookDescription", "Book Description" },
         { "Visitor", "You are visitor number " },
-        
+
         { "What", "What We\'re Reading" },
         {
             "Talk",
@@ -79,14 +79,14 @@ public class BookstoreMessages_en_US extends ListResourceBundle {
             "Your order could not be completed due to insufficient inventory."
         },
         { "With", "With" },
-        
+
         { "Shipping", "Shipping:" },
         { "QuickShip", "Quick Shipping" },
         { "NormalShip", "Normal Shipping" },
         { "SaverShip", "Saver Shipping" },
         { "ShipDate", "Your order will be shipped on " },
         { "ShipDateLC", "your order will be shipped on " },
-        
+
         { "ConfirmAdd", "You just added \"{0}\" to your shopping cart" },
         { "ConfirmRemove", "You just removed \"{0}\" from your shopping cart" },
         {

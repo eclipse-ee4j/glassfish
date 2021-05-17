@@ -27,9 +27,9 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 /**
  * The default ConnectionManager implementation for the
  * non-managed scenario
- * This provieds a hook for a resource adapter to pass a connection 
+ * This provieds a hook for a resource adapter to pass a connection
  * request to an application server.
- * 
+ *
  * @author Sheetal Vartak
  */
 public class CciConnectionManager implements ConnectionManager, Serializable {

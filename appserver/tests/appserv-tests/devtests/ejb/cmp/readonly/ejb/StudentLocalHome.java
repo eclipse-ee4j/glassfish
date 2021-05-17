@@ -36,11 +36,11 @@ public interface StudentLocalHome extends EJBLocalHome {
      * @exception throws FinderException.
      *
      */
- 
-    public StudentLocal findByPrimaryKey(String studentId) 
+
+    public StudentLocal findByPrimaryKey(String studentId)
         throws FinderException;
 
 
     public StudentLocal findByLocalStudent(StudentLocal student) throws FinderException;
-    
+
 }

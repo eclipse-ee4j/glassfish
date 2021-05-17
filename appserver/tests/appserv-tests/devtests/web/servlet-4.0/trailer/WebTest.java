@@ -42,7 +42,7 @@ public class WebTest {
         port = Integer.parseInt(args[1]);
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for trailer");
         WebTest webTest = new WebTest(args);
@@ -85,7 +85,7 @@ public class WebTest {
             }
             String contentType = httpResponse.getHeader("Content-Type");
             System.out.println("--> headers = " + httpResponse.getHeaders());
-            
+
             String result = new StringBuilder(httpResponse.getBody().trim())
                 .append('|')
                 .append(httpResponse.getTrailerFields().get("bar1")) // trailer field
@@ -96,7 +96,7 @@ public class WebTest {
             System.out.println("--> result = " + result);
 
             if  (!EXPECTED_RESPONSE.equals(result)) {
-                throw new Exception("Wrong response. Expected: " + 
+                throw new Exception("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + result);
             }
         }

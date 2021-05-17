@@ -104,7 +104,7 @@ public class InterceptorInfo {
     public boolean getHasTargetClassAroundInvoke() {
         return hasTargetClassAroundInvoke;
     }
-     
+
 
     public List getAroundInvokeInterceptors(Method m) {
 

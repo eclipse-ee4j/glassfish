@@ -45,7 +45,7 @@ import java.util.logging.Level;
 @AnnotationHandlerFor(ConnectionFactoryDefinition.class)
 public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler {
 
-    
+
     public ConnectionFactoryDefinitionHandler() {
     }
 
@@ -58,14 +58,14 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
     }
 
     protected HandlerProcessingResult processAnnotation(ConnectionFactoryDefinition connectorFactoryDefnAn, AnnotationInfo aiInfo,
-                                                        ResourceContainerContext[] rcContexts)  
+                                                        ResourceContainerContext[] rcContexts)
               throws AnnotationProcessorException {
-        
+
         Class annotatedClass = (Class)aiInfo.getAnnotatedElement();
         Annotation[] annotations = annotatedClass.getAnnotations();
         boolean warClass = isAWebComponentClass(annotations);
         boolean ejbClass = isAEjbComponentClass(annotations);
-        
+
         for(ResourceContainerContext context : rcContexts){
             if (!canProcessAnnotation(annotatedClass, ejbClass, warClass, context)){
                 return getDefaultProcessedResult();
@@ -175,7 +175,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
         return true;
     }
 
-    
+
     private boolean isDefinitionAlreadyPresent(Set<ResourceDescriptor> cfdDescs,  ConnectionFactoryDefinitionDescriptor desc) {
         boolean result = false ;
         for(ResourceDescriptor descriptor : cfdDescs){

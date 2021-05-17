@@ -17,7 +17,7 @@
 package test.beans;
 
 public class ShoppingCart {
-    
+
     @Transactional @Secure public void checkout(){
         System.out.println("ShoppingCart::checkout");
     }

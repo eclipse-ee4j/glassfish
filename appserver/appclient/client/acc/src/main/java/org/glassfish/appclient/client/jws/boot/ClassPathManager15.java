@@ -27,7 +27,7 @@ import java.net.URL;
  * @author tjquinn
  */
 public class ClassPathManager15 extends ClassPathManager {
-    
+
     /**
      *Return a new instance of the manager
      *@param loader the Java Web Start-provided class loader
@@ -35,7 +35,7 @@ public class ClassPathManager15 extends ClassPathManager {
     protected ClassPathManager15(ClassLoader loader, boolean keepJWSClassLoader) {
         super(loader, keepJWSClassLoader);
     }
-    
+
     public ClassLoader getParentClassLoader() {
         return (keepJWSClassLoader() ? getJnlpClassLoader() : null);
     }
@@ -49,7 +49,7 @@ public class ClassPathManager15 extends ClassPathManager {
             if (scheme.equals("jar")) {
                 /*
                  *The scheme-specific part will look like "file:<file-spec>!/<path-to-class>.class"
-                 *so we need to isolate the scheme and the <file-spec> part.  
+                 *so we need to isolate the scheme and the <file-spec> part.
                  *The subscheme (the scheme within the jar) precedes the colon
                  *and the file spec appears after it and before the exclamation point.
                  */
@@ -63,6 +63,6 @@ public class ClassPathManager15 extends ClassPathManager {
         }
         return result;
     }
-    
+
 
 }

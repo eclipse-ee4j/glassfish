@@ -427,7 +427,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
     }
 
     /**
-     * Utility method that is used to get the default subject for the 
+     * Utility method that is used to get the default subject for the
      * specified mcf and resource principal.
      * @param poolInfo
      * @param mcf
@@ -461,28 +461,28 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("using subject: " + defaultSubject);
 
-        }        
+        }
         return defaultSubject;
     }
 
     /**
-     * Utility method to get Managed connection from the supplied mcf and 
+     * Utility method to get Managed connection from the supplied mcf and
      * default subject.
      * @param mcf
      * @param defaultSubject
      * @return
      * @throws jakarta.resource.ResourceException
      */
-    protected ManagedConnection getManagedConnection(ManagedConnectionFactory mcf, 
+    protected ManagedConnection getManagedConnection(ManagedConnectionFactory mcf,
             Subject defaultSubject, ConnectionRequestInfo cReqInfo) throws ResourceException {
-        
+
         ManagedConnection mc = null;
-        
+
         //Create the ManagedConnection
         mc = mcf.createManagedConnection(defaultSubject, cReqInfo);
         return mc;
 
-    }    
+    }
 
 /*
     */
@@ -494,7 +494,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws jakarta.resource.ResourceException
      *//*
 
-    protected ManagedConnectionFactory getManagedConnectionFactory(String poolName) 
+    protected ManagedConnectionFactory getManagedConnectionFactory(String poolName)
             throws ResourceException {
         ManagedConnectionFactory mcf = null;
         try {
@@ -733,7 +733,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
 
             if (envProp.getName().toUpperCase(Locale.getDefault()).equals(prop)) {
                 result = envProp.getValue();
-            } 
+            }
         }
         return result;
     }
@@ -742,7 +742,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         ManagedConnectionFactory mcf ) throws NamingException {
         return getDefaultResourcePrincipal(poolInfo, mcf, null);
     }
-    
+
     /*
     * Returns a ResourcePrincipal object populated with a pool's
     * default USERNAME and PASSWORD
@@ -838,7 +838,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         throws ConnectorRuntimeException, NamingException  {
         return getConnectorConnectionPool(poolInfo, null);
     }
-    
+
     /**
      * Returns the connector connection pool object corresponding
      * to the pool name
@@ -915,13 +915,13 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      */
     public ManagedConnectionFactory[] obtainManagedConnectionFactories(
            PoolInfo poolInfo) throws ConnectorRuntimeException {
-	ManagedConnectionFactory[] mcfs = null;
+    ManagedConnectionFactory[] mcfs = null;
         String raName = null;
         try {
-		ConnectorConnectionPool conPool =
-				getConnectorConnectionPool(poolInfo);
-		ActiveResourceAdapter activeResourceAdapter =
-					getResourceAdapter(conPool);
+        ConnectorConnectionPool conPool =
+                getConnectorConnectionPool(poolInfo);
+        ActiveResourceAdapter activeResourceAdapter =
+                    getResourceAdapter(conPool);
             raName = activeResourceAdapter.getModuleName();
                 mcfs =
                      activeResourceAdapter.
@@ -957,7 +957,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         for(ManagedConnectionFactory mcf : mcfs){
             validateMCF(mcf, raName);
         }
-	return mcfs;
+    return mcfs;
     }
 
     private void validateMCF(ManagedConnectionFactory mcf, String raName) {
@@ -968,7 +968,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
     public ManagedConnectionFactory obtainManagedConnectionFactory(PoolInfo poolInfo) throws ConnectorRuntimeException{
         return obtainManagedConnectionFactory(poolInfo, null);
     }
-    
+
     /**
      * Returns the MCF instance. If the MCF is already created and
      * present in connectorRegistry that instance is returned. Otherwise it
@@ -1474,9 +1474,9 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         createConnectorConnectionPool(ccp);
 
     }
-    
+
     /**
-     * Flush Connection pool by reinitializing the connections 
+     * Flush Connection pool by reinitializing the connections
      * established in the pool.
      * @param poolInfo
      * @throws com.sun.appserv.connectors.internal.api.ConnectorRuntimeException

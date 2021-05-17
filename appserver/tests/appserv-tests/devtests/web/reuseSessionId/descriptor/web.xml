@@ -26,7 +26,7 @@
     <servlet>
         <servlet-name>TestServlet</servlet-name>
         <servlet-class>test.TestServlet</servlet-class>
-    </servlet>  
+    </servlet>
 
    <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>

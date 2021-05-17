@@ -37,7 +37,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="client"/>
@@ -46,11 +46,11 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common">
         <antcall target="deploy-jms-common">
         <param name="dest.name" value="SampleQueue"/>
@@ -65,15 +65,15 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <antcall target="restart-server"/>
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup" depends="init-common">
         <antcall target="undeploy-jms-common">

@@ -36,7 +36,7 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer#setConfiguration(WebContainerConfig)
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedSetConfigurationTest {
@@ -63,7 +63,7 @@ public class EmbeddedSetConfigurationTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedWebAPIConfig() throws Exception {
         Context context = embedded.createContext(root);
@@ -92,6 +92,6 @@ public class EmbeddedSetConfigurationTest {
             glassfish = null;
         }
     }
-    
-    
+
+
 }

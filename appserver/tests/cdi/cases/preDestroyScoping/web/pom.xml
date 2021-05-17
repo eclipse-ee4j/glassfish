@@ -31,7 +31,7 @@
     <packaging>war</packaging>
 
     <name>CDI Pre Destroy Scoping Case WebApp</name>
-    
+
     <build>
       <plugins>
           <plugin>

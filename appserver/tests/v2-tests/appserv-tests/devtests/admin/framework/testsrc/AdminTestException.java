@@ -21,7 +21,7 @@ public class AdminTestException extends Exception
     /**
         Creates new <code>MBeanConfigException</code> without detail message.
     */
-    
+
     public AdminTestException(int iLine, String strLine, String sampleLine)
     {
         super("AdminTest Compare Exception: line=" + iLine + "\n<<" + strLine + ">>\n<<" + sampleLine + ">> {sample}" );

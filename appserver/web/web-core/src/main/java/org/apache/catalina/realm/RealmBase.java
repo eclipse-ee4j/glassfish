@@ -88,7 +88,7 @@ public abstract class RealmBase
 
     /**
      * Flag indicating whether a check to see if the request is secure is
-     * required before adding Pragma and Cache-Control headers when proxy 
+     * required before adding Pragma and Cache-Control headers when proxy
      * caching has been disabled
      */
     protected boolean checkIfRequestIsSecure = false;
@@ -274,7 +274,7 @@ public abstract class RealmBase
     // --------------------------------------------------------- Public Methods
 
 
-    
+
     /**
      * Add a property change listener to this component.
      *
@@ -343,7 +343,7 @@ public abstract class RealmBase
         int md5a2Length = ((md5a2 != null) ? md5a2.length : 0);
 
         // serverDigestValue = md5a1:nOnce:nc:cnonce:qop:md5a2
-        char[] serverDigestValue = new char[md5a1.length + 1 + 
+        char[] serverDigestValue = new char[md5a1.length + 1 +
             nOnceLength + 1 + ncLength + 1 + cnonceLength + 1 +
             qopLength + 1 + md5a2Length];
 
@@ -400,7 +400,7 @@ public abstract class RealmBase
                          + " Server digest:" + String.valueOf(serverDigest);
             log.log(Level.FINE, msg);
         }
-        
+
         if (Arrays.equals(serverDigest, clientDigest)) {
             return getPrincipal(username);
         } else {
@@ -445,7 +445,7 @@ public abstract class RealmBase
 
     }
 
-    
+
     /**
      * Execute a periodic task, such as reloading, etc. This method will be
      * invoked inside the classloading context of this container. Unexpected
@@ -492,10 +492,10 @@ public abstract class RealmBase
                 log.log(Level.FINE, "  No applicable constraints defined");
             return (null);
         }
-        
+
         // START SJSWS 6324431
         String origUri = uri;
-        boolean caseSensitiveMapping = 
+        boolean caseSensitiveMapping =
             ((StandardContext)context).isCaseSensitiveMapping();
         if (uri != null && !caseSensitiveMapping) {
             uri = uri.toLowerCase(Locale.ENGLISH);
@@ -505,11 +505,11 @@ public abstract class RealmBase
         boolean found = false;
 
         List<SecurityConstraint> constraints = context.getConstraints();
-        Iterator<SecurityConstraint> i = constraints.iterator(); 
+        Iterator<SecurityConstraint> i = constraints.iterator();
         while (i.hasNext()) {
             SecurityConstraint constraint = i.next();
             SecurityCollection[] collection = constraint.findCollections();
-                     
+
             // If collection is null, continue to avoid an NPE
             // See Bugzilla 30624
             if (collection == null) {
@@ -584,12 +584,12 @@ public abstract class RealmBase
 
         int longest = -1;
 
-        i = constraints.iterator(); 
+        i = constraints.iterator();
         while (i.hasNext()) {
             SecurityConstraint constraint = i.next();
             SecurityCollection [] collection =
                 constraint.findCollections();
-            
+
             // If collection is null, continue to avoid an NPE
             // See Bugzilla 30624
             if ( collection == null) {
@@ -646,9 +646,9 @@ public abstract class RealmBase
                         patterns[k]:patterns[k].toLowerCase(Locale.ENGLISH);
                     // END SJSWS 6324431
                     if (pattern.startsWith("/") &&
-                            pattern.endsWith("/*") && 
+                            pattern.endsWith("/*") &&
                             pattern.length() >= longest) {
-                            
+
                         if (pattern.length() == 2) {
                             matched = true;
                             length = pattern.length();
@@ -685,7 +685,7 @@ public abstract class RealmBase
             return resultsToArray(results);
         }
 
-        i = constraints.iterator(); 
+        i = constraints.iterator();
         while (i.hasNext()) {
             SecurityConstraint constraint = i.next();
             SecurityCollection[] collection = constraint.findCollections();
@@ -695,7 +695,7 @@ public abstract class RealmBase
             if ( collection == null) {
                 continue;
             }
-            
+
             if (log.isLoggable(Level.FINEST)) {
                 /* SJSWS 6324431
                 log.trace("  Checking constraint '" + constraints[i] +
@@ -743,7 +743,7 @@ public abstract class RealmBase
                     String pattern = patterns[k];
                     */
                     // START SJSWS 6324431
-                    String pattern = caseSensitiveMapping ? 
+                    String pattern = caseSensitiveMapping ?
                         patterns[k]:patterns[k].toLowerCase(Locale.ENGLISH);
                     // END SJSWS 6324431
                     if (uri != null && pattern.startsWith("*.")){
@@ -761,7 +761,7 @@ public abstract class RealmBase
                     }
                 }
             }
-    
+
             if (matched) {
                 found = true;
                 if (collection[pos].findMethod(method)) {
@@ -777,11 +777,11 @@ public abstract class RealmBase
             return resultsToArray(results);
         }
 
-        i = constraints.iterator(); 
+        i = constraints.iterator();
         while (i.hasNext()) {
             SecurityConstraint constraint = i.next();
             SecurityCollection[] collection = constraint.findCollections();
-            
+
             // If collection is null, continue to avoid an NPE
             // See Bugzilla 30624
             if (collection == null) {
@@ -834,7 +834,7 @@ public abstract class RealmBase
                     String pattern = patterns[k];
                     */
                     // START SJSWS 6324431
-                    String pattern = caseSensitiveMapping ? 
+                    String pattern = caseSensitiveMapping ?
                         patterns[k]:patterns[k].toLowerCase(Locale.ENGLISH);
                     // END SJSWS 6324431
                     if (pattern.equals("/")){
@@ -844,7 +844,7 @@ public abstract class RealmBase
                 if (matched) {
                     if (results == null) {
                         results = new ArrayList<SecurityConstraint>();
-                    }                    
+                    }
                     results.add(constraint);
                 }
             }
@@ -858,7 +858,7 @@ public abstract class RealmBase
 
         return resultsToArray(results);
     }
- 
+
     /**
      * Convert an ArrayList to a SecurityContraint [].
      */
@@ -871,7 +871,7 @@ public abstract class RealmBase
         return array;
     }
 
-    
+
     /**
      * Perform access control based on the specified authorization constraint.
      * Return <code>true</code> if this constraint is satisfied and processing
@@ -961,7 +961,7 @@ public abstract class RealmBase
         return (false);
 
     }
-    
+
     //START SJSAS 6232464
     /**
      * Return <code>true</code> if the specified Principal has the specified
@@ -975,14 +975,14 @@ public abstract class RealmBase
      * @param principal Principal for whom the role is to be checked
      * @param role Security role to be checked
      */
-    public boolean hasRole(HttpRequest request, 
-                           HttpResponse response, 
-                           Principal principal, 
+    public boolean hasRole(HttpRequest request,
+                           HttpResponse response,
+                           Principal principal,
                            String role) {
         return hasRole(principal, role);
     }
     //END SJSAS 6232464
-    
+
     //START SJSAS 6202703
     /**
      * Checks whether or not authentication is needed.
@@ -994,7 +994,7 @@ public abstract class RealmBase
      * @param constraints Security constraint we are enforcing
      * @param disableProxyCaching whether or not to disable proxy caching for
      *        protected resources.
-     * @param securePagesWithPragma true if we add headers which 
+     * @param securePagesWithPragma true if we add headers which
      * are incompatible with downloading office documents in IE under SSL but
      * which fix a caching problem in Mozilla.
      * @param ssoEnabled true if sso is enabled
@@ -1015,8 +1015,8 @@ public abstract class RealmBase
         }
         return Realm.AUTHENTICATE_NOT_NEEDED;
     }
-    
-    
+
+
     /**
      * Authenticates the user making this request, based on the specified
      * login configuration.  Return <code>true</code> if any specified
@@ -1039,7 +1039,7 @@ public abstract class RealmBase
         return ((AuthenticatorBase) authenticator).authenticate(
                         request, response, config);
     }
-    
+
     /**
      * Post authentication for given request and response.
      *
@@ -1054,7 +1054,7 @@ public abstract class RealmBase
           throws IOException {
          return true;
     }
-    
+
     //END SJSAS 6202703
 
     /**
@@ -1095,7 +1095,7 @@ public abstract class RealmBase
 
     }
 
-    
+
     /**
      * Enforce any user data constraint required by the security constraint
      * guarding this request URI.
@@ -1105,7 +1105,7 @@ public abstract class RealmBase
      * @param constraints Security constraint being checked
      *
      * @exception IOException if an input/output error occurs
-     * 
+     *
      * @return <code>true</code> if this constraint was not violated and
      * processing should continue, or <code>false</code> if we have created
      * a response already
@@ -1121,11 +1121,11 @@ public abstract class RealmBase
      * Checks if the given request URI and method are the target of any
      * user-data-constraint with a transport-guarantee of CONFIDENTIAL,
      * and whether any such constraint is already satisfied.
-     * 
+     *
      * If <tt>uri</tt> and <tt>method</tt> are null, then the URI and method
      * of the given <tt>request</tt> are checked.
      *
-     * If a user-data-constraint exists that is not satisfied, then the 
+     * If a user-data-constraint exists that is not satisfied, then the
      * given <tt>request</tt> will be redirected to HTTPS.
      *
      * @param request the request that may be redirected
@@ -1231,8 +1231,8 @@ public abstract class RealmBase
 
         return (false);
     }
-    
-    
+
+
     /**
      * Remove a property change listener from this component.
      *
@@ -1337,11 +1337,11 @@ public abstract class RealmBase
 
         // Clean up allocated resources
         md = null;
-        
+
         destroy();
-    
+
     }
-    
+
     public void destroy() {
         // no op
     }
@@ -1377,7 +1377,7 @@ public abstract class RealmBase
         synchronized (this) {
             try {
                 md.reset();
-    
+
                 byte[] bytes = null;
                 try {
                     bytes = Utility.convertCharArrayToByteArray(
@@ -1416,11 +1416,11 @@ public abstract class RealmBase
             }
         }
 
-    	if (hasMessageDigest()) {
-    		// Use pre-generated digest
-    		return getPassword(username);
-    	}
-    	
+        if (hasMessageDigest()) {
+            // Use pre-generated digest
+            return getPassword(username);
+        }
+
         char[] pwd = getPassword(username);
         int usernameLength = ((username != null) ? username.length() : 0);
         int realmNameLength = ((realmName != null) ? realmName.length() : 0);
@@ -1527,10 +1527,10 @@ public abstract class RealmBase
             log.log(Level.WARNING, getName()+"[" + name + "]: " + message, t);
         }
     }
-    
+
     //START SJSAS 6202703
     protected void disableProxyCaching(HttpRequest request,
-                                       HttpResponse response, 
+                                       HttpResponse response,
                                        boolean disableProxyCaching,
                                        boolean securePagesWithPragma) {
         HttpServletRequest hsrequest = (HttpServletRequest) request.getRequest();
@@ -1580,7 +1580,7 @@ public abstract class RealmBase
         return null;
     }
 
-        
+
     /**
      * Return an alternate auth type from the request if available.
      * Tomcat realms do not implement this so always return null as default.
@@ -1628,7 +1628,7 @@ public abstract class RealmBase
                 return false;
             }
         }
-        
+
         //here, arr1 and arr2 are not null with equal length
         boolean result = true;
         for (int i = 0; i < arr1.length; i++) {

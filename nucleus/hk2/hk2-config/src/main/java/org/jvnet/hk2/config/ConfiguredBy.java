@@ -27,7 +27,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Contract-like annotation used on services indicating that their lifecycle is
  * governed by the {@link Configured} bean they are associated with, and
  * configured by.
- * 
+ *
  * @author Kohsuke Kawaguchi
  * @author Jeff Trent
  */

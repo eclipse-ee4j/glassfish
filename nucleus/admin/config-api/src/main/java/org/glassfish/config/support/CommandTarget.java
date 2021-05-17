@@ -24,7 +24,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * CommandTarget is an enumeration of valid configuration target for a command execution
- * 
+ *
  */
 public enum CommandTarget implements TargetValidator {
 

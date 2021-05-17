@@ -65,7 +65,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     private String connectionClass;
     private String connectionFactoryInterface;
     private String connectionFactoryClass;
-      
+
     //connector1.5 begin
     private String  resourceAdapterClass = "";
     private ConnectorConfigProperty configProperty = null;
@@ -80,8 +80,8 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     //FIXME remove messagelisteners
     private Set messageListeners;
     //connector1.5 end
-    
-    // following are all the get and set methods for the 
+
+    // following are all the get and set methods for the
     // various variables listed above
     private Set requiredWorkContexts;
 
@@ -108,13 +108,13 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
     public ConnectorDescriptor() {
         this.configProperties = new OrderedSet();
-	this.authMechanisms = new OrderedSet();
-	this.securityPermissions = new OrderedSet();
-	this.adminObjects = new OrderedSet();
+    this.authMechanisms = new OrderedSet();
+    this.securityPermissions = new OrderedSet();
+    this.adminObjects = new OrderedSet();
     this.requiredWorkContexts = new OrderedSet();
 
         //FIXME.  need to remove the following
-	this.messageListeners = new OrderedSet();
+    this.messageListeners = new OrderedSet();
 
     this.connectorAnnotations = new OrderedSet<AnnotationInfo>();
     this.configPropertyAnnotations = new HashMap<String, Set<AnnotationInfo>>();
@@ -132,9 +132,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public void removeRequiredWorkContext(String workContextClass) {
-	    this.requiredWorkContexts.remove(workContextClass);
+        this.requiredWorkContexts.remove(workContextClass);
     }
-    
+
     /**
      * @return the default version of the deployment descriptor
      * loaded by this descriptor
@@ -144,7 +144,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     ////////////////////////////////////////////////////////////////////
-    // The following are access methods for connector1.0's 
+    // The following are access methods for connector1.0's
     // resourceadapter element.
     // We no longer support them.
     ////////////////////////////////////////////////////////////////////
@@ -152,165 +152,165 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     //QQ. FIXME.  After verifier stops using this interface,
     //this REALLY needs to be removed. (for 1.0 cases only)
 
-    // The methods for connection and connection factories have now shifted 
+    // The methods for connection and connection factories have now shifted
     //to OutboundResourceAdapter to maintain backward compatibility
-    //Sheetal. These methods should be removed from here once we start 
+    //Sheetal. These methods should be removed from here once we start
     //using new DOL
 
     /**
-     * @deprecated 
+     * @deprecated
      */
     public String getConnectionFactoryInterface() {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
-    public void 
+    public void
     setConnectionFactoryInterface(String connectionFactoryInterface) {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
-    public String 
+    public String
     getConnectionFactoryImpl() {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
-    public void 
+    public void
     setConnectionFactoryImpl(String connectionFactoryImpl) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public String 
+    public String
     getConnectionInterface() {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
-    public void 
+    public void
     setConnectionInterface(String connectionInterface) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public String 
+    public String
     getConnectionImpl() {
         throw new UnsupportedOperationException();
     }
- 
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
-    public void 
+    public void
     setConnectionImpl(String connectionImpl) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public String getManagedConnectionFactoryImpl() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public void setManagedConnectionFactoryImpl(String managedConnectionFactoryImpl) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public boolean supportsReauthentication() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public String getReauthenticationSupport() {
         throw new UnsupportedOperationException();
-    } 
- 
-    /** 
-     * @deprecated 
+    }
+
+    /**
+     * @deprecated
      */
     public void setReauthenticationSupport(boolean reauthenticationSupport) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public void setReauthenticationSupport(String reauthSupport) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public String getTransSupport() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public int getTransactionSupport() {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
     public void setTransactionSupport(int transactionSupport) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
     public void setTransactionSupport(String support) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public Set 
+    public Set
     getAuthMechanisms() {
         throw new UnsupportedOperationException();
     }
-    
+
     /**
      * @return a set of service-ref from this bundle or null
      * if none
      */
     public Set getServiceReferenceDescriptors() {
         return new OrderedSet();
-    }    
+    }
 
-    /** 
-     *Set of SecurityPermission objects 
+    /**
+     *Set of SecurityPermission objects
      */
-    public Set 
-    getSecurityPermissions() 
+    public Set
+    getSecurityPermissions()
     {
         if (securityPermissions == null) {
             securityPermissions = new OrderedSet();
@@ -318,59 +318,59 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         return securityPermissions;
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public boolean 
-    addAuthMechanism(AuthMechanism mech) 
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    /** 
-     * @deprecated 
-     */
-    public boolean 
-    removeAuthMechanism(AuthMechanism mech) 
+    public boolean
+    addAuthMechanism(AuthMechanism mech)
     {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public boolean 
-    addAuthMechanism(int mech) 
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-
-    /** 
-     * @deprecated 
-     */
-    public boolean 
-    removeAuthMechanism(int mech) 
+    public boolean
+    removeAuthMechanism(AuthMechanism mech)
     {
         throw new UnsupportedOperationException();
     }
 
-    /** 
+    /**
+     * @deprecated
+     */
+    public boolean
+    addAuthMechanism(int mech)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+
+    /**
+     * @deprecated
+     */
+    public boolean
+    removeAuthMechanism(int mech)
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Add a SecurityPermission object to the set
      */
-    public void 
-    addSecurityPermission(SecurityPermission permission) 
+    public void
+    addSecurityPermission(SecurityPermission permission)
     {
-	securityPermissions.add(permission);
+    securityPermissions.add(permission);
     }
 
-    /** 
+    /**
      * Remove a SecurityPermission object to the set
-     */  
-    public void 
-    removeSecurityPermission(SecurityPermission permission) 
+     */
+    public void
+    removeSecurityPermission(SecurityPermission permission)
     {
-	securityPermissions.remove(permission);
+    securityPermissions.remove(permission);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -384,12 +384,12 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public String getResourceAdapterClass() {
         return resourceAdapterClass;
     }
-    
+
     public void setResourceAdapterClass (String raClass) {
         resourceAdapterClass = raClass;
     }
-    
-    /** Set of ConnectorConfigProperty 
+
+    /** Set of ConnectorConfigProperty
      */
     public Set getConfigProperties() {
         return configProperties;
@@ -398,13 +398,13 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /** add a configProperty to the set
      */
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
-	this.configProperties.add(configProperty);
+    this.configProperties.add(configProperty);
     }
 
     /** remove a configProperty from the set
-     */ 
+     */
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
-	configProperties.remove(configProperty);
+    configProperties.remove(configProperty);
     }
 
     public LicenseDescriptor getLicenseDescriptor() {
@@ -418,29 +418,29 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public OutboundResourceAdapter getOutboundResourceAdapter() {
         return this.outboundRA;
     }
-    
-    public void 
+
+    public void
     setOutboundResourceAdapter (OutboundResourceAdapter outboundRA) {
         this.outboundRA = outboundRA;
     }
-    
+
     public InboundResourceAdapter getInboundResourceAdapter() {
         return this.inboundRA;
     }
-    
-    public void 
+
+    public void
     setInboundResourceAdapter(InboundResourceAdapter inboundRA) {
         this.inboundRA = inboundRA;
     }
 
-    /** 
+    /**
      *@return admin objects
      */
     public Set getAdminObjects() {
         return adminObjects;
     }
 
-    /** 
+    /**
      * set admin object
      */
     public void addAdminObject(AdminObject admin) {
@@ -478,7 +478,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public boolean getOutBoundDefined() {
-	return outboundRA != null;
+    return outboundRA != null;
     }
 
     //for the purpose of writing this optional node back to XML format.
@@ -503,7 +503,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public String getConnectorDescription() {
         return connectorDescription;
     }
- 
+
     /** set the connector description
     */
     public void setConnectorDescription(String description) {
@@ -516,7 +516,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public String getVendorName() {
         return vendorName;
     }
- 
+
     /** set value for vendorName
     */
     public void setVendorName(String vendorName) {
@@ -529,13 +529,13 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public String getEisType() {
         return eisType;
     }
- 
-   
+
+
     /** set eisType
     */
     public void setEisType(String eisType) {
         this.eisType = eisType;
-    } 
+    }
 
     /** get value for version
     */
@@ -545,7 +545,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     /** set value for version
-    */ 
+    */
     public void setVersion(String version) {
         //TODO V3 validate version ?
         this.version = version;
@@ -561,7 +561,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     /** set value for resourceadater version (1.5 schema)
-    */ 
+    */
     public void setResourceAdapterVersion(String resourceAdapterVersion) {
         this.resourceAdapterVersion = resourceAdapterVersion;
     }
@@ -573,27 +573,27 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /** return name used for deployment
     */
     public String getDeployName() {
-	return getModuleDescriptor().getArchiveUri();
+    return getModuleDescriptor().getArchiveUri();
     }
 
 
-    /** 
+    /**
      * visit the descriptor and all sub descriptors with a DOL visitor implementation
-     * 
+     *
      * @param aVisitor visitor to traverse the descriptors
-     */    
+     */
     public void visit(DescriptorVisitor aVisitor) {
         if (aVisitor instanceof ConnectorVisitor) {
             visit((ComponentVisitor) aVisitor);
         } else {
             super.visit(aVisitor);
         }
-    }    
+    }
 
     /*
      * @param type The full qualified name for connection factory interface
      */
-    public ConnectionDefDescriptor 
+    public ConnectionDefDescriptor
     getConnectionDefinitionByCFType (String type)
     {
         return getConnectionDefinitionByCFType(type, true);
@@ -606,7 +606,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      *                   only one connection factory type.  If type is null
      *                   and useDefault is true, the only CF will be returned.
      */
-    public ConnectionDefDescriptor 
+    public ConnectionDefDescriptor
     getConnectionDefinitionByCFType (String type, boolean useDefault)
     {
         if (this.outboundRA == null) {
@@ -616,16 +616,16 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         while (it.hasNext())
         {
             ConnectionDefDescriptor desc = (ConnectionDefDescriptor) it.next();
-            
+
             if (type == null)
             {
-                if (useDefault 
+                if (useDefault
                         && this.outboundRA.getConnectionDefs().size() == 1)
                     return desc;
                 else
                     return null;
             }
-                    
+
             if (desc.getConnectionFactoryIntf().equals(type))
                 return desc;
         }
@@ -687,28 +687,28 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     {
         StringBuffer buf = toStringBuffer;
         super.print(buf);
-        
-	buf.append("\n displayName : " + super.getName());
-	buf.append("\n connector_description : " + connectorDescription);
-	buf.append("\n smallIcon : " + super.getSmallIconUri());
-	buf.append("\n largeIcon : " + super.getLargeIconUri());
-	buf.append("\n vendorName : " + vendorName);
-	buf.append("\n eisType : " + eisType);
-	//buf.append("\n version : " + version);
-	buf.append("\n resourceadapter version : " + resourceAdapterVersion);
+
+    buf.append("\n displayName : " + super.getName());
+    buf.append("\n connector_description : " + connectorDescription);
+    buf.append("\n smallIcon : " + super.getSmallIconUri());
+    buf.append("\n largeIcon : " + super.getLargeIconUri());
+    buf.append("\n vendorName : " + vendorName);
+    buf.append("\n eisType : " + eisType);
+    //buf.append("\n version : " + version);
+    buf.append("\n resourceadapter version : " + resourceAdapterVersion);
 
         //license info
         if (getLicenseDescriptor() != null) {
- 	    buf.append("\n license_description : " + getLicenseDescriptor().getDescription());
-       	    buf.append("\n licenseRequired : " + getLicenseDescriptor().getLicenseRequiredValue());
+         buf.append("\n license_description : " + getLicenseDescriptor().getDescription());
+               buf.append("\n licenseRequired : " + getLicenseDescriptor().getLicenseRequiredValue());
         }
 
-	buf.append("\n resourceAdapterClass : " + resourceAdapterClass);
+    buf.append("\n resourceAdapterClass : " + resourceAdapterClass);
 
-	buf.append("\n resourceAdapterClass [" + resourceAdapterClass 
+    buf.append("\n resourceAdapterClass [" + resourceAdapterClass
                 + "] config properties :");
         appendConfigProperties(this.configProperties, buf);
-            
+
         if (this.outboundRA == null)
             buf.append("\n Outbound Resource Adapter NOT available");
         else
@@ -716,56 +716,56 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
             buf.append("\n Outbound Resource Adapter Info : ");
 
             buf.append("\n connection-definitions: ");
-            for (Iterator i = this.outboundRA.getConnectionDefs().iterator(); 
+            for (Iterator i = this.outboundRA.getConnectionDefs().iterator();
                  i.hasNext();)
             {
                 buf.append("\n------------\n");
 
-                ConnectionDefDescriptor conDef = 
+                ConnectionDefDescriptor conDef =
                     (ConnectionDefDescriptor) i.next();
-                buf.append("MCF : " 
+                buf.append("MCF : "
                         + conDef.getManagedConnectionFactoryImpl() + ", ");
-                buf.append("\n MCF [" + 
-                        conDef.getManagedConnectionFactoryImpl() 
+                buf.append("\n MCF [" +
+                        conDef.getManagedConnectionFactoryImpl()
                         + "] config properties :");
                 appendConfigProperties(conDef.getConfigProperties(), buf);
-                
-                buf.append("[CF Interface : " 
+
+                buf.append("[CF Interface : "
                         + conDef.getConnectionFactoryIntf() + "], ");
-                buf.append("[CF Class : " 
+                buf.append("[CF Class : "
                         + conDef.getConnectionFactoryImpl() + "], ");
-                buf.append("[Connection Interface : " 
+                buf.append("[Connection Interface : "
                         + conDef.getConnectionIntf() + "], ");
-                buf.append("[Connection Class : " 
+                buf.append("[Connection Class : "
                         + conDef.getConnectionImpl() + "] ");
-                
+
                 buf.append("\n------------\n");
             }
 
-            buf.append("\n transaction-support : " 
+            buf.append("\n transaction-support : "
                     + this.outboundRA.getTransSupport());
-            
+
             buf.append("\n authentication-mechanism: ");
-            for (Iterator i = this.outboundRA.getAuthMechanisms().iterator(); 
-                 i.hasNext();) 
+            for (Iterator i = this.outboundRA.getAuthMechanisms().iterator();
+                 i.hasNext();)
             {
-                AuthMechanism conf = (AuthMechanism) i.next(); 
+                AuthMechanism conf = (AuthMechanism) i.next();
                 buf.append("\n------------\n");
                 buf.append("[Type : " + conf.getAuthMechType() + "], ");
-                buf.append("[Interface : " 
+                buf.append("[Interface : "
                         + conf.getCredentialInterface() + "]");
                 buf.append("\n------------" );
             }
 
-            buf.append("\n reauthenticate-support : " 
+            buf.append("\n reauthenticate-support : "
                     + this.outboundRA.getReauthenticationSupport());
 
-            buf.append("\n security-permission : "); 
-            for (Iterator i = 
-                     getSecurityPermissions().iterator(); 
-                 i.hasNext();) 
+            buf.append("\n security-permission : ");
+            for (Iterator i =
+                     getSecurityPermissions().iterator();
+                 i.hasNext();)
             {
-                SecurityPermission conf = (SecurityPermission) i.next(); 
+                SecurityPermission conf = (SecurityPermission) i.next();
                 buf.append("\n------------\n");
                 buf.append("[persmission : " + conf.getPermission() + "], ");
                 buf.append("[discription : " + conf.getDescription() + "]");
@@ -779,7 +779,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         else
         {
             buf.append("\n Inbound Resource Adapter Info : ");
-            
+
             buf.append("\n Message Listeners Info : ");
             for (Iterator i = this.inboundRA.getMessageListeners().iterator();
                  i.hasNext();)
@@ -790,10 +790,10 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
                 buf.append("[AS Class : " + l.getActivationSpecClass() + "]");
                 buf.append("\n------------ ");
             }
-            
+
         } //inbound resourceadapter
-        
-        
+
+
         if (this.adminObjects.size() == 0)
             buf.append("\n Admin Objects NOT available");
         else
@@ -808,9 +808,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
                 appendConfigProperties(a.getConfigProperties(), buf);
                 buf.append("\n------------ ");
             }
-            
+
         } //admin objects
-        
+
     }
 
     private StringBuffer appendConfigProperties (Set props, StringBuffer buf)
@@ -829,7 +829,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         buf.append("\n------------");
         return buf;
     }
-    
+
     /**
      * @return the module type for this bundle descriptor
      */
@@ -850,15 +850,15 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public ComponentVisitor getBundleVisitor() {
         return new ConnectorValidator();
     }
-    
+
     /**
      *@param type message listener type
      */
     public MessageListener getSupportedMessageListener(String type) {
         if (this.inboundRA == null) {
-            return null; 
+            return null;
         }
-        
+
         Iterator i = this.inboundRA.getMessageListeners().iterator();
         while (i.hasNext()) {
             MessageListener l = (MessageListener) i.next();
@@ -887,21 +887,21 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * Member Variable: sunConnector
      * Methods: setSunDescriptor, getSunDescriptor
      ***********************************************************************************************/
-    
-    private SunConnector sunConnector = null; 
-    
-    /** 
+
+    private SunConnector sunConnector = null;
+
+    /**
      * This returns the extra ejb sun specific info not in the RI DID.
      *
-     * @return object representation of connector deployment descriptor 
+     * @return object representation of connector deployment descriptor
      */
     public SunConnector getSunDescriptor(){
         return sunConnector;
     }
-    
-    /** 
+
+    /**
      * This sets the extra connector sun specific info not in the RI DID.
-     * 
+     *
      * @param connector SunConnector object representation of connector deployment descriptor
      */
     public void setSunDescriptor(SunConnector connector){

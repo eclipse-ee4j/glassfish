@@ -49,7 +49,7 @@ public interface DynamicContent extends Content {
      * @param tokenValues maps placeholder tokens to values
      * @return matching or newly-created Instance
      */
-    
+
     public Instance getOrCreateInstance(Properties tokenValues);
     /**
      * Retrieve the MIME type for this dynamic content.
@@ -60,10 +60,10 @@ public interface DynamicContent extends Content {
     /**
      * Reports whether this dynamic content represents the main JNLP document
      * for an app client.
-     * @return 
+     * @return
      */
     public boolean isMain();
-    
+
     /**
      * Defines the contract for a given version of dynamic content at a single
      * moment in time.

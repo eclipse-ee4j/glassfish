@@ -50,7 +50,7 @@ public class CreateCustomResourceTest extends ConfigApiTest {
     private org.glassfish.resources.admin.cli.CreateCustomResource command = null;
     private AdminCommandContext context = null;
     private CommandRunner cr = null;
-    
+
     @Override
     public DomDocument getDocument(ServiceLocator habitat) {
         return new TestDocument(habitat);

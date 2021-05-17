@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * <p>
  * Any files returned by the command will be stored in the current directory. The setFileOutputDirectory method can be
  * used to control where returned files are saved.
- * 
+ *
  * <p>
  * <b>This implementation is now in retention period. All content was migrated to RemoteRestAdminCommand. This
  * implementation will be removed just after all necessary changes and tests will be done.</b>
@@ -157,7 +157,7 @@ public class RemoteAdminCommand {
      * this contract allows the caller to delegate to the HttpCommand implementation multiple times to configure each of the
      * URLConnections objects, then to invoke useConnection only once after it has the "final" URLConnection object. For
      * this reason be sure to implement prepareConnection so that it can be invoked multiple times.
-     * 
+     *
      */
     interface HttpCommand {
 
@@ -167,14 +167,14 @@ public class RemoteAdminCommand {
          * <p>
          * This method might be invoked multiple times before the connection is actually connected, so it should be serially
          * reentrant. Note that the caller will
-         * 
+         *
          * @param urlConnection the connection to be configured
          */
         public void prepareConnection(HttpURLConnection urlConnection) throws IOException;
 
         /**
          * Uses the configured and connected connection to read data, process it, etc.
-         * 
+         *
          * @param urlConnection the connection to be used
          * @throws CommandException
          * @throws IOException
@@ -633,7 +633,7 @@ public class RemoteAdminCommand {
                 if (authToken != null) {
                     /*
                      * If this request is for metadata then we expect to reuse
-                     * the auth token.   
+                     * the auth token.
                      */
                     urlConnection.setRequestProperty(SecureAdmin.Util.ADMIN_ONE_TIME_AUTH_TOKEN_HEADER_NAME,
                             (isForMetadata ? AuthTokenManager.markTokenForReuse(authToken) : authToken));
@@ -808,7 +808,7 @@ public class RemoteAdminCommand {
      * Creates a new HttpConnectorAddress corresponding to the location to which an earlier request was redirected.
      * <p>
      * If the new protocol is https then the HttpConnectorAddress secure setting is turned on.
-     * 
+     *
      * @param originalAddr the address which has been redirected elsewhere
      * @param redirection the location to which the attempted connection was redirected
      * @return connector address for the new location
@@ -871,7 +871,7 @@ public class RemoteAdminCommand {
     /*
      * Returns the username/password authenticaiton information to use
      * in building the outbound HTTP connection.
-     * 
+     *
      * @return the username/password auth. information to send with the request
      */
     protected AuthenticationInfo authenticationInfo() {
@@ -1004,7 +1004,7 @@ public class RemoteAdminCommand {
 
     /**
      * Decide what request method to use in building the HTTP request.
-     * 
+     *
      * @return the request method appropriate to the current command and options
      */
     private String chooseRequestMethod() {

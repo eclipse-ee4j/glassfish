@@ -20,7 +20,7 @@ package org.jvnet.hk2.config.provider;
  * Thrown by {@link ConfiguredBy} services that signifies that
  * the service rejected the configuration and the transaction
  * was automatically rolled back.
- * 
+ *
  * @author Jeff Trent
  */
 @SuppressWarnings("serial")
@@ -33,5 +33,5 @@ public class ConfigTransactionRejectedException extends ConfigTransactionExcepti
   public ConfigTransactionRejectedException(String message, Throwable cause) {
     super(message, cause);
   }
-  
+
 }

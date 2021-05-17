@@ -29,21 +29,21 @@ public class StatefulBean {
 
     @PostConstruct
     private void init() {
-	System.out.println("In StatefulBean:init()");
+    System.out.println("In StatefulBean:init()");
     }
 
     @PrePassivate
     private void prePass() {
-	System.out.println("In StatefulBean:prePassivate()");
+    System.out.println("In StatefulBean:prePassivate()");
     }
 
     public void hello() {
-	System.out.println("In StatefulBean::hello()");
+    System.out.println("In StatefulBean::hello()");
     }
 
     @PreDestroy
     private void destroy() {
-	System.out.println("In StatefulBean:destroy()");
+    System.out.println("In StatefulBean:destroy()");
     }
 
 

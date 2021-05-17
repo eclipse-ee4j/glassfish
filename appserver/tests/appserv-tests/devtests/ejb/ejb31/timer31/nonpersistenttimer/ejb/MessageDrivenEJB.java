@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb31.timer.nonpersistenttimer;
 import jakarta.jms.*;
 import jakarta.ejb.*;
 
-public class MessageDrivenEJB extends TimerStuffImpl 
+public class MessageDrivenEJB extends TimerStuffImpl
     implements MessageDrivenBean, TimedObject, MessageListener {
     private MessageDrivenContext mdc;
 
@@ -36,7 +36,7 @@ public class MessageDrivenEJB extends TimerStuffImpl
             System.out.println("Received message " + info + " , redelivered = " + redelivered);
 
             if (info.equals("test1") ) {
-                System.out.println("In onMessage : Got t for timer = " + 
+                System.out.println("In onMessage : Got t for timer = " +
                                    t.getInfo());
                 doTimerStuff("onMessage", true);
                 getInfo(t);
@@ -44,9 +44,9 @@ public class MessageDrivenEJB extends TimerStuffImpl
                 getTimeRemainingTest2(5, t);
 
                 cancelTimer(t);
-                
+
                 createTimerAndCancel(10000000);
-                
+
                 Timer t1 = createTimer(1000000, "messagedrivenejb");
                 cancelTimer(t1);
                 Timer t2 = createTimer(10000, "messagedrivenejb");
@@ -57,7 +57,7 @@ public class MessageDrivenEJB extends TimerStuffImpl
                     if( isBMT() ) {
                         cancelTimer(t);
                     } else {
-                        cancelTimerAndRollback(t);                
+                        cancelTimerAndRollback(t);
                     }
                 }
             } else if( info.equals("test3") ) {
@@ -79,8 +79,8 @@ public class MessageDrivenEJB extends TimerStuffImpl
                 cancelTimer(t);
                 Timer ctar = createTimer(1, 1, "cancelTimerAndRollback");
                 cancelTimer(ctar);
-            } 
-            
+            }
+
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class MessageDrivenEJB extends TimerStuffImpl
         checkCallerSecurityAccess("ejbTimeout", false);
 
         try {
-            System.out.println("In MessageDrivenEJB::ejbTimeout --> " 
+            System.out.println("In MessageDrivenEJB::ejbTimeout --> "
                                + t.getInfo());
         } catch(RuntimeException e) {
             System.out.println("got exception while calling getInfo");
@@ -109,9 +109,9 @@ public class MessageDrivenEJB extends TimerStuffImpl
     }
 
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
-	this.mdc = mdc;
+    this.mdc = mdc;
         setContext(mdc);
-	System.out.println("In ejbnonpersistenttimer.MessageDrivenEJB::setMessageDrivenContext !!");
+    System.out.println("In ejbnonpersistenttimer.MessageDrivenEJB::setMessageDrivenContext !!");
         checkCallerSecurityAccess("setMessageDrivenContext", false);
 
         getTimerService("setMessageDrivenContext", false);
@@ -119,7 +119,7 @@ public class MessageDrivenEJB extends TimerStuffImpl
     }
 
     public void ejbCreate() throws EJBException {
-	System.out.println("In ejbnonpersistenttimer.MessageDrivenEJB::ejbCreate !!");
+    System.out.println("In ejbnonpersistenttimer.MessageDrivenEJB::ejbCreate !!");
         setupJmsConnection();
         checkGetSetRollbackOnly("ejbCreate", false);
         checkCallerSecurityAccess("ejbCreate", false);
@@ -128,7 +128,7 @@ public class MessageDrivenEJB extends TimerStuffImpl
     }
 
     public void ejbRemove() {
-	System.out.println("In ejbnonpersistenttimer.MessageDrivenEJB::ejbRemove !!");
+    System.out.println("In ejbnonpersistenttimer.MessageDrivenEJB::ejbRemove !!");
         checkCallerSecurityAccess("ejbRemove", false);
         checkGetSetRollbackOnly("ejbRemove", false);
         getTimerService("ejbRemove", true);

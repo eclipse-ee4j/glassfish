@@ -34,17 +34,17 @@ public class PropertyVisitor implements Visitor {
     }
 
     /**
-     * Visit reader class 
+     * Visit reader class
      */
     @Override
     public void visit(BaseReader br) throws Exception {
         // FIXME, make as assert here about no class cast exception
-		if (br instanceof PropertyReader) {
-			PropertyReader pRdr = (PropertyReader) br;
-			_prop.setName(pRdr.getName());
-			_prop.setValue(pRdr.getValue());
-			_prop.setDescription(pRdr.getDescription());
-		}
+        if (br instanceof PropertyReader) {
+            PropertyReader pRdr = (PropertyReader) br;
+            _prop.setName(pRdr.getName());
+            _prop.setValue(pRdr.getValue());
+            _prop.setDescription(pRdr.getDescription());
+        }
     }
     //--- PRIVATE VARS ----
     Property _prop = null;

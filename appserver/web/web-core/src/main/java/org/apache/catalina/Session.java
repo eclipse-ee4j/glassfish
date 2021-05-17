@@ -298,9 +298,9 @@ public interface Session {
     // END SJSAS 6329289
 
 
-    /** 
+    /**
      * Gets the version number of this Session
-     */    
+     */
     public long getVersion();
 
     /**
@@ -339,12 +339,12 @@ public interface Session {
     /**
      * lock the session for background
      * returns true if successful; false if unsuccessful
-     */     
+     */
     public boolean lockForeground();
-    
+
 
     /**
      * unlock the session from foreground
-     */      
-    public void unlockForeground(); 
+     */
+    public void unlockForeground();
 }

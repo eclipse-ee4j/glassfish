@@ -227,7 +227,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
                 addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            
+
             Assert.assertEquals("<html><body>You've found the server on port 38082</body></html>",
                     getContent(new URL("https://localhost:38082").openConnection()));
             Assert.assertEquals("<html><body>You've found the server on port 38083</body></html>",
@@ -290,7 +290,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
         assertTrue(validator.isValid("::1", null));
         assertFalse(validator.isValid(":1", null));
     }
-    
+
     @Test
     public void ioStrategySet() throws IOException, InstantiationException {
         GrizzlyConfig grizzlyConfig = null;
@@ -299,21 +299,21 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             grizzlyConfig.setupNetwork();
             GenericGrizzlyListener genericGrizzlyListener1 =
                     (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
-            
+
             Assert.assertEquals(SameThreadIOStrategy.class, genericGrizzlyListener1.getTransport().getIOStrategy().getClass());
 
             GenericGrizzlyListener genericGrizzlyListener2 =
                     (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-2");
-            
+
             Assert.assertEquals(WorkerThreadIOStrategy.class, genericGrizzlyListener2.getTransport().getIOStrategy().getClass());
-            
+
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
             }
         }
     }
-    
+
     @Test
     public void schemeOverride() throws IOException, InstantiationException {
         GrizzlyConfig grizzlyConfig = null;
@@ -329,10 +329,10 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
                     }
                 });
             }
-            
+
             final String content = getContent(new URL("http://localhost:38082").openConnection());
             final String content2 = getContent(new URL("http://localhost:38083").openConnection());
-            
+
             Assert.assertEquals("http", content);
             Assert.assertEquals("https", content2);
         } finally {
@@ -350,7 +350,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
                 return listener;
             }
         }
-        
+
         return null;
     }
 }

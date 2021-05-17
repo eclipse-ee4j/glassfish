@@ -91,8 +91,8 @@ public class AnnotatedClassAttribute extends ClassAttribute {
    * Constructor
    */
   public AnnotatedClassAttribute(
-	ConstUtf8 nameAttr, short version, short annFlags,
-	long modTime, long annTime) {
+    ConstUtf8 nameAttr, short version, short annFlags,
+    long modTime, long annTime) {
     super(nameAttr);
     attrVersion = version;
     annotationFlags = annFlags;
@@ -103,14 +103,14 @@ public class AnnotatedClassAttribute extends ClassAttribute {
   /* package local methods */
 
   static AnnotatedClassAttribute read(
-	ConstUtf8 attrName, DataInputStream data, ConstantPool pool)
+    ConstUtf8 attrName, DataInputStream data, ConstantPool pool)
     throws IOException {
     short version = data.readShort();
     short annFlags = data.readShort();
     long modTime = data.readLong();
     long annTime = data.readLong();
     return  new AnnotatedClassAttribute(attrName, version, annFlags,
-					modTime, annTime);
+                    modTime, annTime);
   }
 
   void write(DataOutputStream out) throws IOException {

@@ -18,8 +18,8 @@
 -->
 
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee web-app_3_1.xsd"    
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee web-app_3_1.xsd"
          version="3.1">
 
     <display-name>administered-object-definition</display-name>
@@ -56,7 +56,7 @@
          <value>connector.MyAdminObject</value>
        </property>
      </administered-object>
-    
+
      <administered-object>
        <description>module-scope resource defined in Web DD</description>
        <name>java:module/env/AdminObject</name>
@@ -68,6 +68,6 @@
          <value>connector.MyAdminObject</value>
        </property>
      </administered-object>
-    
+
 </web-app>
 

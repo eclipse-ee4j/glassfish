@@ -19,7 +19,7 @@ package com.sun.enterprise.iiop.security;
 public class InvalidIdentityTokenException extends java.lang.Exception {
     /**
      * Constructs the exception with the specified detail message.
-     * 
+     *
      * @param the detail message.
      */
     public InvalidIdentityTokenException(String msg) {

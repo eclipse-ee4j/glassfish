@@ -42,11 +42,11 @@ public class SimpleMessageBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In "
             + "SimpleMessageBean.setMessageDrivenContext()");
-	this.mdc = mdc;
+    this.mdc = mdc;
     }
 
     public void ejbCreate() {
-	System.out.println("In SimpleMessageBean.ejbCreate()");
+    System.out.println("In SimpleMessageBean.ejbCreate()");
         try {
             jndiContext = new InitialContext();
             queueConnectionFactory = (QueueConnectionFactory)
@@ -67,19 +67,19 @@ public class SimpleMessageBean implements MessageDrivenBean,
                 msg = (TextMessage) inMessage;
                 System.out.println("MESSAGE BEAN: Message received: "
                     + msg.getText());
-		queueConnection =
-	            queueConnectionFactory.createQueueConnection();
-		queueSession =
-	            queueConnection.createQueueSession(false,
-		    Session.AUTO_ACKNOWLEDGE);
-		queueSender = queueSession.createSender(queue);
-		TextMessage message = queueSession.createTextMessage();
+        queueConnection =
+                queueConnectionFactory.createQueueConnection();
+        queueSession =
+                queueConnection.createQueueSession(false,
+            Session.AUTO_ACKNOWLEDGE);
+        queueSender = queueSession.createSender(queue);
+        TextMessage message = queueSession.createTextMessage();
 
-		message.setText("REPLIED:" + msg.getText());
-		message.setIntProperty("replyid", msg.getIntProperty("id") );
-		System.out.println("Sending message: " +
-		message.getText());
-		queueSender.send(message);
+        message.setText("REPLIED:" + msg.getText());
+        message.setIntProperty("replyid", msg.getIntProperty("id") );
+        System.out.println("Sending message: " +
+        message.getText());
+        queueSender.send(message);
             } else {
                 System.out.println("Message of wrong type: "
                     + inMessage.getClass().getName());
@@ -89,12 +89,12 @@ public class SimpleMessageBean implements MessageDrivenBean,
         } catch (Throwable te) {
             te.printStackTrace();
         } finally {
-	    try {
-	        queueSession.close();
-		queueConnection.close();
-	    } catch (Exception e) {
-	    }
-	}
+        try {
+            queueSession.close();
+        queueConnection.close();
+        } catch (Exception e) {
+        }
+    }
     }  // onMessage
 
     public void ejbRemove() {

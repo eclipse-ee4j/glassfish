@@ -22,7 +22,7 @@ import jakarta.ejb.*;
 public interface LocalTeamHome extends EJBLocalHome {
     public LocalTeam create (String id, String name, String city)
         throws CreateException;
-    
+
     public LocalTeam findByPrimaryKey (String id)
         throws FinderException;
 }

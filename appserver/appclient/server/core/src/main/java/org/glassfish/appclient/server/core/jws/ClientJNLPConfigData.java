@@ -42,7 +42,7 @@ class ClientJNLPConfigData {
     private File configFileFromInstall;
     private long lastModified = -1;
 
-    private static Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+    private static Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     @LogMessageInfo(
@@ -50,7 +50,7 @@ class ClientJNLPConfigData {
             cause = "The config file does not exist.",
             action = "The file is part of the installation so this might be an internal error.  Make sure you have not accidentally removed or renamed the config file.  If not, please file an error with a reproducible test case.")
     public static final String NO_CONFIG_FILE = "AS-ACDEPL-00108";
-    
+
     @LogMessageInfo(
             message = "The config file for client JNLP {0} exists but could not be read.",
             cause = "The config file might be protected from reading.",
@@ -64,7 +64,7 @@ class ClientJNLPConfigData {
     private List<XPathToDeveloperProvidedContentRefs> xPathsToDevContentRefs = Collections.EMPTY_LIST;
     private List<CombinedXPath> xPathsToCombinedContent = Collections.EMPTY_LIST;
 
-    
+
     ClientJNLPConfigData(final File installConfigDir, final File domainConfigDir) {
         super();
         configFileFromInstall = new File(installConfigDir, CONFIG_FILE_NAME);
@@ -199,5 +199,5 @@ class ClientJNLPConfigData {
         return result;
     }
 
-    
+
 }

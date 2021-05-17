@@ -29,7 +29,7 @@ import jakarta.interceptor.InvocationContext;
 @Interceptor
 @RecordingInterceptor
 public class Interceptor1 {
-    
+
     @SuppressWarnings("unchecked")
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
@@ -37,10 +37,10 @@ public class Interceptor1 {
         if (params.length != 1 || !(params[0] instanceof List)) {
             return context.proceed();
         }
-        
+
         List<String> param = (List<String>) params[0];
         param.add(MultiBeansXmlEjb1.INTERCEPTOR1);
-        
+
         return context.proceed();
     }
 

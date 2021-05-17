@@ -38,7 +38,7 @@
     <servlet-name>ResumeSession</servlet-name>
     <url-pattern>/ResumeSession</url-pattern>
   </servlet-mapping>
-    
+
   <session-config>
     <cookie-config>
       <name>ABC</name>

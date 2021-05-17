@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -46,21 +46,21 @@
 
     <target name="build" depends="compile">
 
-	<!--build and package .war first so it doesn't contain ejb bean !-->
-	<!--classes that have @Stateless/@Stateul !-->
+    <!--build and package .war first so it doesn't contain ejb bean !-->
+    <!--classes that have @Stateless/@Stateul !-->
         <antcall target="webclient-war-common">
           <param name="hasWebclient" value="true"/>
         </antcall>
 
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*.class"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/Client.class,**/SfulDriver.class"/>
         </antcall>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -68,10 +68,10 @@
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

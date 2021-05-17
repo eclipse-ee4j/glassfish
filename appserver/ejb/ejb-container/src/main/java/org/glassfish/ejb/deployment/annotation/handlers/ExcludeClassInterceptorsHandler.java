@@ -34,31 +34,31 @@ import org.glassfish.ejb.deployment.descriptor.InterceptorBindingDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the 
+ * This handler is responsible for handling the
  * jakarta.ejb.ExcludeClassInterceptors annotation.
  *
  */
 @Service
 @AnnotationHandlerFor(ExcludeClassInterceptors.class)
-public class ExcludeClassInterceptorsHandler 
+public class ExcludeClassInterceptorsHandler
     extends AbstractAttributeHandler {
-    
+
     public ExcludeClassInterceptorsHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
          EjbBundleDescriptorImpl ejbBundle =
              ((EjbDescriptor)ejbContexts[0].getDescriptor()).
                  getEjbBundleDescriptor();
-        
+
          for(EjbContext next : ejbContexts) {
 
             EjbDescriptor ejbDescriptor = (EjbDescriptor) next.getDescriptor();
 
-            // Create binding information.  
-            InterceptorBindingDescriptor binding = 
+            // Create binding information.
+            InterceptorBindingDescriptor binding =
                 new InterceptorBindingDescriptor();
 
             binding.setEjbName(ejbDescriptor.getName());
@@ -87,8 +87,8 @@ public class ExcludeClassInterceptorsHandler
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

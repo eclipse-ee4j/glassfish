@@ -31,10 +31,10 @@ import org.xml.sax.Attributes;
  * This is for "before" and "after" element.
  *
  * @author  Shing Wai Chan
- * @version 
+ * @version
  */
 public class OrderingOrderingNode extends DeploymentDescriptorNode<OrderingOrderingDescriptor> {
-       
+
     protected OrderingOrderingDescriptor descriptor = null;
 
     /**
@@ -46,12 +46,12 @@ public class OrderingOrderingNode extends DeploymentDescriptorNode<OrderingOrder
             descriptor = new OrderingOrderingDescriptor();
         }
         return descriptor;
-    }  
+    }
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -76,8 +76,8 @@ public class OrderingOrderingNode extends DeploymentDescriptorNode<OrderingOrder
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */

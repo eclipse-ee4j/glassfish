@@ -50,14 +50,14 @@ public class Field
         super(fieldInfo.getType());
         this.fieldInfo = fieldInfo;
     }
-	
+
     /**
      *
      */
-	public String getName()
-	{
-		return I18NHelper.getMessage(messages, "scope.field.getname.name"); //NOI18N
-	}
+    public String getName()
+    {
+        return I18NHelper.getMessage(messages, "scope.field.getname.name"); //NOI18N
+    }
 
     /**
      * Returns the corresponding field info.

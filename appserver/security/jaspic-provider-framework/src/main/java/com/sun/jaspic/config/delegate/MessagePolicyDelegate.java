@@ -31,7 +31,7 @@ public interface MessagePolicyDelegate {
     public MessagePolicy getResponsePolicy(String authContextID, Map properties);
 
     public Class[] getMessageTypes();
-    
+
     public String getAuthContextID(MessageInfo messageInfo);
 
     public boolean isProtected();

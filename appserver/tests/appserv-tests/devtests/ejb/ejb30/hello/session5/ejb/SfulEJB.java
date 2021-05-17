@@ -50,6 +50,6 @@ public class SfulEJB implements Sful, Sful2
         System.out.println("In SfulEJB:hello2()");
         return "hello2";
     }
-    
+
 
 }

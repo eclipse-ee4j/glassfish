@@ -20,7 +20,7 @@ import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleBMP  extends EJBObject {
-    
+
     public boolean test1(int i) throws RemoteException;
 
     public void modifyIsolation(int i) throws RemoteException;

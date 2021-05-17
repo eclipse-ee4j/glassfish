@@ -43,7 +43,7 @@ public class ServerSidePersistenceArchivist extends PersistenceArchivist {
 
     @Override
     protected String getPuRoot(ReadableArchive archive) {
-        //PU root for ejb jars and acc (while on server) is the current exploded archive on server side  
+        //PU root for ejb jars and acc (while on server) is the current exploded archive on server side
         return "";
     }
 

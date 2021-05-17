@@ -38,35 +38,35 @@ import javax.naming.*;
 
 import com.sun.ejb.containers.TimerBean;
 
-public class TimerSessionEJB implements TimedObject, SessionBean 
+public class TimerSessionEJB implements TimedObject, SessionBean
 {
     private SessionContext context;
     private QueueConnection connection;
     private QueueSession session;
     private Queue queue;
     private QueueSender sender;
-    
+
     public void ejbCreate() throws RemoteException {}
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void setSessionContext(SessionContext sc) {
         context = sc;
     }
-    
-    
+
+
     // business method to create a timer
     public TimerHandle createTimer(long initialDelay, long interval,
                                    String msg) {
-        
+
         try {
             System.out.println("Calling getMessageContext");
             context.getMessageContext();
         } catch(IllegalStateException ise) {
             System.out.println("getMessageContext() successfully threw illegalStateException");
         }
-        
-        
+
+
         TimerService timerService = context.getTimerService();
         Timer timer;
         if( interval == 0 ) {
@@ -77,15 +77,15 @@ public class TimerSessionEJB implements TimedObject, SessionBean
         }
         return timer.getHandle();
     }
-    
-    public void createTimerInOtherServer(String owner, String timerId, 
+
+    public void createTimerInOtherServer(String owner, String timerId,
                                          long initialExpiration,
                                          long intervalDuration, String info) {
 
         try {
             Date now = new Date();
-            TimerBean.testCreate(timerId, context, owner, 
-                             new Date(now.getTime() + initialExpiration), 
+            TimerBean.testCreate(timerId, context, owner,
+                             new Date(now.getTime() + initialExpiration),
                                  intervalDuration,
                              info);
         } catch(Exception e) {
@@ -96,7 +96,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
     }
 
     public void migrateTimersFrom(String owner) {
-        
+
         TimerBean.testMigrate(owner);
 
     }
@@ -114,31 +114,31 @@ public class TimerSessionEJB implements TimedObject, SessionBean
 
     // timer callback method
     public void ejbTimeout(Timer timer) {
-        
+
         String info = (String) timer.getInfo();
         System.out.println("Got ejbTimeout for timer " + info);
-        
+
         try {
             System.out.println("Calling getMessageContext");
             context.getMessageContext();
         } catch(IllegalStateException ise) {
             System.out.println("getMessageContext() successfully threw illegalStateException");
         }
-        
-        
+
+
         // add message to queue
         try {
-            
-            
+
+
             InitialContext ic = new InitialContext();
             QueueConnectionFactory qcFactory = (QueueConnectionFactory)
                 ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
             Queue queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
             connection = qcFactory.createQueueConnection();
-            
+
             QueueSession session = connection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
             sender  = session.createSender(queue);
-            
+
             TextMessage message = session.createTextMessage();
             message.setText(info);
             System.out.println("Sending time out message");
@@ -160,7 +160,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
             }
         }
     }
-    
+
     public void ejbActivate() {}
     public void ejbPassivate() {}
 

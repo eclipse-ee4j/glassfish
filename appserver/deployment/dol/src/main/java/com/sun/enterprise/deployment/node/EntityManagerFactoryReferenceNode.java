@@ -25,55 +25,55 @@ import java.util.Map;
 
 /**
  * This node handles all persistence-unit-ref xml tag elements
- * 
+ *
  * @author  Shing Wai Chan
- * @version 
+ * @version
  */
 public class EntityManagerFactoryReferenceNode extends DeploymentDescriptorNode {
-    
+
     public EntityManagerFactoryReferenceNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
-                                InjectionTargetNode.class, "addInjectionTarget");                          
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
+                                InjectionTargetNode.class, "addInjectionTarget");
     }
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map
      * xml element to method name on the descriptor class for setting
-     * the element value. 
-     *  
+     * the element value.
+     *
      * @return the map with the element name as a key, the setter method as
      *         a value
-     */    
+     */
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
         table.put(TagNames.PERSISTENCE_UNIT_REF_NAME, "setName");
-        table.put(TagNames.PERSISTENCE_UNIT_NAME, "setUnitName");        
+        table.put(TagNames.PERSISTENCE_UNIT_NAME, "setUnitName");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, EntityManagerFactoryReferenceDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, EntityManagerFactoryReferenceDescriptor descriptor) {
         Node entityMgrFactoryRefNode = appendChild(parent, nodeName);
         writeLocalizedDescriptions(entityMgrFactoryRefNode, descriptor);
-        
-        appendTextChild(entityMgrFactoryRefNode, TagNames.PERSISTENCE_UNIT_REF_NAME, descriptor.getName());      
-        appendTextChild(entityMgrFactoryRefNode, TagNames.PERSISTENCE_UNIT_NAME, descriptor.getUnitName());      
+
+        appendTextChild(entityMgrFactoryRefNode, TagNames.PERSISTENCE_UNIT_REF_NAME, descriptor.getName());
+        appendTextChild(entityMgrFactoryRefNode, TagNames.PERSISTENCE_UNIT_NAME, descriptor.getUnitName());
         if( descriptor.isInjectable() ) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
             for (InjectionTarget target : descriptor.getInjectionTargets()) {
                 ijNode.writeDescriptor(entityMgrFactoryRefNode, TagNames.INJECTION_TARGET, target);
             }
         }
-            
+
         return entityMgrFactoryRefNode;
     }
 }

@@ -62,7 +62,7 @@ public final class PropertiesAccessTest
         final Map<String, PropertyConfig> all = props.getPropertyConfigMap();
 
         for (final PropertyConfig prop : all.values() ) {
-            final String name = prop.getName(); 
+            final String name = prop.getName();
             final String value = prop.getValue();
         }
     }
@@ -74,7 +74,7 @@ public final class PropertiesAccessTest
         // get each property, set it to the same value, the verify
         // it's the same.
         for ( final PropertyConfig prop : all.values() ) {
-            
+
             final String value = prop.getValue();
             prop.setValue(value);
 
@@ -194,9 +194,9 @@ public final class PropertiesAccessTest
             final Set<ObjectName> all = getAllImplementorsOfProperties();
 
             testAll(all, "checkCreateRemove");
-		}
-	}
-	
+        }
+    }
+
 }
 
 

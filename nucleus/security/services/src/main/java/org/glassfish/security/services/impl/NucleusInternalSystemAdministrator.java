@@ -23,7 +23,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Nucleus (open-source) implementation of the InternalSystemAdministrator contract.
- * 
+ *
  * @author tjquinn
  */
 @Service(name="nucleus")

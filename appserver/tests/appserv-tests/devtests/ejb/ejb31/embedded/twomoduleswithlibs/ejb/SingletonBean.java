@@ -17,8 +17,8 @@
 package org.glassfish.tests.ejb.sample;
 
 import jakarta.ejb.Singleton;
-import jakarta.ejb.Startup; 
-import jakarta.ejb.SessionContext; 
+import jakarta.ejb.Startup;
+import jakarta.ejb.SessionContext;
 import jakarta.annotation.Resource;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.security.PermitAll;
@@ -28,7 +28,7 @@ import javax.naming.InitialContext;
 /**
  * @author Marina Vatkina
  */
-@Singleton 
+@Singleton
 @Startup
 public class SingletonBean {
 

@@ -27,21 +27,21 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class SimpleBMPClient {
 
 
-    public static int NO_OF_THREADS = 20; 
+    public static int NO_OF_THREADS = 20;
     public int failedCount = 0;
 
     SimpleReporterAdapter stat = new SimpleReporterAdapter();
     String testSuite = "ConnectionLeakReclaim ";
     public SimpleBMPClient(){
-	execute();
+    execute();
     }
 
     public static void main(String[] args) {
-	new SimpleBMPClient();
+    new SimpleBMPClient();
     }
 
     private void execute() {
-	stat.addDescription("Connection Leak Reclaim Notify Tests");
+    stat.addDescription("Connection Leak Reclaim Notify Tests");
         WorkerThread workers[] = new WorkerThread[NO_OF_THREADS];
            for(int i=0; i< workers.length;i++){
                workers[i] = new WorkerThread();
@@ -60,11 +60,11 @@ public class SimpleBMPClient {
         for(int i=0; i<workers.length;i++){
             workers[i].setExit(true);
         }
-	if(failedCount > 0) {
-  	    stat.addStatus(testSuite + "test1 : ", stat.FAIL);
-	} else {
-  	    stat.addStatus(testSuite + "test1 : ", stat.PASS);
-	}    
+    if(failedCount > 0) {
+          stat.addStatus(testSuite + "test1 : ", stat.FAIL);
+    } else {
+          stat.addStatus(testSuite + "test1 : ", stat.PASS);
+    }
         stat.printSummary();
     }
 
@@ -88,7 +88,7 @@ public class SimpleBMPClient {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
                 SimpleBMP simpleBMP = simpleBMPHome.create();
-		test(simpleBMP);
+        test(simpleBMP);
             }catch(Exception e){
                 System.out.println("Thread : " + Thread.currentThread().getName() + "did not run ");
                 e.printStackTrace();
@@ -97,10 +97,10 @@ public class SimpleBMPClient {
         }
 
         public boolean test(SimpleBMP bmp) throws RemoteException{
-	    if( ! bmp.test1()) {
-		SimpleBMPClient.this.failedCount++;
-	    }
-	    return true;
+        if( ! bmp.test1()) {
+        SimpleBMPClient.this.failedCount++;
+        }
+        return true;
         }
 
     }

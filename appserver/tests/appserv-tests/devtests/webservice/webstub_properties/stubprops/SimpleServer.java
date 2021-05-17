@@ -22,8 +22,8 @@
 
 package stubprops;
 
-import java.rmi.RemoteException; 
-import java.rmi.Remote; 
+import java.rmi.RemoteException;
+import java.rmi.Remote;
 
 /**
  * Simple WebServices Interface
@@ -31,6 +31,6 @@ import java.rmi.Remote;
  * @author Jerome Dochez
  */
 public interface SimpleServer extends Remote {
-    
+
     public String sayHello(String who) throws RemoteException;
 }

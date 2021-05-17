@@ -23,11 +23,11 @@
      <ejb>
         <ejb-name>SFSBEJB</ejb-name>
         <jndi-name>ejb/ejb_ee_methodcheckpoint_simple_SFSB</jndi-name>
-	<checkpoint-at-end-of-method>
-	    <method>
-		<method-name>getName</method-name>
-	    </method>
-	</checkpoint-at-end-of-method>
+    <checkpoint-at-end-of-method>
+        <method>
+        <method-name>getName</method-name>
+        </method>
+    </checkpoint-at-end-of-method>
      </ejb>
    </enterprise-beans>
 </sun-ejb-jar>

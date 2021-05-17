@@ -50,7 +50,7 @@ import jakarta.persistence.EntityManagerFactory;
 
 /**
  *Represents information about the app client, regardless of what type of
- *archive (jar or directory) it is stored in or what type of module 
+ *archive (jar or directory) it is stored in or what type of module
  *(app client or nested within an ear) that archive holds.
  *
  *@author tjquinn
@@ -59,16 +59,16 @@ import jakarta.persistence.EntityManagerFactory;
 public abstract class AppClientInfo {
 
     public static final String USER_CODE_IS_SIGNED_PROPERTYNAME = "com.sun.aas.user.code.signed";
-    
+
     private static final String SIGNED_USER_CODE_PERMISSION_TEMPLATE_NAME = "jwsclientSigned.policy";
-    
+
     private static final String UNSIGNED_USER_CODE_PERMISSION_TEMPLATE_NAME = "jwsclientUnsigned.policy";
-    
+
     private static final String CODE_BASE_PLACEHOLDER_NAME = "com.sun.aas.jws.client.codeBase";
-    
+
     /** logger */
     protected Logger _logger;
-    
+
 //    /** abstract representation of the storage location */
 //    private ReadableArchive appClientArchive = null;
 
@@ -76,22 +76,22 @@ public abstract class AppClientInfo {
 //    private File appClientArchive = null;
 //    private ReadableArchive appClient;
 
-    /** abstract archivist able to operate on the module in the location 
+    /** abstract archivist able to operate on the module in the location
       * (specified by archive */
     private Archivist archivist = null;
-    
+
     /** main class name as the user specified it on the command line */
     protected String mainClassFromCommandLine;
-    
+
     /**
-     *main class to be used - could come from the command line or from the 
-     *manifest of the selected app client archive 
+     *main class to be used - could come from the command line or from the
+     *manifest of the selected app client archive
      */
     protected String mainClassNameToRun = null;
 
     /** class loader - cached */
     private ClassLoader classLoader = null;
-    
+
     /** indicates if the app client has been launched using Java Web Start */
     protected boolean isJWS = false;
 
@@ -100,7 +100,7 @@ public abstract class AppClientInfo {
      * .class file case and the regular java launch with main class case
      */
     private ApplicationClientDescriptor acDesc = null;
-    
+
     /** access to the localizable strings */
     private static final LocalStringManager localStrings =
             new LocalStringManagerImpl(AppClientInfo.class);
@@ -135,7 +135,7 @@ public abstract class AppClientInfo {
 
     /**
      * Creates a new AppClientInfo for a main class file.
-     * 
+     *
      * @param isJWS
      * @param logger
      * @param mainClassFromCommandLine
@@ -155,7 +155,7 @@ public abstract class AppClientInfo {
     }
 
     protected void completeInit() throws Exception {
-        
+
     }
 //    /**
 //     *Finishes initialization work.
@@ -207,7 +207,7 @@ public abstract class AppClientInfo {
 //            grantRequestedPermissionsToUserCode();
 //        }
 //    }
-    
+
     /**
      *Returns the app client descriptor to be run.
      *@return the descriptor for the selected app client
@@ -226,7 +226,7 @@ public abstract class AppClientInfo {
     protected boolean deleteAppClientDir() {
         return !_keepExplodedDir;
     }
-    
+
     protected String getLocalString(final String key, final String defaultMessage,
             final Object... args) {
         String result = localStrings.getLocalString(this.getClass(),
@@ -264,7 +264,7 @@ public abstract class AppClientInfo {
 
         //TODO: This method does not appear to be used -- can it be deleted?
         public Application getApplication(ServiceLocator habitat) {
-        	
+
             Application application = appClient.getApplication();
             if (application == null) {
                 application = Application.createVirtualApplication(
@@ -317,9 +317,9 @@ public abstract class AppClientInfo {
         ApplicationClientDescriptor descr) {
         return ! descr.getEntityManagerFactoryReferenceDescriptors().isEmpty();
     }
-    
+
     /**
-     *Reports whether the main class in the archive contains annotations that 
+     *Reports whether the main class in the archive contains annotations that
      *refer to persistence units.
      *@return boolean if the main class contains annotations that refer to a pers. unit
      */
@@ -438,7 +438,7 @@ public abstract class AppClientInfo {
 //            }
 //        }
 //    }
-    
+
     /////////////////////////////////////////////////////////////////
     //  The following protected methods are overridden by at least //
     //  one of the sub classes.                                    //
@@ -463,7 +463,7 @@ public abstract class AppClientInfo {
     protected String getAppClientRoot(
         ReadableArchive archive, ApplicationClientDescriptor descriptor) {
         return archive.getURI().toASCIIString();
-    }                                        
+    }
 
     protected void massageDescriptor()
             throws IOException, AnnotationProcessorException {
@@ -497,7 +497,7 @@ public abstract class AppClientInfo {
     }
 
     protected boolean classContainsAnnotation(
-            String entry, AnnotationDetector detector, 
+            String entry, AnnotationDetector detector,
             ReadableArchive archive, ApplicationClientDescriptor descriptor)
             throws FileNotFoundException, IOException {
         return detector.containsAnnotation(archive, entry);
@@ -527,6 +527,6 @@ public abstract class AppClientInfo {
 
 
     //for debug purpose
-    protected static final boolean _keepExplodedDir = 
+    protected static final boolean _keepExplodedDir =
             Boolean.getBoolean("appclient.keep.exploded.dir");
 }

@@ -55,7 +55,7 @@
                        entropy of the initialization of our random number
                        generator"
                  type="java.lang.String"/>
- 
+
     <attribute   name="maxActiveSessions"
           description="The maximum number of active Sessions allowed, or -1
                        for no limit"
@@ -83,7 +83,7 @@
 
     <attribute   name="activeSessions"
           description="Number of active sessions at this moment"
-                 type="int" 
+                 type="int"
             writeable="false"/>
 
     <attribute   name="sessionCount"

@@ -36,24 +36,24 @@ import java.util.logging.Logger;
  * @author Rajiv Mordani
  */
 public class ModifiedAttributeHASession extends BaseHASession {
-    
+
     private static final Logger _logger = HAStoreBase._logger;
 
     private transient Map<String, SessionAttributeState> _attributeStates = new HashMap<String, SessionAttributeState>();
     private transient boolean _dirtyFlag = false;
-    
-    
+
+
     /** Creates a new instance of ModifiedAttributeHASession */
     public ModifiedAttributeHASession(Manager manager) {
         super(manager);
     }
-    
+
     /**
      * return an ArrayList of Strings
      * whose elements are the names of the deleted attributes
-     */      
+     */
     public List<String> getDeletedAttributes() {
-        
+
         List<String> resultList = new ArrayList<String>();
         for (Map.Entry<String, SessionAttributeState> entry : _attributeStates.entrySet()) {
             SessionAttributeState nextAttrState = entry.getValue();
@@ -69,25 +69,25 @@ public class ModifiedAttributeHASession extends BaseHASession {
      * return an ArrayList of Strings
      * whose elements are the names of the modified attributes
      * attributes must dirty, persistent and not deleted
-     */      
+     */
     public List<String> getModifiedAttributes() {
         List<String> resultList = new ArrayList<String>();
         for (Map.Entry<String, SessionAttributeState> entry : _attributeStates.entrySet()) {
             SessionAttributeState nextAttrState = entry.getValue();
             String nextAttrName = entry.getKey();
-            if(nextAttrState.isDirty() 
-                    && nextAttrState.isPersistent() 
+            if(nextAttrState.isDirty()
+                    && nextAttrState.isPersistent()
                     && (!nextAttrState.isDeleted())) {
                 resultList.add(nextAttrName);
             }
         }
-        return resultList; 
-    } 
+        return resultList;
+    }
 
     /**
      * return an ArrayList of Strings
      * whose elements are the names of the added attributes
-     */        
+     */
     public List<String> getAddedAttributes() {
         List<String> resultList = new ArrayList<String>();
         for (Map.Entry<String, SessionAttributeState> entry : _attributeStates.entrySet()) {
@@ -98,12 +98,12 @@ public class ModifiedAttributeHASession extends BaseHASession {
             }
         }
         return resultList;
-    }  
-    
+    }
+
     /**
      * return an ArrayList of Strings
      * whose elements are the names of the added attributes
-     */        
+     */
     public List<String> getAddedAttributesPrevious() {
         List<String> resultList = new ArrayList<String>();
         for (Map.Entry<String, SessionAttributeState> entry : _attributeStates.entrySet()) {
@@ -114,18 +114,18 @@ public class ModifiedAttributeHASession extends BaseHASession {
             }
         }
         return resultList;
-    }      
+    }
 
     /**
      * clear (empty) the attributeStates
-     */     
+     */
     void clearAttributeStates() {
         if(_attributeStates == null) {
             _attributeStates = new HashMap<String, SessionAttributeState>();
         }
         _attributeStates.clear();
     }
-    
+
     //this method should only be used for testing
     public void privateResetAttributeState() {
         this.resetAttributeState();
@@ -137,7 +137,7 @@ public class ModifiedAttributeHASession extends BaseHASession {
      * note: pre-condition is that the removed attributes have been
      * removed from _attributeStates; this is taken care of by removeAttribute
      * method
-     */      
+     */
     void resetAttributeState() {
         clearAttributeStates();
         Enumeration<String> attrNames = getAttributeNames();
@@ -149,13 +149,13 @@ public class ModifiedAttributeHASession extends BaseHASession {
         }
         setDirty(false);
     }
-    
+
     /**
      * set the attribute name to the value value
      * and update the attribute state accordingly
      * @param name
      * @param value
-     */    
+     */
     public void setAttribute(String name, Object value) {
         super.setAttribute(name, value);
         SessionAttributeState attributeState = getAttributeState(name);
@@ -191,13 +191,13 @@ public class ModifiedAttributeHASession extends BaseHASession {
             }
         }
         setDirty(true);
-    }  
-    
+    }
+
     /**
      * remove the attribute name
      * and update the attribute state accordingly
      * @param name
-     */     
+     */
     public void removeAttribute(String name) {
 
 
@@ -216,17 +216,17 @@ public class ModifiedAttributeHASession extends BaseHASession {
     /**
      * return the SessionAttributeState for attributeName
      * @param attributeName
-     */       
+     */
     SessionAttributeState getAttributeState(String attributeName) {
         return _attributeStates.get(attributeName);
     }
-   
+
     /**
      * set the SessionAttributeState for attributeName
      * based on persistent value
      * @param attributeName
      * @param persistent
-     */     
+     */
     void setAttributeStatePersistent(String attributeName, boolean persistent) {
 
         SessionAttributeState attrState = _attributeStates.get(attributeName);
@@ -244,7 +244,7 @@ public class ModifiedAttributeHASession extends BaseHASession {
      * based on dirty value
      * @param attributeName
      * @param dirty
-     */     
+     */
     void setAttributeStateDirty(String attributeName, boolean dirty) {
 
         SessionAttributeState attrState = _attributeStates.get(attributeName);
@@ -260,14 +260,14 @@ public class ModifiedAttributeHASession extends BaseHASession {
     /**
      * remove the SessionAttributeState for attributeName
      * @param attributeName
-     */ 
+     */
     void removeAttributeState(String attributeName) {
         _attributeStates.remove(attributeName);
     }
 
     /**
      * return isDirty
-     */    
+     */
     public boolean isDirty() {
         return _dirtyFlag;
     }
@@ -275,12 +275,12 @@ public class ModifiedAttributeHASession extends BaseHASession {
     /**
      * set isDirty
      * @param isDirty
-     */    
+     */
     public void setDirty(boolean isDirty) {
         _dirtyFlag = isDirty;
     }
-    
-    /* Private Helper method to be used in HAAttributeStore only */ 
+
+    /* Private Helper method to be used in HAAttributeStore only */
     Enumeration<String> privateGetAttributeList() {
 
         return (new Enumerator<String>(new ArrayList<String>(attributes.keySet())));

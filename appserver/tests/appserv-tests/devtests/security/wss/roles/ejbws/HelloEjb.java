@@ -55,7 +55,7 @@ public class HelloEjb {
     public String rolesAllowed1(String who) {
         return "Hello, " + who;
     }
-    
+
     @RolesAllowed(value={"webuser"})
     public String rolesAllowed2(String who) {
         return "Hello, " + who;
@@ -69,7 +69,7 @@ public class HelloEjb {
     @PermitAll
     public String permitAll(String who) {
         return "Hello, " + who;
-    }    
+    }
 
     public String runAs1() {
         return sful.hello();

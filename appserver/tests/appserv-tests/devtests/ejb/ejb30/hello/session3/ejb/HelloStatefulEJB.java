@@ -27,7 +27,7 @@ import jakarta.persistence.EntityManager;
 @AccessTimeout(0)
 @Stateful public class HelloStatefulEJB implements HelloStateful {
 
-    
+
     @PersistenceContext(name="myem",
                         unitName="foo", type=PersistenceContextType.EXTENDED)
         private EntityManager em;
@@ -42,12 +42,12 @@ import jakarta.persistence.EntityManager;
 
     public void sleepFor(int sec) {
         System.out.println("In HelloStatefulEJB::sleepFor()");
-	try {
-	    for (int i=0 ; i<sec; i++) {
-		Thread.currentThread().sleep(1000);
-	    }
-	} catch (Exception ex) {
-	}
+    try {
+        for (int i=0 ; i<sec; i++) {
+        Thread.currentThread().sleep(1000);
+        }
+    } catch (Exception ex) {
+    }
         System.out.println("Finished HelloStatefulEJB::sleepFor()");
     }
 

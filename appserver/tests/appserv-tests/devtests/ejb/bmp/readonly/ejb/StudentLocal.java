@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import jakarta.ejb.EJBLocalObject;
 
 public interface StudentLocal extends EJBLocalObject {
- 
+
   /**
-   * Returns the CourseIds that a student is enrolled in. 
+   * Returns the CourseIds that a student is enrolled in.
    * @param studentId primary key of the student object
    * @param courseId primary key of the course object
-   * 
+   *
    */
    public ArrayList getCourseIds();
 

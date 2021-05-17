@@ -153,7 +153,7 @@ public class XAManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @param other <code>ManagedConnectionFactory</code> object for checking equality with
      * @return true    if the property sets of both the
      *         <code>ManagedConnectionFactory</code> objects are the same
-     *         false	otherwise
+     *         false    otherwise
      */
     public boolean equals(Object other) {
         logFine("In equals");
@@ -304,4 +304,4 @@ public class XAManagedConnectionFactory extends ManagedConnectionFactoryImpl {
     public String getPropertyCycle() {
         return spec.getDetail(DataSourceSpec.PROPERTYCYCLE);
     }
-}    
+}

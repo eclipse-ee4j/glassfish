@@ -40,32 +40,32 @@ public class CreateSession extends HttpServlet {
         // comment
         if (sessionCookie.indexOf("Comment=myComment") == -1) {
             throw new ServletException("Missing cookie comment");
-        }      
+        }
 
         // domain
         if (sessionCookie.indexOf("Domain=mydomain") == -1) {
             throw new ServletException("Missing cookie domain");
-        }      
+        }
 
         // path
         if (sessionCookie.indexOf("Path=/myPath") == -1) {
             throw new ServletException("Missing cookie path");
-        }      
+        }
 
         // secure
         if (sessionCookie.indexOf("Secure") == -1) {
             throw new ServletException("Missing Secure attribute");
-        }      
+        }
 
         // http-only
         if (sessionCookie.indexOf("HttpOnly") == -1) {
             throw new ServletException("Missing HttpOnly attribute");
-        }      
+        }
 
         // max-age
         if (sessionCookie.indexOf("Max-Age=123") == -1) {
             throw new ServletException("Missing max-age");
-        }      
+        }
 
     }
 }

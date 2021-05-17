@@ -58,10 +58,10 @@ public class ListLibrariesCommand implements AdminCommand {
     @Inject
     ServerEnvironment env;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListLibrariesCommand.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListLibrariesCommand.class);
 
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         File libDir = env.getLibPath();

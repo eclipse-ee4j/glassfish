@@ -32,7 +32,7 @@ public class EjbTest {
     public void testTimer() throws Exception {
         try {
             InitialContext ic = new InitialContext();
-            TimerRemote ejb = 
+            TimerRemote ejb =
                     (TimerRemote) ic.lookup("java:global/remoteejbs/TimerEjb");
             System.out.println("Looked up [" + ejb + "]");
             ejb.createTimer();

@@ -408,7 +408,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
                 throw new IllegalArgumentException(localStrings.getLocalString(
                         "web.deployment.exceptionconflictwebcompwithoutimpl",
                         "Two or more web fragments define the same Servlet with conflicting implementation class names that are not overridden by the web.xml"));
-            } 
+            }
             if (resultDesc.getConflictedInitParameterNames().size() > 0) {
                 throw new IllegalArgumentException(localStrings.getLocalString(
                         "web.deployment.exceptionconflictwebcompinitparam",
@@ -1206,7 +1206,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             MessageDestinationReferenceDescriptor mdr =
                 _getMessageDestinationReferenceByName(mdRef.getName());
             if (mdr != null) {
-                combineInjectionTargets(mdr, mdRef);           
+                combineInjectionTargets(mdr, mdRef);
             } else {
                 if (env instanceof WebBundleDescriptor &&
                         ((WebBundleDescriptor)env).isConflictMessageDestinationReference()) {
@@ -1314,7 +1314,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
         if (((WebBundleDescriptor) jndiNameEnv).hasWebServices()) {
             // Add @Resource WebServiceContext present in endpoint impl class to the list of
-            // injectable resources; We do this for servelt endpoint only because the actual 
+            // injectable resources; We do this for servelt endpoint only because the actual
             // endpoint impl class gets replaced by JAXWSServlet in web.xml and hence
             // will never be added as an injectable resource
             for (InjectionCapable next : getInjectableResources(this)) {
@@ -1402,7 +1402,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             Iterator<WebResourceCollection> iter = newSc.getWebResourceCollections().iterator();
             while (iter.hasNext()) {
                 WebResourceCollection wrc = iter.next();
-                Set<String> urlPatterns = wrc.getUrlPatterns();   
+                Set<String> urlPatterns = wrc.getUrlPatterns();
                 urlPatterns.removeAll(allUrlPatterns);
                 boolean isEmpty = (urlPatterns.size() == 0);
                 addSc = (addSc || (!isEmpty));
@@ -1994,7 +1994,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
      * visitor API implementation
      */
     public void visit(DescriptorVisitor aVisitor) {
-        if (aVisitor instanceof WebBundleVisitor || 
+        if (aVisitor instanceof WebBundleVisitor ||
             aVisitor instanceof ComponentPostVisitor) {
             visit((ComponentVisitor) aVisitor);
         } else {
@@ -2208,7 +2208,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     /**
      * This property can be used to indicate special processing.
      * For example, a Deployer may set this property.
-     */ 
+     */
     public void setExtensionProperty(String key, String value) {
         if (null == extensionProperty) {
             extensionProperty = new HashMap<String, String>();
@@ -2220,7 +2220,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
      * Determine if an extension property has been set.
      */
     public boolean hasExtensionProperty(String key) {
-        if (null == extensionProperty || 
+        if (null == extensionProperty ||
             extensionProperty.get(key) == null) {
             return false;
         }
@@ -2240,58 +2240,58 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     }
 
     protected void combineResourceDescriptors(JndiNameEnvironment env, JavaEEResourceType javaEEResourceType) {
-	 for (ResourceDescriptor desc : env.getResourceDescriptors(javaEEResourceType)) {
-	     ResourceDescriptor descriptor = getResourceDescriptor(javaEEResourceType, desc.getName());
-	     if (descriptor == null) {
-		 if (env instanceof WebBundleDescriptor) {
-		     WebBundleDescriptor wbDesc = (WebBundleDescriptor)env;
+     for (ResourceDescriptor desc : env.getResourceDescriptors(javaEEResourceType)) {
+         ResourceDescriptor descriptor = getResourceDescriptor(javaEEResourceType, desc.getName());
+         if (descriptor == null) {
+         if (env instanceof WebBundleDescriptor) {
+             WebBundleDescriptor wbDesc = (WebBundleDescriptor)env;
 
-		     if (javaEEResourceType.equals(JavaEEResourceType.AODD) &&
-			     wbDesc.isConflictAdminObjectDefinition()) {
-			 throw new IllegalArgumentException(localStrings.getLocalString(
-				 "web.deployment.exceptionconflictadministeredobjectdefinition",
-				 "There are more than one administered object definitions defined in web fragments with the same name, but not overrided in web.xml"));
-		     } else if (javaEEResourceType.equals(JavaEEResourceType.MSD) &&
-			     wbDesc.isConflictMailSessionDefinition()) {
-			 throw new IllegalArgumentException(localStrings.getLocalString(
-				 "web.deployment.exceptionconflictmailsessiondefinition",
-				 "There are more than one mail-session definitions defined in web fragments with the same name, but not overrided in web.xml"));
-		     } else if (javaEEResourceType.equals(JavaEEResourceType.DSD) &&
-			     wbDesc.isConflictDataSourceDefinition()) {
-			 throw new IllegalArgumentException(localStrings.getLocalString(
-				 "web.deployment.exceptionconflictdatasourcedefinition",
-				 "There are more than one datasource definitions defined in web fragments with the same name, but not overrided in web.xml"));
-		     } else if (javaEEResourceType.equals(JavaEEResourceType.CFD) &&
-			     wbDesc.isConflictConnectionFactoryDefinition()) {
-			 throw new IllegalArgumentException(localStrings.getLocalString(
-				 "web.deployment.exceptionconflictconnectionfactorydefinition",
-				 "There are more than one connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
-		     } else if (javaEEResourceType.equals(JavaEEResourceType.JMSCFDD) &&
-			     wbDesc.isConflictJMSConnectionFactoryDefinition()) {
-			 throw new IllegalArgumentException(localStrings.getLocalString(
-				 "web.deployment.exceptionconflictjmsconnectionfactorydefinition",
-				 "There are more than one jms connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
-		     } else if (javaEEResourceType.equals(JavaEEResourceType.JMSDD) &&
-			     wbDesc.isConflictJMSDestinationDefinition()) {
-			 throw new IllegalArgumentException(localStrings.getLocalString(
-				 "web.deployment.exceptionconflictjmsdestinationdefinition",
-				 "There are more than one jms destination definitions defined in web fragments with the same name, but not overrided in web.xml"));
-		     }
-		 }
-		 if (desc.getResourceType().equals(JavaEEResourceType.DSD) ||
-			 desc.getResourceType().equals(JavaEEResourceType.MSD) ||
-			 desc.getResourceType().equals(JavaEEResourceType.CFD) ||
-			 desc.getResourceType().equals(JavaEEResourceType.AODD) ||
-			 desc.getResourceType().equals(JavaEEResourceType.JMSCFDD) ||
-			 desc.getResourceType().equals(JavaEEResourceType.JMSDD)) {
-		     getResourceDescriptors(javaEEResourceType).add(desc);
-		 }
-	     }
+             if (javaEEResourceType.equals(JavaEEResourceType.AODD) &&
+                 wbDesc.isConflictAdminObjectDefinition()) {
+             throw new IllegalArgumentException(localStrings.getLocalString(
+                 "web.deployment.exceptionconflictadministeredobjectdefinition",
+                 "There are more than one administered object definitions defined in web fragments with the same name, but not overrided in web.xml"));
+             } else if (javaEEResourceType.equals(JavaEEResourceType.MSD) &&
+                 wbDesc.isConflictMailSessionDefinition()) {
+             throw new IllegalArgumentException(localStrings.getLocalString(
+                 "web.deployment.exceptionconflictmailsessiondefinition",
+                 "There are more than one mail-session definitions defined in web fragments with the same name, but not overrided in web.xml"));
+             } else if (javaEEResourceType.equals(JavaEEResourceType.DSD) &&
+                 wbDesc.isConflictDataSourceDefinition()) {
+             throw new IllegalArgumentException(localStrings.getLocalString(
+                 "web.deployment.exceptionconflictdatasourcedefinition",
+                 "There are more than one datasource definitions defined in web fragments with the same name, but not overrided in web.xml"));
+             } else if (javaEEResourceType.equals(JavaEEResourceType.CFD) &&
+                 wbDesc.isConflictConnectionFactoryDefinition()) {
+             throw new IllegalArgumentException(localStrings.getLocalString(
+                 "web.deployment.exceptionconflictconnectionfactorydefinition",
+                 "There are more than one connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
+             } else if (javaEEResourceType.equals(JavaEEResourceType.JMSCFDD) &&
+                 wbDesc.isConflictJMSConnectionFactoryDefinition()) {
+             throw new IllegalArgumentException(localStrings.getLocalString(
+                 "web.deployment.exceptionconflictjmsconnectionfactorydefinition",
+                 "There are more than one jms connection factory definitions defined in web fragments with the same name, but not overrided in web.xml"));
+             } else if (javaEEResourceType.equals(JavaEEResourceType.JMSDD) &&
+                 wbDesc.isConflictJMSDestinationDefinition()) {
+             throw new IllegalArgumentException(localStrings.getLocalString(
+                 "web.deployment.exceptionconflictjmsdestinationdefinition",
+                 "There are more than one jms destination definitions defined in web fragments with the same name, but not overrided in web.xml"));
+             }
+         }
+         if (desc.getResourceType().equals(JavaEEResourceType.DSD) ||
+             desc.getResourceType().equals(JavaEEResourceType.MSD) ||
+             desc.getResourceType().equals(JavaEEResourceType.CFD) ||
+             desc.getResourceType().equals(JavaEEResourceType.AODD) ||
+             desc.getResourceType().equals(JavaEEResourceType.JMSCFDD) ||
+             desc.getResourceType().equals(JavaEEResourceType.JMSDD)) {
+             getResourceDescriptors(javaEEResourceType).add(desc);
+         }
+         }
          }
     }
 
     /*******************************************************************************************
      * END
      * Deployment Consolidation to Suppport Multiple Deployment API Clients
-     *******************************************************************************************/ 
+     *******************************************************************************************/
 }

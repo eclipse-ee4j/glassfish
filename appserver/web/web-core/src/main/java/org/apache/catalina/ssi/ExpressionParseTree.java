@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 /**
  * Represents a parsed expression.
- * 
+ *
  * @version $Revision: 1.2 $
  * @author Paul Speed
  */

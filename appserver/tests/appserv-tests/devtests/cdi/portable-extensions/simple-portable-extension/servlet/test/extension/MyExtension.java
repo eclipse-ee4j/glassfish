@@ -33,12 +33,12 @@ public class MyExtension implements Extension{
         System.out.println("In MyExtension ctor");
         //new Throwable().printStackTrace();
     }
-    
+
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery bdd){
         System.out.println("MyExtension::beforeBeanDiscovery" + bdd);
         beforeBeanDiscoveryCalled = true;
     }
-    
+
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat){
         System.out.println("MyExtension:Process annotated type" + pat.getAnnotatedType().getBaseType());
         processAnnotatedTypeCalled = true;
@@ -49,10 +49,10 @@ public class MyExtension implements Extension{
             pat.veto();
         }
     }
-    
+
     void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm){
         System.out.println("MyExtension: abd: " + abd + " BeanManager: " + bm);
-        
+
         if (bm != null) {
             //ensure a valid BeanManager is injected
             afterBeanDiscoveryCalled = true;

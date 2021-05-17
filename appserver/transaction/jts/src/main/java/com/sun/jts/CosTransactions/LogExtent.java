@@ -135,7 +135,7 @@ class LogExtent extends Object {
      */
     public void doFinalize() {
         try {
-            fileHandle.destroy(); 
+            fileHandle.destroy();
         } catch( Throwable e ) {};
 
         blockValid = null;

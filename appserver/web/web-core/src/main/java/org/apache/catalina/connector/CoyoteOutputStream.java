@@ -26,11 +26,11 @@ import java.util.ResourceBundle;
 
 /**
  * Coyote implementation of the servlet output stream.
- * 
+ *
  * @author Costin Manolache
  * @author Remy Maucherat
  */
-public class CoyoteOutputStream 
+public class CoyoteOutputStream
     extends ServletOutputStream {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
@@ -53,8 +53,8 @@ public class CoyoteOutputStream
     // END S1AS 6175642
         this.ob = ob;
     }
-    
-    
+
+
     // --------------------------------------------------------- Public Methods
 
 
@@ -66,7 +66,7 @@ public class CoyoteOutputStream
         throw new CloneNotSupportedException();
     }
 
-  
+
     // -------------------------------------------------------- Package Methods
 
 

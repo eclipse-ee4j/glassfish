@@ -60,7 +60,7 @@ public class CreateManagedScheduledExecutorService extends CreateManagedExecutor
         final ActionReport report = context.getActionReport();
 
         HashMap attrList = new HashMap();
-        setAttributeList(attrList); 
+        setAttributeList(attrList);
 
         ResourceStatus rs;
 

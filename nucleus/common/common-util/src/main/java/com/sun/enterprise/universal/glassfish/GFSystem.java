@@ -31,7 +31,7 @@ import java.util.*;
  * The 2 created threads should each call init() -- but the main thread should not.
  * In the usual case where there is just one instance in the JVM -- this class is also
  * perfectly usable.  Just call any method when you need something.
- * 
+ *
  * @author bnevins
  */
 public final class GFSystem {
@@ -39,7 +39,7 @@ public final class GFSystem {
         // forces creation
         getProperty("java.lang.separator");
     }
-    
+
     /**
      * Get the GFSystem Properties
      * @return a snapshot copy of the dcurrent Properties
@@ -48,7 +48,7 @@ public final class GFSystem {
     {
         return gfsi.get().getProperties();
     }
-    
+
     /**
      * Get a GF System Property
      * @param key the name of the property
@@ -68,10 +68,10 @@ public final class GFSystem {
     {
         gfsi.get().setProperty(key, value);
     }
-    
-    private static final InheritableThreadLocal<GFSystemImpl> gfsi = 
+
+    private static final InheritableThreadLocal<GFSystemImpl> gfsi =
          new InheritableThreadLocal<GFSystemImpl>() {
-             @Override 
+             @Override
              protected GFSystemImpl initialValue() {
                  return new GFSystemImpl();
          }

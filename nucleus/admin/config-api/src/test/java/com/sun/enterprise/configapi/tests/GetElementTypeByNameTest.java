@@ -26,7 +26,7 @@ import com.sun.enterprise.config.serverbeans.Config;
 /**
  * Test the getElementTypeByName ConfigSupport API
  *
- * @Author Jerome Dochez 
+ * @Author Jerome Dochez
  */
 public class GetElementTypeByNameTest extends ConfigApiTest {
 

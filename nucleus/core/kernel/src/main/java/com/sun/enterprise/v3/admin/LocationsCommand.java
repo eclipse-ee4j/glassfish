@@ -46,13 +46,13 @@ import org.glassfish.internal.config.UnprocessedConfigListener;
 @I18n("locations.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="locations", 
+        opType=RestEndpoint.OpType.GET,
+        path="locations",
         description="Location",
         useForAuthorization=true)
 })
 public class LocationsCommand implements AdminCommand {
-    
+
     @Inject
     ServerEnvironmentImpl env;
 

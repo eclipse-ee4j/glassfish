@@ -62,5 +62,5 @@ public final class Constants {
     public static final boolean USE_CUSTOM_STATUS_MSG_IN_HEADER =
         Boolean.valueOf(System.getProperty(
                 "org.apache.coyote.USE_CUSTOM_STATUS_MSG_IN_HEADER",
-                "true")).booleanValue(); 
+                "true")).booleanValue();
 }

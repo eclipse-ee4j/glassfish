@@ -133,7 +133,7 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
             for (String line = br.readLine(); line != null; line = br.readLine()) {
                 if (line.length() > 0 && line.toLowerCase().charAt(0) == 'l') {
                     final String lineLC = line.toLowerCase();
-                    
+
                     if (lineLC.equals(expectedLocation)) {
                         found = true;
                         break;

@@ -38,7 +38,7 @@ public class GenericParser{
     /**
      * The Log to which all SAX event related logging calls will be made.
      */
-    protected static final Logger log = 
+    protected static final Logger log =
             Logger.getLogger("org.apache.tomcat.util.digester.Digester.sax");
 
     /**
@@ -59,11 +59,11 @@ public class GenericParser{
      * @return an XML Schema/DTD enabled <code>SAXParser</code>
      */
     public static SAXParser newSAXParser(Properties properties)
-            throws ParserConfigurationException, 
+            throws ParserConfigurationException,
                    SAXException,
-                   SAXNotRecognizedException{ 
+                   SAXNotRecognizedException{
 
-        SAXParserFactory factory = 
+        SAXParserFactory factory =
                         (SAXParserFactory)properties.get("SAXParserFactory");
         SAXParser parser = factory.newSAXParser();
         String schemaLocation = (String)properties.get("schemaLocation");
@@ -76,8 +76,8 @@ public class GenericParser{
             }
         } catch (SAXNotRecognizedException e){
             if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, parser.getClass().getName() + ": "  
-                                            + e.getMessage() + " not supported."); 
+                log.log(Level.INFO, parser.getClass().getName() + ": "
+                                            + e.getMessage() + " not supported.");
             }
         }
         return parser;

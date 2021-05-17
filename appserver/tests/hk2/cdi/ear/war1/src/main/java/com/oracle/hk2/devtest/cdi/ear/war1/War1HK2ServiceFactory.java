@@ -36,14 +36,14 @@ public class War1HK2ServiceFactory implements Factory<War1HK2Service> {
             public String getComponentName() {
                 return HK2Service.WAR1;
             }
-            
+
         } ;
     }
 
     @Override
     public void dispose(War1HK2Service instance) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

@@ -45,7 +45,7 @@ public class JmsResourceHandler {
     }
 
     /**
-     *	<p> This handler return the list of JMS Resources to be displayed in the table.
+     *    <p> This handler return the list of JMS Resources to be displayed in the table.
      */
     @Handler(id = "getJmsResourcesInfo",
     input = {
@@ -55,10 +55,10 @@ public class JmsResourceHandler {
         @HandlerOutput(name = "result", type = java.util.List.class)
     })
     public static void getJmsResourcesInfo(HandlerContext handlerCtx) {
-        
+
         List<Map<String, Object>> resourcesList = (List) handlerCtx.getInputValue("resourcesList");
         Boolean isConnectionFactory = (Boolean) handlerCtx.getInputValue("isConnectionFactory");
-        String prefix = isConnectionFactory ? GuiUtil.getSessionValue("REST_URL") + "/resources/connector-resource/" : 
+        String prefix = isConnectionFactory ? GuiUtil.getSessionValue("REST_URL") + "/resources/connector-resource/" :
                 GuiUtil.getSessionValue("REST_URL") + "/resources/admin-object-resource/";
         try{
             for(Map<String, Object> one : resourcesList){
@@ -93,6 +93,6 @@ public class JmsResourceHandler {
         }
         handlerCtx.setOutputValue("result", resourcesList);
     }
-    
-   
+
+
 }

@@ -28,12 +28,12 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
         out.println(request.getSession(true).getAttribute("FILTER") + " " +
                request.getSession(true).getAttribute("FILTER2") + " " +
-               getServletContext().getAttribute("SCInit"));  
+               getServletContext().getAttribute("SCInit"));
     }
 }
 

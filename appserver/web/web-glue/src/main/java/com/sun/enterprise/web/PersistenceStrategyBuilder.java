@@ -23,7 +23,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface PersistenceStrategyBuilder {
-    
+
     public void initializePersistenceStrategy(
             Context ctx,
             SessionManager smBean,

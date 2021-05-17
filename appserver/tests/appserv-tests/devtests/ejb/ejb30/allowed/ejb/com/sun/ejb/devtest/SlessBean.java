@@ -30,15 +30,15 @@ public class SlessBean
     private CMTOperation cmtOp;
 
     public String sayHello() {
-	return "Hello";
+    return "Hello";
     }
 
     public boolean lookupUserTransactionFromCMTBean() {
-	return cmtOp.lookupUserTransaction();
+    return cmtOp.lookupUserTransaction();
     }
 
     public boolean lookupUserTransactionFromBMTBean() {
-	return bmtOp.lookupUserTransaction();
+    return bmtOp.lookupUserTransaction();
     }
 
 }

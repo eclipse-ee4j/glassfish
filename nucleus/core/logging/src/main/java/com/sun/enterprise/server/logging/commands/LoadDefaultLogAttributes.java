@@ -71,7 +71,7 @@ public class LoadDefaultLogAttributes implements AdminCommand {
             Properties restData = new Properties();
             restData.put("logAttributes", logAttributes);
             report.setExtraProperties(restData);
-            
+
         } catch (IOException ex) {
             report.setMessage(localStrings.getLocalString("get.log.attribute.failed",
                     "Could not get logging attributes for {0}.", target));

@@ -24,7 +24,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
  * Base interface for all security provider implementation configuration.
- * 
+ *
  * Security plugin configuration objects extend SecurityProviderConfig interface
  * such that the configuration of the plugin can be associated with a specific
  * security service configuration.

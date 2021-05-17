@@ -63,7 +63,7 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
     private JarFile _jar = null;
     //List of all substitutable archive entries including the entries from nested archive.
     private List<ArchiveMember> _allArchiveMembers;
-    // Extracted entries from an archive, doesn't include entry from nested archive. 
+    // Extracted entries from an archive, doesn't include entry from nested archive.
     private Map<String, File> _extractedEntries = new HashMap<String, File>();
     //Substitutable entries count for an archive, doesn't include entry from nested archive.
     private AtomicInteger _noOfExtractedEntries = new AtomicInteger();
@@ -124,7 +124,7 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
     /**
      * Extract all the substitutable entries for an archive. It also takes care of extracting substitutable entries from
      * nested archives.
-     * 
+     *
      * @throws IOException If any IO error occurs during extraction.
      */
     private void extract() throws IOException {
@@ -233,7 +233,7 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
 
     /**
      * Updates the jar with the extracted entries.
-     * 
+     *
      * @throws IOException If any error occurs during update process.
      */
     void updateArchive() throws IOException {

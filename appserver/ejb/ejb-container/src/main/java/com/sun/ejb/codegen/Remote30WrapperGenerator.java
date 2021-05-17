@@ -30,14 +30,14 @@ import com.sun.ejb.EJBUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
- * 
+ *
  */
 
-public class Remote30WrapperGenerator extends Generator 
+public class Remote30WrapperGenerator extends Generator
     implements ClassGeneratorFactory {
 
     private static LocalStringManagerImpl localStrings =
-	new LocalStringManagerImpl(Remote30WrapperGenerator.class);
+    new LocalStringManagerImpl(Remote30WrapperGenerator.class);
 
     private String remoteInterfaceName;
     private Class businessInterface;
@@ -51,7 +51,7 @@ public class Remote30WrapperGenerator extends Generator
     public String getGeneratedClass() {
         return remoteClientClassName;
     }
-    
+
     // For corba codegen infrastructure
     public String className() {
         return getGeneratedClass();
@@ -64,22 +64,22 @@ public class Remote30WrapperGenerator extends Generator
      */
     public Remote30WrapperGenerator
         (ClassLoader cl, String businessIntfName, String remoteIntfName)
-	throws GeneratorException 
+    throws GeneratorException
     {
-	    super();
+        super();
 
         remoteInterfaceName = remoteIntfName;
 
         loader = cl;
 
-	    try {
-	        this.businessInterface = cl.loadClass(businessIntfName);
-	    } catch (ClassNotFoundException ex) {
-	        throw new InvalidBean(
-		    localStrings.getLocalString(
-		    "generator.remote_interface_not_found",
-		    "Business interface " + businessInterface + " not found "));
-	    }
+        try {
+            this.businessInterface = cl.loadClass(businessIntfName);
+        } catch (ClassNotFoundException ex) {
+            throw new InvalidBean(
+            localStrings.getLocalString(
+            "generator.remote_interface_not_found",
+            "Business interface " + businessInterface + " not found "));
+        }
 
         if( jakarta.ejb.EJBObject.class.isAssignableFrom(businessInterface) ) {
             throw new GeneratorException("Invalid Remote Business Interface " +
@@ -93,7 +93,7 @@ public class Remote30WrapperGenerator extends Generator
         remoteClientPackageName = getPackageName(remoteClientClassName);
         remoteClientSimpleName = getBaseName(remoteClientClassName);
 
-	    bizMethods = removeDups(businessInterface.getMethods());
+        bizMethods = removeDups(businessInterface.getMethods());
 
         // NOTE : no need to remove ejb object methods because EJBObject
         // is only visible through the RemoteHome view.
@@ -106,16 +106,16 @@ public class Remote30WrapperGenerator extends Generator
         _clear();
 
         if (remoteClientPackageName != null) {
-	    _package(remoteClientPackageName);
+        _package(remoteClientPackageName);
         } else {
             // no-arg _package() call is required for default package
             _package();
         }
 
-        _class(PUBLIC, remoteClientSimpleName, 
-               _t("com.sun.ejb.containers.RemoteBusinessWrapperBase"), 
+        _class(PUBLIC, remoteClientSimpleName,
+               _t("com.sun.ejb.containers.RemoteBusinessWrapperBase"),
                _t(businessInterface.getName()));
-        
+
         _data(PRIVATE, _t(remoteInterfaceName), "delegate_");
 
         _constructor( PUBLIC ) ;
@@ -129,8 +129,8 @@ public class Remote30WrapperGenerator extends Generator
         _end();
 
         for(int i = 0; i < bizMethods.length; i++) {
-	    printMethodImpl(bizMethods[i]);
-	}
+        printMethodImpl(bizMethods[i]);
+    }
 
         _end();
 
@@ -145,7 +145,7 @@ public class Remote30WrapperGenerator extends Generator
             System.out.println("Got exception when generating byte code");
             e.printStackTrace();
         }
-       
+
 
         _classGenerator() ;
 
@@ -158,9 +158,9 @@ public class Remote30WrapperGenerator extends Generator
     {
 
         List<Type> exceptionList = new LinkedList<Type>();
-	for(Class exception : m.getExceptionTypes()) {
+    for(Class exception : m.getExceptionTypes()) {
             exceptionList.add(Type.type(exception));
-	}
+    }
 
         _method( PUBLIC, Type.type(m.getReturnType()),
                  m.getName(), exceptionList);
@@ -174,7 +174,7 @@ public class Remote30WrapperGenerator extends Generator
             i++;
             expressionListTypes.add(Type.type(param));
             expressionList.add(_v(paramName));
-	}
+    }
 
         _body();
 
@@ -184,52 +184,52 @@ public class Remote30WrapperGenerator extends Generator
         Class returnType = m.getReturnType();
 
         if( returnType == void.class ) {
-            _expr( _call( _v("delegate_"), m.getName(), 
-                          _s(Type.type(returnType), expressionListTypes), 
+            _expr( _call( _v("delegate_"), m.getName(),
+                          _s(Type.type(returnType), expressionListTypes),
                           expressionList));
         } else {
-            _return( _call( _v("delegate_"), m.getName(), 
-                            _s(Type.type(returnType), expressionListTypes), 
+            _return( _call( _v("delegate_"), m.getName(),
+                            _s(Type.type(returnType), expressionListTypes),
                             expressionList) );
         }
 
-        boolean doExceptionTranslation = 
+        boolean doExceptionTranslation =
             !java.rmi.Remote.class.isAssignableFrom(businessInterface);
         if( doExceptionTranslation ) {
 
             _catch( _t("jakarta.transaction.TransactionRolledbackException"),
                     "trex");
 
-                _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("jakarta.ejb.EJBTransactionRolledbackException"), 
+                _define( _t("java.lang.RuntimeException"), "r",
+                         _new( _t("jakarta.ejb.EJBTransactionRolledbackException"),
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
-                              _s(_t("java.lang.Throwable"), 
-                                 _t("java.lang.Throwable")), 
+                              _s(_t("java.lang.Throwable"),
+                                 _t("java.lang.Throwable")),
                               _v("trex")));
                 _throw(_v("r"));
 
             _catch( _t("jakarta.transaction.TransactionRequiredException"),
                     "treqex");
 
-                _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("jakarta.ejb.EJBTransactionRequiredException"), 
+                _define( _t("java.lang.RuntimeException"), "r",
+                         _new( _t("jakarta.ejb.EJBTransactionRequiredException"),
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
-                              _s(_t("java.lang.Throwable"), 
-                                 _t("java.lang.Throwable")), 
+                              _s(_t("java.lang.Throwable"),
+                                 _t("java.lang.Throwable")),
                               _v("treqex")));
                 _throw(_v("r"));
 
             _catch( _t("java.rmi.NoSuchObjectException"),
                     "nsoe");
 
-                _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("jakarta.ejb.NoSuchEJBException"), 
+                _define( _t("java.lang.RuntimeException"), "r",
+                         _new( _t("jakarta.ejb.NoSuchEJBException"),
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
-                              _s(_t("java.lang.Throwable"), 
-                                 _t("java.lang.Throwable")), 
+                              _s(_t("java.lang.Throwable"),
+                                 _t("java.lang.Throwable")),
                               _v("nsoe")));
                 _throw(_v("r"));
 
@@ -249,10 +249,10 @@ public class Remote30WrapperGenerator extends Generator
                    "iejbcEx");
 
                 // This wraps an EJBException. Pull out the cause and throw
-                // it as is.  
+                // it as is.
                 //_define( _t("java.lang.Throwable"), "r", _null());
 
-                         
+
                 // _throw(_cast(_t("jakarta.ejb.EJBException"), _v("r")));
                 _throw(_cast(_t("jakarta.ejb.EJBException"),
                             _call( _v("iejbcEx"), "getCause",
@@ -260,18 +260,18 @@ public class Remote30WrapperGenerator extends Generator
 
 
             _catch( _t("java.rmi.RemoteException"), "re");
-            
-                _throw( _new( _t("jakarta.ejb.EJBException"), 
-                              _s(_void(), _t("java.lang.Exception")), 
+
+                _throw( _new( _t("jakarta.ejb.EJBException"),
+                              _s(_void(), _t("java.lang.Exception")),
                               _v("re")));
-            
+
             _catch( _t("org.omg.CORBA.SystemException"), "corbaSysEx");
-                _define( _t("java.lang.RuntimeException"), "r", 
-                         _new( _t("jakarta.ejb.EJBException"), 
+                _define( _t("java.lang.RuntimeException"), "r",
+                         _new( _t("jakarta.ejb.EJBException"),
                            _s(_void())));
                 _expr( _call( _v("r"), "initCause",
-                              _s(_t("java.lang.Throwable"), 
-                                 _t("java.lang.Throwable")), 
+                              _s(_t("java.lang.Throwable"),
+                                 _t("java.lang.Throwable")),
                               _v("corbaSysEx")));
                 _throw(_v("r"));
 
@@ -279,8 +279,8 @@ public class Remote30WrapperGenerator extends Generator
 
         } else {
             _catch(_t("com.sun.ejb.containers.InternalEJBContainerException"), "iejbcEx");
-                _throw( _new( _t("com.sun.ejb.containers.InternalRemoteException"), 
-                              _s(_void(), _t("com.sun.ejb.containers.InternalEJBContainerException")), 
+                _throw( _new( _t("com.sun.ejb.containers.InternalRemoteException"),
+                              _s(_void(), _t("com.sun.ejb.containers.InternalEJBContainerException")),
                               _v("iejbcEx")));
             _end();
         }

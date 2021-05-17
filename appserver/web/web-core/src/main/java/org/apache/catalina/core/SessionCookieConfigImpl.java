@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import jakarta.servlet.SessionCookieConfig;
 
 /**
- * Class that may be used to configure various properties of cookies 
+ * Class that may be used to configure various properties of cookies
  * used for session tracking purposes.
  */
 public class SessionCookieConfigImpl implements SessionCookieConfig {
@@ -125,7 +125,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
 
     /**
      * @return the cookie path set via {@link #setPath}, or the context
-     * path of the <tt>ServletContext</tt> from which this 
+     * path of the <tt>ServletContext</tt> from which this
      * <tt>SessionCookieConfig</tt> was acquired if {@link #setPath}
      * was never called
      */

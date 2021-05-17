@@ -70,12 +70,12 @@ import org.jvnet.hk2.config.types.Property;
 @RunLevel(StartupRunLevel.VAL)
 public class WebContainerStarter
         implements PostConstruct, ConfigListener {
-   
+
     private static final String LOGMSG_PREFIX = "AS-CORE-JAVAEE";
-    
+
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.kernel.javaee.LogMessages";
-    
+
     @LoggerInfo(subsystem = "AS-CORE", description = "Java EE Core Kernel", publish = true)
     private static final String ASCORE_LOGGER = "jakarta.enterprise.system.core.ee";
     private static final Logger logger = Logger.getLogger(
@@ -93,7 +93,7 @@ public class WebContainerStarter
             message = "Done with starting {0} container.",
             level = "INFO")
     public static final String mStartContainerDone = LOGMSG_PREFIX + "-0002";
-    
+
     @LogMessageInfo(
             message = "Unable to start container (no exception provided)",
             cause = "The web container does not start properly.",
@@ -137,7 +137,7 @@ public class WebContainerStarter
      * Scans the domain.xml to see if it specifies any configuration
      * that can be handled only by the web container, and if so, starts
      * the web container
-     */ 
+     */
     public void postConstruct() {
         domainProvider.get();
         Config serverConfig = serverConfigProvider.get();
@@ -202,7 +202,7 @@ public class WebContainerStarter
             }
             return;
         }
-        
+
         if (containerRegistry.getContainer(
                     webSniffer.getContainersNames()[0]) != null) {
             containerRegistry.getContainer(
@@ -216,7 +216,7 @@ public class WebContainerStarter
                     for (EngineInfo info : containersInfo) {
                         info.getContainer();
                         if (logger.isLoggable(Level.INFO)) {
-                            logger.log(Level.INFO, mStartContainerDone, 
+                            logger.log(Level.INFO, mStartContainerDone,
                                 webSniffer.getModuleType());
                         }
                     }
@@ -304,7 +304,7 @@ public class WebContainerStarter
                     !ConfigBeansUtilities.toBoolean(state))) {
             return true;
         }
-     
+
         List<Property> props = host.getProperty();
         if (props != null && !props.isEmpty()) {
             return true;

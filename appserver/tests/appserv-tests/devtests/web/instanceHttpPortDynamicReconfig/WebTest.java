@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for:
  *
  *   http://java.net/jira/browse/GLASSFISH-16013
- *   ("RestartRequired: changing http port does not trigger restart required message 
+ *   ("RestartRequired: changing http port does not trigger restart required message
  *   for a standalone instance")
  */
 public class WebTest {
@@ -47,7 +47,7 @@ public class WebTest {
         location = args[3];
         contextRoot = args[4];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 16013");
         WebTest webTest = new WebTest(args);
@@ -55,8 +55,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -66,13 +66,13 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
-        URL url = new URL("http://" + host  + ":" + newPort + contextRoot); 
+
+        URL url = new URL("http://" + host  + ":" + newPort + contextRoot);
         System.out.println("Connecting ... "+url);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200"
                                 + ", received: " + responseCode);
         } else {

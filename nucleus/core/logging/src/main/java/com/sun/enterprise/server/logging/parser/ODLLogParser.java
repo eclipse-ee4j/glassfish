@@ -34,15 +34,15 @@ import com.sun.enterprise.server.logging.LogFacade;
 final class ODLLogParser implements LogParser {
 
     private static final int ODL_FIXED_FIELD_COUNT = 5;
-    
+
     private static final String ODL_FIELD_REGEX = "(\\[[^\\[\\]]*?\\])+?";
-        
+
     private static final class ODLFieldPatternHolder {
         static final Pattern ODL_FIELD_PATTERN = Pattern.compile(ODL_FIELD_REGEX);
     }
-    
+
     private static final Map<String, String> ODL_STANDARD_FIELDS = new HashMap<String, String>(){
-        
+
         private static final long serialVersionUID = -6870456038890663569L;
 
         {
@@ -50,19 +50,19 @@ final class ODLLogParser implements LogParser {
             put(ParsedLogRecord.EC_ID, ParsedLogRecord.EC_ID);
             put(ParsedLogRecord.USER_ID, ParsedLogRecord.USER_ID);
         }
-    }; 
-    
+    };
+
     private String streamName;
-    
+
     public ODLLogParser(String name) {
         streamName = name;
     }
-    
+
     @Override
     public void parseLog(BufferedReader reader, LogParserListener listener)
-            throws LogParserException 
+            throws LogParserException
     {
-        
+
         try {
             String line = null;
             StringBuffer buffer = new StringBuffer();
@@ -77,7 +77,7 @@ final class ODLLogParser implements LogParser {
                     buffer = new StringBuffer();
                 }
                 buffer.append(line);
-                buffer.append(LogParserFactory.NEWLINE);                
+                buffer.append(LogParserFactory.NEWLINE);
             }
             // Last record
             String logRecord = buffer.toString();
@@ -89,28 +89,28 @@ final class ODLLogParser implements LogParser {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    LogFacade.LOGGING_LOGGER.log(Level.FINE, "Got exception while clsoing reader "+ streamName, e); 
+                    LogFacade.LOGGING_LOGGER.log(Level.FINE, "Got exception while clsoing reader "+ streamName, e);
                 }
             }
-        }                
+        }
     }
-    
+
     private void parseLogRecord(long position, String logRecord, LogParserListener listener) {
         ParsedLogRecord parsedLogRecord = new ParsedLogRecord();
         if (initializeUniformFormatLogRecord(parsedLogRecord, logRecord)) {
             listener.foundLogRecord(position, parsedLogRecord);
-        }        
+        }
     }
 
     private boolean initializeUniformFormatLogRecord(
-            ParsedLogRecord parsedLogRecord, 
-            String logRecord) 
+            ParsedLogRecord parsedLogRecord,
+            String logRecord)
     {
         parsedLogRecord.setFormattedLogRecord(logRecord);
         Matcher matcher = ODLFieldPatternHolder.ODL_FIELD_PATTERN.matcher(logRecord);
         int start=0;
         int end=0;
-        int fieldIndex=0;        
+        int fieldIndex=0;
         while (matcher.find()) {
             fieldIndex++;
             start = matcher.start();
@@ -144,7 +144,7 @@ final class ODLLogParser implements LogParser {
         parsedLogRecord.setFieldValue(ParsedLogRecord.LOG_MESSAGE, msg);
         if (fieldIndex < ODL_FIXED_FIELD_COUNT) {
             return false;
-        }        
+        }
         return true;
     }
 
@@ -159,7 +159,7 @@ final class ODLLogParser implements LogParser {
                 parsedLogRecord.setFieldValue(ODL_STANDARD_FIELDS.get(key), value);
             } else {
                 Properties props = (Properties) parsedLogRecord.getFieldValue(ParsedLogRecord.SUPP_ATTRS);
-                props.put(key, value);               
+                props.put(key, value);
                 if (key.equals(ParsedLogRecord.TIME_MILLIS)) {
                     parsedLogRecord.setFieldValue(ParsedLogRecord.TIME_MILLIS, value);
                 }
@@ -167,8 +167,8 @@ final class ODLLogParser implements LogParser {
         }
     }
 
-    private void populateLogRecordFields(int index, String fieldData, 
-            ParsedLogRecord parsedLogRecord) 
+    private void populateLogRecordFields(int index, String fieldData,
+            ParsedLogRecord parsedLogRecord)
     {
         switch(index) {
         case 1:
@@ -179,16 +179,16 @@ final class ODLLogParser implements LogParser {
             break;
         case 3:
             parsedLogRecord.setFieldValue(ParsedLogRecord.LOG_LEVEL_NAME, fieldData);
-            break;            
+            break;
         case 4:
             parsedLogRecord.setFieldValue(ParsedLogRecord.MESSAGE_ID, fieldData);
-            break;            
+            break;
         case 5:
             parsedLogRecord.setFieldValue(ParsedLogRecord.LOGGER_NAME, fieldData);
             break;
         default:
             break;
-        }        
+        }
     }
-    
+
  }

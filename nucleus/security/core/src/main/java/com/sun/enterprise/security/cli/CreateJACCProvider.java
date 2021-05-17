@@ -96,7 +96,7 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
 
     @AccessRequired.NewChild(type=JaccProvider.class)
     private SecurityService securityService;
-    
+
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
@@ -117,7 +117,7 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
         }
         return true;
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
        final ActionReport report = context.getActionReport();

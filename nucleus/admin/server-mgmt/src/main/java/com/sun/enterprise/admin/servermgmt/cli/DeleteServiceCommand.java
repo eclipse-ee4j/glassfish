@@ -40,7 +40,7 @@ import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
  * Delete a "service" in the operating system.
- * 
+ *
  * @author Byron Nevins
  * @since November 18, 2010
  */

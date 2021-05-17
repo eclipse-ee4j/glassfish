@@ -52,11 +52,11 @@ public class Client {
                                    + " instead of system exception");
                 stat.addStatus(TEST_ID, stat.FAIL);
             } catch(Throwable e) {
-                System.out.println("Successfully received " + e + 
+                System.out.println("Successfully received " + e +
                                    "for commit failure");
-                stat.addStatus(TEST_ID, stat.PASS);    
+                stat.addStatus(TEST_ID, stat.PASS);
             }
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus(TEST_ID, stat.FAIL);

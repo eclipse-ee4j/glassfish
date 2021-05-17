@@ -40,7 +40,7 @@ import javax.management.QueryExp;
 public class QueryMBeansTest implements RemoteAdminQuicklookTest {
 
     private MBeanServerConnection mbsc;
-    
+
     private long start, end;
 
     public QueryMBeansTest() {}
@@ -70,18 +70,18 @@ public class QueryMBeansTest implements RemoteAdminQuicklookTest {
     public long getExecutionTime() {
         return ( end - start );
     }
-    
+
     private File getFile() {
         String path = null; //set it to user passed arg
-        if (path != null) 
+        if (path != null)
             return new File(path);
         else return new File("./ListOfMbeans.txt");
     }
-    
+
     private void queryAllMBeans() throws Exception {
         ObjectName name = null;
         QueryExp query = null;
-        
+
         String[] domains = mbsc.getDomains();
         PrintWriter pw = null;
         try {
@@ -91,23 +91,23 @@ public class QueryMBeansTest implements RemoteAdminQuicklookTest {
                 Set<ObjectName> mbeanObjNames = mbsc.queryNames(name, query);
                 logDomainMBeansTofile(pw, domain, mbeanObjNames);
             }
-            
+
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         } finally {
             if (pw != null) pw.close();
         }
     }
-    
-    private void logDomainMBeansTofile(PrintWriter pw, String domain, Set<ObjectName> mbeanObjNames) 
+
+    private void logDomainMBeansTofile(PrintWriter pw, String domain, Set<ObjectName> mbeanObjNames)
     throws IOException {
         pw.println("/***********************************************************/");
         pw.println("                     " + domain + "                         ");
         pw.println("/***********************************************************/");
-        
-        for (ObjectName objName : mbeanObjNames) 
+
+        for (ObjectName objName : mbeanObjNames)
             pw.println(objName.toString());
         pw.flush();
     }
-    
+
 }

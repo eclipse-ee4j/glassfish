@@ -19,7 +19,7 @@
 
 <project name="gf-community" default="default" basedir=".">
     <property file="build.properties"/>
-    
+
     <path id="path2testng">
     <pathelement location="lib/testng-5.0-jdk15.jar"/>
 </path>
@@ -28,7 +28,7 @@
 <path id="class.path">
     <fileset dir="${install.dir}/lib">
         <include name="**/*.jar"/>
-    </fileset>      
+    </fileset>
     <pathelement location="classes"/>
 </path>
 <path id="test.classpath">
@@ -37,14 +37,14 @@
     </fileset>
     <fileset dir="./lib">
         <include name="**/*.jar"/>
-    </fileset>    
+    </fileset>
     <pathelement location="${test.class.output}"/>
 </path>
 
 <taskdef name="testng"
          classpathref="path2testng"
          classname="org.testng.TestNGAntTask"/>
-    
+
  <description>Builds, tests, and runs the project Hello JSP Application</description>
 <!-- <import file="nbproject/build-impl.xml"/>-->
 
@@ -52,24 +52,24 @@
     <echo message="Hello Community"/>
 </target>
 
-<target name="build">    
-    <ant dir="web/helloworld" target="build"/>    
+<target name="build">
+    <ant dir="web/helloworld" target="build"/>
      <ant dir="ejb30/hello" target="build"/>
      <ant dir="adminweb/basic" target="build"/>
 </target>
 
 
-<target name="compile-tests">            
-    <ant dir="web/helloworld" target="compile-tests" inheritAll="false"/>    
+<target name="compile-tests">
+    <ant dir="web/helloworld" target="compile-tests" inheritAll="false"/>
     <ant dir="ejb30/session/hello" target="compile-tests" inheritAll="false"/>
 </target>
 
-<!--<target  name="run">   
-    <ant dir="web/helloworld" target="run"/>    
+<!--<target  name="run">
+    <ant dir="web/helloworld" target="run"/>
 </target>-->
-    
+
 <target name="deploy" >
-    <ant dir="web/helloworld" target="deploy" inheritAll="false"/>    
+    <ant dir="web/helloworld" target="deploy" inheritAll="false"/>
      <ant dir="ejb30/hello" target="deploy" inheritAll="false"/>
     <!-- <ant dir="adminweb/basic" target="deploy"/>-->
 </target>
@@ -80,34 +80,34 @@
 </target>
 
 <!--<target name="run">
-    <ant dir="web/helloworld" target="run"/>    
+    <ant dir="web/helloworld" target="run"/>
      <ant dir="ejb30/hello" target="run"/>
      <ant dir="adminweb/basic" target="run"/>
 </target>-->
-      
+
 
 <!--<target name="dist">
     <echo message="Save EAR/WAR/JAR file"/>
-    <ant dir="web/helloworld" target="dist"/>    
+    <ant dir="web/helloworld" target="dist"/>
 </target>-->
 
-<target  name="run">    
-    <echo message="=============Starting TestNG functional tests  ============"/>    
-    <mkdir dir="${test.report}"/>    
+<target  name="run">
+    <echo message="=============Starting TestNG functional tests  ============"/>
+    <mkdir dir="${test.report}"/>
     <testng outputdir="${test.report}"
             classpathref="test.classpath">
         <jvmarg value="-Djava.compiler=NONE"/>
         <sysproperty key="basedir" value="${basedir}"/>
-         <!--<classfileset dir="classes/test" includes="**/SeleniumTest.class"/>-->         
+         <!--<classfileset dir="classes/test" includes="**/SeleniumTest.class"/>-->
         <xmlfileset dir="." includes="testng.xml"/>
     </testng>
-    
+
     <!--<antcall target="-post-test-run"/>    -->
-    
-</target>  
+
+</target>
 
 <!-- Generate the TestNG report -->
-<target name="report">        
+<target name="report">
     <junitreport todir="${test.report}">
         <fileset dir=".">
            <include name="**/test-output/**/*.xml"/>
@@ -137,6 +137,6 @@
         </zip>
 
     </target>
-    
+
 
 </project>

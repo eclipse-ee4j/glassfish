@@ -87,9 +87,9 @@ public class CDIHK2Descriptor<T> extends AbstractActiveDescriptor<T> {
             fixScope(bean),
             bean.getName(),
             fixQualifiers(bean),
-            DescriptorType.CLASS, 
+            DescriptorType.CLASS,
             DescriptorVisibility.NORMAL, 0,
-            null, null, null, 
+            null, null, null,
             new HashMap<>());
 
         this.manager = manager;

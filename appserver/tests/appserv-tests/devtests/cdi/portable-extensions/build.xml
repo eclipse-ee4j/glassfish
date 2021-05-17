@@ -88,15 +88,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the portable-extensions tests)
-		ant clean (cleans all the portable-extensions tests)
-		ant build (builds all the portable-extensions tests)
-		ant setup (sets up all resources for portable-extensions tests)
-		ant deploy (deploys all the portable-extensions apps)
-		ant run (Executes all the portable-extensions tests)
-		ant undeploy (undeploys all the  portable-extensions apps)
-		ant unsetup (unsets all resources for portable-extensions tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the portable-extensions tests)
+        ant clean (cleans all the portable-extensions tests)
+        ant build (builds all the portable-extensions tests)
+        ant setup (sets up all resources for portable-extensions tests)
+        ant deploy (deploys all the portable-extensions apps)
+        ant run (Executes all the portable-extensions tests)
+        ant undeploy (undeploys all the  portable-extensions apps)
+        ant unsetup (unsets all resources for portable-extensions tests)
+    </echo>
     </target>
 </project>

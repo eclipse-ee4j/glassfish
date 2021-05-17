@@ -68,12 +68,12 @@ import java.util.ResourceBundle;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-http-redirect", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-http-redirect",
         description="create-http-redirect"),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-http-redirect", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-http-redirect",
         description="create-http-redirect")
 })
 public class CreateHttpRedirect implements AdminCommand {

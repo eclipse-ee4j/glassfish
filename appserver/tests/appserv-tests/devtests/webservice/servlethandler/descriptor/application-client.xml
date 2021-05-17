@@ -24,11 +24,11 @@
     <description>simple handler service ref</description>
     <service-ref-name>service/simplehandler</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
-    <wsdl-file>META-INF/wsdl/SimpleHandlerServlet.wsdl</wsdl-file>    
+    <wsdl-file>META-INF/wsdl/SimpleHandlerServlet.wsdl</wsdl-file>
     <jaxrpc-mapping-file>SimpleHandlerMapping_servlet.xml</jaxrpc-mapping-file>
-    <service-qname xmlns:servicens="urn:HandlerTest">servicens:SimpleHandlerServlet</service-qname>               
+    <service-qname xmlns:servicens="urn:HandlerTest">servicens:SimpleHandlerServlet</service-qname>
     <port-component-ref>
       <service-endpoint-interface>ejb.SimpleServer</service-endpoint-interface>
-    </port-component-ref>          
+    </port-component-ref>
   </service-ref>
 </application-client>

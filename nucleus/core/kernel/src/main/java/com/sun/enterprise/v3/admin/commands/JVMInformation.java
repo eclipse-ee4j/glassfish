@@ -27,7 +27,7 @@ public class JVMInformation  implements JVMInformationMBean { //, MBeanRegistrat
     private final MemoryReporter mr;
     private final ClassReporter cr;
     private final LogReporter lr;
-    
+
     public JVMInformation(MBeanServerConnection mbsc) {
         this.mbsc = mbsc;
         tm = new ThreadMonitor(mbsc);

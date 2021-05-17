@@ -29,7 +29,7 @@ public interface TraderRemote extends EJBObject {
   public TradeResult sell(String customerName, String stockSymbol, int shares)
     throws ProcessingErrorException, RemoteException;
 
-  public double getBalance() 
+  public double getBalance()
     throws RemoteException;
 
 }

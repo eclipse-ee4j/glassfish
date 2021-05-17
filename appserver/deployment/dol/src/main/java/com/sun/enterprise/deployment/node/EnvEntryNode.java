@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
  * This node is responsible for handling all env-entry related xml tags
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> {
 
@@ -36,8 +36,8 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
 
     public EnvEntryNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
-                                InjectionTargetNode.class, "addInjectionTarget");                          
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
+                                InjectionTargetNode.class, "addInjectionTarget");
     }
 
     @Override
@@ -47,11 +47,11 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(TagNames.ENVIRONMENT_PROPERTY_NAME, "setName");
         table.put(TagNames.ENVIRONMENT_PROPERTY_VALUE, "setValue");
-        table.put(TagNames.ENVIRONMENT_PROPERTY_TYPE, "setType");        
+        table.put(TagNames.ENVIRONMENT_PROPERTY_TYPE, "setType");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
         return table;
@@ -72,7 +72,7 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
             }
         }
         return super.endElement(element);
-    } 
+    }
 
     @Override
     public void addDescriptor(Object newDescriptor) {

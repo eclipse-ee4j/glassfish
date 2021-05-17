@@ -99,7 +99,7 @@ public class SystemPropertiesTest extends RestTestBase {
         response = delete(URL_DAS_SYSTEM_PROPERTIES+"/"+prop1);
         checkStatusForSuccess(response);
     }
-    
+
     @Test
     public void testNotResolvingDasSystemProperties() {
         final String prop1 = "property" + generateRandomString();
@@ -120,12 +120,12 @@ public class SystemPropertiesTest extends RestTestBase {
             put("node", "localhost-domain1");
         }});
         checkStatusForSuccess(cr);
-        
+
         createAndTestConfigProperty(propertyName, PROP_VALUE, instanceName + "-config");
 
         createAndTestInstanceOverride(propertyName, PROP_VALUE, PROP_VALUE + "-instance", instanceName);
     }
-    
+
     @Test()
     public void testNotResolvingClusterProperties() {
         final String propertyName = "property" + generateRandomString();
@@ -135,14 +135,14 @@ public class SystemPropertiesTest extends RestTestBase {
         ct.setup();
         ct.createCluster(clusterName);
         ct.createClusterInstance(clusterName, instanceName);
-        
+
         createAndTestConfigProperty(propertyName, PROP_VALUE, clusterName + "-config");
         createAndTestClusterOverride(propertyName, PROP_VALUE, PROP_VALUE + "-cluster", clusterName);
         createAndTestInstanceOverride(propertyName, PROP_VALUE+"-cluster", PROP_VALUE + "-instance", instanceName);
-        
+
         ct.deleteCluster(clusterName);
     }
-    
+
     protected void createAndTestConfigProperty(final String propertyName, final String propertyValue, String configName) {
         final String url = URL_CONFIG_SYSTEM_PROPERTIES.replaceAll("%config%", configName);
         Response response = get(url);
@@ -158,21 +158,21 @@ public class SystemPropertiesTest extends RestTestBase {
         assertNotNull(sysProp);
         assertEquals(sysProp.get("value"), propertyValue);
     }
-    
+
     protected void createAndTestClusterOverride(final String propertyName, final String defaultValue, final String propertyValue, final String clusterName) {
         final String clusterSysPropsUrl = URL_CLUSTER_SYSTEM_PROPERTIES.replaceAll("%clusterName%", clusterName);
-        
+
         Response response = get(clusterSysPropsUrl);
         List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
         Map<String, String> sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(sysProp.get("defaultValue"), defaultValue);
-    
+
         response = post(clusterSysPropsUrl, new HashMap<String, String>() {{
             put(propertyName, propertyValue);
         }});
         checkStatusForSuccess(response);
-        
+
         // Check updated/overriden system property
         response = get(clusterSysPropsUrl);
         systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
@@ -181,21 +181,21 @@ public class SystemPropertiesTest extends RestTestBase {
         assertEquals(sysProp.get("value"), propertyValue);
         assertEquals(sysProp.get("defaultValue"), defaultValue);
     }
-    
+
     protected void createAndTestInstanceOverride(final String propertyName, final String defaultValue, final String propertyValue, final String instanceName) {
         final String instanceSysPropsUrl = URL_INSTANCE_SYSTEM_PROPERTIES.replaceAll("%instanceName%", instanceName);
-        
+
         Response response = get(instanceSysPropsUrl);
         List<Map<String, String>> systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
         Map<String, String> sysProp = getSystemProperty(propertyName, systemProperties);
         assertNotNull(sysProp);
         assertEquals(sysProp.get("defaultValue"), defaultValue);
-    
+
         response = post(instanceSysPropsUrl, new HashMap<String, String>() {{
             put(propertyName, propertyValue);
         }});
         checkStatusForSuccess(response);
-        
+
         // Check updated/overriden system property
         response = get(instanceSysPropsUrl);
         systemProperties = getSystemProperties(MarshallingUtils.buildMapFromDocument(response.readEntity(String.class)));
@@ -204,22 +204,22 @@ public class SystemPropertiesTest extends RestTestBase {
         assertEquals(sysProp.get("value"), propertyValue);
         assertEquals(sysProp.get("defaultValue"), defaultValue);
     }
-    
+
     private List<Map<String, String>> getSystemProperties(Map<String, Object> responseMap) {
         Map<String, Object> extraProperties = (Map<String, Object>)responseMap.get("extraProperties");
         return (List<Map<String, String>>)extraProperties.get("systemProperties");
     }
-    
+
     private Map<String, String> getSystemProperty(String propName, List<Map<String, String>> systemProperties) {
         for (Map<String, String> sysProp : systemProperties) {
             if (sysProp.get("name").equals(propName)) {
                 return sysProp;
             }
         }
-        
+
         return null;
     }
-    
+
     private Map<String, String> getSystemPropertiesMap (List<Map<String, String>> propsList) {
         Map<String, String> allPropsMap = new HashMap();
         for (Map<String, String> sysProp : propsList) {
@@ -227,5 +227,5 @@ public class SystemPropertiesTest extends RestTestBase {
         }
         return allPropsMap;
     }
-    
+
 }

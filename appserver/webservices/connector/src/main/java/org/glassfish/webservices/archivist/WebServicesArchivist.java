@@ -50,7 +50,7 @@ public class WebServicesArchivist extends ExtensionsArchivist {
     public DeploymentDescriptorFile getStandardDDFile(RootDeploymentDescriptor descriptor) {
         if (standardDD == null) {
             standardDD = new WebServicesDeploymentDescriptorFile(descriptor);
-        } 
+        }
         return standardDD;
     }
 

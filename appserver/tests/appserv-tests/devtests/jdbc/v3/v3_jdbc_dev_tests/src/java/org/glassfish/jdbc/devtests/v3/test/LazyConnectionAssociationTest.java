@@ -54,9 +54,9 @@ public class LazyConnectionAssociationTest implements SimpleTest {
      * @param i
      * @param ds
      */
-    private void acquireConnections(int count, DataSource ds, PrintWriter out) 
+    private void acquireConnections(int count, DataSource ds, PrintWriter out)
             throws Exception{
-        
+
             for(int i=0; i<count ; i++){
                 ds.getConnection();
             }

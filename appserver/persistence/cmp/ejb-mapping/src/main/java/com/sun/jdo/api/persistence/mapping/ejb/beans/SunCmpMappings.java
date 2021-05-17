@@ -15,61 +15,61 @@
  */
 
  /**
- *	This generated bean class SunCmpMappings matches the schema element 'sun-cmp-mappings'.
+ *    This generated bean class SunCmpMappings matches the schema element 'sun-cmp-mappings'.
  *
- *	Generated on Mon Dec 22 15:39:25 PST 2008
+ *    Generated on Mon Dec 22 15:39:25 PST 2008
  *
- *	This class matches the root element of the DTD,
- *	and is the root of the following bean graph:
+ *    This class matches the root element of the DTD,
+ *    and is the root of the following bean graph:
  *
- *	sunCmpMappings <sun-cmp-mappings> : SunCmpMappings
- *		sunCmpMapping <sun-cmp-mapping> : SunCmpMapping[1,n]
- *			schema <schema> : String
- *			entityMapping <entity-mapping> : EntityMapping[1,n]
- *				ejbName <ejb-name> : String
- *				tableName <table-name> : String
- *				cmpFieldMapping <cmp-field-mapping> : CmpFieldMapping[1,n]
- *					fieldName <field-name> : String
- *					columnName <column-name> : String[1,n]
- *					readOnly <read-only> : boolean[0,1]
- *						EMPTY : String
- *					fetchedWith <fetched-with> : FetchedWith[0,1]
- *						| default <default> : boolean
- *						| 	EMPTY : String
- *						| level <level> : int
- *						| namedGroup <named-group> : String
- *						| none <none> : boolean
- *						| 	EMPTY : String
- *				cmrFieldMapping <cmr-field-mapping> : CmrFieldMapping[0,n]
- *					cmrFieldName <cmr-field-name> : String
- *					columnPair <column-pair> : ColumnPair[1,n]
- *						columnName <column-name> : String[1,n]
- *					fetchedWith <fetched-with> : FetchedWith[0,1]
- *						| default <default> : boolean
- *						| 	EMPTY : String
- *						| level <level> : int
- *						| namedGroup <named-group> : String
- *						| none <none> : boolean
- *						| 	EMPTY : String
- *				secondaryTable <secondary-table> : SecondaryTable[0,n]
- *					tableName <table-name> : String
- *					columnPair <column-pair> : ColumnPair[1,n]
- *						columnName <column-name> : String[1,n]
- *				consistency <consistency> : Consistency[0,1]
- *					| none <none> : boolean
- *					| 	EMPTY : String
- *					| checkModifiedAtCommit <check-modified-at-commit> : boolean
- *					| 	EMPTY : String
- *					| lockWhenLoaded <lock-when-loaded> : boolean
- *					| 	EMPTY : String
- *					| checkAllAtCommit <check-all-at-commit> : boolean
- *					| 	EMPTY : String
- *					| lockWhenModified <lock-when-modified> : boolean
- *					| 	EMPTY : String
- *					| checkAllAtCommit2 <check-all-at-commit> : boolean[0,1]
- *					| 	EMPTY : String
- *					| checkVersionOfAccessedInstances <check-version-of-accessed-instances> : CheckVersionOfAccessedInstances
- *					| 	columnName <column-name> : String[1,n]
+ *    sunCmpMappings <sun-cmp-mappings> : SunCmpMappings
+ *        sunCmpMapping <sun-cmp-mapping> : SunCmpMapping[1,n]
+ *            schema <schema> : String
+ *            entityMapping <entity-mapping> : EntityMapping[1,n]
+ *                ejbName <ejb-name> : String
+ *                tableName <table-name> : String
+ *                cmpFieldMapping <cmp-field-mapping> : CmpFieldMapping[1,n]
+ *                    fieldName <field-name> : String
+ *                    columnName <column-name> : String[1,n]
+ *                    readOnly <read-only> : boolean[0,1]
+ *                        EMPTY : String
+ *                    fetchedWith <fetched-with> : FetchedWith[0,1]
+ *                        | default <default> : boolean
+ *                        |     EMPTY : String
+ *                        | level <level> : int
+ *                        | namedGroup <named-group> : String
+ *                        | none <none> : boolean
+ *                        |     EMPTY : String
+ *                cmrFieldMapping <cmr-field-mapping> : CmrFieldMapping[0,n]
+ *                    cmrFieldName <cmr-field-name> : String
+ *                    columnPair <column-pair> : ColumnPair[1,n]
+ *                        columnName <column-name> : String[1,n]
+ *                    fetchedWith <fetched-with> : FetchedWith[0,1]
+ *                        | default <default> : boolean
+ *                        |     EMPTY : String
+ *                        | level <level> : int
+ *                        | namedGroup <named-group> : String
+ *                        | none <none> : boolean
+ *                        |     EMPTY : String
+ *                secondaryTable <secondary-table> : SecondaryTable[0,n]
+ *                    tableName <table-name> : String
+ *                    columnPair <column-pair> : ColumnPair[1,n]
+ *                        columnName <column-name> : String[1,n]
+ *                consistency <consistency> : Consistency[0,1]
+ *                    | none <none> : boolean
+ *                    |     EMPTY : String
+ *                    | checkModifiedAtCommit <check-modified-at-commit> : boolean
+ *                    |     EMPTY : String
+ *                    | lockWhenLoaded <lock-when-loaded> : boolean
+ *                    |     EMPTY : String
+ *                    | checkAllAtCommit <check-all-at-commit> : boolean
+ *                    |     EMPTY : String
+ *                    | lockWhenModified <lock-when-modified> : boolean
+ *                    |     EMPTY : String
+ *                    | checkAllAtCommit2 <check-all-at-commit> : boolean[0,1]
+ *                    |     EMPTY : String
+ *                    | checkVersionOfAccessedInstances <check-version-of-accessed-instances> : CheckVersionOfAccessedInstances
+ *                    |     columnName <column-name> : String[1,n]
  *
  * @Generated
  */
@@ -87,252 +87,252 @@ import java.io.*;
 public class SunCmpMappings extends org.netbeans.modules.schema2beans.BaseBean
 {
 
-	static Vector comparators = new Vector();
-	private static final org.netbeans.modules.schema2beans.Version runtimeVersion = new org.netbeans.modules.schema2beans.Version(5, 0, 0);
+    static Vector comparators = new Vector();
+    private static final org.netbeans.modules.schema2beans.Version runtimeVersion = new org.netbeans.modules.schema2beans.Version(5, 0, 0);
 
-	static public final String SUN_CMP_MAPPING = "SunCmpMapping";	// NOI18N
+    static public final String SUN_CMP_MAPPING = "SunCmpMapping";    // NOI18N
 
-	public SunCmpMappings() throws org.netbeans.modules.schema2beans.Schema2BeansException {
-		this(null, Common.USE_DEFAULT_VALUES);
-	}
+    public SunCmpMappings() throws org.netbeans.modules.schema2beans.Schema2BeansException {
+        this(null, Common.USE_DEFAULT_VALUES);
+    }
 
-	public SunCmpMappings(org.w3c.dom.Node doc, int options) throws org.netbeans.modules.schema2beans.Schema2BeansException {
-		this(Common.NO_DEFAULT_VALUES);
-		initFromNode(doc, options);
-	}
-	protected void initFromNode(org.w3c.dom.Node doc, int options) throws Schema2BeansException
-	{
-		if (doc == null)
-		{
-			doc = GraphManager.createRootElementNode("sun-cmp-mappings");	// NOI18N
-			if (doc == null)
-				throw new Schema2BeansException(Common.getMessage(
-					"CantCreateDOMRoot_msg", "sun-cmp-mappings"));
-		}
-		Node n = GraphManager.getElementNode("sun-cmp-mappings", doc);	// NOI18N
-		if (n == null)
-			throw new Schema2BeansException(Common.getMessage(
-				"DocRootNotInDOMGraph_msg", "sun-cmp-mappings", doc.getFirstChild().getNodeName()));
+    public SunCmpMappings(org.w3c.dom.Node doc, int options) throws org.netbeans.modules.schema2beans.Schema2BeansException {
+        this(Common.NO_DEFAULT_VALUES);
+        initFromNode(doc, options);
+    }
+    protected void initFromNode(org.w3c.dom.Node doc, int options) throws Schema2BeansException
+    {
+        if (doc == null)
+        {
+            doc = GraphManager.createRootElementNode("sun-cmp-mappings");    // NOI18N
+            if (doc == null)
+                throw new Schema2BeansException(Common.getMessage(
+                    "CantCreateDOMRoot_msg", "sun-cmp-mappings"));
+        }
+        Node n = GraphManager.getElementNode("sun-cmp-mappings", doc);    // NOI18N
+        if (n == null)
+            throw new Schema2BeansException(Common.getMessage(
+                "DocRootNotInDOMGraph_msg", "sun-cmp-mappings", doc.getFirstChild().getNodeName()));
 
-		this.graphManager.setXmlDocument(doc);
+        this.graphManager.setXmlDocument(doc);
 
-		// Entry point of the createBeans() recursive calls
-		this.createBean(n, this.graphManager());
-		this.initialize(options);
-	}
-	public SunCmpMappings(int options)
-	{
-		super(comparators, runtimeVersion);
-		initOptions(options);
-	}
-	protected void initOptions(int options)
-	{
-		// The graph manager is allocated in the bean root
-		this.graphManager = new GraphManager(this);
-		this.createRoot("sun-cmp-mappings", "SunCmpMappings",	// NOI18N
-			Common.TYPE_1 | Common.TYPE_BEAN, SunCmpMappings.class);
+        // Entry point of the createBeans() recursive calls
+        this.createBean(n, this.graphManager());
+        this.initialize(options);
+    }
+    public SunCmpMappings(int options)
+    {
+        super(comparators, runtimeVersion);
+        initOptions(options);
+    }
+    protected void initOptions(int options)
+    {
+        // The graph manager is allocated in the bean root
+        this.graphManager = new GraphManager(this);
+        this.createRoot("sun-cmp-mappings", "SunCmpMappings",    // NOI18N
+            Common.TYPE_1 | Common.TYPE_BEAN, SunCmpMappings.class);
 
-		// Properties (see root bean comments for the bean graph)
-		initPropertyTables(1);
-		this.createProperty("sun-cmp-mapping", 	// NOI18N
-			SUN_CMP_MAPPING, 
-			Common.TYPE_1_N | Common.TYPE_BEAN | Common.TYPE_KEY, 
-			SunCmpMapping.class);
-		this.initialize(options);
-	}
+        // Properties (see root bean comments for the bean graph)
+        initPropertyTables(1);
+        this.createProperty("sun-cmp-mapping",     // NOI18N
+            SUN_CMP_MAPPING,
+            Common.TYPE_1_N | Common.TYPE_BEAN | Common.TYPE_KEY,
+            SunCmpMapping.class);
+        this.initialize(options);
+    }
 
-	// Setting the default values of the properties
-	void initialize(int options) {
+    // Setting the default values of the properties
+    void initialize(int options) {
 
-	}
+    }
 
-	// This attribute is an array containing at least one element
-	public void setSunCmpMapping(int index, SunCmpMapping value) {
-		this.setValue(SUN_CMP_MAPPING, index, value);
-	}
+    // This attribute is an array containing at least one element
+    public void setSunCmpMapping(int index, SunCmpMapping value) {
+        this.setValue(SUN_CMP_MAPPING, index, value);
+    }
 
-	//
-	public SunCmpMapping getSunCmpMapping(int index) {
-		return (SunCmpMapping)this.getValue(SUN_CMP_MAPPING, index);
-	}
+    //
+    public SunCmpMapping getSunCmpMapping(int index) {
+        return (SunCmpMapping)this.getValue(SUN_CMP_MAPPING, index);
+    }
 
-	// Return the number of properties
-	public int sizeSunCmpMapping() {
-		return this.size(SUN_CMP_MAPPING);
-	}
+    // Return the number of properties
+    public int sizeSunCmpMapping() {
+        return this.size(SUN_CMP_MAPPING);
+    }
 
-	// This attribute is an array containing at least one element
-	public void setSunCmpMapping(SunCmpMapping[] value) {
-		this.setValue(SUN_CMP_MAPPING, value);
-	}
+    // This attribute is an array containing at least one element
+    public void setSunCmpMapping(SunCmpMapping[] value) {
+        this.setValue(SUN_CMP_MAPPING, value);
+    }
 
-	//
-	public SunCmpMapping[] getSunCmpMapping() {
-		return (SunCmpMapping[])this.getValues(SUN_CMP_MAPPING);
-	}
+    //
+    public SunCmpMapping[] getSunCmpMapping() {
+        return (SunCmpMapping[])this.getValues(SUN_CMP_MAPPING);
+    }
 
-	// Add a new element returning its index in the list
-	public int addSunCmpMapping(com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping value) {
-		int positionOfNewItem = this.addValue(SUN_CMP_MAPPING, value);
-		return positionOfNewItem;
-	}
+    // Add a new element returning its index in the list
+    public int addSunCmpMapping(com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping value) {
+        int positionOfNewItem = this.addValue(SUN_CMP_MAPPING, value);
+        return positionOfNewItem;
+    }
 
-	//
-	// Remove an element using its reference
-	// Returns the index the element had in the list
-	//
-	public int removeSunCmpMapping(com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping value) {
-		return this.removeValue(SUN_CMP_MAPPING, value);
-	}
+    //
+    // Remove an element using its reference
+    // Returns the index the element had in the list
+    //
+    public int removeSunCmpMapping(com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping value) {
+        return this.removeValue(SUN_CMP_MAPPING, value);
+    }
 
-	/**
-	 * Create a new bean using it's default constructor.
-	 * This does not add it to any bean graph.
-	 */
-	public SunCmpMapping newSunCmpMapping() {
-		return new SunCmpMapping();
-	}
+    /**
+     * Create a new bean using it's default constructor.
+     * This does not add it to any bean graph.
+     */
+    public SunCmpMapping newSunCmpMapping() {
+        return new SunCmpMapping();
+    }
 
-	//
-	public static void addComparator(org.netbeans.modules.schema2beans.BeanComparator c) {
-		comparators.add(c);
-	}
+    //
+    public static void addComparator(org.netbeans.modules.schema2beans.BeanComparator c) {
+        comparators.add(c);
+    }
 
-	//
-	public static void removeComparator(org.netbeans.modules.schema2beans.BeanComparator c) {
-		comparators.remove(c);
-	}
-	//
-	// This method returns the root of the bean graph
-	// Each call creates a new bean graph from the specified DOM graph
-	//
-	public static SunCmpMappings createGraph(org.w3c.dom.Node doc) throws org.netbeans.modules.schema2beans.Schema2BeansException {
-		return new SunCmpMappings(doc, Common.NO_DEFAULT_VALUES);
-	}
+    //
+    public static void removeComparator(org.netbeans.modules.schema2beans.BeanComparator c) {
+        comparators.remove(c);
+    }
+    //
+    // This method returns the root of the bean graph
+    // Each call creates a new bean graph from the specified DOM graph
+    //
+    public static SunCmpMappings createGraph(org.w3c.dom.Node doc) throws org.netbeans.modules.schema2beans.Schema2BeansException {
+        return new SunCmpMappings(doc, Common.NO_DEFAULT_VALUES);
+    }
 
-	public static SunCmpMappings createGraph(java.io.File f) throws org.netbeans.modules.schema2beans.Schema2BeansException, java.io.IOException {
-		java.io.InputStream in = new java.io.FileInputStream(f);
-		try {
-			return createGraph(in, false);
-		} finally {
-			in.close();
-		}
-	}
+    public static SunCmpMappings createGraph(java.io.File f) throws org.netbeans.modules.schema2beans.Schema2BeansException, java.io.IOException {
+        java.io.InputStream in = new java.io.FileInputStream(f);
+        try {
+            return createGraph(in, false);
+        } finally {
+            in.close();
+        }
+    }
 
-	public static SunCmpMappings createGraph(java.io.InputStream in) throws org.netbeans.modules.schema2beans.Schema2BeansException {
-		return createGraph(in, false);
-	}
+    public static SunCmpMappings createGraph(java.io.InputStream in) throws org.netbeans.modules.schema2beans.Schema2BeansException {
+        return createGraph(in, false);
+    }
 
-	public static SunCmpMappings createGraph(java.io.InputStream in, boolean validate) throws org.netbeans.modules.schema2beans.Schema2BeansException {
-		Document doc = GraphManager.createXmlDocument(in, validate);
-		return createGraph(doc);
-	}
+    public static SunCmpMappings createGraph(java.io.InputStream in, boolean validate) throws org.netbeans.modules.schema2beans.Schema2BeansException {
+        Document doc = GraphManager.createXmlDocument(in, validate);
+        return createGraph(doc);
+    }
 
-	//
-	// This method returns the root for a new empty bean graph
-	//
-	public static SunCmpMappings createGraph() {
-		try {
-			return new SunCmpMappings();
-		}
-		catch (Schema2BeansException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    //
+    // This method returns the root for a new empty bean graph
+    //
+    public static SunCmpMappings createGraph() {
+        try {
+            return new SunCmpMappings();
+        }
+        catch (Schema2BeansException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
-		boolean restrictionFailure = false;
-		boolean restrictionPassed = false;
-		// Validating property sunCmpMapping
-		if (sizeSunCmpMapping() == 0) {
-			throw new org.netbeans.modules.schema2beans.ValidateException("sizeSunCmpMapping() == 0", org.netbeans.modules.schema2beans.ValidateException.FailureType.NULL_VALUE, "sunCmpMapping", this);	// NOI18N
-		}
-		for (int _index = 0; _index < sizeSunCmpMapping(); ++_index) {
-			com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping element = getSunCmpMapping(_index);
-			if (element != null) {
-				element.validate();
-			}
-		}
-	}
+    public void validate() throws org.netbeans.modules.schema2beans.ValidateException {
+        boolean restrictionFailure = false;
+        boolean restrictionPassed = false;
+        // Validating property sunCmpMapping
+        if (sizeSunCmpMapping() == 0) {
+            throw new org.netbeans.modules.schema2beans.ValidateException("sizeSunCmpMapping() == 0", org.netbeans.modules.schema2beans.ValidateException.FailureType.NULL_VALUE, "sunCmpMapping", this);    // NOI18N
+        }
+        for (int _index = 0; _index < sizeSunCmpMapping(); ++_index) {
+            com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping element = getSunCmpMapping(_index);
+            if (element != null) {
+                element.validate();
+            }
+        }
+    }
 
-	// Special serializer: output XML as serialization
-	private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		write(baos);
-		String str = baos.toString();;
-		// System.out.println("str='"+str+"'");
-		out.writeUTF(str);
-	}
-	// Special deserializer: read XML as deserialization
-	private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException{
-		try{
-			init(comparators, runtimeVersion);
-			String strDocument = in.readUTF();
-			// System.out.println("strDocument='"+strDocument+"'");
-			ByteArrayInputStream bais = new ByteArrayInputStream(strDocument.getBytes());
-			Document doc = GraphManager.createXmlDocument(bais, false);
-			initOptions(Common.NO_DEFAULT_VALUES);
-			initFromNode(doc, Common.NO_DEFAULT_VALUES);
-		}
-		catch (Schema2BeansException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    // Special serializer: output XML as serialization
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException{
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        write(baos);
+        String str = baos.toString();;
+        // System.out.println("str='"+str+"'");
+        out.writeUTF(str);
+    }
+    // Special deserializer: read XML as deserialization
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException{
+        try{
+            init(comparators, runtimeVersion);
+            String strDocument = in.readUTF();
+            // System.out.println("strDocument='"+strDocument+"'");
+            ByteArrayInputStream bais = new ByteArrayInputStream(strDocument.getBytes());
+            Document doc = GraphManager.createXmlDocument(bais, false);
+            initOptions(Common.NO_DEFAULT_VALUES);
+            initFromNode(doc, Common.NO_DEFAULT_VALUES);
+        }
+        catch (Schema2BeansException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	public void _setSchemaLocation(String location) {
-		if (beanProp().getAttrProp("xsi:schemaLocation", true) == null) {
-			createAttribute("xmlns:xsi", "xmlns:xsi", AttrProp.CDATA | AttrProp.IMPLIED, null, "http://www.w3.org/2001/XMLSchema-instance");
-			setAttributeValue("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			createAttribute("xsi:schemaLocation", "xsi:schemaLocation", AttrProp.CDATA | AttrProp.IMPLIED, null, location);
-		}
-		setAttributeValue("xsi:schemaLocation", location);
-	}
+    public void _setSchemaLocation(String location) {
+        if (beanProp().getAttrProp("xsi:schemaLocation", true) == null) {
+            createAttribute("xmlns:xsi", "xmlns:xsi", AttrProp.CDATA | AttrProp.IMPLIED, null, "http://www.w3.org/2001/XMLSchema-instance");
+            setAttributeValue("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            createAttribute("xsi:schemaLocation", "xsi:schemaLocation", AttrProp.CDATA | AttrProp.IMPLIED, null, location);
+        }
+        setAttributeValue("xsi:schemaLocation", location);
+    }
 
-	public String _getSchemaLocation() {
-		if (beanProp().getAttrProp("xsi:schemaLocation", true) == null) {
-			createAttribute("xmlns:xsi", "xmlns:xsi", AttrProp.CDATA | AttrProp.IMPLIED, null, "http://www.w3.org/2001/XMLSchema-instance");
-			setAttributeValue("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-			createAttribute("xsi:schemaLocation", "xsi:schemaLocation", AttrProp.CDATA | AttrProp.IMPLIED, null, null);
-		}
-		return getAttributeValue("xsi:schemaLocation");
-	}
+    public String _getSchemaLocation() {
+        if (beanProp().getAttrProp("xsi:schemaLocation", true) == null) {
+            createAttribute("xmlns:xsi", "xmlns:xsi", AttrProp.CDATA | AttrProp.IMPLIED, null, "http://www.w3.org/2001/XMLSchema-instance");
+            setAttributeValue("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+            createAttribute("xsi:schemaLocation", "xsi:schemaLocation", AttrProp.CDATA | AttrProp.IMPLIED, null, null);
+        }
+        return getAttributeValue("xsi:schemaLocation");
+    }
 
-	// Dump the content of this bean returning it as a String
-	public void dump(StringBuffer str, String indent){
-		String s;
-		Object o;
-		org.netbeans.modules.schema2beans.BaseBean n;
-		str.append(indent);
-		str.append("SunCmpMapping["+this.sizeSunCmpMapping()+"]");	// NOI18N
-		for(int i=0; i<this.sizeSunCmpMapping(); i++)
-		{
-			str.append(indent+"\t");
-			str.append("#"+i+":");
-			n = (org.netbeans.modules.schema2beans.BaseBean) this.getSunCmpMapping(i);
-			if (n != null)
-				n.dump(str, indent + "\t");	// NOI18N
-			else
-				str.append(indent+"\tnull");	// NOI18N
-			this.dumpAttributes(SUN_CMP_MAPPING, i, str, indent);
-		}
+    // Dump the content of this bean returning it as a String
+    public void dump(StringBuffer str, String indent){
+        String s;
+        Object o;
+        org.netbeans.modules.schema2beans.BaseBean n;
+        str.append(indent);
+        str.append("SunCmpMapping["+this.sizeSunCmpMapping()+"]");    // NOI18N
+        for(int i=0; i<this.sizeSunCmpMapping(); i++)
+        {
+            str.append(indent+"\t");
+            str.append("#"+i+":");
+            n = (org.netbeans.modules.schema2beans.BaseBean) this.getSunCmpMapping(i);
+            if (n != null)
+                n.dump(str, indent + "\t");    // NOI18N
+            else
+                str.append(indent+"\tnull");    // NOI18N
+            this.dumpAttributes(SUN_CMP_MAPPING, i, str, indent);
+        }
 
-	}
-	public String dumpBeanNode(){
-		StringBuffer str = new StringBuffer();
-		str.append("SunCmpMappings\n");	// NOI18N
-		this.dump(str, "\n  ");	// NOI18N
-		return str.toString();
-	}}
+    }
+    public String dumpBeanNode(){
+        StringBuffer str = new StringBuffer();
+        str.append("SunCmpMappings\n");    // NOI18N
+        this.dump(str, "\n  ");    // NOI18N
+        return str.toString();
+    }}
 
 // END_NOI18N
 
 
 /*
-		The following schema file has been used for generation:
+        The following schema file has been used for generation:
 
 <!--
 
-  XML DTD for Sun ONE Application Server specific Object Relational Mapping 
+  XML DTD for Sun ONE Application Server specific Object Relational Mapping
 
   with Container Managed Persistence.
 
@@ -358,9 +358,9 @@ workaround.
 
 Because of the workaround, the file here differs from the official one in
 
-appserv-commons/lib/dtds (which also has previous versions of sun-cmp-mapping 
+appserv-commons/lib/dtds (which also has previous versions of sun-cmp-mapping
 
-dtds) in the definition of the column pair element.  This difference is so 
+dtds) in the definition of the column pair element.  This difference is so
 
 that schema2beans can produce usable beans.  The official dtd has:
 
@@ -382,7 +382,7 @@ and the one in here has:
 
 
 
-<!-- This file maps at least one set of beans to tables and columns in a 
+<!-- This file maps at least one set of beans to tables and columns in a
 
      specific db schema
 
@@ -398,21 +398,21 @@ and the one in here has:
 
 
 
-<!-- A cmp bean has a name, a primary table, one or more fields, zero or 
+<!-- A cmp bean has a name, a primary table, one or more fields, zero or
 
-     more relationships, and zero or more secondary tables, plus flags for 
+     more relationships, and zero or more secondary tables, plus flags for
 
      consistency checking.
 
- 
 
-     If the consistency checking flag element is not present, then none 
 
-     is assumed 
+     If the consistency checking flag element is not present, then none
 
---> 
+     is assumed
 
-<!ELEMENT entity-mapping (ejb-name, table-name, cmp-field-mapping+, 
+-->
+
+<!ELEMENT entity-mapping (ejb-name, table-name, cmp-field-mapping+,
 
         cmr-field-mapping*, secondary-table*, consistency?)>
 
@@ -430,17 +430,17 @@ and the one in here has:
 
 
 
-<!-- A cmp-field-mapping has a field, one or more columns that it maps to.  
+<!-- A cmp-field-mapping has a field, one or more columns that it maps to.
 
-     The column can be from a bean's primary table or any defined secondary 
+     The column can be from a bean's primary table or any defined secondary
 
      table.  If a field is mapped to multiple columns, the column listed first
 
-     is used as the SOURCE for getting the value from the database.  The 
+     is used as the SOURCE for getting the value from the database.  The
 
-     columns are updated in their order.  A field may also be marked as 
+     columns are updated in their order.  A field may also be marked as
 
-     read-only.  It may also participate in a hierarchial or independent 
+     read-only.  It may also participate in a hierarchial or independent
 
      fetch group. If the fetched-with element is not present, the value,
 
@@ -450,15 +450,15 @@ and the one in here has:
 
 -->
 
-<!ELEMENT cmp-field-mapping (field-name, column-name+, read-only?, 
+<!ELEMENT cmp-field-mapping (field-name, column-name+, read-only?,
 
         fetched-with?) >
 
-            
 
-<!-- The java identifier of a field. Must match the value of the field-name 
 
-     sub-element of the cmp-field that is being mapped. 
+<!-- The java identifier of a field. Must match the value of the field-name
+
+     sub-element of the cmp-field that is being mapped.
 
 -->
 
@@ -466,9 +466,9 @@ and the one in here has:
 
 
 
-<!-- The java identifier of a field.  Must match the value of the 
+<!-- The java identifier of a field.  Must match the value of the
 
-     cmr-field-name sub-element of the cmr-field tat is being mapped. 
+     cmr-field-name sub-element of the cmr-field tat is being mapped.
 
 -->
 
@@ -476,19 +476,19 @@ and the one in here has:
 
 
 
-<!-- The ejb-name from the standard EJB-jar DTD--> 
+<!-- The ejb-name from the standard EJB-jar DTD-->
 
 <!ELEMENT ejb-name (#PCDATA) >
 
 
 
-<!-- The COLUMN name of a column from the primary table, or the table 
+<!-- The COLUMN name of a column from the primary table, or the table
 
-     qualified name (TABLE.COLUMN) of a column from a secondary or related 
+     qualified name (TABLE.COLUMN) of a column from a secondary or related
 
      table
 
---> 
+-->
 
 <!ELEMENT column-name (#PCDATA) >
 
@@ -500,7 +500,7 @@ and the one in here has:
 
 
 
-<!-- Sub element of fetched-with. Implies that a field belongs to the default 
+<!-- Sub element of fetched-with. Implies that a field belongs to the default
 
      hierarchical fetch group. -->
 
@@ -522,7 +522,7 @@ and the one in here has:
 
 
 
-<!-- The name of an independent fetch group.  All the fields and relationships 
+<!-- The name of an independent fetch group.  All the fields and relationships
 
   that are part of a named-group are fetched at the same time-->
 
@@ -548,19 +548,19 @@ and the one in here has:
 
 
 
-<!-- cmr-field mapping.  A cmr field has a name and one or more column 
+<!-- cmr-field mapping.  A cmr field has a name and one or more column
 
-     pairs that define the relationship. The relationship can also 
+     pairs that define the relationship. The relationship can also
 
      participate in a fetch group.
 
-     
+
 
      If the fetched-with element is not present, the value,
 
           <fetched-with><none/></fetched-with>
 
-     is assumed. 
+     is assumed.
 
 -->
 
@@ -568,7 +568,7 @@ and the one in here has:
 
 
 
-<!-- The path name to the schema file--> 
+<!-- The path name to the schema file-->
 
 <!ELEMENT schema (#PCDATA) >
 

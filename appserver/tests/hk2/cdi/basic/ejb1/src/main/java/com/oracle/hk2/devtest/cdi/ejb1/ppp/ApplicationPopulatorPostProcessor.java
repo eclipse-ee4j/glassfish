@@ -26,7 +26,7 @@ import com.oracle.hk2.devtest.cdi.ejb1.scoped.HK2Service;
  * This post-processor will be placed into the META-INF/services
  * of the application.  The test will ensure that it has
  * been properly run
- * 
+ *
  * @author jwells
  *
  */
@@ -42,7 +42,7 @@ public class ApplicationPopulatorPostProcessor implements
     public DescriptorImpl process(ServiceLocator serviceLocator,
             DescriptorImpl descriptorImpl) {
         if (!descriptorImpl.getAdvertisedContracts().contains(HK2Service.class.getName())) return descriptorImpl;
-        
+
         descriptorImpl.addMetadata(KEY, VALUE);
         return descriptorImpl;
     }

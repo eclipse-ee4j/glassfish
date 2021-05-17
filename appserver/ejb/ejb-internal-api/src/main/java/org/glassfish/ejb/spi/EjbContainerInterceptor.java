@@ -21,8 +21,8 @@ import org.jvnet.hk2.annotations.Contract;
 import com.sun.enterprise.deployment.EjbDescriptor;
 
 /**
- * Contract interface for registering EjbContainerInterceptor to 
- * the Ejb Container. It can be inherited by anyone who want to 
+ * Contract interface for registering EjbContainerInterceptor to
+ * the Ejb Container. It can be inherited by anyone who want to
  * extend the Ejb Container.
  *
  * @author Jeremy_Lv
@@ -30,18 +30,18 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  */
 @Contract
 public interface EjbContainerInterceptor {
-	
-	/**
-	 * User can set some useful informations before 
-	 * invoking the EJB application
-	 * @param ejbDesc
-	 */
-	public void preInvoke(EjbDescriptor ejbDesc);
-	
-	/**
-	 * User can set some useful informations after 
-	 * invoking the EJB application
-	 * @param ejbDesc
-	 */
-	public void postInvoke(EjbDescriptor ejbDesc);
+
+    /**
+     * User can set some useful informations before
+     * invoking the EJB application
+     * @param ejbDesc
+     */
+    public void preInvoke(EjbDescriptor ejbDesc);
+
+    /**
+     * User can set some useful informations after
+     * invoking the EJB application
+     * @param ejbDesc
+     */
+    public void postInvoke(EjbDescriptor ejbDesc);
 }

@@ -34,13 +34,13 @@ public class JdbcUserTxTestNG {
 
     private static final String TEST_NAME =
         "jdbc-jdbcusertx";
-   
+
     private String strContextRoot="jdbcusertx";
 
     static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
     /*
      *If two asserts are mentioned in one method, then last assert is taken in
      *to account.
@@ -50,77 +50,77 @@ public class JdbcUserTxTestNG {
 
     @Test(groups ={ "pulse"} ) // test method
     public void testUserTx() throws Exception{
-        
+
         try{
 
-          String testurl = "http://" + host  + ":" + port + "/"+ 
-	    strContextRoot + "/MyServlet?testcase=usertx";
-	  URL url = new URL(testurl);
-	  //echo("Connecting to: " + url.toString());
-	  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	  conn.connect();
-	  int responseCode = conn.getResponseCode();
+          String testurl = "http://" + host  + ":" + port + "/"+
+        strContextRoot + "/MyServlet?testcase=usertx";
+      URL url = new URL(testurl);
+      //echo("Connecting to: " + url.toString());
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.connect();
+      int responseCode = conn.getResponseCode();
 
-	  InputStream is = conn.getInputStream();
-	  BufferedReader input = new BufferedReader(new InputStreamReader(is));
+      InputStream is = conn.getInputStream();
+      BufferedReader input = new BufferedReader(new InputStreamReader(is));
 
-	  String line = null;
-	  boolean result=false;
-	  String testLine = null;        
-	  String EXPECTED_RESPONSE ="user-tx-commit:true";
-	  String EXPECTED_RESPONSE2 ="user-tx-rollback:true";
-	  while ((line = input.readLine()) != null) {
-	    // echo(line);
+      String line = null;
+      boolean result=false;
+      String testLine = null;
+      String EXPECTED_RESPONSE ="user-tx-commit:true";
+      String EXPECTED_RESPONSE2 ="user-tx-rollback:true";
+      while ((line = input.readLine()) != null) {
+        // echo(line);
             if(line.indexOf(EXPECTED_RESPONSE)!=-1 &&
                line.indexOf(EXPECTED_RESPONSE2)!=-1){
-	      testLine = line;
-	      //echo(testLine);
-	      result=true;
-	      break;
+          testLine = line;
+          //echo(testLine);
+          result=true;
+          break;
             }
-	  }        
-                
-	  Assert.assertEquals(result, true,"Unexpected Results");
-        
+      }
+
+      Assert.assertEquals(result, true,"Unexpected Results");
+
         }catch(Exception e){
-	  e.printStackTrace();
-	  throw new Exception(e);
+      e.printStackTrace();
+      throw new Exception(e);
         }
 
     }
 
     @Test(groups ={ "pulse"} ) // test method
     public void testNoLeak() throws Exception{
-        
+
         try{
 
-          String testurl = "http://" + host  + ":" + port + "/"+ 
-	    strContextRoot + "/MyServlet?testcase=noleak";
-	  URL url = new URL(testurl);
-	  //echo("Connecting to: " + url.toString());
-	  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	  conn.connect();
-	  int responseCode = conn.getResponseCode();
+          String testurl = "http://" + host  + ":" + port + "/"+
+        strContextRoot + "/MyServlet?testcase=noleak";
+      URL url = new URL(testurl);
+      //echo("Connecting to: " + url.toString());
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.connect();
+      int responseCode = conn.getResponseCode();
 
-	  InputStream is = conn.getInputStream();
-	  BufferedReader input = new BufferedReader(new InputStreamReader(is));
+      InputStream is = conn.getInputStream();
+      BufferedReader input = new BufferedReader(new InputStreamReader(is));
 
-	  String line = null;
-	  boolean result=false;
-	  String testLine = null;        
-	  String EXPECTED_RESPONSE ="no-leak-test:true";
-	  while ((line = input.readLine()) != null) {
-	    // echo(line);
-   	    if(line.indexOf(EXPECTED_RESPONSE)!=-1){
-	      testLine = line;
-	      //echo(testLine);
-	      result=true;
-	      break;
+      String line = null;
+      boolean result=false;
+      String testLine = null;
+      String EXPECTED_RESPONSE ="no-leak-test:true";
+      while ((line = input.readLine()) != null) {
+        // echo(line);
+           if(line.indexOf(EXPECTED_RESPONSE)!=-1){
+          testLine = line;
+          //echo(testLine);
+          result=true;
+          break;
             }
-	  }        
-                
-	  Assert.assertEquals(result, true,"Unexpected Results");
-               
+      }
+
+      Assert.assertEquals(result, true,"Unexpected Results");
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);

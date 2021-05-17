@@ -27,7 +27,7 @@ import java.util.Iterator;
  * Class representing the parsed mime mapping file of a mime element.
  */
 public class MimeMap implements Serializable {
-   
+
     private static final String MIME_TYPE = "type=";
     private static final String MIME_EXTS = "exts=";
 
@@ -136,7 +136,7 @@ public class MimeMap implements Serializable {
 
     /**
      * Gets the mime type corresponding to the given extension
-     * 
+     *
      * @param extension The mime extension
      *
      * @return The mime type corresponding to the given extension, or null if
@@ -168,7 +168,7 @@ public class MimeMap implements Serializable {
 
         if (mimeMappings == null) {
             mimeMappings = new HashMap<String, String>();
-	}
+    }
 
         exts = exts.substring(index + MIME_EXTS.length());
         index = exts.indexOf(',');

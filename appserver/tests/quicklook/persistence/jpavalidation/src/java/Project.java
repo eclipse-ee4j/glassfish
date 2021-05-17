@@ -24,8 +24,8 @@ import java.util.Collection;
 @Table(name="BV_PROJ")
 public class Project {
 
-    private int	    id;
-    private String	name;
+    private int        id;
+    private String    name;
     private Collection<Employee> employees;
 
     public Project() {}

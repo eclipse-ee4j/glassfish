@@ -31,14 +31,14 @@ import jakarta.ejb.Startup;
  * Starts up the embedded Unboundid LDAP server on port 33389 and loads a test directory
  * into it containing the same caller- and roles names as the Database and Embedded idenity
  * stores are using.
- * 
+ *
  * @author Arjan Tijms
  *
  */
 @Startup
 @Singleton
 public class LdapSetup {
-    
+
     private InMemoryDirectoryServer directoryServer;
 
     @PostConstruct
@@ -49,8 +49,8 @@ public class LdapSetup {
                 new InMemoryListenerConfig("myListener", null, 33389, null, null, null));
 
             directoryServer = new InMemoryDirectoryServer(config);
-            
-            directoryServer.importFromLDIF(true, 
+
+            directoryServer.importFromLDIF(true,
                 new LDIFReader(this.getClass().getResourceAsStream("/test.ldif")));
 
             directoryServer.startListening();
@@ -58,10 +58,10 @@ public class LdapSetup {
             throw new IllegalStateException(e);
         }
     }
-    
+
     @PreDestroy
     public void destroy() {
         directoryServer.shutDown(true);
     }
-    
+
 }

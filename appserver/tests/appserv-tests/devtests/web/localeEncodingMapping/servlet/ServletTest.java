@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ServletTest extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         response.setContentType("text/html");
         response.setLocale(Locale.JAPAN);
         PrintWriter out = response.getWriter();

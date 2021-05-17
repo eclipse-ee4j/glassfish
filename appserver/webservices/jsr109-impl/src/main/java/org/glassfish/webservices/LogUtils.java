@@ -40,7 +40,7 @@ public final class LogUtils {
     public static Logger getLogger() {
         return LOGGER;
     }
-    
+
     @LogMessageInfo(
             message = "Failed to load deployment descriptor, aborting.",
             level = "SEVERE",
@@ -450,7 +450,7 @@ public final class LogUtils {
             cause = "unknown",
             action = "unknown")
     public static final String HANDLER_INJECTION_FAILED = LOGMSG_PREFIX + "-00106";
-    
+
     @LogMessageInfo(
             message = "Cannot log SOAP Message {0}",
             comment = "{0} - message from exception",
@@ -521,7 +521,7 @@ public final class LogUtils {
             cause = "Component link in webservices.xml is invalid",
             action = "check port-component-name matches the name of service implementation bean and check component link in webservices.xml")
     public static final String UNRESOLVED_LINK = LOGMSG_PREFIX + "-00117";
-    
+
     @LogMessageInfo(
             message = "destroyManagedObject failed for Handler {0} for Service {1} with error {2}",
             comment = "{0} - handler class name, {1} - service endpoint name, {2} - exception message",

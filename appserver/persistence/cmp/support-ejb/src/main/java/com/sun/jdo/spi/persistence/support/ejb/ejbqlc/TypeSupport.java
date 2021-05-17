@@ -29,12 +29,12 @@ import com.sun.jdo.api.persistence.model.Model;
 import com.sun.jdo.api.persistence.model.jdo.*;
 import com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper;
 
-/** 
+/**
  * Helper class to support type info access.
  * A type info is statically an object, internally the helper uses the type name
- * as type info. The helper uses a model instance to access meta model info and 
+ * as type info. The helper uses a model instance to access meta model info and
  * uses a NameMapper to map EJB names to JDO names and vice versa.
- * 
+ *
  * @author  Michael Bouschen
  * @author  Shing Wai Chan
  */
@@ -42,7 +42,7 @@ public class TypeSupport
 {
     /** Represents the internal error type. */
     public static final Object errorType = "error";
-    
+
     /** Represents the primitive type boolean. */
     public static final Object booleanType = "boolean";
 
@@ -63,10 +63,10 @@ public class TypeSupport
 
     /** Represents the primitive type float. */
     public static final Object floatType = "float";
-    
+
     /** Represents the primitive type double. */
     public static final Object doubleType = "double";
-    
+
     /** Represents the wrapper class type boolean. */
     public static final Object booleanClassType = "java.lang.Boolean";
 
@@ -87,10 +87,10 @@ public class TypeSupport
 
     /** Represents the wrapper class type float. */
     public static final Object floatClassType = "java.lang.Float";
-    
+
     /** Represents the wrapper class type double. */
     public static final Object doubleClassType = "java.lang.Double";
-    
+
     /** Represents the type java.lang.String. */
     public static final Object stringType = "java.lang.String";
 
@@ -111,16 +111,16 @@ public class TypeSupport
 
     /** Meta data access. */
     protected Model model;
-    
+
     /** Name mapping EJB <-> JDO. */
     protected NameMapper nameMapper;
-    
+
     /** I18N support. */
     protected final static ResourceBundle msgs = I18NHelper.loadBundle(
         TypeSupport.class);
-    
+
     /** Inilialize static fields numericTypes numericWrapperTypes. */
-    static 
+    static
     {
         numericTypes.add(byteType);
         numericTypes.add(shortType);
@@ -129,7 +129,7 @@ public class TypeSupport
         numericTypes.add(longType);
         numericTypes.add(floatType);
         numericTypes.add(doubleType);
-        
+
         numericWrapperTypes.add(byteClassType);
         numericWrapperTypes.add(shortClassType);
         numericWrapperTypes.add(characterClassType);
@@ -143,10 +143,10 @@ public class TypeSupport
         dateTimeTypes.add("java.sql.Time"); //NOI18N
         dateTimeTypes.add("java.sql.Timestamp"); //NOI18N
     }
-    
-    /** 
-     * Creates a new TypeSupport using the specified model instance to 
-     * access meta data and the specified nameMapper for EJB <-> JDO 
+
+    /**
+     * Creates a new TypeSupport using the specified model instance to
+     * access meta data and the specified nameMapper for EJB <-> JDO
      * name mapping.
      */
     public TypeSupport(Model model, NameMapper nameMapper)
@@ -156,15 +156,15 @@ public class TypeSupport
     }
 
     /**
-     * The method returns a type info by type name. 
-     * If the type name denotes a class the name should be fully qualified. 
+     * The method returns a type info by type name.
+     * If the type name denotes a class the name should be fully qualified.
      * The method uses the type name as type info.
      */
     public Object getTypeInfo(String name)
     {
         return name;
     }
-    
+
     /**
      * The method returns a type info by type name by class object.
      */
@@ -173,7 +173,7 @@ public class TypeSupport
         return getTypeInfo(clazz.getName());
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if type denotes the error type.
      */
     public static boolean isErrorType(Object type)
@@ -181,44 +181,44 @@ public class TypeSupport
         return type.equals(errorType);
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if type is boolean or java.lang.Boolean
      */
     public static boolean isBooleanType(Object type)
     {
-        return type.equals(booleanType) || 
+        return type.equals(booleanType) ||
                type.equals(booleanClassType);
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if type is char or java.lang.Character
      */
     public static boolean isCharType(Object type)
     {
-        return type.equals(charType) || 
+        return type.equals(charType) ||
                type.equals(characterClassType);
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if type is int or java.lang.Integer
      */
     public static boolean isIntType(Object type)
     {
-        return type.equals(intType) || 
+        return type.equals(intType) ||
                type.equals(integerClassType);
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if type is double or java.lang.Double.
      */
     public static boolean isDoubleType(Object type)
     {
-        return type.equals(doubleType) || 
+        return type.equals(doubleType) ||
                type.equals(doubleClassType);
     }
 
-    /** 
-     * Returns <code>true</code> if type is a primitive numeric type such as 
+    /**
+     * Returns <code>true</code> if type is a primitive numeric type such as
      * byte, int etc.
      */
     public static boolean isNumericType(Object type)
@@ -227,7 +227,7 @@ public class TypeSupport
     }
 
     /**
-     * Returns <code>true</code> if type is a wrapper class of a primitive 
+     * Returns <code>true</code> if type is a wrapper class of a primitive
      * numeric type such as java.lang.Byte, java.lang.Integer etc.
      */
     public static boolean isNumericWrapperType(Object type)
@@ -270,21 +270,21 @@ public class TypeSupport
     {
         return model.isCollection((String)type);
     }
-    
+
     /** Returns <code>true</code> if type is a date or time type */
     public boolean isDateTimeType(Object type)
     {
         return dateTimeTypes.contains(getTypeName(type));
     }
-   
+
     /** Returns <code>true</code> if type is an orderable type */
     public boolean isOrderableType(Object type)
     {
         return isNumberType(type) || isDateTimeType(type) || isStringType(type);
     }
-   
-    /** 
-     * Returns the type info for a primitive type. The method returns 
+
+    /**
+     * Returns the type info for a primitive type. The method returns
      * {@link #errorType} if the specified type is not a primitive type.
      */
     public static Object getPrimitiveType(Object type)
@@ -309,8 +309,8 @@ public class TypeSupport
         return result;
     }
 
-    /** 
-     * Returns the type info for a wrapper class type. The method returns 
+    /**
+     * Returns the type info for a wrapper class type. The method returns
      * {@link #errorType} if the specified type is not a wrapper class type.
      */
     public static Object getWrapperType(Object type)
@@ -336,7 +336,7 @@ public class TypeSupport
     }
 
     /**
-     * Implements binary numeric promotion as defined in the 
+     * Implements binary numeric promotion as defined in the
      * Java Language Specification section 5.6.2
      */
     public static Object binaryNumericPromotion(Object left, Object right)
@@ -355,13 +355,13 @@ public class TypeSupport
     }
 
     /**
-     * Implements unray numeric promotion as defined in the 
+     * Implements unray numeric promotion as defined in the
      * Java Language Specification section 5.6.1
      */
     public static Object unaryNumericPromotion(Object type)
     {
         if (isNumericType(type)) {
-            if (type.equals(byteType) || type.equals(shortType) || 
+            if (type.equals(byteType) || type.equals(shortType) ||
                 type.equals(charType)) {
                 return intType;
             }
@@ -372,10 +372,10 @@ public class TypeSupport
         return errorType;
     }
 
-    /** 
-     * Implements type compatibility. The method returns <code>true</code> 
-     * if left is compatible with right. This is equivalent to 
-     * rightClass.isAssignableFrom(leftClass). 
+    /**
+     * Implements type compatibility. The method returns <code>true</code>
+     * if left is compatible with right. This is equivalent to
+     * rightClass.isAssignableFrom(leftClass).
      * Note, the method does not support inheritance.
      */
     public boolean isCompatibleWith(Object left, Object right)
@@ -383,16 +383,16 @@ public class TypeSupport
         String leftTypeName = getTypeName(left);
         String rightTypeName = getTypeName(right);
 
-        if (nameMapper.isLocalInterface(leftTypeName) && 
+        if (nameMapper.isLocalInterface(leftTypeName) &&
             nameMapper.isEjbName(rightTypeName))
             rightTypeName = nameMapper.getLocalInterfaceForEjbName(rightTypeName);
-        else if (nameMapper.isRemoteInterface(leftTypeName) && 
+        else if (nameMapper.isRemoteInterface(leftTypeName) &&
             nameMapper.isEjbName(rightTypeName))
             rightTypeName = nameMapper.getRemoteInterfaceForEjbName(rightTypeName);
-        else if (nameMapper.isLocalInterface(rightTypeName) && 
+        else if (nameMapper.isLocalInterface(rightTypeName) &&
             nameMapper.isEjbName(leftTypeName))
             leftTypeName = nameMapper.getLocalInterfaceForEjbName(leftTypeName);
-        else if (nameMapper.isRemoteInterface(rightTypeName) && 
+        else if (nameMapper.isRemoteInterface(rightTypeName) &&
             nameMapper.isEjbName(leftTypeName))
             leftTypeName = nameMapper.getRemoteInterfaceForEjbName(leftTypeName);
 
@@ -405,7 +405,7 @@ public class TypeSupport
     {
         return (String)type;
     }
-    
+
     /** Returns the typeInfo (the ejb name) for the specified abstract schema. */
     public Object getTypeInfoForAbstractSchema(String abstractSchema)
     {
@@ -416,7 +416,7 @@ public class TypeSupport
     public String getAbstractSchemaForTypeInfo(Object typeInfo)
     {
         String typeName = getTypeName(typeInfo);
-        return nameMapper.isEjbName(typeName) ? 
+        return nameMapper.isEjbName(typeName) ?
             nameMapper.getAbstractSchemaForEjbName(typeName) :
             typeName;
     }
@@ -430,7 +430,7 @@ public class TypeSupport
                 msgs, "ERR_EjbNameExpected", //NOI18N
                 "TypeSupport.getFieldType", typeName)); //NOI18N
         }
-        
+
         String fieldType = model.getFieldType(typeName, fieldName);
         // check for local or remote interface, map to ejb name
         if (nameMapper.isLocalInterface(fieldType)) {
@@ -444,9 +444,9 @@ public class TypeSupport
         }
         return getTypeInfo(fieldType);
     }
-    
-    /** 
-     * Returns the field info for the specified field of the specified type. 
+
+    /**
+     * Returns the field info for the specified field of the specified type.
      * The field info is opaque for the caller. Methods {@link #isRelationship}
      * and {@link #getElementType} allow to get details for a given field info.
      */
@@ -468,17 +468,17 @@ public class TypeSupport
         }
         return fieldInfo;
     }
-    
-    /** 
-     * Returns <code>true</code> if the specified field info denotes a 
-     * relationship field. 
+
+    /**
+     * Returns <code>true</code> if the specified field info denotes a
+     * relationship field.
      */
     public boolean isRelationship(Object fieldInfo)
     {
         return (fieldInfo != null) && (fieldInfo instanceof RelationshipElement);
     }
 
-    /** 
+    /**
      * Returns the type info of the element type if the specified field info
      * denotes a collection relationship. Otherwise it returns <code>null</code>.
      */
@@ -492,8 +492,8 @@ public class TypeSupport
             return null;
     }
 
-    /** 
-     * Gets the name of the persistence-capable class which corresponds to 
+    /**
+     * Gets the name of the persistence-capable class which corresponds to
      * the specified typeInfo (assuming an ejb name). The method returs the
      * type name of the specified typeInfo, it the typeInfo does not denote
      * an ejb-name (e.g. a local or remote interface).
@@ -501,28 +501,28 @@ public class TypeSupport
     public String getPCForTypeInfo(Object typeInfo)
     {
         String typeName = getTypeName(typeInfo);
-        String pcClassName = 
+        String pcClassName =
             nameMapper.getPersistenceClassForEjbName(typeName);
         return (pcClassName != null) ? pcClassName : typeName;
     }
-    
-    /** 
+
+    /**
      * Returns <code>true</code> if the specified type info denotes an ejb name.
      */
     public boolean isEjbName(Object typeInfo)
     {
         return nameMapper.isEjbName(getTypeName(typeInfo));
     }
-    
-    /** 
-     * Returns <code>true</code> if the specified type info denotes an ejb name 
+
+    /**
+     * Returns <code>true</code> if the specified type info denotes an ejb name
      * or the name of a local interface or the name of a remote interface.
      */
     public boolean isEjbOrInterfaceName(Object typeInfo)
     {
         String typeName = getTypeName(typeInfo);
-        return nameMapper.isEjbName(typeName) || 
-               nameMapper.isLocalInterface(typeName) || 
+        return nameMapper.isEjbName(typeName) ||
+               nameMapper.isLocalInterface(typeName) ||
                nameMapper.isRemoteInterface(typeName);
     }
 
@@ -535,7 +535,7 @@ public class TypeSupport
         String typeName = getTypeName(typeInfo);
         String remoteInterface = nameMapper.getRemoteInterfaceForEjbName(ejbName);
         return (remoteInterface != null) && remoteInterface.equals(typeName);
-        
+
     }
 
     /**
@@ -549,7 +549,7 @@ public class TypeSupport
         return (localInterface != null) && localInterface.equals(typeName);
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if the specified type info denotes
      * a remote interface.
      */
@@ -558,7 +558,7 @@ public class TypeSupport
         return nameMapper.isRemoteInterface(getTypeName(typeInfo));
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if the specified type info denotes
      * a local interface.
      */
@@ -567,7 +567,7 @@ public class TypeSupport
         return nameMapper.isLocalInterface(getTypeName(typeInfo));
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if the bean with the specified ejb name
      * has a remote interface.
      */
@@ -577,7 +577,7 @@ public class TypeSupport
             getTypeName(typeInfo)) != null;
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if the bean with the specified ejb name
      * has a local interface.
      */

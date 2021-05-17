@@ -153,7 +153,7 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
             AccessController.doPrivileged
                     (new SetMethodAction(adminObject, configProperties_));
 
-        // associate ResourceAdapter if the admin-object is RAA    
+        // associate ResourceAdapter if the admin-object is RAA
         if(adminObject instanceof ResourceAdapterAssociation){
             try {
                 ResourceAdapter ra = ConnectorRegistry.getInstance().

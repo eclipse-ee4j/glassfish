@@ -35,7 +35,7 @@ final public class ClassField extends ClassMember {
 
   /* The attributes associated with the field */
   private AttributeVector fieldAttributes;
-  
+
 
   /* public accessors */
 
@@ -108,17 +108,17 @@ final public class ClassField extends ClassMember {
 
   /* package local methods */
 
-  static ClassField read(DataInputStream data, ConstantPool pool) 
+  static ClassField read(DataInputStream data, ConstantPool pool)
     throws IOException {
     ClassField f = null;
     int accessFlags = data.readUnsignedShort();
     int name_index = data.readUnsignedShort();
     int sig_index = data.readUnsignedShort();
     AttributeVector fieldAttribs = AttributeVector.readAttributes(data, pool);
-    f = new ClassField(accessFlags, 
-		       (ConstUtf8) pool.constantAt(name_index),
-		       (ConstUtf8) pool.constantAt(sig_index),
-		       fieldAttribs);
+    f = new ClassField(accessFlags,
+               (ConstUtf8) pool.constantAt(name_index),
+               (ConstUtf8) pool.constantAt(sig_index),
+               fieldAttribs);
     return f;
   }
 

@@ -24,7 +24,7 @@ package com.sun.enterprise.deployment.node;
  * "weblogic-application/jdbc-connection-pool/data-source-name" is replaced by
  * "weblogic-application/jdbc-connection-pool/data-source-jndi-name".
  * @author  Gerald Ingalls
- * @version 
+ * @version
  */
 public class DataSourceNameVersionUpgrade extends ReplaceVersionUpgrade {
   private static String DATA_SOURCE_NAME =

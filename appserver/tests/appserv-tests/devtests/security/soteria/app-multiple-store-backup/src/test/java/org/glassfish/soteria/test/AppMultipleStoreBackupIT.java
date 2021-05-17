@@ -41,7 +41,7 @@ public class AppMultipleStoreBackupIT extends ArquillianBase {
     public static void printSummary(){
         stat.printSummary();
     }
-    
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();
@@ -52,38 +52,38 @@ public class AppMultipleStoreBackupIT extends ArquillianBase {
         assertDefaultAuthenticated(
             readFromServer("/servlet?name=reza&password=secret1"));
     }
-    
+
     @Test
     public void testAuthenticatedBackupPassword() {
         // This will first try the initial store which will fail, then
-        // tries the second store, which should succeeded. The user 
+        // tries the second store, which should succeeded. The user
         // is present in both stores but with different passwords.
         assertDefaultAuthenticated(
             readFromServer("/servlet?name=reza&password=secret2"));
     }
-    
+
     @Test
     public void testAuthenticatedBackupUser() {
         // This will first try the initial store which will fail, then
-        // tries the second store, which should succeeded. The user 
+        // tries the second store, which should succeeded. The user
         // is only present in the second store.
         Assert.assertAuthenticated(
             "web", "alex",
             readFromServer("/servlet?name=alex&password=verysecret"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongName() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet?name=romo&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongPassword() {
         assertDefaultNotAuthenticated(

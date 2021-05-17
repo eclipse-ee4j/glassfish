@@ -45,7 +45,7 @@ import test.framework.TestFrameworkClassWithSetterAndFieldInjection;
 
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
 public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
-    
+
     @Inject
     @Preferred
     TestBean tb;
@@ -65,7 +65,7 @@ public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
         tb.m1();
         if (!TransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke not called";
-        
+
         tb.m2();
         if (TransactionInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor invocation on method-level " + "interceptor annotation count not expected. " + "expected =2, actual="
@@ -89,12 +89,12 @@ public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
             msg += "Injection of BeanManager into servlet failed";
 
         AnnotatedType<TestFrameworkClassWithConstructorInjection> atfc = bm.createAnnotatedType(TestFrameworkClassWithConstructorInjection.class);
-        
+
         // First: Constructor Injection Framework class
         CreationalContext ctx = bm.createCreationalContext(null);
         InjectionTarget<TestFrameworkClassWithConstructorInjection> it = bm.createInjectionTarget(atfc);
         TestFrameworkClassWithConstructorInjection ctorInstance = it.produce(ctx);
-        
+
         // Since this framework class needs to support constructor based injection
         // we need to ask the CDI runtime to produce the instance.
         it.inject(ctorInstance, ctx);

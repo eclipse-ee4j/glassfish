@@ -28,7 +28,7 @@ public class DependentWithInjectedDataSource {
     private javax.sql.DataSource ds;
 
     public DependentWithInjectedDataSource() {
-	System.out.println("Constructed::DependentWithInjectedDataSource");
+    System.out.println("Constructed::DependentWithInjectedDataSource");
     }
 
     @PostConstruct
@@ -40,7 +40,7 @@ public class DependentWithInjectedDataSource {
     }
 
     public String toString() {
-	return "DependentWithInjectedDataSource";
+    return "DependentWithInjectedDataSource";
     }
 
     /**

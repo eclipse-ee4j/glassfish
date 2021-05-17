@@ -28,9 +28,9 @@ import org.jvnet.hk2.testing.junit.HK2Runner;
 
 /**
  * Tests for the AnnotationUtils
- * 
+ *
  * @author jwells
- * 
+ *
  */
 public class AnnotationUtilsTest extends HK2Runner {
     @Inject
@@ -45,7 +45,7 @@ public class AnnotationUtilsTest extends HK2Runner {
             Assert.assertFalse(forA.isReified());  // not classloaded by HK2
             Assert.assertEquals(HandlerForClassA.class.getName(), forA.getImplementation());
         }
-        
+
         {
             ActiveDescriptor<AnnotationHandler> forB =
                 AnnotationUtils.getAnnotationHandlerForDescriptor(locator, ClassB.class);
@@ -53,12 +53,12 @@ public class AnnotationUtilsTest extends HK2Runner {
             Assert.assertFalse(forB.isReified());  // not classloaded by HK2
             Assert.assertEquals(HandlerForClassB.class.getName(), forB.getImplementation());
         }
-        
+
         {
             ActiveDescriptor<AnnotationHandler> forC =
                 AnnotationUtils.getAnnotationHandlerForDescriptor(locator, ClassC.class);
             Assert.assertNull(forC);
         }
-        
+
     }
 }

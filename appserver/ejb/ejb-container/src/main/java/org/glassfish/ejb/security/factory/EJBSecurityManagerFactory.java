@@ -59,7 +59,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
 
     @Inject
     InvocationManager invMgr;
-     
+
 
     @Inject
     AppServerAuditManager auditManager;
@@ -91,7 +91,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
             EjbDescriptor ejbdes = (EjbDescriptor) descriptor;
             ejbSM = new EJBSecurityManager(ejbdes, invMgr);
 
-            // if the descriptor is not a EjbDescriptor the EJBSM will 
+            // if the descriptor is not a EjbDescriptor the EJBSM will
             // throw an exception. So the following will always work.
             appName = ejbdes.getApplication().getRegistrationName();
             contextId = EJBSecurityManager.getContextID(ejbdes);
@@ -146,12 +146,12 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
         return getManager(SECURITY_MANAGERS, ctxId, name, remove);
     }
 
-    public  <T> ArrayList<EJBSecurityManager> 
+    public  <T> ArrayList<EJBSecurityManager>
             getManagers(String ctxId, boolean remove) {
         return getManagers(SECURITY_MANAGERS, ctxId, remove);
     }
 
-    public  <T> ArrayList<EJBSecurityManager> 
+    public  <T> ArrayList<EJBSecurityManager>
             getManagersForApp(String appName, boolean remove) {
         return getManagersForApp(SECURITY_MANAGERS, CONTEXT_IDS, appName, remove);
     }
@@ -179,7 +179,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
                 manager = new EJBSecurityManager(ejbDesc, this.invMgr, this);
                 probeProvider.securityManagerCreationEndedEvent(ejbName);
                 if (register) {
-                          
+
                     String appName = ejbDesc.getApplication().getRegistrationName();
                     addManagerToApp(ctxId, ejbName, appName, manager);
                     probeProvider.securityManagerCreationEvent(ejbName);
@@ -191,7 +191,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
         }
         return manager;
     }
-    
+
     public final AppServerAuditManager getAuditManager() {
         return this.auditManager;
     }

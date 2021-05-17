@@ -60,7 +60,7 @@ public class ConcurrentMethodDescriptor extends Descriptor {
     public boolean hasAccessTimeout() {
         return (accessTimeout != null);
     }
-    
+
     public long getAccessTimeoutValue() {
         return accessTimeout != null ? accessTimeout.getValue() : 0;
     }

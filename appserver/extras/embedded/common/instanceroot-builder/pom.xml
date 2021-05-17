@@ -28,7 +28,7 @@
   </parent>
 
     <artifactId>instanceroot-builder</artifactId>
-    
+
     <name>GlassFish UberJar InstanceRoot Builder Module</name>
 
     <build>

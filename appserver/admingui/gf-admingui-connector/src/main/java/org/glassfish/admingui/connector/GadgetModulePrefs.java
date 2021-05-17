@@ -24,145 +24,145 @@ import java.util.List;
 
 
 /**
- *  <p>	This class is configured via XML.  This is done via the HK2
- *	<code>ConfigParser</code>.</p>
+ *  <p>    This class is configured via XML.  This is done via the HK2
+ *    <code>ConfigParser</code>.</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen    (ken.paulsen@sun.com)
  */
 @Configured(name="ModulePrefs")
 public class GadgetModulePrefs {
 
     /**
-     *	<p> Accessor for the known Admin Console
-     *	    {@link IntegrationPoint}s.<?p>
+     *    <p> Accessor for the known Admin Console
+     *        {@link IntegrationPoint}s.<?p>
     public List<IntegrationPoint> getIntegrationPoints() {
-	return this.integrationPoints;
+    return this.integrationPoints;
     }
      */
 
     /**
-     *	<p> {@link IntegrationPoint}s setter.</p>
+     *    <p> {@link IntegrationPoint}s setter.</p>
     @Element("integration-point")
     void setIntegrationPoints(List<IntegrationPoint> integrationPoints) {
-	this.integrationPoints = integrationPoints;
+    this.integrationPoints = integrationPoints;
     }
      */
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getTitle() {
-	return this.title;
+    return this.title;
     }
 
     /**
-     *	<p> Setter for the title.</p>
+     *    <p> Setter for the title.</p>
      */
     @Attribute(value="title", required=false)
     void setTitle(String title) {
-	this.title = title;
+    this.title = title;
     }
 
     private String title;
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getTitleUrl() {
-	return this.titleUrl;
+    return this.titleUrl;
     }
 
     /**
-     *	<p> Setter for the titleUrl.</p>
+     *    <p> Setter for the titleUrl.</p>
      */
     @Attribute(value="title_url", required=false)
     void setTitleUrl(String titleUrl) {
-	this.titleUrl = titleUrl;
+    this.titleUrl = titleUrl;
     }
 
     private String titleUrl;
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getDescription() {
-	return this.description;
+    return this.description;
     }
 
     /**
-     *	<p> Setter for the description.</p>
+     *    <p> Setter for the description.</p>
      */
     @Attribute(value="description", required=false)
     void setDescription(String description) {
-	this.description = description;
+    this.description = description;
     }
 
     private String description;
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getAuthor() {
-	return this.author;
+    return this.author;
     }
 
     /**
-     *	<p> Setter for the author.</p>
+     *    <p> Setter for the author.</p>
      */
     @Attribute(value="author", required=false)
     void setAuthor(String author) {
-	this.author = author;
+    this.author = author;
     }
 
     private String author;
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getAuthorEmail() {
-	return this.authorEmail;
+    return this.authorEmail;
     }
 
     /**
-     *	<p> Setter for the authorEmail.</p>
+     *    <p> Setter for the authorEmail.</p>
      */
     @Attribute(value="author_email", required=false)
     void setAuthorEmail(String authorEmail) {
-	this.authorEmail = authorEmail;
+    this.authorEmail = authorEmail;
     }
 
     private String authorEmail;
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getScreenshot() {
-	return this.screenshot;
+    return this.screenshot;
     }
 
     /**
-     *	<p> Setter for the screenshot.</p>
+     *    <p> Setter for the screenshot.</p>
      */
     @Attribute(value="screenshot", required=false)
     void setScreenshot(String screenshot) {
-	this.screenshot = screenshot;
+    this.screenshot = screenshot;
     }
 
     private String screenshot;
 
     /**
-     *	<p> A unique identifier for the GadgetModule instance.</p>
+     *    <p> A unique identifier for the GadgetModule instance.</p>
      */
     public String getThumbnail() {
-	return this.thumbnail;
+    return this.thumbnail;
     }
 
     /**
-     *	<p> Setter for the thumbnail.</p>
+     *    <p> Setter for the thumbnail.</p>
      */
     @Attribute(value="thumbnail", required=false)
     void setThumbnail(String thumbnail) {
-	this.thumbnail = thumbnail;
+    this.thumbnail = thumbnail;
     }
 
     private String thumbnail;

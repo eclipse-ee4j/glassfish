@@ -299,7 +299,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                 if(logger.isLoggable(Level.FINER)) {
                     logger.finer("isEMFCreationRequired(): isTargetDas: " + isTargetDas);
                 }
-                
+
                 if(enabled && isTargetDas) {
                     createEMFs = true;
                 }
@@ -443,7 +443,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                                 logger.finer("iterateInitializedPUsAtApplicationPrepare(): enabled: " + enabled + " isTargetDas: " + isTargetDas);
                             }
                             if(!isTargetDas || !enabled) {
-                                // we are on DAS but target != das or app is not enabled on das => The EMF was just created for Java2Db. Close it. 
+                                // we are on DAS but target != das or app is not enabled on das => The EMF was just created for Java2Db. Close it.
                                 puLoader.getEMF().close();
                                 saveEMF = false; // Do not save EMF. We have already closed it
                             }

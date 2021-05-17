@@ -38,8 +38,8 @@ import java.util.Set;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-validation-table-names", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-validation-table-names",
         description="Get Validation Table Names")
 })
 public class GetValidationTableNames implements AdminCommand {

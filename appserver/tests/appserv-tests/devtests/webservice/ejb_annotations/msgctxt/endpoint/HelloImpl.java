@@ -28,12 +28,12 @@ public class HelloImpl {
     @Resource WebServiceContext ejbsc;
 
     public String sayHello(String who) {
-	System.out.println("EJB WSCTXT wsc = " + ejbsc);
-	jakarta.xml.ws.handler.MessageContext m = ejbsc.getMessageContext();
-	if(m == null)
-		return "WebService Context injection failed";
-	if(ejbsc != null)
-        	return "WebSvcTest-Hello " + who;
+    System.out.println("EJB WSCTXT wsc = " + ejbsc);
+    jakarta.xml.ws.handler.MessageContext m = ejbsc.getMessageContext();
+    if(m == null)
+        return "WebService Context injection failed";
+    if(ejbsc != null)
+            return "WebSvcTest-Hello " + who;
         return "EJB WebServiceContext injection failed";
     }
 }

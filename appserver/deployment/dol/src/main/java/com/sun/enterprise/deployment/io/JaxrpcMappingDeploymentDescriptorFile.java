@@ -21,29 +21,29 @@ import com.sun.enterprise.deployment.node.JaxrpcMappingDescriptorNode;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 
 /**
- * This class is responsible for handling the 
+ * This class is responsible for handling the
  * JSR 109 jaxrpc mapping deployment descriptor
  *
  * @author Kenneth Saks
  */
-public class JaxrpcMappingDeploymentDescriptorFile extends 
+public class JaxrpcMappingDeploymentDescriptorFile extends
     DeploymentDescriptorFile<JaxrpcMappingDescriptor> {
 
     String mappingFilePath = null;
-    
+
     public JaxrpcMappingDeploymentDescriptorFile() {
     }
-    
 
-    /** 
-     * @return the location of the DeploymentDescriptor file for a 
+
+    /**
+     * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     public String getDeploymentDescriptorPath() {
         // writing not supported.  always copied from input jar.
         return mappingFilePath;
     }
-    
+
     /**
      * Sets the mapping file location in the source archive
      */
@@ -59,5 +59,5 @@ public class JaxrpcMappingDeploymentDescriptorFile extends
      */
     public RootXMLNode getRootXMLNode(JaxrpcMappingDescriptor descriptor) {
         return new JaxrpcMappingDescriptorNode();
-    }    
+    }
 }

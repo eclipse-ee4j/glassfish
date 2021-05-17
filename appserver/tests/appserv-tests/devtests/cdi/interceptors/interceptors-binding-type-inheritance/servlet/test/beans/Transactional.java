@@ -30,5 +30,5 @@ import jakarta.interceptor.InterceptorBinding;
 @InterceptorBinding
 public @interface Transactional {
 
-    
+
 }

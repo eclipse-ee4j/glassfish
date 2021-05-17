@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 import jakarta.ejb.Remote;
-	
+
 @Remote
 public interface Sful
 {
@@ -38,7 +38,7 @@ public interface Sful
 
     public void cdef();
 
-    public void abcdef();    
+    public void abcdef();
 
     public void acbdfe();
 

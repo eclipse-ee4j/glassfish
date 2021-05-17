@@ -43,8 +43,8 @@ public class SerializableObjectRefAddr extends RefAddr {
       *                 form of a string.
       */
     public SerializableObjectRefAddr (String addrType, Object contents) {
-	super(addrType);
-	this.contents = contents;
+    super(addrType);
+    this.contents = contents;
     }
 
     /**
@@ -53,6 +53,6 @@ public class SerializableObjectRefAddr extends RefAddr {
       * @return The possibly null address contents.
       */
     public Object getContent() {
-	return contents;
+    return contents;
     }
 }

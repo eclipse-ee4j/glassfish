@@ -34,5 +34,5 @@ public class TestOidSuper implements java.io.Serializable {
     /** Creates a new instance of TestOidSuper */
     public TestOidSuper() {
     }
-    
+
 }

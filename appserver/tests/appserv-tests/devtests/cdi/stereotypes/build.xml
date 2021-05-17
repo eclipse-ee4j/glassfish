@@ -84,15 +84,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the stereotypes tests)
-		ant clean (cleans all the stereotypes tests)
-		ant build (builds all the stereotypes tests)
-		ant setup (sets up all resources for stereotypes tests)
-		ant deploy (deploys all the stereotypes apps)
-		ant run (Executes all the stereotypes tests)
-		ant undeploy (undeploys all the  stereotypes apps)
-		ant unsetup (unsets all resources for stereotypes tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the stereotypes tests)
+        ant clean (cleans all the stereotypes tests)
+        ant build (builds all the stereotypes tests)
+        ant setup (sets up all resources for stereotypes tests)
+        ant deploy (deploys all the stereotypes apps)
+        ant run (Executes all the stereotypes tests)
+        ant undeploy (undeploys all the  stereotypes apps)
+        ant unsetup (unsets all resources for stereotypes tests)
+    </echo>
     </target>
 </project>

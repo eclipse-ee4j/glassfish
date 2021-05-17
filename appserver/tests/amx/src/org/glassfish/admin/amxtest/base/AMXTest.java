@@ -205,13 +205,13 @@ public final class AMXTest
     public void
     testContainerChild() {
 /*
-		final TypeInfos	infos	= TypeInfos.getInstance();
-		final Set<String>		j2eeTypesSet	= infos.getJ2EETypes();
+        final TypeInfos    infos    = TypeInfos.getInstance();
+        final Set<String>        j2eeTypesSet    = infos.getJ2EETypes();
 
         for( final String j2eeType : j2eeTypesSet )
-		{
-			checkContainerChild( j2eeType );
-		}
+        {
+            checkContainerChild( j2eeType );
+        }
 */
     }
 
@@ -259,31 +259,31 @@ public final class AMXTest
      */
     public void
     testHaveJ2EE_TYPE() {
-/*		final TypeInfos	infos	= TypeInfos.getInstance();
-		final Set			j2eeTypes	= infos.getJ2EETypes();
-		
-		boolean	success	= true;
-		final Iterator	iter		= j2eeTypes.iterator();
-		while ( iter.hasNext() )
-		{
-			final String		j2eeType	= (String)iter.next();
-			final TypeInfo	info	= infos.getInfo( j2eeType );
-			
-			final Class	theInterface	= info.getInterface();
-			try
-			{
-				final String	value	=
-					(String)ClassUtil.getFieldValue( theInterface, "J2EE_TYPE" );
-				assert( value.equals( j2eeType ) ) :
-					"info and J2EE_TYPE don't match: " + j2eeType + " != " + value;
-			}
-			catch( Exception e )
-			{
-				trace( "no J2EE_TYPE field found for proxy of type: " + theInterface.getName() );
-				success	= false;
-			}
-		}
-		assert( success );*/
+/*        final TypeInfos    infos    = TypeInfos.getInstance();
+        final Set            j2eeTypes    = infos.getJ2EETypes();
+
+        boolean    success    = true;
+        final Iterator    iter        = j2eeTypes.iterator();
+        while ( iter.hasNext() )
+        {
+            final String        j2eeType    = (String)iter.next();
+            final TypeInfo    info    = infos.getInfo( j2eeType );
+
+            final Class    theInterface    = info.getInterface();
+            try
+            {
+                final String    value    =
+                    (String)ClassUtil.getFieldValue( theInterface, "J2EE_TYPE" );
+                assert( value.equals( j2eeType ) ) :
+                    "info and J2EE_TYPE don't match: " + j2eeType + " != " + value;
+            }
+            catch( Exception e )
+            {
+                trace( "no J2EE_TYPE field found for proxy of type: " + theInterface.getName() );
+                success    = false;
+            }
+        }
+        assert( success );*/
     }
 
 
@@ -798,32 +798,32 @@ public final class AMXTest
     testImplementsAMXMonitoring()
             throws Exception {
 /*
-		final TypeInfos	infos	= TypeInfos.getInstance();
-		
-		final Iterator	iter	= infos.getJ2EETypes().iterator();
-		while ( iter.hasNext() )
-		{
-			final TypeInfo	info	= infos.getInfo( (String)iter.next() );
-			final Class		theInterface	= info.getInterface();
-			final String	interfaceName	= theInterface.getName();
-			if ( ! MON_IGNORE.contains( theInterface ) )
-			{
-				if ( interfaceName.endsWith( "Monitor" ) )
-				{
-					if ( ! Monitoring.class.isAssignableFrom( theInterface ) )
-					{
-						warning( ClassUtil.stripPackageName( interfaceName ) + " does not implement Monitoring" );
-					}
-				}
-				else if ( interfaceName.endsWith( "MonitorMgr" ) )
-				{
-					if ( ! Container.class.isAssignableFrom( theInterface ) )
-					{
-						warning( ClassUtil.stripPackageName( interfaceName ) + " does not implement Container" );
-					}
-				}
-			}
-		}
+        final TypeInfos    infos    = TypeInfos.getInstance();
+
+        final Iterator    iter    = infos.getJ2EETypes().iterator();
+        while ( iter.hasNext() )
+        {
+            final TypeInfo    info    = infos.getInfo( (String)iter.next() );
+            final Class        theInterface    = info.getInterface();
+            final String    interfaceName    = theInterface.getName();
+            if ( ! MON_IGNORE.contains( theInterface ) )
+            {
+                if ( interfaceName.endsWith( "Monitor" ) )
+                {
+                    if ( ! Monitoring.class.isAssignableFrom( theInterface ) )
+                    {
+                        warning( ClassUtil.stripPackageName( interfaceName ) + " does not implement Monitoring" );
+                    }
+                }
+                else if ( interfaceName.endsWith( "MonitorMgr" ) )
+                {
+                    if ( ! Container.class.isAssignableFrom( theInterface ) )
+                    {
+                        warning( ClassUtil.stripPackageName( interfaceName ) + " does not implement Container" );
+                    }
+                }
+            }
+        }
 */
     }
 
@@ -941,12 +941,12 @@ public final class AMXTest
 
             if (debug != null) {
                 final String s  = debug.getImplString( true );
-	            assert( s.length() != 0 );
-	        }
-	    }
-	    
-	    printElapsed( "testToString", all.size(), start );
-	}
+                assert( s.length() != 0 );
+            }
+        }
+
+        printElapsed( "testToString", all.size(), start );
+    }
 }
 
 

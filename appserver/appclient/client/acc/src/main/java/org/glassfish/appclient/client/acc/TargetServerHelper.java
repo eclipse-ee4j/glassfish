@@ -54,7 +54,7 @@ public class TargetServerHelper {
     public static TargetServer[] targetServers(
             final ClientContainer clientContainer,
             final String commandOptionValue) throws UserError {
-        
+
         /*
          * Precedence:
          * 1. command-line -targetserver option

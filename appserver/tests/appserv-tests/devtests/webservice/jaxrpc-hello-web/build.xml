@@ -51,22 +51,22 @@
     </path>
 
   <target name="all" depends="clean,deploy,assemble-client,deploy-client,runtest,undeploy"/>
-  
+
 
   <target name="create-war" description="Packages the WAR file">
      <echo message="Creating the WAR...."/>
      <delete file="${assemble.war}/${war.file}" />
      <delete dir="${assemble.war}/WEB-INF" />
      <copy todir="${assemble.war}/WEB-INF/classes/">
-         <fileset dir="${build}/" 
-                  includes="**/*.class" 
+         <fileset dir="${build}/"
+                  includes="**/*.class"
                   excludes="**/*Client.class, **/*.wsdl, **/*mapping.xml"/>
      </copy>
      <copy file="${build}/MyHelloService.wsdl" todir="${assemble.war}/WEB-INF/wsdl" />
      <copy file="${build}/mapping.xml" todir="${assemble.war}/${build}/" />
      <copy file="sun-web.xml" todir="${assemble.war}/WEB-INF" />
      <copy file="webservices.xml" todir="${assemble.war}/WEB-INF" />
-     <war destfile="${assemble.war}/${war.file}" 
+     <war destfile="${assemble.war}/${war.file}"
           webxml="./web.xml" filesonly="true" >
        <fileset dir="${assemble.war}" includes="WEB-INF/**, build/**" />
      </war>
@@ -102,7 +102,7 @@
         <arg line="${warname}"/>
       </exec>
     </target>
- 
+
 
  <!-- <target name="build-client" depends="build-static"
      description="Executes the targets needed to build a static stub client.">
@@ -133,7 +133,7 @@
         <param name="src" value="client"/>
     </antcall>
     <mkdir dir="${build.classes.dir}/META-INF/wsdl"/>
-    <copy file="${assemble.war}/WEB-INF/wsdl/MyHelloService.wsdl" todir="${build.classes.dir}/META-INF/wsdl"/>    
+    <copy file="${assemble.war}/WEB-INF/wsdl/MyHelloService.wsdl" todir="${build.classes.dir}/META-INF/wsdl"/>
     <unjar src="${env.APS_HOME}/lib/reporter.jar"
         dest="${build.classes.dir}"/>
     <antcall target="appclient-jar-common">
@@ -201,7 +201,7 @@
          </target>
 
        <target  name="undeploy" depends="undeploy-war1,undeploy-client"/>
-    
+
        <target name="runtest" depends="init-common">
              <mkdir dir="${build.classes.dir}/client"/>
              <javac srcdir="." destdir="${build.classes.dir}/client"

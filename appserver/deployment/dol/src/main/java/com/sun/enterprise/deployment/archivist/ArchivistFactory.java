@@ -45,7 +45,7 @@ import java.util.Set;
 public class ArchivistFactory {
     public final static String ARCHIVE_TYPE = "archiveType";
     public final static String EXTENSION_ARCHIVE_TYPE = "extensionArchiveType";
-    
+
     @Inject
     private ServiceLocator habitat;
 
@@ -62,7 +62,7 @@ public class ArchivistFactory {
         ActiveDescriptor<Archivist> best = (ActiveDescriptor<Archivist>)
                 habitat.getBestDescriptor(new ArchivistFilter(archiveType, ARCHIVE_TYPE, Archivist.class));
         if (best == null) return null;
-        
+
         return habitat.getServiceHandle(best).getService();
     }
 
@@ -81,12 +81,12 @@ public class ArchivistFactory {
             List<ActiveDescriptor<?>> descriptors =
                     habitat.getDescriptors(
                     new ArchivistFilter(containerType, EXTENSION_ARCHIVE_TYPE, ExtensionsArchivist.class));
-            
+
             for (ActiveDescriptor<?> item : descriptors) {
-                
+
                 ActiveDescriptor<ExtensionsArchivist> descriptor =
                         (ActiveDescriptor<ExtensionsArchivist>) item;
-            
+
                 ServiceHandle<ExtensionsArchivist> handle = habitat.getServiceHandle(descriptor);
                 ExtensionsArchivist ea = handle.getService();
                 if (ea.supportsModuleType(moduleType)) {
@@ -96,12 +96,12 @@ public class ArchivistFactory {
         }
         return archivists;
     }
-    
+
     private static class ArchivistFilter implements IndexedFilter {
         private final String archiveType;
         private final String metadataKey;
         private final Class<?> index;
-        
+
         private ArchivistFilter(String archiveType, String metadataKey, Class<?> index) {
             this.archiveType = archiveType;
             this.metadataKey = metadataKey;
@@ -114,12 +114,12 @@ public class ArchivistFactory {
         @Override
         public boolean matches(Descriptor d) {
             Map<String, List<String>> metadata = d.getMetadata();
-            
+
             List<String> values = metadata.get(metadataKey);
             if (values == null) {
                 return false;
             }
-            
+
             return values.contains(archiveType);
         }
 
@@ -138,8 +138,8 @@ public class ArchivistFactory {
         public String getName() {
             return null;
         }
-        
+
     }
-    
-    
+
+
 }

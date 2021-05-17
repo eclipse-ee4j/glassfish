@@ -33,7 +33,7 @@ import com.sun.jdo.spi.persistence.utility.logging.Logger;
 /*
  * Represents a database connection as an output stream.
  *
- * @author Jie Leng 
+ * @author Jie Leng
  */
 public class DatabaseOutputStream extends OutputStream {
      /** The logger */
@@ -98,9 +98,9 @@ public class DatabaseOutputStream extends OutputStream {
      * doesn't make sense to write a single int to a database stream.  So
      * always throws UnsupportedOperationException.
      * @throws UnsupportedOperationException
-     */ 
+     */
     public void write(int b) {
-        throw new UnsupportedOperationException(); 
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -110,7 +110,7 @@ public class DatabaseOutputStream extends OutputStream {
      * statement, or in executing it.
      */
     public void write(String stmt) throws SQLException {
-	// Check if stmt is empty (null), and abort if so.
+    // Check if stmt is empty (null), and abort if so.
         if (stmt == null || stmt.trim().length() == 0) {
             return;
         }

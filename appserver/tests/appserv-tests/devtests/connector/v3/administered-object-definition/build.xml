@@ -37,25 +37,25 @@
     </target>
 
     <target name="info" depends="init-common">
-    	<echo message="build.classes.dir is ${build.classes.dir}"/>
-    	<echo message="s1astest.classpath is ${s1astest.classpath}"/>
+        <echo message="build.classes.dir is ${build.classes.dir}"/>
+        <echo message="s1astest.classpath is ${s1astest.classpath}"/>
     </target>
-    
+
     <target name="compile-ut" depends="init-common">
       <mkdir dir="${build.classes.dir}"/>
       <javac srcdir="ut" destdir="${build.classes.dir}"
-      	    classpath="${env.APS_HOME}/lib/junit.jar:${s1astest.classpath}"
-      	    debug="on"
+              classpath="${env.APS_HOME}/lib/junit.jar:${s1astest.classpath}"
+              debug="on"
             includeantruntime="false"
-      	    failonerror="true"/>
+              failonerror="true"/>
     </target>
     <target name="build-ut" depends="init-common">
       <!-- build a special ear which only includes deployment descriptors-->
       <mkdir dir="${assemble.dir}"/>
       <mkdir dir="${assemble.dir}/temp"/>
-      <mkdir dir="${build.classes.dir}/META-INF"/>   
-      <copy file="${basedir}/descriptor/ut-application.xml" tofile="${build.classes.dir}/META-INF/application.xml"  failonerror="false"/> 
-      <jar jarfile="${assemble.dir}/${appname}App-UT.ear"> 
+      <mkdir dir="${build.classes.dir}/META-INF"/>
+      <copy file="${basedir}/descriptor/ut-application.xml" tofile="${build.classes.dir}/META-INF/application.xml"  failonerror="false"/>
+      <jar jarfile="${assemble.dir}/${appname}App-UT.ear">
         <fileset dir="${assemble.dir}">
            <include name="*.jar"/>
         </fileset>
@@ -71,7 +71,7 @@
       <unjar src="${assemble.dir}/${appname}App-UT.ear" dest="${assemble.dir}/temp/${appname}App-UT"/>
 
     </target>
-    	
+
     <target name="run-ut" depends="compile-ut">
       <junit printsummary="yes" haltonerror="no" haltonfailure="no" fork="true">
         <formatter type="plain" usefile="false"/>
@@ -95,7 +95,7 @@
     </target>
 
     <target name="build" depends="compile">
-    	  <echo message="assemble.dir = ${assemble.dir}"/>
+          <echo message="assemble.dir = ${assemble.dir}"/>
         <!--build and package .war first so it doesn't contain ejb bean !-->
         <!--classes that have @Stateless/@Stateul !-->
         <antcall target="webclient-war-common">
@@ -118,11 +118,11 @@
             <param name="ejbjar.classes"
                    value="**/Hello**.class"/>
         </antcall>
-        
+
         <antcall target="ear-common"/>
 
         <antcall target="build-ut"/>
-        
+
         <ant dir="ra" target="all"/>
     </target>
 

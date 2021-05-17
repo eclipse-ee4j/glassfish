@@ -41,7 +41,7 @@ import java.util.Properties;
  * client-stub retrieved with the "asadmin get-client-stubs" command. Instead,
  * we choose to use the Java Web Start URL ([host:port/contextRoot], the
  * contextroot equals to the untagged if not provided in the deployment descriptor)
- * 
+ *
  * The stubs are retrieved with JWS mechanism, it allows us to change the enabled status
  * and make some tests.
  *
@@ -120,7 +120,7 @@ public class SimpleVersionedAppClient {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {       
+    public static void main(String[] args) {
         SimpleVersionedAppClient app = new SimpleVersionedAppClient(args);
         app.doTest();
     }

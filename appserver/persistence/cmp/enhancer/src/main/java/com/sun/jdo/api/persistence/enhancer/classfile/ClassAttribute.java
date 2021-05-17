@@ -44,10 +44,10 @@ public abstract class ClassAttribute implements VMConstants {
   }
 
   /**
-   * General attribute reader 
+   * General attribute reader
    */
   static ClassAttribute read(DataInputStream data, ConstantPool pool)
-	throws IOException {
+    throws IOException {
 
     ClassAttribute attr = null;
     int attrNameIndex = data.readUnsignedShort();
@@ -57,14 +57,14 @@ public abstract class ClassAttribute implements VMConstants {
 
     if (attrName.equals(CodeAttribute.expectedAttrName)) {
       /* The old style code attribute reader uses more memory and
-	 cpu when the instructions don't need to be examined than the
-	 new deferred attribute reader.  We may at some point decide that
-	 we want to change the default based on the current situation
-	 but for now we will just use the deferred reader in all cases. */
+     cpu when the instructions don't need to be examined than the
+     new deferred attribute reader.  We may at some point decide that
+     we want to change the default based on the current situation
+     but for now we will just use the deferred reader in all cases. */
       if (true) {
-	attr = CodeAttribute.read(attrName8, attrLength, data, pool);
+    attr = CodeAttribute.read(attrName8, attrLength, data, pool);
       } else {
-	attr = CodeAttribute.read(attrName8, data, pool);
+    attr = CodeAttribute.read(attrName8, data, pool);
       }
     }
     else if (attrName.equals(SourceFileAttribute.expectedAttrName)) {
@@ -94,7 +94,7 @@ public abstract class ClassAttribute implements VMConstants {
    */
 
   static ClassAttribute read(DataInputStream data, CodeEnv env)
-	throws IOException {
+    throws IOException {
     ClassAttribute attr = null;
     int attrNameIndex = data.readUnsignedShort();
     ConstUtf8 attrName8 = (ConstUtf8) env.pool().constantAt(attrNameIndex);

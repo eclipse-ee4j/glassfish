@@ -41,8 +41,8 @@ import org.glassfish.hk2.api.PerLookup;
 @I18n("list.nodes.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-nodes", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-nodes",
         description="list-nodes")
 })
 public class ListNodesCommand implements AdminCommand{
@@ -51,12 +51,12 @@ public class ListNodesCommand implements AdminCommand{
     Servers servers;
     @Inject
     private Nodes nodes;
-    
+
     @Param(optional = true, defaultValue = "false", name="long", shortName="l")
     private boolean long_opt;
     @Param(optional = true)
     private boolean terse;
-   
+
     private ActionReport report;
     Logger logger;
 
@@ -72,7 +72,7 @@ public class ListNodesCommand implements AdminCommand{
         String nodeList = lnh.getNodeList();
 
          report.setMessage(nodeList);
-        
+
         report.setActionExitCode(ExitCode.SUCCESS);
 
     }

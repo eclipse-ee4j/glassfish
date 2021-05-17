@@ -29,7 +29,7 @@ import org.glassfish.deployment.common.DescriptorVisitor;
 /**
  *
  * @author  dochez
- * @version 
+ * @version
  */
 public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisitor {
 
@@ -73,9 +73,9 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
      */
     @Override
     public void accept(Application application) {
-	DOLUtils.getDefaultLogger().info("Application");
-	DOLUtils.getDefaultLogger().info("name " + application.getName());
-	DOLUtils.getDefaultLogger().info("smallIcon " + application.getSmallIconUri());
+    DOLUtils.getDefaultLogger().info("Application");
+    DOLUtils.getDefaultLogger().info("name " + application.getName());
+    DOLUtils.getDefaultLogger().info("smallIcon " + application.getSmallIconUri());
     }
 
 
@@ -92,7 +92,7 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
     protected void accept(MessageDestinationReferencer referencer) {
         DOLUtils.getDefaultLogger().info(referencer.getMessageDestinationLinkName());
     }
-    
+
     protected void accept(WebService webService) {
         DOLUtils.getDefaultLogger().info(webService.getName());
     }
@@ -113,7 +113,7 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
     @Override
     public void accept(Descriptor descriptor) {
         DOLUtils.getDefaultLogger().info(descriptor.toString());
-    } 
+    }
 
     /**
      * get the visitor for its sub descriptor

@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 import jakarta.ejb.Remote;
-	
+
 @Remote
 public interface Sless5
 {
@@ -25,6 +25,6 @@ public interface Sless5
     public void abdc();
 
     public void dcfe();
-    
+
     public void nothing();
 }

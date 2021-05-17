@@ -46,7 +46,7 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
@@ -77,36 +77,36 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-        MessageDestinationReferenceDescriptor msgDestRef) {          
+    public Node writeDescriptor(Node parent, String nodeName,
+        MessageDestinationReferenceDescriptor msgDestRef) {
         Node msgDestRefNode = super.writeDescriptor(parent, nodeName, msgDestRef);
-        appendTextChild(msgDestRefNode, 
-            RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE_NAME, 
+        appendTextChild(msgDestRefNode,
+            RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE_NAME,
             msgDestRef.getName());
-        appendTextChild(msgDestRefNode, RuntimeTagNames.JNDI_NAME, 
+        appendTextChild(msgDestRefNode, RuntimeTagNames.JNDI_NAME,
             msgDestRef.getJndiName());
         return msgDestRefNode;
-    }  
-    
+    }
+
     /**
      * writes all the runtime information for JMS destination references
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the J2EE component containing message destination references
-     */        
-    public static void writeMessageDestinationReferences(Node parent, 
+     */
+    public static void writeMessageDestinationReferences(Node parent,
         MessageDestinationReferenceContainer descriptor) {
         // message-destination-ref*
-        Iterator msgDestRefs = 
+        Iterator msgDestRefs =
             descriptor.getMessageDestinationReferenceDescriptors().iterator();
         if (msgDestRefs.hasNext()) {
-            MessageDestinationRefNode messageDestinationRefNode = 
+            MessageDestinationRefNode messageDestinationRefNode =
                 new MessageDestinationRefNode();
             while (msgDestRefs.hasNext()) {
-                messageDestinationRefNode.writeDescriptor(parent, 
-                    TagNames.MESSAGE_DESTINATION_REFERENCE, 
+                messageDestinationRefNode.writeDescriptor(parent,
+                    TagNames.MESSAGE_DESTINATION_REFERENCE,
                     (MessageDestinationReferenceDescriptor) msgDestRefs.next());
             }
-        }       
+        }
     }
 }

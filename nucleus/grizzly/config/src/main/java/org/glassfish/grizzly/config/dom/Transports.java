@@ -40,7 +40,7 @@ public interface Transports extends ConfigBeanProxy, PropertyBag {
 
     @DuckTyped
     NetworkConfig getParent();
-    
+
     class Duck {
         public static NetworkConfig getParent(Transports transports) {
             return transports.getParent(NetworkConfig.class);

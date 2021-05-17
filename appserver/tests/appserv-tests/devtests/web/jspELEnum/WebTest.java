@@ -39,16 +39,16 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for enum support in EL");
         WebTest webTest = new WebTest(args);
         webTest.doTest("/enum.jsp", "jsp-el-enum-test");
-	stat.printSummary();
+    stat.printSummary();
     }
 
     private boolean checkValue(BufferedReader input,
-                               String expectedValue) 
+                               String expectedValue)
             throws Exception {
         String line = input.readLine();
         if (line == null)
@@ -64,7 +64,7 @@ public class WebTest {
                 + expectedValue + ", received: " + line);
             return true;
         }
-        return false; 
+        return false;
     }
 
     public void doTest(String path, String testName) {

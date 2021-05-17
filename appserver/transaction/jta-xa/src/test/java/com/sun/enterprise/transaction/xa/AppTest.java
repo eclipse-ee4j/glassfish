@@ -66,7 +66,7 @@ public class AppTest extends TestCase {
     public void testBegin() {
         System.out.println("**Testing TM begin ===>");
         try {
-            System.out.println("**Status before begin: " 
+            System.out.println("**Status before begin: "
                     + JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()));
 
             t.begin();
@@ -84,7 +84,7 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             System.out.println("**Calling TM commit ===>");
@@ -103,13 +103,13 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             System.out.println("**Calling TM rollback ===>");
             t.rollback();
-            System.out.println("**Status after rollback: " 
-                    + JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()) 
+            System.out.println("**Status after rollback: "
+                    + JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus())
                     + " <===");
             assert (true);
         } catch (Exception ex) {
@@ -161,7 +161,7 @@ public class AppTest extends TestCase {
             System.out.println("**Calling TM resume ===>");
             t.resume(tx);
 
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(tx.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(tx.getStatus()),
                 "Active");
 
             System.out.println("**Calling TX commit ===>");
@@ -235,7 +235,7 @@ public class AppTest extends TestCase {
             System.out.println("**Starting transaction ....");
             utx.begin();
 
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(utx.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(utx.getStatus()),
                 "Active");
 
             System.out.println("**Calling UTX rollback ===>");

@@ -65,7 +65,7 @@ public interface JaccProvider extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the policyProvider property.
      *
      * Corresponds to (and can be overridden by) the system property jakarta.security.jacc.policy.provider
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute

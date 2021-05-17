@@ -163,7 +163,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
         }
 
         if(params.properties != null){
-            context.getAppProps().putAll(params.properties);        
+            context.getAppProps().putAll(params.properties);
         }
 
         ApplicationInfo appInfo = null;
@@ -195,7 +195,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
             report.setMessage(
                 "Cannot find deployed application of name " + name);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;            
+            return;
         }
 
         ReadableArchive source = appInfo.getSource();
@@ -210,7 +210,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
             params = new UndeployCommandParameters(name);
         }
         params.origin = UndeployCommandParameters.Origin.undeploy;
-        
+
         ExtendedDeploymentContext deploymentContext;
         try {
             deploymentContext = deployment.getBuilder(logger, params, report).source(source).build();
@@ -244,7 +244,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
             deploymentContext.clean();
 
         }
-        
+
     }
 
     @Override

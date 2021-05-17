@@ -46,7 +46,7 @@ public interface ResourceRecoveryManager {
      * @return boolean indicating the status of transaction recovery
      * @throws Exception when unable to recover
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance, 
+    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance,
             boolean notifyRecoveryListeners) throws Exception;
 
     /**

@@ -48,19 +48,19 @@ public class HASessionStoreValve extends ValveBase {
     /**
      * The logger to use for logging ALL web container related messages.
      */
-    private static final Logger _logger 
+    private static final Logger _logger
         = HAStoreBase._logger;
-    
+
     /** Creates a new instance of HASessionStoreValve */
     public HASessionStoreValve() {
-        super();           
+        super();
     }
 
     /**
      * invoke call-back; nothing to do on the way in
      * @param request
      * @param response
-     */    
+     */
     public int invoke(org.apache.catalina.Request request, org.apache.catalina.Response response) throws java.io.IOException, jakarta.servlet.ServletException {
         //FIXME this is for 7.0PE style valves
         //left here if the same optimization is done to the valve architecture
@@ -73,7 +73,7 @@ public class HASessionStoreValve extends ValveBase {
         HttpSession session = httpServletrequest.getSession(false);
         if (session != null) {
             sessionId = session.getId();
-      
+
             if (sessionId != null) {
                 context = (StandardContext) request.getContext();
                 manager = (ReplicationWebEventPersistentManager)context.getManager();
@@ -103,7 +103,7 @@ public class HASessionStoreValve extends ValveBase {
         return INVOKE_NEXT;
         // return 0;
     }
-    
+
     /**
      * A post-request processing implementation that does the valveSave.
      * @param request
@@ -115,8 +115,8 @@ public class HASessionStoreValve extends ValveBase {
         //left here if the same optimization is done to the valve architecture
         doPostInvoke(request, response);
     }
-       
-    
+
+
     /**
      * A post-request processing implementation that does the valveSave.
      * @param request
@@ -131,7 +131,7 @@ public class HASessionStoreValve extends ValveBase {
         Session session;
         StandardContext context;
         Manager manager;
-        HttpServletRequest hreq = 
+        HttpServletRequest hreq =
             (HttpServletRequest) request.getRequest();
         HttpSession hsess = hreq.getSession(false);
         if (hsess != null) {
@@ -150,12 +150,12 @@ public class HASessionStoreValve extends ValveBase {
                                session);
             }
             if (session != null) {
-                WebEventPersistentManager pMgr = 
+                WebEventPersistentManager pMgr =
                         (WebEventPersistentManager) manager;
                 pMgr.doValveSave(session);
             }
         }
         HACookieManager.reset();
-    }    
-    
+    }
+
 }

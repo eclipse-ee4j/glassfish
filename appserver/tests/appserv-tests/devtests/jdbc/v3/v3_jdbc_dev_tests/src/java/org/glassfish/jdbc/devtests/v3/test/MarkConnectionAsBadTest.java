@@ -73,7 +73,7 @@ public class MarkConnectionAsBadTest implements SimpleTest {
             try {
                 conn[i] = ds.getConnection();
                 physicalConnections.add(ds1.getConnection(conn[i]));
-                
+
             } catch (Exception e) {
                 HtmlUtil.printException(e, out);
                 result = false;
@@ -136,7 +136,7 @@ public class MarkConnectionAsBadTest implements SimpleTest {
             try {
                 conn[i] = ds.getConnection();
                 physicalConnections.add(ds1.getConnection(conn[i]));
-                
+
             } catch (Exception e) {
                 HtmlUtil.printException(e, out);
                 result = false;

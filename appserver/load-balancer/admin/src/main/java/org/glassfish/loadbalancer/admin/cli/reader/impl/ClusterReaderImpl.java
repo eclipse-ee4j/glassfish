@@ -37,7 +37,7 @@ import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
 
 /**
- * Impl class for ClusterReader. This provides loadbalancer 
+ * Impl class for ClusterReader. This provides loadbalancer
  * data for a cluster.
  *
  * @author Kshitiz Saxena
@@ -124,10 +124,10 @@ public class ClusterReaderImpl implements ClusterReader {
 
     @Override
     public void accept(Visitor v) throws Exception{
-    	if(v instanceof ClusterVisitor){
+        if(v instanceof ClusterVisitor){
         ClusterVisitor cv = (ClusterVisitor) v;
         cv.visit(this);
-    	}
+        }
     }
     // ---- VARIABLE(S) - PRIVATE --------------------------
     private Cluster _cluster = null;

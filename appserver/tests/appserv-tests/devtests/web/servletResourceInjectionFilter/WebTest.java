@@ -38,7 +38,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for resource injection into servlet "
@@ -51,18 +51,18 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/TestServlet");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                 ", received: " + responseCode);
         }

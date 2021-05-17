@@ -39,7 +39,7 @@ public class WSDolSupportImpl implements WSDolSupport {
     public static final String SOAP11_MTOM_TOKEN = "##SOAP11_HTTP_MTOM";
     public static final String SOAP12_MTOM_TOKEN = "##SOAP12_HTTP_MTOM";
     public static final String XML_TOKEN = "##XML_HTTP";
-    
+
     public String getProtocolBinding(String value) {
         if (value==null) {
             return SOAPBinding.SOAP11HTTP_BINDING ;
@@ -75,7 +75,7 @@ public class WSDolSupportImpl implements WSDolSupport {
             ref.setWsdlFileUri(wsc.wsdlLocation());
             //we set the service QName too from the @WebServiceClient annotation
             ref.setServiceName(new QName(wsc.targetNamespace(),wsc.name()) );
-        }    
+        }
     }
 
     public Class getType(String className) throws ClassNotFoundException {

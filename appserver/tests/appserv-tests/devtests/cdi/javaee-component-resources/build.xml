@@ -84,7 +84,7 @@
             <ant dir="jpa-resource-injection-with-singleton-ejb-producer" target="${javaee-comp-target}"/>
             <ant dir="no-interface-ejb" target="${javaee-comp-target}"/>
             <ant dir="jms-resource-producer-field" target="${javaee-comp-target}"/>
-<!-- TODO: Investigate 
+<!-- TODO: Investigate
             <ant dir="jms-resource-producer-field-in-library-jar" target="${javaee-comp-target}"/>
 -->
             <ant dir="em-resource-injection" target="${javaee-comp-target}"/>
@@ -95,15 +95,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the javaee-comp tests)
-		ant clean (cleans all the javaee-comp tests)
-		ant build (builds all the javaee-comp tests)
-		ant setup (sets up all resources for javaee-comp tests)
-		ant deploy (deploys all the javaee-comp apps)
-		ant run (Executes all the javaee-comp tests)
-		ant undeploy (undeploys all the  javaee-comp apps)
-		ant unsetup (unsets all resources for javaee-comp tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the javaee-comp tests)
+        ant clean (cleans all the javaee-comp tests)
+        ant build (builds all the javaee-comp tests)
+        ant setup (sets up all resources for javaee-comp tests)
+        ant deploy (deploys all the javaee-comp apps)
+        ant run (Executes all the javaee-comp tests)
+        ant undeploy (undeploys all the  javaee-comp apps)
+        ant unsetup (unsets all resources for javaee-comp tests)
+    </echo>
     </target>
 </project>

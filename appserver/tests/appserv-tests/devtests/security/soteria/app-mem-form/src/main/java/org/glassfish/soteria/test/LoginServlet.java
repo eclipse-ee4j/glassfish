@@ -40,7 +40,7 @@ public class LoginServlet extends HttpServlet {
                 "<form method=\"POST\" action=\"j_security_check\">" +
                     "<p><strong>Username </strong>" +
                     "<input type=\"text\" name=\"j_username\">" +
-                    
+
                     "<p><strong>Password </strong>" +
                     "<input type=\"password\" name=\"j_password\">" +
                     "<p>" +

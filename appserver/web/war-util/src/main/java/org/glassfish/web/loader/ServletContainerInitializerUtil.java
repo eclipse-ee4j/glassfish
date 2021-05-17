@@ -63,7 +63,7 @@ public class ServletContainerInitializerUtil {
             boolean hasOthers, ClassLoader cl) {
         /*
          * If there is an absoluteOrderingList specified, then make sure that
-         * any ServletContainerInitializers included in fragment JARs 
+         * any ServletContainerInitializers included in fragment JARs
          * NOT listed in the absoluteOrderingList will be ignored.
          * For this, we remove any unwanted fragment JARs from the class
          * loader's URL
@@ -211,7 +211,7 @@ public class ServletContainerInitializerUtil {
         // classes to be passed to them as arg
         Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList = null;
 
-        // If an initializer was present without any @HandleTypes, it 
+        // If an initializer was present without any @HandleTypes, it
         // must be called with a null set of classes
         if(interestList.containsKey(ServletContainerInitializerUtil.class)) {
             initializerList = new HashMap<Class<? extends ServletContainerInitializer>, Set<Class<?>>>();
@@ -314,7 +314,7 @@ public class ServletContainerInitializerUtil {
          * If a ServletContainerInitializer was annotated with HandlesTypes,
          * but none of the application classes match, we must still invoke
          * it at its onStartup method, passing in a null Set of classes
-         */ 
+         */
         for (ServletContainerInitializer initializer : initializers) {
             if (!initializerList.containsKey(initializer.getClass())) {
                 initializerList.put(initializer.getClass(), null);
@@ -362,7 +362,7 @@ public class ServletContainerInitializerUtil {
                             int size = -1;
                             while ((size = is.read(bs)) >= 0) {
                                 baos.write(bs, 0, size);
-                            } 
+                            }
                             classInfo.loadClassData(baos.toByteArray());
                         } finally {
                             if (is != null) {
@@ -426,7 +426,7 @@ public class ServletContainerInitializerUtil {
                                     LogFacade.CLASS_LOADING_ERROR,
                                     new Object[] {ae.getName(), t.toString()});
                             }
-                        }     
+                        }
                     }
                 }
             } else {
@@ -460,7 +460,7 @@ public class ServletContainerInitializerUtil {
                 classSet.addAll(resultSet);
                 initializerList.put(initializer, classSet);
             }
-            
+
         }
 
         return initializerList;

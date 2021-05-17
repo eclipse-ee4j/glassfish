@@ -22,36 +22,36 @@
 ]>
 
 <!--
-    Note that this currently assumes that the ear/earwithejb and ejb/statelesshello projects have run to build 
+    Note that this currently assumes that the ear/earwithejb and ejb/statelesshello projects have run to build
     the ear used for this test.
 
     Also note that this test expects the 'grep' command to be present in the operating environment.
-    This is fine on Solaris and Linux systems, and should be fine on Windows systems prepared 
-    according to the requirements for building the app server.  
+    This is fine on Solaris and Linux systems, and should be fine on Windows systems prepared
+    according to the requirements for building the app server.
 -->
- 
+
 <project name="autodeployWithEJB" default="all" basedir=".">
 
- 	&commonBuild;
+     &commonBuild;
 
     <property name="testName" value="withEJB"/>
     <property name="dateFormat" value="yyyy-MM-dd-HH:mm:ss.SSS"/>
     <property name="archivedir" value="${build}/archives"/>
-    
+
     <!--
         The following property defines the exception text that appears in the server.log file if
         the bug is present.
     -->
     <property name="exceptionText" value="EJBClassLoader instance that has already been shutdown"/>
-    
+
     <target name="prepare" depends="init">
         <property name="archiveName" value="earwithejb.ear"/>
         <property name="all.ear" value="${archivedir}/${archiveName}"/>
         <property name="server.log.file" value="${env.S1AS_HOME}/domains/domain1/logs/server.log"/>
         <property name="autodeploy.dir" value="${env.S1AS_HOME}/domains/domain1/autodeploy"/>
         <property name="result.property.file" value="${build}/result.properties"/>
-        
-            
+
+
         <mkdir dir="${build}" />
         <path id="test.compile.classpath">
             <pathelement location="${inst}/lib/j2ee.jar"/>
@@ -60,15 +60,15 @@
             <pathelement location="${build}"/>
         </path>
     </target>
-	
+
     <target name="build" depends="prepare">
-        
+
         <echo>Building ear</echo>
         <!--
             The earlier tests should have run already, so the app we use for autodeploy testing
             should already be in place.
         -->
-        
+
 <!--
         <ant dir="${testsRoot}/ejb/statelesshello" target="assemble">
             <property name="build" value="${testsRoot}/build/ejb/statelesshello"/>
@@ -78,7 +78,7 @@
         </ant>
 -->
     </target>
-    
+
     <target name="compile" depends="prepare">
         <javac srcdir="."
                destdir="${build}"
@@ -87,12 +87,12 @@
             <classpath refid="test.compile.classpath"/>
         </javac>
     </target>
-	
+
     <!--
         This target runs a Java class that watches the app server's autodeploy directory and detects
         when the app server has deployed or undeployed the app (or has reported a failure to do so) by observing
-        when the marker files appear in the directory.  
-        
+        when the marker files appear in the directory.
+
         The target records its results in a temporary properties file in the ${build} directory.
         This provides a simple way (relatively simple, at least) to use the same target more than once
         and store different result values in a way that can be retrieved and used from the main
@@ -117,44 +117,44 @@
             </classpath>
             <arg line="${arg.list}"/>
         </javaWithResult>
-        
+
         <!--
-            The result property name used in the next task is an argument to the called target.  
+            The result property name used in the next task is an argument to the called target.
             Note that the echo is a little oddly formatted.  The </echo> is on a line by itself and left-justified so
             that the output to the file being written will reside on a line by itself.  The
             left-justification is not really needed but the properties file looks a bit nicer
-            if you open it in an editor.  This is because the next line in the properties file being 
+            if you open it in an editor.  This is because the next line in the properties file being
             written is indented as far as the </echo> is indented here in the build.xml file.
         -->
         <echo file="${result.property.file}" append="true">${resultPropertyName}=${autodeployResult}
 </echo>
-        
+
     </target>
-    
+
     <target name="deploy.autodeploy">
-    
+
     <!--
-        To monitor auto-deployment or auto-undeployment, we start by getting the current time.  
-        Then we copy the archive file into the autodeploy directory (for auto-deploy) or delete 
+        To monitor auto-deployment or auto-undeployment, we start by getting the current time.
+        Then we copy the archive file into the autodeploy directory (for auto-deploy) or delete
         it (for auto-undeploy).  All marker files created by the server during auto-deployment of
         the newly-copied archive file will have later timestamps than the timestamp just created.
-        There could be earlier marker files for the same archive in the directory and the monitor 
+        There could be earlier marker files for the same archive in the directory and the monitor
         wants to ignore those, which is why we get the current time and pass it to the monitor.
-        
+
         The monitor will check for marker files for the copied archive file
-        and whose last modification time are after the current timestamp, returning 0 if the 
-        auto-deployer creates a _deployed or _undeployed file, 1 if it creates a _deploy_failed 
+        and whose last modification time are after the current timestamp, returning 0 if the
+        auto-deployer creates a _deployed or _undeployed file, 1 if it creates a _deploy_failed
         or _undeploy_failed file, and -1 if it recognized no marker file.
     -->
         <tstamp prefix="deploy">
             <format property="NOW" pattern="${dateFormat}"/>
         </tstamp>
-        
+
         <!--
             Trigger the auto-deploy.
         -->
         <copy file="${archive.file}" todir="${autodeploy.dir}" overwrite="true"/>
-        
+
         <!--
             Use the monitor to detect when the auto-deploy has completed.
         -->
@@ -165,25 +165,25 @@
             <param name="log.id" value="1"/>
         </antcall>
     </target>
-    
+
     <target name="deploy.autoundeploy">
-    
+
         <!--
-            This target works very much like the deploy.autodeploy target except that instead of 
+            This target works very much like the deploy.autodeploy target except that instead of
             copying the archive into the autodeploy directory it deletes the previously copied
             archive from that directory.
         -->
         <tstamp prefix="undeploy">
             <format property="NOW" pattern="${dateFormat}"/>
         </tstamp>
-        
+
         <!--
             Trigger auto-undeploy by deleting the file.
         -->
         <delete quiet="true">
             <fileset dir="${autodeploy.dir}" includes="${archiveName}"/>
         </delete>
-        
+
         <echo>Waiting for autoundeployment to complete...</echo>
         <antcall target="runAutoDeployMonitor">
             <param name="arg.list" value="${archiveName} ${autodeploy.dir} ${dateFormat} ${undeploy.NOW}"/>
@@ -197,14 +197,14 @@
             See if the exception text appears in the server.log file.  This step assumes the operating
             environment supports the grep command.  This should be fine for Solaris and Linux systems
             and for Windows systems that support building the product.
-            
-            The output from the grep is saved into a property (grepOutput),then the property is written 
+
+            The output from the grep is saved into a property (grepOutput),then the property is written
             into a file.  The file to be written (output.file) is also provided as an argument so this
-            target can be called from different places and the results stored in different files for 
+            target can be called from different places and the results stored in different files for
             later comparison.
         -->
-        <exec 
-            executable="grep" 
+        <exec
+            executable="grep"
             resultproperty="grepResult"
             outputproperty="grepOutput"
             >
@@ -220,26 +220,26 @@
         <condition property="statusMessage" value="The preceding Result: 1 message is expected; it means grep did not find the error string.">
             <equals arg1="${grepResult}" arg2="1"/>
         </condition>
-        
+
         <property name="statusMessage" value=""/>
         <echo>${statusMessage}</echo>
-        
+
         <echo file="${output.file}">${grepOutput}</echo>
         <echo file="${result.property.file}" append="true">${resultPropertyName}=${grepResult}
 </echo>
     </target>
-            		
+
     <target name="checkForRegression" if="fileMatchError">
         <echo>${fileMatchError}
 
 The string "${exceptionText}" was found, implying that the bug is present.
 </echo>
-    </target>	
-    
+    </target>
+
     <target name="private-all" depends="compile">
-        
+
         <antcall target="build"/>
-        
+
         <antcall target="declare-test">
             <param name="description" value="autodeploy/loadertest Test autodeploy and context class loader"/>
         </antcall>
@@ -249,7 +249,7 @@ The string "${exceptionText}" was found, implying that the bug is present.
             record the results of the autodeploy directory monitoring Java class.
         -->
         <delete file="${result.property.file}" quiet="true"/>
-        
+
         <!--
             Do the auto-deployment.
        -->
@@ -264,7 +264,7 @@ The string "${exceptionText}" was found, implying that the bug is present.
             We do this now, before undeploying, and capture the output in a file.  Then we'll
             do the same thing after undeploying, capturing that output to s separate file.  We
             hope the two output files will be the same, meaning that no new exceptions were
-            thrown as a result of the undeploy.  If the bug has resurfaced, then the second 
+            thrown as a result of the undeploy.  If the bug has resurfaced, then the second
             output file will contain an additional exception as compared to the first output file.
         -->
         <antcall target="searchForException">
@@ -300,7 +300,7 @@ The string "${exceptionText}" was found, implying that the bug is present.
             <param name="resultPropertyName" value="secondSearchResult"/>
             <param name="output.file" value="${build}/after2nddeploy.log"/>
         </antcall>
-        
+
         <!--
             Autoundeploy the app once more just to clean up.
         -->
@@ -326,10 +326,10 @@ The string "${exceptionText}" was found, implying that the bug is present.
                 <filesmatch file1="${build}/before2nddeploy.log" file2="${build}/after2nddeploy.log"/>
             </not>
         </condition>
-        
+
         <!--
             Decide whether the test was successful or not.  Make sure that the deploy and
-            undeploy results are good and that the grep for the error string of the server.log 
+            undeploy results are good and that the grep for the error string of the server.log
             file was the same before and after the second autodeployment.  We don't really care
             if the second undeploy worked or not so we don't check its result property here.
         -->
@@ -343,9 +343,9 @@ The string "${exceptionText}" was found, implying that the bug is present.
                 </not>
             </and>
         </condition>
-        
+
         <antcall target="checkForRegression"/>
-        
+
         <!--
             If the property "result" was not set by the "condition" task just above then something
             went wrong and we set result to 1 now.  Normally checkForRegression will set the value to 0 or 1.
@@ -355,12 +355,12 @@ The string "${exceptionText}" was found, implying that the bug is present.
                 <isset property="result"/>
             </not>
         </condition>
-        
+
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/output.log"/>
         </antcall>
 
     </target>
-    
+
 </project>

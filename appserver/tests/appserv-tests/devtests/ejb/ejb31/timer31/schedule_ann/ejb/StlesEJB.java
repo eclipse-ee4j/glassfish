@@ -107,7 +107,7 @@ public class StlesEJB implements Stles {
                 errors.add(info);
             }
         }
-        
+
         if (!expected_callers.isEmpty()) {
             System.out.println("Missed info count: " + expected_callers.size());
             StringBuffer sb = new StringBuffer();
@@ -134,12 +134,12 @@ public class StlesEJB implements Stles {
             for (String e : errors) {
                 sb.append("" + e).append(", ");
             }
-            throw new EJBException("Internal error: ScheduleExpressions for infos: " 
+            throw new EJBException("Internal error: ScheduleExpressions for infos: "
                     + sb.toString() + " were not available at verify!");
         }
 
         if (timerSvc.getTimers().size() != 0) {
-            throw new EJBException("After cencel, timerSvc.getTimers().size() = " 
+            throw new EJBException("After cencel, timerSvc.getTimers().size() = "
                     + timerSvc.getTimers().size());
         }
     }

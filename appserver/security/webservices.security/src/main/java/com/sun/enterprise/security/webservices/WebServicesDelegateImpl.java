@@ -59,7 +59,7 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
 
     private static final String DEFAULT_WEBSERVICES_PROVIDER=
             "com.sun.xml.wss.provider.wsit.WSITAuthConfigProvider";
-    
+
      public MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties) {
         MessageSecurityBindingDescriptor binding = null;
         WSDLPort p = (WSDLPort) properties.get("WSDL_MODEL");
@@ -87,7 +87,7 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
 
     public String getAuthContextID(MessageInfo messageInfo) {
 
-        // make this more efficient by operating on packet 
+        // make this more efficient by operating on packet
         String rvalue = null;
         if (messageInfo instanceof PacketMessageInfo) {
             PacketMessageInfo pmi = (PacketMessageInfo) messageInfo;
@@ -110,7 +110,7 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
             }
             return rvalue;
         } else {
-            // make this more efficient by operating on packet 
+            // make this more efficient by operating on packet
             return getOpName((SOAPMessage) messageInfo.getRequestMessage());
         }
 
@@ -119,8 +119,8 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
     public AuthParam newSOAPAuthParam(MessageInfo messageInfo) {
         return new SOAPAuthParam((SOAPMessage)
                                   messageInfo.getRequestMessage(),
-			         (SOAPMessage)
-			          messageInfo.getResponseMessage());
+                     (SOAPMessage)
+                      messageInfo.getResponseMessage());
 
     }
 
@@ -131,7 +131,7 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
 
         String rvalue = null;
 
-        // first look for a SOAPAction header. 
+        // first look for a SOAPAction header.
         // this is what .net uses to identify the operation
 
         MimeHeaders headers = message.getMimeHeaders();
@@ -191,20 +191,20 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
         /*V3 commented getting this from EJBPolicyContextDelegate instead
          * currently getting this from EjbPolicyContextDelegate which might be OK
         SOAPMessage soapMessage = null;
-	    MessageContext msgContext = inv.messageContext;
+        MessageContext msgContext = inv.messageContext;
 
             if (msgContext != null) {
                 if (msgContext instanceof SOAPMessageContext) {
-		    SOAPMessageContext smc =
+            SOAPMessageContext smc =
                             (SOAPMessageContext) msgContext;
-		    soapMessage = smc.getMessage();
+            soapMessage = smc.getMessage();
                 }
-	    } else {
+        } else {
                 soapMessage = inv.getSOAPMessage();
             }
 
-	    return soapMessage;*/
-        return null; 
+        return soapMessage;*/
+        return null;
     }
-	
+
 }

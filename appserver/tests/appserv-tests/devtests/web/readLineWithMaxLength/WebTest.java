@@ -43,7 +43,7 @@ public class WebTest {
         contextRoot = args[2];
         length = Integer.parseInt(args[3]);
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for readLine with max length");
         WebTest webTest = new WebTest(args);

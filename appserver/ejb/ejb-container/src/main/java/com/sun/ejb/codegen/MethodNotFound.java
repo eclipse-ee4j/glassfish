@@ -22,6 +22,6 @@ public class MethodNotFound extends GeneratorException {
      */
 
     public MethodNotFound(String s) {
-	super(s);
+    super(s);
     }
 }

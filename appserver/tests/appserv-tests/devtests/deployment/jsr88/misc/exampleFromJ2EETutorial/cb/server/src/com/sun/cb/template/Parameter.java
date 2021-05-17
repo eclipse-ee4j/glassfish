@@ -29,7 +29,7 @@ public class Parameter {
 
     public String getName() {
         return name;
-    } 
+    }
 
     public boolean isDirect() {
         return isDirect;

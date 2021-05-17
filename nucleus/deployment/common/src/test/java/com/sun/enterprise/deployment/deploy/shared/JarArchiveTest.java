@@ -58,7 +58,7 @@ public class JarArchiveTest {
     public void tearDown() {
     }
 
-    
+
 
     /**
      * Test of getName method, of class JarArchive.

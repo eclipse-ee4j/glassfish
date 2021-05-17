@@ -31,7 +31,7 @@ import org.jvnet.hk2.annotations.*;
  * server for some reason. The idea is to get the version of server software, the server process need not be running.
  * This command does not return the version of local server installation if its options (host, port, user, passwordfile)
  * identify a running server.
- * 
+ *
  * @author km@dev.java.net
  * @author Bill Shannon
  */

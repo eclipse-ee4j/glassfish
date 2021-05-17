@@ -26,23 +26,23 @@
     <filter>
         <filter-name>FilterTest</filter-name>
         <filter-class>test.FilterTest</filter-class>
-    </filter>    
-        
+    </filter>
+
     <filter-mapping>
         <filter-name>FilterTest</filter-name>
         <url-pattern>/ServletTest</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>INCLUDE</dispatcher>
-        <dispatcher>FORWARD</dispatcher>  
-        <dispatcher>ERROR</dispatcher> 
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
     <servlet>
         <display-name>ServletTest</display-name>
         <servlet-name>ServletTest</servlet-name>
         <servlet-class>test.ServletTest</servlet-class>
-    </servlet>  
-    
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>ServletTest</servlet-name>
         <url-pattern>/ServletTest</url-pattern>

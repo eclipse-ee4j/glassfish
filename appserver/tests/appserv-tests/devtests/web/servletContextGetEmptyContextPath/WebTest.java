@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  * The empty context path is specified in the sun-web.xml, as follows:
  *
  *  <sun-web-app>
- *    <context-root></context-root> 
+ *    <context-root></context-root>
  *  </sun-web-app>
  *
  * and there is no contextroot specified in build.properties.
@@ -47,7 +47,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for ServletContext.getContextPath()");
@@ -60,11 +60,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port + "/TestServlet");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -80,10 +80,10 @@ public class WebTest {
             if (EXPECTED_RESPONSE.equals(line)) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {
-                System.err.println("Wrong response. Expected: " + 
+                System.err.println("Wrong response. Expected: " +
                                    EXPECTED_RESPONSE + ", received: " + line);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
-        }    
+        }
     }
 }

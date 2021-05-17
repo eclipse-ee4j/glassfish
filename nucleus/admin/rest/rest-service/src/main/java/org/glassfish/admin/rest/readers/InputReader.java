@@ -98,7 +98,7 @@ public class InputReader {
 
     /**
      * Get the next char in the string, skipping whitespace.
-     * 
+     *
      * @throws InputException
      * @return A character, or 0 if there are no more characters.
      */
@@ -152,7 +152,7 @@ public class InputReader {
 
     /**
      * Determine if the source string still contains characters that next() can consume.
-     * 
+     *
      * @return true if not yet at the end of the source.
      */
     public boolean more() throws InputException {

@@ -42,7 +42,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 /**
  * This class wraps the Client returned by JerseyClientBuilder. Using this class allows us to encapsulate many of the
  * client configuration concerns, such as registering the <code>CsrfProtectionFilter</code>.
- * 
+ *
  * @author jdlee
  */
 public class ClientWrapper implements Client {
@@ -55,7 +55,7 @@ public class ClientWrapper implements Client {
     /**
      * Create the client, as well as registering a <code>ClientRequestFilter</code> that adds the specified headers to each
      * request.
-     * 
+     *
      * @param headers
      */
     public ClientWrapper(final Map<String, String> headers) {

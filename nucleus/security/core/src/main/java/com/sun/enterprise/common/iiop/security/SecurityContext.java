@@ -15,7 +15,7 @@
  */
 
 /*
- * @(#)SecurityContext.java	1.5 00/10/24
+ * @(#)SecurityContext.java    1.5 00/10/24
  */
 
 package com.sun.enterprise.common.iiop.security;
@@ -43,7 +43,7 @@ import javax.security.auth.*;
  *      must be passed as a PrivateCredential.
  *
  *    X500Principal::
- *      DN name specified in X500Principal: will be asserted. X500Principal must 
+ *      DN name specified in X500Principal: will be asserted. X500Principal must
  *      be passed as a PublicCredential.
  *
  *    GSSUPName:
@@ -51,7 +51,7 @@ import javax.security.auth.*;
  *      be passed as a PublicCredential.
  *
  *    X509CertificateCredential:
- *      The certificate chain in the credential will be asserted. The 
+ *      The certificate chain in the credential will be asserted. The
  *      credential must be passed as a PublicCredential.
  *
  *    AnonCredential:
@@ -60,23 +60,23 @@ import javax.security.auth.*;
  *
  *    Class fields in the SecurityContext are used for credential selection.
  *    There are two class fields: authcls and identcls.
- *    
- *    authcls is a Class object that identifies the credential for 
+ *
+ *    authcls is a Class object that identifies the credential for
  *    client authentication.
- *          
+ *
  *    identcls is a Class object that identifies the credential for
  *    identity assertion.
  *
  *  The following semantics must be observed:
- * 
+ *
  *  1. A client authentication token is always passed as a private
  *     credential. authcls set to the class of the authentication token
- *     
+ *
  *  2. An identity token is always passed as a public credential.
  *     identcls is set to the class of the identity token.
- *  
+ *
  *  3. authcls is set to null if there is no client auth token
- * 
+ *
  *  4. identcls is set to null if there is no ident token
  *
  *  5. There must not be more than one instance of class identified

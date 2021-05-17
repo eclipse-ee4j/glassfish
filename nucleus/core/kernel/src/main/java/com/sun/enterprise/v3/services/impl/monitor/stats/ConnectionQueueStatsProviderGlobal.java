@@ -24,7 +24,7 @@ import org.glassfish.gmbal.ManagedObject;
 
 /**
  * Server wide Connection Queue statistics
- * 
+ *
  * @author Amy Roh
  */
 @AMXMetadata(type = "connection-queue-mon", group = "monitoring")
@@ -96,5 +96,5 @@ public class ConnectionQueueStatsProviderGlobal extends ConnectionQueueStatsProv
             @ProbeParam("listenerName") String listenerName) {
         countOverflows.increment();
     }
-    
+
 }

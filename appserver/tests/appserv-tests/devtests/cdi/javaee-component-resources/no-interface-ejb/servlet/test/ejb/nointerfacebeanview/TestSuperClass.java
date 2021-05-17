@@ -18,7 +18,7 @@ package test.ejb.nointerfacebeanview;
 
 import jakarta.enterprise.inject.Alternative;
 
- 
+
 public class TestSuperClass implements TestInterface{
 
     @Override
@@ -26,7 +26,7 @@ public class TestSuperClass implements TestInterface{
         System.out.println("no interface bean: m1");
         return true;
     }
-    
+
     public boolean m2DefinedInSuperClass(){
         System.out.println("no interface bean: m2");
         return true;

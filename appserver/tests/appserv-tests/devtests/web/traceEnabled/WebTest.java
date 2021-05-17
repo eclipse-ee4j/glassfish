@@ -32,7 +32,7 @@ public class WebTest{
 
     private static SimpleReporterAdapter stat = new SimpleReporterAdapter(
                                                             "appserv-tests");
-    
+
     public static void main(String args[]) {
 
         String host = args[0];
@@ -41,7 +41,7 @@ public class WebTest{
 
         try {
             stat.addDescription("Trace not allowed test");
-            
+
             URL url = new URL("http://" + host  + ":" + port + contextRoot
                           + "/ServletTest");
             System.out.println("Invoking url: " + url.toString());

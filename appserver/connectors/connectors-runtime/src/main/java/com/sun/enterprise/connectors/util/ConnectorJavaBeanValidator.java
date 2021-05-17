@@ -49,7 +49,7 @@ public class ConnectorJavaBeanValidator {
 
                 if (constraintViolations != null && constraintViolations.size() > 0) {
                     ConstraintViolationException cve = new ConstraintViolationException(constraintViolations);
-                    StringBuffer msg = new StringBuffer();    
+                    StringBuffer msg = new StringBuffer();
 
                     Iterator it = constraintViolations.iterator();
                     while (it.hasNext()) {

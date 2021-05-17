@@ -57,7 +57,7 @@ public class ListComponentsCommandTest {
             aModule.setEngines(engines);
             modules.add(aModule);
             app.setModules(modules);
-        
+
             boolean ret = lcc.isApplicationOfThisType(app, "web");
             assertTrue("test app with sniffer engine=web", true==lcc.isApplicationOfThisType(app, "web"));
             //negative testcase
@@ -65,7 +65,7 @@ public class ListComponentsCommandTest {
         }
         catch (Exception ex) {
             //ignore exception
-        } 
+        }
     }
 
         @Test
@@ -78,9 +78,9 @@ public class ListComponentsCommandTest {
             List<Engine> engines = new ArrayList<Engine>();
             engines.add(eng1);
             engines.add(eng2);
-            
+
             ApplicationTest app = new ApplicationTest();
-            List<Module> modules = new ArrayList<Module>();              
+            List<Module> modules = new ArrayList<Module>();
             ModuleTest aModule = new ModuleTest();
             aModule.setEngines(engines);
             modules.add(aModule);
@@ -91,7 +91,7 @@ public class ListComponentsCommandTest {
         }
         catch (Exception ex) {
             //ignore exception
-        } 
+        }
     }
 
 
@@ -192,7 +192,7 @@ public class ListComponentsCommandTest {
         //mock-up Application object
     public class ApplicationTest extends RandomConfig implements Application {
         private List<Module> modules = null;
-        
+
         public String getName() {
             return "hello";
         }
@@ -244,7 +244,7 @@ public class ListComponentsCommandTest {
             public DeployCommandParameters getDeployParameters(ApplicationRef appRef) {
                 return new DeployCommandParameters();
             }
-        
+
         public File application() {return null;}
         public File deploymentPlan() {return null;}
         public String archiveType() {return null;}
@@ -305,7 +305,7 @@ public class ListComponentsCommandTest {
         public List<Property> getProperty() {return null;}
 
             //config.serverbeans.Modules
-        public String getName() { 
+        public String getName() {
             return "hello";
         }
         public void setName(String value) throws PropertyVetoException {}

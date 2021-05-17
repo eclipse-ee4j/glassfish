@@ -55,13 +55,13 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
     protected Logger logger;
     @Inject
     ConfigModularityUtils modularityUtils;
-    
+
     DomDocument skippedDoc = null;
 
     final XMLOutputFactory xmlFactory = XMLOutputFactory.newInstance();
 
     final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(DomainXmlPersistence.class);    
+            new LocalStringManagerImpl(DomainXmlPersistence.class);
 
 
     private synchronized ManagedFile getPidFile() throws IOException {
@@ -198,13 +198,13 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
     }
 
     /**
-     * Update the modified time of the persisted domain.xml so that 
+     * Update the modified time of the persisted domain.xml so that
      * instances will detect it as changed.
      * This is for triggering instance synchronization to occur.
      */
     public void touch() throws IOException {
         getDestination().setLastModified(System.currentTimeMillis());
-    } 
+    }
 
     protected void saved(File destination) {
         logger.fine("Configuration saved at " + destination);
@@ -217,15 +217,15 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
     protected OutputStream getOutputStream(File destination) throws IOException {
         return new FileOutputStream(destination);
     }
-    
-    /* 
+
+    /*
      * The purpose of this service is to write out the domain.xml if any writes
-     * were skipped during startup of the server. 
+     * were skipped during startup of the server.
      */
     @Service
     @RunLevel(PostStartupRunLevel.VAL)
     static class SkippedWriteWriter implements PostConstruct {
-        
+
         @Inject DomainXmlPersistence domPersist;
         @Inject Logger logger;
 
@@ -240,6 +240,6 @@ public class DomainXmlPersistence implements ConfigurationPersistence, Configura
                         "IOException while saving the configuration, changes not persisted"), e);
                 }
             }
-        } 
+        }
     }
 }

@@ -26,32 +26,32 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name="pe")
 public class PEWebContainerFeatureFactoryImpl
         implements WebContainerFeatureFactory {
-        
+
     @Override
     public WebContainerStartStopOperation getWebContainerStartStopOperation() {
         return new PEWebContainerStartStopOperation();
     }
-    
+
     @Override
     public HealthChecker getHADBHealthChecker(WebContainer webContainer) {
         return new PEHADBHealthChecker(webContainer);
     }
-    
+
     @Override
     public ReplicationReceiver getReplicationReceiver(EmbeddedWebContainer embedded) {
         return new PEReplicationReceiver(embedded);
-    }    
-    
+    }
+
     @Override
     public SSOFactory getSSOFactory() {
         return new PESSOFactory();
-    }    
+    }
 
     @Override
     public VirtualServer getVirtualServer() {
         return new VirtualServer();
     }
-    
+
     @Override
     public String getSSLImplementationName(){
         return null;
@@ -94,7 +94,7 @@ public class PEWebContainerFeatureFactoryImpl
      *
      * @return true if first access log file and all subsequently rotated
      * ones are supposed to be date-stamped, and false if datestamp is to be
-     * added only starting with the first rotation. 
+     * added only starting with the first rotation.
      */
     @Override
     public boolean getAddDateStampToFirstAccessLogFile() {

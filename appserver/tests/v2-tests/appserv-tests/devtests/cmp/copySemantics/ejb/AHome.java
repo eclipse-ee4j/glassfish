@@ -24,7 +24,7 @@ import java.util.*;
  */
 
 public interface AHome extends jakarta.ejb.EJBHome {
-    
+
     public  A create(Integer i, java.lang.String name, java.util.Date d, byte[] b) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

@@ -44,7 +44,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4817642,4876454");
         WebTest webTest = new WebTest(args);
@@ -62,7 +62,7 @@ public class WebTest {
             os.write(get.getBytes());
             os.write(("Cookie: JSESSIONID=" + JSESSION_ID + "\n").getBytes());
             os.write("\n".getBytes());
-        
+
             InputStream is = sock.getInputStream();
             BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -87,11 +87,11 @@ public class WebTest {
                     } else {
                         stat.addStatus(TEST_NAME, stat.PASS);
                     }
-	        } else {
+            } else {
                     System.err.println("Missing JSESSIONID");
                     stat.addStatus(TEST_NAME, stat.FAIL);
                 }
-	    } else {
+        } else {
                 System.err.println("Missing Set-Cookie response header");
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }

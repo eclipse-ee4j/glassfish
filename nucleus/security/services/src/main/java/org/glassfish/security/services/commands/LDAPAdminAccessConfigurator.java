@@ -70,8 +70,8 @@ import org.jvnet.hk2.config.Transaction;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="configure-ldap-for-admin", 
+        opType=RestEndpoint.OpType.POST,
+        path="configure-ldap-for-admin",
         description="configure-ldap-for-admin")
 })
 public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -85,10 +85,10 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
 
     @Param(name="ldap-group", shortName="g", optional=true)
     public volatile String ldapGroupName;
-    
+
     @Inject
     Target targetService;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
@@ -108,32 +108,32 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
     public static final String LDAPS_URL = "ldaps://";
 
     private static final Logger logger = Logger.getLogger(ServiceLogging.SEC_COMMANDS_LOGGER, ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
-    
+
     private static final String AUTHENTICATION_SERVICE_PROVIDER_NAME = "adminAuth";
     private static final String FILE_REALM_SECURITY_PROVIDER_NAME = "adminFile";
     private static final String ADMIN_FILE_LM_NAME = "adminFileLM";
 
     private Config asc;
-    
+
     @AccessRequired.To("update")
     private AuthRealm adminAuthRealm;
-    
+
     @AccessRequired.To("update")
     private AdminService adminService;
-    
+
     @AccessRequired.To("update")
     private SecurityProvider fileRealmProvider;
-    
+
     @Inject
     private SecurityConfigurations securityConfigs;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         asc = chooseConfig();
         final SecurityService ss = asc.getSecurityService();
         adminAuthRealm = getAdminRealm(ss);
         adminService = asc.getAdminService();
-        final AuthenticationService adminAuthService = (AuthenticationService) 
+        final AuthenticationService adminAuthService = (AuthenticationService)
                 securityConfigs.getSecurityServiceByName(AUTHENTICATION_SERVICE_PROVIDER_NAME);
         final ActionReport report = context.getActionReport();
         if (adminAuthService == null) {
@@ -148,7 +148,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
             return false;
         }
         if ( ! "LoginModule".equals(fileRealmProvider.getType())) {
-            report.setMessage(lsm.getString("ldap.fileRealmProviderNotLoginModuleType", 
+            report.setMessage(lsm.getString("ldap.fileRealmProviderNotLoginModuleType",
                     FILE_REALM_SECURITY_PROVIDER_NAME,
                     adminAuthService.getName(),
                     fileRealmProvider.getType()));
@@ -158,7 +158,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
         return true;
     }
 
-    
+
 
     /** Field denoting the name of the realm used for administration. This is fixed in entire of v3. Note that
      *  the same name is used in admin GUI's web.xml and sun-web.xml. The name of the realm is the key, the
@@ -210,9 +210,9 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
     }
 
     private void configure(StringBuilder sb) throws TransactionFailure, PropertyVetoException, RetryableException {
-        
+
         //createBackupRealm(sb, getAdminRealm(asc.getSecurityService()), getNewRealmName(asc.getSecurityService()));
-        
+
         Transaction t = new Transaction();
         final SecurityService w_asc = t.enroll(asc.getSecurityService());
         AdminService w_adminSvc = t.enroll(asc.getAdminService());
@@ -248,7 +248,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
         throw new TransactionFailure(
                 lsm.getString("ldap.noAuthProviderConfig", w_sp.getName(), ADMIN_FILE_LM_NAME));
     }
-    
+
     private AuthRealm getAdminRealm(SecurityService ss) {
         List<AuthRealm> realms = ss.getAuthRealm();
         for (AuthRealm realm : realms) {
@@ -270,8 +270,8 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
 
     // delete and create a new realm to replace it in a single transaction
     private void deleteRealm(SecurityService w_ss, final StringBuilder sb) throws TransactionFailure {
-        
-        
+
+
         AuthRealm oldAdminRealm = getAdminRealm(w_ss);
         w_ss.getAuthRealm().remove(oldAdminRealm);
         appendNL(sb,"...");
@@ -320,7 +320,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
             p.setValue(ldapGroupName +"->asadmin"); //appears as gfdomain1->asadmin in domain.xml
             props.add(p);
         }
-        
+
         return ar;
     }
 
@@ -328,7 +328,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
         Properties env = new Properties();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         env.put(Context.PROVIDER_URL, url);
-        
+
         if (url != null && url.startsWith(LDAPS_URL)) {
             env.put(LDAP_SOCKET_FACTORY,
                     DEFAULT_SSL_LDAP_SOCKET_FACTORY);
@@ -356,7 +356,7 @@ public class LDAPAdminAccessConfigurator implements AdminCommand, AdminCommandSe
     private static void appendNL(StringBuilder sb, String s) {
         sb.append(s).append("%%%EOL%%%");
     }
-    
+
     private Config chooseConfig() {
         Server s = configBeansUtilities.getServerNamed(ADMIN_SERVER);
         String ac = s.getConfigRef();

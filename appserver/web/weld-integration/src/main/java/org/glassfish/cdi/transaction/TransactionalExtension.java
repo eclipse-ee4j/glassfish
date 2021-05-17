@@ -34,9 +34,9 @@ public class TransactionalExtension implements Extension {
             TransactionalInterceptorRequired.class,
             TransactionalInterceptorRequiresNew.class,
             TransactionalInterceptorSupports.class);
-        
+
     }
-    
+
     public static void addAnnotatedTypes(BeforeBeanDiscovery beforeBean, BeanManager beanManager, Class<?>... types) {
         for (Class<?> type : types) {
             beforeBean.addAnnotatedType(beanManager.createAnnotatedType(type), "GlassFish-TX-" + type.getName());

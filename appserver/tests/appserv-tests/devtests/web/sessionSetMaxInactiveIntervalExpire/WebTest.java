@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 4661001");
         WebTest webTest = new WebTest(args);
@@ -48,7 +48,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -66,7 +66,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot
                      + "/CreateSession";
         HttpURLConnection conn = (HttpURLConnection)
@@ -84,9 +84,9 @@ public class WebTest {
 
         Thread.sleep(5 * 1000);
 
-	// translate server -> client cookie
-	String clientCookie = cookie.replace("Path", "$Path").replace("HttpOnly", "$HttpOnly");
- 
+    // translate server -> client cookie
+    String clientCookie = cookie.replace("Path", "$Path").replace("HttpOnly", "$HttpOnly");
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         os.write(("GET " + contextRoot + "/CheckSession"

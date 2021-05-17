@@ -148,7 +148,7 @@ public interface ExtendedJDOMetaData
      * @param fieldSig the non-null type signature of the field
      * @return true if this field is known to be non-managed; otherwise false
      * @see #isManagedField(String, String)
-     * 
+     *
      *********************************************************************/
 
     public boolean isKnownNonManagedField(String classPath,
@@ -157,7 +157,7 @@ public interface ExtendedJDOMetaData
         throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
-   /********************************************************************** 
+   /**********************************************************************
      * Returns whether a field of a class is transient transactional
      * or persistent.
      * <P>
@@ -195,7 +195,7 @@ public interface ExtendedJDOMetaData
      * @param fieldName the non-null name of the field
      * @return true if this field is key; otherwise false
      * @see #isPersistentField(String, String)
-     * 
+     *
      *********************************************************************/
 
     public boolean isKeyField(String classPath, String fieldName)
@@ -234,13 +234,13 @@ public interface ExtendedJDOMetaData
      * @param classPath the non-null JVM-qualified name of the class
      * @param fieldName the non-null name of the field
      * @return the field flags for this field
-     * 
+     *
      *********************************************************************/
 
     public int getFieldFlags(String classPath, String fieldName)
         throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
-    
+
     /**********************************************************************
      * Returns the field flags for some declared, managed fields of a class.
      * <P>
@@ -248,7 +248,7 @@ public interface ExtendedJDOMetaData
      * @param classPath the non-null JVM-qualified name of the class
      * @param fieldNames the non-null array of names of the declared fields
      * @return the field flags for the fields
-     * 
+     *
      *********************************************************************/
 
     public int[] getFieldFlags(String classPath, String[] fieldNames)
@@ -276,7 +276,7 @@ public interface ExtendedJDOMetaData
      * @param classPath the non-null JVM-qualified name of the class
      * @param fieldNames the non-null array of names of the declared fields
      * @return the non-negative, unique field indices
-     * 
+     *
      *********************************************************************/
 
     public int[] getFieldNo(String classPath, String[] fieldNames)
@@ -289,7 +289,7 @@ public interface ExtendedJDOMetaData
      * This method requires all fields having been declared by declareField().
      * @param classPath the non-null JVM-qualified name of the class
      * @return an array of all declared key fields of a class
-     * 
+     *
      *********************************************************************/
 
     public String[] getKeyFields(String classPath)

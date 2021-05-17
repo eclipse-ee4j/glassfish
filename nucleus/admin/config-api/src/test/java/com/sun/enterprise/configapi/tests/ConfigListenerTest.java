@@ -53,26 +53,26 @@ public class ConfigListenerTest extends ConfigApiTest {
     @Before
     public void setup() {
         habitat = Utils.instance.getHabitat(this);
-        
+
         // make sure the ConfigConfigListener exists
         ServiceHandle<ConfigConfigBeanListener> i = habitat.getServiceHandle(ConfigConfigBeanListener.class);
         ConfigConfigBeanListener ccbl = i.getService();
         assertTrue(ccbl != null);
     }
-    
+
     private HttpListenerContainer registerAndCreateHttpListenerContainer(ServiceLocator locator) {
         HttpListenerContainer retVal = locator.getService(HttpListenerContainer.class);
         if (retVal != null) return retVal;
-        
+
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         Assert.assertNotNull(dcs);
-        
+
         DynamicConfiguration config = dcs.createDynamicConfiguration();
-        
+
         config.addActiveDescriptor(HttpListenerContainer.class);
-        
+
         config.commit();
-        
+
         return locator.getService(HttpListenerContainer.class);
     }
 
@@ -113,7 +113,7 @@ public class ConfigListenerTest extends ConfigApiTest {
     public void removeListenerTest() throws TransactionFailure {
 
         Transactions transactions = getHabitat().getService(Transactions.class);
-        
+
         HttpListenerContainer container = registerAndCreateHttpListenerContainer(habitat);
 
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(container.httpListener);
@@ -131,7 +131,7 @@ public class ConfigListenerTest extends ConfigApiTest {
         transactions.waitForDrain();
         assertFalse(container.received);
 
-        // put back the right values in the domain to avoid test collisions        
+        // put back the right values in the domain to avoid test collisions
         ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
 
             @Override

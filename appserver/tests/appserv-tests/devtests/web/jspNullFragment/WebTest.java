@@ -37,18 +37,18 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugzilla 27948");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() {
 
         BufferedReader bis = null;
-        try { 
+        try {
             URL url = new URL("http://" + host  + ":" + port
                        + contextRoot + "/test.jsp");
             System.out.println("Connecting to: " + url.toString());

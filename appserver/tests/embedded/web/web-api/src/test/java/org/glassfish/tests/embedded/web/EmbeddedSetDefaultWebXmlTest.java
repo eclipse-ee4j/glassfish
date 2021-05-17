@@ -35,7 +35,7 @@ import org.junit.Test;
 /**
  * Tests EmbeddedFileSystem.configurationFile and WebBuilder.setDefaultWebXml
  * Checks if directory listings is correctly getting picked up from the default-web.xml
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedSetDefaultWebXmlTest {
@@ -63,7 +63,7 @@ public class EmbeddedSetDefaultWebXmlTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedWebAPIConfig() throws Exception {
 
@@ -83,9 +83,9 @@ public class EmbeddedSetDefaultWebXmlTest {
             sb.append(inputLine);
         }
         in.close();
-        
+
         embedded.removeContext(context);
-        
+
      }
 
     @AfterClass
@@ -97,5 +97,5 @@ public class EmbeddedSetDefaultWebXmlTest {
             glassfish = null;
         }
     }
-    
+
 }

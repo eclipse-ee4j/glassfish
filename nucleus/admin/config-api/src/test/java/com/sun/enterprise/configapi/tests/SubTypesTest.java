@@ -42,7 +42,7 @@ public class SubTypesTest extends ConfigApiTest {
 
     public String getFileName() {
         return "DomainTest";
-    }    
+    }
 
     @Test
     public void testSubTypesOfDomain() {
@@ -69,7 +69,7 @@ public class SubTypesTest extends ConfigApiTest {
                 }
             }
         } catch(ClassNotFoundException e) {
-            e.printStackTrace();           
+            e.printStackTrace();
         }
     }
 }

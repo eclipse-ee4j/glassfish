@@ -23,9 +23,9 @@ import javax.naming.ldap.*;
 import java.io.IOException;
 
 /**
- * This class implements the LDAPv3 Extended Request for WhoAmI. The 
+ * This class implements the LDAPv3 Extended Request for WhoAmI. The
  * <tt>WhoAmIRequest</tt> and <tt>WhoAmIResponse</tt> are used to
- * obtain the current authorization identity of the user.   
+ * obtain the current authorization identity of the user.
  * WhoAmI extended operation allows users to get authorization identity
  * seperately from LDAP bind operation, unlike {@link com.sun.jndi.ldap.ctl.AuthorizationIDControl <tt>AuthorizationIDControl</tt>}
  * which has to be used with LDAP bind operation.
@@ -50,7 +50,7 @@ import java.io.IOException;
  * </pre>
  *
  * @see WhoAmIResponse
- * @see com.sun.jndi.ldap.ctl.AuthorizationIDControl 
+ * @see com.sun.jndi.ldap.ctl.AuthorizationIDControl
  * @author Vincent Ryan
  */
 
@@ -91,7 +91,7 @@ public class WhoAmIRequest implements ExtendedRequest {
     }
 
     /**
-     * Creates an extended response object that corresponds to the 
+     * Creates an extended response object that corresponds to the
      * LDAP WhoAmI extended request.
      *
      * @throws NamingException if cannot create extended response due
@@ -107,15 +107,15 @@ public class WhoAmIRequest implements ExtendedRequest {
                 "WhoAmI received the following response instead of " +
                 OID + ": " + id);
         }
-	try {
+    try {
             return new WhoAmIResponse(id, berValue, offset, length);
-	} catch (IOException e) { 
+    } catch (IOException e) {
 
-	    // Error occured in parsing the response value
-	    NamingException ne = new NamingException(
-			"Could not parse the response value");
-	    ne.setRootCause(e);
-	    throw ne;
-	}
+        // Error occured in parsing the response value
+        NamingException ne = new NamingException(
+            "Could not parse the response value");
+        ne.setRootCause(e);
+        throw ne;
+    }
     }
 }

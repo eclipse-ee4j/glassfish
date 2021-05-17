@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="client"/>
@@ -44,17 +44,17 @@
     </target>
 
     <target name="build" depends="compile">
-	<mkdir dir="${assemble.dir}"/>
+    <mkdir dir="${assemble.dir}"/>
       <antcall target="package-appclientjar-common">
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.files" 
+        <param name="appclientjar.files"
           value="${build.classes.dir}" />
-	<param name="appclient.jar" 
-	value="${assemble.dir}/${appname}AppClient.jar"/>
+    <param name="appclient.jar"
+    value="${assemble.dir}/${appname}AppClient.jar"/>
       </antcall>
-    </target> 
-    
+    </target>
+
 <!-- run appclient in AppServ  -->
 <target name="myrunclient" depends="init-common">
   <echo message="appclient -client ${assemble.dir}/${appname}AppClient.jar -name ${appname}Client -textauth -user j2ee -password j2ee -xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml ${appclient.application.args}"/>
@@ -81,9 +81,9 @@
     <target name="run" depends="init-common">
       <antcall target="myrunclient"/>
     </target>
- 
+
     <target name="unsetup" depends="init-common">
-	 <antcall target="delete-jdbc-resource-common">
+     <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/nonxaresource"/>
         </antcall>
 
@@ -91,7 +91,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-pool"/>
         </antcall>
 
-	 <antcall target="delete-jdbc-resource-common">
+     <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.resource.name" value="jdbc/xaresource"/>
         </antcall>
 
@@ -99,7 +99,7 @@
             <param name="jdbc.conpool.name" value="jdbc-derby-xa-pool"/>
         </antcall>
 
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

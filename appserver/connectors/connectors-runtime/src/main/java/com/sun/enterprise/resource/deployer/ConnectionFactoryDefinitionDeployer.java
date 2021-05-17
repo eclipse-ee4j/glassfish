@@ -61,7 +61,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
     public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
-    
+
     public void deployResource(Object resource) throws Exception {
 
         final ConnectionFactoryDefinitionDescriptor desc = (ConnectionFactoryDefinitionDescriptor) resource;
@@ -81,7 +81,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
         //deploy resource
         ConnectorResource connectorResource = new MyConnectorResource(poolName, resourceName);
         getDeployer(connectorResource).deployResource(connectorResource);
-        
+
     }
 
     /**
@@ -100,7 +100,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
      * {@inheritDoc}
      */
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
-                                          com.sun.enterprise.config.serverbeans.Application newApp, 
+                                          com.sun.enterprise.config.serverbeans.Application newApp,
                                           Resource resource,
                                           Resources allResources)
     throws ResourceConflictException {
@@ -173,7 +173,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
     }
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
- 
+
         public ConfigBeanProxy deepCopy(ConfigBeanProxy parent) {
             throw new UnsupportedOperationException();
         }
@@ -188,7 +188,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
 
         public <T extends ConfigBeanProxy> T createChild(Class<T> tClass) throws TransactionFailure {
             return null;
-        }        
+        }
     }
 
     class ConnectionFactoryProperty extends FakeConfigBean implements Property {
@@ -404,7 +404,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
         public void setPoolResizeQuantity(String value) throws PropertyVetoException {
             //do nothing
         }
-        
+
         public String getIdleTimeoutInSeconds() {
             String idleTimeoutInSeconds = desc.getProperty(PROPERTY_PREFIX+"idle-timeout-in-seconds");
             if (idleTimeoutInSeconds != null && !idleTimeoutInSeconds.equals("")) {
@@ -634,7 +634,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
 
             return connectionFactoryProperties;
         }
- 
+
 
         public Property getProperty(String name) {
             String value = desc.getProperty(name);

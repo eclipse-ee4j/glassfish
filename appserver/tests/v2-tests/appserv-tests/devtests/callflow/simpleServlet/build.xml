@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -42,15 +42,15 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="**/*.class"/> 
+            <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
-    </target> 
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="re-deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
@@ -58,7 +58,7 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
           <javac
             srcdir="."
@@ -77,25 +77,25 @@
     </target>
 
    <target name="just-run">
-	<antcall target="start-callflow"/> 
-	<!-- <antcall target="clean-db"/>-->
-	<antcall target="run"/>
-	<antcall target="stop-callflow"/>
-	<antcall target="run-report"/>
-   </target> 
+    <antcall target="start-callflow"/>
+    <!-- <antcall target="clean-db"/>-->
+    <antcall target="run"/>
+    <antcall target="stop-callflow"/>
+    <antcall target="run-report"/>
+   </target>
 
     <target name="run-report" depends="init-common">
           <javac
             srcdir="."
             classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="WebTest.java"/>
-	<sleep seconds ="4"/>
+    <sleep seconds ="4"/>
         <java classname="WebTest">
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <arg value="/dbReader"/>
-	  <arg value="report"/>
-	  <arg value="${expectedresult}"/>
+      <arg value="report"/>
+      <arg value="${expectedresult}"/>
           <classpath>
            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
            <pathelement location="."/>
@@ -108,12 +108,12 @@
             srcdir="."
             classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="WebTest.java"/>
-	<sleep seconds ="4"/>
+    <sleep seconds ="4"/>
         <java classname="WebTest">
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <arg value="/dbReader"/>
-	  <arg value="clean-db"/>
+      <arg value="clean-db"/>
           <classpath>
            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
            <pathelement location="."/>
@@ -121,22 +121,22 @@
         </java>
     </target>
     <target name="start-callflow" depends="init-common">
-	<antcall target="asadmin-common" >
-		<param name="admin.command" value="start-callflow-monitoring"/>
-		<param name="operand.props" value="server"/>
-	</antcall>
-    </target> 
+    <antcall target="asadmin-common" >
+        <param name="admin.command" value="start-callflow-monitoring"/>
+        <param name="operand.props" value="server"/>
+    </antcall>
+    </target>
 
     <target name="stop-callflow" depends="init-common">
-	<antcall target="asadmin-common" >
-		<param name="admin.command" value="stop-callflow-monitoring"/>
-		<param name="operand.props" value="server"/>
-	</antcall>
-    </target> 
+    <antcall target="asadmin-common" >
+        <param name="admin.command" value="stop-callflow-monitoring"/>
+        <param name="operand.props" value="server"/>
+    </antcall>
+    </target>
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

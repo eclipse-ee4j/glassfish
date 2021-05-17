@@ -22,7 +22,7 @@ import org.glassfish.api.admin.PasswordAliasStore;
 /**
  * Provides password alias resolution, using an internal password alias store
  * to actually resolve an alias if one is specified.
- * 
+ *
  * @author tjquinn
  */
 public class PasswordAliasResolverImpl implements PasswordAliasResolver {
@@ -30,12 +30,12 @@ public class PasswordAliasResolverImpl implements PasswordAliasResolver {
     private static final String ALIAS_TOKEN = "ALIAS";
     private static final String STARTER = "${" + ALIAS_TOKEN + "="; //no space is allowed in starter
     private static final String ENDER = "}";
-    
+
     private final PasswordAliasStore store;
     public PasswordAliasResolverImpl(final PasswordAliasStore store) {
         this.store = store;
     }
-    
+
     @Override
     public char[] resolvePassword(String aliasExpressionOrPassword) {
         final String alias = getAlias(aliasExpressionOrPassword);
@@ -44,13 +44,13 @@ public class PasswordAliasResolverImpl implements PasswordAliasResolver {
         }
         return aliasExpressionOrPassword.toCharArray();
     }
-    
+
     /**
      * check if a given property name matches AS alias pattern ${ALIAS=aliasname}.
      * if so, return the aliasname, otherwise return null.
      * @param propName The property name to resolve. ex. ${ALIAS=aliasname}.
      * @return The aliasname or null.
-     */    
+     */
     private static String getAlias(String pwOrAliasExpression)
     {
        String aliasName=null;
@@ -65,7 +65,7 @@ public class PasswordAliasResolverImpl implements PasswordAliasResolver {
                    aliasName = pwOrAliasExpression.trim();
                }
            }
-       } 
-       return aliasName;    
+       }
+       return aliasName;
     }
 }

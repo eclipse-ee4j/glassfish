@@ -62,11 +62,11 @@ public class GraphMenuNodeTag extends UIComponentBodyTag {
     private String action = null;
     private boolean expanded;
     private boolean enabled = true;
-   
+
     // Relationship Instance Variables
 
     //
-    // Constructors and Initializers    
+    // Constructors and Initializers
     //
 
     public GraphMenuNodeTag() {
@@ -80,7 +80,7 @@ public class GraphMenuNodeTag extends UIComponentBodyTag {
     //
     // General Methods
     //
-   
+
     /**
      * Name of the node
      */
@@ -191,5 +191,5 @@ public class GraphMenuNodeTag extends UIComponentBodyTag {
     }
 
 }
-    
+
 

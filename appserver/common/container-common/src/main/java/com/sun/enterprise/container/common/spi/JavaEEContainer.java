@@ -31,5 +31,5 @@ public interface JavaEEContainer {
     public <D> D getDescriptor();
 
     public EntityManager lookupExtendedEntityManager(EntityManagerFactory emf);
-    
+
 }

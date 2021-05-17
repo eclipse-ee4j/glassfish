@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -46,14 +46,14 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*Bean*.class,**/*Hello*" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -63,7 +63,7 @@
           <param name="asadmin.file" value="create_resources.asadmin"/>
         </antcall>
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="delete_resources.asadmin"/>
@@ -77,20 +77,20 @@
     </target>
 
     <target name="run_standaloneclient" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/modules/jakarta.jms-api.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${simple.client}">
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant create-resources Create all destinations and connection factories
           ant delete-resources Delete all destinations and connection factories
         </echo>

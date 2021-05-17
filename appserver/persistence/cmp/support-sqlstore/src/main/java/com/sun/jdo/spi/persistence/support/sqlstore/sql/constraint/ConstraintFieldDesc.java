@@ -48,7 +48,7 @@ public class ConstraintFieldDesc extends ConstraintField {
         this.desc = desc;
         this.ordering = ordering;
     }
-    
+
     public ConstraintFieldDesc(LocalFieldDesc desc,
                                QueryPlan plan) {
         super();
@@ -57,7 +57,7 @@ public class ConstraintFieldDesc extends ConstraintField {
         this.originalPlan = plan;
         this.ordering = 0;
     }
-    
+
 
     public ConstraintFieldDesc(LocalFieldDesc desc,
                                QueryPlan plan,

@@ -37,7 +37,7 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     private IdentityHashMap associatedHandles;
 
     private ResourceHandle resource;
-        
+
     public LocalTxConnectionEventListener(ResourceHandle resource) {
         this.resource = resource;
         this.associatedHandles = new IdentityHashMap(10);
@@ -50,14 +50,14 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
         if (associatedHandles.containsKey(connectionHandle)) {
             handle = (ResourceHandle) associatedHandles.get(connectionHandle);
         }
-        poolMgr.resourceClosed(handle); 
+        poolMgr.resourceClosed(handle);
     }
-        
+
     public void connectionErrorOccurred(ConnectionEvent evt) {
         resource.setConnectionErrorOccurred();
         ManagedConnection mc = (ManagedConnection) evt.getSource();
         mc.removeConnectionEventListener(this);
-	    poolMgr.resourceErrorOccurred( resource );
+        poolMgr.resourceErrorOccurred( resource );
 /*
         try {
             mc.destroy();
@@ -80,7 +80,7 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
         ManagedConnection mc = (ManagedConnection) evt.getSource();
         mc.removeConnectionEventListener(this);
 
-        poolMgr.badResourceClosed(handle); 
+        poolMgr.badResourceClosed(handle);
     }
 
     public void localTransactionStarted(ConnectionEvent evt) {
@@ -106,6 +106,6 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     public Map getAssociatedHandles(){
         return associatedHandles;
     }
-        
+
 }
 

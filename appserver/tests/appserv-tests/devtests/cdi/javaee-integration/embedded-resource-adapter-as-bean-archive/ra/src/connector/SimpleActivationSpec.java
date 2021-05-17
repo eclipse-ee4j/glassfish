@@ -22,7 +22,7 @@ import jakarta.resource.spi.ResourceAdapter;
 /**
  * This class is supposed to implemented as a JavaBean so that the app server
  * can instantiate and configure it at the runtime.
- * 
+ *
  * @author Qingqing Ouyang
  */
 public class SimpleActivationSpec implements ActivationSpec,

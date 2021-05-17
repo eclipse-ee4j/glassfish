@@ -29,7 +29,7 @@ import org.jvnet.hk2.annotations.Contract;
 public interface ProbeProviderEventListener {
 
     public <T> void probeProviderAdded(String moduleProviderName, String moduleName,
-    		String probeProviderName, String invokerId,
-    		Class<T> providerClazz, T provider);
+            String probeProviderName, String invokerId,
+            Class<T> providerClazz, T provider);
 
 }

@@ -34,8 +34,8 @@
     <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
     <!-- For Dynamic Faces: -->
     <init-param>
-	<param-name>jakarta.faces.LIFECYCLE_ID</param-name>
-	<param-value>com.sun.faces.lifecycle.PARTIAL</param-value>
+    <param-name>jakarta.faces.LIFECYCLE_ID</param-name>
+    <param-value>com.sun.faces.lifecycle.PARTIAL</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

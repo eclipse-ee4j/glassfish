@@ -27,7 +27,7 @@ import java.util.Map;
  * This node handles the sercurity-constraint xml node
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class UserDataConstraintNode  extends DeploymentDescriptorNode<UserDataConstraintImpl> {
 
@@ -45,12 +45,12 @@ public class UserDataConstraintNode  extends DeploymentDescriptorNode<UserDataCo
     }
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map<String, String> getDispatchTable() {    
+    protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.TRANSPORT_GUARANTEE, "setTransportGuarantee");
         return table;
@@ -59,16 +59,16 @@ public class UserDataConstraintNode  extends DeploymentDescriptorNode<UserDataCo
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, UserDataConstraintImpl descriptor) {      
+    public Node writeDescriptor(Node parent, String nodeName, UserDataConstraintImpl descriptor) {
        Node myNode = appendChild(parent, nodeName);
        writeLocalizedDescriptions(myNode, descriptor);
-       appendTextChild(myNode, WebTagNames.TRANSPORT_GUARANTEE, descriptor.getTransportGuarantee());       
+       appendTextChild(myNode, WebTagNames.TRANSPORT_GUARANTEE, descriptor.getTransportGuarantee());
        return myNode;
     }
 }

@@ -27,8 +27,8 @@
 
 <project name="ee-synchronization" default="usage" basedir=".">
 
-    &commonSetup; 
-    &commonBuild; 
+    &commonSetup;
+    &commonBuild;
     &eeCommonBuild;
     &testproperties;
 

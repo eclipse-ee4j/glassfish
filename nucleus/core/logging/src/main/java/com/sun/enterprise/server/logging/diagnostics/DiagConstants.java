@@ -24,7 +24,7 @@ package com.sun.enterprise.server.logging.diagnostics;
  */
 public class DiagConstants{
      public static final int MAX_CAUSES_AND_CHECKS = 5;
-  
+
      // The causes in the Resource Bundle will be in the format
      // <messageId>.diag.cause.<cause number>
      public static final String CAUSE_PREFIX = ".diag.cause.";
@@ -33,9 +33,9 @@ public class DiagConstants{
      // <messageId>.diag.check.<check number>
      public static final String CHECK_PREFIX = ".diag.check.";
 
-     public static final String URI_PREFIX = 
+     public static final String URI_PREFIX =
          "http://docs.sun.com/diagnostics/jes/appserver/";
 
-     public static final String JDO_MESSAGE_PREFIX = "JDO"; 
+     public static final String JDO_MESSAGE_PREFIX = "JDO";
 }
-     
+

@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.ejb30.clientview.adapted;
 
-public interface CommonRemoteLocalBusinessSuper 
+public interface CommonRemoteLocalBusinessSuper
 {
     void sharedRemoteLocalBusinessSuper(boolean expectTx);
 

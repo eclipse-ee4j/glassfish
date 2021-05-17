@@ -37,7 +37,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(Remove.class)
 public class RemoveHandler extends AbstractAttributeHandler {
-    
+
     public RemoveHandler() {
     }
 
@@ -47,19 +47,19 @@ public class RemoveHandler extends AbstractAttributeHandler {
         Remove remove = (Remove) ainfo.getAnnotation();
 
         for(EjbContext next : ejbContexts) {
-            
-            EjbSessionDescriptor sessionDescriptor = 
+
+            EjbSessionDescriptor sessionDescriptor =
                 (EjbSessionDescriptor) next.getDescriptor();
 
             Method m = (Method) ainfo.getAnnotatedElement();
-            MethodDescriptor removeMethod = 
+            MethodDescriptor removeMethod =
                 new MethodDescriptor(m, MethodDescriptor.EJB_BEAN);
 
-            EjbRemovalInfo removalInfo = 
+            EjbRemovalInfo removalInfo =
                 sessionDescriptor.getRemovalInfo(removeMethod);
 
             if (removalInfo == null) {
-                // if this element is not defined in xml 
+                // if this element is not defined in xml
                 // use all information from annotation
                 removalInfo = new EjbRemovalInfo();
                 removalInfo.setRemoveMethod(removeMethod);
@@ -67,21 +67,21 @@ public class RemoveHandler extends AbstractAttributeHandler {
                 sessionDescriptor.addRemoveMethod(removalInfo);
             } else {
                 // if this element is already defined in xml
-                // set the retainIfException only if this subelement 
+                // set the retainIfException only if this subelement
                 // is not defined in xml
                 if (! removalInfo.isRetainIfExceptionSet()) {
                     removalInfo.setRetainIfException(
                         remove.retainIfException());
                 }
-            } 
+            }
         }
-        
+
         return getDefaultProcessedResult();
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

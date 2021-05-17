@@ -49,10 +49,10 @@ public class ProxiableSingletonContext implements
         if (activeDescriptor.isCacheSet()) {
             return activeDescriptor.getCache();
         }
-        
+
         U retVal = activeDescriptor.create(root);
         activeDescriptor.setCache(retVal);
-        
+
         return retVal;
     }
 
@@ -86,13 +86,13 @@ public class ProxiableSingletonContext implements
     @Override
     public void shutdown() {
         // Do nothing
-        
+
     }
 
     @Override
     public void destroyOne(ActiveDescriptor<?> descriptor) {
         // Do nothing
-        
+
     }
 
 }

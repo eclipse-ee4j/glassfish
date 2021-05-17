@@ -55,19 +55,19 @@ public class WebConfigListener implements ConfigListener, MapperUpdateListener {
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     public HttpService httpService;
-    
+
     @Inject @Optional
     public ManagerProperties managerProperties;
 
     @Inject @Optional
     public List<Property> property;
-    
+
     private WebContainer container;
 
     private Logger logger;
 
     private NetworkConfig networkConfig;
-    
+
     /**
      * Set the Web Container for this ConfigListener.
      * Must be set in order to perform dynamic configuration
@@ -93,7 +93,7 @@ public class WebConfigListener implements ConfigListener, MapperUpdateListener {
      */
     @Override
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-        return ConfigSupport.sortAndDispatch(events, new Changed() {         
+        return ConfigSupport.sortAndDispatch(events, new Changed() {
             @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> tClass, T t) {
                 if (logger.isLoggable(Level.FINE)) {

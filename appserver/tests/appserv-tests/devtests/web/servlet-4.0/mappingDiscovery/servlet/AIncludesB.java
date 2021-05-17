@@ -44,17 +44,17 @@ public class AIncludesB extends HttpServlet {
             out.print("<!DOCTYPE html>");
             out.print("<html>");
             out.print("<head>");
-            out.print("<title>Servlet AIncludesB</title>");            
+            out.print("<title>Servlet AIncludesB</title>");
             out.print("</head>");
             out.print("<body>");
             out.print("<h1>Servlet AIncludesB at " + request.getContextPath() + "</h1>");
-            request.getServletContext().log(this.getClass().getSimpleName() + " getHttpServletMapping: " 
+            request.getServletContext().log(this.getClass().getSimpleName() + " getHttpServletMapping: "
                     + request.getHttpServletMapping());
             HttpServletMapping forwardMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.FORWARD_MAPPING);
-            request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: " 
+            request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: "
                     + forwardMapping);
             HttpServletMapping includeMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.INCLUDE_MAPPING);
-            request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: " 
+            request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: "
                     + includeMapping);
             out.print("<p> In " + this.getClass().getSimpleName() + " " + request.getHttpServletMapping() + "</p>");
             out.print("<p> FORWARD_MAPPING: " + forwardMapping + "</p>");

@@ -53,5 +53,5 @@
     <home>samples.ejb.bmp.robean.ejb.CustomerProgRefreshHome</home>
     <remote>samples.ejb.bmp.robean.ejb.CustomerProgRefresh</remote>
     <ejb-link>CustomerProgRefreshEJB</ejb-link>
-  </ejb-ref>  
+  </ejb-ref>
 </application-client>

@@ -40,10 +40,10 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 
         @LogMessageInfo(level="INFO", message="Creating a SecureRMIClientSocketFactory @ {0}with ssl config = {1}")
         private final static String creatingFactory = Util.LOG_PREFIX + "00022";
-    
+
         @LogMessageInfo(level="INFO", message="Setting SSLParams @ {0}")
         private final static String settingSSLParams = Util.LOG_PREFIX + "00023";
-    
+
         private InetAddress mAddress;
         private transient SSLParams sslParams;
         private transient Map socketMap = new HashMap<Integer, Socket>();
@@ -55,8 +55,8 @@ import org.glassfish.logging.annotation.LogMessageInfo;
             mAddress = addr;
             this.sslParams = sslParams;
             if(sslParams != null) {
-                _logger.log(Level.INFO, 
-                        creatingFactory, 
+                _logger.log(Level.INFO,
+                        creatingFactory,
                         new Object[]{addr.getHostAddress(), sslParams.toString()});
             }
         }
@@ -77,7 +77,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
         public int hashCode() {
              return mAddress.hashCode();
         }
-        
+
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new IOException("Serialization not supported");
         }
@@ -88,7 +88,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
             if(socketMap.containsKey(Integer.valueOf(port))) {
                 return (Socket)socketMap.get(Integer.valueOf(port));
             }
-           
+
             final int backlog = 5;
 
             SSLClientConfigurator sslCC = SSLClientConfigurator.getInstance();
@@ -118,7 +118,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
             if (ecs != null) {
                 sslSocket.setEnabledCipherSuites(configureEnabledCiphers(sslSocket, ecs));
             }
-            
+
             String ep[] = sslCC.getEnabledProtocols();
             if (ep != null) {
                 sslSocket.setEnabledProtocols(configureEnabledProtocols(sslSocket, ep));

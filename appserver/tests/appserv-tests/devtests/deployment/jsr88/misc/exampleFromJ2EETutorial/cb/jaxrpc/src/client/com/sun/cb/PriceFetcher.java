@@ -21,7 +21,7 @@ public final class PriceFetcher {
     public static final PriceListBean getPriceList(String endpoint) {
 
         PriceListBean result = null;
-    
+
         try {
             SupplierIF_Stub stub =
                 (SupplierIF_Stub)(new Supplier_Impl().getSupplierIFPort());
@@ -32,9 +32,9 @@ public final class PriceFetcher {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    
+
         return result;
 
-    } // getPriceList    
+    } // getPriceList
 
 } // class

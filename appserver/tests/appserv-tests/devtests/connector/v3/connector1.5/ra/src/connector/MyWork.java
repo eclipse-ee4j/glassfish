@@ -30,7 +30,7 @@ import jakarta.resource.spi.work.ExecutionContext;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author    Qingqing Ouyang
  */
 public class MyWork implements Work, ResourceAdapterAssociation {
 
@@ -39,7 +39,7 @@ public class MyWork implements Work, ResourceAdapterAssociation {
     private MessageEndpointFactory factory;
     private WorkManager wm;
     protected ResourceAdapter raBean;
-    
+
     public MyWork(
             String name, MessageEndpointFactory factory, WorkManager wm) {
         this.factory = factory;
@@ -66,7 +66,7 @@ public class MyWork implements Work, ResourceAdapterAssociation {
             try {
 
                 Method onMessage = getOnMessageMethod();
-                System.out.println("isDeliveryTransacted = " + 
+                System.out.println("isDeliveryTransacted = " +
                                       factory.isDeliveryTransacted(onMessage));
 
                 /*
@@ -83,7 +83,7 @@ public class MyWork implements Work, ResourceAdapterAssociation {
                 ex.printStackTrace();
             }
         }
-        
+
         debug("LEAVE...");
     }
 
@@ -98,14 +98,14 @@ public class MyWork implements Work, ResourceAdapterAssociation {
     }
 
     public Method getOnMessageMethod() {
-        
+
         Method onMessageMethod = null;
         try {
             Class msgListenerClass = connector.MyMessageListener.class;
             Class[] paramTypes = { java.lang.String.class };
-            onMessageMethod = 
+            onMessageMethod =
                 msgListenerClass.getMethod("onMessage", paramTypes);
-            
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }

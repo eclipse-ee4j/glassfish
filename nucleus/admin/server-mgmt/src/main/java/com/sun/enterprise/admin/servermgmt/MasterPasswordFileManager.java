@@ -66,7 +66,7 @@ public class MasterPasswordFileManager extends KeystoreManager {
 
     /**
      * Create the master password keystore. This routine can also modify the master password if the keystore already exists
-     * 
+     *
      * @param config
      * @param masterPassword
      * @throws RepositoryException
@@ -85,7 +85,7 @@ public class MasterPasswordFileManager extends KeystoreManager {
 
     /**
      * Return the master password stored in the master password keystore.
-     * 
+     *
      * @param config
      * @throws RepositoryException
      * @return
@@ -108,7 +108,7 @@ public class MasterPasswordFileManager extends KeystoreManager {
 
     /**
      * Changes the master password in the master password file
-     * 
+     *
      * @param saveMasterPassword
      * @param config
      * @param newPassword
@@ -124,7 +124,7 @@ public class MasterPasswordFileManager extends KeystoreManager {
 
     /**
      * Changes the master password in the master password file
-     * 
+     *
      * @param saveMasterPassword
      * @param config
      * @param newPassword

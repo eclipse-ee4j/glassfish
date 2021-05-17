@@ -1,17 +1,17 @@
-/*	
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.	
- *	
- * This program and the accompanying materials are made available under the	
- * terms of the Eclipse Public License v. 2.0, which is available at	
- * http://www.eclipse.org/legal/epl-2.0.	
- *	
- * This Source Code may also be made available under the following Secondary	
- * Licenses when the conditions for such availability set forth in the	
- * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,	
- * version 2 with the GNU Classpath Exception, which is available at	
- * https://www.gnu.org/software/classpath/license.html.	
- *	
- * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0	
+/*
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 package org.glassfish.admingui.common.deployment;
 
@@ -297,11 +297,11 @@ public class DFDeploymentProperties extends Properties {
 
     public static final String DEFAULT_UPLOAD = "true";
     public static final String DEFAULT_EXTERNALLY_MANAGED = "false";
-    // resource constants	
+    // resource constants
     public static final String RESOURCE_ACTION = "resourceAction";
     public static final String RESOURCE_TARGET_LIST = "resourceTargetList";
 
-    // possible values for resource action	
+    // possible values for resource action
     public static final String RES_DEPLOYMENT = "resDeployment";
     public static final String RES_CREATE_REF = "resCreateRef";
     public static final String RES_DELETE_REF = "resDeleteRef";
@@ -312,12 +312,12 @@ public class DFDeploymentProperties extends Properties {
             = DeploymentUtils.DEPLOYMENT_PROPERTY_JAVA_WEB_START_ENABLED;
     public static final String DEPLOY_OPTION_LIBRARIES = "libraries";
 
-    // possible values for module state	
+    // possible values for module state
     public static final String ALL = "all";
     public static final String RUNNING = "running";
     public static final String NON_RUNNING = "non-running";
 
-    // lifecycle module constants	
+    // lifecycle module constants
     public static final String LIFECYCLE_MODULE = "lifecycle-module";
     public static final String CLASS_NAME = "class-name";
     public static final String CLASSPATH = "classpath";

@@ -31,7 +31,7 @@ import jakarta.interceptor.InvocationContext;
 @Stateless
 @ExcludeDefaultInterceptors
 @Interceptors({InterceptorD.class, InterceptorC.class})
-public class SlessEJB7 
+public class SlessEJB7
 {
 
     private final static int EXPECTED = 1;
@@ -52,7 +52,7 @@ public class SlessEJB7
         Common.storeResult("SlessEJB7-dc");
         return null;
     }
-    
+
     @AroundInvoke
     private Object aroundInvoke(InvocationContext ctx) throws Exception
     {
@@ -61,7 +61,7 @@ public class SlessEJB7
 
         return ctx.proceed();
     }
-    
+
     public void verify() {
         Common.checkResults("SlessEJB7", EXPECTED);
     }

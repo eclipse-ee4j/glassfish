@@ -82,11 +82,11 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     private Set<RelationshipDescriptor> relationships = new HashSet<RelationshipDescriptor>();
     private String relationshipsDescription;
     private String ejbClientJarUri;
-    
+
     // list of configured persistence manager
     private Vector configured_pms = null;
     private PersistenceManagerInUse pm_inuse = null;
-    
+
     // the resource (database) to be used for persisting CMP EntityBeans
     // the same resource is used for all beans in this ejb jar.
     private ResourceReferenceDescriptor cmpResourceReference;
@@ -104,16 +104,16 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
     // All interceptor classes defined within this ejb module, keyed by
     // interceptor class name.
-    private Map<String, EjbInterceptor> interceptors = 
+    private Map<String, EjbInterceptor> interceptors =
         new HashMap<String, EjbInterceptor>();
-        
+
     private LinkedList<InterceptorBindingDescriptor> interceptorBindings =
         new LinkedList<InterceptorBindingDescriptor>();
 
     private List<NameValuePairDescriptor> enterpriseBeansProperties =
             new ArrayList<NameValuePairDescriptor>();
 
-    // EJB module level dependencies 
+    // EJB module level dependencies
     private Set<EnvironmentProperty> environmentProperties =
               new HashSet<EnvironmentProperty>();
     private Set<EjbReference> ejbReferences =
@@ -138,13 +138,13 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
      * for any new modules.
      */
     // XXX
-    // this method is not true anymore now we have ejb3.0, keep this 
-    // method as it is for now, will revisit once ejb30 persistence 
+    // this method is not true anymore now we have ejb3.0, keep this
+    // method as it is for now, will revisit once ejb30 persistence
     // is implemented
     public boolean isEJB20() {
         return !isEJB11();
     }
-    
+
     /**
      * True if EJB version is 1.x.
      */
@@ -188,7 +188,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     public Map<String, EjbApplicationExceptionInfo> getApplicationExceptions() {
         return new HashMap<String, EjbApplicationExceptionInfo>(applicationExceptions);
     }
-     
+
     /**
     * Return the set of NamedDescriptors that I have.
     */
@@ -205,7 +205,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     * Return all the named descriptors I have together with the descriptor
     * that references each one in a Vector of NameReferencePairs.
     */
-    
+
     public Vector<NamedReferencePair> getNamedReferencePairs() {
     Vector<NamedReferencePair> pairs = new Vector<NamedReferencePair>();
         for (EjbDescriptor ejbDescriptor : getEjbs()) {
@@ -214,8 +214,8 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             pairs.addAll(super.getNamedReferencePairsFrom(ejbDescriptor));
         }
     return pairs;
-    } 
-    
+    }
+
     /**
     * Return the set of references to resources held by ejbs defined in this module.
     */
@@ -227,7 +227,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
     return resourceReferences;
     }
-    
+
     /**
     * Return true if I reference other ejbs, false else.
     */
@@ -273,9 +273,9 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
     return false;
     }
-    
+
     /**
-    * Returns an ejb descriptor that I have by the same name, otherwise 
+    * Returns an ejb descriptor that I have by the same name, otherwise
     * throws an IllegalArgumentException
     */
     @Override
@@ -284,7 +284,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
 
     /**
-     * Returns an ejb descriptor that I have by the same name. 
+     * Returns an ejb descriptor that I have by the same name.
      * Create a DummyEjbDescriptor if requested, otherwise
      * throws an IllegalArgumentException
      */
@@ -295,7 +295,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             }
         }
 
-         if (!isCreateDummy) {   
+         if (!isCreateDummy) {
              throw new IllegalArgumentException(localStrings.getLocalString(
                  "enterprise.deployment.exceptionbeanbundle",
                  "Referencing error: this bundle has no bean of name: {0}",
@@ -303,8 +303,8 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
          }
 
          // there could be cases where the annotation defines the ejb component
-         // and the ejb-jar.xml just uses it 
-         // we have to create a dummy version of the ejb descriptor in this 
+         // and the ejb-jar.xml just uses it
+         // we have to create a dummy version of the ejb descriptor in this
          // case as we process xml before annotations.
          _logger.log(Level.FINE, "enterprise.deployment_dummy_ejb_descriptor",
                          new Object[] {name});
@@ -331,7 +331,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
         return ejbList.toArray(new EjbDescriptor[ejbList.size()]);
     }
-    
+
     /**
      * Returns all ejb descriptors that has a given Class name as
      * the web service endpoint interface.
@@ -362,13 +362,13 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     public void addEjb(EjbDescriptor ejbDescriptor) {
         ejbDescriptor.setEjbBundleDescriptor(this);
         ejbs.add(ejbDescriptor);
-    
+
     }
-    
+
     /**
     * Remove the given ejb descriptor from my (by equality).
     */
-    
+
     public void removeEjb(EjbDescriptor ejbDescriptor) {
         ejbDescriptor.setEjbBundleDescriptor(null);
         ejbs.remove(ejbDescriptor);
@@ -379,7 +379,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
      * EntityBean
      */
     public boolean containsCMPEntity() {
-        
+
         Set ejbs = getEjbs();
         for (Iterator ejbsItr = ejbs.iterator();ejbsItr.hasNext();) {
             if (ejbsItr.next() instanceof EjbCMPEntityDescriptor) {
@@ -395,9 +395,9 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         if (ic == null) {
             interceptor.setEjbBundleDescriptor(this);
             interceptors.put(interceptor.getInterceptorClassName(), interceptor);
-        }                 
+        }
     }
-    
+
     @Override
     public EjbInterceptor getInterceptorByClassName(String className) {
 
@@ -442,16 +442,16 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     /**
     * Checks whether the role references my ejbs have reference roles that I have.
     */
-    
+
     public boolean areResourceReferencesValid() {
     // run through each of the ejb's role references, checking that the roles exist in this bundle
     for (EjbDescriptor ejbDescriptor : getEjbs()) {
         for (Iterator roleRefs = ejbDescriptor.getRoleReferences().iterator(); roleRefs.hasNext();) {
         RoleReference roleReference = (RoleReference) roleRefs.next();
         Role referredRole = roleReference.getRole();
-        if (!referredRole.getName().equals("") 
+        if (!referredRole.getName().equals("")
             && !super.getRoles().contains(referredRole) ) {
-            
+
             _logger.log(Level.FINE,localStrings.getLocalString(
                "enterprise.deployment.badrolereference",
                "Warning: Bad role reference to {0}", new Object[] {referredRole}));
@@ -462,7 +462,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
     return true;
     }
-    
+
     /**
     * Removes the given org.glassfish.security.common.Role object from me.
     */
@@ -476,7 +476,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         super.removeRole(role);
     }
     }
-    
+
     /**
     * Returns true if I have Roles to which method permissions have been assigned.
     */
@@ -489,7 +489,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
     return false;
     }
-    
+
     /**
     * Return true if any of my ejb's methods have been assigned transaction attributes.
     */
@@ -502,7 +502,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     }
     return false;
     }
-    
+
     /**
     * Return true if I have roles, permissioned roles or container transactions.
     */
@@ -530,7 +530,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
     }
 
- 
+
     /**
      * EJB2.0: get description for <relationships> element.
      */
@@ -539,14 +539,14 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         relationshipsDescription = "";
     return relationshipsDescription;
     }
- 
+
     /**
      * EJB2.0: set description for <relationships> element.
      */
     public void setRelationshipsDescription(String relationshipsDescription) {
         this.relationshipsDescription = relationshipsDescription;
     }
-    
+
 
     /**
      * Get all relationships in this ejb-jar.
@@ -576,7 +576,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     public ResourceReferenceDescriptor getCMPResourceReference() {
         return cmpResourceReference;
     }
-    
+
     /**
      * Sets the resource reference I use for CMP.
      */
@@ -586,7 +586,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
 
     public Descriptor getDescriptorByName(String name)
-    {        
+    {
         try {
             return getEjbByName(name);
         } catch(IllegalArgumentException iae) {
@@ -607,9 +607,9 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     return super.getName();
     }
 
-        // START OF IASRI 4645310 
+        // START OF IASRI 4645310
     /**
-     * Sets the unique id for a stand alone ejb module. It traverses through 
+     * Sets the unique id for a stand alone ejb module. It traverses through
      * all the ejbs in this stand alone module and sets the unique id for
      * each of them. The traversal order is done in ascending element order.
      *
@@ -617,7 +617,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
      *
      * @param    id    unique id for stand alone module
      */
-    public void setUniqueId(long id) 
+    public void setUniqueId(long id)
     {
         uniqueId  = id;
 
@@ -626,9 +626,9 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
 
         // The sorting algorithm used by this api is a modified mergesort.
-        // This algorithm offers guaranteed n*log(n) performance, and 
-        // can approach linear performance on nearly sorted lists. 
-        Arrays.sort(descs, 
+        // This algorithm offers guaranteed n*log(n) performance, and
+        // can approach linear performance on nearly sorted lists.
+        Arrays.sort(descs,
             new Comparator<EjbDescriptor>() {
                 @Override
                 public int compare(EjbDescriptor o1, EjbDescriptor o2) {
@@ -657,10 +657,10 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
 
     public static int getIdFromEjbId(long ejbId)
     {
-    long id = ejbId >> 32;  
+    long id = ejbId >> 32;
     return (int)id;
     }
-    
+
     /**
      * @return true if this bundle descriptor defines web service clients
      */
@@ -673,8 +673,8 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             }
         }
         return false;
-    }  
-    
+    }
+
     /**
      * @return a set of service-ref from ejbs contained in this bundle this bundle or empty set
      * if none
@@ -685,10 +685,10 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         for (EjbDescriptor next : getEjbs()) {
             serviceRefs.addAll(next.getServiceReferenceDescriptors());
         }
-        return serviceRefs;        
-    }    
-    
-    /** 
+        return serviceRefs;
+    }
+
+    /**
     * Returns a formatted String representing my state.
     */
     @Override
@@ -706,7 +706,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             toStringBuffer.append("\n------------");
         }
     }
-    
+
     @Override
     public DescriptorVisitor getTracerVisitor() {
         return new EjbBundleTracerVisitor();
@@ -721,9 +721,9 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         return new EjbBundleValidator();
     }
 
-    /** 
+    /**
      * visit the descriptor and all sub descriptors with a DOL visitor implementation
-     * 
+     *
      * @param aVisitor a visitor to traverse the descriptors
      */
     @Override
@@ -734,7 +734,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         } else {
             super.visit(aVisitor);
         }
-    }    
+    }
 
     /**
      * @return the module type for this bundle descriptor
@@ -742,7 +742,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     @Override
     public ArchiveType getModuleType() {
         return DOLUtils.ejbType();
-    }  
+    }
 
     public void setPersistenceManagerInuse(String id,String ver)
     {
@@ -751,16 +751,16 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         _logger.fine("***IASEjbBundleDescriptor"
                 + ".setPersistenceManagerInUse done -#- ");
     }
-    
+
     public void setPersistenceManagerInUse(PersistenceManagerInUse inuse) {
     pm_inuse = inuse;
     }
-        
+
     public PersistenceManagerInUse getPersistenceManagerInUse()
     {
         return pm_inuse;
     }
-                
+
     public void addPersistenceManager(IASPersistenceManagerDescriptor pmDesc)
     {
         if (configured_pms==null) {
@@ -771,7 +771,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
             _logger.fine("***IASEjbBundleDescriptor"
                + ".addPersistenceManager done -#- ");
     }
-        
+
     public IASPersistenceManagerDescriptor getPreferredPersistenceManager()
     {
         boolean debug = _logger.isLoggable(Level.FINE);
@@ -784,10 +784,10 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         String pminuse_id   = pm_inuse.get_pm_identifier().trim();
         String pminuse_ver  = pm_inuse.get_pm_version().trim();
         if (debug) {
-             _logger.fine("IASPersistenceManagerDescriptor.getPreferred - inid*" + 
-                pminuse_id.trim() + "*"); 
-             _logger.fine("IASPersistenceManagerDescriptor.getPreferred - inver*" + 
-                pminuse_ver.trim() + "*"); 
+             _logger.fine("IASPersistenceManagerDescriptor.getPreferred - inid*" +
+                pminuse_id.trim() + "*");
+             _logger.fine("IASPersistenceManagerDescriptor.getPreferred - inver*" +
+                pminuse_ver.trim() + "*");
         }
 
         int size = configured_pms.size();
@@ -797,14 +797,14 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         String pmdesc_ver   = pmdesc.getPersistenceManagerVersion();
 
             if (debug) {
-            _logger.fine("IASPersistenceManagerDescriptor.getPreferred - pmid*" + 
-                    pmdesc_id.trim() + "*"); 
-            _logger.fine("IASPersistenceManagerDescriptor.getPreferred - pmver*" + 
-                    pmdesc_ver.trim() + "*"); 
+            _logger.fine("IASPersistenceManagerDescriptor.getPreferred - pmid*" +
+                    pmdesc_id.trim() + "*");
+            _logger.fine("IASPersistenceManagerDescriptor.getPreferred - pmver*" +
+                    pmdesc_ver.trim() + "*");
             }
 
 
-            if( ((pmdesc_id.trim()).equals(pminuse_id)) && 
+            if( ((pmdesc_id.trim()).equals(pminuse_id)) &&
                 ((pmdesc_ver.trim()).equals(pminuse_ver)) ) {
 
                 if (debug)
@@ -824,7 +824,7 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
         _logger.fine("***IASEjbBundleDescriptor.getPersistenceManagers done -#- ");
     return configured_pms;
     }
-    
+
     public void addSecurityRoleMapping(SecurityRoleMapping roleMapping) {
         roleMaps.add(roleMapping);
     }

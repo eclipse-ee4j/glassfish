@@ -37,51 +37,51 @@ import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 @Configured
 public interface RoleMappingProviderConfig extends SecurityProviderConfig, PropertyBag {
 
-	/**
-	 * Gets the class name of the role provider.
-	 */
-	@Attribute(required=false)
-	@NotNull
-	@JavaClassName
-	public String getProviderClass();
-	public void setProviderClass(String value) throws PropertyVetoException;
+    /**
+     * Gets the class name of the role provider.
+     */
+    @Attribute(required=false)
+    @NotNull
+    @JavaClassName
+    public String getProviderClass();
+    public void setProviderClass(String value) throws PropertyVetoException;
 
-	/**
-	 * Indicates if the provider supports role deployment.
-	 */
-	@Attribute(defaultValue = "true")
-	boolean getSupportRoleDeploy();
-	void setSupportRoleDeploy(boolean value) throws PropertyVetoException;
+    /**
+     * Indicates if the provider supports role deployment.
+     */
+    @Attribute(defaultValue = "true")
+    boolean getSupportRoleDeploy();
+    void setSupportRoleDeploy(boolean value) throws PropertyVetoException;
 
-	/**
-	 * Gets the version of the provider.
-	 */
-	@Attribute(required=false)
-	String getVersion();
-	void setVersion(String value) throws PropertyVetoException;
+    /**
+     * Gets the version of the provider.
+     */
+    @Attribute(required=false)
+    String getVersion();
+    void setVersion(String value) throws PropertyVetoException;
 
-	/**
-	 * Gets the properties of the provider.
-	 */
-	@Element
-	List<Property> getProperty();
+    /**
+     * Gets the properties of the provider.
+     */
+    @Element
+    List<Property> getProperty();
 
-	/**
-	 * Gets the options of the provider.
-	 */
-	@DuckTyped
-	Map<String,?> getProviderOptions();
+    /**
+     * Gets the options of the provider.
+     */
+    @DuckTyped
+    Map<String,?> getProviderOptions();
 
-	class Duck {
-		/**
-		 * Gets the options of the provider by looking at the properties.
-		 */
-		public static Map<String,?> getProviderOptions(RoleMappingProviderConfig config) {
-			Map<String,String> providerOptions = new HashMap<String,String>();
-			for (Property prop : config.getProperty()) {
-				providerOptions.put(prop.getName(), prop.getValue());
-			}
-			return providerOptions;
-		}
-	}
+    class Duck {
+        /**
+         * Gets the options of the provider by looking at the properties.
+         */
+        public static Map<String,?> getProviderOptions(RoleMappingProviderConfig config) {
+            Map<String,String> providerOptions = new HashMap<String,String>();
+            for (Property prop : config.getProperty()) {
+                providerOptions.put(prop.getName(), prop.getValue());
+            }
+            return providerOptions;
+        }
+    }
 }

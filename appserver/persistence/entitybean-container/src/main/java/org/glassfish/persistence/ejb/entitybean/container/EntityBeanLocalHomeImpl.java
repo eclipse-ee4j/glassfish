@@ -28,8 +28,8 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 
 /**
  * Implementation of the EJBLocalHome interface for Entity Beans.
- * At deployment time, one instance of this class is created 
- * for each EntityBean class in a JAR that has a local home. 
+ * At deployment time, one instance of this class is created
+ * for each EntityBean class in a JAR that has a local home.
  *
  * @author mvatkina
  */

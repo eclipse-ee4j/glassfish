@@ -449,7 +449,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
 
                 try {
                     Class implClass = Class.forName(implFile, true,
-                        Thread.currentThread().getContextClassLoader()); 
+                        Thread.currentThread().getContextClassLoader());
                     Class clazz = implClass;
                     String packageName = null;
                     Package clazzPackage = implClass.getPackage();
@@ -463,7 +463,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
                     while (clazz != null && (!clazz.getName().startsWith("jakarta.servlet."))
                             && searchingMethods.size() > 0) {
                         Package p = clazz.getPackage();
-                        Method[] methods = clazz.getDeclaredMethods(); 
+                        Method[] methods = clazz.getDeclaredMethods();
                         for (Method m : methods) {
                             String methodName = m.getName();
                             if (searchingMethods.contains(methodName)) {
@@ -546,14 +546,14 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
         add(other, true, false);
     }
 
-    // this method will combine the information from this "other" 
+    // this method will combine the information from this "other"
     // WebComponentDescriptor with current WebComponentDescriptor
     //
     // when there are conflicts between the contents of the two,
     // the value from current WebComponentDescriptor will override
     // the value in "other"
     //
-    // Note: in the Set API, we only add value when such value 
+    // Note: in the Set API, we only add value when such value
     // is not existed in the Set already
     //
     // If combineUrlPatterns is false, then the first one take priority,
@@ -565,12 +565,12 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
     // And the conflict boolean will not be set.
     public void add(WebComponentDescriptor other, boolean combineUrlPatterns,
             boolean combineConflict) {
-        // do not do anything if the canonical name of the two web 
+        // do not do anything if the canonical name of the two web
         // components are different
         if (!getCanonicalName().equals(other.getCanonicalName())) {
             return;
         }
-        // do not do anything if the type of the two web 
+        // do not do anything if the type of the two web
         // components are different
         if ((isServlet() && !other.isServlet()) ||
                 (!isServlet() && other.isServlet())) {
@@ -582,8 +582,8 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
             getUrlPatternsSet().addAll(other.getUrlPatternsSet());
         }
 
-        // for complex types, only added it if the complex type with same 
-        // name is not in the set yet 
+        // for complex types, only added it if the complex type with same
+        // name is not in the set yet
         if (conflictedInitParameterNames == null) {
             conflictedInitParameterNames = other.getConflictedInitParameterNames();
         } else {

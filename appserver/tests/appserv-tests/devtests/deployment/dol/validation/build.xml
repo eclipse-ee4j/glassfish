@@ -28,42 +28,42 @@
     <property name="testName" value="validation"/>
 
     <target name="prepare" depends="init">
-        <property name="validation.war" 
+        <property name="validation.war"
             value="${build}/war/${testName}.war"/>
-        <property name="validation.jar" 
+        <property name="validation.jar"
             value="${build}/ejb/${testName}-ejb.jar"/>
-        <property name="validation.rar" 
+        <property name="validation.rar"
             value="${build}/rar/${testName}.rar"/>
-        <property name="validation.car" 
+        <property name="validation.car"
             value="${build}/car/${testName}-client.jar"/>
 
-        <property name="validation.wlsRar" 
+        <property name="validation.wlsRar"
             value="${build}/wlsRar/${testName}.rar"/>
 
         <property name="validation.ear.dir" value="${build}/ear"/>
-        <property name="validation.ear.war" 
+        <property name="validation.ear.war"
                   value="${validation.ear.dir}/${testName}.war"/>
-        <property name="validation.ear.jar" 
+        <property name="validation.ear.jar"
                   value="${validation.ear.dir}/${testName}-ejb.jar"/>
-        <property name="validation.ear.rar" 
+        <property name="validation.ear.rar"
                   value="${validation.ear.dir}/${testName}.rar"/>
-        <property name="validation.ear.car" 
+        <property name="validation.ear.car"
                   value="${validation.ear.dir}/${testName}-client.jar"/>
-        <property name="validation.ear" 
+        <property name="validation.ear"
                   value="${validation.ear.dir}/${testName}.ear"/>
 
         <property name="validation.wlsEar.dir" value="${build}/wlsEar"/>
-        <property name="validation.wlsEar.wlsRar" 
+        <property name="validation.wlsEar.wlsRar"
                  value="${validation.wlsEar.dir}/${testName}.rar"/>
-        <property name="validation.wlsEar" 
+        <property name="validation.wlsEar"
                   value="${validation.wlsEar.dir}/${testName}.ear"/>
         <property name="validation.wlsEar2.dir" value="${build}/wlsEar2"/>
-        <property name="validation.wlsEar2" 
+        <property name="validation.wlsEar2"
                   value="${validation.wlsEar2.dir}/${testName}.ear"/>
         <property name="validation.wlsEar3.dir" value="${build}/wlsEar3"/>
-        <property name="validation.wlsEar3.wlsRar" 
+        <property name="validation.wlsEar3.wlsRar"
                  value="${validation.wlsEar3.dir}/${testName}.rar"/>
-        <property name="validation.wlsEar3" 
+        <property name="validation.wlsEar3"
                   value="${validation.wlsEar3.dir}/${testName}.ear"/>
 
         <mkdir dir="${build}/war"/>
@@ -106,7 +106,7 @@
         <jar destfile="${validation.ear.war}" basedir="${basedir}/ear/war"/>
         <jar destfile="${validation.ear.jar}" basedir="${basedir}/ear/ejb"/>
         <jar destfile="${validation.ear.rar}" basedir="${basedir}/ear/rar"/>
-        <jar destfile="${validation.ear.car}" basedir="${basedir}/ear/car" 
+        <jar destfile="${validation.ear.car}" basedir="${basedir}/ear/car"
              manifest="${basedir}/ear/car/META-INF/MANIFEST.MF"/>
         <copy todir="${validation.ear.dir}">
             <fileset dir="${basedir}/ear" includes="META-INF/*"/>

@@ -70,7 +70,7 @@ public final class FileRealm extends IASRealm
     public static final String PARAM_KEYFILE="file";
 
     FileRealmHelper helper;
-    
+
     /**
      * Constructor.
      *
@@ -105,14 +105,14 @@ public final class FileRealm extends IASRealm
         this.init(p);
     }
 
-    /* 
-     * No arg constructor used by the Realm class when creating realms. 
-     * This is followed by a call to the init() method. 
+    /*
+     * No arg constructor used by the Realm class when creating realms.
+     * This is followed by a call to the init() method.
      */
     public FileRealm()
     {
     }
-    
+
     /**
      * Return a list of the file names used by all file realms
      * defined for the specified config.
@@ -141,7 +141,7 @@ public final class FileRealm extends IASRealm
         return files;
     }
 
-    
+
     /**
      * Initialize a realm with some properties.  This can be used
      * when instantiating realms from their descriptions.  This
@@ -167,9 +167,9 @@ public final class FileRealm extends IASRealm
         if (file.contains("$")) {
                 file = RelativePathResolver.resolvePath(file);
         }
-        
+
         this.setProperty(PARAM_KEYFILE, file);
-        
+
         String jaasCtx = props.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
         if (jaasCtx == null) {
             String msg = sm.getString("filerealm.nomodule");
@@ -204,7 +204,7 @@ public final class FileRealm extends IASRealm
     {
         return AUTH_TYPE;
     }
-    
+
 
     /**
      * Returns names of all the users in this particular realm.
@@ -232,7 +232,7 @@ public final class FileRealm extends IASRealm
     public User getUser(String name)
         throws NoSuchUserException
     {
-        
+
         FileRealmHelper.User u = helper.getUser(name);
         if (u == null) {
             String msg = sm.getString("filerealm.nouser", name);
@@ -240,7 +240,7 @@ public final class FileRealm extends IASRealm
         }
         return new FileRealmUser(u, null);
     }
-    
+
 
     /**
      * Returns names of all the groups in this particular realm.
@@ -256,7 +256,7 @@ public final class FileRealm extends IASRealm
         return Collections.enumeration(helper.getGroupNames());
     }
 
-    
+
     /**
      * Returns the name of all the groups that this user belongs to.
      * @param username Name of the user in this realm whose group listing
@@ -325,7 +325,7 @@ public final class FileRealm extends IASRealm
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("Reloading file realm data.");
         }
-        
+
         try {
             FileRealm newRealm = new FileRealm(getProperty(PARAM_KEYFILE));
             newRealm.init(getProperties());
@@ -413,14 +413,14 @@ public final class FileRealm extends IASRealm
     }
 
     /*
-     * Test whether their is a user in the FileRealm that has a password that 
+     * Test whether their is a user in the FileRealm that has a password that
      * has been set, i.e., something other than the resetKey.
      */
-    public boolean hasAuthenticatableUser() 
+    public boolean hasAuthenticatableUser()
     {
         return helper.hasAuthenticatableUser();
     }
-      
+
     /**
      * @return true if the realm implementation support User Management (add,remove,update user)
      */
@@ -429,17 +429,17 @@ public final class FileRealm extends IASRealm
         //File Realm supports UserManagement
         return true;
     }
-    
+
     /**
      * Persist the realm data to permanent storage
      * @throws com.sun.enterprise.security.auth.realm.BadRealmException
      */
     @Override
-    public void persist() throws BadRealmException {      
+    public void persist() throws BadRealmException {
         try {
            helper.persist();
         } catch (IOException ex) {
             throw new BadRealmException(ex);
         }
-    }    
+    }
 }

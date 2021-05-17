@@ -37,11 +37,11 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-sfsb tests)
-			ant passivateactivate (Executes the ejb-sfsb-passivateactivate test)
-			ant sfsbcache (Executes the ejb-sfsb-sfsbcache test)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the ejb-sfsb tests)
+            ant passivateactivate (Executes the ejb-sfsb-passivateactivate test)
+            ant sfsbcache (Executes the ejb-sfsb-sfsbcache test)
+    </echo>
     </target>
 </project>

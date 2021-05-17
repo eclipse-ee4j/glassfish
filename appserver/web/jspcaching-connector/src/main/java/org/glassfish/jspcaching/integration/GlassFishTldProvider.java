@@ -81,11 +81,11 @@ public class GlassFishTldProvider
     public Map<URI, List<String>> getTldListenerMap() {
         return getTldMap();
     }
- 
+
     public void postConstruct() {
         /*
          * Check whether JSP caching has been enabled
-         */        
+         */
         Config cfg = serverContext.getDefaultServices().getService(
             Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         WebContainer webContainer = cfg.getExtensionByType(WebContainer.class);

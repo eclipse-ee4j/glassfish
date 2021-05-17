@@ -32,14 +32,14 @@
   &testproperties;
   &jdbcCommon;
   &jdbcCommonProps;
-    
+
   <target name="all" depends="clean,build,deploy,run,undeploy"/>
-  
+
   <target name="clean" depends="init-common">
     <delete dir="${build.classes.dir}"/>
     <delete dir="${assemble.dir}"/>
   </target>
-  
+
   <target name="compile" depends="clean">
     <antcall target="compile-common">
       <param name="src" value="ejb"/>
@@ -63,23 +63,23 @@
     <antcall target="deploy-jdbc-common"/>
     <antcall target="deploy-common"/>
   </target>
-  
-  
+
+
   <target name="undeploy" depends="init-common">
     <antcall target="undeploy-jdbc-common"/>
     <antcall target="undeploy-common"/>
   </target>
-  
-  
+
+
   <target name="run">
     <antcall target="execute-sql-common">
       <param name="sql.file" value="sql/create.sql"/>
-    </antcall>  
+    </antcall>
     <antcall target="runclient-common"/>
   </target>
-  
+
   <target name="usage">
     <antcall target="usage-common"/>
   </target>
-  
+
 </project>

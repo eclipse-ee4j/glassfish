@@ -43,7 +43,7 @@ public class AuthMechanism extends Descriptor {
     public AuthMechanism(String description, int authMechVal,
                          String credInterface) {
         super.setDescription(description);
-      	this.authMechVal = authMechVal;
+          this.authMechVal = authMechVal;
         this.credInterface = credInterface;
     }
 
@@ -63,7 +63,7 @@ public class AuthMechanism extends Descriptor {
         return credInterface;
     }
 
-   /** 
+   /**
     * Get the description
     * @return description.
     */
@@ -71,7 +71,7 @@ public class AuthMechanism extends Descriptor {
         return super.getDescription();
     }
 
-    /** 
+    /**
      * Sets the description
      * @param description.
      */
@@ -79,13 +79,13 @@ public class AuthMechanism extends Descriptor {
         super.setDescription(description);
     }
 
-   /** 
+   /**
     * Get the auth-mech-type
     * @return authMechVal the authentication mechanism type
     */
     public String getAuthMechType() {
         if(authMechVal == PoolManagerConstants.BASIC_PASSWORD)
-	    return ConnectorTagNames.DD_BASIC_PASSWORD;
+        return ConnectorTagNames.DD_BASIC_PASSWORD;
         else
             return ConnectorTagNames.DD_KERBEROS;
     }
@@ -94,34 +94,34 @@ public class AuthMechanism extends Descriptor {
         if(value.trim().equals(ConnectorTagNames.DD_BASIC_PASSWORD)){
             return PoolManagerConstants.BASIC_PASSWORD;
         }else if((value.trim()).equals(ConnectorTagNames.DD_KERBEROS)){
-	        return PoolManagerConstants.KERBV5;
+            return PoolManagerConstants.KERBV5;
         }else{
             throw new IllegalArgumentException("Invalid auth-mech-type");// put this in localStrings...
         }
     }
-    
+
     /**
      * Get the authentication mechanism value.
      */
-    public int getAuthMechVal() { 
+    public int getAuthMechVal() {
         return authMechVal;
     }
 
     /**
      * Set the authentication mechanism value.
      */
-    public void setAuthMechVal(int value) { 
+    public void setAuthMechVal(int value) {
         authMechVal = value;
     }
 
     /**
      * Set the authentication mechanism value.
      */
-    public void setAuthMechVal(String value) { 
+    public void setAuthMechVal(String value) {
         if((value.trim()).equals(ConnectorTagNames.DD_BASIC_PASSWORD))
-	    authMechVal = PoolManagerConstants.BASIC_PASSWORD;
+        authMechVal = PoolManagerConstants.BASIC_PASSWORD;
         else if((value.trim()).equals(ConnectorTagNames.DD_KERBEROS))
-	    authMechVal = PoolManagerConstants.KERBV5;
-	else throw new IllegalArgumentException("Invalid auth-mech-type");// put this in localStrings...
+        authMechVal = PoolManagerConstants.KERBV5;
+    else throw new IllegalArgumentException("Invalid auth-mech-type");// put this in localStrings...
     }
 }

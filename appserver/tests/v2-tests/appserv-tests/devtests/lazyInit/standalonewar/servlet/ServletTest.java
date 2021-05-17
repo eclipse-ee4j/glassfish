@@ -46,13 +46,13 @@ import java.sql.*;
 public class ServletTest extends HttpServlet implements HttpSessionListener {
 
     private ServletContext context;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("[Servlet.init]");        
+        System.out.println("[Servlet.init]");
         context = config.getServletContext();
         System.out.println("[Servlet.init] " + context.getMajorVersion());
-        
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,23 +60,23 @@ public class ServletTest extends HttpServlet implements HttpSessionListener {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        
+
         request.getSession().setAttribute("FILTER-REQUEST", request.getSession().getAttribute("FILTER"));
-        request.getSession().setAttribute("FILTER", "FAIL");        
-        	
+        request.getSession().setAttribute("FILTER", "FAIL");
+
         RequestDispatcher rd = context.getRequestDispatcher("/ServletTest2");
-        rd.forward(request, response);       
+        rd.forward(request, response);
     }
 
     public void sessionCreated(jakarta.servlet.http.HttpSessionEvent httpSessionEvent) {
         System.out.println("[Servlet.sessionCreated]");
     }
-    
+
     public void sessionDestroyed(jakarta.servlet.http.HttpSessionEvent httpSessionEvent) {
         System.out.println("[Servlet.sessionDestroyed]");
         System.out.println("Attributes: " + httpSessionEvent.getSession().getAttribute("test"));

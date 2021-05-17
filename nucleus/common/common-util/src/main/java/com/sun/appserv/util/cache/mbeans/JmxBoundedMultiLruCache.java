@@ -29,12 +29,12 @@ import com.sun.appserv.util.cache.Constants;
  * @author Krishnamohan Meduri (Krishna.Meduri@Sun.com)
  *
  */
-public class JmxBoundedMultiLruCache extends JmxMultiLruCache 
+public class JmxBoundedMultiLruCache extends JmxMultiLruCache
                               implements JmxBoundedMultiLruCacheMBean {
 
     private BoundedMultiLruCache boundedMultiLruCache;
 
-    public JmxBoundedMultiLruCache(BoundedMultiLruCache boundedMultiLruCache, 
+    public JmxBoundedMultiLruCache(BoundedMultiLruCache boundedMultiLruCache,
                                    String name) {
         super(boundedMultiLruCache, name);
         this.boundedMultiLruCache = boundedMultiLruCache;
@@ -55,7 +55,7 @@ public class JmxBoundedMultiLruCache extends JmxMultiLruCache
         Object object = boundedMultiLruCache.getStatByName(
                                         Constants.STAT_BOUNDEDMULTILRUCACHE_MAX_SIZE);
         /*
-         * BoundedMultiLruCache class returns java.lang.String with a value 
+         * BoundedMultiLruCache class returns java.lang.String with a value
          * "default" if the maxSize == Constants.DEFAULT_MAX_CACHE_SIZE
          * To take care of this case, the if/else is added below
          */

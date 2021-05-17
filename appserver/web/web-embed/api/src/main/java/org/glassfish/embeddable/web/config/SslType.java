@@ -18,7 +18,7 @@ package org.glassfish.embeddable.web.config;
 
 /**
  * Class used to define ssl protocol variants
- * 
+ *
  * @author Rajiv Mordani
  */
 public enum SslType {

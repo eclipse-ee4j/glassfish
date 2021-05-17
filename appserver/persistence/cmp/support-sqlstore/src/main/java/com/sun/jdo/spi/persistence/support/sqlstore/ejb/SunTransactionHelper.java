@@ -46,10 +46,10 @@ import org.glassfish.internal.api.Globals;
 
 
 /** Sun specific implementation for TransactionHelper interface.
-* This class has a special implementation for 
-* <code>registerSynchronization</code>, because it uses a special 
-* object that registers Synchronization instance to be processed after 
-* any bean's or container beforeCompletion method, but before the corresponding 
+* This class has a special implementation for
+* <code>registerSynchronization</code>, because it uses a special
+* object that registers Synchronization instance to be processed after
+* any bean's or container beforeCompletion method, but before the corresponding
 * afterCompletion.
 */
 public class SunTransactionHelper extends TransactionHelperImpl
@@ -63,14 +63,14 @@ public class SunTransactionHelper extends TransactionHelperImpl
         SunTransactionHelper.class.getClassLoader());
 
     private static List<PersistenceManagerFactory> pmf_list;
-    
+
     private static EjbContainerUtil ejbContainerUtil;
-    
+
     private final static Object pmf_listSyncObject = new Object();
-    
+
     /**
-     * Array of registered ApplicationLifeCycleEventListener 
-     */ 
+     * Array of registered ApplicationLifeCycleEventListener
+     */
     private final List<ApplicationLifeCycleEventListener> applicationLifeCycleEventListeners = new ArrayList<ApplicationLifeCycleEventListener>();
 
 
@@ -85,18 +85,18 @@ public class SunTransactionHelper extends TransactionHelperImpl
 //        ApplicationLoaderEventNotifier.getInstance().addListener(helper);
         ConnectorRuntime connectorRuntime = Globals.getDefaultHabitat().getService(ConnectorRuntime.class);
         connectorRuntime.registerConnectorNamingEventListener(helper);
-        
+
         pmf_list = new ArrayList<PersistenceManagerFactory>();
 
         ejbContainerUtil = Globals.getDefaultHabitat().getService(EjbContainerUtil.class);
     }
- 
+
     /** Default constructor should not be public */
     SunTransactionHelper() { }
 
     // helper class for looking up the TransactionManager instances.
     static private class TransactionManagerFinder {
-        
+
         // JNDI name of the TransactionManager used for managing local transactions.
         static private final String AS_TM_NAME = "java:appserver/TransactionManager"; //NOI18N
 
@@ -125,14 +125,14 @@ public class SunTransactionHelper extends TransactionHelperImpl
 
     /** SunTransactionHelper specific code */
     public UserTransaction getUserTransaction() {
-	try {
-	    InitialContext ctx =
+    try {
+        InitialContext ctx =
                 (InitialContext) Class.forName("javax.naming.InitialContext").newInstance(); //NOI18N
 
             return (UserTransaction)ctx.lookup("java:comp/UserTransaction"); //NOI18N
-	} catch (Exception e) {
-	    throw new JDOFatalInternalException(e.getMessage());
-	}
+    } catch (Exception e) {
+        throw new JDOFatalInternalException(e.getMessage());
+    }
     }
 
     /** SunTransactionHelper specific code */
@@ -143,30 +143,30 @@ public class SunTransactionHelper extends TransactionHelperImpl
 
     /** SunTransactionHelper specific code */
     public PersistenceManagerFactory replaceInternalPersistenceManagerFactory(
-	PersistenceManagerFactory pmf) {
+    PersistenceManagerFactory pmf) {
 
         synchronized(pmf_listSyncObject) {
-	    int i = pmf_list.indexOf(pmf);
-	    if (i == -1) {
-	        // New PersistenceManagerFactory. Remember it.
-	        pmf_list.add(pmf);
-	        return pmf;
-	    }
+        int i = pmf_list.indexOf(pmf);
+        if (i == -1) {
+            // New PersistenceManagerFactory. Remember it.
+            pmf_list.add(pmf);
+            return pmf;
+        }
 
-	    return pmf_list.get(i);
+        return pmf_list.get(i);
         }
     }
 
-    /** 
+    /**
      * Returns name prefix for DDL files extracted from the info instance by the
      * application server specific code.
      * SunTransactionHelper specific code. Delegates the actual implementation
      * to DeploymentHelper#getDDLNamePrefix(Object);
-     *   
+     *
      * @param info the instance to use for the name generation.
-     * @return name prefix as String. 
-     */   
-    public String getDDLNamePrefix(Object info) { 
+     * @return name prefix as String.
+     */
+    public String getDDLNamePrefix(Object info) {
         return DeploymentHelper.getDDLNamePrefix(info);
     }
 
@@ -199,7 +199,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
         } else {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "ejb.SunTransactionHelper.wrongdatasourcetype", //NOI18N
-                resource.getClass().getName())); 
+                resource.getClass().getName()));
         }
         return rc;
     }
@@ -212,10 +212,10 @@ public class SunTransactionHelper extends TransactionHelperImpl
                 throw new JDOFatalInternalException(err.getMessage());
         }
     }
-    
+
     /**
      * @inheritDoc
-     */ 
+     */
     public void registerApplicationLifeCycleEventListener(
             ApplicationLifeCycleEventListener listener) {
         synchronized(applicationLifeCycleEventListeners) {
@@ -253,14 +253,14 @@ public class SunTransactionHelper extends TransactionHelperImpl
         } // Ignore all other events.
     }
 
-    /** 
+    /**
      * Removes all entries that correspond to the same connection factory name.
      * @param name the connection factory name.
      */
     private void cleanUpResources(String name) {
         synchronized(pmf_listSyncObject) {
             for (Iterator it = pmf_list.iterator(); it.hasNext(); ) {
-                PersistenceManagerFactory pmf = (PersistenceManagerFactory)it.next();        
+                PersistenceManagerFactory pmf = (PersistenceManagerFactory)it.next();
                 if (pmf.getConnectionFactoryName().equals(name)) {
                     it.remove();
                 }

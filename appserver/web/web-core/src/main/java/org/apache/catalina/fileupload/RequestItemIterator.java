@@ -220,7 +220,7 @@ class RequestItemIterator {
 
     // Whether the current item may still be read.
     private boolean itemValid;
- 
+
     // Whether we have seen the end of the file.
     private boolean eof;
 

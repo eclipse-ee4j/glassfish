@@ -19,15 +19,15 @@ package com.sun.ejb.spi.container;
 import jakarta.ejb.DuplicateKeyException;
 
 /**
- * There are cases where the container would need to interact with the 
+ * There are cases where the container would need to interact with the
  * persistence manager. Some known cases are listed below
- * 1. provide the user with a mechanism to flush changes to the database 
- *    at the end of a method with out waiting until the end of the transaction. 
- * 2. for read only beans provide a mechanism to have the master copy of the bean  
+ * 1. provide the user with a mechanism to flush changes to the database
+ *    at the end of a method with out waiting until the end of the transaction.
+ * 2. for read only beans provide a mechanism to have the master copy of the bean
  *    sync up with the database record.
  *
  * Currently the bean concrete implementation that is created as part of the codegen
- * would implement this interface. 
+ * would implement this interface.
  *
  * @author Pramod Gopinath
  */
@@ -36,12 +36,12 @@ import jakarta.ejb.DuplicateKeyException;
 public interface BeanStateSynchronization {
     /**
      * Provides a mechanism to flush changes to the database w/o waiting for
-     * the end of the transaction, based on some descriptor values set by the user. 
+     * the end of the transaction, based on some descriptor values set by the user.
      * The container would call this method in the postInvoke(), only if the flush
-     * is enabled for the current method and there were no other exceptions set 
+     * is enabled for the current method and there were no other exceptions set
      * into inv.exception.
      */
-    public void ejb__flush() 
+    public void ejb__flush()
         throws DuplicateKeyException;
 
     /**

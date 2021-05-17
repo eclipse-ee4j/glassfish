@@ -26,7 +26,7 @@ import org.glassfish.grizzly.http.util.Ascii;
  */
 public class HttpUtils {
 
-    
+
     private final static String CSS =
             "H1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} " +
             "H2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} " +
@@ -36,7 +36,7 @@ public class HttpUtils {
             "P {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;}" +
             "A {color : black;}" +
             "HR {color : #525D76;}";
- 
+
     /**
      * Specialized utility method: find a sequence of lower case bytes inside
      * a {@link ByteBuffer}.
@@ -44,19 +44,19 @@ public class HttpUtils {
     public static int findBytes(ByteBuffer byteBuffer, byte[] b) {
         int curPosition = byteBuffer.position();
         int curLimit = byteBuffer.limit();
-      
+
         if (byteBuffer.position() == 0){
             throw new IllegalStateException("Invalid state");
         }
-       
+
         byteBuffer.position(0);
         byteBuffer.limit(curPosition);
-        try {                         
+        try {
             byte first = b[0];
             int start = 0;
             int end = curPosition;
 
-            // Look for first char 
+            // Look for first char
             int srcEnd = b.length;
 
             for (int i = start; i <= (end - srcEnd); i++) {
@@ -72,10 +72,10 @@ public class HttpUtils {
             return -1;
         } finally {
             byteBuffer.limit(curLimit);
-            byteBuffer.position(curPosition);                
+            byteBuffer.position(curPosition);
         }
     }
-    
+
     public static String getErrorPage(String serverName, String message, String errorCode) {
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
@@ -94,6 +94,6 @@ public class HttpUtils {
         sb.append(serverName).append("</h3></body></html>");
         return sb.toString();
     }
-    
+
 }
 

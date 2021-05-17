@@ -31,34 +31,34 @@ public class SimpleBMPClient {
     public static void main(String[] args)
         throws Exception {
 
-	SimpleBMPClient client = new SimpleBMPClient();
-	client.runTest();
+    SimpleBMPClient client = new SimpleBMPClient();
+    client.runTest();
     }
 
     public void runTest() throws Exception {
-     
-	String testSuite = "ContAuthTX ";
+
+    String testSuite = "ContAuthTX ";
 
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
-	SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
+    SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
         javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP simpleBMP = simpleBMPHome.create();
         System.out.println(" Will Fail till a better XA driver is integrated into Derby");
-	stat.addDescription("JDBC Container Authentication TX test");
+    stat.addDescription("JDBC Container Authentication TX test");
         if ( simpleBMP.test1() ) {
-	    stat.addStatus(testSuite+"test1 : ", stat.PASS);
-	} else {
-	    stat.addStatus(testSuite+"test1 : ", stat.FAIL);
-	}
-	if ( simpleBMP.test2() ) {
-	    stat.addStatus(testSuite+"test2 : ", stat.PASS);
-	} else {
-	    stat.addStatus(testSuite+"test2 : ", stat.FAIL);
-	}
+        stat.addStatus(testSuite+"test1 : ", stat.PASS);
+    } else {
+        stat.addStatus(testSuite+"test1 : ", stat.FAIL);
+    }
+    if ( simpleBMP.test2() ) {
+        stat.addStatus(testSuite+"test2 : ", stat.PASS);
+    } else {
+        stat.addStatus(testSuite+"test2 : ", stat.FAIL);
+    }
 
-	System.out.println("jdbc contauthtx status: ");
-	stat.printSummary();
+    System.out.println("jdbc contauthtx status: ");
+    stat.printSummary();
     }
 }

@@ -33,9 +33,9 @@ public class InterceptorB {
 
     // around-invoke declared in ejb-jar.xml
     Object aroundInvoke(InvocationContext ctx)
-	        throws Exception {
+            throws Exception {
         Common.aroundInvokeCalled(ctx, "B");
         return ctx.proceed();
     }
-   
+
 }

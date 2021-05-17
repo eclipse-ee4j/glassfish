@@ -56,7 +56,7 @@ public class FlashlightUtils {
                 setDTraceEnabled(Boolean.parseBoolean(monConfig.getDtraceEnabled()));
                 setMonitoringEnabled(Boolean.parseBoolean(monConfig.getMonitoringEnabled()));
 
-                // order mattrs.  the next method is depending on the previous 
+                // order mattrs.  the next method is depending on the previous
                 //methods having been run already...
                 setDTraceAvailabilty();
             }

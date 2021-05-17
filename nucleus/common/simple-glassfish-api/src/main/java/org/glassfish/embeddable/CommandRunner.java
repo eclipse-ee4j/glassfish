@@ -17,7 +17,7 @@
 package org.glassfish.embeddable;
 
 /**
- * GlassFish has a very sophisticated command line interface (CLI) viz., 
+ * GlassFish has a very sophisticated command line interface (CLI) viz.,
  * 'asadmin' to executive administrative commands.
  *
  * <p/>This is a programmatic interface equivalent to 'asadmin'.

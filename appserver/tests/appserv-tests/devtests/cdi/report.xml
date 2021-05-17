@@ -29,8 +29,8 @@
             <xslt style="${stylesheet}" in="${xmlfile}" out="${htmlfile}" basedir="." destdir="." failOnNoResources="false" />
         </then>
     </if>
-      
-    
+
+
     <antcall target="report-sh" />
 </target>
 

@@ -26,7 +26,7 @@ import jakarta.ejb.PrePassivate;
 import jakarta.ejb.PostActivate;
 
 public class BaseInterceptor
-	implements java.io.Serializable {
+    implements java.io.Serializable {
 
     protected static final String BASE_INTERCEPTOR_NAME = "BaseInterceptor";
 
@@ -41,9 +41,9 @@ public class BaseInterceptor
 
     @PostConstruct
     private void basePostConstruct(InvocationContext ctx)
-    	throws RuntimeException {
-	    postConstructList = new ArrayList<String>();
-	    postConstructList.add(BASE_INTERCEPTOR_NAME);
+        throws RuntimeException {
+        postConstructList = new ArrayList<String>();
+        postConstructList.add(BASE_INTERCEPTOR_NAME);
         ctx.getContextData().put(getName(), this);
         basePCCount++;
         System.out.println("GGGG: @PostConstruct for: " + this.getClass().getName());
@@ -59,24 +59,24 @@ public class BaseInterceptor
 
     @AroundInvoke
     public Object baseAroundInvoke(InvocationContext ctx)
-   		throws Exception
+           throws Exception
     {
-	    aroundInvokeList = new ArrayList<String>();
-	    aroundInvokeList.add(BASE_INTERCEPTOR_NAME);
-		ctx.getContextData().put(getName(), this);
-		baseAICount++;
-    	return ctx.proceed();
+        aroundInvokeList = new ArrayList<String>();
+        aroundInvokeList.add(BASE_INTERCEPTOR_NAME);
+        ctx.getContextData().put(getName(), this);
+        baseAICount++;
+        return ctx.proceed();
     }
 
     @PrePassivate
     public void prePassivate(InvocationContext ctx) {
-	prePassivateCount++;
-	}
+    prePassivateCount++;
+    }
 
     @PostActivate
     public void postActivate(InvocationContext ctx) {
-	postActivateCount++;
-	}
+    postActivateCount++;
+    }
 
 
     String getName() {

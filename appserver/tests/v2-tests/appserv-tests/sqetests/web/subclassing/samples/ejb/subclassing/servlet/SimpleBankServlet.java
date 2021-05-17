@@ -11,16 +11,16 @@
 package samples.ejb.subclassing.servlet;
 
 import java.io.*;
-import java.util.*; 
-import jakarta.servlet.*; 
-import javax.naming.*; 
-import jakarta.servlet.http.*; 
+import java.util.*;
+import jakarta.servlet.*;
+import javax.naming.*;
+import jakarta.servlet.http.*;
 import javax.rmi.PortableRemoteObject;
-import jakarta.ejb.*; 
+import jakarta.ejb.*;
 
-import samples.ejb.subclassing.ejb.*; 
+import samples.ejb.subclassing.ejb.*;
 
-public class SimpleBankServlet extends HttpServlet {  
+public class SimpleBankServlet extends HttpServlet {
 
 
   InitialContext initContext = null;
@@ -37,14 +37,14 @@ public class SimpleBankServlet extends HttpServlet {
     doLookup();
   }
 
-  public void doGet (HttpServletRequest request,HttpServletResponse response) 
-        throws ServletException, IOException { 
+  public void doGet (HttpServletRequest request,HttpServletResponse response)
+        throws ServletException, IOException {
     doPost(request, response);
-  }  
+  }
 
-  /** handles the HTTP POST operation **/ 
-  public void doPost (HttpServletRequest request,HttpServletResponse response) 
-        throws ServletException, IOException { 
+  /** handles the HTTP POST operation **/
+  public void doPost (HttpServletRequest request,HttpServletResponse response)
+        throws ServletException, IOException {
     System.out.println("SimpleBankServlet is executing");
     String SSN = request.getParameter("SSN");
 
@@ -59,14 +59,14 @@ public class SimpleBankServlet extends HttpServlet {
     String zipCode = "";
     long currentSavingsBalance = 0;
     long currentCheckingBalance = 0;
-     
+
     String action = request.getParameter("action");
     if (action.equals("Create"))
     {
       message = "Add Customer";
       jsp = "/SimpleBankAdd.jsp";
     }
-    else if (action.equals("Add Customer")) 
+    else if (action.equals("Add Customer"))
     {
       System.out.println("Add Customer button pressed");
       SSN = request.getParameter("SSN");
@@ -121,7 +121,7 @@ public class SimpleBankServlet extends HttpServlet {
       }
       message = "Customer Deleted.";
       jsp = "/SimpleBankMessage.jsp";
-    }  
+    }
 
 
     else if (action.equals("Update"))
@@ -198,7 +198,7 @@ public class SimpleBankServlet extends HttpServlet {
     RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(jsp);
     dispatcher.include(request, response);
     return;
-  } 
+  }
 
   public void doLookup()
   {

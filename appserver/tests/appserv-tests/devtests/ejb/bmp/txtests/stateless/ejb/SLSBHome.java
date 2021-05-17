@@ -23,6 +23,6 @@ import jakarta.ejb.CreateException;
 public interface SLSBHome
     extends EJBHome
 {
-	SLSB create()
+    SLSB create()
         throws RemoteException, CreateException;
 }

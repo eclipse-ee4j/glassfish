@@ -32,8 +32,8 @@ public class AdminObjectResourceTest extends BaseTest
     static final String kResAdapter     = "abcAdapter";
     static final String kObjectType     = "user";
 
-    public AdminObjectResourceTest(final String user, 
-        final String password, final String host, final int port, 
+    public AdminObjectResourceTest(final String user,
+        final String password, final String host, final int port,
         final String jndiName, final String resType, final String resAdapter)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -41,11 +41,11 @@ public class AdminObjectResourceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateAdminObjectResourceCmd createCmd = 
-                cmdFactory.createCreateAdminObjectResourceCmd(jndiName, 
+        final CreateAdminObjectResourceCmd createCmd =
+                cmdFactory.createCreateAdminObjectResourceCmd(jndiName,
                         resType, resAdapter, getOptional());
 
-        final DeleteAdminObjectResourceCmd deleteCmd = 
+        final DeleteAdminObjectResourceCmd deleteCmd =
                 cmdFactory.createDeleteAdminObjectResourceCmd(jndiName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -67,14 +67,14 @@ public class AdminObjectResourceTest extends BaseTest
 
     public static void main(String[] args) throws Exception
     {
-        new AdminObjectResourceTest("admin", "password", "localhost", 8686, 
-                kJNDIName, kResType, kResAdapter).run(); 
+        new AdminObjectResourceTest("admin", "password", "localhost", 8686,
+                kJNDIName, kResType, kResAdapter).run();
     }
 
     private Map getOptional()
     {
         final Map optional = new HashMap();
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
                 //kObjectType);
         return optional;
     }

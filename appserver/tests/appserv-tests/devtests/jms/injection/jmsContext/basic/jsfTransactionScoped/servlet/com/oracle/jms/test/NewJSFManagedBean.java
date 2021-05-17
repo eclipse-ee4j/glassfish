@@ -44,7 +44,7 @@ public class NewJSFManagedBean implements java.io.Serializable {
     @JMSSessionMode(JMSContext.AUTO_ACKNOWLEDGE)
     private JMSContext jmsContext;
 
-    @Inject 
+    @Inject
     UserTransaction ut;
 
     private static String transactionScope = "around TransactionScoped";
@@ -54,7 +54,7 @@ public class NewJSFManagedBean implements java.io.Serializable {
      */
     public NewJSFManagedBean() {
     }
-    
+
     public String getMessage() {
         String context = "";
         try {
@@ -70,11 +70,11 @@ public class NewJSFManagedBean implements java.io.Serializable {
             }
             return text;
         } catch (Exception e) {
-            try {                
+            try {
                 ut.rollback();
             } catch (Exception ex) {
                 e.printStackTrace();
-            } 
+            }
             throw new RuntimeException(e);
         }
     }

@@ -50,7 +50,7 @@ public class LogViewHandlers {
      * QUERY_STRING parameters that should be passed to the REST logging
      * endpoint to make a query with the given constraints.</p>
      *
-     * @param	context	The HandlerContext.
+     * @param    context    The HandlerContext.
      */
     @Handler(id = "gf.getLogQueryAttributes",
             input = {
@@ -95,7 +95,7 @@ public class LogViewHandlers {
         String instanceName = (String) handlerCtx.getInputValue("InstanceName");
 
         notNullStringPut(attMap, "instanceName", instanceName);
-        
+
         if ((instanceName != null)) {
             if (logFileName != null) {
             Date from;
@@ -153,13 +153,13 @@ public class LogViewHandlers {
                 // Add custom loggers
                 if ((customLoggers != null) && (customLoggers.toString().trim().length() != 0)) {
                     String customLoggerList = customLoggers.toString().trim();
-                    
+
                     for (String delim : CUSTOM_LOGGER_DELIMITERS) {
                         customLoggerList = customLoggerList.replace(delim, ",");
                     }
                     listOfModules += sep + customLoggerList;
                 }
-                
+
                 if (!listOfModules.isEmpty()) {
                     attMap.put("listOfModules", listOfModules);
                 }
@@ -210,7 +210,7 @@ public class LogViewHandlers {
      * QUERY_STRING parameters that should be passed to the REST logging
      * endpoint to make a query with the given constraints.</p>
      *
-     * @param	context	The HandlerContext.
+     * @param    context    The HandlerContext.
      */
     @Handler(id = "gf.processLogRecords",
             input = {
@@ -288,11 +288,11 @@ public class LogViewHandlers {
     /**
      * This method converts a date/time string to a Date.
      *
-     * @param	request	The ServletRequest
-     * @param	date	The date as a String (or the date/time as a Date)
-     * @param	time	The time as a String (or null)
-     * @param	vd	The ViewDescriptor (for exception handling)
-     * @param	view	The View (for exception handling)
+     * @param    request    The ServletRequest
+     * @param    date    The date as a String (or the date/time as a Date)
+     * @param    time    The time as a String (or null)
+     * @param    vd    The ViewDescriptor (for exception handling)
+     * @param    view    The View (for exception handling)
      */
     protected static Date convertDateTime(HandlerContext handlerCtx, Object date, Object time) {
         // If Date is already a Date, then do nothing

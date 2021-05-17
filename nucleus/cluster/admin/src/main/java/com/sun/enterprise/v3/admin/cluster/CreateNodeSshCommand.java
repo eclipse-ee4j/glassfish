@@ -45,8 +45,8 @@ import org.glassfish.hk2.api.PerLookup;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Nodes.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-node-ssh", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-node-ssh",
         description="Create Node SSH")
 })
 public class CreateNodeSshCommand extends CreateRemoteNodeCommand {

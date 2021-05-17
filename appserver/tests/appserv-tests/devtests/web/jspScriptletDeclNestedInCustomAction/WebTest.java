@@ -42,7 +42,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4869146");
         WebTest webTest = new WebTest(args);
@@ -61,7 +61,7 @@ public class WebTest {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 stat.addStatus("Wrong response code. Expected: 200"
                                + ", received: " + responseCode, stat.FAIL);
             } else {
@@ -76,7 +76,7 @@ public class WebTest {
                 }
 
                 if (!EXPECTED.equals(lastLine)) {
-                    stat.addStatus("Wrong response body. Expected: " 
+                    stat.addStatus("Wrong response body. Expected: "
                                    + EXPECTED + ", received: " + lastLine,
                                    stat.FAIL);
                 } else {

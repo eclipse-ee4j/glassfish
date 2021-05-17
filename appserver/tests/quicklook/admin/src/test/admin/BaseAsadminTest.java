@@ -30,11 +30,11 @@ import org.testng.annotations.Parameters;
  * @since GlassFish v3 Prelude
  */
 public class BaseAsadminTest {
-    
+
     String adminUrl;
     String adminUser;
     String adminPassword;
-    
+
     @BeforeClass
     @Parameters({"admin.url", "admin.user", "admin.password"})
     void setUpEnvironment(String url, String adminUser, String adminPassword) {
@@ -42,7 +42,7 @@ public class BaseAsadminTest {
         this.adminUser     = adminUser;
         this.adminPassword = adminPassword;
     }
-    
+
     protected Manifest invokeURLAndGetManifest(String urls) {
         try {
             URL url = new URL(urls);

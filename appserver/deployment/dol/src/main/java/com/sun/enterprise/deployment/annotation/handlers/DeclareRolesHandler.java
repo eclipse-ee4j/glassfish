@@ -39,13 +39,13 @@ import java.lang.annotation.Annotation;
 @Service
 @AnnotationHandlerFor(DeclareRoles.class)
 public class DeclareRolesHandler extends AbstractCommonAttributeHandler {
-    
+
     public DeclareRolesHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
-        
+
         DeclareRoles rolesRefAn = (DeclareRoles)ainfo.getAnnotation();
 
         for (EjbContext ejbContext : ejbContexts) {
@@ -64,11 +64,11 @@ public class DeclareRolesHandler extends AbstractCommonAttributeHandler {
             }
         }
         return getDefaultProcessedResult();
-    }   
+    }
 
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             WebComponentContext[] webCompContexts)
-            throws AnnotationProcessorException { 
+            throws AnnotationProcessorException {
         WebBundleDescriptor webBundleDesc =
             webCompContexts[0].getDescriptor().getWebBundleDescriptor();
         return processAnnotation(ainfo, webBundleDesc);
@@ -92,8 +92,8 @@ public class DeclareRolesHandler extends AbstractCommonAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

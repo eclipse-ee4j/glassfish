@@ -148,7 +148,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,"Resource Exception while creating resource",ex);
             }
-            
+
             if (ex.getLinkedException() != null) {
                 _logger.log(Level.WARNING,
                         "poolmgr.create_resource_linked_error", ex

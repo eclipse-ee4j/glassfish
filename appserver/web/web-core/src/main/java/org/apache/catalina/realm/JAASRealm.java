@@ -129,7 +129,7 @@ public class JAASRealm
 
     // ------------------------------------------------------------- Properties
 
-    
+
     /**
      * setter for the appName member variable
      * @deprecated JAAS should use the Engine ( domain ) name and webpp/host overrides
@@ -137,7 +137,7 @@ public class JAASRealm
     public void setAppName(String name) {
         appName = name;
     }
-    
+
     /**
      * getter for the appName member variable
      */

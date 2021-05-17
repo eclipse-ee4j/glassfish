@@ -29,7 +29,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class PublicAdminAdapter extends AdminAdapter {
 
-    public final static String VS_NAME="__asadmin";    
+    public final static String VS_NAME="__asadmin";
     public final static String PREFIX_URI = "/" + VS_NAME;
 
     public PublicAdminAdapter() {

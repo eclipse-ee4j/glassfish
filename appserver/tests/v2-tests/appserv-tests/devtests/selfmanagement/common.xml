@@ -123,10 +123,10 @@
         <arg line="--action ${action.mbean.name}"/>
         <arg line="--eventtype ${selfmanagement.rule.eventtype}"/>
         <arg line="--eventloglevel ${selfmanagement.rule.eventloglevel}"/>
-        <arg line="--eventproperties ${selfmanagement.rule.eventproperties}"/> 
+        <arg line="--eventproperties ${selfmanagement.rule.eventproperties}"/>
         <arg line="${selfmanagement.rule.name}"/>
     </exec>
-</target> 
+</target>
 
 <target name="undeploy-selfmgmt-rule-common" depends="init-common">
     <antcall target="delete-event-mbean-common" />
@@ -152,7 +152,7 @@
         <arg line="${event.mbean.name}"/>
     </exec>
 </target>
-                                                                                                                                               
+
 <target name="delete-action-mbean-common" depends="init-common">
 <echo message="deleted Action MBean ${action.mbean.name}"
     level="verbose"/>
@@ -185,7 +185,7 @@
     <arg line="-client ${appclient.jar}"/>
     <arg line="${as.props}"/>
   </exec>
-                                                                                                                                               
+
 <!-- confirming report generation... -->
 <!--    <antcall target="checkReporting-common">
         <param name="test.name" value="${appname}"/>

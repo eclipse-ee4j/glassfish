@@ -26,6 +26,6 @@
     <packaging>pom</packaging>
     <name>Basic tests for testing org.glassfish.embeddable APIs</name>
     <modules>
-    	<module>lifecycle</module>
+        <module>lifecycle</module>
     </modules>
 </project>

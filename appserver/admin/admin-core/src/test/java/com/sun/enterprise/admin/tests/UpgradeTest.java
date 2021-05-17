@@ -42,10 +42,10 @@ public class UpgradeTest extends ConfigApiTest {
     public void setup() {
         Domain domain = getHabitat().getService(Domain.class);
         assertTrue(domain!=null);
-        
+
         // perform upgrade
         for (ConfigurationUpgrade upgrade : getHabitat().<ConfigurationUpgrade>getAllServices(ConfigurationUpgrade.class)) {
-            Logger.getAnonymousLogger().info("running upgrade " + upgrade.getClass());    
+            Logger.getAnonymousLogger().info("running upgrade " + upgrade.getClass());
         }
     }
 

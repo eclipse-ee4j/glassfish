@@ -28,7 +28,7 @@
         <outbound-resourceadapter>
             <connection-definition>
                 <managedconnectionfactory-class>com.sun.jdbcra.spi.DSManagedConnectionFactory</managedconnectionfactory-class>
-                
+
                 <!-- There can be any number of these elements including 0 -->
                 <config-property>
                     <config-property-name>User</config-property-name>
@@ -45,7 +45,7 @@
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value>dbpassword</config-property-value>
                 </config-property>
-                <config-property>    
+                <config-property>
                     <config-property-name>URL</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value>jdbc:derby://localhost:1527/testdb;create=true</config-property-value>
@@ -55,7 +55,7 @@
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value>Oracle thin driver Datasource</config-property-value>
                  </config-property>
-                <config-property>    
+                <config-property>
                     <config-property-name>ClassName</config-property-name>
                     <config-property-type>java.lang.String</config-property-type>
                     <config-property-value>org.apache.derby.jdbc.ClientDataSource40</config-property-value>
@@ -72,7 +72,7 @@
                 <connection-interface>java.sql.Connection</connection-interface>
 
                 <connection-impl-class>com.sun.jdbcra.spi.ConnectionHolder</connection-impl-class>
-                
+
             </connection-definition>
 
             <transaction-support>LocalTransaction</transaction-support>

@@ -64,7 +64,7 @@
                value="-keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://localhost:8080/jsr208-integration-web-client/webservice/CalculatorService?WSDL"/>
     </antcall>
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="webclient/**"/>
       <copy file="./client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="./client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
@@ -111,11 +111,11 @@
         <antcall target="undeploy-war-common"/>
         <antcall target="undeploy-client"/>
     </target>
-    
+
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">

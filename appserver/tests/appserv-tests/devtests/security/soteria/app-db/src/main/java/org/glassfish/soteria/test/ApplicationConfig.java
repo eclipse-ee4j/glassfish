@@ -21,24 +21,24 @@ import jakarta.inject.Named;
 import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 
 @DatabaseIdentityStoreDefinition(
-    dataSourceLookup="${'jdbc/__default'}", 
+    dataSourceLookup="${'jdbc/__default'}",
     callerQuery="#{'select password from caller where name = ?'}",
     groupsQuery="select group_name from caller_groups where caller_name = ?",
     hashAlgorithm = PlaintextPasswordHash.class,
     hashAlgorithmParameters = {
-        "foo=bar", 
-        "kax=zak", 
+        "foo=bar",
+        "kax=zak",
         "foox=${'iop'}",
         "${applicationConfig.dyna}"
-        
+
     } // just for test / example
 )
 @ApplicationScoped
 @Named
 public class ApplicationConfig {
-    
+
     public String[] getDyna() {
         return new String[] {"dyn=1","dyna=2","dynam=3"};
     }
-    
+
 }

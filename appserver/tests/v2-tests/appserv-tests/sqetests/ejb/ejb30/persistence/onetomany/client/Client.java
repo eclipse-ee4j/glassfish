@@ -25,7 +25,7 @@ import pe.ejb.ejb30.persistence.toplinksample.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
-    
+
     private static @EJB StatelessInterface sless;
     List rows;
     Iterator i;
@@ -34,11 +34,11 @@ public class Client {
             new SimpleReporterAdapter("appserv-tests");
 
     public static String testSuiteID;
-    
+
     public static void main(String[] args) {
-     
+
      if(args.length==1) {
-		 testSuiteID=args[0];
+         testSuiteID=args[0];
             }
        System.out.println("The TestSuite ID : " + testSuiteID);
        System.out.println("The args length is : " + args.length);
@@ -47,9 +47,9 @@ public class Client {
         client.doTest();
         stat.printSummary("ejb3_slsb_persistenceID");
     }
-    
+
     public Client(String[] args) {}
-    
+
     public void doTest() {
         try{
 
@@ -69,11 +69,11 @@ public class Client {
                 System.out.println("Client: getting customer orders");
                 Collection c = sless.getCustomerOrders(1);
                 if(c==null){
-                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getCustomerOrders:relationshipTest", 
+                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getCustomerOrders:relationshipTest",
                             stat.FAIL);
                     System.out.println("Client: got NULL Orders");
                 } else {
-                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getCustomerOrders:relationshipTest", 
+                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getCustomerOrders:relationshipTest",
                             stat.PASS);
                     System.out.println("Client: got Orders of class:"+c.getClass().getName());
                     i=c.iterator();
@@ -91,7 +91,7 @@ public class Client {
                 rows=sless.getCustomers("Alice", "Santa Clara");
                 if(rows == null){
                     stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getCustomers", stat.FAIL);
-                } else { 
+                } else {
                     stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getCustomers", stat.PASS);
                     System.out.println("Client: Got Rows. Listing...");
                     i=rows.iterator();
@@ -109,7 +109,7 @@ public class Client {
                 rows=sless.getAllCustomers();
                 if(rows == null){
                     stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllCustomers", stat.FAIL);
-                } else { 
+                } else {
                     stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllCustomers", stat.PASS);
                     System.out.println("Client: Got allCustomer rows. Listing...");
                     i=rows.iterator();
@@ -127,7 +127,7 @@ public class Client {
                 rows=sless.getAllItemsByName();
                 if(rows == null){
                     stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllItemsByName", stat.FAIL);
-                } else { 
+                } else {
                     stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllItemsByName", stat.PASS);
                     System.out.println("Client: Got allItemsByName rows. Listing...");
                     i=rows.iterator();
@@ -144,10 +144,10 @@ public class Client {
                 //--getAllOrdersByItem test
                 rows=sless.getAllItemsByName();
                 if(rows == null){
-                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllOrdersByItem", 
+                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllOrdersByItem",
                             stat.FAIL);
-                } else { 
-                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllOrdersByItem", 
+                } else {
+                    stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence getAllOrdersByItem",
                             stat.PASS);
                     System.out.println("Client: Got AllOrdersByItem rows. Listing...");
                     i=rows.iterator();
@@ -181,5 +181,5 @@ public class Client {
             stat.addStatus(testSuiteID+""+"ejb3_slsb_persistence ALLTESTS", stat.FAIL);
         }
         return;
-    }   
+    }
 }

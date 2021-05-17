@@ -25,8 +25,8 @@ import jakarta.ejb.*;
  */
 
 public interface SPSessionHome extends jakarta.ejb.EJBHome {
-    
+
     public Data.SPSession create()
     throws jakarta.ejb.CreateException, java.rmi.RemoteException;
-    
+
 }

@@ -27,7 +27,7 @@ import javax.xml.rpc.server.ServiceLifecycle;
 public class HelloImpl implements jakarta.servlet.SingleThreadModel, ServiceLifecycle {
 
     private boolean gotInit = false;
-   
+
     public void init(Object o) {
         System.out.println("Got ServiceLifecycle::init call " + o);
         gotInit = true;

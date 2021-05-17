@@ -199,7 +199,7 @@ public interface MonitoringService extends ConfigExtension, PropertyBag {
             // Order of precedence is to first check module-monitoring-levels
             // then container-monitoring.
 
-            // module-monitoring-levels           
+            // module-monitoring-levels
             populateGetMethods();
 
             // strip - part from name

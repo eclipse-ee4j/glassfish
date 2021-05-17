@@ -77,7 +77,7 @@ public final class JMXStartupService implements PostConstruct {
     }
 
     private static final Logger JMX_LOGGER = Util.JMX_LOGGER;
-    
+
     @Inject
     private MBeanServer mMBeanServer;
     @Inject
@@ -89,9 +89,9 @@ public final class JMXStartupService implements PostConstruct {
     private ServiceLocator mHabitat;
     @Inject
     Events mEvents;
-     
+
     static ServiceLocator habitat = Globals.getDefaultHabitat();
-    
+
     @Inject
     private ServerEnvironment serverEnv;
 
@@ -99,24 +99,24 @@ public final class JMXStartupService implements PostConstruct {
 
     private volatile JMXConnectorStatus jmxConnectorstatus = JMXConnectorStatus.STOPPED;
     private Object lock = new Object();
-    
+
     private volatile BootAMX mBootAMX;
     private volatile JMXConnectorsStarterThread mConnectorsStarterThread;
-    
-    
+
+
     @LogMessageInfo(message = "JMXStartupService and JMXConnectors have been shut down.", level="INFO")
     private static final String JMX_STARTUPSERVICE_SHUTDOWN=Util.LOG_PREFIX + "00001";
-    
+
     @LogMessageInfo(message="JMXStartupService: Stopped JMXConnectorServer: {0}", level="INFO")
     private static final String JMX_STARTUPSERVICE_STOPPED_JMX_CONNECTOR=Util.LOG_PREFIX + "00002";
-    
-    @LogMessageInfo(message="MBean Registration Exception thrown {0}", level="SEVERE", 
-            cause="JMX Connector Server MBean could not be unregistered.", 
+
+    @LogMessageInfo(message="MBean Registration Exception thrown {0}", level="SEVERE",
+            cause="JMX Connector Server MBean could not be unregistered.",
             action="Take appropriate action based on the exception message.")
     private static final String JMX_MBEAN_REG_EXCEPTION=Util.LOG_PREFIX + "00003";
 
-    @LogMessageInfo(message="Instance Not Found Exception thrown {0}", level="SEVERE", 
-            cause="JMX Connector Server MBean instance not found.", 
+    @LogMessageInfo(message="Instance Not Found Exception thrown {0}", level="SEVERE",
+            cause="JMX Connector Server MBean instance not found.",
             action="Take appropriate action based on the exception message.")
     private static final String JMX_INSTANCE_NOT_FOUND_EXCEPTION=Util.LOG_PREFIX + "00004";
 
@@ -281,7 +281,7 @@ public final class JMXStartupService implements PostConstruct {
             final Ssl ssl = connConfig.getSsl();
 
             JMXConnectorServer server = null;
-            final BootAMXListener listener = mNeedBootListeners ? 
+            final BootAMXListener listener = mNeedBootListeners ?
                     new BootAMXListener(mAMXBooterNew) : null;
             if (protocol.equals("rmi_jrmp")) {
                 starter = new RMIConnectorStarter(mMBeanServer, address, port,

@@ -56,7 +56,7 @@ public class WebTest {
             os.write("\n".getBytes());
 
             try (InputStream is = s.getInputStream(); BufferedReader bis = new BufferedReader(new InputStreamReader(is))) {
-                
+
                 String line = null;
                 int count = 0;
                 while ((line = bis.readLine()) != null) {
@@ -65,7 +65,7 @@ public class WebTest {
                         count++;
                     }
                 }
-    
+
                 if (count == 2) {
                     stat.addStatus(TEST_NAME, stat.PASS);
                 } else {

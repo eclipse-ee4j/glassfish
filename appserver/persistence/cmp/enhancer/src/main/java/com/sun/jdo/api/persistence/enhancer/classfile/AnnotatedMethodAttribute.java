@@ -81,8 +81,8 @@ public class AnnotatedMethodAttribute extends ClassAttribute {
    * Constructor
    */
   public AnnotatedMethodAttribute(
-	ConstUtf8 nameAttr, short version, short annFlags,
-	InsnTarget[] annRanges) {
+    ConstUtf8 nameAttr, short version, short annFlags,
+    InsnTarget[] annRanges) {
     super(nameAttr);
     attrVersion = version;
     annotationFlags = annFlags;
@@ -92,7 +92,7 @@ public class AnnotatedMethodAttribute extends ClassAttribute {
   /* package local methods */
 
   static AnnotatedMethodAttribute read(
-	ConstUtf8 attrName, DataInputStream data, CodeEnv env)
+    ConstUtf8 attrName, DataInputStream data, CodeEnv env)
     throws IOException {
     short version = data.readShort();
     short annFlags = data.readShort();
@@ -120,7 +120,7 @@ public class AnnotatedMethodAttribute extends ClassAttribute {
     else {
       out.writeShort(annotationRanges.length / 2);
       for (int i=0; i<annotationRanges.length; i++)
-	out.writeShort(annotationRanges[i].offset());
+    out.writeShort(annotationRanges[i].offset());
     }
   }
 
@@ -131,9 +131,9 @@ public class AnnotatedMethodAttribute extends ClassAttribute {
     if (annotationRanges != null) {
         out.println("Annotations: ");//NOI18N
       for (int i=0; i<annotationRanges.length/2; i++) {
-	ClassPrint.spaces(out, indent+2);
-	out.println(annotationRanges[i*2] + " to " +//NOI18N
-		    annotationRanges[i*2+1]);
+    ClassPrint.spaces(out, indent+2);
+    out.println(annotationRanges[i*2] + " to " +//NOI18N
+            annotationRanges[i*2+1]);
       }
     }
   }

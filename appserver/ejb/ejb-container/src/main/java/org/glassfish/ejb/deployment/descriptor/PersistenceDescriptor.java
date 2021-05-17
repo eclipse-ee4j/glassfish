@@ -36,7 +36,7 @@ import java.util.Locale;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.Descriptor;
 
-/** 
+/**
  * This class contains information about the persistent state
  * (abstract persistence schema)
  * for EJB2.0 CMP EntityBeans and Join Objects.
@@ -45,27 +45,27 @@ import org.glassfish.deployment.common.Descriptor;
  */
 
 public final class PersistenceDescriptor extends Descriptor {
-    
+
     private Set<FieldDescriptor> cmpFields = new HashSet<FieldDescriptor>();
 
-    // there can be 0 or more pkey fields 
-    // This set contains FieldDescriptors for fields from bean or pkey class 
-    private Set pkeyFields = new HashSet(); 
+    // there can be 0 or more pkey fields
+    // This set contains FieldDescriptors for fields from bean or pkey class
+    private Set pkeyFields = new HashSet();
 
     // true if primkey-field is set or for container-generated pk field
     private boolean pkeyIsOneField = false;
 
     // false for beans with no primkey-field and pk class = Object
-    private boolean pkeyFieldSpecified = true; 
+    private boolean pkeyFieldSpecified = true;
 
     private String primaryKeyClassName;
     private boolean pkeyStuffInitialized = false;
 
     // true for beans whose primary fields are all primitive fields
     private boolean pkeyFieldsAllPrimitive = false;
-	
+
     private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(PersistenceDescriptor.class);
+        new LocalStringManagerImpl(PersistenceDescriptor.class);
 
     private EjbCMPEntityDescriptor parentDesc; //the bean whose persistence I describe
 
@@ -88,15 +88,15 @@ public final class PersistenceDescriptor extends Descriptor {
 
     public PersistenceDescriptor() {
     }
-    
-    /** 
+
+    /**
      * The copy constructor.
      */
     public PersistenceDescriptor(PersistenceDescriptor pers) {
-	super(pers);
+    super(pers);
 
-	this.getCMPFields().addAll(pers.getCMPFields());
-	//this.primaryKeyFieldDesc = pers.primaryKeyFieldDesc;
+    this.getCMPFields().addAll(pers.getCMPFields());
+    //this.primaryKeyFieldDesc = pers.primaryKeyFieldDesc;
     }
 
     public String getCMRFieldReturnType(String field) {
@@ -104,7 +104,7 @@ public final class PersistenceDescriptor extends Descriptor {
         try {
             if( !field.trim().equals("") ) {
                 Class persClass = getPersistentClass();
-                String methodName = "get" + field.substring(0,1).toUpperCase(Locale.US) 
+                String methodName = "get" + field.substring(0,1).toUpperCase(Locale.US)
                     + field.substring(1);
                 Method method = TypeUtil.getMethod
                     (persClass, persClass.getClassLoader(), methodName,
@@ -112,22 +112,22 @@ public final class PersistenceDescriptor extends Descriptor {
                 returnType = method.getReturnType().getName();
             }
         } catch(Throwable t) {
-            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {            
+            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().log(Level.FINE, t.toString(), t);
             }
         }
-        
+
         return returnType;
     }
 
-    /**     
+    /**
      * Called from EjbCMPEntityDescriptor
      * when some classes in this object are updated.
-     */         
+     */
     public boolean classesChanged() {
 
         // XXX Remove any fields marked as persistent that no longer exist
-	// in bean class as getter/setter.
+    // in bean class as getter/setter.
         persistentClass = null;
         stateClass = null;
 
@@ -154,7 +154,7 @@ public final class PersistenceDescriptor extends Descriptor {
         }
 
         FieldDescriptor primKeyFieldDesc = parentDesc.getPrimaryKeyFieldDesc();
-        if( (primKeyFieldDesc != null) && 
+        if( (primKeyFieldDesc != null) &&
             !fieldDescriptors.contains(primKeyFieldDesc) ) {
             parentDesc.setPrimaryKeyFieldDesc(null);
         }
@@ -165,23 +165,23 @@ public final class PersistenceDescriptor extends Descriptor {
 
         // First clone old set of queries
         Hashtable queriesClone = (Hashtable) queries.clone();
-        
+
         queries = new Hashtable();
         initializeAllQueriedMethods();
 
         for (Object o : queriesClone.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             Method oldMethod = (Method)entry.getKey();
-            Method newMethod = findEquivalentMethod(allQueriedMethods, 
+            Method newMethod = findEquivalentMethod(allQueriedMethods,
                                                     oldMethod);
             if( newMethod != null ) {
                 QueryDescriptor oldQuery = (QueryDescriptor) entry.getValue();
-                QueryDescriptor newQuery = 
+                QueryDescriptor newQuery =
                     new QueryDescriptor(oldQuery, newMethod);
                 // Only add to list of methods having queries if
                 // it's still in the class.
                 queries.put(newMethod, newQuery);
-            } 
+            }
         }
 
         // Force the persistence descriptor to regenerate its
@@ -194,8 +194,8 @@ public final class PersistenceDescriptor extends Descriptor {
     /**
      * Search for a matching method in a list of methods
      * that might have been loaded with a different classloader.
-     * Because of this possibility, we can't use 
-     * java.lang.reflect.Method.equals().  
+     * Because of this possibility, we can't use
+     * java.lang.reflect.Method.equals().
      * @return matched method or NULL
      */
     private Method findEquivalentMethod(Collection methods,
@@ -223,11 +223,11 @@ public final class PersistenceDescriptor extends Descriptor {
 
     /**
      * Checks whether two methods that might have been loaded by
-     * different class loaders are equal.  
+     * different class loaders are equal.
      * @param compareDeclaringClass if true, declaring class will
-     * be considered as part of equality test.  
+     * be considered as part of equality test.
      */
-    private boolean methodsEqual(Method m1, Method m2, 
+    private boolean methodsEqual(Method m1, Method m2,
                                  boolean compareDeclaringClass) {
         boolean equal = false;
 
@@ -247,7 +247,7 @@ public final class PersistenceDescriptor extends Descriptor {
 
             Class[] m1ParamTypes = m1.getParameterTypes();
             Class[] m2ParamTypes = m2.getParameterTypes();
-            
+
             if( m1ParamTypes.length != m2ParamTypes.length ) { break; }
 
             equal = true;
@@ -258,7 +258,7 @@ public final class PersistenceDescriptor extends Descriptor {
                     equal = false;
                     break;
                 }
-            } 
+            }
 
         } while(false);
 
@@ -267,17 +267,17 @@ public final class PersistenceDescriptor extends Descriptor {
 
     public void setParentDescriptor(EjbCMPEntityDescriptor parentDesc)
     {
-	this.parentDesc = parentDesc;
+    this.parentDesc = parentDesc;
     }
 
     public Descriptor getParentDescriptor()
     {
-	return parentDesc;
+    return parentDesc;
     }
-   
+
     public EjbBundleDescriptorImpl getEjbBundleDescriptor()
     {
-	 return parentDesc.getEjbBundleDescriptor();
+     return parentDesc.getEjbBundleDescriptor();
     }
 
     /**
@@ -302,66 +302,66 @@ public final class PersistenceDescriptor extends Descriptor {
     /**
      * Return array of CMRFieldInfo objects for all CMR fields.
      */
-    public CMRFieldInfo[] getCMRFieldInfo() 
+    public CMRFieldInfo[] getCMRFieldInfo()
     {
-	if ( cmrFieldInfo == null ) {
-	    try {
-		initCMRFieldStuff();
-	    } catch ( Exception ex ) {
+    if ( cmrFieldInfo == null ) {
+        try {
+        initCMRFieldStuff();
+        } catch ( Exception ex ) {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.invalidDescriptorMappingFailure",
                     new Object[] {ex.toString()});
-		throw new DeploymentException(ex);
-	    }
-	}
-	return cmrFieldInfo;
+        throw new DeploymentException(ex);
+        }
+    }
+    return cmrFieldInfo;
     }
 
-    /** 
+    /**
      * Return the CMRFieldInfo object for the given CMR field
      */
     public CMRFieldInfo getCMRFieldInfoByName(String fieldName)
     {
-	CMRFieldInfo[] cmrf = this.getCMRFieldInfo();
-	for ( int i=0; i<cmrf.length; i++ ) {
-	    if ( cmrf[i].name.equals(fieldName) )
-		return cmrf[i];
-	}
-	throw new DeploymentException("CMRFieldInfo not found for field "+fieldName);
+    CMRFieldInfo[] cmrf = this.getCMRFieldInfo();
+    for ( int i=0; i<cmrf.length; i++ ) {
+        if ( cmrf[i].name.equals(fieldName) )
+        return cmrf[i];
+    }
+    throw new DeploymentException("CMRFieldInfo not found for field "+fieldName);
     }
 
     /**
      * Ensures that persistence descriptor will regenerate its
-     * derived information after changes have been made to 
+     * derived information after changes have been made to
      * persistent characteristics.
      */
     public void invalidate() {
         cmrFieldInfo = null;
-	persFieldInfo = null;
+    persFieldInfo = null;
         fieldInfoInitialized = false;
         pkeyStuffInitialized = false;
     }
 
     private void initCMRFieldStuff()
-	throws Exception
+    throws Exception
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
 
         Set relationships = getRelationships();
-	Iterator it = relationships.iterator();
+    Iterator it = relationships.iterator();
         // set to the biggest possible size when all relationships
         // are self-referencing
-	CMRFieldInfo[] cmrFieldInfo2 = 
+    CMRFieldInfo[] cmrFieldInfo2 =
             new CMRFieldInfo[relationships.size() * 2];
-	int count = 0;
-	while ( it.hasNext() ) { 
-	    RelationshipDescriptor rd = (RelationshipDescriptor)it.next();
-	    RelationRoleDescriptor source = rd.getSource();
-	    RelationRoleDescriptor sink = rd.getSink();
-	    RelationRoleDescriptor myroles[];
-            // if this is a self-referencing relationship, initialize 
+    int count = 0;
+    while ( it.hasNext() ) {
+        RelationshipDescriptor rd = (RelationshipDescriptor)it.next();
+        RelationRoleDescriptor source = rd.getSource();
+        RelationRoleDescriptor sink = rd.getSink();
+        RelationRoleDescriptor myroles[];
+            // if this is a self-referencing relationship, initialize
             // both source and sink cmr fields
-	    if ( source.getPersistenceDescriptor() ==  
+        if ( source.getPersistenceDescriptor() ==
                 sink.getPersistenceDescriptor() ) {
                 myroles = new RelationRoleDescriptor[2];
                 myroles[0] = source;
@@ -370,76 +370,76 @@ public final class PersistenceDescriptor extends Descriptor {
                 myroles = new RelationRoleDescriptor[1];
                 if ( source.getPersistenceDescriptor() == this ) {
                     myroles[0] = source;
-                } else { 
+                } else {
                     myroles[0] = sink;
                 }
             }
-            
+
             // for all relation role elements in myroles, initialize
             // their cmr fields and put them in cmrFieldInfo2
             for (int ii = 0; ii < myroles.length; ii++) {
-	        CMRFieldInfo finfo = new CMRFieldInfo();
-	        cmrFieldInfo2[count++] = finfo;
+            CMRFieldInfo finfo = new CMRFieldInfo();
+            cmrFieldInfo2[count++] = finfo;
 
-	        PersistenceDescriptor partnerPers = 
-		    myroles[ii].getPartner().getPersistenceDescriptor();
+            PersistenceDescriptor partnerPers =
+            myroles[ii].getPartner().getPersistenceDescriptor();
 
-	        // Check if partner has a local interface
-	        EjbCMPEntityDescriptor partner = 
+            // Check if partner has a local interface
+            EjbCMPEntityDescriptor partner =
                     myroles[ii].getPartner().getOwner();
                 if ( !partner.isLocalInterfacesSupported() &&
-		    myroles[ii].getCMRField() != null ) {
-      		    throw new RuntimeException(
+            myroles[ii].getCMRField() != null ) {
+                  throw new RuntimeException(
                         "No local interface for target bean of CMR field");
-	        }
+            }
 
-	        String type; 
-	        if ( myroles[ii].getPartner().getIsMany() == false ) {
-	      	    // 1-1 and many-1
+            String type;
+            if ( myroles[ii].getPartner().getIsMany() == false ) {
+                  // 1-1 and many-1
                     if ( partner.isLocalInterfacesSupported() )
-		        type = partner.getLocalClassName();
-	       	    else 
-                        // a unidirectional relation, partner is 
+                type = partner.getLocalClassName();
+                   else
+                        // a unidirectional relation, partner is
                         // remote-only bean
-		        type = partner.getPrimaryKeyClassName();
-	        }
-	        else {
-	      	    // 1-many and many-many
-		    type = myroles[ii].getCMRFieldType();
-      		    if ( type == null ) { 
-		        // A unidirectional relationship from partner 
+                type = partner.getPrimaryKeyClassName();
+            }
+            else {
+                  // 1-many and many-many
+            type = myroles[ii].getCMRFieldType();
+                  if ( type == null ) {
+                // A unidirectional relationship from partner
                         // to this obj
-		        type = "java.util.Collection";
-    		    }
-	        }
-	        finfo.type = getClass(type);
+                type = "java.util.Collection";
+                }
+            }
+            finfo.type = getClass(type);
 
-	        finfo.name = myroles[ii].getCMRField();
-	        if ( finfo.name == null ) {
-	       	    // A unidirectional relationship from partner to this obj.
-	      	    // We need to maintain a pointer to partner anyway. 
-       		    finfo.name = myroles[ii].composeReverseCmrFieldName();
-	        }
-	        finfo.role = myroles[ii];
-	        myroles[ii].setCMRFieldInfo(finfo);
+            finfo.name = myroles[ii].getCMRField();
+            if ( finfo.name == null ) {
+                   // A unidirectional relationship from partner to this obj.
+                  // We need to maintain a pointer to partner anyway.
+                   finfo.name = myroles[ii].composeReverseCmrFieldName();
+            }
+            finfo.role = myroles[ii];
+            myroles[ii].setCMRFieldInfo(finfo);
 
-	        if ( rd.isOneOne() && fkeyFields != null ) {
-	    	    // set foreign key fields corresponding to this CMR field
-		    PersistentFieldInfo[] cmrFkeyFields;
-      		    PersistentFieldInfo[] partnerPkeyFields =
-					    partnerPers.getPkeyFieldInfo();
-		    cmrFkeyFields = 
-			new PersistentFieldInfo[partnerPkeyFields.length];
-		    for ( int i=0; i<partnerPkeyFields.length; i++ ) {
-		        String fkeyName = "_" + finfo.name + "_" 
-					    + partnerPkeyFields[i].name;
-		        for ( int j=0; j<fkeyFields.length; j++ ) {
-		    	    if ( fkeyFields[j].name.equals(fkeyName) )
-			        cmrFkeyFields[i] = fkeyFields[j];
-		        }
-		    }
-		    finfo.fkeyFields = cmrFkeyFields;
-	        }	
+            if ( rd.isOneOne() && fkeyFields != null ) {
+                // set foreign key fields corresponding to this CMR field
+            PersistentFieldInfo[] cmrFkeyFields;
+                  PersistentFieldInfo[] partnerPkeyFields =
+                        partnerPers.getPkeyFieldInfo();
+            cmrFkeyFields =
+            new PersistentFieldInfo[partnerPkeyFields.length];
+            for ( int i=0; i<partnerPkeyFields.length; i++ ) {
+                String fkeyName = "_" + finfo.name + "_"
+                        + partnerPkeyFields[i].name;
+                for ( int j=0; j<fkeyFields.length; j++ ) {
+                    if ( fkeyFields[j].name.equals(fkeyName) )
+                    cmrFkeyFields[i] = fkeyFields[j];
+                }
+            }
+            finfo.fkeyFields = cmrFkeyFields;
+            }
             }
         }
 
@@ -448,11 +448,11 @@ public final class PersistenceDescriptor extends Descriptor {
         cmrFieldInfo = new CMRFieldInfo[count];
         System.arraycopy(cmrFieldInfo2, 0, cmrFieldInfo, 0, count);
 
-	// Sort cmrFieldInfo in alphabetical order of CMR field name
+    // Sort cmrFieldInfo in alphabetical order of CMR field name
         for ( int i=cmrFieldInfo.length-1; i>0; i-- ) {
             for ( int j=0; j<i; j++ ) {
-                if ( cmrFieldInfo[j].name.compareTo(cmrFieldInfo[j+1].name) 
-									> 0 ) {
+                if ( cmrFieldInfo[j].name.compareTo(cmrFieldInfo[j+1].name)
+                                    > 0 ) {
                     CMRFieldInfo tmp = cmrFieldInfo[j];
                     cmrFieldInfo[j] = cmrFieldInfo[j+1];
                     cmrFieldInfo[j+1] = tmp;
@@ -485,31 +485,31 @@ public final class PersistenceDescriptor extends Descriptor {
     }
 
     /**
-     * Set the FieldDescriptor objects that the EJB container will persist 
+     * Set the FieldDescriptor objects that the EJB container will persist
      * for this bean.
      */
     public void setCMPFields(Set cmpFields) {
-	this.cmpFields = cmpFields;
-	persFieldInfo = null;
-	fieldInfoInitialized = false;
+    this.cmpFields = cmpFields;
+    persFieldInfo = null;
+    fieldInfoInitialized = false;
 
     }
-    
+
     /**
-     * Has the supplied field object been deemed persistent. 
+     * Has the supplied field object been deemed persistent.
      */
     public boolean isCMPField(String field) {
-	return this.getCMPFields().contains(new FieldDescriptor(field));
+    return this.getCMPFields().contains(new FieldDescriptor(field));
     }
 
-	
-    /** 
+
+    /**
      * Return the Set of fields deemed persistent.
      * The elements of this Set are FieldDescriptor objects.
      * This Set should be modified by calling addCMPField, removeCMPField
      */
     public Set<FieldDescriptor> getCMPFields() {
-	return this.cmpFields;
+    return this.cmpFields;
     }
 
     /**
@@ -521,7 +521,7 @@ public final class PersistenceDescriptor extends Descriptor {
     public void addPkeyField(String field) {
         addPkeyField(new FieldDescriptor(field));
     }
-    
+
     public void addPkeyField(FieldDescriptor fieldDesc) {
         this.pkeyFields.add(fieldDesc);
         setPkeyFields(this.pkeyFields);
@@ -530,7 +530,7 @@ public final class PersistenceDescriptor extends Descriptor {
     public void removePkeyField(String field) {
         removePkeyField(new FieldDescriptor(field));
     }
-    
+
     public void removePkeyField(FieldDescriptor fieldDesc) {
         this.pkeyFields.remove(fieldDesc);
         setPkeyFields(this.pkeyFields);
@@ -542,22 +542,22 @@ public final class PersistenceDescriptor extends Descriptor {
      * for this bean.
      */
     public void setPkeyFields(Set pkeyFields) {
-	this.pkeyFields = pkeyFields;
-	fieldInfoInitialized = false;
-	persFieldInfo = null;
-	pkeyStuffInitialized = false;
+    this.pkeyFields = pkeyFields;
+    fieldInfoInitialized = false;
+    persFieldInfo = null;
+    pkeyStuffInitialized = false;
 
     }
-    
-    /** 
+
+    /**
      * Return the Set of primary key fields.
      * The elements of this Set are FieldDescriptor objects.
      * This Set can be modified by calling addPkeyField, removePkeyField
      */
     public Set getPkeyFields() {
-	if ( !pkeyStuffInitialized )
-	    initPkeyInfo();
-	return pkeyFields;
+    if ( !pkeyStuffInitialized )
+        initPkeyInfo();
+    return pkeyFields;
     }
 
     /**
@@ -579,51 +579,51 @@ public final class PersistenceDescriptor extends Descriptor {
      */
     private void initPkeyInfo()
     {
-	try {
-	    pkeyIsOneField = false;
+    try {
+        pkeyIsOneField = false;
             pkeyFieldSpecified = true;
-	    primaryKeyClassName = parentDesc.getPrimaryKeyClassName();
-    
-	    FieldDescriptor fd = parentDesc.getPrimaryKeyFieldDesc();
-	    if ( pkeyFields == null || pkeyFields.size() == 0 ) {
-	        pkeyFields = new HashSet();
+        primaryKeyClassName = parentDesc.getPrimaryKeyClassName();
 
-	        if ( fd != null ) // primkey-field was set
-		    pkeyFields.add(fd);
+        FieldDescriptor fd = parentDesc.getPrimaryKeyFieldDesc();
+        if ( pkeyFields == null || pkeyFields.size() == 0 ) {
+            pkeyFields = new HashSet();
 
-	        else if (!primaryKeyClassName.equals("java.lang.Object")) {
-		    // get fields of primaryKeyClass
-		    primaryKeyClass = getClass(primaryKeyClassName);
-		    Field[] fields = primaryKeyClass.getFields();
-		    pkeyFieldsAllPrimitive = true;
-		    for ( int i=0; i<fields.length; i++ ) {
-		        // ignore static or final fields
-		        int m = fields[i].getModifiers();
-		        if ( Modifier.isStatic(m) || Modifier.isFinal(m) )
-			    continue;
-		        if ( !fields[i].getType().isPrimitive() )
-			    pkeyFieldsAllPrimitive = false;
-		        pkeyFields.add(new FieldDescriptor(
-						    fields[i].getName()));
-		    }
-	        }
-	        else {
-		    // Will use PM-generated primary key
-		    primaryKeyClass = getClass(primaryKeyClassName);
+            if ( fd != null ) // primkey-field was set
+            pkeyFields.add(fd);
+
+            else if (!primaryKeyClassName.equals("java.lang.Object")) {
+            // get fields of primaryKeyClass
+            primaryKeyClass = getClass(primaryKeyClassName);
+            Field[] fields = primaryKeyClass.getFields();
+            pkeyFieldsAllPrimitive = true;
+            for ( int i=0; i<fields.length; i++ ) {
+                // ignore static or final fields
+                int m = fields[i].getModifiers();
+                if ( Modifier.isStatic(m) || Modifier.isFinal(m) )
+                continue;
+                if ( !fields[i].getType().isPrimitive() )
+                pkeyFieldsAllPrimitive = false;
+                pkeyFields.add(new FieldDescriptor(
+                            fields[i].getName()));
+            }
+            }
+            else {
+            // Will use PM-generated primary key
+            primaryKeyClass = getClass(primaryKeyClassName);
                        pkeyIsOneField = true;
                        pkeyFieldSpecified = false;
-	        }
-	    }
-	    if ( fd != null )
-	        pkeyIsOneField = true;
+            }
+        }
+        if ( fd != null )
+            pkeyIsOneField = true;
 
-	    pkeyStuffInitialized = true;
-	}
-	catch ( Exception ex ) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.invalidDescriptorMappingFailure", 
+        pkeyStuffInitialized = true;
+    }
+    catch ( Exception ex ) {
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.invalidDescriptorMappingFailure",
                 new Object[] {ex.toString()});
             throw new DeploymentException(ex);
-	}
+    }
     }
 
     /**
@@ -632,22 +632,22 @@ public final class PersistenceDescriptor extends Descriptor {
      * True for EJBs if the primkey-field deployment descriptor element
      * is specified, or if a container-inserted pk field is used.
      */
-    public boolean primaryKeyIsOneField() 
+    public boolean primaryKeyIsOneField()
     {
-	if ( !pkeyStuffInitialized )
-	    initPkeyInfo();
-	return pkeyIsOneField;
+    if ( !pkeyStuffInitialized )
+        initPkeyInfo();
+    return pkeyIsOneField;
     }
 
 
     /**
      * @return false if the primkey-field is not specified and pk class = Object
      */
-    public boolean primaryKeyIsSpecified() 
+    public boolean primaryKeyIsSpecified()
     {
         if( !pkeyStuffInitialized )
             initPkeyInfo();
-	return pkeyFieldSpecified;
+    return pkeyFieldSpecified;
     }
 
 
@@ -655,11 +655,11 @@ public final class PersistenceDescriptor extends Descriptor {
      * @return true if the primkey-field is not specified all fields of
      * pkey class are Java primitive types.
      */
-    public boolean primaryKeyFieldsAllPrimitive() 
+    public boolean primaryKeyFieldsAllPrimitive()
     {
         if( !pkeyStuffInitialized )
             initPkeyInfo();
-	return pkeyFieldsAllPrimitive;
+    return pkeyFieldsAllPrimitive;
     }
 
 
@@ -670,134 +670,134 @@ public final class PersistenceDescriptor extends Descriptor {
      */
     public Class getPrimaryKeyClass()
     {
-	if ( !pkeyStuffInitialized )
-	    initPkeyInfo();
-	return primaryKeyClass;
+    if ( !pkeyStuffInitialized )
+        initPkeyInfo();
+    return primaryKeyClass;
     }
-   
+
 
     // May return null for Join objects when called at/before deployment
     public Class getPersistentClass()
     {
-	if ( persistentClass == null ) {
-	    persistentClass = getClass(parentDesc.getEjbClassName());
-	}
-	return persistentClass;
+    if ( persistentClass == null ) {
+        persistentClass = getClass(parentDesc.getEjbClassName());
+    }
+    return persistentClass;
     }
 
     public Class getStateClass()
     {
-	if ( stateClass == null ) {
-	    stateClass = getPersistentClass();
-	    if ( parentDesc.isEJB20() ) {
-		if( !Modifier.isAbstract(stateClass.getModifiers()) ) {
-	            throw new DeploymentException("2.x CMP bean class "
+    if ( stateClass == null ) {
+        stateClass = getPersistentClass();
+        if ( parentDesc.isEJB20() ) {
+        if( !Modifier.isAbstract(stateClass.getModifiers()) ) {
+                throw new DeploymentException("2.x CMP bean class "
                         + stateClass.getName() + " must be decleared abstract "
                         + "or cmp-version for the corresponding bean must be set to 1.x.");
                 }
-	        String stateClassName = parentDesc.getStateImplClassName();
-	        stateClass = getClass(stateClassName);
-	    }
-	}
-	return stateClass;
+            String stateClassName = parentDesc.getStateImplClassName();
+            stateClass = getClass(stateClassName);
+        }
+    }
+    return stateClass;
     }
 
 
 
     private Class getClass(String className)
-    {            
-	try {
-	    return getEjbBundleDescriptor().getClassLoader().loadClass(className);
-	} catch ( Exception ex ) {
-	    throw new DeploymentException(ex);
-	}
+    {
+    try {
+        return getEjbBundleDescriptor().getClassLoader().loadClass(className);
+    } catch ( Exception ex ) {
+        throw new DeploymentException(ex);
+    }
     }
 
 
     /**
-     * Set the array of PersistentFieldInfo objects representing the 
+     * Set the array of PersistentFieldInfo objects representing the
      * foreign key fields of this bean.
      */
     public void setFkeyFields(PersistentFieldInfo[] fkeyFields) {
-	this.fkeyFields = fkeyFields;
-	fieldInfoInitialized = false;
-	persFieldInfo = null;
+    this.fkeyFields = fkeyFields;
+    fieldInfoInitialized = false;
+    persFieldInfo = null;
 
     }
-    
-	
-    /** 
-     * Return the array of PersistentFieldInfo objects for the 
+
+
+    /**
+     * Return the array of PersistentFieldInfo objects for the
      * foreign key fields of this bean.
      */
     public PersistentFieldInfo[] getFkeyFields() {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	return this.fkeyFields;
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    return this.fkeyFields;
     }
 
 
-    /** 
-     * Return the array of PersistentFieldInfo objects for the 
+    /**
+     * Return the array of PersistentFieldInfo objects for the
      * CMP + foreign key fields
      */
     public PersistentFieldInfo[] getPersistentFieldInfo()
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	return persFieldInfo;
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    return persFieldInfo;
     }
 
 
-    /** 
+    /**
      * Return the PersistentFieldInfo object for the given CMP/fkey field
      */
     public PersistentFieldInfo getPersistentFieldInfoByName(String fieldName)
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	for ( int i=0; i<persFieldInfo.length; i++ ) {
-	    if ( persFieldInfo[i].name.equals(fieldName) )
-		return persFieldInfo[i];
-	}
-	throw new DeploymentException("PersistentFieldInfo not found for field "+fieldName);
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    for ( int i=0; i<persFieldInfo.length; i++ ) {
+        if ( persFieldInfo[i].name.equals(fieldName) )
+        return persFieldInfo[i];
+    }
+    throw new DeploymentException("PersistentFieldInfo not found for field "+fieldName);
     }
 
 
-    /** 
+    /**
      * Return the array of PersistentFieldInfo objects for the CMP fields
      * which are not primary keys + foreign key fields.
      */
     public PersistentFieldInfo[] getNonPkeyPersFieldInfo()
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	return persNoPkeyFieldInfo;
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    return persNoPkeyFieldInfo;
     }
 
 
-    /** 
+    /**
      * Return the array of PersistentFieldInfo objects for the pkey fields.
      */
     public PersistentFieldInfo[] getPkeyFieldInfo()
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	return pkeyFieldInfo;
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    return pkeyFieldInfo;
     }
 
-    /** 
+    /**
      * Return PersistentFieldInfo object for the given pkey field.
      */
     public PersistentFieldInfo getPkeyFieldInfoByName(String fieldName)
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	for ( int i=0; i<pkeyFieldInfo.length; i++ ) {
-	    if ( pkeyFieldInfo[i].name.equals(fieldName) )
-		return pkeyFieldInfo[i];
-	}
-	throw new DeploymentException("PersistentFieldInfo not found for pkey field "+fieldName);
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    for ( int i=0; i<pkeyFieldInfo.length; i++ ) {
+        if ( pkeyFieldInfo[i].name.equals(fieldName) )
+        return pkeyFieldInfo[i];
+    }
+    throw new DeploymentException("PersistentFieldInfo not found for pkey field "+fieldName);
     }
 
 
@@ -808,50 +808,50 @@ public final class PersistenceDescriptor extends Descriptor {
      */
     public Field[] getPkeyClassFields()
     {
-	if ( !fieldInfoInitialized )
-	    initializeFieldInfo();
-	return pkeyClassPkeyFields;
+    if ( !fieldInfoInitialized )
+        initializeFieldInfo();
+    return pkeyClassPkeyFields;
     }
 
 
-    // Initialize persFieldInfo, pkeyFieldInfo, persNoPkeyFieldInfo, 
+    // Initialize persFieldInfo, pkeyFieldInfo, persNoPkeyFieldInfo,
     // pkeyClassPkeyFields
     private void initializeFieldInfo()
     {
-	if ( !pkeyStuffInitialized )
-	    initPkeyInfo();
+    if ( !pkeyStuffInitialized )
+        initPkeyInfo();
 
-	int cmpFieldCount = cmpFields.size();
+    int cmpFieldCount = cmpFields.size();
         if (cmpFieldCount==0) {
             throw new DeploymentException("No cmp field defined for CMP EJB " + parentDesc.getName());
         }
 
-	int fkeyCount = 0;
-	if ( fkeyFields != null )
-	    fkeyCount = fkeyFields.length;
+    int fkeyCount = 0;
+    if ( fkeyFields != null )
+        fkeyCount = fkeyFields.length;
 
-	persFieldInfo = new PersistentFieldInfo[cmpFieldCount + fkeyCount];
-	// Add CMP fields
-	int fcount = 0;
-	Iterator itr = cmpFields.iterator();
-	while ( itr.hasNext() ) {
-	    persFieldInfo[fcount] = new PersistentFieldInfo();
-	    persFieldInfo[fcount].name =((FieldDescriptor)itr.next()).getName();
-	    fcount++;
-	}
-	// Add foreign key fields
-	if ( fkeyFields != null ) {
-	    for ( int i=0; i<fkeyFields.length; i++ ) {
-		persFieldInfo[fcount] = fkeyFields[i];
-		fcount++;
-	    }
-	}
+    persFieldInfo = new PersistentFieldInfo[cmpFieldCount + fkeyCount];
+    // Add CMP fields
+    int fcount = 0;
+    Iterator itr = cmpFields.iterator();
+    while ( itr.hasNext() ) {
+        persFieldInfo[fcount] = new PersistentFieldInfo();
+        persFieldInfo[fcount].name =((FieldDescriptor)itr.next()).getName();
+        fcount++;
+    }
+    // Add foreign key fields
+    if ( fkeyFields != null ) {
+        for ( int i=0; i<fkeyFields.length; i++ ) {
+        persFieldInfo[fcount] = fkeyFields[i];
+        fcount++;
+        }
+    }
 
-	// sort persFieldInfo in alphabetical order
+    // sort persFieldInfo in alphabetical order
         for ( int i=persFieldInfo.length-1; i>0; i-- ) {
             for ( int j=0; j<i; j++ ) {
-                if ( persFieldInfo[j].name.compareTo(persFieldInfo[j+1].name) 
-									> 0 ) {
+                if ( persFieldInfo[j].name.compareTo(persFieldInfo[j+1].name)
+                                    > 0 ) {
                     PersistentFieldInfo tmp = persFieldInfo[j];
                     persFieldInfo[j] = persFieldInfo[j+1];
                     persFieldInfo[j+1] = tmp;
@@ -859,10 +859,10 @@ public final class PersistenceDescriptor extends Descriptor {
             }
         }
 
-        // Initialize pkeyFieldInfo[] and persNoPkeyFieldInfo[] 
-	// They contain the same PersistentFieldInfo objects as persFieldInfo.
+        // Initialize pkeyFieldInfo[] and persNoPkeyFieldInfo[]
+    // They contain the same PersistentFieldInfo objects as persFieldInfo.
         pkeyFieldInfo = new PersistentFieldInfo[pkeyFields.size()];
-	if ( pkeyFieldSpecified ) {
+    if ( pkeyFieldSpecified ) {
 
             // check if PK class has public non-persistent fields
             StringBuffer nonPersFieldsInPK = new StringBuffer();
@@ -886,79 +886,79 @@ public final class PersistenceDescriptor extends Descriptor {
             if ( nonPersFieldsInPK.length() != 0 ) {
                 throw new DeploymentException(localStrings.getLocalString(
                 "enterprise.deployment.pkhasnopersistentfields",
-                "CMP bean [{0}], primary key class [{1}] has " + 
+                "CMP bean [{0}], primary key class [{1}] has " +
                 "public non-persistent field(s) [{2}].",
                 new Object[] {getParentDescriptor().getName(),
                 primaryKeyClassName,
                 nonPersFieldsInPK.toString()}));
             }
 
-	    persNoPkeyFieldInfo = new PersistentFieldInfo[persFieldInfo.length -
-							  pkeyFieldInfo.length];
-	    int pkeyCount = 0;
-	    int noPkeyCount = 0;
-	    for ( int i=0; i<persFieldInfo.length; i++ ) {
-		boolean isPkey = false;
-		for ( Iterator it=pkeyFields.iterator(); it.hasNext(); ) {
-		    FieldDescriptor fd = (FieldDescriptor)it.next();
-		    if ( fd.getName().equals(persFieldInfo[i].name) ) {
-			isPkey = true;
-			break;
-		    }
-		}
-		if ( isPkey ) 
-		    pkeyFieldInfo[pkeyCount++] = persFieldInfo[i];
-		else
-		    persNoPkeyFieldInfo[noPkeyCount++] = persFieldInfo[i];
-	    }
-	}
+        persNoPkeyFieldInfo = new PersistentFieldInfo[persFieldInfo.length -
+                              pkeyFieldInfo.length];
+        int pkeyCount = 0;
+        int noPkeyCount = 0;
+        for ( int i=0; i<persFieldInfo.length; i++ ) {
+        boolean isPkey = false;
+        for ( Iterator it=pkeyFields.iterator(); it.hasNext(); ) {
+            FieldDescriptor fd = (FieldDescriptor)it.next();
+            if ( fd.getName().equals(persFieldInfo[i].name) ) {
+            isPkey = true;
+            break;
+            }
+        }
+        if ( isPkey )
+            pkeyFieldInfo[pkeyCount++] = persFieldInfo[i];
+        else
+            persNoPkeyFieldInfo[noPkeyCount++] = persFieldInfo[i];
+        }
+    }
 
-	if ( pkeyIsOneField  && pkeyFieldSpecified) {
-	    // Initialize pkey field type. This is needed for
-	    // beans with no pkey field (i.e. PM-generated pkey)
-	    // because they wont have get/set for the pkey in the bean class
-	    // so the getCMPFieldType() below will bomb if type is not set.
-	    // Note: pkeyFieldInfo and persFieldInfo arrays share the same
-	    // PersistentFieldInfo objects.
-	    pkeyFieldInfo[0].type = getPrimaryKeyClass();
-	}
+    if ( pkeyIsOneField  && pkeyFieldSpecified) {
+        // Initialize pkey field type. This is needed for
+        // beans with no pkey field (i.e. PM-generated pkey)
+        // because they wont have get/set for the pkey in the bean class
+        // so the getCMPFieldType() below will bomb if type is not set.
+        // Note: pkeyFieldInfo and persFieldInfo arrays share the same
+        // PersistentFieldInfo objects.
+        pkeyFieldInfo[0].type = getPrimaryKeyClass();
+    }
 
-	// Initialize Java types in persFieldInfo
-	for ( int i=0; i<persFieldInfo.length; i++ ) {
-	    // fill type for CMP fields if not there 
-	    // (fkey types will already be filled)
-	    if ( persFieldInfo[i].type == null )
-	        persFieldInfo[i].type = getCMPFieldType(persFieldInfo[i].name);
+    // Initialize Java types in persFieldInfo
+    for ( int i=0; i<persFieldInfo.length; i++ ) {
+        // fill type for CMP fields if not there
+        // (fkey types will already be filled)
+        if ( persFieldInfo[i].type == null )
+            persFieldInfo[i].type = getCMPFieldType(persFieldInfo[i].name);
         }
 
         // When called from Deploytool, the bean class is abstract,
-        // and doesnt have the CMP fields: they will be in the generated 
-        // code after deployment. So all the java.lang.reflect.Field 
-	// values in PersistentFieldInfo can only be initialized at runtime.
-	try {
-	    if ( persistentClass != null 
-		 && !Modifier.isAbstract(persistentClass.getModifiers()) ) {
-		for ( int i=0; i<persFieldInfo.length; i++ ) {
-		    persFieldInfo[i].field = getField(getStateClass(), 
-						      persFieldInfo[i].name);
-		}
-	    }
+        // and doesnt have the CMP fields: they will be in the generated
+        // code after deployment. So all the java.lang.reflect.Field
+    // values in PersistentFieldInfo can only be initialized at runtime.
+    try {
+        if ( persistentClass != null
+         && !Modifier.isAbstract(persistentClass.getModifiers()) ) {
+        for ( int i=0; i<persFieldInfo.length; i++ ) {
+            persFieldInfo[i].field = getField(getStateClass(),
+                              persFieldInfo[i].name);
+        }
+        }
 
-	    // Initialize pkeyClassPkeyFields
-	    if ( !pkeyIsOneField && primaryKeyClass != null 
+        // Initialize pkeyClassPkeyFields
+        if ( !pkeyIsOneField && primaryKeyClass != null
                  && !Modifier.isAbstract(primaryKeyClass.getModifiers()) ) {
-		pkeyClassPkeyFields = new Field[pkeyFieldInfo.length];
-		for ( int i=0; i<pkeyFieldInfo.length; i++ ) {
-		    pkeyClassPkeyFields[i] = primaryKeyClass.getField(
-							pkeyFieldInfo[i].name); 
-		}
-	    } 
-	} catch ( NoSuchFieldException ex ) {
-            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {            
+        pkeyClassPkeyFields = new Field[pkeyFieldInfo.length];
+        for ( int i=0; i<pkeyFieldInfo.length; i++ ) {
+            pkeyClassPkeyFields[i] = primaryKeyClass.getField(
+                            pkeyFieldInfo[i].name);
+        }
+        }
+    } catch ( NoSuchFieldException ex ) {
+            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().log(Level.FINE, ex.toString(), ex);
             }
-	    throw new DeploymentException(ex);
-	}
+        throw new DeploymentException(ex);
+    }
 
         fieldInfoInitialized = true;
     }
@@ -973,7 +973,7 @@ public final class PersistenceDescriptor extends Descriptor {
             new java.security.PrivilegedAction() {
                 public Object run()  {
                     try {
-                        // this is needed for EJB2.0 CMP beans whose 
+                        // this is needed for EJB2.0 CMP beans whose
                         // generated fields are private.
                         return c.getDeclaredField(name);
                     }
@@ -995,65 +995,65 @@ public final class PersistenceDescriptor extends Descriptor {
      */
     public Class getTypeFor(String field)
     {
-	return getCMPFieldType(field);
+    return getCMPFieldType(field);
     }
 
     private Class getCMPFieldType(String field)
     {
-	Class pclass = getPersistentClass();
-	if ( Modifier.isAbstract(pclass.getModifiers()) ) {
-	    // An EJB2.0 CMP bean : field is a virtual field 
-	    String javaBeanName = capitalize(field);
-	    String getter = "get"+javaBeanName;
-	    try {
-		Method method = pclass.getMethod(getter, (Class[]) null);
-		return method.getReturnType();
-	    } catch ( Exception ex ) {
-		throw new RuntimeException("Cannot find accessor " + getter + " for CMP field "+field);
-	    }
-	}
-	else {
-	    // field is a Java field in state class
-	    try {
-		Field f = getField(getStateClass(), field);
-		return f.getType();
-	    } catch ( NoSuchFieldException ex ) {
-		throw new RuntimeException("Cant find CMP field "+field+" in class "+getStateClass().getName());
-	    }
-	}
+    Class pclass = getPersistentClass();
+    if ( Modifier.isAbstract(pclass.getModifiers()) ) {
+        // An EJB2.0 CMP bean : field is a virtual field
+        String javaBeanName = capitalize(field);
+        String getter = "get"+javaBeanName;
+        try {
+        Method method = pclass.getMethod(getter, (Class[]) null);
+        return method.getReturnType();
+        } catch ( Exception ex ) {
+        throw new RuntimeException("Cannot find accessor " + getter + " for CMP field "+field);
+        }
+    }
+    else {
+        // field is a Java field in state class
+        try {
+        Field f = getField(getStateClass(), field);
+        return f.getType();
+        } catch ( NoSuchFieldException ex ) {
+        throw new RuntimeException("Cant find CMP field "+field+" in class "+getStateClass().getName());
+        }
+    }
     }
 
 
     // called from CMPClassGenerator too
     public static String capitalize(String name)
     {
-	// EJB2.0 proposed final draft says that CMP/CMR field names
-	// must begin with a lower case letter.
-	if ( Character.isUpperCase(name.charAt(0)) ) {
-	    throw new DeploymentException("CMP/CMR field "+name+" must start with a lower case character.");
-	}
-	else {
-	    char chars[] = name.toCharArray();
-	    chars[0] = Character.toUpperCase(chars[0]);
-	    return new String(chars);
-	}
+    // EJB2.0 proposed final draft says that CMP/CMR field names
+    // must begin with a lower case letter.
+    if ( Character.isUpperCase(name.charAt(0)) ) {
+        throw new DeploymentException("CMP/CMR field "+name+" must start with a lower case character.");
+    }
+    else {
+        char chars[] = name.toCharArray();
+        chars[0] = Character.toUpperCase(chars[0]);
+        return new String(chars);
+    }
     }
 
     public void setQueryFor(MethodDescriptor method, QueryDescriptor query)
     {
-		queries.put(method, query);
+        queries.put(method, query);
     }
 
 
     public QueryDescriptor getQueryFor(MethodDescriptor method)
     {
-	return (QueryDescriptor)queries.get(method);
+    return (QueryDescriptor)queries.get(method);
     }
 
     public void  removeQueryFor(MethodDescriptor method)
-    {           
-	queries.remove(method);
-    }       
+    {
+    queries.remove(method);
+    }
 
     public void setQueryFor(Method method, QueryDescriptor query)
     {
@@ -1064,7 +1064,7 @@ public final class PersistenceDescriptor extends Descriptor {
         // This matches the spec requirement that the same finder
         // method defined on the LocalHome and RemoteHome has only
         // ONE query-method declaration in the deployment descriptor.
-        // 
+        //
         MethodDescriptor md = new MethodDescriptor(method,"");
         setQueryFor(md, query);
     }
@@ -1076,14 +1076,14 @@ public final class PersistenceDescriptor extends Descriptor {
         MethodDescriptor md = new MethodDescriptor(method,"");
         return (QueryDescriptor) queries.get(md);
     }
-    
+
     /**
-     * Get all methods for which setQueryFor was done 
+     * Get all methods for which setQueryFor was done
      * @return a Set of Methods
      */
     public Set getQueriedMethods()
     {
-	return queries.keySet();
+    return queries.keySet();
     }
 
     /**
@@ -1093,48 +1093,48 @@ public final class PersistenceDescriptor extends Descriptor {
      */
     public Set getAllPossibleQueriedMethods()
     {
-	if ( allQueriedMethods == null ) 
-	    initializeAllQueriedMethods();
+    if ( allQueriedMethods == null )
+        initializeAllQueriedMethods();
 
-	return allQueriedMethods;
+    return allQueriedMethods;
     }
 
-    private void initializeAllQueriedMethods() 
+    private void initializeAllQueriedMethods()
     {
-	allQueriedMethods = new HashSet();	    
+    allQueriedMethods = new HashSet();
 
-	// add all ejbSelect* methods in persistentClass
-	Method[] beanMethods = getPersistentClass().getMethods();
-	for ( int i=0; i<beanMethods.length; i++ ) {
-	    if ( beanMethods[i].getName().startsWith("ejbSelect") ) {
-		allQueriedMethods.add(new MethodDescriptor(beanMethods[i], MethodDescriptor.EJB_BEAN));
-	    }
-	}
+    // add all ejbSelect* methods in persistentClass
+    Method[] beanMethods = getPersistentClass().getMethods();
+    for ( int i=0; i<beanMethods.length; i++ ) {
+        if ( beanMethods[i].getName().startsWith("ejbSelect") ) {
+        allQueriedMethods.add(new MethodDescriptor(beanMethods[i], MethodDescriptor.EJB_BEAN));
+        }
+    }
 
         // add all finders in Home/LocalHome intf, findByPrimaryKey too
         if ( parentDesc.isRemoteInterfacesSupported() ) {
-	    Class homeIntf = getClass(parentDesc.getHomeClassName());
-    
-	    Method[] homeMethods = homeIntf.getMethods();
-	    for ( int i=0; i<homeMethods.length; i++ ) {
-	        String name = homeMethods[i].getName();
-	        if ( name.startsWith("find") 
-		        && !name.equals("findByPrimaryKey") ) {
-		    allQueriedMethods.add(new MethodDescriptor(homeMethods[i], MethodDescriptor.EJB_HOME));
-	        }
-	    }
+        Class homeIntf = getClass(parentDesc.getHomeClassName());
+
+        Method[] homeMethods = homeIntf.getMethods();
+        for ( int i=0; i<homeMethods.length; i++ ) {
+            String name = homeMethods[i].getName();
+            if ( name.startsWith("find")
+                && !name.equals("findByPrimaryKey") ) {
+            allQueriedMethods.add(new MethodDescriptor(homeMethods[i], MethodDescriptor.EJB_HOME));
+            }
+        }
         }
         if ( parentDesc.isLocalInterfacesSupported() ) {
-	    Class homeIntf = getClass(parentDesc.getLocalHomeClassName());
-    
-	    Method[] homeMethods = homeIntf.getMethods();
-	    for ( int i=0; i<homeMethods.length; i++ ) {
-	        String name = homeMethods[i].getName();
-	        if ( name.startsWith("find") 
-		        && !name.equals("findByPrimaryKey") ) {
-		    allQueriedMethods.add(new MethodDescriptor(homeMethods[i], MethodDescriptor.EJB_LOCALHOME));
-	        }
-	    }
+        Class homeIntf = getClass(parentDesc.getLocalHomeClassName());
+
+        Method[] homeMethods = homeIntf.getMethods();
+        for ( int i=0; i<homeMethods.length; i++ ) {
+            String name = homeMethods[i].getName();
+            if ( name.startsWith("find")
+                && !name.equals("findByPrimaryKey") ) {
+            allQueriedMethods.add(new MethodDescriptor(homeMethods[i], MethodDescriptor.EJB_LOCALHOME));
+            }
+        }
         }
     }
 
@@ -1142,8 +1142,8 @@ public final class PersistenceDescriptor extends Descriptor {
     * Return my formatted string representation.
     */
     public void print(StringBuffer toStringBuffer) {
-	super.print(toStringBuffer);
-	toStringBuffer.append("\n Entity descriptor");
-	toStringBuffer.append("\n cmpFields ").append(cmpFields);
+    super.print(toStringBuffer);
+    toStringBuffer.append("\n Entity descriptor");
+    toStringBuffer.append("\n cmpFields ").append(cmpFields);
     }
 }

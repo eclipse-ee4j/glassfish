@@ -52,11 +52,11 @@ import java.util.logging.Level;
 
 public class StandardHost
     extends ContainerBase
-    implements Deployer, Host  
+    implements Deployer, Host
  {
     /* Why do we implement deployer and delegate to deployer ??? */
 
-    
+
     // ----------------------------------------------------------- Constructors
 
 
@@ -140,7 +140,7 @@ public class StandardHost
 
 
     /**
-     * The Java class name of the default error reporter implementation class 
+     * The Java class name of the default error reporter implementation class
      * for deployed web applications.
      */
     private String errorReportValveClass =
@@ -196,13 +196,13 @@ public class StandardHost
 
 
     /**
-     * With proxy caching disabled, setting this flag to true adds 
-     * Pragma and Cache-Control headers with "No-cache" as value. 
+     * With proxy caching disabled, setting this flag to true adds
+     * Pragma and Cache-Control headers with "No-cache" as value.
      * Setting this flag to false does not add any Pragma header,
      * but sets the Cache-Control header to "private".
      */
     private boolean securePagesWithPragma = true;
-    
+
 
     private SingleSignOn sso;
 
@@ -212,7 +212,7 @@ public class StandardHost
       */
      private long sequenceNumber = 0;
 
-    
+
     // ------------------------------------------------------------- Properties
 
 
@@ -223,7 +223,7 @@ public class StandardHost
         pl.setBasic(shValve);
         pipeline = pl;
         hasCustomPipeline = true;
-    }    
+    }
     // END SJSAS 6331392
 
 
@@ -254,7 +254,7 @@ public class StandardHost
 
 
     /**
-     * Return the value of the auto deploy flag.  If true, it indicates that 
+     * Return the value of the auto deploy flag.  If true, it indicates that
      * this host's child webapps will be dynamically deployed.
      */
     public boolean getAutoDeploy() {
@@ -266,14 +266,14 @@ public class StandardHost
 
     /**
      * Set the auto deploy flag value for this host.
-     * 
+     *
      * @param autoDeploy The new auto deploy flag
      */
     public void setAutoDeploy(boolean autoDeploy) {
 
         boolean oldAutoDeploy = this.autoDeploy;
         this.autoDeploy = autoDeploy;
-        support.firePropertyChange("autoDeploy", oldAutoDeploy, 
+        support.firePropertyChange("autoDeploy", oldAutoDeploy,
                                    this.autoDeploy);
 
     }
@@ -334,8 +334,8 @@ public class StandardHost
 
 
     /**
-     * Return the value of the deploy on startup flag.  If true, it indicates 
-     * that this host's child webapps should be discovered and automatically 
+     * Return the value of the deploy on startup flag.  If true, it indicates
+     * that this host's child webapps should be discovered and automatically
      * deployed at startup time.
      */
     public boolean getDeployOnStartup() {
@@ -347,14 +347,14 @@ public class StandardHost
 
     /**
      * Set the deploy on startup flag value for this host.
-     * 
+     *
      * @param deployOnStartup The new deploy on startup flag
      */
     public void setDeployOnStartup(boolean deployOnStartup) {
 
         boolean oldDeployOnStartup = this.deployOnStartup;
         this.deployOnStartup = deployOnStartup;
-        support.firePropertyChange("deployOnStartup", oldDeployOnStartup, 
+        support.firePropertyChange("deployOnStartup", oldDeployOnStartup,
                                    this.deployOnStartup);
 
     }
@@ -402,7 +402,7 @@ public class StandardHost
         String oldErrorReportValveClassClass = this.errorReportValveClass;
         this.errorReportValveClass = errorReportValveClass;
         support.firePropertyChange("errorReportValveClass",
-                                   oldErrorReportValveClassClass, 
+                                   oldErrorReportValveClassClass,
                                    this.errorReportValveClass);
     }
 
@@ -494,8 +494,8 @@ public class StandardHost
      */
     public void setXmlNamespaceAware(boolean xmlNamespaceAware){
         this.xmlNamespaceAware=xmlNamespaceAware;
-    }    
-    
+    }
+
     /**
      * Host work directory base.
      */
@@ -607,7 +607,7 @@ public class StandardHost
         // START OF PE 4989789
         //alias = alias.toLowerCase();
         // START OF PE 4989789
-        
+
         // Skip duplicate aliases
         for(String name : aliases) {
             if(name.equals(alias)) {
@@ -749,7 +749,7 @@ public class StandardHost
         // START OF PE 4989789
         //alias = alias.toLowerCase();
         // START OF PE 4989789
-        
+
         // Make sure this alias is currently present
         int n = -1;
         for (int i = 0; i < aliases.length; i++) {
@@ -874,7 +874,7 @@ public class StandardHost
         if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, LogFacade.XML_VALIDATION_ENABLED);
         }
-        // END SJSAS_PE 8.1 5034793 
+        // END SJSAS_PE 8.1 5034793
 
         super.start();
 
@@ -1081,7 +1081,7 @@ public class StandardHost
 
     }
 
-    
+
     /**
      * Returns the value of the securePagesWithPragma property.
      */
@@ -1141,7 +1141,7 @@ public class StandardHost
 
 
     static String STANDARD_HOST_DEPLOYER="org.apache.catalina.core.StandardHostDeployer";
-    
+
     public Deployer getDeployer() {
         if( deployer!= null )
             return deployer;
@@ -1158,7 +1158,7 @@ public class StandardHost
         }
         return deployer;
     }
-    
+
     public void setDeployer(Deployer d) {
         this.deployer=d;
     }
@@ -1190,7 +1190,7 @@ public class StandardHost
 
     /* CR 6368085
     private boolean initialized=false;
-    */    
+    */
 
     @Override
     public void init() {
@@ -1198,7 +1198,7 @@ public class StandardHost
         /* CR 6368085
         initialized=true;
         */
-        
+
         if( oname==null ) {
             // not registered in JMX yet - standalone mode
             try {
@@ -1225,7 +1225,7 @@ public class StandardHost
         initialized = true;
         // END CR 6368085
     }
-    
+
     @Override
     public ObjectName createObjectName(String domain, ObjectName parent)
         throws Exception

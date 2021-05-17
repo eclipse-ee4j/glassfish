@@ -60,7 +60,7 @@ public class ACCClassLoader extends URLClassLoader {
         if (instance != null) {
             throw new IllegalStateException("already set");
         }
-        
+
         ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
         boolean currentCLWasAgentCL = currentClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME);
         ClassLoader parentForACCCL = currentCLWasAgentCL ? currentClassLoader.getParent() : currentClassLoader;
@@ -91,15 +91,15 @@ public class ACCClassLoader extends URLClassLoader {
 
     private static void adjustACCAgentClassLoaderParent(ACCClassLoader instance) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        
+
         if (systemClassLoader.getClass().getName().equals(AGENT_LOADER_CLASS_NAME)) {
             if (systemClassLoader instanceof Consumer<?>) {
-                
+
                 @SuppressWarnings("unchecked")
                 Consumer<ClassLoader> consumerOfClassLoader = (Consumer<ClassLoader>) systemClassLoader;
-                
+
                 consumerOfClassLoader.accept(instance);
-                
+
                 System.setProperty("org.glassfish.appclient.acc.agentLoaderDone", "true");
             }
         }
@@ -108,7 +108,7 @@ public class ACCClassLoader extends URLClassLoader {
     private static URL[] userClassPath() {
         URI GFSystemURI = GFSystemURI();
         List<URL> result = classPathToURLs(System.getProperty("java.class.path"));
-        
+
         for (ListIterator<URL> it = result.listIterator(); it.hasNext();) {
             URL url = it.next();
             try {
@@ -142,7 +142,7 @@ public class ACCClassLoader extends URLClassLoader {
         if (classPath == null) {
             return emptyList();
         }
-        
+
         List<URL> result = new ArrayList<>();
         try {
             for (String classPathElement : classPath.split(File.pathSeparator)) {
@@ -198,7 +198,7 @@ public class ACCClassLoader extends URLClassLoader {
 
             });
         }
-        
+
         return shadow;
     }
 
@@ -207,7 +207,7 @@ public class ACCClassLoader extends URLClassLoader {
         if (!shouldTransform) {
             return super.findClass(name);
         }
-        
+
         return copyClass(shadow().findClassUnshadowed(name));
     }
 
@@ -236,7 +236,7 @@ public class ACCClassLoader extends URLClassLoader {
         if (is == null) {
             throw new ClassNotFoundException(className);
         }
-        
+
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             byte[] buffer = new byte[8196];
@@ -262,7 +262,7 @@ public class ACCClassLoader extends URLClassLoader {
             return super.getPermissions(codesource);
         }
 
-        // When security manager is enabled, find the declared permissions        
+        // When security manager is enabled, find the declared permissions
         if (clientCLDelegate.getCachedPerms(codesource) != null) {
             return clientCLDelegate.getCachedPerms(codesource);
         }

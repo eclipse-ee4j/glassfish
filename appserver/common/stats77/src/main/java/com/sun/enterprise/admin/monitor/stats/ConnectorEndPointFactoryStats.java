@@ -18,33 +18,33 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
 /**
- * A Stats interface to represent the statistical data about 
+ * A Stats interface to represent the statistical data about
  * Endpoint factory in the Connector Module
- * 
+ *
  * @author  Murali Vempaty
  * @since   SJSAS8.1
  */
 public interface ConnectorEndPointFactoryStats {
-    
+
     /**
      * indicates the number of messages created via this endpoint factory, since
      * the last reset
      * @return CountStatistic
      */
     public CountStatistic getMessagesCreatedCount();
-    
+
     /**
      * indicates the number of messages delivered through Endpoints created, via
      * this endpoint factory
      * @return CountStatistic
      */
     public CountStatistic getDeliveredMessageCount();
-    
+
     /**
      * indicates the number of runtime exceptions that had occurred during the
      * delivery of messages to endpoints created via this endpoint factory.
      * @return CountStatistic
      */
     public CountStatistic getRuntimeExceptionsCount();
-    
+
 }

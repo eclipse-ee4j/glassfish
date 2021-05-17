@@ -85,7 +85,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
 
     /**
      * Construct new printer
-     * 
+     *
      * @param disableAnimation will print each message on new line and spinner as dots
      * @param debugOutput expect printing of other data together with progress. New line must be printed ASAP.
      */

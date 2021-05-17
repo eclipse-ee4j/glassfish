@@ -42,7 +42,7 @@ public class HelloEJB implements SessionBean {
     private BmpRemoteHome bmpRemoteHome;
 
     private long overhead;
-    
+
     private static final String pkey = "A BMP Bean";
 
     jakarta.transaction.UserTransaction ut;
@@ -51,7 +51,7 @@ public class HelloEJB implements SessionBean {
 
     public void ejbCreate() {
 
-	try {
+    try {
             Context ic = new InitialContext();
 
             Context ic1 = (Context) ic.lookup("java:comp/env");
@@ -60,27 +60,27 @@ public class HelloEJB implements SessionBean {
 
             Context ic2 = (Context) ic.lookup("java:comp/env/ejb");
             String ic2Name = ic2.getNameInNamespace();
-            Context ic2_ = (Context) ic.lookup(ic2Name);            
+            Context ic2_ = (Context) ic.lookup(ic2Name);
 
-	    sfulHome = (SfulHome) ic2_.lookup("Sful");
+        sfulHome = (SfulHome) ic2_.lookup("Sful");
             sful = sfulHome.create();
             Object obj = ic2_.lookup("SfulRemote");
             sfulRemoteHome = (SfulRemoteHome)
                 PortableRemoteObject.narrow(obj, SfulRemoteHome.class);
             sfulRemote = sfulRemoteHome.create();
 
-	    System.out.println("Created Stateful bean.");
-	   	     
-	    slessHome = (SlessHome) ic1_.lookup("ejb/Sless");
+        System.out.println("Created Stateful bean.");
+
+        slessHome = (SlessHome) ic1_.lookup("ejb/Sless");
             sless = slessHome.create();
             obj = ic2_.lookup("SlessRemote");
             slessRemoteHome = (SlessRemoteHome)
                 PortableRemoteObject.narrow(obj, SlessRemoteHome.class);
             slessRemote = slessRemoteHome.create();
 
-	    System.out.println("Created Stateless bean.");
+        System.out.println("Created Stateless bean.");
 
-	    bmpHome = (BmpHome) ic.lookup("java:comp/env/ejb/Bmp");
+        bmpHome = (BmpHome) ic.lookup("java:comp/env/ejb/Bmp");
 
             bmp = bmpHome.create(pkey);
             obj = ic2_.lookup("BmpRemote");
@@ -89,14 +89,14 @@ public class HelloEJB implements SessionBean {
             bmpRemote = (BmpRemote)
                 bmpRemoteHome.findByPrimaryKey(pkey);
 
-	    System.out.println("Created BMP bean.");
-	   	     
-	    ut = context.getUserTransaction();
+        System.out.println("Created BMP bean.");
 
-	} catch (Exception ex) {
-	    System.out.println("couldn't get all beans");
-	    ex.printStackTrace();
-	}
+        ut = context.getUserTransaction();
+
+    } catch (Exception ex) {
+        System.out.println("couldn't get all beans");
+        ex.printStackTrace();
+    }
     }
 
     private void testRemove() throws RemoteException {
@@ -105,7 +105,7 @@ public class HelloEJB implements SessionBean {
             System.out.println("Created BMP bean.");
             bmpHome.remove(bmp2.getPrimaryKey());
             System.out.println("Successfully removed local entity bean");
-        } catch(Exception e) {            
+        } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
@@ -130,7 +130,7 @@ public class HelloEJB implements SessionBean {
             // success
         }
 
-        
+
         try {
             EJBObject bmpRemote2 = bmpRemoteHome.create("foobar2");
             System.out.println("Created BMP bean.");
@@ -174,9 +174,9 @@ public class HelloEJB implements SessionBean {
 
         try {
             sful.remove();
-            
+
             try {
-                sful.remove(); 
+                sful.remove();
                 throw new EJBException("2nd sful remove should have caused exception");
             } catch(Exception e) {
                 System.out.println("Successfully caught exception when attempting to "+
@@ -186,7 +186,7 @@ public class HelloEJB implements SessionBean {
 
             sless.remove();
 
-            bmp.remove(); 
+            bmp.remove();
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -208,29 +208,29 @@ public class HelloEJB implements SessionBean {
     public void throwAppException2() throws FinderException {
         throw new ObjectNotFoundException("throwAppException2");
     }
-    
-    public void warmup(int type) throws Exception {
-	warmup(type, true);
-	warmup(type, false);
 
-	// Measure looping and timing overhead 
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	}
-	long end = System.currentTimeMillis();
-	overhead = end - begin;
+    public void warmup(int type) throws Exception {
+    warmup(type, true);
+    warmup(type, false);
+
+    // Measure looping and timing overhead
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+    }
+    long end = System.currentTimeMillis();
+    overhead = end - begin;
 
         String pkey2 = (String) bmp.getPrimaryKey();
         if( !pkey2.equals(pkey) ) {
             throw new EJBException("pkey2 " + pkey2 + " doesn't match " + pkey);
         }
-        
+
         ut = context.getUserTransaction();
-        
+
         testLocalObjects(sful, sless);
         testLocalObjects(sful, bmp);
         testLocalObjects(sless, bmp);
-        
+
         testEJBObjects(sfulRemote, slessRemote);
         testEJBObjects(sfulRemote, bmpRemote);
         testEJBObjects(slessRemote, bmpRemote);
@@ -259,14 +259,14 @@ public class HelloEJB implements SessionBean {
         testExceptions(slessRemote);
         testExceptions(bmpRemote);
     }
-    
+
     private void testExceptions(Common c) {
 
         try {
             c.testException1();
             throw new EJBException("didn't get exception for testException1");
         } catch(Exception e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -274,7 +274,7 @@ public class HelloEJB implements SessionBean {
             c.testException2();
             throw new EJBException("didn't get exception for testException2");
         } catch(EJBException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -282,10 +282,10 @@ public class HelloEJB implements SessionBean {
             c.testException3();
             throw new EJBException("didn't get exception for testException3");
         } catch(FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
-                
+
     }
 
     private void testExceptions(CommonRemote c) throws RemoteException {
@@ -294,7 +294,7 @@ public class HelloEJB implements SessionBean {
             c.testException1();
             throw new EJBException("didn't get exception for testException1");
         } catch(Exception e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -302,7 +302,7 @@ public class HelloEJB implements SessionBean {
             c.testException2();
             throw new EJBException("didn't get exception for testException2");
         } catch(RemoteException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -310,7 +310,7 @@ public class HelloEJB implements SessionBean {
             c.testException3();
             throw new EJBException("didn't get exception for testException3");
         } catch(FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -318,10 +318,10 @@ public class HelloEJB implements SessionBean {
             c.testException4();
             throw new EJBException("didn't get exception for testException4");
         } catch(FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
-                
+
     }
 
     public Object testPassByRef() throws Exception {
@@ -343,9 +343,9 @@ public class HelloEJB implements SessionBean {
         return null;
     }
 
-    private void _testPassByRef(CommonRemote c, boolean passByRef) 
+    private void _testPassByRef(CommonRemote c, boolean passByRef)
       throws Exception {
-        
+
         int intVal = 1;
         String stringVal = "HelloEJB::_testPassByRef";
 
@@ -361,7 +361,7 @@ public class HelloEJB implements SessionBean {
         if( passByRef ) {
             if( (h1.a == intVal) || h1.b.equals(stringVal) ) {
                 throw new EJBException("h1 mutations not present " + h1);
-            }            
+            }
         } else {
             if( (h1.a != intVal) || !h1.b.equals(stringVal) ) {
                 throw new EJBException("error : h1 was mutated " + h1);
@@ -378,23 +378,23 @@ public class HelloEJB implements SessionBean {
             System.out.println("After testPassByRef3 : " + h2);
             if( (h2.a == intVal) || h2.b.equals(stringVal) ) {
                 throw new EJBException("h2 mutations not present " + h2);
-            }   
+            }
         } else {
             try {
                 c.testPassByRef3(h2);
-                System.out.println("Error : Expected exception when " + 
+                System.out.println("Error : Expected exception when " +
                                    "passing non-serializable data " + h2);
-                 
+
                 /* DON'T TREAT AS FATAL ERROR WHILE WE INVESTIGATE WHETHER
                  * THIS WAS INTENDED BEHAVIOR FOR THE ORB
-                 throw new EJBException("Error : Expected exception when " + 
-                 "passing non-serializable data " + 
+                 throw new EJBException("Error : Expected exception when " +
+                 "passing non-serializable data " +
                  h2);
                 */
             } catch(EJBException ejbex) {
                 throw ejbex;
             } catch(Exception e) {
-                System.out.println("Caught expected exception when " + 
+                System.out.println("Caught expected exception when " +
                                    " passing non-serializable data" +
                                    e.toString());
             }
@@ -409,16 +409,16 @@ public class HelloEJB implements SessionBean {
         } else {
             try {
                 Helper2 h6 = c.testPassByRef6();
-                System.out.println("Error : Expected exception when " + 
+                System.out.println("Error : Expected exception when " +
                            "returning non-serializable data " + h6);
-                /* see comment for testPassByRef3 above 
-                throw new EJBException("Error : Expected exception when " + 
+                /* see comment for testPassByRef3 above
+                throw new EJBException("Error : Expected exception when " +
                                        "returning non-serializable data ");
                 */
             } catch(EJBException ejbex) {
-                throw ejbex;                           
+                throw ejbex;
             } catch(Exception e) {
-                System.out.println("Caught expected exception when " + 
+                System.out.println("Caught expected exception when " +
                                    " returning non-serializable data" +
                                    e.toString());
             }
@@ -450,144 +450,144 @@ public class HelloEJB implements SessionBean {
     }
 
     private void warmup(int type, boolean tx) throws Exception {
-	// get Hotspot warmed up	
-	Common bean = pre(type, tx);
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.requiresNew();
-	    bean.notSupported();
-	}
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.required();
-	    if ( tx )
-		bean.mandatory();
-	    else
-		bean.never();
-	    bean.supports();
-	}
-	if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+    // get Hotspot warmed up
+    Common bean = pre(type, tx);
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.requiresNew();
+        bean.notSupported();
+    }
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.required();
+        if ( tx )
+        bean.mandatory();
+        else
+        bean.never();
+        bean.supports();
+    }
+    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
     }
 
-    private Common pre(int type, boolean tx) 
+    private Common pre(int type, boolean tx)
     {
-	if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
-	if ( type == Common.STATELESS )
-	    return sless;
-	else if ( type == Common.STATEFUL )
-	    return sful;
-	else
-	    return bmp;
+    if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
+    if ( type == Common.STATELESS )
+        return sless;
+    else if ( type == Common.STATEFUL )
+        return sful;
+    else
+        return bmp;
     }
 
-    private CommonRemote preRemote(int type, boolean tx) 
-    {       
-	if ( type == Common.STATELESS )
-	    return slessRemote;
-	else if ( type == Common.STATEFUL )
-	    return sfulRemote;
-	else
-	    return bmpRemote;
+    private CommonRemote preRemote(int type, boolean tx)
+    {
+    if ( type == Common.STATELESS )
+        return slessRemote;
+    else if ( type == Common.STATEFUL )
+        return sfulRemote;
+    else
+        return bmpRemote;
     }
 
 
     private float post(long begin, long end, boolean tx)
     {
-	if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
-	return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
+    if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+    return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
     }
 
     public float requiresNew(int type, boolean tx) throws RemoteException
     {
-	Common bean = pre(type, tx);
+    Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.requiresNew();
-	}
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.requiresNew();
+    }
         for ( int i=0; i<ITERATIONS; i++ ) {
-	    beanRemote.requiresNew();
-	}
-	long end = System.currentTimeMillis();
-	return post(begin, end, tx);
+        beanRemote.requiresNew();
+    }
+    long end = System.currentTimeMillis();
+    return post(begin, end, tx);
     }
 
     public float notSupported(int type, boolean tx) throws RemoteException
     {
-	Common bean = pre(type, tx);
+    Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.notSupported();
-	}
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.notSupported();
+    }
         for ( int i=0; i<ITERATIONS; i++ ) {
-	    beanRemote.notSupported();
-	}
-	long end = System.currentTimeMillis();
-	return post(begin, end, tx);
+        beanRemote.notSupported();
+    }
+    long end = System.currentTimeMillis();
+    return post(begin, end, tx);
     }
 
     public float required(int type, boolean tx) throws RemoteException
     {
-	Common bean = pre(type, tx);
+    Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.required();
-	}
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    beanRemote.required();
-	}
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.required();
+    }
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        beanRemote.required();
+    }
 
-	long end = System.currentTimeMillis();
-	return post(begin, end, tx);
+    long end = System.currentTimeMillis();
+    return post(begin, end, tx);
     }
 
     public float mandatory(int type, boolean tx) throws RemoteException
     {
-	Common bean = pre(type, tx);
+    Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.mandatory();
-	}
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    beanRemote.mandatory();
-	}
-	long end = System.currentTimeMillis();
-	return post(begin, end, tx);
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.mandatory();
+    }
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        beanRemote.mandatory();
+    }
+    long end = System.currentTimeMillis();
+    return post(begin, end, tx);
     }
 
     public float never(int type, boolean tx) throws RemoteException
     {
-	Common bean = pre(type, tx);
+    Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.never();
-	}
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    beanRemote.never();
-	}
-	long end = System.currentTimeMillis();
-	return post(begin, end, tx);
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.never();
+    }
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        beanRemote.never();
+    }
+    long end = System.currentTimeMillis();
+    return post(begin, end, tx);
     }
 
     public float supports(int type, boolean tx) throws RemoteException
     {
-	Common bean = pre(type, tx);
+    Common bean = pre(type, tx);
         CommonRemote beanRemote = preRemote(type, tx);
-	long begin = System.currentTimeMillis();
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.supports();
-	}
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    beanRemote.supports();
-	}
-	long end = System.currentTimeMillis();
-	return post(begin, end, tx);
+    long begin = System.currentTimeMillis();
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        bean.supports();
+    }
+    for ( int i=0; i<ITERATIONS; i++ ) {
+        beanRemote.supports();
+    }
+    long end = System.currentTimeMillis();
+    return post(begin, end, tx);
     }
 
     public void setSessionContext(SessionContext sc) {
-	context = sc;
+    context = sc;
     }
 
     public void ejbRemove() {}
@@ -637,11 +637,11 @@ public class HelloEJB implements SessionBean {
         if( o1.isIdentical(o2) ) {
             throw new EJBException("isIdentical failed");
         }
-        
+
         if( o2.isIdentical(o1) ) {
             throw new EJBException("isIdentical failed");
         }
-        
+
         if( !o1.isIdentical(o1) ) {
             throw new EJBException("isIdentical failed");
         }
@@ -694,12 +694,12 @@ public class HelloEJB implements SessionBean {
         }
 
         System.out.println("o1.hashCode() = " + o1.hashCode());
-                           
+
         System.out.println("o2.hashCode() = " + o2.hashCode());
-        
+
         System.out.println("o1.toString() = " + o1.toString());
         System.out.println("o2.toString() = " + o2.toString());
-        
+
     }
 
 }

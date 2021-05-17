@@ -51,10 +51,10 @@ import org.glassfish.config.support.TargetType;
 
 /**
  * Delete Audit Module Command
- * 
-* Usage: delete-audit-module [--terse=false] [--echo=false] 
- *        [--interactive=true] [--host localhost] [--port 4848|4849] 
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name] 
+ *
+* Usage: delete-audit-module [--terse=false] [--echo=false]
+ *        [--interactive=true] [--host localhost] [--port 4848|4849]
+ *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
  *        [--target target(Default server)] auth_realm_name
  *
  * @author Nandini Ektare
@@ -65,8 +65,8 @@ import org.glassfish.config.support.TargetType;
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
+
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(DeleteAuditModule.class);
 
     @Param(name="auditmodulename", primary=true)
@@ -87,7 +87,7 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
 
     @Inject
     SecurityConfigListener securityConfigListener;
-    
+
     private SecurityService securityService;
 
     @Override
@@ -95,7 +95,7 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         auditModule = chooseAuditModule(context.getActionReport());
         return true;
     }
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -103,29 +103,29 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         ActionReport report = context.getActionReport();
 
-        try {            
+        try {
             if (auditModule == null) {
                 report.setMessage(localStrings.getLocalString(
-                    "delete.audit.module.notfound", 
+                    "delete.audit.module.notfound",
                     "Specified Audit Module {0} not found", auditModuleName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
 
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-                public Object run(SecurityService param) 
+                public Object run(SecurityService param)
                 throws PropertyVetoException, TransactionFailure {
-                    
+
                     param.getAuditModule().remove(auditModule);
                     return null;
                 }
             }, securityService);
         } catch(TransactionFailure e) {
             report.setMessage(localStrings.getLocalString(
-                "delete.audit.module.fail", "Deletion of Audit Module {0} failed", 
+                "delete.audit.module.fail", "Deletion of Audit Module {0} failed",
                 auditModuleName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
@@ -135,7 +135,7 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
             "Deletion of Audit Module {0} completed successfully", auditModuleName));*/
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
-    
+
     private AuditModule chooseAuditModule(final ActionReport report) {
         config = CLIUtil.chooseConfig(domain, target, report);
         if (config == null) {

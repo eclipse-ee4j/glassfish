@@ -40,137 +40,137 @@ import java.util.regex.Pattern;
 
 public class BasicDBInitSqlTest {
 
-	@Test
-	public void test() throws Exception {
+    @Test
+    public void test() throws Exception {
 
-		// 1. Bootstrap GlassFish DAS in embedded mode.
-		GlassFishProperties glassFishProperties = new GlassFishProperties();
-		glassFishProperties.setInstanceRoot(System.getenv("S1AS_HOME")
-				+ "/domains/domain1");
-		glassFishProperties.setConfigFileReadOnly(false);
-		GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish(
-				glassFishProperties);
-		PrintStream sysout = System.out;
-		glassfish.start();
-		System.setOut(sysout);
+        // 1. Bootstrap GlassFish DAS in embedded mode.
+        GlassFishProperties glassFishProperties = new GlassFishProperties();
+        glassFishProperties.setInstanceRoot(System.getenv("S1AS_HOME")
+                + "/domains/domain1");
+        glassFishProperties.setConfigFileReadOnly(false);
+        GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish(
+                glassFishProperties);
+        PrintStream sysout = System.out;
+        glassfish.start();
+        System.setOut(sysout);
 
-		// 2. Deploy the PaaS application.
-		File archive = new File(System.getProperty("basedir")
-				+ "/target/basic_db_initsql_paas_sample.war"); // TODO :: use
-																// mvn apis to
-																// get the
-																// archive
-																// location.
-		Assert.assertTrue(archive.exists());
+        // 2. Deploy the PaaS application.
+        File archive = new File(System.getProperty("basedir")
+                + "/target/basic_db_initsql_paas_sample.war"); // TODO :: use
+                                                                // mvn apis to
+                                                                // get the
+                                                                // archive
+                                                                // location.
+        Assert.assertTrue(archive.exists());
 
-		Deployer deployer = null;
-		String appName = null;
-		try {
-			deployer = glassfish.getDeployer();
-			appName = deployer.deploy(archive);
+        Deployer deployer = null;
+        String appName = null;
+        try {
+            deployer = glassfish.getDeployer();
+            appName = deployer.deploy(archive);
 
-			System.err.println("Deployed [" + appName + "]");
-			Assert.assertNotNull(appName);
+            System.err.println("Deployed [" + appName + "]");
+            Assert.assertNotNull(appName);
 
-			CommandRunner commandRunner = glassfish.getCommandRunner();
-			CommandResult result = commandRunner.run("list-services");
-			System.out.println("\nlist-services command output [ "
-					+ result.getOutput() + "]");
+            CommandRunner commandRunner = glassfish.getCommandRunner();
+            CommandResult result = commandRunner.run("list-services");
+            System.out.println("\nlist-services command output [ "
+                    + result.getOutput() + "]");
 
-			// 3. Access the app to make sure PaaS app is correctly provisioned.
-			String HTTP_PORT = (System.getProperty("http.port") != null) ? System
-					.getProperty("http.port") : "28080";
-			String instanceIP = getLBIPAddress(glassfish);
+            // 3. Access the app to make sure PaaS app is correctly provisioned.
+            String HTTP_PORT = (System.getProperty("http.port") != null) ? System
+                    .getProperty("http.port") : "28080";
+            String instanceIP = getLBIPAddress(glassfish);
 
-			get("http://" + instanceIP + ":" + HTTP_PORT
-					+ "/basic_db_initsql_paas_sample/BasicDBInitSqlServlet",
-					"Customer ID");
+            get("http://" + instanceIP + ":" + HTTP_PORT
+                    + "/basic_db_initsql_paas_sample/BasicDBInitSqlServlet",
+                    "Customer ID");
 
             testListServices();
 
-			// 4. Undeploy the PaaS application .
-		} finally {
-			if (appName != null) {
-				deployer.undeploy(appName);
-				System.out.println("Destroying the resources created");
-				System.err.println("Undeployed [" + appName + "]");
-				try {
-					boolean undeployClean = false;
-					CommandResult commandResult = glassfish.getCommandRunner()
-							.run("list-services");
-					if (commandResult.getOutput().contains("Nothing to list.")) {
-						undeployClean = true;
-					}
-					Assert.assertTrue(undeployClean);
-				} catch (Exception e) {
-					System.err
-							.println("Couldn't varify whether undeploy succeeded");
-				}
-			}
-		}
+            // 4. Undeploy the PaaS application .
+        } finally {
+            if (appName != null) {
+                deployer.undeploy(appName);
+                System.out.println("Destroying the resources created");
+                System.err.println("Undeployed [" + appName + "]");
+                try {
+                    boolean undeployClean = false;
+                    CommandResult commandResult = glassfish.getCommandRunner()
+                            .run("list-services");
+                    if (commandResult.getOutput().contains("Nothing to list.")) {
+                        undeployClean = true;
+                    }
+                    Assert.assertTrue(undeployClean);
+                } catch (Exception e) {
+                    System.err
+                            .println("Couldn't varify whether undeploy succeeded");
+                }
+            }
+        }
 
-	}
+    }
 
-	private void get(String urlStr, String result) throws Exception {
-		URL url = new URL(urlStr);
-		URLConnection yc = url.openConnection();
-		System.out.println("\nURLConnection [" + yc + "] : ");
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				yc.getInputStream()));
-		String line = null;
-		boolean found = false;
-		while ((line = in.readLine()) != null) {
-			System.out.println(line);
-			if (line.indexOf(result) != -1) {
-				found = true;
-			}
-		}
-		Assert.assertTrue(found);
-		System.out.println("\n***** SUCCESS **** Found [" + result
-				+ "] in the response.*****\n");
-	}
+    private void get(String urlStr, String result) throws Exception {
+        URL url = new URL(urlStr);
+        URLConnection yc = url.openConnection();
+        System.out.println("\nURLConnection [" + yc + "] : ");
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream()));
+        String line = null;
+        boolean found = false;
+        while ((line = in.readLine()) != null) {
+            System.out.println(line);
+            if (line.indexOf(result) != -1) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found);
+        System.out.println("\n***** SUCCESS **** Found [" + result
+                + "] in the response.*****\n");
+    }
 
-	private String getLBIPAddress(GlassFish glassfish) {
-		String lbIP = null;
-		String IPAddressPattern = "IP-ADDRESS\\s*\n*(.*)\\s*\n(([01]?\\d*|2[0-4]\\d|25[0-5])\\."
-				+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-				+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-				+ "([0-9]?\\d\\d?|2[0-4]\\d|25[0-5]))";
-		try {
-			CommandRunner commandRunner = glassfish.getCommandRunner();
-			String result = commandRunner
-					.run("list-services", "--type", "LB",
-							"--output", "IP-ADDRESS").getOutput().toString();
-			if (result.contains("Nothing to list.")) {
-				result = commandRunner
-						.run("list-services", "--type", "JavaEE", "--output",
-								"IP-ADDRESS").getOutput().toString();
+    private String getLBIPAddress(GlassFish glassfish) {
+        String lbIP = null;
+        String IPAddressPattern = "IP-ADDRESS\\s*\n*(.*)\\s*\n(([01]?\\d*|2[0-4]\\d|25[0-5])\\."
+                + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+                + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+                + "([0-9]?\\d\\d?|2[0-4]\\d|25[0-5]))";
+        try {
+            CommandRunner commandRunner = glassfish.getCommandRunner();
+            String result = commandRunner
+                    .run("list-services", "--type", "LB",
+                            "--output", "IP-ADDRESS").getOutput().toString();
+            if (result.contains("Nothing to list.")) {
+                result = commandRunner
+                        .run("list-services", "--type", "JavaEE", "--output",
+                                "IP-ADDRESS").getOutput().toString();
 
-				Pattern p = Pattern.compile(IPAddressPattern);
-				Matcher m = p.matcher(result);
-				if (m.find()) {
-					lbIP = m.group(2);
-				} else {
-					lbIP = "localhost";
-				}
-			} else {
-				Pattern p = Pattern.compile(IPAddressPattern);
-				Matcher m = p.matcher(result);
-				if (m.find()) {
-					lbIP = m.group(2);
-				} else {
-					lbIP = "localhost";
-				}
+                Pattern p = Pattern.compile(IPAddressPattern);
+                Matcher m = p.matcher(result);
+                if (m.find()) {
+                    lbIP = m.group(2);
+                } else {
+                    lbIP = "localhost";
+                }
+            } else {
+                Pattern p = Pattern.compile(IPAddressPattern);
+                Matcher m = p.matcher(result);
+                if (m.find()) {
+                    lbIP = m.group(2);
+                } else {
+                    lbIP = "localhost";
+                }
 
-			}
+            }
 
-		} catch (Exception e) {
-			System.out.println("Regex has thrown an exception "
-					+ e.getMessage());
-			return "localhost";
-		}
-		return lbIP;
-	}
+        } catch (Exception e) {
+            System.out.println("Regex has thrown an exception "
+                    + e.getMessage());
+            return "localhost";
+        }
+        return lbIP;
+    }
 
 private void testListServices() {
         ServiceLocator habitat = Globals.getDefaultHabitat();

@@ -29,7 +29,7 @@ public class WebTest{
 
     private static final SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
-    
+
     private String host;
     private String port;
     private String contextRoot;

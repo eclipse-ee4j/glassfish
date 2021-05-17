@@ -86,7 +86,7 @@ public interface Request {
 
     /**
      * Set filter chain associated with the request.
-     * 
+     *
      * @param filterChain new filter chain
      */
     public void setFilterChain(FilterChain filterChain);
@@ -337,10 +337,10 @@ public interface Request {
 
     // START SJSAS 6346226
     /**
-     * Gets the jroute id of this request, which may have been 
+     * Gets the jroute id of this request, which may have been
      * sent as a separate <code>JROUTE</code> cookie or appended to the
      * session identifier encoded in the URI (if cookies have been disabled).
-     * 
+     *
      * @return The jroute id of this request, or null if this request does not
      * carry any jroute id
      */

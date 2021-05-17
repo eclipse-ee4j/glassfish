@@ -50,7 +50,7 @@ public class CompositeArchive extends AbstractReadableArchive {
 
     public boolean exists(String name) throws IOException {
         if (filter.accept(delegate, name)) {
-            return delegate.exists(name);                                    
+            return delegate.exists(name);
         }
         return false;
     }
@@ -139,7 +139,7 @@ public class CompositeArchive extends AbstractReadableArchive {
     }
 
     // we don't hide the top level directories as we need to use them
-    // to figure out whether the EarSniffer can handle it in the 
+    // to figure out whether the EarSniffer can handle it in the
     // case of optional application.xml
     public Collection<String> getDirectories() throws IOException {
         return delegate.getDirectories();

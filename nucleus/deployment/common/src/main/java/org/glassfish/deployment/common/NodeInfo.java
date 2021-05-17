@@ -29,7 +29,7 @@ import java.io.InputStream;
  * A class that maintains information about a class
  *
  * @author Mahesh Kannan
- * 
+ *
  */
 class NodeInfo
         extends ClassVisitor {

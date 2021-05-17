@@ -19,7 +19,7 @@ package endpoint;
 @jakarta.xml.ws.BindingType(jakarta.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 @jakarta.jws.WebService (wsdlLocation="WEB-INF/wsdl/AddNumbers.wsdl", serviceName="AddNumbersService", targetNamespace="http://duke.org", portName="AddNumbersPort", endpointInterface="endpoint.AddNumbersPortType")
 public class AddNumbersImpl implements AddNumbersPortType {
-    
+
     public int addNumbers (int number1, int number2) {
         return number1 + number2;
     }

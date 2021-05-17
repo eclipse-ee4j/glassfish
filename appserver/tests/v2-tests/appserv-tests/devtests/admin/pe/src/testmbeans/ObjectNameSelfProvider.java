@@ -98,9 +98,9 @@ public class ObjectNameSelfProvider extends ObjectNameSelfProviderDynamicSupport
    /**
     * Build the private dMBeanInfo field,
     * which represents the management interface exposed by the MBean,
-    * that is, the set of attributes, constructors, operations and 
+    * that is, the set of attributes, constructors, operations and
     * notifications which are available for management.
-    * 
+    *
     * A reference to the dMBeanInfo object is returned by the getMBeanInfo()
     * method of the DynamicMBean interface. Note that, once constructed,
     * an MBeanInfo object is immutable.

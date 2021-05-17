@@ -35,10 +35,10 @@ public class SlessEJB6 implements Sless6
 {
     boolean aroundInvokeCalled = false;
 
-    
+
     @Interceptors({InterceptorA.class, InterceptorG.class})
     public void ag() {
-        System.out.println("in SlessEJB6:ag().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:ag().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( !aroundInvokeCalled ) {
@@ -50,17 +50,17 @@ public class SlessEJB6 implements Sless6
     public void ag(int param1) {
         System.out.println("in SlessEJB6:ag(int param).  " +
                            "aroundInvokeCalled = " + aroundInvokeCalled);
-                           
+
         if( aroundInvokeCalled ) {
             aroundInvokeCalled = false;
             throw new EJBException("bean class aroundInvoke was incorrectly called");
         }
     }
 
-    // bg() (but not bg(param)) marked through ejb-jar.xml 
+    // bg() (but not bg(param)) marked through ejb-jar.xml
     // as having interceptors B,G
     public void bg() {
-        System.out.println("in SlessEJB6:bg().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:bg().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( !aroundInvokeCalled ) {
@@ -72,7 +72,7 @@ public class SlessEJB6 implements Sless6
     public void bg(int param1) {
         System.out.println("in SlessEJB6:bg(int param).  " +
                            "aroundInvokeCalled = " + aroundInvokeCalled);
-                           
+
         if( aroundInvokeCalled ) {
             aroundInvokeCalled = false;
             throw new EJBException("bean class aroundInvoke was incorrectly called");
@@ -82,7 +82,7 @@ public class SlessEJB6 implements Sless6
     // overloaded version of interceptor-binding used in ejb-jar.xml to
     // mark all methods with name cg as having interceptors C,G
     public void cg() {
-        System.out.println("in SlessEJB6:cg().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:cg().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( !aroundInvokeCalled ) {
@@ -92,7 +92,7 @@ public class SlessEJB6 implements Sless6
     }
 
     public void cg(int param1) {
-        System.out.println("in SlessEJB6:cg(int).  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:cg(int).  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( !aroundInvokeCalled ) {
@@ -102,7 +102,7 @@ public class SlessEJB6 implements Sless6
     }
 
     public void cg(String param1, double param2) {
-        System.out.println("in SlessEJB6:cg(String, double).  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:cg(String, double).  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( !aroundInvokeCalled ) {
@@ -112,11 +112,11 @@ public class SlessEJB6 implements Sless6
     }
 
 
-    // Kind of like ag(), in that dg() is overloaded, but it's the 
+    // Kind of like ag(), in that dg() is overloaded, but it's the
     // signature that has a parameter that is assigned interceptors using
     // @Interceptor.
     public void dg() {
-        System.out.println("in SlessEJB6:dg().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:dg().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( aroundInvokeCalled ) {
@@ -129,7 +129,7 @@ public class SlessEJB6 implements Sless6
     public void dg(int param1) {
         System.out.println("in SlessEJB6:dg(int param).  " +
                            "aroundInvokeCalled = " + aroundInvokeCalled);
-                           
+
         if( !aroundInvokeCalled ) {
             throw new EJBException("bean class aroundInvoke not called");
         }
@@ -141,7 +141,7 @@ public class SlessEJB6 implements Sless6
     // Like dg(), except that dg(int param) is assigned its interceptor
     // chain through ejb-jar.xml
     public void eg() {
-        System.out.println("in SlessEJB6:eg().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB6:eg().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         if( aroundInvokeCalled ) {
@@ -153,15 +153,15 @@ public class SlessEJB6 implements Sless6
     public void eg(int param1) {
         System.out.println("in SlessEJB6:eg(int param).  " +
                            "aroundInvokeCalled = " + aroundInvokeCalled);
-                           
+
         if( !aroundInvokeCalled ) {
             throw new EJBException("bean class aroundInvoke not called");
         }
         aroundInvokeCalled = false;
     }
 
-    
+
 
 }
-    
+
 

@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Test Servlet that prints out the name of the authenticated caller and whether
  * this caller is in any of the roles {foo, bar, kaz}
- * 
+ *
  *
  */
 @DeclareRoles({ "foo", "bar", "kaz" })

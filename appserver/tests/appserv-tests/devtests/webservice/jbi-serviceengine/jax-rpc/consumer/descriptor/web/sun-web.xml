@@ -26,7 +26,7 @@
            <wsdl-port>
     <namespaceURI>http://hello.org/wsdl</namespaceURI>
     <localpart>InterestIFPort</localpart>
-</wsdl-port> 
+</wsdl-port>
             <stub-property name="jbi-enabled" value="true"/>
         </port-info>
     </service-ref>

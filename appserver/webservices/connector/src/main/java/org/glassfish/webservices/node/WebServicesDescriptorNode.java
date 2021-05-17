@@ -39,13 +39,13 @@ import org.glassfish.webservices.connector.LogUtils;
  * Root node for web services deployment descriptor
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 @Service
-public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescriptor> {    
+public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescriptor> {
     public final static XMLElement ROOT_ELEMENT =
         new XMLElement(WebServicesTagNames.WEB_SERVICES);
-    
+
     public final static String SCHEMA_ID = "jakartaee_web_services_2_0.xsd";
     public final static String SCHEMA_ID_12 = "javaee_web_services_1_2.xsd";
     public final static String SCHEMA_ID_13 = "javaee_web_services_1_3.xsd";
@@ -64,7 +64,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
         return Collections.unmodifiableList(sysIDs);
 
     }
-    
+
     private BundleDescriptor bundleDescriptor;
 
     public WebServicesDescriptorNode(BundleDescriptor descriptor) {
@@ -72,7 +72,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
         registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE),
                                WebServiceNode.class);
         SaxParserHandler.registerBundleNode(this, WebServicesTagNames.WEB_SERVICES);
-    }   
+    }
 
     public WebServicesDescriptorNode() {
         this(null);
@@ -82,7 +82,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
         return ROOT_ELEMENT.getQName();
     }
-    
+
     @Override
     public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, Map<String, List<Class>> versionUpgrades) {
         return Collections.EMPTY_MAP;
@@ -95,7 +95,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public String getDocType() {
         return null;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */
@@ -119,34 +119,34 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
-     */    
+     */
     @Override
-    public void setElementValue(XMLElement element, String value) {    
-        if (TagNames.VERSION.equals(element.getQName())) {    
+    public void setElementValue(XMLElement element, String value) {
+        if (TagNames.VERSION.equals(element.getQName())) {
             bundleDescriptor.getWebServices().setSpecVersion(value);
         } else super.setElementValue(element, value);
     }
-        
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor 
+     * Adds  a new DOL descriptor instance to the descriptor
      * instance associated with this XMLNode
      *
      * @param descriptor the new descriptor
      */
     @Override
-    public void addDescriptor(Object descriptor) {    
-        WebServicesDescriptor webServicesDesc = 
+    public void addDescriptor(Object descriptor) {
+        WebServicesDescriptor webServicesDesc =
             bundleDescriptor.getWebServices();
         WebService webService = (WebService) descriptor;
         webServicesDesc.addWebService(webService);
-        
-        for(Iterator iter = webService.getEndpoints().iterator(); 
+
+        for(Iterator iter = webService.getEndpoints().iterator();
             iter.hasNext();) {
             WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
             if( !next.resolveComponentLink() ) {
@@ -154,16 +154,16 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
                         new Object[]{next.getEndpointName(), next.getLinkName()});
             }
         }
-        
+
     }
-    
+
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     @Override
     public BundleDescriptor getDescriptor() {
         return bundleDescriptor;
-    }     
+    }
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -171,7 +171,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
      * @param parent node for the DOM tree
      * @param descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     @Override
     public Node writeDescriptor(Node parent, BundleDescriptor descriptor) {
         if (parent instanceof Document) {
@@ -193,6 +193,6 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-    
+
 }
 

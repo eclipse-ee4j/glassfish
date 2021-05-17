@@ -22,8 +22,8 @@
         <!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
         <!ENTITY run SYSTEM "./../../../config/run.xml">
-	<!ENTITY jdbcxml SYSTEM "./../JdbcCommon.xml">
-	<!ENTITY jdbcProps SYSTEM "./../JdbcCommon.properties">
+    <!ENTITY jdbcxml SYSTEM "./../JdbcCommon.xml">
+    <!ENTITY jdbcProps SYSTEM "./../JdbcCommon.properties">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -71,13 +71,13 @@
     <target name="run" depends="init-common">
         <antcall target="stop-derby"/>
 
-	<parallel>
-        	<antcall target="runclient-common"/>
-		<sequential>
-			<sleep seconds="15"/>
-			<antcall target="start-derby"/>
-		</sequential>
-	</parallel>
+    <parallel>
+            <antcall target="runclient-common"/>
+        <sequential>
+            <sleep seconds="15"/>
+            <antcall target="start-derby"/>
+        </sequential>
+    </parallel>
 
     </target>
 

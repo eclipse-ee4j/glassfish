@@ -38,19 +38,19 @@ public final class SecurityClassLoad {
         if( System.getSecurityManager() == null ){
             return;
         }
-        
+
         loadCorePackage(loader);
         loadLoaderPackage(loader);
         loadServletsPackage(loader);
         loadSessionPackage(loader);
         loadUtilPackage(loader);
         loadJavaxPackage(loader);
-        loadCoyotePackage(loader);        
-        loadHttp11Package(loader);        
+        loadCoyotePackage(loader);
+        loadHttp11Package(loader);
         loadTomcatPackage(loader);
     }
-    
-    
+
+
     private final static void loadCorePackage(ClassLoader loader)
         throws Exception {
         String basePackage = "org.apache.catalina.";
@@ -70,8 +70,8 @@ public final class SecurityClassLoad {
             (basePackage +
              "core.StandardWrapper$1");
     }
-    
-    
+
+
     private final static void loadLoaderPackage(ClassLoader loader)
         throws Exception {
         String basePackage = "org.apache.catalina.";
@@ -90,8 +90,8 @@ public final class SecurityClassLoad {
         // via web application class loader.
         loader.loadClass(basePackage + "DefaultServlet");
     }
-    
-    
+
+
     private final static void loadSessionPackage(ClassLoader loader)
         throws Exception {
         String basePackage = "org.apache.catalina.session.";
@@ -99,8 +99,8 @@ public final class SecurityClassLoad {
         loader.loadClass(basePackage + "StandardSession$1");
         loader.loadClass(basePackage + "StandardManager$PrivilegedDoUnload");
     }
-    
-    
+
+
     private final static void loadUtilPackage(ClassLoader loader)
         throws Exception {
         String basePackage = "org.apache.catalina.";
@@ -108,13 +108,13 @@ public final class SecurityClassLoad {
             (basePackage + "util.URL");
         loader.loadClass(basePackage + "util.Enumerator");
     }
-    
-    
+
+
     private final static void loadJavaxPackage(ClassLoader loader)
         throws Exception {
         loader.loadClass("jakarta.servlet.http.Cookie");
     }
-    
+
 
     private final static void loadHttp11Package(ClassLoader loader)
         throws Exception {
@@ -123,8 +123,8 @@ public final class SecurityClassLoad {
         loader.loadClass(basePackage + "InternalOutputBuffer$1");
         loader.loadClass(basePackage + "InternalOutputBuffer$2");
     }
-    
-    
+
+
     private final static void loadCoyotePackage(ClassLoader loader)
         throws Exception {
         String basePackage = "org.apache.catalina.connector.";
@@ -154,7 +154,7 @@ public final class SecurityClassLoad {
              "RequestFacade$GetHeadersPrivilegedAction");
         loader.loadClass
             (basePackage +
-             "RequestFacade$GetHeaderNamesPrivilegedAction");  
+             "RequestFacade$GetHeaderNamesPrivilegedAction");
         loader.loadClass
             (basePackage +
              "RequestFacade$GetCookiesPrivilegedAction");

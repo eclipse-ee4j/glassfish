@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 
 /**
  * Coyote implementation of the servlet writer.
- * 
+ *
  * @author Remy Maucherat
  * @author Kin-man Chung
  */
@@ -72,8 +72,8 @@ public class CoyoteWriter
         throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-    
-    
+
+
     // -------------------------------------------------------- Package Methods
 
 
@@ -181,7 +181,7 @@ public class CoyoteWriter
 
 
     public void write(char buf[]) {
-	write(buf, 0, buf.length);
+    write(buf, 0, buf.length);
     }
 
 

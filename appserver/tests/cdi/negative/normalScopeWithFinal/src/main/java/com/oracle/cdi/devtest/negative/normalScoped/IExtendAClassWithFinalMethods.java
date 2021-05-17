@@ -21,10 +21,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 /**
  * This class extends a class with final methods, but does not have any final
  * methods itself.  However, it still cannot be proxied because of the final.
- * 
+ *
  * This should cause a deployment failure
  * methods in the superclass
- * 
+ *
  * @author jwells
  *
  */

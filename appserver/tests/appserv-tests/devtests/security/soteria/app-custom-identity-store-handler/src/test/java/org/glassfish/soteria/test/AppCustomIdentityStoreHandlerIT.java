@@ -52,16 +52,16 @@ public class AppCustomIdentityStoreHandlerIT extends ArquillianBase {
     @Test
     public void testAuthenticated() {
         assertAuthenticated(
-            "web", "reza", 
+            "web", "reza",
             readFromServer("/servlet?name=reza&password=secret1"),
-            // Only groups from the 
+            // Only groups from the
             "baz");
     }
 
     @Test
     public void testBlacklisted() {
         assertNotAuthenticated(
-            "web", "rudy", 
+            "web", "rudy",
             readFromServer("/servlet?name=rudy&password=pw"),
             "foo", "bar");
     }
@@ -75,7 +75,7 @@ public class AppCustomIdentityStoreHandlerIT extends ArquillianBase {
     @Test
     public void testNotAuthenticatedWrongName() {
         assertNotAuthenticated(
-            "web", "reza", 
+            "web", "reza",
             readFromServer("/servlet?name=romo&password=secret1"),
             "foo", "bar", "baz");
     }
@@ -83,7 +83,7 @@ public class AppCustomIdentityStoreHandlerIT extends ArquillianBase {
     @Test
     public void testNotAuthenticatedWrongPassword() {
         assertNotAuthenticated(
-            "web", "reza", 
+            "web", "reza",
             readFromServer("/servlet?name=reza&password=wrongpassword"),
             "foo", "bar", "baz");
     }

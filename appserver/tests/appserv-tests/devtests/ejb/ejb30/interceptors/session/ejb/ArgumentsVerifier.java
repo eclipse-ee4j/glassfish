@@ -25,7 +25,7 @@ public class ArgumentsVerifier {
 
     @AroundInvoke
     public Object interceptCall(InvocationContext ctx)
-   	throws MyBadException, Exception 
+       throws MyBadException, Exception
     {
         Method method = ctx.getMethod();
         String methodName = method.getName();
@@ -51,7 +51,7 @@ public class ArgumentsVerifier {
             params[0] = new Long(45);
         } else if (methodName.equals("objectArgs")) {
             params = new Object[0];
-        } 
+        }
 
         try {
             ctx.setParameters(params);

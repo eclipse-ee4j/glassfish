@@ -50,7 +50,7 @@ import com.sun.enterprise.config.serverbeans.*;
 @RestEndpoints({
     @RestEndpoint(configBean=Config.class,
         opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE
-        path="delete-config", 
+        path="delete-config",
         description="Delete Config",
         params={
             @RestParam(name="id", value="$parent")

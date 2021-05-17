@@ -107,7 +107,7 @@
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-local-pool.idle_timeout_in_seconds=3600"/>
         </antcall>
-	<!--<antcall target="asadmin-common">
+    <!--<antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-local-pool.property.URL=jdbc:derby://localhost:1527/testdb;user=dbuser;password=dbpassword"/>

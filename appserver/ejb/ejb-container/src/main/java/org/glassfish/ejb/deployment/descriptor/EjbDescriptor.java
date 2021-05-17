@@ -104,7 +104,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
     private String jndiName = "";
     private String mappedName = "";
 
-    // Is set to true if this bean exposes a no-interface view 
+    // Is set to true if this bean exposes a no-interface view
     private boolean localBean = false;
 
     // Used in <transaction-scope> element in XML
@@ -193,14 +193,14 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
             new ArrayList<MethodDescriptor>();
 
     //
-    // The set of all interceptor classes applicable to this bean.  This 
+    // The set of all interceptor classes applicable to this bean.  This
     // includes any interceptor class that is present at *either* the class
     // level or method-level.
     //
     private Set<EjbInterceptor> allInterceptorClasses =
             new HashSet<EjbInterceptor>();
 
-    // Ordered list of class-level interceptors for this bean.  
+    // Ordered list of class-level interceptors for this bean.
     private List<EjbInterceptor> interceptorChain =
             new LinkedList<EjbInterceptor>();
 
@@ -208,13 +208,13 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
     // Interceptor info per business method.  If the map does not
     // contain an entry for the business method, there is no method-specific
     // interceptor information for that method.  In that case the standard
-    // class-level interceptor information applies.  
+    // class-level interceptor information applies.
     //
-    // If there is an entry for the business method, the corresponding list 
-    // represents the *complete* ordered list of interceptor classes for that 
+    // If there is an entry for the business method, the corresponding list
+    // represents the *complete* ordered list of interceptor classes for that
     // method.  An empty list would mean all the interceptors have been
     // disabled for that particular business method.
-    // 
+    //
     private Map<MethodDescriptor, List<EjbInterceptor>> methodInterceptorsMap =
             new HashMap<MethodDescriptor, List<EjbInterceptor>>();
 
@@ -246,13 +246,13 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         super(other);
         this.homeClassName = other.homeClassName;
         this.remoteClassName = other.remoteClassName;
-        this.remoteBusinessClassNames = 
+        this.remoteBusinessClassNames =
             new HashSet<String>(other.remoteBusinessClassNames);
         this.localHomeClassName = other.localHomeClassName;
         this.localClassName = other.localClassName;
-        this.localBusinessClassNames = 
+        this.localBusinessClassNames =
             new HashSet<String>(other.localBusinessClassNames);
-        this.webServiceEndpointInterfaceName = 
+        this.webServiceEndpointInterfaceName =
             other.webServiceEndpointInterfaceName;
         this.localBean = other.localBean;
         this.jndiName = other.jndiName;
@@ -296,28 +296,28 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
     }
 
     public abstract void setType(String type);
-    
+
     /**
-    * Returns the classname of the Home interface of this ejb. 
+    * Returns the classname of the Home interface of this ejb.
     */
     public String getHomeClassName() {
     return this.homeClassName;
     }
-    
-    /** 
-    * Sets the classname of the Home interface of this ejb. 
+
+    /**
+    * Sets the classname of the Home interface of this ejb.
     */
     public void setHomeClassName(String homeClassName) {
     this.homeClassName = homeClassName;
     }
-    
+
     /**
-    * Sets the classname of the Remote interface of this ejb. 
+    * Sets the classname of the Remote interface of this ejb.
     */
     public void setRemoteClassName(String remoteClassName) {
     this.remoteClassName = remoteClassName;
     }
-    
+
 
     /**
     * Returns the classname of the Remote interface of this ejb.
@@ -328,7 +328,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
 
     /**
      * Sets the classname for the local home interface of this ejb
-     * 
+     *
      * @param localHomeClassName fully qualified class name for the interface
      */
     public void setLocalHomeClassName(String localHomeClassName) {
@@ -344,7 +344,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
 
     /**
      * Sets the classname for the local interface of this ejb
-     * 
+     *
      * @param localClassName fully qualified class name for the interface
      */
     public void setLocalClassName(String localClassName) {
@@ -360,7 +360,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
 
     /**
      * Add a classname for a no-interface view of the local ejb
-     * 
+     *
      * @param className fully qualified class name for the interface
      */
     public void addNoInterfaceLocalBeanClass(String className) {
@@ -458,7 +458,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
      * @return true if the EJB has a RemoteHome/Remote interface
      */
     public boolean isRemoteInterfacesSupported() {
-        return (getHomeClassName() != null);        
+        return (getHomeClassName() != null);
     }
 
     /**
@@ -472,7 +472,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
      * @return true if this is an EJB that implements a web service endpoint.
      */
     public boolean hasWebServiceEndpointInterface() {
-        return (getWebServiceEndpointInterfaceName() != null);        
+        return (getWebServiceEndpointInterfaceName() != null);
     }
 
     /**
@@ -630,8 +630,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         for(MethodDescriptor next : timerMethodDescriptors) {
             if( next.getName().equals(timerMethod.getName()) &&
                 ( next.getParameterClassNames() == null ||
-		    next.getParameterClassNames().length ==
-		        timerMethod.getParameterTypes().length) ) {
+            next.getParameterClassNames().length ==
+                timerMethod.getParameterTypes().length) ) {
                 match = true;
                 break;
             }
@@ -850,7 +850,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
     }
 
     public void addInterceptorClass(EjbInterceptor interceptor) {
-        allInterceptorClasses.add(interceptor);    
+        allInterceptorClasses.add(interceptor);
     }
 
     public void appendToInterceptorChain(List<EjbInterceptor> chain) {
@@ -904,7 +904,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         LinkedList<EjbInterceptor> aroundInvokeInterceptors =
                 new LinkedList<EjbInterceptor>();
 
-        List<EjbInterceptor> classOrMethodInterceptors = 
+        List<EjbInterceptor> classOrMethodInterceptors =
                 getClassOrMethodInterceptors(businessMethod);
 
         for (EjbInterceptor next : classOrMethodInterceptors) {
@@ -938,7 +938,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         LinkedList<EjbInterceptor> aroundTimeoutInterceptors =
                 new LinkedList<EjbInterceptor>();
 
-        List<EjbInterceptor> classOrMethodInterceptors = 
+        List<EjbInterceptor> classOrMethodInterceptors =
                 getClassOrMethodInterceptors(businessMethod);
 
         for (EjbInterceptor next : classOrMethodInterceptors) {
@@ -1047,7 +1047,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
 
                 callbackDescriptors = ((EjbSessionDescriptor) this).getPostActivateDescriptors();
                 break;
-                
+
             default:
                 throw new IllegalStateException(localStrings.getLocalString(
                     "enterprise.deployment.invalidcallbacktype",
@@ -1057,13 +1057,13 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         return getCallbackInterceptors(type, callbackDescriptors);
     }
 
-    /** 
+    /**
      * Common code to add the bean class as a LC interceptor
      */
-    private LinkedList<EjbInterceptor> getCallbackInterceptors(CallbackType type, 
+    private LinkedList<EjbInterceptor> getCallbackInterceptors(CallbackType type,
             Set<LifecycleCallbackDescriptor> callbackDescriptors) {
 
-        LinkedList<EjbInterceptor> callbackInterceptors = 
+        LinkedList<EjbInterceptor> callbackInterceptors =
                 new LinkedList<EjbInterceptor>();
 
         ClassLoader classLoader = getEjbBundleDescriptor().getClassLoader();
@@ -1122,7 +1122,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
                 _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[]{this.getEjbClassName()});
                 throw new RuntimeException(t);
             }
-        } 
+        }
         if (callbackInterceptors == null) {
             // non-CDI or no @Inject constructor - use no-arg constructor
             callbackInterceptors = getClassOrMethodInterceptors(
@@ -1526,7 +1526,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         }
 
         // the current info is structured as MethodDescriptors as keys to
-        // method permission, let's reverse this to make the Map using the 
+        // method permission, let's reverse this to make the Map using the
         // method permission as a key.
         Map styledMethodDescriptorsByPermission = new HashMap();
         for (Iterator mdIterator = styledMethodDescriptors.entrySet().iterator(); mdIterator.hasNext();) {
@@ -1595,7 +1595,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
                 MethodDescriptor md = (MethodDescriptor) mdItr.next();
 
                 // remove it from the list of unpermissioned methods.
-                // it will be used at the end to set all remaining methods 
+                // it will be used at the end to set all remaining methods
                 // with the unchecked method permission
                 unpermissionedMethods.remove(md);
 
@@ -1608,7 +1608,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
             }
         }
 
-        // All remaining methods should now be defined as unchecked...        
+        // All remaining methods should now be defined as unchecked...
         MethodPermission mp = MethodPermission.getUncheckedMethodPermission();
         Iterator iterator = unpermissionedMethods.iterator();
         while (iterator.hasNext()) {
@@ -2554,11 +2554,11 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
             }
 
             if (isLocalBean()) {
-                addAllInterfaceMethodsIn(methods, classLoader.loadClass(getEjbClassName()), 
-                        MethodDescriptor.EJB_LOCAL);                    
+                addAllInterfaceMethodsIn(methods, classLoader.loadClass(getEjbClassName()),
+                        MethodDescriptor.EJB_LOCAL);
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", 
+            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
                     new Object[]{"(EjbDescriptor.getBusinessMethodDescriptors())"});
 
             throw new RuntimeException(t);
@@ -2845,7 +2845,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         if(iorConfigDescriptors== null || iorConfigDescriptors.isEmpty()){
             return false;
         }
-        
+
         for (EjbIORConfigurationDescriptor iorDesc : iorConfigDescriptors) {
 
             if (EjbIORConfigurationDescriptor.REQUIRED.equalsIgnoreCase
@@ -2872,4 +2872,4 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor
         return true;
     }
 }
-    
+

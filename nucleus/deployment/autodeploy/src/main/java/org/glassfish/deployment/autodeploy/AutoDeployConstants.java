@@ -31,7 +31,7 @@ import java.util.List;
  * @author  vikas
  */
 public class AutoDeployConstants {
-    
+
     /**
      * Starting delay between AutoDeployTask activation and actual deployment.
      */
@@ -39,7 +39,7 @@ public class AutoDeployConstants {
     /**
      * Max tardiness between schedule and actual execution of task.
      */
-    public static  final long MAX_TARDINESS= 10; //sec 
+    public static  final long MAX_TARDINESS= 10; //sec
     /**
      * Max tardiness between schedule and actual execution of task.
      */
@@ -63,7 +63,7 @@ public class AutoDeployConstants {
      * Extension of file, if deployment fails
      */
     public static  final String NOTDEPLOYED="_notdeployed";
-    
+
     /**
      * File type if it is being monitored due to slow growth
      */
@@ -81,11 +81,11 @@ public class AutoDeployConstants {
     public static final String DEPLOY_FAILED       = "_deployFailed";
     public static final String UNDEPLOYED       = "_undeployed";
     public static final String UNDEPLOY_FAILED       = "_undeployFailed";
-    
+
     public static final String UNDEPLOY_REQUESTED = "_undeployRequested";
-    
+
     public static final List<String> MARKER_FILE_SUFFIXES = initMarkerFileSuffixes();
-    
+
     private static List<String> initMarkerFileSuffixes() {
         List<String> result = new ArrayList<String>();
         result.add(DEPLOYED);
@@ -95,7 +95,7 @@ public class AutoDeployConstants {
         result.add(UNDEPLOYED);
         result.add(UNDEPLOY_FAILED);
         result.add(UNDEPLOY_REQUESTED);
-        
+
         return result;
     }
 }

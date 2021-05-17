@@ -51,7 +51,7 @@ import org.glassfish.config.support.TargetType;
 /**
  * Flush JMS Destination
  *
- * 
+ *
  */
 @Service(name="flush-jmsdest")
 @PerLookup
@@ -60,15 +60,15 @@ import org.glassfish.config.support.TargetType;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="flush-jmsdest", 
+        opType=RestEndpoint.OpType.POST,
+        path="flush-jmsdest",
         description="Flush",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="flush-jmsdest", 
+        opType=RestEndpoint.OpType.POST,
+        path="flush-jmsdest",
         description="Flush",
         params={
             @RestParam(name="target", value="$parent")
@@ -79,9 +79,9 @@ public class FlushJMSDestination extends JMSDestination implements AdminCommand 
         private static final Logger logger = Logger.getLogger(LogUtils.JMS_ADMIN_LOGGER);
         final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(FlushJMSDestination.class);
          private static final String DESTINATION_CONFIG_DOMAIN_TYPE
-    			= MBEAN_DOMAIN_NAME
-				+ ":type=" + "Destination"
-				+ ",subtype=Config";
+                = MBEAN_DOMAIN_NAME
+                + ":type=" + "Destination"
+                + ",subtype=Config";
 
         @Param(name="destType", shortName="T", optional=false)
         String destType;
@@ -227,18 +227,18 @@ public class FlushJMSDestination extends JMSDestination implements AdminCommand 
        }
 
     private ObjectName createDestinationConfig(String destinationType,
-					String destinationName)
-				throws MalformedObjectNameException,
-					NullPointerException  {
-	String s = DESTINATION_CONFIG_DOMAIN_TYPE
-			+ ",desttype="
-			+ destinationType
-			+ ",name="
-			+ ObjectName.quote(destinationName);
+                    String destinationName)
+                throws MalformedObjectNameException,
+                    NullPointerException  {
+    String s = DESTINATION_CONFIG_DOMAIN_TYPE
+            + ",desttype="
+            + destinationType
+            + ",name="
+            + ObjectName.quote(destinationName);
 
-	ObjectName o = new ObjectName(s);
+    ObjectName o = new ObjectName(s);
 
-	return (o);
+    return (o);
     }
 
 }

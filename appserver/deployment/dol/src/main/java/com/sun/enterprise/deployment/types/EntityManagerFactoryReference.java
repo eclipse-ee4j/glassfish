@@ -19,11 +19,11 @@ package com.sun.enterprise.deployment.types;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.InjectionCapable;
 
-/** 
+/**
  * Protocol associated with defining an EntityManagerFactory reference
  *
  */
-public interface EntityManagerFactoryReference extends NamedInformation, 
+public interface EntityManagerFactoryReference extends NamedInformation,
     InjectionCapable {
 
     /**
@@ -41,13 +41,13 @@ public interface EntityManagerFactoryReference extends NamedInformation,
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * reference is declared. 
+     * reference is declared.
      */
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * reference is declared.  
+     * reference is declared.
      */
     public BundleDescriptor getReferringBundleDescriptor();
 

@@ -26,7 +26,7 @@ import org.glassfish.external.arc.Taxonomy;
 
 /**
     <b>INTERNAL USE ONLY--not part of the API</b>
-	@since AS 9.0
+    @since AS 9.0
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public final class LogQueryResultImpl
@@ -34,7 +34,7 @@ public final class LogQueryResultImpl
 {
     private String[]         mFieldNames;
     private LogQueryEntry[]  mEntries;
-    
+
         public
     LogQueryResultImpl(
         final String[]          fieldNames,
@@ -43,36 +43,36 @@ public final class LogQueryResultImpl
         mFieldNames   = fieldNames;
         mEntries      = entries;
     }
-    
+
     /**
         Instantiate using result from {@link Logging#queryServerLog}.
         The first Object[] is a String[] of the field names.
         Subsequent Object[] are the data values.
      */
-        public 
+        public
     LogQueryResultImpl( final List<Serializable[]> records )
     {
         mFieldNames   = (String[])records.get( 0 );
-        
+
         mEntries    = new LogQueryEntry[ records.size() - 1 ];
         for( int i = 0; i < mEntries.length; ++i )
         {
             mEntries[ i ]   = new LogQueryEntryImpl( records.get( i+1 ) );
         }
     }
-    
+
         public String[]
     getFieldNames()
     {
         return mFieldNames;
     }
-    
+
         public LogQueryEntry[]
     getEntries()
     {
         return mEntries;
     }
-    
+
     private static final String    FIELD_DELIM = "\t";
     private static final String    NEWLINE = System.getProperty( "line.separator" );;
     /**
@@ -83,14 +83,14 @@ public final class LogQueryResultImpl
     toString()
     {
         final StringBuilder builder = new StringBuilder();
-        
+
         for( final String s : getFieldNames() )
         {
             builder.append( s );
             builder.append( FIELD_DELIM );
         }
         builder.replace( builder.length() - 1, builder.length(), NEWLINE );
-        
+
         for ( final LogQueryEntry entry : getEntries() )
         {
             final Object[]  fields  = entry.getFields();
@@ -101,34 +101,34 @@ public final class LogQueryResultImpl
             }
             builder.replace( builder.length() - 1, builder.length(), NEWLINE );
         }
-        
+
         return builder.toString();
     }
-    
- 	    public int
- 	hashCode()
- 	{
- 	    return ObjectUtil.hashCode( getFieldNames(), getEntries() );
- 	}
-    
+
+         public int
+     hashCode()
+     {
+         return ObjectUtil.hashCode( getFieldNames(), getEntries() );
+     }
+
         public boolean
     equals( final Object rhs )
     {
         boolean equal   = rhs instanceof LogQueryResult;
-        
+
         if ( equal )
         {
             final LogQueryResult    r   = (LogQueryResult)rhs;
-            
+
             equal   = ArrayUtil.arraysEqual( getFieldNames(), r.getFieldNames() ) &&
                       ArrayUtil.arraysEqual( getEntries(), r.getEntries() );
-                        
+
         }
-        
+
         return equal;
     }
-    
- 
+
+
 }
 
 

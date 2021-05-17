@@ -74,7 +74,7 @@ abstract public class Insn implements VMConstants {
   }
 
   /**
-   * Insert the single instruction in the code sequence after this 
+   * Insert the single instruction in the code sequence after this
    * instruction.
    * Returns the inserted instruction.
    */
@@ -91,7 +91,7 @@ abstract public class Insn implements VMConstants {
   }
 
   /**
-   * Insert an instruction sequence in the code sequence after this 
+   * Insert an instruction sequence in the code sequence after this
    * instruction.
    * Returns the final instruction.
    */
@@ -113,7 +113,7 @@ abstract public class Insn implements VMConstants {
 
   /**
    * Append an instruction sequence at the end of this instruction
-   * sequence. 
+   * sequence.
    * Returns the final instruction.
    */
   public Insn append(Insn i) {
@@ -193,7 +193,7 @@ abstract public class Insn implements VMConstants {
   }
 
   /**
-   * Create an instruction which requires a single constant from the 
+   * Create an instruction which requires a single constant from the
    * constant pool as an immediate operand.
    */
   public static Insn create(int theOpCode, ConstBasic constValue) {
@@ -434,11 +434,11 @@ abstract public class Insn implements VMConstants {
     case opc_monitorenter:
     case opc_monitorexit:
       return new InsnSingle(op, pc);
-      
+
     case opc_ldc:
       return new InsnConstOp(op, insnEnv.pool().constantAt(insnEnv.getUByte()),
-			     pc);
-      
+                 pc);
+
     case opc_ldc_w:
     case opc_ldc2_w:
     case opc_getstatic:
@@ -453,9 +453,9 @@ abstract public class Insn implements VMConstants {
     case opc_checkcast:
     case opc_instanceof:
       return new InsnConstOp(op,
-			     insnEnv.pool().constantAt(insnEnv.getUShort()),
-			     pc);
-      
+                 insnEnv.pool().constantAt(insnEnv.getUShort()),
+                 pc);
+
     case opc_iload:
     case opc_lload:
     case opc_fload:
@@ -468,9 +468,9 @@ abstract public class Insn implements VMConstants {
     case opc_astore:
     case opc_ret:
       if (widen)
-	return new InsnIntOp(op, insnEnv.getShort(), pc);
+    return new InsnIntOp(op, insnEnv.getShort(), pc);
       else
-	return new InsnIntOp(op, insnEnv.getByte(), pc);
+    return new InsnIntOp(op, insnEnv.getByte(), pc);
 
     case opc_bipush: /* a byte constant */
     case opc_newarray:
@@ -481,9 +481,9 @@ abstract public class Insn implements VMConstants {
 
     case opc_iinc:
       if (widen)
-	return new InsnIInc(insnEnv.getUShort(), insnEnv.getShort(), pc);
+    return new InsnIInc(insnEnv.getUShort(), insnEnv.getShort(), pc);
       else
-	return new InsnIInc(insnEnv.getUByte(), insnEnv.getByte(), pc);
+    return new InsnIInc(insnEnv.getUByte(), insnEnv.getByte(), pc);
 
     case opc_ifeq:
     case opc_ifne:

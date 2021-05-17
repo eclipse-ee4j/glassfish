@@ -76,4 +76,4 @@ public abstract class SSLImplementation {
     public abstract SSLSupport getSSLSupport(Socket sock);
 
     public abstract SSLSupport getSSLSupport(SSLEngine sslEngine);
-}    
+}

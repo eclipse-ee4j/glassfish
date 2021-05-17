@@ -30,10 +30,10 @@ public class Client {
 
 
         public static void main(String[] args) {
-	    stat.addDescription("ejbwsinwarwithwsdl");
+        stat.addDescription("ejbwsinwarwithwsdl");
             Client client = new Client();
             client.doTest(args);
-	    stat.printSummary("ejbwsinwarwithwsdl");
+        stat.printSummary("ejbwsinwarwithwsdl");
        }
 
        public void doTest(String[] args) {
@@ -50,17 +50,17 @@ public class Client {
                 /*
                 URL serviceInfo = new URL (args[0]);
                 URLConnection con = serviceInfo.openConnection();
-               BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream())); 
+               BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 
                 String inputLine;
-                int index=0; 
+                int index=0;
                 while ((inputLine = in.readLine()) != null) {
                    if ((index= inputLine.indexOf("href="))>0){
 
-                      String url = inputLine.substring(index+1);  
+                      String url = inputLine.substring(index+1);
                       if (url.indexOf("http:")>0) {
                          stat.addStatus("ejbwsinwarwithwsdl", stat.PASS);
-                      } 
+                      }
                       System.out.println(inputLine);
                    }
                 }

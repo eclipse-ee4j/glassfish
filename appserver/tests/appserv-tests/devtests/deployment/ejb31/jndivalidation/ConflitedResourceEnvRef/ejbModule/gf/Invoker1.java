@@ -23,5 +23,5 @@ import jakarta.ejb.Stateless;
 @Stateless
 public class Invoker1 {
 
-	  
+
 }

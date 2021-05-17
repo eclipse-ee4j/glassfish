@@ -22,7 +22,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -48,7 +48,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         Select select1 = new Select(driver.findElement(By.id("form:propertySheet:poolPropertySheet:transprop:trans")));
         select1.selectByVisibleText("LocalTransaction");
         clickAndWait("form:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:resourcesTable", poolName, "colName");
         assertEquals(poolName, getText(prefix + "colName:link"));
 
@@ -56,12 +56,12 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         String selectId = prefix + "colSelect:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:disableButton");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:enableButton");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:enableButton");
-        
+
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:deleteConnButton");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:deleteConnButton");
@@ -74,7 +74,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         final String poolName = "JMSConnFactory" + generateRandomString();
         final String description = "Test Pool - " + poolName;
         final String instanceName = "standalone" + generateRandomString();
-        
+
         StandaloneTest instanceTest = new StandaloneTest();
         instanceTest.createStandAloneInstance(instanceName);
 
@@ -87,14 +87,14 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("form:propertySheet:generalPropertySheet:descProp:descProp", description);
         Select select1 = new Select(driver.findElement(By.id("form:propertySheet:poolPropertySheet:transprop:trans")));
         select1.selectByVisibleText("LocalTransaction");
-        
-        
+
+
         Select select2 = new Select(driver.findElement(By.id("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available")));
         select2.selectByVisibleText(instanceName);
         select2.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
         clickAndWait("form:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:resourcesTable", poolName, "colName");
         assertEquals(poolName, getText(prefix + "colName:link"));
 
@@ -102,7 +102,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         String selectId = prefix + "colSelect:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:disableButton");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:enableButton");
         clickByIdAction(selectId);
@@ -118,7 +118,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         select5.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
-        
+
 
         gotoDasPage();
         clickAndWait("treeForm:tree:resources:jmsResources:jmsConnectionFactories:jmsConnectionFactories_link");
@@ -126,7 +126,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:deleteConnButton");
         closeAlertAndGetItsText();
         waitForAlertProcess("modalBody");
-        
+
         //Delete the instance
         clickAndWait("treeForm:tree:standaloneTreeNode:standaloneTreeNode_link");
         deleteRow("propertyForm:instancesTable:topActionsGroup1:button1", "propertyForm:instancesTable", instanceName);
@@ -149,21 +149,21 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("form:propertyContentPage:propertySheet:propertSectionTextField:nameProp:name", "somePhysicalDestination");
         setFieldValue("form:propertyContentPage:propertySheet:propertSectionTextField:descProp:desc", description);
         clickAndWait("form:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "colName");
         assertEquals(resourceName, getText(prefix + "colName:link"));
-        
+
 
         //test disable button
         String selectId = prefix + "colSelect:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:disableButton");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:enableButton");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:enableButton");
-        
+
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:deleteDestButton");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:deleteDestButton");
@@ -193,7 +193,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
 
         clickAndWait("form:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "colName");
         assertEquals(resourceName, getText(prefix + "colName:link"));
 
@@ -201,7 +201,7 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         String selectId = prefix + "colSelect:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:disableButton");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:enableButton");
         clickByIdAction(selectId);
@@ -217,14 +217,14 @@ public class JmsResourcesTest extends BaseSeleniumTestClass {
         select5.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:resources:jmsResources:jmsDestinationResources:jmsDestinationResources_link");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:deleteDestButton");
         closeAlertAndGetItsText();
         waitForAlertProcess("modalBody");
-        
+
         //Delete the instance
         clickAndWait("treeForm:tree:standaloneTreeNode:standaloneTreeNode_link");
         deleteRow("propertyForm:instancesTable:topActionsGroup1:button1", "propertyForm:instancesTable", instanceName);

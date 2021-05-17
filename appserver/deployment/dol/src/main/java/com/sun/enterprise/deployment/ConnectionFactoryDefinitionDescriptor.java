@@ -33,18 +33,18 @@ public class ConnectionFactoryDefinitionDescriptor extends AbstractConnectorReso
     private boolean isTransactionSupportSet = false;
     private int maxPoolSize=-1;
     private int minPoolSize=-1;
-    
-	public ConnectionFactoryDefinitionDescriptor() {
+
+    public ConnectionFactoryDefinitionDescriptor() {
         super();
         setResourceType(CFD);
-	}
-	
-	public String getInterfaceName() {
-		return interfaceName;
-	}
+    }
 
-	public void setInterfaceName(String interfaceName) {
-		this.interfaceName = interfaceName;
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
     }
 
     public String getTransactionSupport() {

@@ -29,7 +29,7 @@ import org.jvnet.hk2.config.Configured;
  * <p>
  * Each different container type provides its own sub-interface of ApplicationConfig to reprsent the customizable parts
  * of its application config information. See WebAppConfig in web/webgui-plugin-common for an example.
- * 
+ *
  * @author tjquinn
  */
 @Configured

@@ -52,9 +52,9 @@ import org.jvnet.hk2.config.types.Property;
 
 /**
  * Delete File User Command
- * Usage: delete-file-user [--terse=false] [--echo=false] [--interactive=true] 
+ * Usage: delete-file-user [--terse=false] [--echo=false] [--interactive=true]
  * [--host localhost] [--port 4848|4849] [--secure | -s] [--user admin_user]
- * [--passwordfile file_name] [--authrealmname authrealm_name] 
+ * [--passwordfile file_name] [--authrealmname authrealm_name]
  * [--target target(Default server)] username
  *
  * @author Nandini Ektare
@@ -67,21 +67,21 @@ import org.jvnet.hk2.config.types.Property;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=AuthRealm.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-user", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-user",
         description="Delete",
         params={
             @RestParam(name="authrealmname", value="$parent")
         })
 })
 public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(DeleteFileUser.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(DeleteFileUser.class);
 
     @Param(name="authrealmname", optional=true)
     private String authRealmName;
-    
+
     @Param(name = "target", optional = true, defaultValue =
     SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
@@ -99,7 +99,7 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
 
     @AccessRequired.To("update")
     private AuthRealm fileAuthRealm;
-    
+
     private SecurityService securityService;
 
     @Override
@@ -116,7 +116,7 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                 "delete.file.user.filerealmnotfound",
                 "File realm {0} does not exist", authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;                                            
+            return false;
         }
         /*
          * The realm might have been defaulted, so capture the actual name.
@@ -124,8 +124,8 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
         authRealmName = fileAuthRealm.getName();
         return true;
     }
-    
-    
+
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -134,23 +134,23 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         // Get FileRealm class name, match it with what is expected.
         String fileRealmClassName = fileAuthRealm.getClassname();
-        
+
         // Report error if provided impl is not the one expected
-        if (fileRealmClassName != null && 
+        if (fileRealmClassName != null &&
             !fileRealmClassName.equals(
                 "com.sun.enterprise.security.auth.realm.file.FileRealm")) {
             report.setMessage(
                 localStrings.getLocalString(
                     "delete.file.user.realmnotsupported",
-                    "Configured file realm {0} is not supported.", 
+                    "Configured file realm {0} is not supported.",
                     fileRealmClassName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                
+            return;
         }
 
         // ensure we have the file associated with the authrealm
@@ -163,10 +163,10 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
         if (keyFile == null) {
             report.setMessage(
                 localStrings.getLocalString("delete.file.user.keyfilenotfound",
-                "There is no physical file associated with this file realm {0} ", 
+                "There is no physical file associated with this file realm {0} ",
                 authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                                            
+            return;
         }
         boolean exists = (new File(kFile)).exists();
         if (!exists) {
@@ -177,7 +177,7 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
          //even though delete-file-user is not an update to the security-service
          //do we need to make it transactional by referncing the securityservice
          //hypothetically ?.

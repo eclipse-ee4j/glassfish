@@ -44,7 +44,7 @@ public class MyListener implements ServletContextListener {
         FilterRegistration fr = sc.addFilter("NewFilter", "test.NewFilter");
         fr.setInitParameter("filterInitName", "filterInitValue");
         fr.addMappingForServletNames(EnumSet.of(DispatcherType.REQUEST),
-                                     true, "NewServlet"); 
+                                     true, "NewServlet");
     }
 
     /**

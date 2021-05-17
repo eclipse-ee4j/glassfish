@@ -28,10 +28,10 @@ public class RandomNumberGenerator {
     @Produces @Named @RandomLessThanOrEqualToHundred int getRandomNumber(){
         return lessThan100--;
     }
-    
+
     //Generate a number greater than 100
     @Produces @Named @RandomGreaterThanHundred int getRandomNumberGreatherThanHundred(){
         return greaterThan100++;
     }
-    
+
 }

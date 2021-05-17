@@ -22,9 +22,9 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Prescribes behavior of authentication callbacks which modules can implement
- * to provide callback behavior without the authentication logic needing to 
+ * to provide callback behavior without the authentication logic needing to
  * know about specific implementations ahead of time.
- * 
+ *
  * @author tjquinn
  */
 @Contract
@@ -41,11 +41,11 @@ public interface AdminAuthCallback extends Callback {
     public interface RequestAccepter extends AdminAuthCallback {
         public void setRequest(Object data);
     }
-    
+
     public interface Validator extends AdminAuthCallback {
         public boolean isValid();
     }
-    
+
     public interface Authenticator extends AdminAuthCallback {
         public Subject getSubject();
     }

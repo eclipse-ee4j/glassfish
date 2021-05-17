@@ -65,11 +65,11 @@ public final class SolarisRealm extends IASRealm
         }
     }
 
-    
+
     /**
      * Initialize a realm with some properties.  This can be used
      * when instantiating realms from their descriptions.  This
-     * method may only be called a single time.  
+     * method may only be called a single time.
      *
      * @param props Initialization parameters used by this realm.
      * @exception BadRealmException If the configuration parameters
@@ -114,7 +114,7 @@ public final class SolarisRealm extends IASRealm
     {
         return AUTH_TYPE;
     }
-    
+
 
     /**
      * Returns the name of all the groups that this user belongs to.
@@ -135,7 +135,7 @@ public final class SolarisRealm extends IASRealm
         if (v == null) {
             v = loadGroupNames(username);
         }
-        
+
         return v.elements();
     }
 
@@ -149,7 +149,7 @@ public final class SolarisRealm extends IASRealm
     private void setGroupNames(String username, String[] groups)
     {
         Vector v = null;
-        
+
         if (groups == null) {
             v = emptyVector;
 
@@ -159,7 +159,7 @@ public final class SolarisRealm extends IASRealm
                 v.add(groups[i]);
             }
         }
-        
+
         synchronized (this) {
             groupCache.put(username, v);
         }
@@ -199,7 +199,7 @@ public final class SolarisRealm extends IASRealm
         if (grps == null) {
             _logger.fine("No groups returned for user: "+username);
         }
-        
+
         grps = addAssignGroups(grps);
         setGroupNames(username, grps);
         return (Vector)groupCache.get(username);
@@ -212,12 +212,12 @@ public final class SolarisRealm extends IASRealm
      */
     private static native String[] nativeAuthenticate(String user,
                                                      String password);
-    
+
     /**
      * Native method. Retrieve Solaris groups for user.
      *
      */
     private static native String[] nativeGetGroups(String user);
 
-    
+
 }

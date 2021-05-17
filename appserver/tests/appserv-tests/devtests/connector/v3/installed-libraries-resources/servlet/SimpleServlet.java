@@ -74,7 +74,7 @@ public class SimpleServlet extends HttpServlet {
         }catch(NamingException ne){
             ne.printStackTrace();
         } catch (CreateException e) {
-            e.printStackTrace();  
+            e.printStackTrace();
         }finally{
             out.println("END_OF_TEST");
             out.flush();

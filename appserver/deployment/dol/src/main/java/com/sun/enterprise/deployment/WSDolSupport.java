@@ -23,7 +23,7 @@ import org.jvnet.hk2.annotations.Contract;
  * DOL into the respective container (jaxws in this case) so we have to use this
  * workarounds
  *
- * @author Jerome Dochez 
+ * @author Jerome Dochez
  */
 @Contract
 public interface WSDolSupport {

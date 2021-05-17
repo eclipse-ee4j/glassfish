@@ -34,13 +34,13 @@ import java.sql.Connection;
         value = {
                 //pure annotation that has url and no standard properties
                 //test-case for issue-14918
-		@DataSourceDefinition(name="java:app/jdbc/appds_driver",
-       	 		className="org.apache.derby.jdbc.ClientDriver",
-        		user="dbuser",
-        		password="dbpassword",
-        		transactional=false,
-        		url="jdbc:derby://localhost:1527/testdb;create=true"
-		),
+        @DataSourceDefinition(name="java:app/jdbc/appds_driver",
+                    className="org.apache.derby.jdbc.ClientDriver",
+                user="dbuser",
+                password="dbpassword",
+                transactional=false,
+                url="jdbc:derby://localhost:1527/testdb;create=true"
+        ),
 
                 @DataSourceDefinition(name = "java:global/env/HelloEJB_DataSource",
                         className = "org.apache.derby.jdbc.EmbeddedXADataSource",
@@ -73,13 +73,13 @@ import java.sql.Connection;
                 ),
                 // annotation + DD where URL specified in annotation wins
                 //test-case for issue-14918
-		@DataSourceDefinition(name="java:module/env/HelloEJB_DataSource_driver",
-        		className="org.apache.derby.jdbc.ClientDriver",
-        		user="dbuser",
-        		password="dbpassword",
-        		transactional=false,
-        		url="jdbc:derby://localhost:1527/testdb;create=true"
-		)
+        @DataSourceDefinition(name="java:module/env/HelloEJB_DataSource_driver",
+                className="org.apache.derby.jdbc.ClientDriver",
+                user="dbuser",
+                password="dbpassword",
+                transactional=false,
+                url="jdbc:derby://localhost:1527/testdb;create=true"
+        )
         }
 )
 

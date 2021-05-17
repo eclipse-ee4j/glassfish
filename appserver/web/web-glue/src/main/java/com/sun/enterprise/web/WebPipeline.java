@@ -36,17 +36,17 @@ import org.apache.catalina.Realm;
 public class WebPipeline extends StandardPipeline {
 
     private WebModule webModule;
-    
-    /** 
+
+    /**
      * creates an instance of WebPipeline
      * @param container
-     */       
+     */
     public WebPipeline(Container container) {
         super(container);
         if(container instanceof WebModule) {
             this.webModule = (WebModule)container;
         }
-    }    
+    }
 
     /**
      * Processes the specified request, and produces the appropriate

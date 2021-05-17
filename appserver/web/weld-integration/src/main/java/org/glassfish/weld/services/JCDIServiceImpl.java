@@ -205,7 +205,7 @@ public class JCDIServiceImpl implements JCDIService {
         if (null != jcdiCtx) {
             creationalContext = jcdiCtx.getCreationalContext();
         }
-        
+
         if (creationalContext == null) {
             // The creational context may have been created by interceptors because they are created first
             // (see createInterceptorInstance below.)

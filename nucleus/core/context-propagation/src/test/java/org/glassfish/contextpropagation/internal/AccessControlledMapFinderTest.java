@@ -30,34 +30,34 @@ import org.junit.Test;
 @Ignore
 public class AccessControlledMapFinderTest {
 //  static AccessControlledMapFinder mapFinder = new AccessControlledMapFinder();
-//  
+//
 //  @Before
 //  public void setup() {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());
 //    mapFinder.getMapAndCreateIfNeeded();
 //  }
-//  
+//
 //  @Test
 //  public void testGetMapIfItExistsButDoesnt() {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());
 //    assertNull(mapFinder.getMapIfItExists());
 //  }
-//  
+//
 //  @Test
 //  public void testGetMapIfItExistsWhenItDoes() {
 //    assertNotNull(mapFinder.getMapIfItExists());
 //  }
-//  
+//
 //  @Test
 //  public void testCreateMapIfItExistsButDoesnt() {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());
 //    assertNull(mapFinder.getMapIfItExists());
 //    assertNotNull(mapFinder.getMapAndCreateIfNeeded());
 //  }
-//  
+//
 //  @Test
 //  public void testCreateMapIfItExistsWhenItDoes() {
 //    assertEquals(mapFinder.getMapIfItExists(), mapFinder.getMapAndCreateIfNeeded());
-//  }  
+//  }
 
 }

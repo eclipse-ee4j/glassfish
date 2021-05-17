@@ -44,7 +44,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for IT GLASSFISH-16768");
@@ -74,7 +74,7 @@ public class WebTest {
             // trailing headers size limit
             // need to set maxTrailerSize = 10
             String dummy = "01234567890";
-            
+
             req = new String[] {
                 "POST /" + webTest.contextRoot + " HTTP/1.1" + CRLF +
                 "Host: any" + CRLF +

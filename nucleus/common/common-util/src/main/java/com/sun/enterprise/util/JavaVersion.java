@@ -42,7 +42,7 @@ public class JavaVersion {
                 "[0-9]+\\.[0-9]+\\.[0-9]+_[0-9]+-ea")) {
           string = string.replace("-ea", ".");
         }
-        
+
         // and create the version
         final Matcher matcher = Pattern.
                 compile("[0-9]+\\.[0-9]+[0-9_\\.\\-]+").
@@ -85,31 +85,31 @@ public class JavaVersion {
             return true;
         if (getMajor() < version.getMajor())
             return false;
-        
+
         // majors are equal, so compare minors
         if (getMinor() > version.getMinor())
             return true;
         if (getMinor() < version.getMinor())
             return false;
-        
+
         // minors are equal, so compare micros
         if (getMicro() > version.getMicro())
             return true;
         if (getMicro() < version.getMicro())
             return false;
-        
+
         // micros are equal, so compare updates
         if (getUpdate() > version.getUpdate())
             return true;
         if (getUpdate() < version.getUpdate())
             return false;
-        
+
         // updates are equal, so compare builds
         if (getBuild() > version.getBuild())
             return true;
         if (getBuild() < version.getBuild())
             return true;
-        
+
         return false;
     }
 
@@ -123,7 +123,7 @@ public class JavaVersion {
 
     public boolean olderOrEquals(JavaVersion version) {
         return !newerThan(version);
-    }   
+    }
 
     public long getMajor() {
         return major;

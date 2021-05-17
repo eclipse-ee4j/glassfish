@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -46,14 +46,14 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/*Common*.class,**/Helper*.class,**/Hello*.class,**/Bmp*.class,**/Sful*.class,**/Sless*.class"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/Helper*.class,**/SfulRemote.class,**/SlessRemote.class,**/Client.class,**/Hello.class,**/CommonRemote*.class,**/BmpRemote.class,**/BmpRemoteHome*.class,**/SfulRemoteHome*.class,**/SlessRemoteHome*.class"/>
         </antcall>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -63,17 +63,17 @@
     </target>
 
     <target name="run_se" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
         <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

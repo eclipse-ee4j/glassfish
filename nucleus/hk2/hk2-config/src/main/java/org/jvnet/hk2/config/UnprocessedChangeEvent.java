@@ -34,16 +34,16 @@ public final class UnprocessedChangeEvent {
     public String getReason()             { return mReason; }
     public PropertyChangeEvent getEvent() { return mEvent; }
     public long getWhen()                 { return mWhen; }
-    
-    
+
+
     private static String toString( final PropertyChangeEvent e ) {
         return "PropertyName=" + e.getPropertyName() + ", OldValue = " + e.getOldValue() +
             ", NewValue = " + e.getNewValue() + ", Source = " + e.getSource();
     }
-    
+
     public String toString() {
         return "UnprocessedChangeEvent{" + toString(mEvent) +
                 "}, reason = " + mReason +
-                ", when = " + getWhen(); 
+                ", when = " + getWhen();
     }
 }

@@ -57,37 +57,37 @@ public class StatefulWrapperImpl implements StatefulWrapper {
 
         System.out.println("doTest(): creating the timer");
         Timer timer = timerStuff.createTimer(1, 1);
-        
+
         //
         System.out.println("doTest(): creating the timer2");
         Timer timer2 = timerStuff.createTimer(10000, 10000);
-        
+
         //
         System.out.println("doTest(): creating the timer3");
         Timer timer3 = timerStuff.createTimer(new Date());
-        
+
         //
         System.out.println("doTest(): creating the timer4");
         Timer timer4 = timerStuff.createTimer(new Date(new Date().getTime() + 2000));
-        
+
         //
         System.out.println("doTest(): creating the timer5");
         Timer timer5 = timerStuff.createTimer(new Date(new Date().getTime() + 20000), 10000);
 
         System.out.println("doTest(): creating the createTimerAndRollback");
         timerStuff.createTimerAndRollback(20000);
-        
+
         //
         System.out.println("doTest(): creating the createTimerAndCancel");
         timerStuff.createTimerAndCancel(20000);
-        
+
         // @@@ reevaluate double cancel logic
         //timerStuff.createTimerAndCancelAndCancel(20000);
-        
+
         //
         System.out.println("doTest(): creating the createTimerAndCancelAndRollback");
         timerStuff.createTimerAndCancelAndRollback(20000);
-        
+
         //
         System.out.println("doTest(): creating the cancelTimer(timer2)");
         timerStuff.cancelTimer(timer2);
@@ -98,18 +98,18 @@ public class StatefulWrapperImpl implements StatefulWrapper {
         timerStuff.cancelTimerAndRollback(timer5);
         // @@@ reevaluate double cancel logic
         //timerStuff.cancelTimerAndCancelAndRollback(timer6);
-        
-        Timer timer7 = 
+
+        Timer timer7 =
             timerStuff.createTimer(1, 1, "cancelTimer");
-        Timer timer8 = 
+        Timer timer8 =
             timerStuff.createTimer(1, 1, "cancelTimerAndRollback");
-        Timer timer9 =         
+        Timer timer9 =
             timerStuff.createTimer(1, "cancelTimerAndRollback");
 
         Timer timer11 = timerStuff.getTimeRemainingTest1(20);
         timerStuff.getTimeRemainingTest2(20, timer11);
         timerStuff.getTimeRemainingTest2(20, timer);
-        
+
         Timer timer12 = timerStuff.getNextTimeoutTest1(20);
         timerStuff.getNextTimeoutTest2(20, timer12);
         timerStuff.getNextTimeoutTest2(20, timer);

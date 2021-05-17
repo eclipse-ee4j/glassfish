@@ -21,7 +21,7 @@ import jakarta.servlet.jsp.PageContext;
 
 
 public class MyBody extends BodyTagSupport {
-	
+
   String echoStr;
   String staticStr;
 

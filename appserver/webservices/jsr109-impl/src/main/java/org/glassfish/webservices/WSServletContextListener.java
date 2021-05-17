@@ -86,7 +86,7 @@ public class WSServletContextListener implements ServletContextListener {
         } else {
             throw new WebServiceException("Cannot intialize the JAXWSServlet for " + jndiNameEnv);
         }
-        
+
         contextRoot = webBundle.getContextRoot();
         WebServicesDescriptor webServices = webBundle.getWebServices();
         try {

@@ -24,32 +24,32 @@ import java.lang.reflect.Method;
  * Lifecycle contract for a single MessageBeanListener. Implemented
  * by the MessageBeanContainer and called by the MessageBeanClient for
  * each message delivery.  Each message delivery MUST call each of the
- * three methods exactly once, in the same thread, and in the following 
+ * three methods exactly once, in the same thread, and in the following
  * order :
  *
  * 1. beforeMessageDelivery
  * 2. deliverMessage
  * 3. afterMessageDelivery
  *
- * 
+ *
  * @author Kenneth Saks
  */
 public interface MessageBeanListener {
 
     /**
-     * Pre-delivery notification to the container.  Any transaction 
-     * initialization is peformed here.  In addition, when this method 
-     * returns, the current thread's context class loader will be set 
-     * the message-bean's application class loader.  
+     * Pre-delivery notification to the container.  Any transaction
+     * initialization is peformed here.  In addition, when this method
+     * returns, the current thread's context class loader will be set
+     * the message-bean's application class loader.
      *
      * @param method is the method that will be invoked during deliverMessage.
-     * It is used the container during transaction setup to lookup the 
+     * It is used the container during transaction setup to lookup the
      * appropriate transaction attribute.
      * @param txImported whether a transaction is being imported
-     * 
+     *
      */
     void beforeMessageDelivery(Method method, boolean txImported);
-    
+
     /**
      * Deliver a message to a message bean instance.
      *
@@ -58,8 +58,8 @@ public interface MessageBeanListener {
      *
      * @throws Throwable  This is either an application exception as thrown
      * from the message bean instance or a jakarta.ejb.EJBException in the case
-     * that the bean throws a system exception.  Note that exceptions are 
-     * *always* propagated, regardless of transaction type.  
+     * that the bean throws a system exception.  Note that exceptions are
+     * *always* propagated, regardless of transaction type.
      */
     Object deliverMessage(Object[] params) throws Throwable;
 

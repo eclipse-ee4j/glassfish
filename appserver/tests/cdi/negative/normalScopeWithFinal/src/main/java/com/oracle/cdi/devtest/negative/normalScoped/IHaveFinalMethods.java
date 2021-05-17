@@ -19,13 +19,13 @@ package com.oracle.cdi.devtest.negative.normalScoped;
 /**
  * This class has final methods, and hence cannot
  * be proxied
- * 
+ *
  * @author jwells
  *
  */
 public class IHaveFinalMethods {
-    
-    
+
+
     public final void iAmAFinalMethod() {
     }
 

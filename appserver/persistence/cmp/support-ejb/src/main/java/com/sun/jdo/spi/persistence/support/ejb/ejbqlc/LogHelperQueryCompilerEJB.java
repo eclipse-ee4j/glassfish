@@ -24,21 +24,21 @@ import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
  * @author  Michael Bouschen
  */
 public class LogHelperQueryCompilerEJB {
-    
+
     /** The component name for this component
      */
     protected static final String componentName = "query.compiler.ejb"; // NOI18N
-    
+
     /** The class loader for this component
      */
-    protected static final ClassLoader loader = 
+    protected static final ClassLoader loader =
         LogHelperQueryCompilerEJB.class.getClassLoader();
-    
+
     /** The bundle name for this component
      */
-    protected static final String bundleName = 
+    protected static final String bundleName =
         "com.sun.jdo.spi.persistence.support.ejb.ejbqlc.Bundle"; // NOI18N
-    
+
     /** Return the logger for the sqlstore component
      */
     public static Logger getLogger() {

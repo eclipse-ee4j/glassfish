@@ -38,7 +38,7 @@ import com.sun.enterprise.config.serverbeans.AvailabilityServiceExtension;
 @Configured
 public interface EjbContainerAvailability extends ConfigBeanProxy,
         PropertyBag, AvailabilityServiceExtension {
-    
+
     /**
      * Gets the value of the availabilityEnabled property.
      *
@@ -166,9 +166,9 @@ public interface EjbContainerAvailability extends ConfigBeanProxy,
      *              {@link String }
      */
     void setSfsbStorePoolName(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

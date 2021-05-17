@@ -50,15 +50,15 @@ import java.util.Properties;
 @I18n("jms-ping")
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="jms-ping", 
+        opType=RestEndpoint.OpType.GET,
+        path="jms-ping",
         description="Ping JMS",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="jms-ping", 
+        opType=RestEndpoint.OpType.GET,
+        path="jms-ping",
         description="Ping JMS",
         params={
             @RestParam(name="id", value="$parent")
@@ -126,7 +126,7 @@ public class JMSPing implements AdminCommand {
          }
         try{
             boolean value = pingConnectionPool(tmpJMSResource + JNDINAME_APPENDER);
-            
+
             if(!value){
 
                  report.setMessage(localStrings.getLocalString("jms-ping.pingConnectionPoolFailed",
@@ -218,7 +218,7 @@ public class JMSPing implements AdminCommand {
         PoolInfo poolInfo = new PoolInfo(tmpJMSResource);
         return connectorRuntime.pingConnectionPool(poolInfo);
     }
-    
+
     void deleteJMSResource(ActionReport subReport, String tmpJMSResource, final Subject subject)
     {
         ParameterMap aoAttrList = new ParameterMap();

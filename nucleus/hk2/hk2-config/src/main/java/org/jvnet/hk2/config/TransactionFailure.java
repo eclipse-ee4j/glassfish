@@ -34,7 +34,7 @@ public class TransactionFailure extends Exception {
      */
     public TransactionFailure(String message) {
         super(message, null);
-    }   
+    }
 
     /**
      * Constructs a new exception with the specified detail message and

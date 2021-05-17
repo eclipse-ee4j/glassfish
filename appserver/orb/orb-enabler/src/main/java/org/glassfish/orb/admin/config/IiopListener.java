@@ -66,7 +66,7 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      * Gets the value of the id property.
      *
      * if false, a configured listener, is disabled
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -87,7 +87,7 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      * Gets the value of the address property.
      *
      * ip V6 or V4 address or hostname
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -107,7 +107,7 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      * Gets the value of the port property.
      *
      * Port number
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -128,9 +128,9 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
     /**
      * Gets the value of the securityEnabled property.
      *
-     * Determines whether the iiop listener runs SSL. You can turn 
+     * Determines whether the iiop listener runs SSL. You can turn
      * SSL2 or SSL3 on or off and set ciphers using an ssl element
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -149,7 +149,7 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      * Gets the value of the enabled property.
      *
      * if false, a configured listener, is disabled
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -169,7 +169,7 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      *
      * Specifies optional SSL configuration. Note that the ssl2 ciphers are not
      * supported for iiop, and therefore must be disabled
-     * 
+     *
      * @return possible object is
      *         {@link Ssl }
      */
@@ -202,9 +202,9 @@ public interface IiopListener extends ConfigBeanProxy, PropertyBag, Payload {
      * @param value true if the listener is to be started lazily; false otherwise
      */
     void String(boolean value);
-    
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+        Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

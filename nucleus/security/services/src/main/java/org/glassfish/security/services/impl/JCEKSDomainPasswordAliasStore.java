@@ -38,12 +38,12 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 @Secure(accessPermissionName = "security/service/credential/provider/jceks")
 public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore implements DomainScopedPasswordAliasStore  {
-    
+
     private static final String PASSWORD_ALIAS_KEYSTORE = "domain-passwords";
 
     @Inject @Optional
     private IdentityManagement idm;
-    
+
     @PostConstruct
     private void initStore() {
         try {
@@ -52,11 +52,11 @@ public class JCEKSDomainPasswordAliasStore extends JCEKSPasswordAliasStore imple
             throw new RuntimeException(ex);
         }
     }
-    
+
     private char[] getMasterPassword() {
         return idm == null ? null : idm.getMasterPassword();
     }
-    
+
     private static String pathToDomainAliasStore() {
         return System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY) +
                 File.separator + "config" + File.separator + PASSWORD_ALIAS_KEYSTORE;

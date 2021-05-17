@@ -59,8 +59,8 @@ public abstract class AbstractJMSContextManager implements Serializable {
             context = connectionFactory.createContext(userName, password, sessionMode);
         }
         if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, localStrings.getLocalString("JMSContext.impl.create", 
-                                   "Created new JMSContext instance associated with id {0}: {1}.", 
+            logger.log(Level.FINE, localStrings.getLocalString("JMSContext.impl.create",
+                                   "Created new JMSContext instance associated with id {0}: {1}.",
                                    ipId, context.toString()));
         }
         return context;
@@ -105,13 +105,13 @@ public abstract class AbstractJMSContextManager implements Serializable {
                 try {
                     context.close();
                     if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE, localStrings.getLocalString("JMSContext.impl.close", 
-                                               "Closed JMSContext instance associated with id {0}: {1}.", 
+                        logger.log(Level.FINE, localStrings.getLocalString("JMSContext.impl.close",
+                                               "Closed JMSContext instance associated with id {0}: {1}.",
                                                ipId, context.toString()));
                     }
                 } catch (Exception e) {
-                    logger.log(Level.SEVERE, localStrings.getLocalString("JMSContext.impl.close.failure", 
-                                             "Failed to close JMSContext instance associated with id {0}: {1}.", 
+                    logger.log(Level.SEVERE, localStrings.getLocalString("JMSContext.impl.close.failure",
+                                             "Failed to close JMSContext instance associated with id {0}: {1}.",
                                              ipId, context.toString()), e);
                 } finally {
                     if (inv != null && currentInv != inv) invMgr.postInvoke(inv);

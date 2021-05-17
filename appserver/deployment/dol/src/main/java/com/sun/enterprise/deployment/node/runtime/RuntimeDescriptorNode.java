@@ -38,7 +38,7 @@ import java.util.logging.Level;
  * Superclass for all the runtime descriptor nodes
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
 {
@@ -47,42 +47,42 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
      */
     @Override
     public T getDescriptor() {
-        
+
         if (abstractDescriptor==null) {
-	    abstractDescriptor = createDescriptor();
+        abstractDescriptor = createDescriptor();
             if (abstractDescriptor ==null) {
                 return (T)getParentNode().getDescriptor();
             }
         }
         return (T)abstractDescriptor;
-    }     
-    
+    }
+
     @SuppressWarnings("unchecked")
     protected Object createDescriptor() {
         return RuntimeDescriptorFactory.getDescriptor(getXMLPath());
     }
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     public void setElementValue(XMLElement element, String value) {
-	if (getDispatchTable().containsKey(element.getQName())) {
-	    super.setElementValue(element, value);
-	} else {
-	    Object o = getDescriptor();
-	    if (o instanceof RuntimeDescriptor) {
-		RuntimeDescriptor rd = (RuntimeDescriptor) o;
-		rd.setValue(element.getQName(), value);
-	    } else {
+    if (getDispatchTable().containsKey(element.getQName())) {
+        super.setElementValue(element, value);
+    } else {
+        Object o = getDescriptor();
+        if (o instanceof RuntimeDescriptor) {
+        RuntimeDescriptor rd = (RuntimeDescriptor) o;
+        rd.setValue(element.getQName(), value);
+        } else {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
                     new Object[]{element.getQName() , value });
             }
-	}
     }
-    
+    }
+
     /**
      * writes all information common to all J2EE components
      *
@@ -92,7 +92,7 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
     public static void writeCommonComponentInfo(Node parent, Descriptor descriptor) {
         if (descriptor instanceof EjbReferenceContainer) {
             EjbRefNode.writeEjbReferences(parent, (EjbReferenceContainer) descriptor);
-        }	
+        }
         if (descriptor instanceof ResourceReferenceContainer) {
             ResourceRefNode.writeResourceReferences(parent, (ResourceReferenceContainer) descriptor);
         }
@@ -104,16 +104,16 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T>
                 (parent, (JndiNameEnvironment) descriptor);
         }
         if (descriptor instanceof MessageDestinationReferenceContainer) {
-            MessageDestinationRefNode.writeMessageDestinationReferences(parent, 
+            MessageDestinationRefNode.writeMessageDestinationReferences(parent,
                 (MessageDestinationReferenceContainer) descriptor);
         }
-    }                
+    }
 
-    public static void writeMessageDestinationInfo(Node parent, 
+    public static void writeMessageDestinationInfo(Node parent,
                                                BundleDescriptor descriptor) {
         for(Iterator iter = descriptor.getMessageDestinations().iterator();
             iter.hasNext();) {
-            MessageDestinationRuntimeNode node = 
+            MessageDestinationRuntimeNode node =
                 new MessageDestinationRuntimeNode();
             node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION,
                                  (MessageDestinationDescriptor) iter.next());

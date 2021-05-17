@@ -53,8 +53,8 @@ import java.util.Map;
 @I18n("delete.log.levels")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-log-levels", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-log-levels",
         description="delete-log-levels")
 })
 public class DeleteLogLevel implements AdminCommand {

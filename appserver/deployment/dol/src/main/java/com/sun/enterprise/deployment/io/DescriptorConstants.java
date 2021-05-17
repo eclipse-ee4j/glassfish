@@ -25,7 +25,7 @@ import java.io.File;
  * @since  JDK1.4
  */
 public interface DescriptorConstants {
-    
+
     /** Prefix used for S1AS xmls */
     String S1AS_PREFIX = "sun-";
 
@@ -99,7 +99,7 @@ public interface DescriptorConstants {
     String S1AS_RAR_JAR_ENTRY = "META-INF/" + S1AS_PREFIX + "ra.xml";
 
     /** The name of the deployment descriptor entry inside the ear. */
-    String WLS_APPLICATION_JAR_ENTRY = "META-INF/" + WLS_PREFIX + 
+    String WLS_APPLICATION_JAR_ENTRY = "META-INF/" + WLS_PREFIX +
         "application.xml";
 
     /** The name of the WebLogic deployment descriptor entry in web jar. */
@@ -146,7 +146,7 @@ public interface DescriptorConstants {
     String TAG_LIB_EXT = ".tld";
 
     /** The name of the deployment descriptor entry in the client jar. */
-    String APP_CLIENT_DD_ENTRY = "META-INF" 
+    String APP_CLIENT_DD_ENTRY = "META-INF"
                                + File.separator
                                + "application-client.xml";
 
@@ -154,7 +154,7 @@ public interface DescriptorConstants {
     String APP_CLIENT_JAR_ENTRY = "META-INF/application-client.xml";
 
     /** The name of the deployment descriptor entry in the client jar. */
-    String S1AS_APP_CLIENT_DD_ENTRY = "META-INF" 
+    String S1AS_APP_CLIENT_DD_ENTRY = "META-INF"
                                    + File.separator
                                    + S1AS_PREFIX+"application-client.xml";
 
@@ -175,21 +175,21 @@ public interface DescriptorConstants {
     String MODULE_ROLEMAPPER_PREFIX = "module_";
 
     /** The Sun cmp-mapping  descriptor entry in exploded file system. */
-    String S1AS_CMP_MAPPING_DD_ENTRY = "META-INF" 
+    String S1AS_CMP_MAPPING_DD_ENTRY = "META-INF"
                                     + File.separator
-                                    + S1AS_PREFIX 
+                                    + S1AS_PREFIX
                                     + "cmp-mappings.xml";
 
     /** The Sun cmp-mapping  descriptor entry inside an ejb jar. */
-    String S1AS_CMP_MAPPING_JAR_ENTRY = "META-INF/" 
+    String S1AS_CMP_MAPPING_JAR_ENTRY = "META-INF/"
                                      + S1AS_PREFIX + "cmp-mappings.xml";
-    
+
     /** JaxRPC deployment descriptor file */
     String JAXRPC_JAR_ENTRY = "WEB-INF/jaxrpc-ri.xml";
-    
+
     /** WebServices descriptor entry in a web jar */
     String WEB_WEBSERVICES_JAR_ENTRY = "WEB-INF/webservices.xml";
-    
+
     /** WebServices descriptor entry in an ejb jar */
     String EJB_WEBSERVICES_JAR_ENTRY = "META-INF/webservices.xml";
 

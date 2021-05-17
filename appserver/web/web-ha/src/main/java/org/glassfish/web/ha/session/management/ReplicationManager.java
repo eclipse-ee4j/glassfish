@@ -35,21 +35,21 @@ import java.util.concurrent.CountDownLatch;
  * @author Rajiv Mordani
  */
 public interface ReplicationManager {
-    
+
     public String getApplicationId();
 
     public Object getReplicationSessionMonitor(String id);
-    
+
 //    public void processMessage(ReplicationState message);
 //
 //    public void processQueryMessage(ReplicationState message, String returnInstance);
-    
+
     public void repair(long repairStartTime);
-    
+
     public void repair(long repairStartTime, boolean checkForStopping);
-    
+
     public void respondToFailure(String instanceName, boolean checkForStopping);
-    
+
 
 //    public <V> V __load(String id, String version, JxtaBackingStoreImpl jxtaBackingStore)
 //            throws BackingStoreException;
@@ -58,5 +58,5 @@ public interface ReplicationManager {
             throws BackingStoreException;
 
     public int processExpiredSessions();
-    
+
 }

@@ -42,9 +42,9 @@ import java.util.logging.Logger;
  */
 public final class IntrospectionUtils {
 
-    
+
     private static final Logger log = org.glassfish.web.loader.LogFacade.getLogger();
-    
+
     /**
      * Call execute() - any ant-like task should work
      */
@@ -138,7 +138,7 @@ public final class IntrospectionUtils {
      * Guess a product install/home by analyzing the class path. It works for
      * product using the pattern: lib/executable.jar or if executable.jar is
      * included in classpath by a shell script. ( java -jar also works )
-     * 
+     *
      * Insures both "install" and "home" System properties are set. If either or
      * both System properties are unset, "install" and "home" will be set to the
      * same value. This value will be the other System property that is set, or
@@ -333,7 +333,7 @@ public final class IntrospectionUtils {
 
                         // Unknown type
                     } else {
-                        if (log.isLoggable(Level.FINE)) 
+                        if (log.isLoggable(Level.FINE))
                             log.fine("IntrospectionUtils: Unknown type " +
                                     paramType.getName());
                     }
@@ -349,9 +349,9 @@ public final class IntrospectionUtils {
                     if (methods[i].getReturnType()==Boolean.TYPE){
                         setPropertyMethodBool = methods[i];
                     }else {
-                        setPropertyMethodVoid = methods[i];    
+                        setPropertyMethodVoid = methods[i];
                     }
-                    
+
                 }
             }
 
@@ -446,7 +446,7 @@ public final class IntrospectionUtils {
         return null;
     }
 
-    /** 
+    /**
      */
     public static void setProperty(Object o, String name) {
         String setter = "set" + capitalize(name);
@@ -633,7 +633,7 @@ public final class IntrospectionUtils {
      * Add elements from the classpath <i>cp </i> to a Vector <i>jars </i> as
      * file URLs (We use Vector for JDK 1.1 compat).
      * <p>
-     * 
+     *
      * @param jars The jar list
      * @param cp a String classpath of directory or jar file elements
      *   separated by path.separator delimiters.
@@ -705,7 +705,7 @@ public final class IntrospectionUtils {
     public static void clear() {
         objectMethods.clear();
     }
-    
+
     static Hashtable<Class<?>,Method[]> objectMethods =
         new Hashtable<Class<?>,Method[]>();
 
@@ -898,7 +898,7 @@ public final class IntrospectionUtils {
         }
         return result;
     }
-    
+
     // -------------------- Get property --------------------
     // This provides a layer of abstraction
 

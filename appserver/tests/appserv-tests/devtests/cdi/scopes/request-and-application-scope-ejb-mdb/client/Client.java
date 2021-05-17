@@ -147,7 +147,7 @@ public class Client {
         message.setBooleanProperty("flag", true);
         message.setIntProperty("num", 2);
         sendMsgs((jakarta.jms.Queue) dest, message, num);
-        
+
         System.out.println("remote bean:" + helloStatelessRemoteBean);
         String response = helloStatelessRemoteBean.hello();
         if (!response.equals("hello")){

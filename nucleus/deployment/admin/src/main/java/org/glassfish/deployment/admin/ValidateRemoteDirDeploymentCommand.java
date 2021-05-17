@@ -62,8 +62,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 @ExecuteOn(value={RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_validateRemoteDirDeployment", 
+        opType=RestEndpoint.OpType.POST,
+        path="_validateRemoteDirDeployment",
         description="_validateRemoteDirDeployment")
 })
 @AccessRequired(resource=DeploymentCommandUtils.APPLICATION_RESOURCE_NAME, action="write")

@@ -39,14 +39,14 @@ public class Connector implements WSTCPConnector {
     private final TCPMessageListener listener;
 
     private final Properties properties;
-    
+
     private final IncomeMessageProcessor processor;
-    
+
     public Connector(String host, int port, TCPMessageListener listener) {
         this.host = host;
         this.port = port;
         this.listener = listener;
-        
+
         properties = new Properties();
 
         processor = IncomeMessageProcessor.registerListener(port, listener, properties);

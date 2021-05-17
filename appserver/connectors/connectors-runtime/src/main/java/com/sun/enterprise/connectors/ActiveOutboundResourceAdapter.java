@@ -153,7 +153,7 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
     /**
      * called by connector runtime to start the resource-adapter java bean
      * @param bootstrapContext BootstrapContext
-     * @throws ResourceAdapterInternalException 
+     * @throws ResourceAdapterInternalException
      */
     protected void startResourceAdapter(BootstrapContext bootstrapContext) throws ResourceAdapterInternalException {
         resourceadapter_.start(bootstrapContext);

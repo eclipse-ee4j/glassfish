@@ -36,7 +36,7 @@ import java.net.MalformedURLException;
  * @author Jerome Dochez
  */
 public interface ExtendedDeploymentContext extends DeploymentContext {
-    
+
     public enum Phase { UNKNOWN, PREPARE, PREPARED, LOAD, START, STOP, UNLOAD, CLEAN, REPLICATION }
 
     public static final String IS_TEMP_CLASSLOADER = "isTempClassLoader";
@@ -45,7 +45,7 @@ public interface ExtendedDeploymentContext extends DeploymentContext {
 
     /**
      * Sets the phase of the deployment activity.
-     * 
+     *
      * @param newPhase
      */
     public void setPhase(Phase newPhase);
@@ -60,8 +60,8 @@ public interface ExtendedDeploymentContext extends DeploymentContext {
     public List<ClassFileTransformer> getTransformers();
 
     /**
-     * Create the deployment class loader. It will be used for sniffer 
-     * retrieval, metadata parsing and deployer prepare. 
+     * Create the deployment class loader. It will be used for sniffer
+     * retrieval, metadata parsing and deployer prepare.
      *
      * @param clh the hierarchy of class loader for the parent
      * @param handler the archive handler for the source archive
@@ -119,7 +119,7 @@ public interface ExtendedDeploymentContext extends DeploymentContext {
    /**
      * Sets the parent context
      *
-     * @param parentContext 
+     * @param parentContext
      */
     public void setParentContext(ExtendedDeploymentContext parentContext);
 
@@ -154,11 +154,11 @@ public interface ExtendedDeploymentContext extends DeploymentContext {
     public File getAppInternalDir();
 
     /**
-     * Returns the alternate deployment descriptor directory for the 
-     * application (used for holding the external alternate deployment 
+     * Returns the alternate deployment descriptor directory for the
+     * application (used for holding the external alternate deployment
      * descriptors).
      *
-     * @return location of the alternate deployment descriptor directory for 
+     * @return location of the alternate deployment descriptor directory for
      *  the application
      */
     public File getAppAltDDDir();
@@ -196,13 +196,13 @@ public interface ExtendedDeploymentContext extends DeploymentContext {
      * implementation should be selective.  (Some data is used, for instance,
      * in the DeployCommand logic after ApplicationLifeCycle.deploy has
      * completed.)
-     * 
+     *
      * @param isFinalClean whether this clean is the final clean or a selective one.
      */
     public void postDeployClean(boolean isFinalClean);
 
     /**
-     * Prepare the scratch directories, creating the directories 
+     * Prepare the scratch directories, creating the directories
      * if they do not exist
      */
     public void prepareScratchDirs() throws IOException;

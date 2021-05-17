@@ -49,7 +49,7 @@ public class HelloOSGITestNG extends AdminBaseDevTest{
     static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
 
     @Test(groups ={ "osgi"} ) // test method
     public void simpleOSGIDeployTest() throws Exception{
@@ -78,7 +78,7 @@ public class HelloOSGITestNG extends AdminBaseDevTest{
         String line = null;
         boolean result=false;
         String testLine = null;
-	    String EXPECTED_RESPONSE ="JSP Test Page";
+        String EXPECTED_RESPONSE ="JSP Test Page";
         while ((line = input.readLine()) != null) {
             if(line.indexOf(EXPECTED_RESPONSE)!=-1){
                 result=true;

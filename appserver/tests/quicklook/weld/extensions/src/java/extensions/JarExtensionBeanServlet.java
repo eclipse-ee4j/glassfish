@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Check that ExtensionBean is deployed and accessible
  * in JAR file.
- * 
+ *
  * @author paulsandoz
  * @author Santiago.PericasGeertsen@sun.com
  */

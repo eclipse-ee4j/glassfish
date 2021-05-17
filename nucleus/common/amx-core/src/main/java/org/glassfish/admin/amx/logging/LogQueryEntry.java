@@ -22,11 +22,11 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-	An individual result representing a log entry found
-	by {@link LogQuery#queryServerLog}.
-	
-	@since AS 9.0
-	@see LogQueryResult
+    An individual result representing a log entry found
+    by {@link LogQuery#queryServerLog}.
+
+    @since AS 9.0
+    @see LogQueryResult
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public interface LogQueryEntry
@@ -37,56 +37,56 @@ public interface LogQueryEntry
         {@link LogRecordFields}.  A field is always non-null.
      */
     public Object[] getFields();
-    
+
     /**
         The record number within the log file (first one is 0).
      */
     public long getRecordNumber();
-    
+
     /**
         The name of the product.
      */
     public String getProductName();
-    
-     
+
+
     /**
         The Date that the log entry was emitted.
      */
     public Date     getDate();
-    
+
     /**
         The module or Logger that emitted the entry.
      */
     public String   getModule();
-    
+
     /**
         The Level of the entry.
      */
     public String    getLevel();
-    
+
     /**
         The unique message ID identifying the entry.
      */
     public String   getMessageID();
-    
+
     /**
         The free-form message.
      */
     public String   getMessage();
-    
-    
+
+
     /**
         Key for the thread ID within the Map returned by {@link #getNameValuePairsMap}.
         Value is of type java.lang.String.
      */
     public static final String  THREAD_ID_KEY   = "_ThreadID";
-    
+
     /**
         Key for the ObjectName within the Map returned by {@link #getNameValuePairsMap}.
         Value is of type javax.management.ObjectName.
      */
     public static final String  OBJECT_NAME_KEY   = "_ObjectName";
-    
+
     /**
         A Map containing name/value pairs as parsed
         from the String given by {@link #getNameValuePairs}.
@@ -97,13 +97,13 @@ public interface LogQueryEntry
         </ul>
      */
     public Map<String,String>   getNameValuePairsMap();
-    
+
     /**
         The raw name/value pair String for this log entry.  Each
         pair is separated by the ';' character.
      */
     public String   getNameValuePairs();
-    
+
     /**
         The ID of the thread that emitted the entry (may be null).
      */

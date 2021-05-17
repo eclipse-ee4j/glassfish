@@ -85,7 +85,7 @@ public class Client {
             } else {
                 stat.addStatus("create container with a wrong provider", stat.PASS);
             }
-        } catch (EJBException e) { 
+        } catch (EJBException e) {
             System.err.println("==> Caught expected: " + e.getMessage());
             stat.addStatus("create container with a wrong provider", stat.PASS);
         }
@@ -128,7 +128,7 @@ public class Client {
                 stat.addStatus("create container without closing the current", stat.FAIL);
                 System.err.println("==> ERROR: Created another container without closing the current...");
             }
-        } catch (EJBException e) { 
+        } catch (EJBException e) {
             System.err.println("==> Caught expected: " + e.getMessage());
             stat.addStatus("create container without closing the current", stat.PASS);
         }

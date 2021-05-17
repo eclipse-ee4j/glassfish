@@ -28,11 +28,11 @@ import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 import jakarta.xml.soap.*;
 
 public class TestHandler implements SOAPHandler<SOAPMessageContext> {
-    
+
     public Set<QName> getHeaders() {
         return null;
     }
-    
+
     String postConstString = "NOT_INITIALIZED";
     @PostConstruct
     public void init() {
@@ -40,8 +40,8 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     @Resource(name="stringValue")
-    String injectedString = "undefined";    
-    
+    String injectedString = "undefined";
+
     public boolean handleMessage(SOAPMessageContext context) {
         try {
             if ("PROPERLY_INITIALIZED".equals(postConstString)) {
@@ -50,33 +50,33 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
                 System.out.println("Handler PostConstruct not called property");
                 System.out.println("postConstString = " + postConstString);
                 return false;
-            }            
+            }
             if ("undefined".equals(injectedString)) {
                 System.out.println("Handler not injected property");
                 return false;
             } else {
                 System.out.println("injectedString = " + injectedString);
-            }            
+            }
             SOAPMessageContext smc = (SOAPMessageContext) context;
             SOAPMessage message = smc.getMessage();
             SOAPBody body = message.getSOAPBody();
-            
+
             SOAPElement paramElement =
                 (SOAPElement) body.getFirstChild().getFirstChild();
             paramElement.setValue(injectedString + " " + paramElement.getValue());
         } catch (SOAPException e) {
             e.printStackTrace();
         }
-	System.out.println("VIJ's TEST HANDLER CALLED");
+    System.out.println("VIJ's TEST HANDLER CALLED");
         return true;
     }
-    
+
     public boolean handleFault(SOAPMessageContext context) {
         return true;
     }
-    
+
     public void destroy() {}
-    
+
     public void close(MessageContext context) {}
-    
+
 }

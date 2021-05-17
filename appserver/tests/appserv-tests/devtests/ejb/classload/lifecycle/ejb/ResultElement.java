@@ -31,10 +31,10 @@ public class ResultElement {
     protected java.lang.String hostName;
     protected com.sun.s1asdev.ejb.classload.lifecycle.DirectoryCategory directoryCategory;
     protected java.lang.String directoryTitle;
-    
+
     public ResultElement() {
     }
-    
+
     public ResultElement(java.lang.String summary, java.lang.String URL, java.lang.String snippet, java.lang.String title, java.lang.String cachedSize, boolean relatedInformationPresent, java.lang.String hostName, com.sun.s1asdev.ejb.classload.lifecycle.DirectoryCategory directoryCategory, java.lang.String directoryTitle) {
         this.summary = summary;
         this.URL = URL;
@@ -46,75 +46,75 @@ public class ResultElement {
         this.directoryCategory = directoryCategory;
         this.directoryTitle = directoryTitle;
     }
-    
+
     public java.lang.String getSummary() {
         return summary;
     }
-    
+
     public void setSummary(java.lang.String summary) {
         this.summary = summary;
     }
-    
+
     public java.lang.String getURL() {
         return URL;
     }
-    
+
     public void setURL(java.lang.String URL) {
         this.URL = URL;
     }
-    
+
     public java.lang.String getSnippet() {
         return snippet;
     }
-    
+
     public void setSnippet(java.lang.String snippet) {
         this.snippet = snippet;
     }
-    
+
     public java.lang.String getTitle() {
         return title;
     }
-    
+
     public void setTitle(java.lang.String title) {
         this.title = title;
     }
-    
+
     public java.lang.String getCachedSize() {
         return cachedSize;
     }
-    
+
     public void setCachedSize(java.lang.String cachedSize) {
         this.cachedSize = cachedSize;
     }
-    
+
     public boolean isRelatedInformationPresent() {
         return relatedInformationPresent;
     }
-    
+
     public void setRelatedInformationPresent(boolean relatedInformationPresent) {
         this.relatedInformationPresent = relatedInformationPresent;
     }
-    
+
     public java.lang.String getHostName() {
         return hostName;
     }
-    
+
     public void setHostName(java.lang.String hostName) {
         this.hostName = hostName;
     }
-    
+
     public com.sun.s1asdev.ejb.classload.lifecycle.DirectoryCategory getDirectoryCategory() {
         return directoryCategory;
     }
-    
+
     public void setDirectoryCategory(com.sun.s1asdev.ejb.classload.lifecycle.DirectoryCategory directoryCategory) {
         this.directoryCategory = directoryCategory;
     }
-    
+
     public java.lang.String getDirectoryTitle() {
         return directoryTitle;
     }
-    
+
     public void setDirectoryTitle(java.lang.String directoryTitle) {
         this.directoryTitle = directoryTitle;
     }

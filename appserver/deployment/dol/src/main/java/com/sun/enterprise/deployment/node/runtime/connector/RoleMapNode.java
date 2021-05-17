@@ -25,19 +25,19 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * This node handles the role-map runtime deployment descriptors 
+ * This node handles the role-map runtime deployment descriptors
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class RoleMapNode extends RuntimeDescriptorNode {
-    
-    
+
+
     public RoleMapNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.MAP_ELEMENT), 
-                               MapElementNode.class, "addMapElement"); 
+        registerElementHandler(new XMLElement(RuntimeTagNames.MAP_ELEMENT),
+                               MapElementNode.class, "addMapElement");
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -45,21 +45,21 @@ public class RoleMapNode extends RuntimeDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, String nodeName, RoleMap descriptor) {
-	Element roleMapNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-	appendTextChild(roleMapNode, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
-	setAttribute(roleMapNode, RuntimeTagNames.MAP_ID, (String) descriptor.getValue(RoleMap.MAP_ID));
+    Element roleMapNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+    appendTextChild(roleMapNode, RuntimeTagNames.DESCRIPTION, descriptor.getDescription());
+    setAttribute(roleMapNode, RuntimeTagNames.MAP_ID, (String) descriptor.getValue(RoleMap.MAP_ID));
 
-	// map-element*
-	MapElement[] maps = descriptor.getMapElement();	
-	if (maps.length>0) {
-	    MapElementNode men = new MapElementNode();
-	    for (int i=0;i<maps.length;i++) {
-		men.writeDescriptor(roleMapNode, RuntimeTagNames.MAP_ELEMENT, maps[i]);
-	    }
-	}
-	
-	return roleMapNode;
+    // map-element*
+    MapElement[] maps = descriptor.getMapElement();
+    if (maps.length>0) {
+        MapElementNode men = new MapElementNode();
+        for (int i=0;i<maps.length;i++) {
+        men.writeDescriptor(roleMapNode, RuntimeTagNames.MAP_ELEMENT, maps[i]);
+        }
+    }
+
+    return roleMapNode;
     }
 }

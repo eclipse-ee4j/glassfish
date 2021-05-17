@@ -33,27 +33,27 @@ public class InterceptorB {
 
     @PostConstruct
     private void init(InvocationContext c) throws Exception {
-	System.out.println("In InterceptorB::init() ");
-	((ManagedBeanSuper)c.getTarget()).newInterceptorInstance();
-	c.proceed();
+    System.out.println("In InterceptorB::init() ");
+    ((ManagedBeanSuper)c.getTarget()).newInterceptorInstance();
+    c.proceed();
     }
 
 
     @AroundInvoke
     private Object roundInvoke(InvocationContext c) throws Exception {
-	System.out.println("In InterceptorB::aroundInvoke() ");
-	if( c.getMethod().getName().equals("getAroundInvokeSequence") ) {
-	    String result = (String) c.proceed();
-	    return "B" + result;
-	} else {
-	    return c.proceed();
-	}
+    System.out.println("In InterceptorB::aroundInvoke() ");
+    if( c.getMethod().getName().equals("getAroundInvokeSequence") ) {
+        String result = (String) c.proceed();
+        return "B" + result;
+    } else {
+        return c.proceed();
+    }
     }
 
     @PreDestroy
     private void destroy(InvocationContext c) throws Exception {
-	System.out.println("In InterceptorB::destroy() ");
-	c.proceed();
+    System.out.println("In InterceptorB::destroy() ");
+    c.proceed();
     }
 
 }

@@ -41,7 +41,7 @@
             <fileset dir="client/test/client" includes="*.class"/>
         </delete>
     </target>
-       
+
     <target name="compile" depends="clean">
         <!-- compile and build extension jar -->
         <antcall target="compile-common">
@@ -55,7 +55,7 @@
               tofile="${build.classes.dir}/META-INF/services/jakarta.enterprise.inject.spi.Extension"
               failonerror="false"/>
         <copy file="${beans.xml}"
-	          tofile="${build.classes.dir}/META-INF/beans.xml"
+              tofile="${build.classes.dir}/META-INF/beans.xml"
               failonerror="false"/>
         <jar jarfile="lib/${extension.jar}" basedir="${build.classes.dir}" update="true" includes ="${build.classes.dir}">
             <metainf dir="${build.classes.dir}/META-INF">
@@ -76,7 +76,7 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
             <param name="webclient.war.classes" value="**/*.class"/>
@@ -85,14 +85,14 @@
         <javac srcdir="client" classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="test/client/WebTest.java"/>
 
-    </target> 
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="test.client.WebTest">
           <arg value="${http.host}"/>
@@ -104,10 +104,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

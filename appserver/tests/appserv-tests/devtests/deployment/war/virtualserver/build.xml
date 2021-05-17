@@ -27,9 +27,9 @@
 
     <property name="contextRoot" value="war"/>
     <property name="testName" value="virtualserver"/>
-    <property name="url2" 
+    <property name="url2"
               value="http://${http.host}:${http.port.2}/${contextRoot}/${testName}"/>
-              
+
     <target name="prepare" depends="init">
         <property name="portable.war" value="${build}/${testName}-portable.war"/>
         <property name="all.war" value="${build}/${testName}.war"/>
@@ -61,7 +61,7 @@
 
     <target name="create.virtual.server">
         <antcall target="common.create.virtual.server.asadmin">
-        <param name="arg.list" 
+        <param name="arg.list"
                value="--hosts ${http.host} ${virtual.server.name}"/>
         </antcall>
     </target>
@@ -89,14 +89,14 @@
 
     <target name="deploy.asadmin" depends="prepare">
         <antcall target="common.deploy.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="--virtualservers ${virtual.server.name} ${all.war}"/>
         </antcall>
     </target>
 
     <target name="undeploy.asadmin">
         <antcall target="common.undeploy.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
@@ -146,7 +146,7 @@
     </target>
 
     <target name="private-all">
-        <!-- test that the app is deployed to the newly 
+        <!-- test that the app is deployed to the newly
              created virtual server -->
         <antcall target="declare-test">
             <param name="description" value="war/virtualserver Test asadmin deploy1"/>

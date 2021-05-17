@@ -65,15 +65,15 @@ import org.glassfish.api.admin.ServerEnvironment;
 @TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-lifecycle-module", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-lifecycle-module",
         description="Delete Lifecycle Module",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-lifecycle-module", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-lifecycle-module",
         description="Delete Lifecycle Module",
         params={
             @RestParam(name="target", value="$parent")
@@ -98,7 +98,7 @@ public class DeleteLifecycleModuleCommand implements AdminCommand, AdminCommandS
 
     @Inject
     ServiceLocator habitat;
-    
+
     private List<String> targets = null;
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteLifecycleModuleCommand.class);
@@ -122,14 +122,14 @@ public class DeleteLifecycleModuleCommand implements AdminCommand, AdminCommandS
         }
         return accessChecks;
     }
-   
+
     public void execute(AdminCommandContext context) {
-        
+
         ActionReport report = context.getActionReport();
         final Logger logger = context.getLogger();
 
         if (!deployment.isRegistered(name)) {
-            report.setMessage(localStrings.getLocalString("lifecycle.notreg","Lifecycle module {0} not registered", name)); 
+            report.setMessage(localStrings.getLocalString("lifecycle.notreg","Lifecycle module {0} not registered", name));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
@@ -152,7 +152,7 @@ public class DeleteLifecycleModuleCommand implements AdminCommand, AdminCommandS
                 ParameterMap paramMap = extractor.extract(Collections.EMPTY_LIST);
                 paramMap.set("DEFAULT", name);
 
-                ClusterOperationUtil.replicateCommand("delete-lifecycle-module", FailurePolicy.Error, 
+                ClusterOperationUtil.replicateCommand("delete-lifecycle-module", FailurePolicy.Error,
                         FailurePolicy.Ignore, FailurePolicy.Warn, targets, context, paramMap, habitat);
             } catch (Exception e) {
                 report.failure(logger, e.getMessage());

@@ -51,7 +51,7 @@ public class TestServlet extends HttpServlet
              * The following line will compile correctly only when the ant
              * devtest is running.  The ChangeableClass class is generated
              * by the ant task (two different ways at two different points
-             * in the processing).  
+             * in the processing).
              */
             final String changeableValue = ChangeableClass.changeableValue();
             PrintWriter out = response.getWriter();

@@ -54,19 +54,19 @@ public abstract class EJBContextImpl
 
     private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(EJBContextImpl.class);
-    
+
     private Object ejb;
-    
+
     // These are all transient to prevent serialization during passivation
     // Note: all these will be initialized to default values during
     // deserialization.
     transient protected BaseContainer container;
-    
+
     transient protected Transaction transaction = null;
     transient protected Context initialContext = null;
     transient private ArrayList resources;
     transient private int concInvokeCount = 0;
-    
+
     // the EJBObject's client-side RMI stub
     transient protected EJBObject ejbStub=null;
     transient protected EJBObjectImpl ejbObjectImpl;
@@ -76,15 +76,15 @@ public abstract class EJBContextImpl
     transient protected EJBLocalObjectImpl ejbLocalObjectImpl;
     transient protected EJBLocalObjectImpl ejbLocalBusinessObjectImpl;
     transient protected EJBLocalObjectImpl optionalEjbLocalBusinessObjectImpl;
-    
+
     transient private long lastTimeUsed;
     transient protected BeanState state;
-    
-    // true if the bean exposes a RemoteHome/Remote view  
+
+    // true if the bean exposes a RemoteHome/Remote view
     // (not 3.0 business view)
     protected boolean isRemoteInterfaceSupported;
 
-    // true if the bean exposes a LocalHome/Localview 
+    // true if the bean exposes a LocalHome/Localview
     // (not 3.0 business view)
     protected boolean isLocalInterfaceSupported;
 
@@ -93,12 +93,12 @@ public abstract class EJBContextImpl
     // on the DESTROYED state doesn't help, since often times the container
     // can't/doesn't set the context to DESTROYED until after calling ejbRemove
     transient protected boolean inEjbRemove;
-    
+
     private Object[]    interceptorInstances;
 
     // TODO how to handle this for passivated SFSBs?
     transient protected JCDIService.JCDIInjectionContext jcdiInjectionContext;
-    
+
     protected EJBContextImpl(Object ejb, BaseContainer container) {
         this.ejb = ejb;
         this.container = container;
@@ -108,19 +108,19 @@ public abstract class EJBContextImpl
         isRemoteInterfaceSupported = container.isRemoteInterfaceSupported();
         isLocalInterfaceSupported  = container.isLocalInterfaceSupported();
     }
-    
+
     public Transaction getTransaction() {
         return transaction;
     }
-    
+
     public void setTransaction(Transaction tr) {
         transaction = tr;
     }
-    
+
     void setEJBStub(EJBObject ejbStub) {
         this.ejbStub = ejbStub;
     }
-    
+
     void setEJBLocalObjectImpl(EJBLocalObjectImpl localObjectImpl) {
         this.ejbLocalObjectImpl = localObjectImpl;
     }
@@ -134,15 +134,15 @@ public abstract class EJBContextImpl
         this.optionalEjbLocalBusinessObjectImpl = optionalLocalBusObjectImpl;
     }
 
-    
+
     void setEJBObjectImpl(EJBObjectImpl ejbo) {
         this.ejbObjectImpl = ejbo;
     }
-    
+
     EJBObjectImpl getEJBObjectImpl() {
         return ejbObjectImpl;
     }
-    
+
     void setEJBRemoteBusinessObjectImpl(EJBObjectImpl ejbo) {
         this.ejbRemoteBusinessObjectImpl = ejbo;
     }
@@ -162,11 +162,11 @@ public abstract class EJBContextImpl
     EJBLocalObjectImpl getOptionalEJBLocalBusinessObjectImpl() {
         return optionalEjbLocalBusinessObjectImpl;
     }
-    
+
     void setContainer(BaseContainer container) {
         this.container = container;
     }
-    
+
     void setState(BeanState s) {
         state = s;
     }
@@ -178,11 +178,11 @@ public abstract class EJBContextImpl
     protected BeanState getState() {
         return state;
     }
-    
+
     void setInEjbRemove(boolean beingRemoved) {
         inEjbRemove = beingRemoved;
     }
-    
+
     boolean isInEjbRemove() {
         return inEjbRemove;
     }
@@ -198,29 +198,29 @@ public abstract class EJBContextImpl
     public long getLastTimeUsed() {
         return lastTimeUsed;
     }
-    
+
     public void touch() {
         lastTimeUsed = System.currentTimeMillis();
     }
-    
-    
-    
+
+
+
     /**************************************************************************
     The following are implementations of ComponentContext methods.
      **************************************************************************/
-    
+
     /**
      *
      */
     public Object getEJB() {
         return ejb;
     }
-    
-    
+
+
     public Container getContainer() {
         return container;
     }
-    
+
     /**
      * Register a resource opened by the EJB instance
      * associated with this Context.
@@ -230,7 +230,7 @@ public abstract class EJBContextImpl
             resources = new ArrayList();
         resources.add(h);
     }
-    
+
     /**
      * Unregister a resource from this Context.
      */
@@ -248,8 +248,8 @@ public abstract class EJBContextImpl
             resources = new ArrayList(0);
         return resources;
     }
-    
-    
+
+
     /**
      * Get the number of concurrent invocations on this bean
      * (could happen with re-entrant bean).
@@ -258,7 +258,7 @@ public abstract class EJBContextImpl
     public int getConcurrentInvokeCount() {
         return concInvokeCount;
     }
-    
+
     /**
      * Increment the number of concurrent invocations on this bean
      * (could happen with re-entrant bean).
@@ -267,7 +267,7 @@ public abstract class EJBContextImpl
     public synchronized void incrementConcurrentInvokeCount() {
         concInvokeCount++;
     }
-    
+
     /**
      * Decrement the number of concurrent invocations on this bean
      * (could happen with re-entrant bean).
@@ -276,11 +276,11 @@ public abstract class EJBContextImpl
     public synchronized void decrementConcurrentInvokeCount() {
         concInvokeCount--;
     }
-    
+
     /**************************************************************************
     The following are implementations of EJBContext methods.
      **************************************************************************/
-    
+
     /**
      * This is a SessionContext/EntityContext method.
      */
@@ -293,7 +293,7 @@ public abstract class EJBContextImpl
 
         return ejbStub;
     }
-    
+
     /**
      * This is a SessionContext/EntityContext method.
      */
@@ -303,12 +303,12 @@ public abstract class EJBContextImpl
         if ( ejbLocalObjectImpl == null ) {
             throw new IllegalStateException("EJBLocalObject not available");
         }
-        
-        // Have to convert EJBLocalObjectImpl to the client-view of 
+
+        // Have to convert EJBLocalObjectImpl to the client-view of
         // EJBLocalObject
         return (EJBLocalObject) ejbLocalObjectImpl.getClientObject();
     }
-    
+
     /**
      *
      */
@@ -319,8 +319,8 @@ public abstract class EJBContextImpl
 
         return container.getEJBHomeStub();
     }
-    
-    
+
+
     /**
      *
      */
@@ -331,8 +331,8 @@ public abstract class EJBContextImpl
 
         return container.getEJBLocalHome();
     }
-    
-    
+
+
     /**
      *
      */
@@ -340,7 +340,7 @@ public abstract class EJBContextImpl
         // This is deprecated, see EJB2.0 section 20.6.
         return container.getEnvironmentProperties();
     }
-    
+
     /**
      * @deprecated
      */
@@ -373,7 +373,7 @@ public abstract class EJBContextImpl
         }
         return o;
     }
-    
+
     /**
      *
      */
@@ -394,12 +394,12 @@ public abstract class EJBContextImpl
         ComponentInvocation inv = EjbContainerUtilImpl.getInstance().getCurrentInvocation();
         if ( inv instanceof EjbInvocation ) {
             EjbInvocation ejbInv = (EjbInvocation) inv;
-            contextData = ejbInv.getContextData();          
+            contextData = ejbInv.getContextData();
         }
         return contextData;
     }
-    
-    
+
+
     /**
      * @deprecated
      */
@@ -408,8 +408,8 @@ public abstract class EJBContextImpl
         // This implementation is as in EJB2.0 section 21.2.5
         return isCallerInRole(identity.getName());
     }
-    
-    
+
+
     /**
      *
      */
@@ -418,11 +418,11 @@ public abstract class EJBContextImpl
             throw new IllegalStateException("Argument is null");
 
         checkAccessToCallerSecurity();
-        
+
         com.sun.enterprise.security.SecurityManager sm = container.getSecurityManager();
-	    return sm.isCallerInRole(roleRef);
+        return sm.isCallerInRole(roleRef);
     }
-    
+
     /**
      * Overridden in containers that allow access to isCallerInRole() and
      * getCallerPrincipal()
@@ -432,7 +432,7 @@ public abstract class EJBContextImpl
     {
         throw new IllegalStateException("Operation not allowed");
     }
-    
+
     /**
      *
      */
@@ -441,7 +441,7 @@ public abstract class EJBContextImpl
     {
         throw new IllegalStateException("Operation not allowed");
     }
-    
+
     /**
      *
      */
@@ -450,15 +450,15 @@ public abstract class EJBContextImpl
     {
         if (state == BeanState.CREATED)
             throw new IllegalStateException("EJB not in READY state");
-        
+
         // EJB2.0 section 7.5.2: only EJBs with container managed transactions
         // can use this method.
         if ( container.isBeanManagedTran )
             throw new IllegalStateException(
                 "Illegal operation for bean-managed transactions");
-        
+
         TransactionManager tm = EjbContainerUtilImpl.getInstance().getTransactionManager();
-        
+
         try {
             if ( tm.getStatus() == Status.STATUS_NO_TRANSACTION ) {
                 // EJB might be in a non-business method (for SessionBeans)
@@ -469,20 +469,20 @@ public abstract class EJBContextImpl
                 // so the container doesnt have to do anything.
                 throw new IllegalStateException("No transaction context.");
             }
-            
+
             checkActivatePassivate();
 
             doGetSetRollbackTxAttrCheck();
-            
+
             tm.setRollbackOnly();
-            
+
         } catch (Exception ex) {
             IllegalStateException illEx = new IllegalStateException(ex.toString());
             illEx.initCause(ex);
             throw illEx;
         }
     }
-    
+
     /**
      *
      */
@@ -491,26 +491,26 @@ public abstract class EJBContextImpl
     {
         if (state == BeanState.CREATED)
             throw new IllegalStateException("EJB not in READY state");
-        
+
         // EJB2.0 section 7.5.2: only EJBs with container managed transactions
         // can use this method.
         if ( container.isBeanManagedTran )
             throw new IllegalStateException(
                 "Illegal operation for bean-managed transactions");
-        
+
         TransactionManager tm = EjbContainerUtilImpl.getInstance().getTransactionManager();
-        
+
         try {
             int status = tm.getStatus();
             if ( status == Status.STATUS_NO_TRANSACTION ) {
                 // EJB which was invoked without a global transaction.
                 throw new IllegalStateException("No transaction context.");
             }
-            
+
             checkActivatePassivate();
 
             doGetSetRollbackTxAttrCheck();
-            
+
             if ( status == Status.STATUS_MARKED_ROLLBACK
             || status == Status.STATUS_ROLLEDBACK
             || status == Status.STATUS_ROLLING_BACK )
@@ -518,7 +518,7 @@ public abstract class EJBContextImpl
             else
                 return false;
         } catch (Exception ex) {
-            _logger.log(Level.FINE, "Exception in method getRollbackOnly()", 
+            _logger.log(Level.FINE, "Exception in method getRollbackOnly()",
                 ex);
             IllegalStateException illEx = new IllegalStateException(ex.toString());
             illEx.initCause(ex);
@@ -544,18 +544,18 @@ public abstract class EJBContextImpl
         }
 
     }
-    
+
     /**************************************************************************
     The following are EJBContextImpl-specific methods.
      **************************************************************************/
     void setInterceptorInstances(Object[] instances) {
         this.interceptorInstances = instances;
     }
-    
+
     public Object[] getInterceptorInstances() {
         return this.interceptorInstances;
     }
-    
+
     /**
      * The EJB spec makes a distinction between access to the TimerService
      * object itself (via EJBContext.getTimerService) and access to the
@@ -569,7 +569,7 @@ public abstract class EJBContextImpl
         throw new IllegalStateException("EJB Timer Service method calls " +
         "cannot be called in this context");
     }
-    
+
     // Throw exception if EJB is in ejbActivate/Passivate
     protected void checkActivatePassivate()
         throws IllegalStateException
@@ -577,9 +577,9 @@ public abstract class EJBContextImpl
         if( inActivatePassivate() ) {
             throw new IllegalStateException("Operation not allowed.");
         }
-        
+
     }
-    
+
     protected boolean inActivatePassivate() {
         return inActivatePassivate(EjbContainerUtilImpl.getInstance().getCurrentInvocation());
     }
@@ -595,11 +595,11 @@ public abstract class EJBContextImpl
                 : false;
         }
         return inActivatePassivate;
-    } 
+    }
 
     void setEJB(Object o) {
         ejb = o;
-    } 
+    }
 
     protected Object getKey() {
         if ( ejbLocalObjectImpl != null ) {
@@ -610,7 +610,7 @@ public abstract class EJBContextImpl
             return null;
         }
     }
-    
+
     /**
      * Called after this context is freed up.
      */
@@ -625,5 +625,5 @@ public abstract class EJBContextImpl
         ejbLocalObjectImpl = null;
         ejbLocalBusinessObjectImpl = null;
     }
-	
+
 }

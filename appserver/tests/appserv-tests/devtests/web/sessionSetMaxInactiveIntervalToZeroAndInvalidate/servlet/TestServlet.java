@@ -28,7 +28,7 @@ public class TestServlet extends HttpServlet {
         try {
             HttpSession session = req.getSession(true);
             session.setMaxInactiveInterval(0);
-            session.invalidate();   
+            session.invalidate();
         } catch (IllegalStateException ise) {
             passed = true;
         }

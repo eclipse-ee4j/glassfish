@@ -28,7 +28,7 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 import com.sun.enterprise.util.io.FileUtils;
 
 /**
- * This class holds all of the values that the caller needs.  
+ * This class holds all of the values that the caller needs.
  * An instance of this class can be used to create a request object.
  * @author  bnevins
  */
@@ -37,7 +37,7 @@ public class BackupRequest {
     /**
      * Create an instance (generic)
      **/
-    public BackupRequest(String domainsDirName, String domain, 
+    public BackupRequest(String domainsDirName, String domain,
                          File backupDir, String backupConfig,boolean configonly) {
         setDomainsDir(domainsDirName);
         setBackupDir(backupDir);
@@ -49,18 +49,18 @@ public class BackupRequest {
     /**
      * Create an instance (used by backup-domain and list-backups)
      **/
-    public BackupRequest(String domainsDirName, String domain, 
+    public BackupRequest(String domainsDirName, String domain,
                          File backupDir, String backupConfig,
                          String desc, int limit,boolean configonly) {
         this(domainsDirName, domain, backupDir, backupConfig,configonly);
         setDescription(desc);
         setRecycleLimit(limit);
     }
-    
+
     /**
      * Create an instance (used by restore-domain)
      **/
-    public BackupRequest(String domainsDirName, String domain, 
+    public BackupRequest(String domainsDirName, String domain,
                          File backupDir, String backupConfig,
                          String backupFileName,boolean configonly) {
         this(domainsDirName, domain, backupDir, backupConfig,configonly);
@@ -73,11 +73,11 @@ public class BackupRequest {
     public void setTerse(boolean b) {
         terse = b;
     }
-    
+
     public void setVerbose(boolean b) {
         verbose = b;
     }
-    
+
     public String toString() {
         return ObjectAnalyzer.toString(this);
     }
@@ -87,7 +87,7 @@ public class BackupRequest {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private void setDomainsDir(String name) {
         domainsDir = FileUtils.safeGetCanonicalFile(new File(name));
     }
@@ -115,9 +115,9 @@ public class BackupRequest {
     ///////////////////////////////////////////////////////////////////////////
     ////////////     Variables     ////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////
-    
+
     final static String[] excludeDirs = {Constants.BACKUP_DIR + "/",
-                                         Constants.OSGI_CACHE + "/"}; 
+                                         Constants.OSGI_CACHE + "/"};
 
     File    domainsDir;
     String  domainName;
@@ -129,11 +129,11 @@ public class BackupRequest {
 
     // VARIABLES POSSIBLY SET AT RUNTIME
     File    backupFile;
-    
+
     // VARIABLES SET AT RUNTIME
     File    domainDir;
     long    timestamp;
-    
+
     boolean terse = false;
     boolean verbose = false;
     boolean force = false;

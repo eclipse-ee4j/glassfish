@@ -43,7 +43,7 @@ public interface ResourceDeployer {
      * @param moduleName module-name
      * @throws Exception thrown if fail
      */
-    void deployResource(Object resource, String applicationName, String moduleName) throws Exception; 
+    void deployResource(Object resource, String applicationName, String moduleName) throws Exception;
 
     /**
      * Deploy the resource into the server's runtime naming context
@@ -70,7 +70,7 @@ public interface ResourceDeployer {
      * @throws Exception thrown if fail
      */
     void undeployResource(Object resource, String applicationName, String moduleName) throws Exception;
-    
+
     /**
      * Redeploy the resource into the server's runtime naming context
      *
@@ -85,7 +85,7 @@ public interface ResourceDeployer {
      * @param resource a resource object (eg. JmsResource)
      * @exception Exception thrown if fail
      */
-	void enableResource(Object resource) throws Exception;
+    void enableResource(Object resource) throws Exception;
 
     /**
      * Disable the resource in the server's runtime naming context
@@ -93,7 +93,7 @@ public interface ResourceDeployer {
      * @param resource a resource object (eg. JmsResource)
      * @exception Exception thrown if fail
      */
-	void disableResource(Object resource) throws Exception;
+    void disableResource(Object resource) throws Exception;
 
     /**
      * Indicates whether a particular resource deployer can handle the

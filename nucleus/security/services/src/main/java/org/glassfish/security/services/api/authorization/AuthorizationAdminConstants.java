@@ -24,17 +24,17 @@ import java.util.Set;
 /**
  * Common attribute names, used in authorization and set by code using
  * the authorization service.
- * 
+ *
  * @author tjquinn
  */
 public interface AuthorizationAdminConstants {
     public final static String ISDAS_ATTRIBUTE = "isDAS";
-    
+
     public final static String ADMIN_TOKEN = "adminToken";
     public final static String REST_TOKEN = "restToken";
     public final static String LOCAL_PASSWORD = "localPassword";
     public final static String SERVER = "server";
-    
+
     /*
      * The presence of either of these attributes means the associated
      * subject is not linked to a specific admin user but was authenticated
@@ -42,6 +42,6 @@ public interface AuthorizationAdminConstants {
      */
     public final static Set<String> TRUSTED_FOR_DAS_OR_INSTANCE =
             Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(LOCAL_PASSWORD, SERVER)));
-    
+
     public final static String ADMIN_GROUP = "asadmin"; // must match with value in admin/util module's AdminConstants class
 }

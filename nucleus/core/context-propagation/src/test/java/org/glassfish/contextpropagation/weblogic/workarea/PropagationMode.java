@@ -16,7 +16,7 @@
 
 package org.glassfish.contextpropagation.weblogic.workarea;
 
-public interface PropagationMode 
+public interface PropagationMode
 {
   /**
    * Propagate a WorkContext only for the scope of the current thread.

@@ -26,7 +26,7 @@ import test.beans.nonmock.TestBeanForAnotherQualifier;
 
 public class MockAnotherQualifierProducer extends AnotherQualifierProducer{
     @Produces @Specializes
-    //We don't specify AnotherQualifier here. It is inherited from 
+    //We don't specify AnotherQualifier here. It is inherited from
     //AnotherQualifierProducer.getTestBeanWithAnotherQualifier
     //because of the @Specializes annotation
     protected TestBeanInterface getTestBeanWithAnotherQualifier() {

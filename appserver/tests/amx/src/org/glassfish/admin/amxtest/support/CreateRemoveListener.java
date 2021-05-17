@@ -58,7 +58,7 @@ public final class CreateRemoveListener
             final Object handback) {
         final String type = notifIn.getType();
 
-        //final Map<String,Serializable>	m	= getAMXNotificationData * notifIn );
+        //final Map<String,Serializable>    m    = getAMXNotificationData * notifIn );
         final ObjectName objectName =
                 Util.getAMXNotificationValue(notifIn, AMXConfig.CONFIG_OBJECT_NAME_KEY, ObjectName.class);
 

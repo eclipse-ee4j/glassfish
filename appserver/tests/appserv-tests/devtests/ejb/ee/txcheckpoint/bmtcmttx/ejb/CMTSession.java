@@ -24,15 +24,15 @@ public interface CMTSession
 {
 
     public String getName()
-	throws RemoteException;
+    throws RemoteException;
 
     public int getActivateCount()
-	throws RemoteException;
+    throws RemoteException;
 
     public int getPassivateCount()
-	throws RemoteException;
+    throws RemoteException;
 
     public void incrementCount()
-	throws RemoteException;
+    throws RemoteException;
 
 }

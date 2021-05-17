@@ -48,8 +48,8 @@ public class JMSDestinationDefinitionsHandler extends AbstractResourceHandler {
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,  ResourceContainerContext[] rcContexts)
             throws AnnotationProcessorException {
-    	JMSDestinationDefinitions defns = (JMSDestinationDefinitions) ainfo.getAnnotation();
-    	JMSDestinationDefinition values[] = defns.value();
+        JMSDestinationDefinitions defns = (JMSDestinationDefinitions) ainfo.getAnnotation();
+        JMSDestinationDefinition values[] = defns.value();
         Set<String> duplicates = new HashSet<String>();
         if (values != null && values.length > 0) {
             for (JMSDestinationDefinition defn : values) {

@@ -32,7 +32,7 @@
     <packaging>pom</packaging>
     <version>6.1.1-SNAPSHOT</version>
 
-    <name>GlassFish CDI MultiBeanXml Test</name>  
+    <name>GlassFish CDI MultiBeanXml Test</name>
     <modules>
         <module>ejb1</module>
         <module>ejb2</module>

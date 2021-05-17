@@ -18,19 +18,19 @@ package com.sun.enterprise.deployment.web;
 
     /** I am the type representing a named descriptor that may be shown in a UI tool. */
 public interface WebDescriptor {
-    
-	/** Return the relative URI to the large icon for this descriptor. */
+
+    /** Return the relative URI to the large icon for this descriptor. */
     public String getLargeIconUri();
     public void setLargeIconUri(String largeIconUri);
-	/** Return the relative URI to the small icon for this descriptor. */
+    /** Return the relative URI to the small icon for this descriptor. */
     public String getSmallIconUri();
     public void setSmallIconUri(String smallIconUri);
-	/** Return the human readable display name of this descriptor. */
+    /** Return the human readable display name of this descriptor. */
     public String getName();
     public void setName(String name);
-	/** Return a human readable description of this entity. */
+    /** Return a human readable description of this entity. */
     public String getDescription();
     public void setDescription(String description);
-    
+
 }
 

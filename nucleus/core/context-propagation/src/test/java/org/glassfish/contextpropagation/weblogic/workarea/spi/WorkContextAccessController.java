@@ -51,9 +51,9 @@ public abstract class WorkContextAccessController
   public static boolean isAccessAllowed(String key, int type) {
     return getAccessController().checkAccess(key, type);
   }
-  
+
   public static WorkContextMap getPriviledgedWorkContextMap(WorkContextMap map) {
-	return getAccessController().getPriviledgedWrapper(map);
+    return getAccessController().getPriviledgedWrapper(map);
   }
 
   /**
@@ -65,15 +65,15 @@ public abstract class WorkContextAccessController
   protected boolean checkAccess(String key, int type) {
     return true;
   }
-  
+
   /**
    * SPI provider implementation of {@link #getPriviledgedWorkContextMap}
-   * @param map   
+   * @param map
    * @return
    */
   protected WorkContextMap getPriviledgedWrapper(WorkContextMap map) {
     return map;
-  }  
+  }
 
   private static WorkContextAccessController getAccessController() {
     if (SINGLETON == null) return new WorkContextAccessController() {};

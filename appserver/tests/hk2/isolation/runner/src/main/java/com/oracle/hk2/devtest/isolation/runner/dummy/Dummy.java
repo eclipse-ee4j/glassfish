@@ -18,7 +18,7 @@ package com.oracle.hk2.devtest.isolation.runner.dummy;
 
 /**
  * Only here to make maven happy
- * 
+ *
  * @author jwells
  *
  */

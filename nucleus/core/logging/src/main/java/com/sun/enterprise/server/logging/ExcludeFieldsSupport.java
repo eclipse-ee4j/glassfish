@@ -23,7 +23,7 @@ import java.util.BitSet;
  *
  */
 public class ExcludeFieldsSupport {
-    
+
     static enum SupplementalAttribute {TID, USERID, ECID, TIME_MILLIS, LEVEL_VALUE};
 
     private BitSet excludeSuppAttrsBits = new BitSet();
@@ -43,11 +43,11 @@ public class ExcludeFieldsSupport {
                     excludeSuppAttrsBits.set(SupplementalAttribute.TIME_MILLIS.ordinal());
                 } else if (field.equals("levelValue")) {
                     excludeSuppAttrsBits.set(SupplementalAttribute.LEVEL_VALUE.ordinal());
-                } 
+                }
             }
-        } 
+        }
     }
-    
+
     boolean isSet(SupplementalAttribute attr) {
         return excludeSuppAttrsBits.get(attr.ordinal());
     }

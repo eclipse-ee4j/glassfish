@@ -36,16 +36,16 @@ abstract class ClassPathElement {
   /* package local accessors */
 
   /**
-   * If this class path element resolves the class, return a 
+   * If this class path element resolves the class, return a
    * ClassFileSource for the class.
    */
   public abstract ClassFileSource sourceOf(String className);
 
   /**
-   * Return an enumeration of all of the class files in the specified 
+   * Return an enumeration of all of the class files in the specified
    * package in this class path element.
    *
-   * @param packageName specifies the VM format package name 
+   * @param packageName specifies the VM format package name
    *    to which class files must belong.
    * @returns an Enumeration of the VM format class names which
    *    can be found.  The return value may be null if the class
@@ -60,21 +60,21 @@ abstract class ClassPathElement {
   abstract boolean matches(File directory);
 
   /**
-   * Return the next class path element in the chain 
+   * Return the next class path element in the chain
    */
   ClassPathElement next() {
     return this.next;
   }
 
   /**
-   * Set the the next class path element in the chain 
+   * Set the the next class path element in the chain
    */
   void setNext(ClassPathElement next) {
     this.next = next;
   }
 
   /**
-   * Construct a class path element 
+   * Construct a class path element
    */
   ClassPathElement() {
   }
@@ -86,7 +86,7 @@ abstract class ClassPathElement {
   static ClassPathElement create(String elementSpec) {
     File element = new File(elementSpec);
     if (!element.isDirectory() &&
-	looksLikeZipName(elementSpec))
+    looksLikeZipName(elementSpec))
       return new ZipFileClassPathElement(element);
     else
       return new DirectoryClassPathElement(element);
@@ -107,8 +107,8 @@ abstract class ClassPathElement {
    */
   static protected boolean looksLikeZipName(String fname) {
     return (fname.length() > 4 &&
-	    (fname.regionMatches(true, fname.length() - 4, ".zip", 0, 4) ||//NOI18N
-	     fname.regionMatches(true, fname.length() - 4, ".jar", 0, 4)));//NOI18N
+        (fname.regionMatches(true, fname.length() - 4, ".zip", 0, 4) ||//NOI18N
+         fname.regionMatches(true, fname.length() - 4, ".jar", 0, 4)));//NOI18N
   }
 
 }
@@ -127,7 +127,7 @@ class DirectoryClassPathElement extends ClassPathElement {
   /* package local accessors */
 
   /**
-   * If this class path element resolves the class, return a 
+   * If this class path element resolves the class, return a
    * ClassFileSource for the class.
    */
   public ClassFileSource sourceOf(String className) {
@@ -152,7 +152,7 @@ class DirectoryClassPathElement extends ClassPathElement {
   }
 
   /**
-   * Construct a class path element 
+   * Construct a class path element
    */
   DirectoryClassPathElement(File dirSpec) {
     directory = dirSpec;
@@ -169,12 +169,12 @@ class DirectoryClassPathElement extends ClassPathElement {
     if (exists && directory.isDirectory()) {
       StringBuffer newPath = new StringBuffer(directory.getPath());
       if (newPath.charAt(newPath.length() - 1) != File.separatorChar)
-	newPath.append(File.separatorChar);
+    newPath.append(File.separatorChar);
       newPath.append(ClassPath.fileNameOf(className));
 
       File f = new File(newPath.toString());
       if (f.isFile())
-	return f;
+    return f;
     }
 
     return null;
@@ -206,15 +206,15 @@ class ZipFileClassPathElement extends ClassPathElement {
   /* package local accessors */
 
   /**
-   * If this class path element resolves the class, return a 
+   * If this class path element resolves the class, return a
    * ClassFileSource for the class.
    */
   public ClassFileSource sourceOf(String className) {
     if (zipFile != null) {
       ZipEntry entry =
-	zipFile.getEntry(ClassPath.zipFileNameOf(className));
+    zipFile.getEntry(ClassPath.zipFileNameOf(className));
       if (entry != null) {
-	return new ClassFileSource(className, zipFile);
+    return new ClassFileSource(className, zipFile);
       }
     }
     return null;
@@ -232,7 +232,7 @@ class ZipFileClassPathElement extends ClassPathElement {
   }
 
   /**
-   * Construct a zip file class path element 
+   * Construct a zip file class path element
    */
   ZipFileClassPathElement(File elementSpec) {
     zipFileElement = elementSpec;
@@ -243,13 +243,13 @@ class ZipFileClassPathElement extends ClassPathElement {
 
   private void checkValid() {
     if (looksLikeZipName(zipFileElement.getPath()) &&
-	zipFileElement.isFile()) {
+    zipFileElement.isFile()) {
       try {
-	zipFile = ZipFileRegistry.openZipFile(zipFileElement);
+    zipFile = ZipFileRegistry.openZipFile(zipFileElement);
       } catch (IOException e) {
-	System.err.println("IO exception while reading " +
-			   zipFileElement.getPath());
-	zipFile = null;
+    System.err.println("IO exception while reading " +
+               zipFileElement.getPath());
+    zipFile = null;
       }
     }
   }
@@ -261,7 +261,7 @@ class ZipFileClassPathElement extends ClassPathElement {
  * can be found relative to a particular directory.
  */
 
-class DirectoryClassPackageEnumerator 
+class DirectoryClassPackageEnumerator
   implements Enumeration, FilenameFilter {
 
   private String[] matches;
@@ -269,21 +269,21 @@ class DirectoryClassPackageEnumerator
   String searchPackage;
 
   /**
-   * Constructor 
+   * Constructor
    * @param directory The directory to be used as the root of the
    *   package structure.
    * @param packageName The name of the package to search (in VM form).
    */
   DirectoryClassPackageEnumerator(File directory, String packageName) {
     searchPackage = packageName;
-    String packageDirName = directory.getPath() + File.separator + 
+    String packageDirName = directory.getPath() + File.separator +
       packageName.replace('/', File.separatorChar);
 
     File packageDir = new File(packageDirName);
     if (packageDir.isDirectory()) {
       matches = packageDir.list(this);
       if (matches != null && matches.length > 0)
-	nextMatch = 0;
+    nextMatch = 0;
     }
   }
 
@@ -308,7 +308,7 @@ class DirectoryClassPackageEnumerator
   public boolean accept(File dir, String name) {
     int nameLength = name.length();
     boolean isOk = (nameLength > 6 &&
-		    name.regionMatches(true, nameLength - 6, ".class", 0, 6));//NOI18N
+            name.regionMatches(true, nameLength - 6, ".class", 0, 6));//NOI18N
     return isOk;
   }
 
@@ -331,27 +331,27 @@ class ZipFileClassPackageEnumerator implements Enumeration {
 
   public boolean hasMoreElements() {
     while (nextEntry == null && zipFileEntries != null &&
-	   zipFileEntries.hasMoreElements()) {
+       zipFileEntries.hasMoreElements()) {
       ZipEntry ent = (ZipEntry) zipFileEntries.nextElement();
       String memName = ent.getName();
       int memNameLength = memName.length();
       int packageNameLength = packageName.length();
 
       /* Check that the package name is a prefix of the member name.
-	 Note that we rely here on the fact that zip file have a separator
-	 character identical to the VM package separator */
+     Note that we rely here on the fact that zip file have a separator
+     character identical to the VM package separator */
 
       if (memNameLength > packageNameLength + 1 &&
-	  memName.regionMatches(false, 0, packageName, 
-				0, packageNameLength) &&
-	  memName.charAt(packageNameLength) == '/') {
-	if (memName.indexOf('/', packageNameLength+1) == -1) {
-	  boolean isOk =
-	    (memNameLength > packageNameLength+7 &&
-	     memName.regionMatches(true, memNameLength - 6, ".class", 0, 6));//NOI18N
-	  if (isOk)
-	    nextEntry = ent;
-	}
+      memName.regionMatches(false, 0, packageName,
+                0, packageNameLength) &&
+      memName.charAt(packageNameLength) == '/') {
+    if (memName.indexOf('/', packageNameLength+1) == -1) {
+      boolean isOk =
+        (memNameLength > packageNameLength+7 &&
+         memName.regionMatches(true, memNameLength - 6, ".class", 0, 6));//NOI18N
+      if (isOk)
+        nextEntry = ent;
+    }
       }
     }
     return nextEntry != null;

@@ -26,100 +26,100 @@ import jakarta.ejb.*;
 
 
 public abstract class DBean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: D ejbRemove");
-        
+
         cascadeDelete.LocalA a = getA();
         System.out.println("A: " + ((a==null)? "null" : a.getName()));
-        
+
         cascadeDelete.LocalB b = getB();
         System.out.println("B: " + ((b==null)? "null" : b.getName()));
-        
+
         cascadeDelete.LocalC c = getC();
         System.out.println("C: " + ((c==null)? "null" : c.getName()));
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract java.lang.Integer getId();
     public abstract void setId(java.lang.Integer id);
-    
+
     public abstract java.lang.String getName();
     public abstract void setName(java.lang.String name);
-    
+
     public abstract cascadeDelete.LocalA getA();
-    
+
     public abstract void setA(cascadeDelete.LocalA a);
-    
+
     public abstract cascadeDelete.LocalB getB();
-    
+
     public abstract void setB(cascadeDelete.LocalB b);
-    
+
     public abstract cascadeDelete.LocalC getC();
-    
+
     public abstract void setC(cascadeDelete.LocalC c);
-    
+
     public java.lang.Integer ejbCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
         setId(id);
         setName(name);
         return null;
     }
-    
+
     public void ejbPostCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
     }
-    
+
 }

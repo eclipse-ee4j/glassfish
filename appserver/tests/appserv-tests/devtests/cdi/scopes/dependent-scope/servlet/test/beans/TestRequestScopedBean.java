@@ -24,7 +24,7 @@ public class TestRequestScopedBean {
 
     @Inject
     private TestDependentScopedBean tdsb;
-    
+
     public TestDependentScopedBean getDependentScopedBean(){
         return this.tdsb;
     }

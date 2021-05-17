@@ -50,8 +50,8 @@ public abstract class JMSDestination {
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJMSDestination.class);
 
     // JMS destination types
-           public static final String JMS_DEST_TYPE_TOPIC		= "topic";
-           public static final String JMS_DEST_TYPE_QUEUE		= "queue";
+           public static final String JMS_DEST_TYPE_TOPIC        = "topic";
+           public static final String JMS_DEST_TYPE_QUEUE        = "queue";
            public static final String DEFAULT_MAX_ACTIVE_CONSUMERS = "-1";
            public static final String MAX_ACTIVE_CONSUMERS_ATTRIBUTE = "MaxNumActiveConsumers";
            public static final String MAX_ACTIVE_CONSUMERS_PROPERTY = "maxNumActiveConsumers";
@@ -66,14 +66,14 @@ public abstract class JMSDestination {
            protected static final String MBEAN_DOMAIN_NAME = "com.sun.messaging.jms.server";
             /* String representation of the ObjectName for the DestinationManager Config MBean. */
            protected static final String DESTINATION_MANAGER_CONFIG_MBEAN_NAME
-    			= MBEAN_DOMAIN_NAME
-				+ ":type=" + "DestinationManager"
-				+ ",subtype=Config";
-           
-	   protected static final String CLUSTER_CONFIG_MBEAN_NAME
-    			= MBEAN_DOMAIN_NAME
-				+ ":type=" + "Cluster"
-				+ ",subtype=Config";
+                = MBEAN_DOMAIN_NAME
+                + ":type=" + "DestinationManager"
+                + ",subtype=Config";
+
+       protected static final String CLUSTER_CONFIG_MBEAN_NAME
+                = MBEAN_DOMAIN_NAME
+                + ":type=" + "Cluster"
+                + ",subtype=Config";
             // Queue destination type
             protected static final String DESTINATION_TYPE_QUEUE= "q";
             //Topic destination type
@@ -353,7 +353,7 @@ public abstract class JMSDestination {
              }
 
         //final String myCluster      = ClusterHelper.getClusterByName(domainCC, clusterName).getName();
-	    final Server[] buddies      = this.getServersInCluster(cluster);//ServerHelper.getServersInCluster(domainCC, myCluster);
+        final Server[] buddies      = this.getServersInCluster(cluster);//ServerHelper.getServersInCluster(domainCC, myCluster);
         final Config cfg =  getConfigForServer(buddies[0]);
 
              final String myCluster      = ClusterHelper.getClusterByName(domainCC, clusterName).getName();

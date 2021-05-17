@@ -47,16 +47,16 @@ public final class EntityContainerFactory extends BaseContainerFactory
     private Config serverConfig;
 
     private EjbContainer ejbContainerDesc;
-    
-    private static final Logger _logger = 
-    	LogDomains.getLogger(EntityContainerFactory.class, LogDomains.EJB_LOGGER);
-    
+
+    private static final Logger _logger =
+        LogDomains.getLogger(EntityContainerFactory.class, LogDomains.EJB_LOGGER);
+
     public void postConstruct() {
         ejbContainerDesc = serverConfig.getExtensionByType(EjbContainer.class);
     }
 
     public Container createContainer(EjbDescriptor ejbDescriptor,
-				     ClassLoader loader,
+                     ClassLoader loader,
                      DeploymentContext deployContext)
             throws Exception {
         EntityContainer container = null;

@@ -63,7 +63,7 @@ public class AppLibClassLoaderServiceImpl {
             new HashMap<URI, DelegatingClassLoader.ClassFinder>();
 
     /**
-     * @see org.glassfish.internal.api.ClassLoaderHierarchy#getAppLibClassLoader(String, List<URI>) 
+     * @see org.glassfish.internal.api.ClassLoaderHierarchy#getAppLibClassLoader(String, List<URI>)
      */
     public ClassLoader getAppLibClassLoader(String application, List<URI> libURIs)
             throws MalformedURLException {
@@ -115,7 +115,7 @@ public class AppLibClassLoaderServiceImpl {
     }
 
     /**
-     * @see org.glassfish.internal.api.ClassLoaderHierarchy#getAppLibClassFinder(List<URI>) 
+     * @see org.glassfish.internal.api.ClassLoaderHierarchy#getAppLibClassFinder(List<URI>)
      */
     public DelegatingClassLoader.ClassFinder getAppLibClassFinder(Collection<URI> libURIs)
             throws MalformedURLException {

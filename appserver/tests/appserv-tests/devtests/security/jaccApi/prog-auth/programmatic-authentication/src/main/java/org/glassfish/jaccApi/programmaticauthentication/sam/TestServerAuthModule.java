@@ -40,9 +40,9 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Very basic SAM that returns a single hardcoded user named "test" with role "architect" when the request *attribute*
  * <code>doLogin</code> is present.
- * 
+ *
  * @author Arjan Tijms
- * 
+ *
  */
 public class TestServerAuthModule implements ServerAuthModule {
 

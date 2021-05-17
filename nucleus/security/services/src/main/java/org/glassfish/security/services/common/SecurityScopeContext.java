@@ -35,7 +35,7 @@ import org.jvnet.hk2.annotations.Service;
 public class SecurityScopeContext implements Context<SecurityScope> {
     private final HashMap<String, HashMap<ActiveDescriptor<?>, Object>> contexts =
         new HashMap<String, HashMap<ActiveDescriptor<?>, Object>>();
-    
+
     @Inject
     private StateManager manager;
 
@@ -45,24 +45,24 @@ public class SecurityScopeContext implements Context<SecurityScope> {
     }
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public <T> T findOrCreate(ActiveDescriptor<T> activeDescriptor, ServiceHandle<?> root) {
         HashMap<ActiveDescriptor<?>, Object> mappings = getCurrentContext();
-        
+
         Object retVal = mappings.get(activeDescriptor);
         if (retVal == null) {
             retVal = activeDescriptor.create(root);
-            
+
             mappings.put(activeDescriptor, retVal);
         }
         return (T) retVal;
     }
 
     @SuppressWarnings("unchecked")
-	@Override
+    @Override
     public boolean containsKey(ActiveDescriptor<?> descriptor) {
         HashMap<ActiveDescriptor<?>, Object> mappings = getCurrentContext();
-        
+
         return mappings.containsKey(descriptor);
     }
 
@@ -70,17 +70,17 @@ public class SecurityScopeContext implements Context<SecurityScope> {
     public boolean isActive() {
         return manager.getCurrent() != null;
     }
-    
+
     private HashMap<ActiveDescriptor<?>, Object> getCurrentContext() {
         if (manager.getCurrent() == null) throw new IllegalStateException("Not In Active State");
-        
+
         HashMap<ActiveDescriptor<?>, Object> retVal = contexts.get(manager.getCurrent());
         if (retVal == null) {
             retVal = new HashMap<ActiveDescriptor<?>, Object>();
-            
+
             contexts.put(manager.getCurrent(), retVal);
         }
-        
+
         return retVal;
     }
 
@@ -98,12 +98,12 @@ public class SecurityScopeContext implements Context<SecurityScope> {
     @Override
     public void shutdown() {
         // Do nothing
-        
+
     }
 
     @Override
     public void destroyOne(ActiveDescriptor<?> descriptor) {
         // TODO Auto-generated method stub
-        
+
     }
 }

@@ -38,16 +38,16 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(AroundInvoke.class)
 public class AroundInvokeHandler extends AbstractAttributeHandler {
-    
+
     public AroundInvokeHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         for(EjbContext next : ejbContexts) {
-            
-            EjbDescriptor ejbDescriptor = 
+
+            EjbDescriptor ejbDescriptor =
                 (EjbDescriptor) next.getDescriptor();
 
             ejbDescriptor.addAroundInvokeDescriptor(
@@ -65,13 +65,13 @@ public class AroundInvokeHandler extends AbstractAttributeHandler {
 
         ejbInterceptor.addAroundInvokeDescriptor(
             getAroundInvocationDescriptor(ainfo));
-            
+
         return getDefaultProcessedResult();
     }
 
     protected LifecycleCallbackDescriptor getAroundInvocationDescriptor(
             AnnotationInfo ainfo) {
-        
+
         Method m = (Method) ainfo.getAnnotatedElement();
         LifecycleCallbackDescriptor lccDesc =
                 new LifecycleCallbackDescriptor();
@@ -81,8 +81,8 @@ public class AroundInvokeHandler extends AbstractAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

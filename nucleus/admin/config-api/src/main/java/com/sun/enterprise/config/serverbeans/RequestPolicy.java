@@ -38,7 +38,7 @@ public interface RequestPolicy extends ConfigBeanProxy {
 
     /**
      * Gets the value of the authSource property.
-     * 
+     *
      * Defines a requirement for message layer sender authentication (e.g. username password) or content authentication
      * (e.g. digital signature)
      *

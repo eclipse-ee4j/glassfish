@@ -28,11 +28,11 @@ import libclasspath2.ejb.LookupSBRemote;
 public class LibDirTestClient {
 
     private static @EJB() LookupSBRemote lookup;
-    
+
     /** Creates a new instance of LibDirTestClient */
     public LibDirTestClient() {
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -44,7 +44,7 @@ public class LibDirTestClient {
             System.exit(-1);
         }
     }
-    
+
     private void run(String[] args) throws IOException {
         if (args.length == 0) {
             System.out.println("result=-1");
@@ -57,13 +57,13 @@ public class LibDirTestClient {
          *Ask the EJB to find the required resources and property values.
          */
         ResourceHelper.Result serverResult = lookup.runTests(args, ResourceHelper.TestType.SERVER);
-        
+
         /*
          *Now try to get the same results on the client side.
          */
         StringBuilder clientResults = new StringBuilder();
         ResourceHelper.Result clientResult = ResourceHelper.checkAll(args, ResourceHelper.TestType.CLIENT);
-        
+
         if (serverResult.getResult() && clientResult.getResult()) {
             System.out.println("result=0");
             System.out.println("note=Received expected results");
@@ -83,6 +83,6 @@ public class LibDirTestClient {
             }
             System.out.println("note=");
         }
-        
+
     }
 }

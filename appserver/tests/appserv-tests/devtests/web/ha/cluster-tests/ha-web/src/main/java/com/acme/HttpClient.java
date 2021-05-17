@@ -116,7 +116,7 @@ public class HttpClient {
                     System.out.println("Failed " + info);
                 }
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,7 +134,7 @@ public class HttpClient {
         }
 
         if (tmpSessState.getJsessionCookie() == null) {
-            tmpSessState.setJsessionCookie(cookie);    
+            tmpSessState.setJsessionCookie(cookie);
         }
         int code = ((HttpURLConnection) uc).getResponseCode();
         InputStream is = uc.getInputStream();
@@ -169,7 +169,7 @@ public class HttpClient {
             result = result && prev.getJsessionCookie().equals(current.getJsessionCookie());
 
             result = result && prev.getHttpCounter() < current.getHttpCounter();
-            
+
         }
         return result;
     }

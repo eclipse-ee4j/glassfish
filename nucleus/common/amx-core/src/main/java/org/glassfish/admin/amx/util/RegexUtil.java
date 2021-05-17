@@ -38,8 +38,8 @@ public final class RegexUtil
     /**
     Converts each String to a Pattern using wildcardToJavaRegex
 
-    @param exprs	String[] of expressions
-    @return	Pattern[], one for each String
+    @param exprs    String[] of expressions
+    @return    Pattern[], one for each String
      */
     public static Pattern[] exprsToPatterns(final String[] exprs)
     {
@@ -49,9 +49,9 @@ public final class RegexUtil
     /**
     Converts each String to a Pattern using wildcardToJavaRegex, passing the flags.
 
-    @param exprs	String[] of expressions
-    @param flags	flags to pass to Pattern.compile
-    @return	Pattern[], one for each String
+    @param exprs    String[] of expressions
+    @param flags    flags to pass to Pattern.compile
+    @return    Pattern[], one for each String
      */
     public static Pattern[] exprsToPatterns(final String[] exprs, int flags)
     {

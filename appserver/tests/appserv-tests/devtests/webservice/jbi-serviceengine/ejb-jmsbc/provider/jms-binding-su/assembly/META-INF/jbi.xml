@@ -22,13 +22,13 @@
     version="1.0"
     xmlns="http://java.sun.com/xml/ns/jbi"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  
+
   <service-assembly>
     <identification>
       <name>client_ejb_provider_assembly</name>
       <description>This is an SA for JMS Binding</description>
     </identification>
- 
+
     <service-unit>
       <identification>
          <name>client_ejb_provider_su</name>

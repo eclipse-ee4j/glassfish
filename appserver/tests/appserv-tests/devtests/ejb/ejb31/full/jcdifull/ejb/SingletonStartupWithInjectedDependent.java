@@ -31,7 +31,7 @@ public class SingletonStartupWithInjectedDependent {
     @Inject
     public SingletonStartupWithInjectedDependent(DependentWithInjectedDataSource service) {
         this.service = service;
-	System.out.println("Constructed::SingletonStartupWithInjectedDependent");
+    System.out.println("Constructed::SingletonStartupWithInjectedDependent");
     }
 
     @PostConstruct
@@ -41,7 +41,7 @@ public class SingletonStartupWithInjectedDependent {
     }
 
     public String toString() {
-	return "SingletonStartupWithInjectedDependent";
+    return "SingletonStartupWithInjectedDependent";
     }
 
 }

@@ -22,23 +22,23 @@
 ]>
 
 <!--
-  Test directory deployment for ear with directory structure such 
+  Test directory deployment for ear with directory structure such
   as foo.ear/bar.war
 -->
- 
+
 <project name="directoryDeploy-withEarSuffix" default="all" basedir=".">
 
- 	&commonBuild;
+     &commonBuild;
 
     <property name="testName" value="dirDeployWithEarSuffix"/>
     <property name="contextRoot" value="${testName}Web"/>
     <property name="ear.build.dir" value="${build}/${testName}.ear"/>
-    <property name="ejb.build.dir" 
+    <property name="ejb.build.dir"
               value="${ear.build.dir}/${testName}Ejb.jar"/>
-    <property name="web.build.dir" 
+    <property name="web.build.dir"
               value="${ear.build.dir}/${testName}Web.war"/>
     <property name="client.build.dir" value="${build}/client"/>
-        
+
     <target name="prepare" depends="init">
        <mkdir dir="${build}" />
        <mkdir dir="${ear.build.dir}" />
@@ -66,11 +66,11 @@
         </javac>
 
     </target>
-                                                                                
+
     <target name="assemble" depends="compile">
             <copy file="../ear/descriptor/web.xml" todir="${web.build.dir}/WEB-INF"/>
-            <copy file="../ear/descriptor/sun-web.xml" 
-                  todir="${web.build.dir}/WEB-INF" 
+            <copy file="../ear/descriptor/sun-web.xml"
+                  todir="${web.build.dir}/WEB-INF"
                   failonerror="false"/>
              <copy todir="${web.build.dir}">
                   <fileset dir="../ear/war" includes="*.jsp, *.html"/>
@@ -79,18 +79,18 @@
                   <fileset dir="../ear/war" includes="*properties"/>
              </copy>
              <mkdir dir="${ejb.build.dir}/META-INF"/>
-             <copy file="../ear/descriptor/ejb-jar.xml" 
+             <copy file="../ear/descriptor/ejb-jar.xml"
                    todir="${ejb.build.dir}/META-INF"/>
-             <copy file="../ear/descriptor/sun-ejb-jar.xml" 
-                   todir="${ejb.build.dir}/META-INF" 
+             <copy file="../ear/descriptor/sun-ejb-jar.xml"
+                   todir="${ejb.build.dir}/META-INF"
                    failonerror="false"/>
              <mkdir dir="${ear.build.dir}/META-INF"/>
 
              <!-- application.xml is optional
-             <copy file="../ear/descriptor/application.xml" 
+             <copy file="../ear/descriptor/application.xml"
                    todir="${ear.build.dir}/META-INF"/>
              -->
-             <copy file="../ear/descriptor/sun-application.xml" 
+             <copy file="../ear/descriptor/sun-application.xml"
                    todir="${ear.build.dir}/META-INF"
                    failonerror="false"/>
     </target>
@@ -117,7 +117,7 @@
     </target>
 
    <target name="run" depends="run.positive"/>
-                                                                                
+
     <target name="run.positive" depends="setHttpPort">
         <property name="url" value="http://${http.host}:${depltest.port}/${contextRoot}"/>
         <antcall target="runclient">
@@ -125,7 +125,7 @@
             <param name="log.id" value="${log.id}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="run.negative" depends="setHttpPort">
         <property name="url" value="http://${http.host}:${depltest.port}/${contextRoot}/${testName}"/>
         <antcall target="runclient">
@@ -133,7 +133,7 @@
             <param name="log.id" value="${log.id}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="runclient" depends="init">
         <echo message="TestClient ${arg.list}"/>
         <javaWithResult
@@ -145,21 +145,21 @@
             resultproperty="result">
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-                                                                                
-            <classpath>                
+
+            <classpath>
                 <path refid="gfv3.classpath"/>
                 <path location="${client.build.dir}"/>
             </classpath>
 
             <arg line="${arg.list}"/>
         </javaWithResult>
-                                                                                
+
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="private-all">
         <antcall target="assemble"/>
        <antcall target="declare-test">
@@ -167,7 +167,7 @@
         </antcall>
         <antcall target="deploydir.asadmin"/>
         <antcall target="run.positive"><param name="log.id" value="1"/></antcall>
-                                                                                
+
         <antcall target="declare-test">
             <param name="description" value="directorydeploy/earWithSuffix Test asadmin redeploydir"/>
         </antcall>
@@ -184,5 +184,5 @@
         <delete dir="${build}"/>
     </target>
 
-    
+
 </project>

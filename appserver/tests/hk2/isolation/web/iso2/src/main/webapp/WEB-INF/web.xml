@@ -26,7 +26,7 @@
     <servlet-name>iso2</servlet-name>
     <servlet-class>com.oracle.hk2.devtest.isolation.web.iso2.Iso2Servlet</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>iso2</servlet-name>
     <url-pattern>/iso2</url-pattern>

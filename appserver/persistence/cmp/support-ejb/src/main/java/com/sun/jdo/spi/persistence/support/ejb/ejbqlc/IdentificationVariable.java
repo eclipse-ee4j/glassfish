@@ -18,7 +18,7 @@ package com.sun.jdo.spi.persistence.support.ejb.ejbqlc;
 
 /**
  * An instance of this class denotes an identification variable as declared
- * in the from clause of an EJBQL query string. The compiler creates such an 
+ * in the from clause of an EJBQL query string. The compiler creates such an
  * instance when analysing the from clause and stores it in the symbol table.
  *
  * @author Michael Bouschen
@@ -31,7 +31,7 @@ public class IdentificationVariable
     /** The type of the identification variable. */
     private Object typeInfo;
 
-    /** 
+    /**
      * Creates an identification variable declaration for use during semantic
      * analysis.
      * @param name the name of the identification variable.
@@ -60,5 +60,5 @@ public class IdentificationVariable
     {
         return typeInfo;
     }
-    
+
 }

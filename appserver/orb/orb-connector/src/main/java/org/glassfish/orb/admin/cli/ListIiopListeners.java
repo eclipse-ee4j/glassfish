@@ -60,8 +60,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 )
 @RestEndpoints({
     @RestEndpoint(configBean=IiopService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-iiop-listeners", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-iiop-listeners",
         description="list-iiop-listeners")
 })
 public class ListIiopListeners implements AdminCommand {

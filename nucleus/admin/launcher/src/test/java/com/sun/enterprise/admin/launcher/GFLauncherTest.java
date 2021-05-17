@@ -89,7 +89,7 @@ public class GFLauncherTest {
         assertTrue(cmdline.contains("-XX:+UnlockDiagnosticVMOptions"));
         // 0 --> java, 1 --> "-cp" 2 --> the classpath, 3 -->first arg
         assertEquals(cmdline.get(3), "-XX:+UnlockDiagnosticVMOptions");
-        
+
         /* Too noisy, todo figure out how to get it into the test report
         System.out.println("COMMANDLINE:");
         for(String s : cmdline) {

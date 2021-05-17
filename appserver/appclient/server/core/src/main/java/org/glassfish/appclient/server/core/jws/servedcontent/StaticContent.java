@@ -27,7 +27,7 @@ import org.glassfish.grizzly.http.server.Response;
  * This interface exposes a File object, as opposed to a stream for example,
  * so that the Grizzly adapter that actually serves the content can use
  * sendFile for efficiency.
- * 
+ *
  * @author tjquinn
  */
 public interface StaticContent extends Content {
@@ -37,13 +37,13 @@ public interface StaticContent extends Content {
      * @return a File object for the content
      */
     public File file() throws IOException;
-    
+
     /**
      * Process the static content, adding the correct data to the response.
      * @param relativeURIString URI path by which the content was addressed
      * @param gReq the request
      * @param gResp the response
-     * @throws Exception 
+     * @throws Exception
      */
     public void process(String relativeURIString, Request gReq, Response gResp) throws Exception;
 }

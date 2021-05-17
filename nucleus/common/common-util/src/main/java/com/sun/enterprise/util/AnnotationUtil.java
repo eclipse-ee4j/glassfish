@@ -24,7 +24,7 @@ import org.glassfish.api.admin.ManagedJob;
  * @author mmares
  */
 public class AnnotationUtil {
-    
+
     /** If annotation is present on given type or on annotation which is
      * on given type.
      */
@@ -43,5 +43,5 @@ public class AnnotationUtil {
         }
         return false;
     }
-    
+
 }

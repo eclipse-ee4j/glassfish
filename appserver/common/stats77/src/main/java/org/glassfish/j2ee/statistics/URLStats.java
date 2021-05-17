@@ -17,7 +17,7 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies the statistics provided by a URL resource. 
+ * Specifies the statistics provided by a URL resource.
  */
 public interface URLStats extends Stats {
 }

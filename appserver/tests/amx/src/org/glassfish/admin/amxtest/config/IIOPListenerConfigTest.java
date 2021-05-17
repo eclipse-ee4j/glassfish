@@ -127,21 +127,21 @@ public final class IIOPListenerConfigTest
         }
     }
 /*
-		public void
-	testCreateSSLClientConfig()
-		throws Exception
-	{
-		final Set<IIOPServiceConfig> s = getQueryMgr().getJ2EETypeProxies("X-IIOPServiceConfig");
-		assert s.size() >= 0;
-		IIOPServiceConfig iiopService = (IIOPServiceConfig)s.iterator().next();
-		assert iiopService != null;
-		Map sslParams = new HashMap();
-		sslParams.put("CertNickname", "mycert");
-		final ObjectName on = iiopService.createIIOPSSLClientConfig(sslParams);
-		assert on != null && on.equals(iiopService.getIIOPSSLClientConfigObjectName());
-		IIOPSSLClientConfig sslClientConfig = iiopService.getIIOPSSLClientConfig();
-		assert sslClientConfig != null;
-	}
+        public void
+    testCreateSSLClientConfig()
+        throws Exception
+    {
+        final Set<IIOPServiceConfig> s = getQueryMgr().getJ2EETypeProxies("X-IIOPServiceConfig");
+        assert s.size() >= 0;
+        IIOPServiceConfig iiopService = (IIOPServiceConfig)s.iterator().next();
+        assert iiopService != null;
+        Map sslParams = new HashMap();
+        sslParams.put("CertNickname", "mycert");
+        final ObjectName on = iiopService.createIIOPSSLClientConfig(sslParams);
+        assert on != null && on.equals(iiopService.getIIOPSSLClientConfigObjectName());
+        IIOPSSLClientConfig sslClientConfig = iiopService.getIIOPSSLClientConfig();
+        assert sslClientConfig != null;
+    }
  */
 }
 

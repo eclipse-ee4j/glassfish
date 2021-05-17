@@ -207,13 +207,13 @@ public class PersistentValve
      * @param message Message to be logged
      */
     protected void log(String message) {
- 
+
         Logger logger = container.getLogger();
         if (logger != null)
             logger.log(this.toString() + ": " + message);
         else
             System.out.println(this.toString() + ": " + message);
- 
+
     }
 
     /**
@@ -223,7 +223,7 @@ public class PersistentValve
      * FIXME: Probably belongs in the Session class.
      */
     protected boolean isSessionStale(Session session, long timeNow) {
- 
+
         int maxInactiveInterval = session.getMaxInactiveInterval();
         if (maxInactiveInterval >= 0) {
             int timeIdle = // Truncate, do not round up
@@ -231,9 +231,9 @@ public class PersistentValve
             if (timeIdle >= maxInactiveInterval)
                 return true;
         }
- 
+
         return false;
- 
+
     }
 
 }

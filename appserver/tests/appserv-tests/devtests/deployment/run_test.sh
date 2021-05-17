@@ -55,7 +55,7 @@ test_run(){
   fi
    if [[ ${1} = "deployment_cluster_all" ]]; then
       cp -r ${APS_HOME}/devtests/deployment/server-logs/ ${WORKSPACE}/results/
-  fi  
+  fi
   echo DEPL_TARGET is ${DEPL_TARGET}
 }
 
@@ -78,8 +78,8 @@ generate_junit_report_deployment(){
       print "  <testcase classname=\"DeploymentTest\" name=\"" \
         substr($2,2,index($2,"description")-4) \
         id \
-        "\">"		
-      
+        "\">"
+
       # searching for FAILED in field 4,5,6
       # if not found, test PASSED
       failure=1
@@ -92,11 +92,11 @@ generate_junit_report_deployment(){
             failure=0;
           }
         }
-      } 
+      }
       if( failure == 1 ) {
         print "   <failure type=\"testfailure\"/>"
       }
-      
+
       print "  </testcase>"
       id++;
     }

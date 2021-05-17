@@ -18,11 +18,11 @@ package com.sun.enterprise.tools;
 
 /**
  * Abstraction for a Messager
- * 
+ *
  * @author Jeff Trent
  */
 public interface Messager {
 
   void printError(String msg, Exception e);
-  
+
 }

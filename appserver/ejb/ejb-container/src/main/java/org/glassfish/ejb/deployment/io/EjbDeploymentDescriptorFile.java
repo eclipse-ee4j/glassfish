@@ -32,16 +32,16 @@ import org.glassfish.ejb.deployment.node.EjbBundleNode;
  */
 
 public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile {
-    
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     public String getDeploymentDescriptorPath() {
         return DOLUtils.warType().equals(getArchiveType()) ?
-        		DescriptorConstants.EJB_IN_WAR_ENTRY : DescriptorConstants.EJB_JAR_ENTRY;
+                DescriptorConstants.EJB_IN_WAR_ENTRY : DescriptorConstants.EJB_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module

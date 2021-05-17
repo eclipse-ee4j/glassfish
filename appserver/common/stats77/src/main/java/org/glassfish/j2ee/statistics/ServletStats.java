@@ -17,11 +17,11 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies the statistics provided by a Servlet. 
+ * Specifies the statistics provided by a Servlet.
  */
 public interface ServletStats extends Stats {
     /**
-     * Execution times for the methods. 
+     * Execution times for the methods.
      */
     TimeStatistic getServiceTime();
 }

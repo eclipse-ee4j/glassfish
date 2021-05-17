@@ -26,28 +26,28 @@ import org.omg.CosTransactions.*;
 /**
  * This class is used to set trace properties and print trace statements. The print method does the printing.
  * All the methods are unsynchronized. Since setting of properties doesn't happen simultaneously with print
- * in current usage, this is fine. The tracing should be enabled/disabled by calling 
+ * in current usage, this is fine. The tracing should be enabled/disabled by calling
  * <code> Configuration.enableTrace()/disableTrace()</code>
  * prior to any operation on TraceUtil.
- * It uses TraceRecordFormatter for formatting the trace record. 
+ * It uses TraceRecordFormatter for formatting the trace record.
  *
  * @author <a href="mailto:kannan.srinivasan@sun.com">Kannan Srinivasan</a>
  * @version 1.0
  */
 public class TraceUtil
 {
-	private static int m_currentTraceLevel = TraceLevel.IAS_JTS_TRACE_TRIVIAL ;
-	private static char m_fieldDelimiter = ':';
-	private static String m_traceRecordTag = "iAS_JTS_Trace> ";
-	private static PrintWriter m_traceWriter = null ;
+    private static int m_currentTraceLevel = TraceLevel.IAS_JTS_TRACE_TRIVIAL ;
+    private static char m_fieldDelimiter = ':';
+    private static String m_traceRecordTag = "iAS_JTS_Trace> ";
+    private static PrintWriter m_traceWriter = null ;
 
-	static
-	{
-		m_traceWriter = new PrintWriter(System.out);
-	}
+    static
+    {
+        m_traceWriter = new PrintWriter(System.out);
+    }
 
  /**
-   * Initialises the trace class with given output writer. 
+   * Initialises the trace class with given output writer.
    *
    * @param traceWriter an <code>PrintWriter</code> value
    */
@@ -63,7 +63,7 @@ public class TraceUtil
    */
     public static void setTraceWriter(PrintWriter traceWriter)
     {
-	m_traceWriter = traceWriter;
+    m_traceWriter = traceWriter;
     }
 
   /**
@@ -107,7 +107,7 @@ public class TraceUtil
                     traceLevelSet = true;
                     break;
                 }
-            } 
+            }
             if(!traceLevelSet)
                 throw new InvalidTraceLevelException();
 
@@ -126,36 +126,36 @@ public class TraceUtil
    * @param origin an <code>Object</code> value
    * @param msg a <code>String</code> value
    */
-    public static void print(int traceLevel, PrintWriter outWriter, Object tid, Object origin, String msg) 
+    public static void print(int traceLevel, PrintWriter outWriter, Object tid, Object origin, String msg)
     {
             if( traceLevel <= m_currentTraceLevel )
             {
-            	String traceRecord = TraceRecordFormatter.createTraceRecord(tid, origin, msg); 
-		outWriter.println(traceRecord);
+                String traceRecord = TraceRecordFormatter.createTraceRecord(tid, origin, msg);
+        outWriter.println(traceRecord);
             }
     }
 
   /**
-   * This method formats and writes the trace record to current output writer. The method is 
-   * called with a tracelevel, which is checked with current trace level and if found equal 
+   * This method formats and writes the trace record to current output writer. The method is
+   * called with a tracelevel, which is checked with current trace level and if found equal
    * or higher, the print is carried out. This method doesn't take a otid and tries to recover
    * it from current obejct asscociated with this thread
    * @param traceLevel an <code>int</code> value
    * @param origin an <code>Object</code> value
    * @param msg a <code>String</code> value
    */
-    public static void print(int traceLevel, Object origin, String msg) 
+    public static void print(int traceLevel, Object origin, String msg)
     {
-	try{
-		 print(traceLevel,
-	          ((com.sun.jts.CosTransactions.TopCoordinator)
-		  com.sun.jts.CosTransactions.CurrentTransaction.getCurrent().get_localCoordinator()).get_transaction_name(),
-		  origin,
-		  msg
-		  );
-	}catch(Exception e){
-    		print(traceLevel,null,origin,msg);
-	}
+    try{
+         print(traceLevel,
+              ((com.sun.jts.CosTransactions.TopCoordinator)
+          com.sun.jts.CosTransactions.CurrentTransaction.getCurrent().get_localCoordinator()).get_transaction_name(),
+          origin,
+          msg
+          );
+    }catch(Exception e){
+            print(traceLevel,null,origin,msg);
+    }
     }
 
   /**
@@ -167,9 +167,9 @@ public class TraceUtil
    * @param origin an <code>Object</code> value
    * @param msg a <code>String</code> value
    */
-    public static void print(int traceLevel, Object tid, Object origin, String msg) 
+    public static void print(int traceLevel, Object tid, Object origin, String msg)
     {
-    	print(traceLevel,m_traceWriter,tid,origin,msg);
+        print(traceLevel,m_traceWriter,tid,origin,msg);
     }
 
   /**
@@ -180,7 +180,7 @@ public class TraceUtil
     public static char getFieldDelimiter()
     {
         return m_fieldDelimiter;
-     }    
+     }
 
   /**
    * Sets the current field delimiter.
@@ -193,7 +193,7 @@ public class TraceUtil
     }
 
   /**
-   * Gets the current trace record tag used in formatting of trace record. The default is 
+   * Gets the current trace record tag used in formatting of trace record. The default is
    * 'iAS_JTS_Trace> '.
    *
    * @return a <code>String</code> value
@@ -201,7 +201,7 @@ public class TraceUtil
     public static String getTraceRecordTag()
     {
         return m_traceRecordTag;
-     }    
+     }
 
   /**
    * Sets the trace record tag.
@@ -257,7 +257,7 @@ public class TraceUtil
             return m.invoke(instance, null);
         } catch (Exception e) {
             logger.log(Level.FINE, "", e);
-        } 
+        }
         return null;
     }
 }

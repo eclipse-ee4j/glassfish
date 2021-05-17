@@ -24,9 +24,9 @@ import jakarta.resource.spi.ResourceAdapter;
  * so that the app server can instantiate and configure
  * it at the runtime.
  *
- * @author	Qingqing Ouyang
+ * @author    Qingqing Ouyang
  */
-public class SimpleActivationSpec 
+public class SimpleActivationSpec
     implements ActivationSpec, java.io.Serializable {
 
     private String destinationName;
@@ -42,7 +42,7 @@ public class SimpleActivationSpec
     public String getDestinationName () {
         return this.destinationName;
     }
-    
+
     public void setDestinationName (String name) {
         debug("setDestinationName() called... name = " + name);
         this.destinationName = name;
@@ -51,7 +51,7 @@ public class SimpleActivationSpec
     public String getDestinationType() {
         return this.destinationType;
     }
-    
+
     public void setDestinationType (String type) {
         debug("setDestinationType () called... type = " + type);
         this.destinationType= type;
@@ -60,7 +60,7 @@ public class SimpleActivationSpec
     public String getTestProp() {
         return this.testProp;
     }
-    
+
     public void setTestProp (String testProp) {
         debug("setTestProp () called... testProp = " + testProp);
         this.testProp = testProp;
@@ -76,7 +76,7 @@ public class SimpleActivationSpec
         this.resourceadapter = ra;
     }
 
-    public void validate() {} 
+    public void validate() {}
 
     private void debug (String message)
     {

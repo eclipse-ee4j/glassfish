@@ -39,7 +39,7 @@ public class MultipleInterceptorImplementationsTestServlet extends HttpServlet {
     @Preferred
     TestBean tb;
 
-    @Inject 
+    @Inject
     TestRequestScopedBean trsb;
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
@@ -63,30 +63,30 @@ public class MultipleInterceptorImplementationsTestServlet extends HttpServlet {
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
 
-        
+
         if (!SecondTransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke in the second " +
-            		"transaction interceptor not called";
+                    "transaction interceptor not called";
         tb.m2(); //calling m2 again
         if (SecondTransactionInterceptor.aroundInvokeInvocationCount != 3)
             msg += "Business method second interceptor invocation on method-level "
                     + "interceptor annotation count not expected. "
                     + "expected =3, actual="
                     + SecondTransactionInterceptor.aroundInvokeInvocationCount;
-        
+
         //test ordering of interceptors in the system
-        boolean expectedOrdering = 
+        boolean expectedOrdering =
             ((trsb.interceptorInvocationOrder.get(0).
                     equals(SecondTransactionInterceptor.class.getCanonicalName()))
                 && (trsb.interceptorInvocationOrder.get(1).
                         equals(TransactionInterceptor.class.getCanonicalName())));
-        if (!expectedOrdering) 
+        if (!expectedOrdering)
             msg += "Interceptor invocation order does not match with the expected order";
-        
-        //test disabling of interceptors via beans.xml 
-        if (ThirdTransactionInterceptor.aroundInvokeCalled) 
+
+        //test disabling of interceptors via beans.xml
+        if (ThirdTransactionInterceptor.aroundInvokeCalled)
             msg += "Disabled interceptor called";
-        
+
         writer.write(msg + "\n");
     }
 

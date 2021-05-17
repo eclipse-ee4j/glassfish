@@ -20,7 +20,7 @@ package org.glassfish.ha.common;
  * @author Mahesh Kannan
  */
 public class HACookieManager {
-    
+
     private static final HACookieManager _manager = new HACookieManager();
 
     private static InheritableThreadLocal<HACookieInfo> _haCookieInfo

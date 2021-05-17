@@ -78,7 +78,7 @@ public class SeleniumHelper {
         selenium.windowFocus();
         selenium.windowMaximize();
         selenium.setTimeout("90000");
-        
+
         return selenium;
     }
 
@@ -120,7 +120,7 @@ public class SeleniumHelper {
     public static String captureScreenshot() {
         return captureScreenshot("" + (Math.abs(new Random().nextInt()) + 1));
     }
-    
+
     public static String captureScreenshot(String fileName) {
         try {
             new File("target/surefire-reports/").mkdirs(); // Insure directory is there
@@ -130,7 +130,7 @@ public class SeleniumHelper {
         } catch (Exception e) {
             // No need to crash the tests if the screenshot fails
         }
-        
+
         return fileName;
     }
 }

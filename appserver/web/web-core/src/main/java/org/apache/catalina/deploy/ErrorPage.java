@@ -154,7 +154,7 @@ public class ErrorPage implements Serializable {
 
     // START SJSAS 6324911
     /**
-     * Gets the reason string that is associated with the error (status) code 
+     * Gets the reason string that is associated with the error (status) code
      * for which this error page is active.
      *
      * @return The reason string of this error page
@@ -164,7 +164,7 @@ public class ErrorPage implements Serializable {
     }
 
     /**
-     * Sets the reason string to be associated with the error (status) code 
+     * Sets the reason string to be associated with the error (status) code
      * for which this error page is active.
      *
      * @param reason The reason string

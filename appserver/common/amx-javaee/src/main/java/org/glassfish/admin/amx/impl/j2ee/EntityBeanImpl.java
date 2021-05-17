@@ -23,13 +23,13 @@ import javax.management.ObjectName;
 /**
  */
 public final class EntityBeanImpl
-	extends EJBImplBase
+    extends EJBImplBase
 {
     public static final Class<EntityBean> INTF = EntityBean.class;
-		public
-	EntityBeanImpl(
+        public
+    EntityBeanImpl(
         final ObjectName parentObjectName, final Metadata meta)
-	{
-		super( parentObjectName, meta, INTF );
-	}
+    {
+        super( parentObjectName, meta, INTF );
+    }
 }

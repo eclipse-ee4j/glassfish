@@ -54,8 +54,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Protocol.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-protocol-finder", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-protocol-finder",
         description="Create",
         params={
             @RestParam(name="protocol", value="$parent")
@@ -104,12 +104,12 @@ public class CreateProtocolFinder implements AdminCommand {
             PortUnification unif = (PortUnification)ConfigSupport.apply(new SingleConfigCode<Protocol>() {
                 @Override
                 public Object run(Protocol param) throws PropertyVetoException, TransactionFailure {
-					     PortUnification pu = param.getPortUnification();
-						  if(pu == null) {
-						      pu = param.createChild(PortUnification .class);
-								param.setPortUnification(pu);
-						  }
-						  return pu;
+                         PortUnification pu = param.getPortUnification();
+                          if(pu == null) {
+                              pu = param.createChild(PortUnification .class);
+                                param.setPortUnification(pu);
+                          }
+                          return pu;
                 }
             }, protocol);
             ConfigSupport.apply(new SingleConfigCode<PortUnification>() {

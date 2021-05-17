@@ -30,14 +30,14 @@ public final class ServletFilterMappingDescriptor
     extends Descriptor
     implements com.sun.enterprise.deployment.web.ServletFilterMapping
 {
-    
+
     private EnumSet<DispatcherType> dispatchers;
     private List<String> servletNames;
     private List<String> urlPatterns;
 
     /** generic constructor */
     public ServletFilterMappingDescriptor() {
-	super(""/*name*/, ""/*description*/);
+    super(""/*name*/, ""/*description*/);
     }
 
     /** copy constructor */
@@ -75,7 +75,7 @@ public final class ServletFilterMappingDescriptor
         }
         dispatchers.add(Enum.valueOf(DispatcherType.class, dispatcher));
     }
-    
+
     public void removeDispatcher(String dispatcher) {
         if (dispatchers == null) {
             return;

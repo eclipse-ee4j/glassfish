@@ -125,7 +125,7 @@
                     out.write("\n" + lineSepatartor + "\n");
                 }
                 in.close();
-		out.close();
+        out.close();
             } catch (Exception ex) {
                 System.out.println("REPORTER: Error generating TestSummary");
             }

@@ -51,18 +51,18 @@
       <property-name>shape</property-name>
       <property-class>java.lang.String</property-class>
     </property>
-    
+
     <component-extension>
       <component-family>Area</component-family>
       <renderer-type>DemoArea</renderer-type>
     </component-extension>
-    
+
   </component>
 
   <component>
     <component-type>Graph</component-type>
     <component-class>components.components.GraphComponent</component-class>
-    
+
     <component-extension>
       <component-family>Graph</component-family>
       <renderer-type>MenuBar</renderer-type>
@@ -79,28 +79,28 @@
       <property-name>current</property-name>
       <property-class>java.lang.String</property-class>
     </property>
-    
+
     <component-extension>
       <component-family>Map</component-family>
       <renderer-type>DemoMap</renderer-type>
     </component-extension>
-    
+
   </component>
 
   <component>
     <component-type>Pane</component-type>
     <component-class>components.components.PaneComponent</component-class>
-    
+
     <component-extension>
       <component-family>Pane</component-family>
       <renderer-type>Tab</renderer-type>
     </component-extension>
   </component>
-  
+
   <component>
     <component-type>Scroller</component-type>
     <component-class>components.components.ScrollerComponent</component-class>
-    
+
     <component-extension>
       <component-family>Scroller</component-family>
     </component-extension>
@@ -109,16 +109,16 @@
   <component>
     <component-type>Chart</component-type>
     <component-class>components.components.ChartComponent</component-class>
-    
+
     <component-extension>
       <component-family>Chart</component-family>
     </component-extension>
   </component>
-  
+
   <component>
     <component-type>ChartItem</component-type>
     <component-class>components.components.ChartItemComponent</component-class>
-    
+
     <component-extension>
       <component-family>ChartItem</component-family>
     </component-extension>
@@ -134,7 +134,7 @@
       <component-family>Area</component-family>
       <renderer-type>DemoArea</renderer-type>
       <renderer-class>components.renderkit.AreaRenderer</renderer-class>
-      
+
       <attribute>
         <description>
           Context-relative path to an image to be displayed when the
@@ -167,7 +167,7 @@
       <component-family>Map</component-family>
       <renderer-type>DemoMap</renderer-type>
       <renderer-class>components.renderkit.MapRenderer</renderer-class>
-      
+
       <attribute>
         <description>
           CSS style class to use when rendering this component.

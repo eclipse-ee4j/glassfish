@@ -36,7 +36,7 @@ import java.util.Set;
  * a service reference wsdl port.
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
 
@@ -55,20 +55,20 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE, 
+        table.put(WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE,
                   "setServiceEndpointInterface");
         return table;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -84,9 +84,9 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
             desc.setWsdlPort(wsdlPort);
             namespaceUri = null;
         } else super.setElementValue(element, value);
-        
+
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -94,10 +94,10 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
                                 ServiceRefPortInfo desc) {
-        Node serviceRefPortInfoRuntimeNode = 
+        Node serviceRefPortInfoRuntimeNode =
             super.writeDescriptor(parent, nodeName, desc);
 
         appendTextChild(serviceRefPortInfoRuntimeNode,
@@ -109,7 +109,7 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
         if( port != null ) {
             Node wsdlPortNode = appendChild(serviceRefPortInfoRuntimeNode,
                                             WebServicesTagNames.WSDL_PORT);
-            appendTextChild(wsdlPortNode, 
+            appendTextChild(wsdlPortNode,
                             WebServicesTagNames.NAMESPACE_URI,
                             port.getNamespaceURI());
             appendTextChild(wsdlPortNode,
@@ -134,7 +134,7 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
             iter.hasNext();) {
             NameValuePairDescriptor next = (NameValuePairDescriptor)iter.next();
             nameValueNode.writeDescriptor
-                (serviceRefPortInfoRuntimeNode, 
+                (serviceRefPortInfoRuntimeNode,
                  WebServicesTagNames.CALL_PROPERTY, next);
         }
 
@@ -148,6 +148,6 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
         }
 
         return serviceRefPortInfoRuntimeNode;
-    }  
-    
+    }
+
 }

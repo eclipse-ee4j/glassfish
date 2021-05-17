@@ -21,36 +21,36 @@ import jakarta.ejb.*;
  */
 public class MySession1Bean implements SessionBean, MySession1RemoteBusiness {
     private SessionContext context;
-    
+
     /**
      * @see jakarta.ejb.SessionBean#setSessionContext(jakarta.ejb.SessionContext)
      */
     public void setSessionContext(SessionContext aContext) {
         context = aContext;
     }
-    
+
     /**
      * @see jakarta.ejb.SessionBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
+
     /**
      * @see jakarta.ejb.SessionBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
+
     /**
      * @see jakarta.ejb.SessionBean#ejbRemove()
      */
     public void ejbRemove() {
-        
+
     }
     // </editor-fold>
-    
+
     /**
      * See section 7.10.3 of the EJB 2.0 specification
      * See section 7.11.3 of the EJB 2.1 specification
@@ -61,9 +61,9 @@ public class MySession1Bean implements SessionBean, MySession1RemoteBusiness {
         // spanning all methods can be performed here such as home interfaces
         // and data sources.
     }
-    
-    
-    
+
+
+
     public String businessMethod(String name) {
         return "hello " + name;
     }
@@ -75,7 +75,7 @@ public class MySession1Bean implements SessionBean, MySession1RemoteBusiness {
     public String businessMethod3(String name) {
         return "howdy "+name;
     }
-    
-    
-    
+
+
+
 }

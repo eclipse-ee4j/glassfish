@@ -242,25 +242,25 @@ public class HttpServiceStatsProvider implements PostConstruct {
     public CountStatistic getErrorCount() {
         return errorCount;
     }
-    
+
     @ManagedAttribute(id="count200")
     @Description(COUNT_200_DESCRIPTION)
     public CountStatistic getCount200() {
         return count200;
     }
-    
+
     @ManagedAttribute(id="count2xx")
     @Description(COUNT_2xx_DESCRIPTION)
     public CountStatistic getCount2xx() {
         return count2xx;
     }
-    
+
     @ManagedAttribute(id="count302")
     @Description(COUNT_302_DESCRIPTION)
     public CountStatistic getCount302() {
         return count302;
     }
-    
+
     @ManagedAttribute(id="count304")
     @Description(COUNT_304_DESCRIPTION)
     public CountStatistic getCount304() {
@@ -268,7 +268,7 @@ public class HttpServiceStatsProvider implements PostConstruct {
     }
 
     @ManagedAttribute(id="count3xx")
-    @Description(COUNT_3xx_DESCRIPTION) 
+    @Description(COUNT_3xx_DESCRIPTION)
     public CountStatistic getCount3xxt() {
         return count3xx;
     }
@@ -433,7 +433,7 @@ public class HttpServiceStatsProvider implements PostConstruct {
         }
     }
 
-    
+
     public long getProcessTime() {
         long count = requestProcessTime.getCount();
         long processTime = 0L;

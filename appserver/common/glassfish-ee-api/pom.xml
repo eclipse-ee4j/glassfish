@@ -23,10 +23,10 @@
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>common</artifactId>
         <version>6.1.1-SNAPSHOT</version>
-    </parent>    
+    </parent>
     <artifactId>glassfish-ee-api</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Java EE dependent public APIs of Glassfish</name>
 
     <developers>

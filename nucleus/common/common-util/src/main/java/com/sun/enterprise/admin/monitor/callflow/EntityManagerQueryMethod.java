@@ -21,82 +21,82 @@
  * $Revision: 1.1 $
  */
 
-package	com.sun.enterprise.admin.monitor.callflow;
+package    com.sun.enterprise.admin.monitor.callflow;
 
 public enum EntityManagerQueryMethod {
-    
+
     GET_RESULT_LIST {
         public String toString() {
             return "getResultList()";
         }
     },
-    
+
     GET_SINGLE_RESULT {
         public String toString() {
             return "getSingleResult()";
         }
     },
-    
+
     EXECUTE_UPDATE {
         public String toString() {
             return "executeUpdate()";
         }
     },
-    
+
     SET_MAX_RESULTS {
         public String toString() {
             return "setMaxResults(int maxResult)";
         }
     },
-    
+
     SET_FIRST_RESULT {
         public String toString() {
             return "setFirstResult(int startPosition)";
         }
     },
-    
+
     SET_HINT {
         public String toString() {
             return "setHint(String hintName, Object value)";
         }
     },
-    
+
     SET_PARAMETER_STRING_OBJECT {
         public String toString() {
             return "setParameter(String name, Object value)";
         }
     },
-    
+
     SET_PARAMETER_STRING_DATE_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(String name, Date value, TemporalType temporalType)";
         }
     },
-    
+
     SET_PARAMETER_STRING_CALENDAR_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(String name, Calendar value, TemporalType temporalType)";
         }
     },
-    
+
     SET_PARAMETER_INT_OBJECT {
         public String toString() {
             return "setParameter(int position, Object value)";
         }
     },
-    
+
     SET_PARAMETER_INT_DATE_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(int position, Date value, TemporalType temporalType)";
         }
     },
-    
+
     SET_PARAMETER_INT_CALENDAR_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(int position, Calendar value, TemporalType temporalType)";
         }
     },
-    
+
     SET_FLUSH_MODE {
         public String toString() {
             return "setFlushMode(FlushModeType flushMode)";

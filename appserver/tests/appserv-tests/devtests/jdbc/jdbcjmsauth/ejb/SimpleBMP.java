@@ -29,5 +29,5 @@ public interface SimpleBMP
     public boolean test5() throws RemoteException;
     public boolean test6() throws RemoteException;
     public boolean test7() throws RemoteException;
-    
+
 }

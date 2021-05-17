@@ -26,19 +26,19 @@ import java.util.*;
 import java.lang.*;
 
 /**
- *  This is message listener configuration parser. It parses the 
- *  ra.xml file for the message listener specific configurations 
+ *  This is message listener configuration parser. It parses the
+ *  ra.xml file for the message listener specific configurations
  *  like activationSpec javabean  properties, message listener types .
  *
  *  @author      Srikanth P
  *
  */
 
-public class MessageListenerConfigParserImpl implements 
+public class MessageListenerConfigParserImpl implements
                                MessageListenerConfigParser {
 
     private final static Logger _logger = LogDomains.getLogger(MessageListenerConfigParserImpl.class, LogDomains.RSR_LOGGER);
-   
+
     /**
      *  Default constructor.
      *
@@ -53,64 +53,64 @@ public class MessageListenerConfigParserImpl implements
      * @param desc ConnectorDescriptor pertaining to rar.
      * @param messageListenerType MessageListener type
      * @throws  ConnectorRuntimeException If moduleDir is null.
-     *          If corresponding rar is not deployed. 
+     *          If corresponding rar is not deployed.
      */
 
-    public String getActivationSpecClass( ConnectorDescriptor desc, 
+    public String getActivationSpecClass( ConnectorDescriptor desc,
              String messageListenerType) throws ConnectorRuntimeException
     {
         if(desc == null) {
             throw new ConnectorRuntimeException("Invalid arguments");
         }
 
-        MessageListener messageListeners[] = 
+        MessageListener messageListeners[] =
                ddTransformUtil.getMessageListeners(desc);
 
         if(messageListeners != null) {
             for(int i=0;i<messageListeners.length;++i) {
-                if(messageListenerType.equals( 
+                if(messageListenerType.equals(
                            messageListeners[i].getMessageListenerType())){
                     return messageListeners[i].getActivationSpecClass();
                 }
             }
         }
-        return null; 
+        return null;
     }
 
-    /* Parses the ra.xml and returns all the Message listener types. 
+    /* Parses the ra.xml and returns all the Message listener types.
      *
      * @param desc ConnectorDescriptor pertaining to rar.
      * @return Array of message listener types as strings.
      * @throws  ConnectorRuntimeException If moduleDir is null.
-     *          If corresponding rar is not deployed. 
+     *          If corresponding rar is not deployed.
      *
      */
 
     public String[] getMessageListenerTypes(ConnectorDescriptor desc)
-               throws ConnectorRuntimeException 
+               throws ConnectorRuntimeException
     {
 
         if(desc == null) {
             throw new ConnectorRuntimeException("Invalid arguments");
         }
 
-        MessageListener messageListeners[] = 
+        MessageListener messageListeners[] =
                ddTransformUtil.getMessageListeners(desc);
 
         String[] messageListenerTypes = null;
         if(messageListeners != null) {
             messageListenerTypes = new String[messageListeners.length];
             for(int i=0;i<messageListeners.length;++i) {
-                messageListenerTypes[i] = 
+                messageListenerTypes[i] =
                            messageListeners[i].getMessageListenerType();
             }
         }
         return messageListenerTypes;
     }
 
-    /** Parses the ra.xml for the ActivationSpec javabean 
-     *  properties. The ActivationSpec to be parsed is 
-     *  identified by the moduleDir where ra.xml is present and the 
+    /** Parses the ra.xml for the ActivationSpec javabean
+     *  properties. The ActivationSpec to be parsed is
+     *  identified by the moduleDir where ra.xml is present and the
      *  message listener type.
      *
      *  message listener type will be unique in a given ra.xml.
@@ -118,13 +118,13 @@ public class MessageListenerConfigParserImpl implements
      *  It throws ConnectorRuntimeException if either or both the
      *  parameters are null, if corresponding rar is not deployed,
      *  if message listener type mentioned as parameter is not found in ra.xml.
-     *  If rar is deployed and message listener (type mentioned) is present  
-     *  but no properties are present for the corresponding message listener, 
+     *  If rar is deployed and message listener (type mentioned) is present
+     *  but no properties are present for the corresponding message listener,
      *  null is returned.
      *
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @param  messageListenerType message listener type.It is uniqie
-     *          across all <messagelistener> sub-elements in <messageadapter> 
+     *          across all <messagelistener> sub-elements in <messageadapter>
      *          element in a given rar.
      *  @return Javabean properties with the property names and values
      *          of properties. The property values will be the values
@@ -133,12 +133,12 @@ public class MessageListenerConfigParserImpl implements
      *          In both the case if no value is present, empty String is
      *          returned as the value.
      *  @throws  ConnectorRuntimeException if either of the parameters are null.
-     *           If corresponding rar is not deployed i.e moduleDir is invalid. 
+     *           If corresponding rar is not deployed i.e moduleDir is invalid.
      *           If messagelistener type is not found in ra.xml
      */
 
-    public Properties getJavaBeanProps(ConnectorDescriptor desc, 
-               String messageListenerType, String rarName) throws ConnectorRuntimeException 
+    public Properties getJavaBeanProps(ConnectorDescriptor desc,
+               String messageListenerType, String rarName) throws ConnectorRuntimeException
     {
 
         MessageListener messageListener = getMessageListener(desc, messageListenerType);
@@ -215,15 +215,15 @@ public class MessageListenerConfigParserImpl implements
     /** Returns the Properties object consisting of propertyname as the
      *  key and datatype as the value.
      *  @param  messageListenerType message listener type.It is uniqie
-     *          across all <messagelistener> sub-elements in <messageadapter> 
+     *          across all <messagelistener> sub-elements in <messageadapter>
      *          element in a given rar.
      *  @return Properties object with the property names(key) and datatype
-     *          of property(as value). 
+     *          of property(as value).
      *  @throws  ConnectorRuntimeException if either of the parameters are null.
-     *           If corresponding rar is not deployed i.e moduleDir is invalid. 
+     *           If corresponding rar is not deployed i.e moduleDir is invalid.
      *           If messagelistener type is not found in ra.xml
      */
-    public Properties getJavaBeanReturnTypes(ConnectorDescriptor desc, 
+    public Properties getJavaBeanReturnTypes(ConnectorDescriptor desc,
                String messageListenerType, String rarName) throws ConnectorRuntimeException
     {
 

@@ -23,7 +23,7 @@ import org.glassfish.web.util.HtmlEntityEncoder;
 import java.io.PrintWriter;
 /**
  * Return the result associated with the supplied Server Variable.
- * 
+ *
  * @author Bip Thelin
  * @author Paul Speed
  * @author Dan Sandberg

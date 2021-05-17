@@ -53,9 +53,9 @@ public abstract class StoreBase
     protected static String info = "StoreBase/1.0";
     */
     // START SJSAS
-    // If this variable were static, it would need to be protected from 
+    // If this variable were static, it would need to be protected from
     // manipulation by malicious code by making it final. However, this
-    // variable must not be final, because it is assigned a different value 
+    // variable must not be final, because it is assigned a different value
     // in some of the EE subclasses. Therefore, turning it into an instance
     // variable.
     protected String info = "StoreBase/1.0";
@@ -64,13 +64,13 @@ public abstract class StoreBase
     /**
      * Name to register for this Store, used for logging.
      */
-    /* SJSAS 
+    /* SJSAS
     protected static String storeName = "StoreBase";
     */
     // START SJSAS
-    // If this variable were static, it would need to be protected from 
+    // If this variable were static, it would need to be protected from
     // manipulation by malicious code by making it final. However, this
-    // variable must not be final, because it is assigned a different value 
+    // variable must not be final, because it is assigned a different value
     // in some of the EE subclasses. Therefore, turning it into an instance
     // variable.
     protected String storeName = "StoreBase";
@@ -202,9 +202,9 @@ public abstract class StoreBase
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         support.removePropertyChangeListener(listener);
     }
-        
+
     /**
-    * Serialize a session into an output stream.  
+    * Serialize a session into an output stream.
     *
     * @param sess
     *   The session to be serialized
@@ -218,10 +218,10 @@ public abstract class StoreBase
       if ( sess == null )  {
         return;
       }
-      
+
       oos.writeObject(sess);
-    } 
-    
+    }
+
     /**
     * Create a session object from an input stream.
     *
@@ -231,7 +231,7 @@ public abstract class StoreBase
     * @param ois
     *   The input stream containing the serialized session
     *
-    * @return 
+    * @return
     *   The resulting session object
     * Hercules: added method
     */
@@ -240,31 +240,31 @@ public abstract class StoreBase
 
         StandardSession sess = StandardSession.deserialize(ois, manager);
         sess.setManager(manager);
-      
+
         return sess;
     }
-    
+
     /**
     * public wrapper for processExpires()
     * don't want to make processExpires() public
     * called from manager background thread
     *
     * Hercules: added method
-    */    
+    */
     public void doProcessExpires() {
         this.processExpires();
     }
-    
+
     /**
     * no-op method - sub classes will
     * implement to remove a session from the store
     * cache
     * Hercules: added method
-    */    
+    */
     public void removeFromStoreCache(String id) {
         //do nothing
-    }     
-    
+    }
+
 
     // ----------------------------------------------------- Protected Methods
 
@@ -274,7 +274,7 @@ public abstract class StoreBase
      * the Session and remove it from the Store.
      */
     public void processExpires() {
-        long timeNow = System.currentTimeMillis(); 
+        long timeNow = System.currentTimeMillis();
         String[] keys = null;
 
         if(!started) {
@@ -297,7 +297,7 @@ public abstract class StoreBase
                 int timeIdle = (int) ((timeNow - session.thisAccessedTime) / 1000L);
                 if (timeIdle < session.getMaxInactiveInterval()) {
                     continue;
-                } 
+                }
                 if ( ( (PersistentManagerBase) manager).isLoaded( keys[i] )) {
                     // recycle old backup session
                     session.recycle();
@@ -341,7 +341,7 @@ public abstract class StoreBase
      *
      * @param message the message
      * @param t the Throwable
-     */    
+     */
     private void log(String message, Throwable t) {
         Logger logger = null;
         String containerName = null;
@@ -372,7 +372,7 @@ public abstract class StoreBase
     public Session load(String id, String version)
             throws ClassNotFoundException, IOException {
         return load(id);
-    }    
+    }
 
     // --------------------------------------------------------- Thread Methods
 

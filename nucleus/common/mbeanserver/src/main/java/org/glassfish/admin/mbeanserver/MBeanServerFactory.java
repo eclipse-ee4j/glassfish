@@ -32,15 +32,15 @@ import org.glassfish.internal.api.PostStartupRunLevel;
 @RunLevel(mode=RunLevel.RUNLEVEL_MODE_NON_VALIDATING, value=PostStartupRunLevel.VAL)
 public final class MBeanServerFactory implements Factory<MBeanServer> {
     private static void debug( final String s ) { System.out.println(s); }
-    
+
     private final MBeanServer     mMBeanServer;
-    
+
     public MBeanServerFactory()
     {
         // initialize eagerly; ~20ms
         mMBeanServer = java.lang.management.ManagementFactory.getPlatformMBeanServer();
     }
-    
+
     public void postConstruct()
     {
     }
@@ -58,9 +58,9 @@ public final class MBeanServerFactory implements Factory<MBeanServer> {
      */
     @Override
     public void dispose(MBeanServer instance) {
-        
+
     }
-    
+
 }
 
 

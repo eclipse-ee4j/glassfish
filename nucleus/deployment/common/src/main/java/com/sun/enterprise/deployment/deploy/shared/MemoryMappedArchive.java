@@ -52,10 +52,10 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
     private URI uri;
 
     byte[] file;
-    
+
     /** Creates a new instance of MemoryMappedArchive */
     protected MemoryMappedArchive() {
-	// for use by subclasses
+    // for use by subclasses
     }
 
     /** Creates a new instance of MemoryMappedArchive */
@@ -70,14 +70,14 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
     public byte[] getByteArray() {
         return file;
     }
-    
+
     private void read(InputStream is) throws IOException{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ArchivistUtils.copy(is,baos);
         file = baos.toByteArray();
-        
+
     }
-    
+
     public void open(URI uri) throws IOException {
         File in = new File(uri);
         if (!in.exists()) {
@@ -93,7 +93,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
             }
         }
     }
-    
+
     // copy constructor
     public MemoryMappedArchive(ReadableArchive source) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -102,28 +102,28 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
             String elementName = (String) elements.nextElement();
             InputStream is = source.getEntry(elementName);
             jos.putNextEntry(new ZipEntry(elementName));
-            ArchivistUtils.copyWithoutClose(is, jos);            
+            ArchivistUtils.copyWithoutClose(is, jos);
             is.close();
             jos.flush();
             jos.closeEntry();
         }
         jos.close();
-        file = baos.toByteArray();            
+        file = baos.toByteArray();
     }
-    
+
     /**
      * close the abstract archive
      */
     public void close() throws IOException {
     }
-        
+
     /**
      * delete the archive
      */
     public boolean delete() {
         return false;
     }
-    
+
     /**
      * @return an @see java.util.Enumeration of entries in this abstract
      * archive
@@ -150,36 +150,36 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
             }
             jis.close();
         } catch(IOException ioe) {
-            Logger.getAnonymousLogger().log(Level.WARNING, 
-                ioe.getMessage(), ioe);  
+            Logger.getAnonymousLogger().log(Level.WARNING,
+                ioe.getMessage(), ioe);
         }
-        return entries;        
+        return entries;
     }
-    
-	/**
-	 *  @return an @see java.util.Enumeration of entries in this abstract
-	 * archive, providing the list of embedded archive to not count their 
-	 * entries as part of this archive
-	 */
-	 public Enumeration entries(Enumeration embeddedArchives) {
-	// jar file are not recursive    
-	return entries();
-	}
-    
+
+    /**
+     *  @return an @see java.util.Enumeration of entries in this abstract
+     * archive, providing the list of embedded archive to not count their
+     * entries as part of this archive
+     */
+     public Enumeration entries(Enumeration embeddedArchives) {
+    // jar file are not recursive
+    return entries();
+    }
+
     /**
      * @return true if this archive exists
      */
     public boolean exists() {
         return false;
     }
-    
+
     /**
      * @return the archive uri
      */
     public String getPath() {
         return null;
     }
-    
+
     /**
      * Get the size of the archive
      * @return tje the size of this archive or -1 on error
@@ -187,7 +187,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
     public long getArchiveSize() throws NullPointerException, SecurityException {
         return(file.length);
     }
-    
+
     public URI getURI() {
         return uri;
     }
@@ -195,7 +195,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
     public void setURI(final URI uri) {
         this.uri = uri;
     }
-    
+
     /**
      * create or obtain an embedded archive within this abstraction.
      *
@@ -221,7 +221,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
     public boolean exists(String name) throws IOException {
         return (getEntry(name) != null);
     }
-    
+
     /**
      * @return a @see java.io.InputStream for an existing entry in
      * the current abstract archive
@@ -231,10 +231,10 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
         JarInputStream jis = new JarInputStream(new ByteArrayInputStream(file));
         ZipEntry ze;
         while ((ze=jis.getNextEntry())!=null) {
-            if (ze.getName().equals(name)) 
+            if (ze.getName().equals(name))
                 return new BufferedInputStream(jis);
         }
-        return null;        
+        return null;
     }
 
     public JarEntry getJarEntry(String name) {
@@ -272,7 +272,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
         }
         return 0;
     }
-    
+
     /**
      * @return the manifest information for this abstract archive
      */
@@ -282,7 +282,7 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
         jis.close();
         return m;
     }
-    
+
     /**
      * rename the archive
      *
@@ -290,14 +290,14 @@ public class MemoryMappedArchive extends JarArchive implements ReadableArchive {
      */
     public boolean renameTo(String name) {
         return false;
-    }        
-    
+    }
+
     /**
      * Returns the name for the archive.
      * <p>
      * For a MemoryMappedArhive there is no name, so an empty string is returned.
      * @return the name of the archive
-     * 
+     *
      */
     @Override
     public String getName() {

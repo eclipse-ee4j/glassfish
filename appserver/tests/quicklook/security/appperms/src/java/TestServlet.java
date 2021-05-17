@@ -28,7 +28,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 public class TestServlet extends HttpServlet {
-   
+
     @EJB
     private BeanRootInterface root;
 
@@ -90,7 +90,7 @@ public class TestServlet extends HttpServlet {
                             checkReport.append("servlet - success for WAR.txt; ");
                         } else
                             checkReport.append("servlet - bypass for WAR.txt; ");
-                        
+
                     } catch (AccessControlException e) {
                         checkReport.append("servlet - failed for WAR.txt; ");
                     }
@@ -122,9 +122,9 @@ public class TestServlet extends HttpServlet {
                     String crStr = checkReport.toString();
                     out.println("test: " + crStr);
 
-                    
-                    
-                    if (hello.equals(hello2) && 
+
+
+                    if (hello.equals(hello2) &&
                         !crStr.contains("failed") &&
                         !hello.contains("failed")) {
                         status = true;

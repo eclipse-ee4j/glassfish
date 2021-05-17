@@ -70,6 +70,6 @@
       <trans-attribute>Required</trans-attribute>
     </container-transaction>
   </assembly-descriptor>
-      
+
 </ejb-jar>
 

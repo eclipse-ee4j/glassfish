@@ -26,7 +26,7 @@
 ]>
 
 <project name="security-defaultp2r" basedir="." default="usage">
-  
+
   &commonSetup;
   &commonBuild;
   &commonRun;
@@ -38,10 +38,10 @@
     <antcall target="test-p2r-disabled"/>
     <antcall target="unsetup"/>
   </target>
-  
+
   <target name="test-p2r-enabled"
       depends="enable-p2r, deploy, run, undeploy"/>
-  
+
   <target name="test-p2r-disabled"
       depends="disable-p2r, deploy, run-negative, undeploy"/>
 
@@ -49,25 +49,25 @@
     <delete dir="${build.classes.dir}"/>
     <delete dir="${assemble.dir}"/>
   </target>
-  
+
   <target name="compile" depends="clean">
     <antcall target="compile-common">
       <param name="src" value="web"/>
     </antcall>
   </target>
-  
+
   <target name="build" depends="compile">
     <antcall target="webclient-war-common">
-      <param name="hasWebclient" value="yes" /> 
+      <param name="hasWebclient" value="yes" />
     </antcall>
   </target>
-  
+
   <target name="deploy" depends="init-common">
     <antcall target="deploy-war-common">
       <param name="contextroot" value="${appname}"/>
     </antcall>
   </target>
-  
+
   <target name="run" depends="init-common">
     <antcall target="runweb">
       <param name="servlet" value="TestServlet"/>
@@ -86,7 +86,7 @@
       <param name="testcaseid" value="user-auth-with-get"/>
     </antcall>
   </target>
-  
+
   <target name="run-negative" depends="init-common">
     <antcall target="runweb-403">
       <param name="servlet" value="TestServlet"/>
@@ -96,7 +96,7 @@
       <param name="testcaseid" value="user-auth-should-fail"/>
     </antcall>
   </target>
-  
+
   <target name="runweb" depends="init-common">
     <taskdef name="webtest" classname="${webtest.classname}"
         classpath="${webtest.classpath}" />
@@ -126,7 +126,7 @@
         testCaseDescription="Testing default principal to role mapping"
         testStrategy="Testing default principal to role mapping"/>
   </target>
-  
+
   <target name="runweb-403" depends="init-common">
     <taskdef name="webtest" classname="${webtest.classname}"
         classpath="${webtest.classpath}" />
@@ -156,15 +156,15 @@
         testCaseDescription="Testing default p2r mapping disabled"
         testStrategy="Testing default p2r mapping disabled"/>
     </target>
-    
+
   <target name="undeploy" depends="init-common">
     <antcall target="undeploy-war-common"/>
   </target>
-  
+
   <target name="usage">
     <antcall target="usage-common"/>
   </target>
-  
+
   <target name="setup">
     <antcall target="create-user-common">
       <param name="user" value="bobby"/>
@@ -173,14 +173,14 @@
     </antcall>
    <!-- <antcall target="reconfig-common"/>-->
   </target>
-  
+
   <target name="unsetup">
     <!-- remove test users, just cleanup. -->
     <antcall target="delete-user-common">
       <param name="user" value="bobby"/>
     </antcall>
   </target>
-  
+
   <target name="enable-p2r" depends="init-common">
     <antcall target="asadmin-common">
       <param name="admin.command" value="set"/>
@@ -188,7 +188,7 @@
           value="server-config.security-service.activate-default-principal-to-role-mapping=true"/>
     </antcall>
   </target>
-  
+
   <target name="disable-p2r" depends="init-common">
     <antcall target="asadmin-common">
       <param name="admin.command" value="set"/>

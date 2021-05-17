@@ -40,7 +40,7 @@ public class EjbInterceptorContext extends ResourceContainerContextImpl {
     }
 
     public void endElement(ElementType type, AnnotatedElement element) {
-        
+
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();

@@ -18,6 +18,6 @@ package com.sun.s1asdev.security.sameEjbName.ejb;
 
 public interface Hello {
     public String rolesAllowed1(String who);
-    
+
     public String rolesAllowed2(String who);
 }

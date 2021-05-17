@@ -44,7 +44,7 @@ public class OfflineCommander
     static String TEST_DIR = "/tmp/asadmintest";
 
     private OfflineConfigMgr _mgr; // = new AdminTester(_mode, _registry, _configContext);
-    
+
     public OfflineCommander() throws Exception
     {
         _mgr = new OfflineConfigMgr(TEST_DIR+"/domain.xml");
@@ -60,7 +60,7 @@ public class OfflineCommander
             System.out.println("usage: offlineconfigtest -testpath <path to test directory> [print|create]");
             System.exit(1);
         }
-        TEST_DIR = args[1]; 
+        TEST_DIR = args[1];
         OfflineCommander commander = new OfflineCommander();
         System.out.print(">");
         String cmd = "";
@@ -74,7 +74,7 @@ public class OfflineCommander
             {//new command
                if(cmd.equals("q") || cmd.equals("Q"))
                    break;
-               
+
                try {
                    if(cmd.startsWith("list ") || cmd.equals("list"))
                    {
@@ -113,7 +113,7 @@ public class OfflineCommander
                            System.out.println("ERROR!");
                            continue;
                        }
-                       
+
                        attrs = commander._mgr.addSubvaluesToArrayAttribute(
                                rest.substring(0, spaceIdx).trim(),
                                rest.substring(spaceIdx).trim().split(","));
@@ -129,7 +129,7 @@ public class OfflineCommander
                            System.out.println("ERROR!");
                            continue;
                        }
-                       
+
                        attrs = commander._mgr.removeSubvaluesFromArrayAttribute(
                                rest.substring(0, spaceIdx).trim(),
                                rest.substring(spaceIdx).trim().split(","));
@@ -149,9 +149,9 @@ public class OfflineCommander
         System.out.println("\n finished");
     }
 
-    
 
-    
+
+
     //******************************************************************
     //******************HELPERS***************************************
     //******************************************************************
@@ -164,18 +164,18 @@ public class OfflineCommander
             Attribute attr = (Attribute)attrs.get(i);
             if(attr.getValue() instanceof Object[])
             {
-                System.out.println("         "+ 
+                System.out.println("         "+
                        attr.getName() + " = " );
                 Object[] sub_attrs= (Object[])attr.getValue();
                 for(int j=0; j<sub_attrs.length; j++)
                 {
-                    System.out.println("               "+ 
+                    System.out.println("               "+
                         sub_attrs[j]);
                 }
             }
             else
             {
-                System.out.println("         "+ 
+                System.out.println("         "+
                        attr.getName() + " = " + attr.getValue());
             }
         }

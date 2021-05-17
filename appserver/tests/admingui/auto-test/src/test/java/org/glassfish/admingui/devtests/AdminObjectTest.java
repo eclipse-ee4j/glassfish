@@ -46,10 +46,10 @@ public class AdminObjectTest extends BaseSeleniumTestClass {
 
         setFieldValue("form:propertySheet:propertSectionTextField:nameNew:name", resName);
         setFieldValue("form:propertySheet:propertSectionTextField:descriptionProp:descAdaptor", description);
-        
+
         int emptyCount = getTableRowCountByValue("form:basicTable", "", "col3:col1St", false);
         int count = addTableRow("form:basicTable", "form:basicTable:topActionsGroup1:addButton");
-        
+
         sleep(500);
         setFieldValue("form:basicTable:rowGroup1:0:col2:col1St", "property" + generateRandomString());
         sleep(500);
@@ -71,12 +71,12 @@ public class AdminObjectTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button2");
-        
+
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button1");
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", resName);
     }
@@ -129,7 +129,7 @@ public class AdminObjectTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);

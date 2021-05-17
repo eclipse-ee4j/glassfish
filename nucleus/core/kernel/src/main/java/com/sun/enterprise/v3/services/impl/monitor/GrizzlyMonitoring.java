@@ -17,7 +17,7 @@
 package com.sun.enterprise.v3.services.impl.monitor;
 
 import com.sun.enterprise.v3.services.impl.monitor.probes.ConnectionQueueProbeProvider;
-import com.sun.enterprise.v3.services.impl.monitor.probes.FileCacheProbeProvider;             
+import com.sun.enterprise.v3.services.impl.monitor.probes.FileCacheProbeProvider;
 import com.sun.enterprise.v3.services.impl.monitor.probes.KeepAliveProbeProvider;
 import com.sun.enterprise.v3.services.impl.monitor.probes.ThreadPoolProbeProvider;
 import com.sun.enterprise.v3.services.impl.monitor.stats.ConnectionQueueStatsProvider;
@@ -36,12 +36,12 @@ import org.glassfish.external.probe.provider.StatsProviderManager;
 /**
  * Grizzly monitoring manager, which is responsible for registering, unregistering
  * Grizzly statistics probes.
- * 
+ *
  * @author Alexey Stashok
  */
 public class GrizzlyMonitoring {
     private static final String CONFIG_ELEMENT = "http-service";
-    
+
     // network-listener->thread-pool-stats Map
     private final Map<String, ThreadPoolStatsProvider> threadPoolStatsProvidersMap =
             new ConcurrentHashMap<String, ThreadPoolStatsProvider>();
@@ -63,7 +63,7 @@ public class GrizzlyMonitoring {
     private final KeepAliveProbeProvider keepAliveProbeProvider;
     // connection queue emitter probe
     private final ConnectionQueueProbeProvider connectionQueueProbeProvider;
-    
+
     public GrizzlyMonitoring() {
         threadPoolProbeProvider = new ThreadPoolProbeProvider();
         fileCacheProbeProvider = new FileCacheProbeProvider();
@@ -73,7 +73,7 @@ public class GrizzlyMonitoring {
 
     /**
      * Get thread-pool probe provider
-     * 
+     *
      * @return thread-pool probe provider
      */
     public ThreadPoolProbeProvider getThreadPoolProbeProvider() {
@@ -120,7 +120,7 @@ public class GrizzlyMonitoring {
         if (oldthreadPoolStatsProvider != null) {
             StatsProviderManager.unregister(oldthreadPoolStatsProvider);
         }
-        
+
         StatsProviderManager.register(CONFIG_ELEMENT, PluginPoint.SERVER,
                 subtreePrefix(name) + "/thread-pool", threadPoolStatsProvider);
     }

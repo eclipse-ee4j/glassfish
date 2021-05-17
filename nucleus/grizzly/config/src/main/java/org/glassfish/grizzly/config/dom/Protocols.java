@@ -40,7 +40,7 @@ public interface Protocols extends ConfigBeanProxy, PropertyBag {
 
     @DuckTyped
     NetworkConfig getParent();
-    
+
     class Duck {
         public static Protocol findProtocol(Protocols protocols, String name) {
             for (Protocol protocol : protocols.getProtocol()) {

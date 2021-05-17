@@ -31,11 +31,11 @@ import java.util.logging.LogRecord;
  * @author dochez
  */
 public class LogFormatter extends Formatter {
-    
+
     /** Creates a new instance of LogFormatter */
     public LogFormatter() {
     }
-   
+
     public String format(LogRecord record) {
         return record.getMessage()+"\n";
     }

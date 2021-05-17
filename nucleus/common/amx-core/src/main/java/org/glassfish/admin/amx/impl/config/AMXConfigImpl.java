@@ -65,7 +65,7 @@ public class AMXConfigImpl extends AMXImplBase
         }
         return configMBeanInfo;
     }
-    
+
     /**
      * We save time and space by creating exactly one MBeanInfo for any given config interface;
      * it can be shared among all instances since it is invariant.
@@ -195,7 +195,7 @@ public class AMXConfigImpl extends AMXImplBase
         // return an empty list, per JMX spec for failure
         return new AttributeList();
     }
-    
+
     public AttributeList setAttributesTransactionally(final AttributeList attrs) throws Exception
     {
         final AttributeList successList = new AttributeList();
@@ -209,7 +209,7 @@ public class AMXConfigImpl extends AMXImplBase
         {
             // propogate the stack trace back, it's important for clients to have something to go on
             final Throwable rootCause = ExceptionUtil.getRootCause(e);
-            
+
             // do not propagate back any proprietary exception; class might not exist on client
             throw new Exception( ExceptionUtil.toString(rootCause) );
         }
@@ -234,7 +234,7 @@ public class AMXConfigImpl extends AMXImplBase
             // deal with annoying and rare case of name existing, but not a key value
             name = cb.rawAttribute( "name" );
         }
-        
+
         return name == null ? NO_NAME : name;
     }
 
@@ -313,7 +313,7 @@ public class AMXConfigImpl extends AMXImplBase
 
         return resolvedAttrs;
     }
-    
+
 
 //========================================================================================
 
@@ -325,18 +325,18 @@ public class AMXConfigImpl extends AMXImplBase
         final String              mType;
         final Map<String,Object>  mAttrs;
         final List<CreateParams>  mChildren;
-        
+
         public CreateParams( final String type, final Map<String,?> values )
         {
             mAttrs    = MapUtil.newMap();
             mChildren = ListUtil.newList();
             mType     = type;
-            
+
             if ( values == null )
             {
                 return; // null is legal, no attributes
             }
-            
+
             for (final Map.Entry<String,?> me : values.entrySet())
             {
                 final String nameAsProvided = me.getKey();
@@ -384,12 +384,12 @@ public class AMXConfigImpl extends AMXImplBase
                 }
             }
         }
-        
+
         public String              type()     { return mType; }
         public String              name()     { return (String)mAttrs.get("name"); }
         public Map<String,Object>  attrs()    { return Collections.unmodifiableMap(mAttrs); }
         public List<CreateParams>  children() { return Collections.unmodifiableList(mChildren); }
-       
+
         /**
             Convert incoming attributes to HK2 requirements.
          */
@@ -397,7 +397,7 @@ public class AMXConfigImpl extends AMXImplBase
         toAttributeChanges(final Map<String, Object> values)
         {
             if ( values == null ) return null;
-            
+
             final List<AttributeChanges> changes = ListUtil.newList();
             for (final String xmlName : mAttrs.keySet() )
             {
@@ -420,7 +420,7 @@ public class AMXConfigImpl extends AMXImplBase
         {
             final StringBuilder buf = new StringBuilder();
             final String NL = StringUtil.LS;
-            
+
             // crude toString, really should indent
             buf.append( prefix + mType + " = " + mAttrs + NL );
             if ( mChildren.size() != 0 )
@@ -432,7 +432,7 @@ public class AMXConfigImpl extends AMXImplBase
                 }
                 buf.append( prefix + "]" );
             }
-            
+
             return buf.toString();
         }
         public String toString()
@@ -440,8 +440,8 @@ public class AMXConfigImpl extends AMXImplBase
             return toString("");
         }
     }
-    
-    
+
+
     /**
         To make error messages more friendly and quick sanity check,
         verify that no conflicting children already exist.
@@ -469,7 +469,7 @@ public class AMXConfigImpl extends AMXImplBase
             }
         }
     }
-    
+
         ObjectName[]
     createChildren(
         final List<CreateParams>  children,
@@ -505,7 +505,7 @@ public class AMXConfigImpl extends AMXImplBase
 
         return CollectionUtil.toArray( newMBeans, ObjectName.class );
     }
-    
+
         public ObjectName[]
     createChildren(
         final Map<String, Map<String,Object>[]> childrenMaps,
@@ -527,10 +527,10 @@ public class AMXConfigImpl extends AMXImplBase
                     children.add( new CreateParams(type, m) );
                 }
              } */
-        
+
         return createChildren( children, attrs);
     }
-    
+
      /** Create one or more children */
     private final class ChildrenCreator implements ConfigCode
     {
@@ -566,38 +566,38 @@ public class AMXConfigImpl extends AMXImplBase
                 throws PropertyVetoException, TransactionFailure
         {
             final WriteableView parentW = WriteableView.class.cast(Proxy.getInvocationHandler(Proxy.class.cast(parent)));
-            
+
             // if attributes were specified, set them first.
             if ( mAttrs != null )
             {
                 setAttrs( parent, mAttrs );
             }
-            
+
             final SubElementsCallback callback = new SubElementsCallback(mChildrenMaps);
 
             final ConfigBeanJMXSupport sptRoot = ConfigBeanJMXSupportRegistry.getInstance( Dom.unwrap(parent).getProxyType() );
             final List<ConfigBean>  newDescendants = callback.recursiveCreate( parentW, sptRoot, mChildrenMaps);
             mNewConfigBeans.addAll( newDescendants );
-            
+
             return null;
         }
-        
+
         public List<ConfigBean> configBeans() { return mNewConfigBeans; }
     }
 
     public ObjectName createChild(final String type, final Map<String, Object> params)
     {
         final CreateParams childParams = new CreateParams( type, params );
-        
+
         final List<CreateParams> children = ListUtil.newList();
         children.add(childParams);
         final ObjectName[] objectNames = createChildren( children, null);
-        
+
         return objectNames[0];
     }
-    
+
     /**
-        Replace "Name" or "name" with the 
+        Replace "Name" or "name" with the
      */
         Map<String,Object>
     replaceNameWithKey(
@@ -613,9 +613,9 @@ public class AMXConfigImpl extends AMXImplBase
         {
             key = "name";
         }
-        
+
         Map<String,Object> m = attrs;
-        
+
         if ( key != null )
         {
             // map "Name" or "name" to the actual key value (which could be "name')
@@ -629,13 +629,13 @@ public class AMXConfigImpl extends AMXImplBase
                 m.put( xmlKeyName, value );
             }
         }
-        
+
         return m;
     }
-    
+
     /** exists so we can get the parameterized return type */
     public static List<String> listOfString() { return null; }
-    
+
     public static String convertAttributeName(final String s )
     {
         // do not alter any name that is already all lower-case or that contains a "-" */
@@ -643,24 +643,24 @@ public class AMXConfigImpl extends AMXImplBase
         {
             return(s);
         }
-        
+
         // Dom.convertName() has a bug: IsFooBar => is-foo-bar, but is-foo-bar => -foo-bar.
-        
+
         return Dom.convertName(s);
     }
-    
+
     private void setAttrs(
         final ConfigBeanProxy     target,
         final Map<String,Object>  attrs )
     {
        final WriteableView targetW = WriteableView.class.cast(Proxy.getInvocationHandler(Proxy.class.cast(target)));
-        
+
         for ( final Map.Entry<String,Object> me : attrs.entrySet() )
         {
             final String attrName = me.getKey();
             final Object attrValue = me.getValue();
             final String xmlName = convertAttributeName(attrName);
-            
+
             final ConfigBean targetCB = (ConfigBean)Dom.unwrap(target);
             final ConfigModel.Property modelProp = targetCB.model.findIgnoreCase( xmlName );
             if ( modelProp == null )
@@ -681,7 +681,7 @@ public class AMXConfigImpl extends AMXImplBase
                     throw new IllegalStateException("impossible");
                 }
                 final java.lang.reflect.Type  listOfStringClass = m.getGenericReturnType();
-                
+
                 List<String>  list;
                 if ( attrValue instanceof String[] )
                 {
@@ -700,7 +700,7 @@ public class AMXConfigImpl extends AMXImplBase
             //cdebug( "set attribute \"" + attrName + "\" to \"" + attrValue + "\" on " + type );
         }
     }
-    
+
     /**
     Callback to create sub-elements (recursively) on a newly created child element.
      */
@@ -716,10 +716,10 @@ public class AMXConfigImpl extends AMXImplBase
         public void performOn(final WriteableView item) throws TransactionFailure
         {
             final ConfigBeanJMXSupport sptRoot = ConfigBeanJMXSupportRegistry.getInstance( com.sun.enterprise.config.serverbeans.Domain.class );
-        
+
             recursiveCreate( item, sptRoot, mSubs );
         }
-        
+
         /**
             If the child is of a type matching an @Element that is a List<its type>, then
             get that list and add it to it.
@@ -731,7 +731,7 @@ public class AMXConfigImpl extends AMXImplBase
             final Class<? extends ConfigBeanProxy> parentClass = parent.getProxyType();
             final Class<? extends ConfigBeanProxy> childClass  = Dom.unwrap(child).getProxyType();
             final ConfigBeanJMXSupport  parentSpt = ConfigBeanJMXSupportRegistry.getInstance(parentClass);
-            
+
             final ConfigBeanJMXSupport.ElementMethodInfo elementInfo = parentSpt.getElementMethodInfo(childClass);
             //cdebug( "Found: " + elementInfo + " for " + childClass + " on parent class " + parentClass.getName() );
             final ConfigBean parentBean = (ConfigBean)Dom.unwrap(parent.getProxy(parentClass));
@@ -754,26 +754,26 @@ public class AMXConfigImpl extends AMXImplBase
                 parent.setter( modelProp, child, childClass );
             }
         }
-        
+
         private List<ConfigBean> recursiveCreate(
             final WriteableView parent,
             final ConfigBeanJMXSupport sptRoot,
             final List<CreateParams> subs ) throws TransactionFailure
         {
             final List<ConfigBean> newChildren = ListUtil.newList();
-            
+
             // create each sub-element, recursively
             for (final CreateParams childParams : subs )
             {
                 final String type = childParams.type();
                 //cdebug( "recursiveCreate: " + type );
-                
+
                 final Class<? extends ConfigBeanProxy> clazz = ConfigBeanJMXSupportRegistry.getConfigBeanProxyClassFor(sptRoot, type);
                 if ( clazz == null )
                 {
                     throw new IllegalArgumentException("@Configured interface for type " + type + " cannot be found" );
                 }
-                
+
                 final ConfigBeanJMXSupport spt = ConfigBeanJMXSupportRegistry.getInstance(clazz);
 
                 final ConfigBeanProxy childProxy = parent.allocateProxy(clazz);
@@ -784,10 +784,10 @@ public class AMXConfigImpl extends AMXImplBase
                 newChildren.add(child);
                 final WriteableView childW = WriteableView.class.cast(Proxy.getInvocationHandler(Proxy.class.cast(childProxy)));
                 //cdebug("Created sub-element of type: " + type + ", " + clazz);
-                
+
                 final Map<String,Object> childAttrs = replaceNameWithKey( childParams.attrs(), spt);
                 setAttrs( childProxy, childAttrs );
-                
+
                 if ( childParams.children().size() != 0 )
                 {
                     final List<ConfigBean> more = recursiveCreate( childW, spt, childParams.children() );
@@ -872,7 +872,7 @@ public class AMXConfigImpl extends AMXImplBase
 
             Object result = info.method().invoke(getConfigBeanProxy(), args);
             result = translateResult(result);
-            
+
             // cdebug( "invokeDuckMethod(): invoked: " + info.name() + ", got " + result );
 
             return result;
@@ -882,16 +882,16 @@ public class AMXConfigImpl extends AMXImplBase
             throw new MBeanException(e);
         }
     }
-    
+
     private ObjectName getObjectName( final ConfigBeanProxy cbp )
     {
         final Dom dom = Dom.unwrap(cbp);
-        
+
         if ( dom instanceof ConfigBean )
         {
             return ConfigBeanRegistry.getInstance().getObjectName( (ConfigBean)dom );
         }
-        
+
         // we can't return a Dom over the wire
         return null;
     }
@@ -904,11 +904,11 @@ public class AMXConfigImpl extends AMXImplBase
     {
         // short-circuit the common case
         if ( result instanceof String ) return result;
-        
+
         Object out = result;
 
         // ConfigBean types must be mapped back to ObjectName; they can't go across the wire
-            
+
         if ( result instanceof ConfigBeanProxy )
         {
             out = getObjectName( (ConfigBeanProxy)result );
@@ -921,7 +921,7 @@ public class AMXConfigImpl extends AMXImplBase
             {
                 translated.add( translateResult(item) );
             }
-            
+
             if ( result instanceof Set )
             {
                 out = new HashSet<Object>(translated);
@@ -960,10 +960,10 @@ public class AMXConfigImpl extends AMXImplBase
                 out = objectNames;
             }
         }
-        
+
         return out;
     }
-        
+
     /**
     Automatically figure out get<abc>Factory(),
     create<Abc>Config(), remove<Abc>Config().
@@ -1063,11 +1063,11 @@ public class AMXConfigImpl extends AMXImplBase
         final MBeanAttributeInfo attrInfo = getAttributeInfo(amxName);
         if ( attrInfo == null )
         {
-            // 
+            //
             // check for  PSEUDO ATTTRIBUTES implemented as methods eg getFoo()
             //
             //cdebug( "getAttributeFromConfigBean: no info for " + amxName );
-            
+
             ConfigBeanJMXSupport.DuckTypedInfo info = getConfigBeanJMXSupport().findDuckTyped("get" + amxName, null);
             if ( info == null )
             {
@@ -1085,7 +1085,7 @@ public class AMXConfigImpl extends AMXImplBase
                 {
                     throw new RuntimeException( new MBeanException( e, amxName ) );
                 }
-                
+
             }
             else
             {
@@ -1385,9 +1385,9 @@ public class AMXConfigImpl extends AMXImplBase
             if (xmlName != null)
             {
                 //cdebug( "mapNamesAndValues: " + xmlName );
-                    
+
                 final Object value = valueIn;
-                
+
                 // We accept only Strings, String[] or null
                 if (valueIn == null || (value instanceof String))
                 {
@@ -1438,7 +1438,7 @@ public class AMXConfigImpl extends AMXImplBase
             cdebug("setAttributes: failed to map these AMX attributes: {" + CollectionUtil.toString(notMatched.keySet(), ", ") + "}");
 
         }
-        
+
         //System.out.println( "setAttributesInConfigBean: " + amxAttrs);
 
         final AttributeList successfulAttrs = new AttributeList();
@@ -1479,13 +1479,13 @@ public class AMXConfigImpl extends AMXImplBase
 
         return successfulAttrs;
     }
-    
+
     /**
         Share one sequence number for *all* Config MBeans to keep overhead low
-        instead of 
+        instead of
      */
     private static final AtomicLong sSequenceNumber = new AtomicLong(0);
-    
+
         void
     issueAttributeChangeForXmlAttrName(
         final String xmlAttrName,
@@ -1501,19 +1501,19 @@ public class AMXConfigImpl extends AMXImplBase
             //cdebug( "issueAttributeChangeForXmlAttrName(): MBean attribute name not found for xml name, using xml name: " + xmlAttrName );
             logger.log(Level.SEVERE, AMXLoggerInfo.attributeNotfound, xmlAttrName);
         }
-        
+
         final String attributeType = String.class.getName();
-        
+
         getLogger().fine( getObjectName() + " -- " + attributeName + " = " + newValue + " <== " + oldValue );
-        
+
         // if ( getListenerCount() == 0 ) return;
-        
+
         final long sequenceNumber = sSequenceNumber.getAndIncrement();
-		final AttributeChangeNotification	notif =
+        final AttributeChangeNotification    notif =
             new AttributeChangeNotification( getObjectName(), sequenceNumber, whenChanged, message, attributeName, attributeType, oldValue, newValue);
-			
-		sendNotification( notif );
-        
+
+        sendNotification( notif );
+
         //cdebug( "AMXConfigImpl.issueAttributeChangeForXmlAttrName(): sent: " + notif );
     }
 }

@@ -106,20 +106,20 @@ public interface UserWorkArea extends Serializable
    */
   public String getName();
 
-  /** 
+  /**
    * Returns an array of all of the keys associated with the stack of
    * WorkArea's for the current thread. There is no guaranteed
    * ordering of the returned keys. The set of keys includes all those
    * of all enclosing WorkAreas.
    */
   public String[] getKeys();
-  
+
   /**
    * Adds context data to the current WorkArea. This context data is
    * propagated according to the policyOptions that the context was
    * started with. Any existing value for key will be overlaid.
    */
-  public void setProperty(String key, WorkContext ctx) 
+  public void setProperty(String key, WorkContext ctx)
     throws NoWorkContextException, PropertyReadOnlyException;
 
   /**
@@ -129,7 +129,7 @@ public interface UserWorkArea extends Serializable
    * items to be propagated as long as their keys differ.
    */
   public void setProperty(String key, WorkContext ctx,
-                          int propertyModeType) throws NoWorkContextException, 
+                          int propertyModeType) throws NoWorkContextException,
                                                        PropertyReadOnlyException;
 
   /**

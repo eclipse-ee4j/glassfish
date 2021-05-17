@@ -57,9 +57,9 @@ public final class UnprocessedConfigListener implements PostConstruct, Transacti
     public synchronized void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
         mUnprocessedChangeEvents.addAll(changes);
     }
-    
+
     public boolean serverRequiresRestart() {
-        return getUnprocessedChangeEvents().size() != 0; 
+        return getUnprocessedChangeEvents().size() != 0;
     }
 
     public synchronized List<UnprocessedChangeEvents> getUnprocessedChangeEvents() {

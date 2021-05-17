@@ -46,7 +46,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
  */
 public class RootBeanDeploymentArchive extends BeanDeploymentArchiveImpl {
-    
+
     private BeanDeploymentArchiveImpl moduleBda;
 
     public RootBeanDeploymentArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext deploymentContext) {

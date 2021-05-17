@@ -55,22 +55,22 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
     static {
         _logger=LogDomains.getLogger(AppClientSecurityInfoImpl.class, LogDomains.SECURITY_LOGGER);
     }
-    
+
      private static final String DEFAULT_PARSER_CLASS =
         "com.sun.enterprise.security.appclient.ConfigXMLParser";
-     
+
     private CallbackHandler callbackHandler;
     private CredentialType  appclientCredentialType;
     boolean isJWS;
     boolean useGUIAuth;
     private List<TargetServer> targetServers;
     private List<MessageSecurityConfig> msgSecConfigs;
-    
+
     @Inject
     protected SSLUtils sslUtils;
-    
+
     @Inject
-    private SecurityServicesUtil secServUtil; 
+    private SecurityServicesUtil secServUtil;
     @Inject
     private Util util;
     @Inject
@@ -78,10 +78,10 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
 
     public void initializeSecurity(
             List<TargetServer> tServers,
-            List<MessageSecurityConfig> configs, CallbackHandler handler, 
-            CredentialType credType, String username, 
+            List<MessageSecurityConfig> configs, CallbackHandler handler,
+            CredentialType credType, String username,
             char[] password, boolean isJWS, boolean useGUIAuth) {
-       
+
            /* security init */
         this.isJWS = isJWS;
         this.useGUIAuth = useGUIAuth;
@@ -93,7 +93,7 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         }
         this.targetServers = tServers;
         this.msgSecConfigs = configs;
-        
+
         SecurityManager secMgr = System.getSecurityManager();
         if (!isJWS && secMgr != null &&
                 !(J2EESecurityManager.class.equals(secMgr.getClass()))) {
@@ -111,23 +111,23 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         //set the parser to ConfigXMLParser
         System.setProperty("config.parser", DEFAULT_PARSER_CLASS);
         util.setAppClientMsgSecConfigs(msgSecConfigs);
-	try {
-	    /* setup jsr 196 factory
-	     * define default factory if it is not already defined
-	     */
-	    String defaultFactory = java.security.Security.getProperty
-		(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY);
+    try {
+        /* setup jsr 196 factory
+         * define default factory if it is not already defined
+         */
+        String defaultFactory = java.security.Security.getProperty
+        (AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY);
             _logger.fine("AuthConfigFactory obtained from java.security.Security.getProperty(\"authconfigprovider.factory\") :"
                     + ((defaultFactory != null) ? defaultFactory : "NULL"));
-	    if (defaultFactory == null) {
-		java.security.Security.setProperty
-		    (AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY,
-		     GFAuthConfigFactory.class.getName());
-	    }
+        if (defaultFactory == null) {
+        java.security.Security.setProperty
+            (AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY,
+             GFAuthConfigFactory.class.getName());
+        }
 
-	} catch (Exception e) {
-	    _logger.log(Level.WARNING, "main.jmac_default_factory");
-	}
+    } catch (Exception e) {
+        _logger.log(Level.WARNING, "main.jmac_default_factory");
+    }
 
         //TODO:V3 LoginContextDriver has a static variable dependency on AuditManager
         //And since LoginContextDriver has too many static methods that use AuditManager
@@ -158,13 +158,13 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
             default :
                 throw new RuntimeException("Unknown CredentialType");
         }
-        
+
     }
 
     public Subject doClientLogin(CredentialType credType) {
         return LoginContextDriver.doClientLogin(this.getCredentialEncoding(credType), callbackHandler);
     }
-    
+
     private AppClientSSL convert(Ssl ssl) {
         AppClientSSL appSSL = new AppClientSSL();
         appSSL.setCertNickname(ssl.getCertNickname());
@@ -175,36 +175,36 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
         appSSL.setSsl3TlsCiphers(ssl.getSsl3TlsCiphers());
         appSSL.setTlsEnabled(ssl.isTlsEnabled());
         appSSL.setTlsRollbackEnabled(ssl.isTlsRollbackEnabled());
-        
+
         return appSSL;
     }
-    
+
     private void setSSLData(List<TargetServer> tServers) {
         try {
             // Set the SSL related properties for ORB
             TargetServer tServer = tServers.get(0);
             // TargetServer is required.
-	    //temp solution to target-server+ change in DTD
+        //temp solution to target-server+ change in DTD
             // assuming that multiple servers can be specified but only 1st
-	    // first one will be used.
-	    Security security = tServer.getSecurity();
-	    if (security == null) {
-		_logger.fine("No Security input set in ClientContainer.xml");
-		// do nothing
-		return;
-	    }
-	    Ssl ssl = security.getSsl();
-	    if (ssl == null) {
-		_logger.fine("No SSL input set in ClientContainer.xml");
-		// do nothing
-		return;
-		
-	    }
-	    //XXX do not use NSS in this release
-	    //CertDb   certDB  = security.getCertDb();
-	    sslUtils.setAppclientSsl(convert(ssl));	
+        // first one will be used.
+        Security security = tServer.getSecurity();
+        if (security == null) {
+        _logger.fine("No Security input set in ClientContainer.xml");
+        // do nothing
+        return;
+        }
+        Ssl ssl = security.getSsl();
+        if (ssl == null) {
+        _logger.fine("No SSL input set in ClientContainer.xml");
+        // do nothing
+        return;
+
+        }
+        //XXX do not use NSS in this release
+        //CertDb   certDB  = security.getCertDb();
+        sslUtils.setAppclientSsl(convert(ssl));
             this.appClientSSLUtil.setAppClientSSL(convert(ssl));
-	} catch (Exception ex) {
+    } catch (Exception ex) {
 
         }
     }

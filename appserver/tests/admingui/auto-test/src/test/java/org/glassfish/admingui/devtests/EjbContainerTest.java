@@ -23,7 +23,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -52,7 +52,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:ejbContainer:ejbContainer_link");
         assertEquals(minSize, getValue("form1:propertySheet:poolSettingSection:MinSizeProp:MinSize", "value"));
@@ -60,7 +60,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         assertEquals(poolResize, getValue("form1:propertySheet:poolSettingSection:PoolResizeProp:PoolResize", "value"));
         assertEquals(timeout, getValue("form1:propertySheet:poolSettingSection:TimeoutProp:Timeout", "value"));
         assertTableRowCount("form1:basicTable", count);
-        
+
         //delete the property used to test
         clickByIdAction("form1:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("form1:basicTable:topActionsGroup1:button1");
@@ -94,7 +94,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:ejbContainer:ejbContainer_link");
         clickAndWait("form1:ejbContainerTabs:mdbSettingsTab");
@@ -104,7 +104,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         assertEquals(poolResize, getValue("form1:propertySheet:propertySectionTextField:PoolResizeProp:PoolResize", "value"));
         assertEquals(timeout, getValue("form1:propertySheet:propertySectionTextField:TimeoutProp:Timeout", "value"));
         assertTableRowCount("form1:basicTable", count);
-        
+
         //delete the property used to test
         clickByIdAction("form1:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("form1:basicTable:topActionsGroup1:button1");
@@ -154,7 +154,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:propertySheet:propertySectionTextField:MaxRedeliveryProp:MaxRedelivery", "1");
         setFieldValue("form1:propertySheet:propertySectionTextField:RedeliveryIntrProp:RedeliveryIntr", "5000");
         setFieldValue("form1:propertySheet:propertySectionTextField:TimerDatasourceProp:TimerDatasource", "");
-        
+
         //delete the property used to test
         clickByIdAction("form1:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("form1:basicTable:topActionsGroup1:button1");
@@ -184,7 +184,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         //Save this, goto another tab and back
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:ejbContainer:ejbContainer_link");
 
@@ -201,7 +201,7 @@ public class EjbContainerTest extends BaseSeleniumTestClass {
         waitForButtonEnabled("form1:propertyContentPage:loadDefaultsButton");
 
         assertEquals(location, getValue("form1:propertySheet:generalPropertySection:SessionStoreProp:SessionStore", "value"));
-        
+
         assertEquals(true, driver.findElement(By.id(("form1:propertySheet:generalPropertySection:commitOptionProp:optB"))).isSelected());
         assertEquals("0", getValue("form1:propertySheet:poolSettingSection:MinSizeProp:MinSize", "value"));
         assertEquals("32", getValue("form1:propertySheet:poolSettingSection:MaxSizeProp:MaxSize", "value"));

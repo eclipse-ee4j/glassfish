@@ -42,8 +42,8 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Applications.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-applications", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-applications",
         description="List Applications")
 })
 public class ListApplicationsCommand extends ListComponentsCommand {

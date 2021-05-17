@@ -48,14 +48,14 @@ public class NewJSFManagedBean implements java.io.Serializable {
      */
     public NewJSFManagedBean() {
     }
-    
+
     public String getMessage() {
         try {
             String text = "JSF Hello World!";
             JMSProducer producer = jmsContext.createProducer();
             TextMessage msg = jmsContext.createTextMessage(text);
             producer.send(queue, msg);
-            
+
             if(jmsContext.toString().indexOf(requestScope) == -1){
                 throw new RuntimeException("NOT in requestScope scope!");
             }

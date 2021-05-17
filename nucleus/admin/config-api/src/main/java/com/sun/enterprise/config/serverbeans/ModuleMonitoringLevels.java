@@ -47,7 +47,7 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the threadPool property.
      *
      * All the thread-pools used by the run time
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
@@ -133,7 +133,7 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the transactionService property.
      *
      * Transaction subsystem
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
@@ -151,7 +151,7 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the httpService property.
      *
      * http engine and the http listeners therein.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")
@@ -169,7 +169,7 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the jdbcConnectionPool property.
      *
      * Monitoring level for all the jdbc-connection-pools used by the runtime.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "OFF")

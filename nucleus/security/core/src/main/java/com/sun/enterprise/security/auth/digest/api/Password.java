@@ -30,7 +30,7 @@ public interface Password {
     public int getType();
     /**
      * returns password.
-     * @returns byte[] 
+     * @returns byte[]
      */
     public byte[] getValue();
 }

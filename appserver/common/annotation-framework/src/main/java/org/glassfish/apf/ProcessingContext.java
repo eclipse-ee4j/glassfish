@@ -22,24 +22,24 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
  * This interface defines the context for the annotation procesing
- * handler. There is only one context instance per AnnotationProcessor 
+ * handler. There is only one context instance per AnnotationProcessor
  * invocation.
  *
  * @author Jerome Dochez
  */
 public interface ProcessingContext {
-    
+
     /**
      * Returns the AnnotationProcessor instance this context is associated
-     * with. 
+     * with.
      * @return annotation processor instance
      */
-    public AnnotationProcessor getProcessor();    
-    
+    public AnnotationProcessor getProcessor();
+
     /**
      * Returns the Scanner implementation which is responsible for providing
      * access to all the .class files the processing tool needs to scan.
-     * @return scanner instance 
+     * @return scanner instance
      */
     public Scanner getProcessingInput();
 
@@ -53,39 +53,39 @@ public interface ProcessingContext {
     public ReadableArchive getArchive();
 
     public void setArchive(ReadableArchive archive);
-    
+
     /**
-     * Sets the Scanner implementation which is responsible for accessing 
+     * Sets the Scanner implementation which is responsible for accessing
      * all the .class files the AnnotationProcessor should process.
      */
     public void setProcessingInput(Scanner scanner);
-    
+
     /**
-     * Push a new handler on the stack of handlers. This handler will receive 
-     * all the AnnotedElementHandler events until it is removed from the stack 
-     * with a popHandler() call. 
+     * Push a new handler on the stack of handlers. This handler will receive
+     * all the AnnotedElementHandler events until it is removed from the stack
+     * with a popHandler() call.
      * @param handler the new events handler.
-     */    
+     */
     public void pushHandler(AnnotatedElementHandler handler);
-    
-    /** 
+
+    /**
      * Return the current handler (if any) receving all the annotated elements
      * start and stop events.
      * @return the top handler
      */
-    public AnnotatedElementHandler getHandler();    
-        
-    /** 
+    public AnnotatedElementHandler getHandler();
+
+    /**
      * Removes the top handler
      * @return the removed handler
      */
     public AnnotatedElementHandler popHandler();
-    
-    /** 
+
+    /**
      * Return the top handler casted to the requested handler type
-     * @param requested handler type 
+     * @param requested handler type
      * @return the top handler
-     * @throws ClassCastException if the top handler cannot be casted to 
+     * @throws ClassCastException if the top handler cannot be casted to
      * the requested handler type.
      */
     public <U extends AnnotatedElementHandler> U getHandler(Class<U> handlerType)
@@ -97,11 +97,11 @@ public interface ProcessingContext {
      * @param handler the annotation handler
      */
     public void setErrorHandler(ErrorHandler errorHandler);
-    
+
     /**
      * Return the error handler for this processing context.
      * @return the error handler
      */
     public ErrorHandler getErrorHandler();
-            
+
 }

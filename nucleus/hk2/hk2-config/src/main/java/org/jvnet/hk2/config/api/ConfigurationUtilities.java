@@ -35,7 +35,7 @@ public interface ConfigurationUtilities {
     /**
      * Adds this child bean to the parent with the given attributes.  Does not
      * start or end a configuration transaction
-     * 
+     *
      * @param param
      * @param parent
      * @param childType

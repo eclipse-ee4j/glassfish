@@ -101,7 +101,7 @@ public class Response
         // END OF SJSAS 6231069
         urlEncoder.addSafeCharacter('/');
     }
-    
+
     // START OF SJSAS 6231069
     public Response(boolean chunkingDisabled) {
         outputBuffer = new OutputBuffer();
@@ -171,7 +171,7 @@ public class Response
 
     /**
      * Set the Coyote response.
-     * 
+     *
      * @param coyoteResponse The Coyote response
      */
     public void setCoyoteResponse(org.glassfish.grizzly.http.server.Response coyoteResponse) {
@@ -218,28 +218,28 @@ public class Response
     /**
      * The associated output buffer.
      */
-    // START OF SJSAS 6231069    
+    // START OF SJSAS 6231069
     //protected OutputBuffer outputBuffer = new OutputBuffer();
     protected OutputBuffer outputBuffer;
-    // END OF SJSAS 6231069    
+    // END OF SJSAS 6231069
 
     /**
      * The associated output stream.
-     */    
-    // START OF SJSAS 6231069 
+     */
+    // START OF SJSAS 6231069
     /*protected CoyoteOutputStream outputStream =
         new CoyoteOutputStream(outputBuffer);*/
-    protected CoyoteOutputStream outputStream;    
-    // END OF SJSAS 6231069    
+    protected CoyoteOutputStream outputStream;
+    // END OF SJSAS 6231069
 
     /**
      * The associated writer.
      */
-    // START OF SJSAS 6231069 
+    // START OF SJSAS 6231069
     // protected CoyoteWriter writer = new CoyoteWriter(outputBuffer);
     protected CoyoteWriter writer;
-    // END OF SJSAS 6231069    
-    
+    // END OF SJSAS 6231069
+
 
     /**
      * The application commit flag.
@@ -252,18 +252,18 @@ public class Response
      */
     protected boolean included = false;
 
-    
+
     /**
      * The characterEncoding flag
      */
     private boolean isCharacterEncodingSet = false;
-    
+
     /**
      * The contextType flag
-     */    
+     */
     private boolean isContentTypeSet = false;
 
-    
+
     /**
      * The error flag.
      */
@@ -351,7 +351,7 @@ public class Response
 
     /**
      * Set the application commit flag.
-     * 
+     *
      * @param appCommitted The new application committed flag value
      */
     public void setAppCommitted(boolean appCommitted) {
@@ -462,7 +462,7 @@ public class Response
 
     /**
      * Set the suspended flag.
-     * 
+     *
      * @param suspended The new suspended flag value
      */
     public void setSuspended(boolean suspended) {
@@ -522,7 +522,7 @@ public class Response
      *
      * @exception IOException if an input/output error occurs
      */
-    public ServletOutputStream createOutputStream() 
+    public ServletOutputStream createOutputStream()
         throws IOException {
         // Probably useless
         if (outputStream == null) {
@@ -538,16 +538,16 @@ public class Response
      *
      * @exception IOException if an input/output error occurs
      */
-    public void finishResponse() 
+    public void finishResponse()
         throws IOException {
 
         // Writing leftover bytes
         try {
             outputBuffer.close();
         } catch(IOException e) {
-	    ;
+        ;
         } catch(Throwable t) {
-	    log(rb.getString(LogFacade.ERROR_DURING_FINISH_RESPONSE), t);
+        log(rb.getString(LogFacade.ERROR_DURING_FINISH_RESPONSE), t);
         }
     }
 
@@ -602,7 +602,7 @@ public class Response
      *
      * @exception IOException if an input/output error occurs
      */
-    public void flushBuffer() 
+    public void flushBuffer()
         throws IOException {
         outputBuffer.flush();
     }
@@ -623,7 +623,7 @@ public class Response
         return coyoteResponse.getCharacterEncoding();
     }
 
-    
+
     /*
      * Overrides the name of the character encoding used in the body
      * of the request. This method must be called prior to reading
@@ -649,7 +649,7 @@ public class Response
         isCharacterEncodingSet = true;
     }
 
-    
+
     /**
      * Return the servlet output stream associated with this Response.
      *
@@ -657,7 +657,7 @@ public class Response
      *  already been called for this response
      * @exception IOException if an input/output error occurs
      */
-    public ServletOutputStream getOutputStream() 
+    public ServletOutputStream getOutputStream()
         throws IOException {
 
         if (usingWriter)
@@ -688,7 +688,7 @@ public class Response
      *  already been called for this response
      * @exception IOException if an input/output error occurs
      */
-    public PrintWriter getWriter() 
+    public PrintWriter getWriter()
         throws IOException {
 
         if (usingOutputStream)
@@ -757,7 +757,7 @@ public class Response
         resetBuffer(false);
     }
 
-    
+
     /**
      * Reset the data buffer and the using Writer/Stream flags but not any
      * status or header information.
@@ -765,7 +765,7 @@ public class Response
      * @param resetWriterStreamFlags <code>true</code> if the internal
      *        <code>usingWriter</code>, <code>usingOutputStream</code>,
      *        <code>isCharacterEncodingSet</code> flags should also be reset
-     * 
+     *
      * @exception IllegalStateException if the response has already
      *  been committed
      */
@@ -775,7 +775,7 @@ public class Response
             throw new IllegalStateException(rb.getString(LogFacade.CANNOT_RESET_BUFFER_EXCEPTION));
 
         outputBuffer.reset();
-                
+
         if(resetWriterStreamFlags) {
             usingOutputStream = false;
             usingWriter = false;
@@ -887,7 +887,7 @@ public class Response
             }
         }
 
-        isContentTypeSet = true;    
+        isContentTypeSet = true;
     }
 
 
@@ -1026,9 +1026,9 @@ public class Response
             AccessController.doPrivileged(new PrivilegedAction<Void>() {
                 public Void run(){
                     ServerCookie.appendCookieValue
-                        (sb, cookie.getVersion(), cookie.getName(), 
-                         cookie.getValue(), cookie.getPath(), 
-                         cookie.getDomain(), cookie.getComment(), 
+                        (sb, cookie.getVersion(), cookie.getName(),
+                         cookie.getValue(), cookie.getPath(),
+                         cookie.getDomain(), cookie.getComment(),
                          cookie.getMaxAge(), cookie.getSecure());
                     return null;
                 }
@@ -1036,7 +1036,7 @@ public class Response
         } else {
             ServerCookie.appendCookieValue
                 (sb, cookie.getVersion(), cookie.getName(), cookie.getValue(),
-                     cookie.getPath(), cookie.getDomain(), cookie.getComment(), 
+                     cookie.getPath(), cookie.getDomain(), cookie.getComment(),
                      cookie.getMaxAge(), cookie.getSecure());
         }
         */
@@ -1056,8 +1056,8 @@ public class Response
     }
 
     /**
-     * Special method for adding a session cookie as we should be overriding 
-     * any previous 
+     * Special method for adding a session cookie as we should be overriding
+     * any previous
      * @param cookie
      */
     public void addSessionCookieInternal(final Cookie cookie) {
@@ -1196,7 +1196,7 @@ public class Response
     public String encodeRedirectURL(String url) {
         if (isEncodeable(toAbsolute(url))) {
             String sessionVersion = null;
-            Map<String, String> sessionVersions = 
+            Map<String, String> sessionVersions =
                 request.getSessionVersionsRequestAttribute();
             if (sessionVersions != null) {
                 sessionVersion = RequestUtil.createSessionVersionString(
@@ -1234,14 +1234,14 @@ public class Response
     public String encodeURL(String url) {
         String absolute = toAbsolute(url);
         if (isEncodeable(absolute)) {
-            // W3c spec clearly said 
+            // W3c spec clearly said
             if (url.equalsIgnoreCase("")){
                 url = absolute;
             } else if (url.equals(absolute) && !hasPath(url)) {
                 url += '/';
             }
             String sessionVersion = null;
-            Map<String, String> sessionVersions = 
+            Map<String, String> sessionVersions =
                 request.getSessionVersionsRequestAttribute();
             if (sessionVersions != null) {
                 sessionVersion = RequestUtil.createSessionVersionString(
@@ -1283,7 +1283,7 @@ public class Response
 
     /**
      * Send an acknowledgment of a request.
-     * 
+     *
      * @exception IOException if an input/output error occurs
      */
     public void sendAcknowledgement()
@@ -1294,7 +1294,7 @@ public class Response
 
         // Ignore any call from an included servlet
         if (included)
-            return; 
+            return;
 
         coyoteResponse.sendAcknowledgement();
 
@@ -1311,7 +1311,7 @@ public class Response
      *  already been committed
      * @exception IOException if an input/output error occurs
      */
-    public void sendError(int status) 
+    public void sendError(int status)
         throws IOException {
         sendError(status, null);
     }
@@ -1327,7 +1327,7 @@ public class Response
      *  already been committed
      * @exception IOException if an input/output error occurs
      */
-    public void sendError(int status, String message) 
+    public void sendError(int status, String message)
         throws IOException {
 
         if (isCommitted())
@@ -1335,7 +1335,7 @@ public class Response
 
         // Ignore any call from an included servlet
         if (included) {
-            return; 
+            return;
         }
 
         setError();
@@ -1379,7 +1379,7 @@ public class Response
      * @throws IllegalStateException if this response has
      *  already been committed
      * @throws IOException if an input/output error occurs
-     */    
+     */
     public void sendRedirect(String location, boolean isTemporary)
             throws IOException {
 
@@ -1388,7 +1388,7 @@ public class Response
 
         // Ignore any call from an included servlet
         if (included)
-            return; 
+            return;
 
         // Clear any data content that has been buffered
         resetBuffer();
@@ -1735,18 +1735,18 @@ public class Response
                     String relativePath = request.getDecodedRequestURI();
                     int pos = relativePath.lastIndexOf('/');
                     relativePath = relativePath.substring(0, pos);
-                    
+
                     String encodedURI = null;
                     final String frelativePath = relativePath;
-                    
+
                      if (SecurityUtil.isPackageProtectionEnabled() ){
                         try{
-                            encodedURI = AccessController.doPrivileged( 
-                                new PrivilegedExceptionAction<String>(){                                
+                            encodedURI = AccessController.doPrivileged(
+                                new PrivilegedExceptionAction<String>(){
                                     public String run() throws IOException{
                                         return urlEncoder.encodeURL(frelativePath);
                                     }
-                           });   
+                           });
                         } catch (PrivilegedActionException pae){
                             IllegalArgumentException iae =
                                 new IllegalArgumentException(location);
@@ -1756,7 +1756,7 @@ public class Response
                     } else {
                         encodedURI = urlEncoder.encodeURL(relativePath);
                     }
-                          
+
                     redirectURLCC.append(encodedURI, 0, encodedURI.length());
                     redirectURLCC.append('/');
                 }
@@ -1850,7 +1850,7 @@ public class Response
             sb.append(sessionId);
             if (ctx != null && ctx.getJvmRoute() != null) {
                 sb.append('.').append(ctx.getJvmRoute());
-            }                    
+            }
 
             // START SJSAS 6337561
             String jrouteId = request.getHeader(Constants.PROXY_JROUTE);

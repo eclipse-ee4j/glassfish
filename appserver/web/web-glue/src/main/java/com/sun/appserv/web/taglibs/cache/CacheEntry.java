@@ -25,15 +25,15 @@ public class CacheEntry
     public static final int NO_TIMEOUT = -1;
 
     String content;
-    volatile long expireTime; 
+    volatile long expireTime;
 
     /**
      * Constructs a CacheEntry using the response string to be
      * cached and the timeout after which the entry will expire
      */
     public CacheEntry(String response, int timeout) {
-        content = response; 
-        computeExpireTime(timeout);  
+        content = response;
+        computeExpireTime(timeout);
     }
 
     /**
@@ -54,7 +54,7 @@ public class CacheEntry
     }
 
     /**
-     * compute when this entry to be expired based on timeout relative to 
+     * compute when this entry to be expired based on timeout relative to
      * current time.
      * @param timeout in seconds
      */
@@ -72,7 +72,7 @@ public class CacheEntry
                 expireTime == NO_TIMEOUT);
     }
 
-    /** 
+    /**
      * clear the contents
      */
     public void clear() {

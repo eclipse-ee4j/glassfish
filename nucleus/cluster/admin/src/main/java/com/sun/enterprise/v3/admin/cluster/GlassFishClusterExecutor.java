@@ -77,7 +77,7 @@ public class GlassFishClusterExecutor implements ClusterExecutor, PostConstruct 
      * @param context the original command context
      * @param parameters the parameters passed to the original local command
      * @return an array of @{link org.glassfish.api.ActionReport} for each remote
-     * execution status. 
+     * execution status.
      */
     @Override
     public ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context, ParameterMap parameters) {
@@ -86,7 +86,7 @@ public class GlassFishClusterExecutor implements ClusterExecutor, PostConstruct 
             command instanceof CommandModelProvider ?
                 ((CommandModelProvider)command).getModel() :
                 new CommandModelImpl(command.getClass());
-        
+
         org.glassfish.api.admin.ExecuteOn clAnnotation = model.getClusteringAttributes();
         List<RuntimeType> runtimeTypes = new ArrayList<RuntimeType>();
         @ExecuteOn final class DefaultExecuteOn {}
@@ -99,7 +99,7 @@ public class GlassFishClusterExecutor implements ClusterExecutor, PostConstruct 
         } else {
             runtimeTypes.addAll(Arrays.asList(clAnnotation.value()));
         }
-        
+
         String targetName = parameters.getOne("target");
         if(targetName == null)
                 targetName = "server";

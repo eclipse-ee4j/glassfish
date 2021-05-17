@@ -20,24 +20,24 @@ import java.util.Map;
 import java.lang.reflect.AnnotatedElement;
 
 /**
- * This interface encapsulates all AnnotatedElements processing result by 
- * the AnnotationProcessor tool. Each AnnotatedElement can have multiple 
- * annotations, therefore the AnnotationProcessor tool result is defined 
+ * This interface encapsulates all AnnotatedElements processing result by
+ * the AnnotationProcessor tool. Each AnnotatedElement can have multiple
+ * annotations, therefore the AnnotationProcessor tool result is defined
  * by the list of AnnotatedElements it processed and for each AnnotatedElement,
  * it defines each Annotation processed and its processing result.
  *
  * @author Jerome Dochez
  */
 public interface ProcessingResult {
-    
+
     /**
-     * @return a Map indexed by all AnnotatedElements processed and each 
+     * @return a Map indexed by all AnnotatedElements processed and each
      * AnnotatedElement HandlerProcessingResult as values.
      */
     public Map<AnnotatedElement,HandlerProcessingResult> getResults();
-    
+
     /**
-     * @return the overall processing result, which is usually the most 
+     * @return the overall processing result, which is usually the most
      * severe ResultType for all the annotated elements processing
      */
     public ResultType getOverallResult();

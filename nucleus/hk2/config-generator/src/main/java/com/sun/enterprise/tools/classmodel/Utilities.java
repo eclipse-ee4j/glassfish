@@ -28,14 +28,14 @@ import org.jvnet.hk2.component.MultiMap;
 
 /**
  * Utilities
- * 
+ *
  * @author Jeff Trent
  */
 public class Utilities {
 
   /**
    * Sorts all of the lines in an inhabitants descriptor
-   * 
+   *
    * @param in the input string
    * @param innerSort true if each line in the inhabitants file is sorted as well
    * @return the sorted output string
@@ -71,7 +71,7 @@ public class Utilities {
     List<String> vals = mm.remove("class");
     assert(null != vals && 1 == vals.size());
     sb.append("class=").append(vals.iterator().next());
-    
+
     // indicies
     vals = mm.remove("index");
     if (null != vals && vals.size() > 0) {
@@ -80,7 +80,7 @@ public class Utilities {
         sb.append(",index=").append(index);
       }
     }
-    
+
     // metadata
     vals = new ArrayList<String>(mm.keySet());
     Collections.sort(vals);

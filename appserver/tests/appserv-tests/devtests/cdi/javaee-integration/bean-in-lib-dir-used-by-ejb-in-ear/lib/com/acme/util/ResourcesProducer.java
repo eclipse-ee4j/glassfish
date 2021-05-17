@@ -28,10 +28,10 @@ public class ResourcesProducer {
     @PersistenceContext(unitName = "pu1")
     @TestDatabase
     EntityManager customerDatabasePersistenceUnit;
-    
+
     @Inject
     TestDependentBeanInLib foo;
-    
+
     public boolean isInjectionSuccessful(){
         return (foo != null);
     }

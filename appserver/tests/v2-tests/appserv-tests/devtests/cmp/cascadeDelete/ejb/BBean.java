@@ -26,36 +26,36 @@ import jakarta.ejb.*;
 
 
 public abstract class BBean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
     private boolean cascadeDeleteFromA = false;
     private boolean cascadeDeleteFromC = false;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
@@ -63,7 +63,7 @@ public abstract class BBean implements jakarta.ejb.EntityBean {
         System.out.println("Debug: B ejbRemove");
         cascadeDelete.LocalA a = getA();
         System.out.println("A: " + ((a==null)? "null" : a.getName()));
-        
+
         cascadeDelete.LocalC c = getC();
         System.out.println("C: " + ((c==null)? "null" : c.getName()));
 
@@ -81,69 +81,69 @@ public abstract class BBean implements jakarta.ejb.EntityBean {
         }
 
         System.out.println("Ds: " + getDs().size());
-        
-        
+
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
         cascadeDeleteFromA = false;
         cascadeDeleteFromC = false;
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract java.lang.Integer getId();
     public abstract void setId(java.lang.Integer id);
-    
+
     public abstract java.lang.String getName();
     public abstract void setName(java.lang.String name);
-    
+
     public abstract java.util.Collection getDs();
-    
+
     public abstract void setDs(java.util.Collection ds);
-    
+
     public abstract cascadeDelete.LocalC getC();
-    
+
     public abstract void setC(cascadeDelete.LocalC c);
-    
+
     public abstract cascadeDelete.LocalA getA();
-    
+
     public abstract void setA(cascadeDelete.LocalA a);
-    
+
     public java.lang.Integer ejbCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
         setId(id);
         setName(name);
         return null;
     }
-    
+
     public void ejbPostCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
     }
 
     public void cascadeDeleteFromA() {
         cascadeDeleteFromA = true;
     }
-    
+
     public void cascadeDeleteFromC() {
         cascadeDeleteFromC = true;
     }
-    
+
 }

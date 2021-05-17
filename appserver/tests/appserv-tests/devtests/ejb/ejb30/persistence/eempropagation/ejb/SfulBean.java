@@ -34,27 +34,27 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.ejb.EJBException;
 
 @Stateful
-@EJB(name="ejb/SfulBean", 
+@EJB(name="ejb/SfulBean",
         beanInterface=com.sun.s1asdev.ejb.ejb30.persistence.eempropagation.SfulDelegate.class)
 
 public class SfulBean
     implements Sful {
 
     private String name;
-    
+
     //private @EJB SfulDelegate delegate;
-    
+
     private @PersistenceContext(unitName="lib/ejb-ejb30-persistence-eempropagation-par1.jar#em",
-                type=PersistenceContextType.EXTENDED) 
+                type=PersistenceContextType.EXTENDED)
             EntityManager extendedEM;
- 
+
     private SfulDelegate delegate;
 
     public void setName(String name) {
         this.name = name;
         try {
             String lookupName = "java:comp/env/ejb/SfulBean";
-            
+
             InitialContext initCtx = new InitialContext();
             delegate = (SfulDelegate) initCtx.lookup(lookupName);
         } catch (Exception ex) {
@@ -64,7 +64,7 @@ public class SfulBean
 
     public Map<String, Boolean> doTests() {
         Person person = new Person(name);
-        
+
         String delegateName = "delgname_" + name;
         String delegateData= "delgdata: " + name;
         delegate.create(delegateName, delegateData);
@@ -73,11 +73,11 @@ public class SfulBean
 
         extendedEM.persist(person);
         Person foundPerson = delegate.find(name);
-        
+
         boolean delegateRemovedMe = delegate.remove(name);
-        
+
         boolean removedDelegate = removePerson(delegateName);
-        
+
         Map<String, Boolean> map = new HashMap<String, Boolean>();
         map.put("findDelegateCreatedPerson", (dPerson != null));
         map.put("delegateFoundMe", (foundPerson != null));
@@ -105,5 +105,5 @@ public class SfulBean
         }
         return removed;
     }
-    
+
 }

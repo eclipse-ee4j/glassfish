@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
         <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -56,14 +56,14 @@
 
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="WebTest.java"/>
-    </target> 
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
             <arg value="${http.host}"/>
@@ -75,10 +75,10 @@
             </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

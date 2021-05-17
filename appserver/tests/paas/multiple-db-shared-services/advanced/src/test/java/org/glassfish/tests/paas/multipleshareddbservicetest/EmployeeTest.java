@@ -133,7 +133,7 @@ public class EmployeeTest {
                         "delete-shared-service", "salary-service");
                 System.out.println("\ndelete-shared-service salary-service command output [" +
                     deleteResult.getOutput() + "]");
-            } 
+            }
         }
 
     }

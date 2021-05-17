@@ -33,15 +33,15 @@
 
     <target name="all" depends="build,create-resources,deploy,run,undeploy,delete-resources" />
 
-	<target name="clean" depends="init-common">
-		<antcall target="clean-common" />
-		<delete>
-			<fileset dir="." includes="*.class" />
-			<fileset dir="client/test/client" includes="*.class" />
-		</delete>
-	</target>
+    <target name="clean" depends="init-common">
+        <antcall target="clean-common" />
+        <delete>
+            <fileset dir="." includes="*.class" />
+            <fileset dir="client/test/client" includes="*.class" />
+        </delete>
+    </target>
 
-	<target name="compile" depends="clean">
+    <target name="compile" depends="clean">
         <!-- compile and create library jar -->
         <mkdir dir="tmp"/>
         <mkdir dir="tmp/META-INF"/>
@@ -57,34 +57,34 @@
         </jar>
         <echo message="created library jar at lib/producer-library.jar"/>
 
-		<antcall target="compile-common">
-			<param name="src" value="servlet" />
-		</antcall>
-	</target>
+        <antcall target="compile-common">
+            <param name="src" value="servlet" />
+        </antcall>
+    </target>
 
-	<target name="build" depends="compile">
-		<property name="hasWebclient" value="yes" />
-		<antcall target="webclient-war-common">
-			<param name="hasWebclient" value="yes" />
-			<param name="webclient.war.classes" value="**/*.class" />
-		</antcall>
+    <target name="build" depends="compile">
+        <property name="hasWebclient" value="yes" />
+        <antcall target="webclient-war-common">
+            <param name="hasWebclient" value="yes" />
+            <param name="webclient.war.classes" value="**/*.class" />
+        </antcall>
 
-		<javac srcdir="client" classpath="${env.APS_HOME}/lib/reportbuilder.jar" includes="test/client/WebTest.java" />
+        <javac srcdir="client" classpath="${env.APS_HOME}/lib/reportbuilder.jar" includes="test/client/WebTest.java" />
 
-	</target>
+    </target>
 
-	<target name="build-publish-war" depends="build, publish-war-common" />
+    <target name="build-publish-war" depends="build, publish-war-common" />
 
-	<target name="deploy" depends="init-common">
-		<antcall target="deploy-war-common" />
-	</target>
+    <target name="deploy" depends="init-common">
+        <antcall target="deploy-war-common" />
+    </target>
 
     <target name="create-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="create_resources.asadmin"/>
         </antcall>
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="delete_resources.asadmin"/>
@@ -92,24 +92,24 @@
     </target>
 
 
-	<target name="run" depends="init-common">
-		<java classname="test.client.WebTest">
-			<arg value="${http.host}" />
-			<arg value="${http.port}" />
-			<arg value="${contextroot}" />
-			<classpath>
-				<pathelement location="${env.APS_HOME}/lib/reportbuilder.jar" />
-				<pathelement location="client" />
-			</classpath>
-		</java>
-	</target>
+    <target name="run" depends="init-common">
+        <java classname="test.client.WebTest">
+            <arg value="${http.host}" />
+            <arg value="${http.port}" />
+            <arg value="${contextroot}" />
+            <classpath>
+                <pathelement location="${env.APS_HOME}/lib/reportbuilder.jar" />
+                <pathelement location="client" />
+            </classpath>
+        </java>
+    </target>
 
-	<target name="undeploy" depends="init-common">
-		<antcall target="undeploy-war-common" />
+    <target name="undeploy" depends="init-common">
+        <antcall target="undeploy-war-common" />
         <delete file="lib/producer-library.jar"/>
-	</target>
+    </target>
 
-	<target name="usage">
-		<antcall target="usage-common" />
-	</target>
+    <target name="usage">
+        <antcall target="usage-common" />
+    </target>
 </project>

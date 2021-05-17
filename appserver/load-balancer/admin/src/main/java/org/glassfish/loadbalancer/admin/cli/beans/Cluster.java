@@ -23,20 +23,20 @@ import java.util.*;
 public class Cluster extends org.netbeans.modules.schema2beans.BaseBean {
 
     static Vector comparators = new Vector();
-    static public final String NAME = "Name";	// NOI18N
-    static public final String POLICY = "Policy";	// NOI18N
-    static public final String POLICYMODULE = "PolicyModule";	// NOI18N
-    static public final String INSTANCE = "Instance";	// NOI18N
-    static public final String INSTANCENAME = "InstanceName";	// NOI18N
-    static public final String INSTANCEENABLED = "InstanceEnabled";	// NOI18N
-    static public final String INSTANCEDISABLETIMEOUTINMINUTES = "InstanceDisableTimeoutInMinutes";	// NOI18N
-    static public final String INSTANCELISTENERS = "InstanceListeners";	// NOI18N
-    static public final String INSTANCEWEIGHT = "InstanceWeight";	// NOI18N
-    static public final String WEB_MODULE = "WebModule";	// NOI18N
-    static public final String HEALTH_CHECKER = "HealthChecker";	// NOI18N
-    static public final String HEALTHCHECKERURL = "HealthCheckerUrl";	// NOI18N
-    static public final String HEALTHCHECKERINTERVALINSECONDS = "HealthCheckerIntervalInSeconds";	// NOI18N
-    static public final String HEALTHCHECKERTIMEOUTINSECONDS = "HealthCheckerTimeoutInSeconds";	// NOI18N
+    static public final String NAME = "Name";    // NOI18N
+    static public final String POLICY = "Policy";    // NOI18N
+    static public final String POLICYMODULE = "PolicyModule";    // NOI18N
+    static public final String INSTANCE = "Instance";    // NOI18N
+    static public final String INSTANCENAME = "InstanceName";    // NOI18N
+    static public final String INSTANCEENABLED = "InstanceEnabled";    // NOI18N
+    static public final String INSTANCEDISABLETIMEOUTINMINUTES = "InstanceDisableTimeoutInMinutes";    // NOI18N
+    static public final String INSTANCELISTENERS = "InstanceListeners";    // NOI18N
+    static public final String INSTANCEWEIGHT = "InstanceWeight";    // NOI18N
+    static public final String WEB_MODULE = "WebModule";    // NOI18N
+    static public final String HEALTH_CHECKER = "HealthChecker";    // NOI18N
+    static public final String HEALTHCHECKERURL = "HealthCheckerUrl";    // NOI18N
+    static public final String HEALTHCHECKERINTERVALINSECONDS = "HealthCheckerIntervalInSeconds";    // NOI18N
+    static public final String HEALTHCHECKERTIMEOUTINSECONDS = "HealthCheckerTimeoutInSeconds";    // NOI18N
 
     public Cluster() {
         this(Common.USE_DEFAULT_VALUES);
@@ -414,7 +414,7 @@ public class Cluster extends org.netbeans.modules.schema2beans.BaseBean {
         boolean restrictionFailure = false;
         // Validating property name
         if (getName() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getName() == null", "name", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getName() == null", "name", this);    // NOI18N
         }
         // Validating property instance
         for (int _index = 0; _index < sizeInstance(); ++_index) {
@@ -434,15 +434,15 @@ public class Cluster extends org.netbeans.modules.schema2beans.BaseBean {
         // Validating property healthChecker
         // Validating property healthCheckerUrl
         if (getHealthCheckerUrl() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getHealthCheckerUrl() == null", "healthCheckerUrl", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getHealthCheckerUrl() == null", "healthCheckerUrl", this);    // NOI18N
         }
         // Validating property healthCheckerIntervalInSeconds
         if (getHealthCheckerIntervalInSeconds() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getHealthCheckerIntervalInSeconds() == null", "healthCheckerIntervalInSeconds", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getHealthCheckerIntervalInSeconds() == null", "healthCheckerIntervalInSeconds", this);    // NOI18N
         }
         // Validating property healthCheckerTimeoutInSeconds
         if (getHealthCheckerTimeoutInSeconds() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getHealthCheckerTimeoutInSeconds() == null", "healthCheckerTimeoutInSeconds", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getHealthCheckerTimeoutInSeconds() == null", "healthCheckerTimeoutInSeconds", this);    // NOI18N
         }
     }
 
@@ -453,32 +453,32 @@ public class Cluster extends org.netbeans.modules.schema2beans.BaseBean {
         Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
-        str.append("Instance[" + this.sizeInstance() + "]");	// NOI18N
+        str.append("Instance[" + this.sizeInstance() + "]");    // NOI18N
         for (int i = 0; i < this.sizeInstance(); i++) {
             str.append(indent + "\t");
             str.append("#" + i + ":");
-            str.append(indent + "\t");	// NOI18N
+            str.append(indent + "\t");    // NOI18N
             str.append((this.isInstance(i) ? "true" : "false"));
             this.dumpAttributes(INSTANCE, i, str, indent);
         }
 
         str.append(indent);
-        str.append("WebModule[" + this.sizeWebModule() + "]");	// NOI18N
+        str.append("WebModule[" + this.sizeWebModule() + "]");    // NOI18N
         for (int i = 0; i < this.sizeWebModule(); i++) {
             str.append(indent + "\t");
             str.append("#" + i + ":");
             n = (org.netbeans.modules.schema2beans.BaseBean) this.getWebModule(i);
             if (n != null) {
-                n.dump(str, indent + "\t");	// NOI18N
+                n.dump(str, indent + "\t");    // NOI18N
             } else {
-                str.append(indent + "\tnull");	// NOI18N
+                str.append(indent + "\tnull");    // NOI18N
             }
             this.dumpAttributes(WEB_MODULE, i, str, indent);
         }
 
         str.append(indent);
-        str.append("HealthChecker");	// NOI18N
-        str.append(indent + "\t");	// NOI18N
+        str.append("HealthChecker");    // NOI18N
+        str.append(indent + "\t");    // NOI18N
         str.append((this.isHealthChecker() ? "true" : "false"));
         this.dumpAttributes(HEALTH_CHECKER, 0, str, indent);
 
@@ -487,8 +487,8 @@ public class Cluster extends org.netbeans.modules.schema2beans.BaseBean {
     @Override
     public String dumpBeanNode() {
         StringBuffer str = new StringBuffer();
-        str.append("Cluster\n");	// NOI18N
-        this.dump(str, "\n  ");	// NOI18N
+        str.append("Cluster\n");    // NOI18N
+        this.dump(str, "\n  ");    // NOI18N
         return str.toString();
     }
 }

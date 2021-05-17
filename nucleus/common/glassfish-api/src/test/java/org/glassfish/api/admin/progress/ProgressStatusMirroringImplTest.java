@@ -28,9 +28,9 @@ import org.junit.BeforeClass;
  * @author mmares
  */
 public class ProgressStatusMirroringImplTest {
-    
+
     private DummyParent parent;
-    
+
     public ProgressStatusMirroringImplTest() {
     }
 
@@ -41,12 +41,12 @@ public class ProgressStatusMirroringImplTest {
 //    @AfterClass
 //    public static void tearDownClass() throws Exception {
 //    }
-    
+
     @Before
     public void setUp() {
         parent = new DummyParent();
     }
-    
+
     @Test
     public void testTotalStepCount() {
         ProgressStatusMirroringImpl prog = new ProgressStatusMirroringImpl("first", parent, null);
@@ -73,7 +73,7 @@ public class ProgressStatusMirroringImplTest {
         ch2 = prog.createChild("A2", 0);
         assertEquals(-1, prog.getTotalStepCount());
     }
-    
+
     @Test
     public void testProgress() {
         ProgressStatusMirroringImpl prog = new ProgressStatusMirroringImpl("first", parent, null);
@@ -90,7 +90,7 @@ public class ProgressStatusMirroringImplTest {
         ch2.progress(2, "Some message");
         assertEquals(3, prog.currentStepCount);
     }
-    
+
     @Test
     public void testComplete() {
         ProgressStatusMirroringImpl prog = new ProgressStatusMirroringImpl("first", parent, null);
@@ -113,5 +113,5 @@ public class ProgressStatusMirroringImplTest {
         assertTrue(prog.isComplete());
     }
 
-    
+
 }

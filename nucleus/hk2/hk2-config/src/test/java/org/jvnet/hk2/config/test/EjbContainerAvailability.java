@@ -29,7 +29,7 @@ import java.beans.PropertyVetoException;
 
 @Configured
 public interface EjbContainerAvailability extends ConfigBeanProxy {
-    
+
     /**
      * Gets the value of the availabilityEnabled property.
      *

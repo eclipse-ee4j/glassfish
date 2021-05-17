@@ -45,7 +45,7 @@ public class ServletMain {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
-    
+
     @Test
     public void test() throws Exception {
 

@@ -33,7 +33,7 @@ import org.jvnet.hk2.config.generator.ConfigInjectorGenerator;
 
 /**
  * @author jwells
- * 
+ *
  * Abstract Mojo for config generator
  */
 public abstract class AbstractConfigGeneratorMojo extends AbstractMojo {
@@ -48,39 +48,39 @@ public abstract class AbstractConfigGeneratorMojo extends AbstractMojo {
      * @parameter expression="${project}" @required @readonly
      */
     protected MavenProject project;
-    
+
     /**
      * @parameter
      */
     private boolean verbose;
-    
+
     /**
      * @parameter expression="${supportedProjectTypes}" default-value="jar"
      */
     private String supportedProjectTypes;
-    
+
     /**
      * @parameter expression="${includes}" default-value="**\/*.java"
      */
     private String includes;
-    
+
     /**
      * @parameter expression="${excludes}" default-value=""
      */
     private String excludes;
-    
+
     protected abstract File getSourceDirectory();
     protected abstract File getGeneratedDirectory();
     protected abstract File getOutputDirectory();
     protected abstract void addCompileSourceRoot(String path);
-    
+
     /* (non-Javadoc)
      * @see org.apache.maven.plugin.Mojo#execute()
      */
     private void internalExecute() throws Throwable {
         List<String> projectTypes = Arrays.asList(supportedProjectTypes.split(","));
         if(!projectTypes.contains(project.getPackaging())
-                || !getSourceDirectory().exists() 
+                || !getSourceDirectory().exists()
                 || !getSourceDirectory().isDirectory()){
             return;
         }
@@ -110,12 +110,12 @@ public abstract class AbstractConfigGeneratorMojo extends AbstractMojo {
         options.add(getBuildClasspath());
         List<String> classNames = new ArrayList<String>();
         classNames.addAll(FileUtils.getFileNames(getSourceDirectory(), includes, excludes,true));
-        
+
         if(classNames.isEmpty()){
             getLog().info("No source file");
             return;
         }
-        
+
         if(verbose){
             getLog().info("");
             getLog().info("-- AnnotationProcessing Command Line --");
@@ -158,36 +158,36 @@ public abstract class AbstractConfigGeneratorMojo extends AbstractMojo {
             if (th instanceof MojoFailureException) {
                 throw (MojoFailureException) th;
             }
-            
+
             Throwable cause = th;
             int lcv = 0;
             while (cause != null) {
                 getLog().error("Exception from hk2-config-generator[" + lcv++ + "]=" + cause.getMessage());
                 cause.printStackTrace();
-                
+
                 cause = cause.getCause();
             }
-            
+
             throw new MojoExecutionException(th.getMessage(), th);
         }
     }
-    
+
     private String getBuildClasspath() {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append(project.getBuild().getOutputDirectory());
         sb.append(File.pathSeparator);
-        
+
         if (!getOutputDirectory().getAbsolutePath().equals(
                 project.getBuild().getOutputDirectory())) {
-            
+
             sb.append(getOutputDirectory().getAbsolutePath());
             sb.append(File.pathSeparator);
         }
-        
+
         List<Artifact> artList = new ArrayList<Artifact>(project.getArtifacts());
         Iterator<Artifact> i = artList.iterator();
-        
+
         if (i.hasNext()) {
             sb.append(i.next().getFile().getPath());
 
@@ -196,7 +196,7 @@ public abstract class AbstractConfigGeneratorMojo extends AbstractMojo {
                 sb.append(i.next().getFile().getPath());
             }
         }
-        
+
         String classpath = sb.toString();
         if(verbose){
             getLog().info("");

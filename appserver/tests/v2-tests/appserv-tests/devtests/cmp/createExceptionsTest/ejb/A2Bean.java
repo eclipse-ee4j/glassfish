@@ -20,64 +20,64 @@ import jakarta.ejb.*;
 import javax.naming.*;
 
 /**
- * 2.0 bean. 
+ * 2.0 bean.
  * @author mvatkina
  */
 
 
 public abstract class A2Bean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: A2Bean ejbRemove");
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
@@ -87,21 +87,21 @@ public abstract class A2Bean implements jakarta.ejb.EntityBean {
     public abstract java.lang.String getName() ;
     public abstract void setName(java.lang.String s) ;
 
-    /** This ejbCreate/ejbPostCreate combination tests CreateException 
-     * thrown from ejbPostCreate. 
+    /** This ejbCreate/ejbPostCreate combination tests CreateException
+     * thrown from ejbPostCreate.
      */
     public java.lang.String ejbCreate(java.lang.String name) throws jakarta.ejb.CreateException {
 
         setName(name);
         return null;
     }
-    
-    public void ejbPostCreate(java.lang.String name) throws jakarta.ejb.CreateException { 
+
+    public void ejbPostCreate(java.lang.String name) throws jakarta.ejb.CreateException {
         throw new jakarta.ejb.CreateException("A2Bean.ejbPostCreate");
     }
 
-    /** This ejbCreate/ejbPostCreate combination tests CreateException 
-     * thrown from ejbCreate. 
+    /** This ejbCreate/ejbPostCreate combination tests CreateException
+     * thrown from ejbCreate.
      */
     public java.lang.String ejbCreate() throws jakarta.ejb.CreateException {
        throw new jakarta.ejb.CreateException("A2Bean.ejbCreate");
@@ -109,7 +109,7 @@ public abstract class A2Bean implements jakarta.ejb.EntityBean {
 
     public void ejbPostCreate() throws jakarta.ejb.CreateException {
     }
-    
+
     /** This ejbCreate/ejbPostCreate combination tests that bean state is
      * reset prior to call to ejbCreate.
      */

@@ -32,23 +32,23 @@ public class FileClassLoader extends ClassLoader {
 
     public FileClassLoader(String codebase)
     {
-	this.codebase = codebase;
+    this.codebase = codebase;
     }
 
     private byte[] loadClassData(String name)
-	throws IOException
+    throws IOException
     {
         // load the class data from the codebase
-	String sep = System.getProperty("file.separator");
-	String c = name.replace('.', sep.charAt(0)) + ".class";
-	File file = new File(codebase + sep + c);
-	if (!file.exists()) {
-	    File wf = new File(codebase + sep + "WEB-INF" + sep + "classes" + sep + c);
-	    if (wf.exists()) {
-		file = wf;
-	    }
-	}
-	FileInputStream fis = null;
+    String sep = System.getProperty("file.separator");
+    String c = name.replace('.', sep.charAt(0)) + ".class";
+    File file = new File(codebase + sep + c);
+    if (!file.exists()) {
+        File wf = new File(codebase + sep + "WEB-INF" + sep + "classes" + sep + c);
+        if (wf.exists()) {
+        file = wf;
+        }
+    }
+    FileInputStream fis = null;
         byte[] buf = null;
         try {
           fis = new FileInputStream(file);
@@ -59,11 +59,11 @@ public class FileClassLoader extends ClassLoader {
           if (fis != null)
             fis.close();
         }
-	return buf;
+    return buf;
     }
-    
+
     String getClassName(File f) throws IOException, ClassFormatError {
-	FileInputStream fis = null;
+    FileInputStream fis = null;
         byte[] buf = null;
         int avail = 0;
         try {
@@ -75,30 +75,30 @@ public class FileClassLoader extends ClassLoader {
           if (fis != null)
             fis.close();
         }
-	Class c = super.defineClass(null, buf, 0, avail);
-	return c.getName();
+    Class c = super.defineClass(null, buf, 0, avail);
+    return c.getName();
     }
 
     /**
      * @exception ClassNotFoundException if class load fails
      */
-    public synchronized Class loadClass(String name, boolean resolve) 
-	throws ClassNotFoundException
+    public synchronized Class loadClass(String name, boolean resolve)
+    throws ClassNotFoundException
     {
         Class c = (Class)cache.get(name);
         if (c == null) {
-	    try { 
+        try {
                 byte data[] = loadClassData(name);
                 c = defineClass(null,data, 0, data.length);
                 if( !name.equals(c.getName()) ) {
                     throw new ClassNotFoundException(localStrings.getLocalString("classloader.wrongpackage", "", new Object[] { name, c.getName() }));
                 }
-	    }
-	    catch ( Exception ex ) {
-		// Try to use default classloader. If this fails, 
-		// then a ClassNotFoundException is thrown.
-		c = Class.forName(name);
-	    }
+        }
+        catch ( Exception ex ) {
+        // Try to use default classloader. If this fails,
+        // then a ClassNotFoundException is thrown.
+        c = Class.forName(name);
+        }
             cache.put(name, c);
         }
         if (resolve)
@@ -108,6 +108,6 @@ public class FileClassLoader extends ClassLoader {
 
     public String toString()
     {
-	return "FileClassLoader: Codebase = "+codebase+"\n";
+    return "FileClassLoader: Codebase = "+codebase+"\n";
     }
 }

@@ -42,7 +42,7 @@
       <resource-ref>
         <res-ref-name>DataSource</res-ref-name>
         <res-type>javax.sql.ConnectionPoolDataSource</res-type>
-        <res-auth>Container</res-auth> 
+        <res-auth>Container</res-auth>
         <!-- <res-auth>Application</res-auth> -->
         <res-sharing-scope>Shareable</res-sharing-scope>
       </resource-ref>
@@ -58,6 +58,6 @@
       <trans-attribute>Required</trans-attribute>
     </container-transaction>
   </assembly-descriptor>
-      
+
 </ejb-jar>
 

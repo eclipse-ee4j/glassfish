@@ -28,7 +28,7 @@ import java.util.List;
 
 /**
  * This class is used to handle the hidden definition
- * of an identifier. If an identifier is declared its old 
+ * of an identifier. If an identifier is declared its old
  * definition is hidden and stored in the actual nesting.
  *
  * @author  Michael Bouschen
@@ -40,7 +40,7 @@ public class Nesting
      * List of idents with hidden definitions in the actual scope.
      */
     protected List idents;
-    
+
     /**
      * List of hidden definitions; each definition in this list
      * corresponds to an identifier of the list idents.

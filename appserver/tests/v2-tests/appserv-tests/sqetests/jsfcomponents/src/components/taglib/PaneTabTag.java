@@ -55,11 +55,11 @@ public class PaneTabTag extends UIComponentTag {
 
     protected String paneClass;
     public String getPaneClass() {
-	return paneClass;
+    return paneClass;
     }
 
     public void setPaneClass(String newPaneClass) {
-	paneClass = newPaneClass;
+    paneClass = newPaneClass;
     }
 
 

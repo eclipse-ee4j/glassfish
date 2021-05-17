@@ -69,7 +69,7 @@ public class WebTest {
                 line = input.readLine();
                 System.out.println("line = " + line);
             }
-            
+
             if (EXPECTED_RESPONSE.equals(line)) {
                 stat.addStatus(TEST_NAME, stat.PASS);
             } else {

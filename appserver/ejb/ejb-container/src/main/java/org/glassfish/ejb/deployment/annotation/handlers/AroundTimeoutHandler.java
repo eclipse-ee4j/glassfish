@@ -35,7 +35,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(AroundTimeout.class)
 public class AroundTimeoutHandler extends AroundInvokeHandler {
-    
+
     public AroundTimeoutHandler() {
     }
 
@@ -43,8 +43,8 @@ public class AroundTimeoutHandler extends AroundInvokeHandler {
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         for(EjbContext next : ejbContexts) {
-            
-            EjbDescriptor ejbDescriptor = 
+
+            EjbDescriptor ejbDescriptor =
                 (EjbDescriptor) next.getDescriptor();
 
             ejbDescriptor.addAroundTimeoutDescriptor(
@@ -62,7 +62,7 @@ public class AroundTimeoutHandler extends AroundInvokeHandler {
 
         ejbInterceptor.addAroundTimeoutDescriptor(
             getAroundInvocationDescriptor(ainfo));
-            
+
         return getDefaultProcessedResult();
     }
 

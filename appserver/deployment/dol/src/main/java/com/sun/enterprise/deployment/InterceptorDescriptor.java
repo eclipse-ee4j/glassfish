@@ -35,7 +35,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor
 {
     private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(InterceptorDescriptor.class);
+        new LocalStringManagerImpl(InterceptorDescriptor.class);
 
     private static final Logger _logger = DOLUtils.getDefaultLogger();
 

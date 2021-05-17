@@ -22,7 +22,7 @@ import java.io.*;
 // to generated jdo fields and methods
 
 /**
- * SyntheticAttribute represents a constant value attribute 
+ * SyntheticAttribute represents a constant value attribute
  * in a class file.  These attributes are used as initialization
  * values for static fields.
  */
@@ -31,7 +31,7 @@ public class SyntheticAttribute extends ClassAttribute {
   /* The expected name of this attribute */
   public static final String expectedAttrName = "Synthetic";//NOI18N
 
-  /** 
+  /**
    * Construct a constant value attribute
    */
   public SyntheticAttribute(ConstUtf8 attrName) {

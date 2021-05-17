@@ -23,7 +23,7 @@ import java.net.*;
 /**
  * Simple Java Bean used to set/get name and greeting messages from a jsp
  * @author  Chand Basha
- * @version	1.0
+ * @version    1.0
  */
 public class JavaUseBean {
 
@@ -40,7 +40,7 @@ public class JavaUseBean {
         this.name = name;
     }
 
-	/** Gets the name that was set using setName(String name) method of this class
+    /** Gets the name that was set using setName(String name) method of this class
      */
     public String getName() {
         return name;

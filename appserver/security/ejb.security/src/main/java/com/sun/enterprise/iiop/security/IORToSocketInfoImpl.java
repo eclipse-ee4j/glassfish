@@ -40,7 +40,7 @@ import org.glassfish.internal.api.Globals;
 
 /**
  * This implements IORToSocketInfo for ORB. Part of logic is from previous version of IIOPSSLSocketFactory.
- * 
+ *
  * @author Shing Wai Chan
  */
 public class IORToSocketInfoImpl implements IORToSocketInfo {

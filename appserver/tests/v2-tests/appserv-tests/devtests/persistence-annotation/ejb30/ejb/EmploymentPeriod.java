@@ -36,12 +36,12 @@ import static jakarta.persistence.AccessType.*;
  */
 @Embeddable
 public class EmploymentPeriod implements Serializable {
-	private Date start; 
-	private Date end; 
-	@Basic
-	public Date getStartDate() { return start; } 
-	public void setStartDate(Date start) { this.start = start; } 
-	@Basic
-	public Date getEndDate() { return end; } 
-	public void setEndDate(Date end) { this.end = end; } 
+    private Date start;
+    private Date end;
+    @Basic
+    public Date getStartDate() { return start; }
+    public void setStartDate(Date start) { this.start = start; }
+    @Basic
+    public Date getEndDate() { return end; }
+    public void setEndDate(Date end) { this.end = end; }
 }

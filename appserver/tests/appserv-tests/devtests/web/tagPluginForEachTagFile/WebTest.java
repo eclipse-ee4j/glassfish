@@ -21,7 +21,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for Bugzilla 28361 ("foreach no longer works in tag file") 
+ * Unit test for Bugzilla 28361 ("foreach no longer works in tag file")
  */
 public class WebTest {
 
@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugzilla 28361");
         WebTest webTest = new WebTest(args);
@@ -62,7 +62,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                 ", received: " + responseCode);
         }
@@ -83,7 +83,7 @@ public class WebTest {
                 if (br != null) br.close();
             } catch (IOException ex) {}
         }
-                
+
         if (!found) {
             throw new Exception("Invalid response. Response did not " +
                 "contain expected: " + EXPECTED);

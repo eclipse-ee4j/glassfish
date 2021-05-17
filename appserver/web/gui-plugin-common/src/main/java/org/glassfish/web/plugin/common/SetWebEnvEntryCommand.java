@@ -38,7 +38,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Sets the value of an env-entry customization for a web application.
- * 
+ *
  * @author tjquinn
  */
 @Service(name="set-web-env-entry")
@@ -46,8 +46,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="set-web-env-entry", 
+        opType=RestEndpoint.OpType.POST,
+        path="set-web-env-entry",
         description="set-web-env-entry",
         params={
             @RestParam(name="id", value="$parent")
@@ -126,7 +126,7 @@ public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
         }
         return result;
     }
-    
+
     private void createEnvEntryOnNewWMC(final Engine owningEngine,
             final String name,
             final String value,
@@ -218,7 +218,7 @@ public class SetWebEnvEntryCommand extends WebEnvEntryCommand {
         if (value != null) {
             envEntry.setEnvEntryValue(value);
         }
-        
+
         if (envEntryType != null) {
             envEntry.setEnvEntryType(envEntryType);
         }

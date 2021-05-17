@@ -377,7 +377,7 @@ public class MapperListener implements NotificationListener, NotificationFilter{
         javax.naming.Context resources = context.findStaticResources();
         String[] welcomeFiles = context.getWelcomeFiles();
 
-        mapper.addContext(hostName, contextName, context, 
+        mapper.addContext(hostName, contextName, context,
                           welcomeFiles, ContextsAdapterUtility.wrap(resources),
                           context.getAlternateDocBases());
     }
@@ -484,7 +484,7 @@ public class MapperListener implements NotificationListener, NotificationFilter{
     private void unregisterOSGiWrapper(ObjectName objectName)
         throws Exception {
 
-        // If the domain is the same with ours or the engine 
+        // If the domain is the same with ours or the engine
         // name attribute is the same... - then it's ours
         String targetDomain=objectName.getDomain();
         if( ! domain.equals( targetDomain )) {

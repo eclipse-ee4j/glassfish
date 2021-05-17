@@ -84,8 +84,8 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
             jtaDataSource = jtaDataSourceName == null ? null : providerContainerContractInfo.lookupDataSource(jtaDataSourceName);
             nonJtaDataSource = nonJtaDataSourceName == null ? null : providerContainerContractInfo.lookupNonTxDataSource(nonJtaDataSourceName);
         } catch (NamingException e) {
-			throw new RuntimeException(e);
-		}
+            throw new RuntimeException(e);
+        }
     }
 
     // Implementation of PersistenceUnitInfo interface
@@ -301,7 +301,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
      * @return the absolute path of the root of this persistence unit
      */
     private String getAbsolutePuRootWithinApplication() {
-        // TODO shift this into PersistenceUnitDescriptor to better encapsulate 
+        // TODO shift this into PersistenceUnitDescriptor to better encapsulate
         RootDeploymentDescriptor rootDD = persistenceUnitDescriptor.getParent().
                 getParent();
         String puRoot = persistenceUnitDescriptor.getPuRoot();
@@ -314,7 +314,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
                 return puRoot;
             } else {
                 // The module is embedded in an ear (an ejb jar or war)
-                final String moduleLocation =        // Would point to the directory where module is expanded. For example myejb_jar 
+                final String moduleLocation =        // Would point to the directory where module is expanded. For example myejb_jar
                         DeploymentUtils.getRelativeEmbeddedModulePath(
                         providerContainerContractInfo.getApplicationLocation(), module.getArchiveUri());
                 return moduleLocation + '/' + puRoot; // see we always '/'

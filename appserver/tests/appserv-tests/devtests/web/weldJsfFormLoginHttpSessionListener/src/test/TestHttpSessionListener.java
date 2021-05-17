@@ -28,10 +28,10 @@ public class TestHttpSessionListener implements HttpSessionListener {
         String value = myBean.getText();
         if (!"CDI_VALUE".equals(value)) {
             throw new RuntimeException();
-        }   
+        }
         se.getSession().setAttribute("myAttr", value);
         System.out.println(">>> sessionCreated: " + value);
-    }   
+    }
 
     public void sessionDestroyed(HttpSessionEvent se) {
         System.out.println(">>> sessionDestroyed");

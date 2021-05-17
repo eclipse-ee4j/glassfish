@@ -32,8 +32,8 @@ import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.internal.api.Globals;
 
 /**
- * Glassfish role mapper 
- * 
+ * Glassfish role mapper
+ *
  * <p>
  * NB: mapper only supports disjunctive (as apposed to conjunctive principal 2 role mappings. IOW,
  * there is no way to require 2 or more principals to be in a Role.
@@ -69,7 +69,7 @@ public class GlassfishRoleMapper implements JACCRoleMapper {
             logger.log(Level.SEVERE, msg);
             throw new SecurityException(msg);
         }
-        
+
         return securityRoleMapper;
     }
 
@@ -124,7 +124,7 @@ public class GlassfishRoleMapper implements JACCRoleMapper {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -189,7 +189,7 @@ public class GlassfishRoleMapper implements JACCRoleMapper {
                 list[i] = (Principal) obj;
             }
         }
-        
+
         return list;
     }
 
@@ -198,7 +198,7 @@ public class GlassfishRoleMapper implements JACCRoleMapper {
         if (principals.length == 0 || roles == null || roles.length == 0) {
             return null;
         }
-        
+
         BitSet roleSet = new BitSet(roles.length);
         SecurityRoleMapper srm = getInternalMapper(contextId);
         for (int i = 0; i < roles.length; i++) {

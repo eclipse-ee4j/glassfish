@@ -52,28 +52,28 @@ public class ServiceInitializerListener extends org.glassfish.grizzly.config.Gen
     public NetworkListener getNetworkListener() {
         return networkListener;
     }
-    
+
     @Override
     protected void configureTransport(final NetworkListener networkListener,
                                       final Transport transportConfig,
                                       final FilterChainBuilder filterChainBuilder) {
-        
+
         transport = configureDefaultThreadPoolConfigs(
                 TCPNIOTransportBuilder.newInstance().build());
 
         final int acceptorThreads = transportConfig != null
                 ? Integer.parseInt(transportConfig.getAcceptorThreads())
                 : Transport.ACCEPTOR_THREADS;
-        
+
         transport.setSelectorRunnersCount(acceptorThreads);
         transport.getKernelThreadPoolConfig().setPoolName(networkListener.getName() + "-kernel");
-        
+
         if (acceptorThreads > 0) {
             transport.getKernelThreadPoolConfig()
                     .setCorePoolSize(acceptorThreads)
                     .setMaxPoolSize(acceptorThreads);
         }
-        
+
         rootFilterChain = FilterChainBuilder.stateless().build();
 
         transport.setProcessor(rootFilterChain);
@@ -93,7 +93,7 @@ public class ServiceInitializerListener extends org.glassfish.grizzly.config.Gen
     protected void configureThreadPool(final ServiceLocator habitat,
             final NetworkListener networkListener,
             final ThreadPool threadPool) {
-        
+
         // we don't need worker thread pool
         transport.setWorkerThreadPoolConfig(null);
     }

@@ -55,13 +55,13 @@
         <param name="sql.file" value="sql/create.sql"/>
       </antcall>
     </target>
-                                                                                
+
     <target name="unsetup_sql" depends="init">
       <antcall target="execute-ejb-sql-common">
         <param name="sql.file" value="sql/drop.sql"/>
       </antcall>
     </target>
-                                                                                
+
     <target name="compile" depends="prepare">
         <javac srcdir="ejb" destdir="${ejb.build.dir}">
          <classpath refid="gfv3.classpath"/>
@@ -110,11 +110,11 @@
                    failonerror="false"/>
              <copy file="client/MANIFEST.MF"
                    todir="${client.build.dir}/META-INF"/>
-                                                                                
+
              <copy file="descriptor/application.xml"
-			   todir="${ear.build.dir}/META-INF"/>
-    </target> 
-    
+               todir="${ear.build.dir}/META-INF"/>
+    </target>
+
    <target name="deploydir.asadmin" depends="prepare">
         <antcall target="common.deploydir.asadmin">
             <param name="arg.list"
@@ -129,7 +129,7 @@
         </antcall>
     </target>
 
-                                                                                
+
     <target name="undeploy.asadmin">
         <antcall target="common.undeploy.asadmin">
             <param name="arg.list"
@@ -144,9 +144,9 @@
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
-        </antcall>    
+        </antcall>
     </target>
- 
+
     <target name="private-all">
         <!--
         <antcall target="startDerby"/>

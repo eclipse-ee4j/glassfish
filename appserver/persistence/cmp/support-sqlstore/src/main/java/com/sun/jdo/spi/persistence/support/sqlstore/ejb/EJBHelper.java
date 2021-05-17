@@ -55,8 +55,8 @@ public class EJBHelper {
     * Should be called by a static method at class initialization time.
     * If null is passed, sets the reference to the DefaultTransactionHelper.
     *
-    * @param 	h 	application server specific implemetation of the TransactionHelper
-    * 			interface.
+    * @param     h     application server specific implemetation of the TransactionHelper
+    *             interface.
     */
     public static void registerTransactionHelper (TransactionHelper h) {
         myHelper = h;
@@ -99,8 +99,8 @@ public class EJBHelper {
     * returns the value passed to it as an argument.
     *
     * @see TransactionHelper#translateStatus(int st)
-    * @param 	st 	Status value
-    * @return 	the jakarta.transaction.Status value of the status
+    * @param     st     Status value
+    * @return     the jakarta.transaction.Status value of the status
     */
     public static int translateStatus(int st) {
         return myHelper.translateStatus(st);
@@ -112,9 +112,9 @@ public class EJBHelper {
     * passed to it as an argument.
     *
     * @see TransactionHelper#replaceInternalPersistenceManagerFactory(
-    * 	PersistenceManagerFactory pmf)
-    * @param 	pmf 	PersistenceManagerFactory instance to be replaced
-    * @return 	the PersistenceManagerFactory known to the runtime
+    *     PersistenceManagerFactory pmf)
+    * @param     pmf     PersistenceManagerFactory instance to be replaced
+    * @return     the PersistenceManagerFactory known to the runtime
     */
     public static PersistenceManagerFactory replaceInternalPersistenceManagerFactory(
                 PersistenceManagerFactory pmf) {
@@ -126,7 +126,7 @@ public class EJBHelper {
     * or if the postInvoke method does not use the value, this method returns null.
     *
     * @see TransactionHelper#preInvoke(Object component)
-    * @param 	component 	an array of Objects
+    * @param     component     an array of Objects
     * @return implementation-specific Object
     */
     public static Object preInvoke(Object component) {
@@ -149,20 +149,20 @@ public class EJBHelper {
     * all user defined Synchronization instances.
     *
     * @see Transaction#registerSynchronization(Synchronization sync)
-    * @see TransactionHelper#registerSynchronization(Transaction jta, 
+    * @see TransactionHelper#registerSynchronization(Transaction jta,
     * Synchronization sync)
     * @param jta the Transaction instance for the calling thread.
     * @param sync the internal Synchronization instance to register.
     * @throws jakarta.transaction.RollbackException.
     * @throws jakarta.transaction.SystemException.
     */
-    public static void registerSynchronization(Transaction jta, 
+    public static void registerSynchronization(Transaction jta,
         Synchronization sync) throws RollbackException, SystemException {
         myHelper.registerSynchronization(jta, sync);
     }
 
     /** Called in a managed environment to get a Connection from the application
-     * server specific resource. In a non-managed environment throws an Exception 
+     * server specific resource. In a non-managed environment throws an Exception
      * as it should not be called.
      *
      * @param resource the application server specific resource.
@@ -172,13 +172,13 @@ public class EJBHelper {
      * @return a Connection.
      * @throws java.sql.SQLException.
      */
-    public static java.sql.Connection getConnection(Object resource, 
+    public static java.sql.Connection getConnection(Object resource,
         String username, char[] password) throws java.sql.SQLException {
         return myHelper.getConnection(resource, username, password);
     }
 
     /** Called in a managed environment to get a non-transactional Connection
-     * from the application server specific resource. In a non-managed 
+     * from the application server specific resource. In a non-managed
      * environment throws an Exception as it should not be called.
      *
      * @param resource the application server specific resource.
@@ -192,7 +192,7 @@ public class EJBHelper {
         Object resource, String username, char[] password)
         throws java.sql.SQLException {
 
-        return myHelper.getNonTransactionalConnection(resource, 
+        return myHelper.getNonTransactionalConnection(resource,
             username, password);
     }
 
@@ -200,7 +200,7 @@ public class EJBHelper {
     /** Called in a managed environment to access a TransactionManager
      * for managing local transaction boundaries and synchronization
      * for local transaction completion.
-     * 
+     *
      * @return jakarta.transaction.TransactionManager
      */
     public static TransactionManager getLocalTransactionManager() {
@@ -214,12 +214,12 @@ public class EJBHelper {
     public static java.sql.Statement unwrapStatement(java.sql.Statement stmt) {
         return myHelper.unwrapStatement(stmt);
     }
-    
+
     /**
      * Set environment specific default values for the given PersistenceManagerFactory.
-     *   
+     *
      * @param pmf the PersistenceManagerFactory.
-     */  
+     */
     public static void setPersistenceManagerFactoryDefaults(PersistenceManagerFactory pmf) {
         myHelper.setPersistenceManagerFactoryDefaults(pmf);
     }
@@ -227,25 +227,25 @@ public class EJBHelper {
     /**
      * Returns name prefix for DDL files extracted from the info instance by the
      * application server specific code.
-     *   
+     *
      * @param info the instance to use for the name generation.
      * @return name prefix as String.
-     */  
+     */
     public static String getDDLNamePrefix(Object info) {
         return myHelper.getDDLNamePrefix(info);
     }
-      
+
     /**
      * Called to register a ApplicationLifeCycleEventListener. If
      * ApplicationLifeCycle management is active (typically in managed
      * environment), the registered listener will receive a call back
      * for lifecycle events.
      *
-     * @param listener An instance of ApplicationLifeCycleEventListener. 
-     */  
+     * @param listener An instance of ApplicationLifeCycleEventListener.
+     */
     public static void registerApplicationLifeCycleEventListener(
             ApplicationLifeCycleEventListener listener) {
-        myHelper.registerApplicationLifeCycleEventListener(listener);        
+        myHelper.registerApplicationLifeCycleEventListener(listener);
     }
     /**
      * Called to notify a ApplicationLifeCycleEventListeners that an application
@@ -253,9 +253,9 @@ public class EJBHelper {
      * environment), the registered listener will handle the notification.
      *
      * @param cl An instance of the ClassLoader that loaded the application.
-     */  
+     */
     public static void notifyApplicationUnloaded(ClassLoader cl) {
-        myHelper.notifyApplicationUnloaded(cl);        
+        myHelper.notifyApplicationUnloaded(cl);
     }
 
       /**
@@ -265,7 +265,7 @@ public class EJBHelper {
      * registers itself with the EJBHelper to override this behavior.
      */
     private static class DefaultTransactionHelper implements TransactionHelper {
-        
+
        private static final DefaultTransactionHelper instance = new DefaultTransactionHelper();
 
        /**
@@ -273,7 +273,7 @@ public class EJBHelper {
         */
        public static DefaultTransactionHelper getInstance() {return instance;}
 
-       /** 
+       /**
         * In a non-managed environment there is no transaction associated with
         * the current thread, this method returns null.
         *
@@ -281,8 +281,8 @@ public class EJBHelper {
         * @return null;
         */
         public Transaction getTransaction() { return null; }
-    
-       /** 
+
+       /**
         * In a non-managed environment there is no transaction currently in progress,
         * this method returns null.
         *
@@ -290,45 +290,45 @@ public class EJBHelper {
         * @return the null.
         */
         public UserTransaction getUserTransaction() { return null; }
-    
+
         /** Identifies the non-managed environment behavior.
          * @return false.
          */
         public boolean isManaged() { return false; }
-    
-       /** 
+
+       /**
         * In a non-managed environment returns the value passed to it as an argument.
         *
         * @see TransactionHelper#translateStatus(int st)
-        * @param 	local 	Status value
-        * @return 	the status value
+        * @param     local     Status value
+        * @return     the status value
         */
         public int translateStatus(int st) { return st; }
-    
-       /** 
+
+       /**
         * In a non-managed environment returns the value passed to it as an argument.
         *
         * @see TransactionHelper#replaceInternalPersistenceManagerFactory(
-        * 	PersistenceManagerFactory pmf)
-        * @param 	pmf 	PersistenceManagerFactory instance to be replaced
-        * @return 	the pmf value.
+        *     PersistenceManagerFactory pmf)
+        * @param     pmf     PersistenceManagerFactory instance to be replaced
+        * @return     the pmf value.
         */
         public PersistenceManagerFactory replaceInternalPersistenceManagerFactory(
                     PersistenceManagerFactory pmf) { return pmf; }
-    
+
        /** Called at the beginning of the Transaction.beforeCompletion() to register
-        * the component with the app server if necessary. 
+        * the component with the app server if necessary.
         * In a non-managed environment throws JDOFatalInternalException.
         *
         * @see TransactionHelper#preInvoke(Object component)
-        * @param 	component 	an array of Objects
+        * @param     component     an array of Objects
         * @throw JDOFatalInternalException if called.
         */
-        public Object preInvoke(Object component) { 
+        public Object preInvoke(Object component) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "ejb.ejbhelper.nonmanaged", "preInvoke")); //NOI18N
         }
-    
+
        /** Called in a managed environment at the end of the Transaction.beforeCompletion()
         * to de-register the component with the app server if necessary.
         * In a non-managed environment throws JDOFatalInternalException.
@@ -337,28 +337,28 @@ public class EJBHelper {
         * @param im implementation-specific Object
         * @throw JDOFatalInternalException if called.
         */
-        public void postInvoke(Object im) { 
+        public void postInvoke(Object im) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "ejb.ejbhelper.nonmanaged", "postInvoke")); //NOI18N
         }
-    
+
        /** Called in a managed environment to register internal Synchronization object
-        * with the Transaction Synchronization. 
+        * with the Transaction Synchronization.
         * In a non-managed environment it is a no-op.
         *
         * @see Transaction#registerSynchronization(Synchronization sync)
-        * @see TransactionHelper#registerSynchronization(Transaction jta, 
+        * @see TransactionHelper#registerSynchronization(Transaction jta,
         * Synchronization sync)
         * @param jta the Transaction instance for the calling thread.
         * @param sync the internal Synchronization instance to register.
         * @throws jakarta.transaction.RollbackException.
         * @throws jakarta.transaction.SystemException.
         */
-        public void registerSynchronization(Transaction jta, 
+        public void registerSynchronization(Transaction jta,
             Synchronization sync) throws RollbackException, SystemException { }
-    
+
         /** Called in a managed environment to get a Connection from the application
-         * server specific resource. 
+         * server specific resource.
          * In a non-managed environment throws JDOFatalInternalException.
          *
          * @param resource the application server specific resource.
@@ -368,12 +368,12 @@ public class EJBHelper {
          * @throw JDOFatalInternalException if called.
          * @throw java.sql.SQLException.
          */
-        public java.sql.Connection getConnection(Object resource, 
+        public java.sql.Connection getConnection(Object resource,
             String username, char[] password) throws java.sql.SQLException {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "ejb.ejbhelper.nonmanaged", "getConnection")); //NOI18N
         }
-    
+
         /** Called in a managed environment to get a non-transactional Connection
          * from the application server specific resource.
          * In a non-managed environment throws JDOFatalInternalException.
@@ -393,18 +393,18 @@ public class EJBHelper {
                 messages, "ejb.ejbhelper.nonmanaged", //NOI18N
                 "getNonTransactionalConnection")); //NOI18N
         }
-    
+
         /** Called in a managed environment to access a TransactionManager
          * for managing local transaction boundaries and synchronization
          * for local transaction completion.
-         * 
+         *
          * @return jakarta.transaction.TransactionManager
          */
         public TransactionManager getLocalTransactionManager() {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "ejb.ejbhelper.nonmanaged", "getLocalTransactionManager")); //NOI18N
         }
-    
+
         /**
          * This method unwraps given Statement and return the Statement from
          * JDBC driver if possible.
@@ -414,40 +414,40 @@ public class EJBHelper {
             return stmt;
         }
 
-        /** 
-         * Set environment specific default values for the given PersistenceManagerFactory. 
+        /**
+         * Set environment specific default values for the given PersistenceManagerFactory.
          * In a non-managed this is a no-op.
-         *   
-         * @param pmf the PersistenceManagerFactory. 
-         */   
+         *
+         * @param pmf the PersistenceManagerFactory.
+         */
         public void setPersistenceManagerFactoryDefaults(PersistenceManagerFactory pmf) {}
 
-        /** 
-         * Returns name prefix for DDL files extracted from the info instance by the 
-         * application server specific code. 
+        /**
+         * Returns name prefix for DDL files extracted from the info instance by the
+         * application server specific code.
          * In a non-managed environment throws JDOFatalInternalException.
-         *   
-         * @param info the instance to use for the name generation. 
-         * @return name prefix as String. 
-         */   
-        public String getDDLNamePrefix(Object info) { 
+         *
+         * @param info the instance to use for the name generation.
+         * @return name prefix as String.
+         */
+        public String getDDLNamePrefix(Object info) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "ejb.ejbhelper.nonmanaged", "getDDLNamePrefix")); //NOI18N
         }
-          
+
         /**
          * @inheritDoc
-         */ 
+         */
         public void registerApplicationLifeCycleEventListener(
                 ApplicationLifeCycleEventListener listener) {
-            // The default implementation is no-op 
+            // The default implementation is no-op
         }
-          
+
         /**
          * @inheritDoc
-         */ 
+         */
         public void notifyApplicationUnloaded(ClassLoader cl) {
-            // The default implementation is no-op 
+            // The default implementation is no-op
         }
    }
 }

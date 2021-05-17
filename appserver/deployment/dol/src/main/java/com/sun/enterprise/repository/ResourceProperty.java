@@ -19,9 +19,9 @@ package com.sun.enterprise.repository;
 public interface ResourceProperty {
 
     String getName();
-    
+
     Object getValue();
 
     void setValue(Object value);
-    
+
 }

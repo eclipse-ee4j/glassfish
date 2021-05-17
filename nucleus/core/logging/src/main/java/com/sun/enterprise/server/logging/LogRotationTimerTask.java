@@ -35,7 +35,7 @@ public class LogRotationTimerTask extends TimerTask {
     }
 
     public long getRotationTimerValueInMinutes( ) {
-        // We are just converting the value from milliseconds back to 
+        // We are just converting the value from milliseconds back to
         // minutes
         return timerValue/60000;
     }
@@ -43,5 +43,5 @@ public class LogRotationTimerTask extends TimerTask {
     public void run( ) {
         task.run();
     }
-}    
+}
 

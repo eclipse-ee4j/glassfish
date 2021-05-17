@@ -26,7 +26,7 @@ public class Client {
 
     @EJB private static KeepStateIF bean;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         boolean keepState = Boolean.valueOf(args[0]);
         String testName = "ejb31-timer-keepstate-" + keepState;
         stat.addDescription(testName);
@@ -41,7 +41,7 @@ public class Client {
     }
 
     public static void testKeepState(boolean keepState) throws Exception {
-        String result = bean.verifyTimers(keepState);        
+        String result = bean.verifyTimers(keepState);
         System.out.println("testKeepStateTrue result: " + result);
     }
 

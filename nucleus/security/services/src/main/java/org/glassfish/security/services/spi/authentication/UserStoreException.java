@@ -21,7 +21,7 @@ import java.security.GeneralSecurityException;
 public class UserStoreException extends GeneralSecurityException {
 
     private static final long serialVersionUID = 2747414489750791081L;
-    
+
 
     public UserStoreException(String msg) {
         super(msg);

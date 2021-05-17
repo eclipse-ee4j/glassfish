@@ -36,7 +36,7 @@ public class CheckoutFormBean {
   private RetailPriceList rpl;
   private OrderConfirmations ocs;
   private ResourceBundle messages;
-  
+
 
   public boolean validate() {
     boolean allOk=true;
@@ -47,7 +47,7 @@ public class CheckoutFormBean {
     } else {
       errors.put("firstName","");
     }
-    
+
     if (lastName.equals("")) {
       errors.put("lastName",messages.getString("LastNameError"));
       lastName="";
@@ -111,12 +111,12 @@ public class CheckoutFormBean {
     } else {
       try {
         int x = Integer.parseInt(zip);
-      	errors.put("zip","");
+          errors.put("zip","");
       } catch (NumberFormatException e) {
         errors.put("zip",messages.getString("ZipError"));
         zip="";
         allOk=false;
-      }	
+      }
     }
 
     if (CCNumber.equals("")) {
@@ -133,31 +133,31 @@ public class CheckoutFormBean {
 
     if (allOk) {
       String orderId = CCNumber;
-       
-      AddressBean address = 
+
+      AddressBean address =
         new AddressBean(street, city, state, zip);
-      CustomerBean customer = 
-        new CustomerBean(firstName, lastName, 
+      CustomerBean customer =
+        new CustomerBean(firstName, lastName,
           "(" + areaCode+ ") " + phoneNumber, email);
-          
-      for (Iterator d = rpl.getDistributors().iterator(); 
+
+      for (Iterator d = rpl.getDistributors().iterator();
           d.hasNext(); ) {
         String distributor = (String)d.next();
-        System.out.println(distributor);				
+        System.out.println(distributor);
         ArrayList lis = new ArrayList();
         BigDecimal price = new BigDecimal("0.00");
         BigDecimal total = new BigDecimal("0.00");
-        for (Iterator c = cart.getItems().iterator(); 
+        for (Iterator c = cart.getItems().iterator();
             c.hasNext(); ) {
           ShoppingCartItem sci = (ShoppingCartItem) c.next();
           if ((sci.getItem().getDistributor()).
-              equals(distributor) && 
+              equals(distributor) &&
               sci.getPounds().floatValue() > 0) {
             price = sci.getItem().getWholesalePricePerPound().
-              multiply(sci.getPounds());	
+              multiply(sci.getPounds());
             total = total.add(price);
             LineItemBean li = new LineItemBean(
-              sci.getItem().getCoffeeName(), sci.getPounds(), 
+              sci.getItem().getCoffeeName(), sci.getPounds(),
               sci.getItem().getWholesalePricePerPound());
             lis.add(li);
           }
@@ -169,12 +169,12 @@ public class CheckoutFormBean {
           lineItems[i] = (LineItemBean)j.next();
           i++;
         }
-        
+
         if (lineItems.length != 0) {
-          OrderBean order = new OrderBean(address, customer, 
+          OrderBean order = new OrderBean(address, customer,
             orderId, lineItems, total);
-            
-          String SAAJOrderURL = 
+
+          String SAAJOrderURL =
             URLHelper.getSaajURL() + "/orderCoffee";
           if (distributor.equals(SAAJOrderURL)) {
             OrderRequest or = new OrderRequest(SAAJOrderURL);
@@ -182,17 +182,17 @@ public class CheckoutFormBean {
           }
           else {
             OrderCaller ocaller = new OrderCaller(distributor);
-            confirmation = ocaller.placeOrder(order);				
+            confirmation = ocaller.placeOrder(order);
           }
-          OrderConfirmation oc = 
+          OrderConfirmation oc =
             new OrderConfirmation(order, confirmation);
           ocs.add(oc);
-        } 
+        }
       }
     }
     return allOk;
   }
-  
+
   public HashMap getErrors() {
     return errors;
   }
@@ -220,7 +220,7 @@ public class CheckoutFormBean {
    this.messages = messages;
    ocs = new OrderConfirmations();
   }
-  
+
   public String getFirstName() {
     return firstName;
   }
@@ -240,38 +240,38 @@ public class CheckoutFormBean {
   public String getAreaCode() {
     return areaCode;
   }
-  
+
   public String getPhoneNumber() {
     return phoneNumber;
   }
-   
+
   public String getStreet() {
     return street;
   }
-   
+
   public String getCity() {
     return city;
   }
-   
+
   public String getState() {
     return state;
   }
-   
-  
+
+
   public int getCCOption() {
     return CCOption;
   }
- 
-  
+
+
   public String getCCNumber() {
     return CCNumber;
   }
-   
-  
+
+
   public OrderConfirmations getOrderConfirmations() {
     return ocs;
   }
-  
+
   public void setMessages(ResourceBundle messages) {
     this.messages=messages;
   }
@@ -298,27 +298,27 @@ public class CheckoutFormBean {
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber=phoneNumber ;
   }
-  
+
   public void setStreet(String street) {
     this.street=street ;
   }
-  
+
   public void setCity(String city) {
     this.city=city ;
   }
-  
+
   public void setState(String state) {
     this.state=state ;
   }
-  
+
   public void setCCOption(int CCOption) {
     this.CCOption=CCOption ;
   }
   public void setCCNumber(String CCNumber) {
     this.CCNumber=CCNumber ;
   }
-  
-  public void setErrors(String key, String msg) {	
+
+  public void setErrors(String key, String msg) {
     errors.put(key,msg);
   }
 

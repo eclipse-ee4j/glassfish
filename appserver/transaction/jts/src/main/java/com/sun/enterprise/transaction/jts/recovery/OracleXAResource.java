@@ -38,19 +38,19 @@ import com.sun.logging.LogDomains;
 public class OracleXAResource extends XAResourceWrapper
 {
 
-    // Use superclass for Sting Manager 
+    // Use superclass for Sting Manager
     private static final StringManager sm = StringManager.getManager(XAResourceWrapper.class);
 
-    // Use JTA_LOGGER for backward compatibility, so use a class from 
+    // Use JTA_LOGGER for backward compatibility, so use a class from
     // 'jta' bundle to load it.
     private static final Logger _logger = LogDomains.getLogger(
-            com.sun.enterprise.transaction.JavaEETransactionManagerSimplified.class, 
+            com.sun.enterprise.transaction.JavaEETransactionManagerSimplified.class,
             LogDomains.JTA_LOGGER);
 
     public XAResourceWrapper getInstance() {
         return new OracleXAResource();
     }
-	
+
   /**
    * Recovers list of xids in transaction table. Recover on oracle ignores flags sent to it, this method
    * takes care of flags in addition to calling recoverList for xid list.
@@ -62,7 +62,7 @@ public class OracleXAResource extends XAResourceWrapper
     public Xid[] recover(int flag) throws XAException {
         if(flag==XAResource.TMNOFLAGS)
             return null;
-	return recoverList(flag);
+    return recoverList(flag);
     }
   /**
    * Fires a select statement so that transaction xids are updated and retrieve the xid list. Oracle

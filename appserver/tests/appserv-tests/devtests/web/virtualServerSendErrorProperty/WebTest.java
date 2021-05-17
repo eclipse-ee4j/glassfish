@@ -53,7 +53,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6324911");
         WebTest webTest = new WebTest(args);
@@ -82,7 +82,7 @@ public class WebTest {
         os.write("\n".getBytes());
 
         boolean statusHeaderFound = false;
-        boolean bodyLineFound = false;        
+        boolean bodyLineFound = false;
         BufferedReader br = null;
         try {
             InputStream is = sock.getInputStream();

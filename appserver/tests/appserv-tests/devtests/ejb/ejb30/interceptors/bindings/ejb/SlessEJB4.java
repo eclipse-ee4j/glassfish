@@ -35,7 +35,7 @@ public class SlessEJB4 implements Sless4
     private boolean aroundInvokeCalled = false;
 
     public void cbd() {
-        System.out.println("in SlessEJB4:cbd().  aroundInvokeCalled = " + 
+        System.out.println("in SlessEJB4:cbd().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         // a little extra checking to make sure aroundInvoke is invoked...
@@ -56,12 +56,12 @@ public class SlessEJB4 implements Sless4
                    InterceptorE.class, InterceptorF.class})
     public void abef(int i) {}
 
-    // @ExcludeDefaultInterceptors is a no-op here since it 
+    // @ExcludeDefaultInterceptors is a no-op here since it
     // was already excluded at class-level
     @ExcludeDefaultInterceptors
     @Interceptors({InterceptorE.class, InterceptorF.class})
     public void cbdef() {}
-    
+
     @ExcludeClassInterceptors
     public void nothing() {}
 
@@ -77,7 +77,7 @@ public class SlessEJB4 implements Sless4
             throw new EJBException(e);
         }
     }
-    
+
 }
-    
+
 

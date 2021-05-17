@@ -22,7 +22,7 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import org.glassfish.web.deployment.runtime.WebPropertyContainer;
 
 /**
-* superclass node for WebProperty container 
+* superclass node for WebProperty container
 *
 * @author Jerome Dochez
 */
@@ -32,9 +32,9 @@ public class WebPropertyContainerNode extends RuntimeDescriptorNode {
      * Initialize the child handlers
      */
     public WebPropertyContainerNode() {
-	
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), 
-                               WebPropertyNode.class, "addWebProperty");		       
+
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
+                               WebPropertyNode.class, "addWebProperty");
     }
 
     protected WebPropertyContainer descriptor = null;

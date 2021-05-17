@@ -27,8 +27,8 @@ public class Client {
     public static void main (String[] args) {
         Client client = new Client(args);
         client.doTest(args);
-    }  
-    
+    }
+
     public Client (String[] args) {}
 
     @EJB
@@ -54,21 +54,21 @@ public class Client {
                 fail();
                 return;
             }
-        
+
             pass();
         } catch(Exception e) {
             e.printStackTrace();
             fail();
         }
-        
-    	return;
+
+        return;
     }
 
     private void pass() {
         System.err.println("PASSED: descriptor_free_zone/ear/no_appxml_2");
         System.exit(0);
     }
-                                                                                             
+
     private void fail() {
         System.err.println("FAILED: descriptor_free_zone/ear/no_appxml_2");
         System.exit(-1);

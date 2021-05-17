@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.*;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -52,7 +52,7 @@ public class ResourceAdapterConfigsTest extends BaseSeleniumTestClass {
             Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:threadPoolsIdProp:threadpoolsid")));
             assertTrue(select1.getFirstSelectedOption().getAttribute("value").equals("thread-pool-1"));
             clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
-            
+
             // Remove config
             gotoDasPage();
             clickAndWait("treeForm:tree:resources:resourceAdapterConfigs:resourceAdapterConfigs_link");

@@ -18,11 +18,11 @@
 -->
 
 <ejb-jar xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         metadata-complete="false" version="3.2" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         metadata-complete="false" version="3.2"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd">
   <module-name>administered-object-definition-ejb</module-name>
-  
+
   <enterprise-beans>
     <entity>
       <ejb-name>HelloEntity</ejb-name>
@@ -41,7 +41,7 @@
           <value>connector.MyAdminObject</value>
         </property>
       </administered-object>
-      
+
       <administered-object>
         <description>module-scope resource defined in EJB DD</description>
         <name>java:module/env/Entity_AdminObject</name>
@@ -53,7 +53,7 @@
           <value>connector.MyAdminObject</value>
         </property>
       </administered-object>
-      
+
       <administered-object>
         <description>component-scope resource defined in EJB DD</description>
         <name>java:comp/env/Entity_AdminObject</name>

@@ -30,14 +30,14 @@ import java.util.logging.Logger;
 
 public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
                     implements org.omg.PortableInterceptor.IORInterceptor{
-    
+
     public static final String baseMsg = IORAddrAnyInterceptor.class.getName();
     private static final Logger _logger = LogDomains.getLogger(
         IORAddrAnyInterceptor.class, LogDomains.CORBA_LOGGER);
-    
+
     private Codec codec;
-    
-    
+
+
     /** Creates a new instance of IORAddrAnyInterceptor
      * @param c The codec
      */
@@ -65,7 +65,7 @@ public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
     @Override
     public void destroy() {
     }
-    
+
     /**
      * A server side ORB calls the <code>establish_components</code>
      * operation on all registered <code>IORInterceptor</code> instances
@@ -112,7 +112,7 @@ public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
         }
         */
     }
-    
+
     /**
      * Returns the name of the interceptor.
      * <p>
@@ -130,28 +130,28 @@ public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
         return baseMsg;
     }
 
-    protected short intToShort( int value ) 
+    protected short intToShort( int value )
     {
-	if (value > 32767) {
+    if (value > 32767) {
             return (short) (value - 65536);
         }
-	return (short)value ;
+    return (short)value ;
     }
-    
+
     /*
-    private void addAddressComponents(org.omg.PortableInterceptor.IORInfo iorInfo, 
+    private void addAddressComponents(org.omg.PortableInterceptor.IORInfo iorInfo,
                     ArrayList allInetAddress, int port) {
         try {
             for (int i = 0; i < allInetAddress.size(); i++) {
                 String address = ((InetAddress)allInetAddress.get(i)).getHostAddress();
-                AlternateIIOPAddressComponent iiopAddress = 
+                AlternateIIOPAddressComponent iiopAddress =
                     new AlternateIIOPAddressComponent(address, intToShort(port));
                 Any any = ORB.init().create_any();
                 AlternateIIOPAddressComponentHelper.insert(any, iiopAddress);
                 byte[] data = codec.encode_value(any);
                 TaggedComponent taggedComponent =
                     new TaggedComponent( org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS.value,
-					//AlternateIIOPAddressComponent.TAG_ALTERNATE_IIOP_ADDRESS_ID,
+                    //AlternateIIOPAddressComponent.TAG_ALTERNATE_IIOP_ADDRESS_ID,
                             data);
                 iorInfo.add_ior_component(taggedComponent);
             }
@@ -160,5 +160,5 @@ public class IORAddrAnyInterceptor extends org.omg.CORBA.LocalObject
         }
     }
     */
-    
+
 }

@@ -40,7 +40,7 @@ public class ScheduledTimerDescriptor extends DescribableDescriptor {
     }
 
     public String getMinute() {
-	    return minute_;
+        return minute_;
     }
 
     public void setHour(String h) {
@@ -56,7 +56,7 @@ public class ScheduledTimerDescriptor extends DescribableDescriptor {
     }
 
     public String getDayOfMonth() {
-	    return dayOfMonth_;
+        return dayOfMonth_;
     }
 
     public void setMonth(String m) {
@@ -72,7 +72,7 @@ public class ScheduledTimerDescriptor extends DescribableDescriptor {
     }
 
     public String getDayOfWeek() {
-	    return dayOfWeek_;
+        return dayOfWeek_;
     }
 
     public void setYear(String y) {
@@ -145,8 +145,8 @@ public class ScheduledTimerDescriptor extends DescribableDescriptor {
                 + ";start=" + start_
                 + ";end=" + end_
                 + ";" + timeoutMethod_ //MethodDescriptor prints it's name
-                + ";persistent=" + persistent_ 
-                + ";info=" + info_ 
+                + ";persistent=" + persistent_
+                + ";info=" + info_
                 + "]";
     }
 

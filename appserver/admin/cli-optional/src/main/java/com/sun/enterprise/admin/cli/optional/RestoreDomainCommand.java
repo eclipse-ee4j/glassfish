@@ -65,7 +65,7 @@ public final class RestoreDomainCommand extends BackupCommands {
             throws CommandException, CommandValidationException {
 
         boolean domainExists = true;
-        
+
         if (backupFilename == null && domainName == null) {
             if (!force) {
                 throw new CommandException(strings.get("UseForceOption"));
@@ -120,13 +120,13 @@ public final class RestoreDomainCommand extends BackupCommands {
 
         initializeLogger();     // in case program options changed
     }
- 
+
     /**
      */
     @Override
     protected int executeCommand()
             throws CommandException {
-        try {            
+        try {
             RestoreManager mgr = new RestoreManager(request);
             logger.info(mgr.restore());
         } catch (BackupWarningException bwe) {

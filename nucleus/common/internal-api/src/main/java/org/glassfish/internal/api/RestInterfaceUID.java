@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Contract;
 public interface RestInterfaceUID {
     /**
      * Returns unique ID to be used by local clients.
-     * 
+     *
      * @return String the unique ID. Returns null for unathorized clients.
      */
     String getUID();

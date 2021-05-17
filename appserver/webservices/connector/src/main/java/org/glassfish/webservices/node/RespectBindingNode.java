@@ -102,5 +102,5 @@ public class RespectBindingNode extends DisplayableComponentNode {
         return wshNode;
     }
 
-  
+
 }

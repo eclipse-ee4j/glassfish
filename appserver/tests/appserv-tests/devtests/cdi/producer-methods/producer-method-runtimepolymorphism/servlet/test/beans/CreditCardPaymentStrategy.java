@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 import jakarta.enterprise.context.RequestScoped;
 
-@RequestScoped 
+@RequestScoped
 //Note: This is request scoped bean
 public class CreditCardPaymentStrategy implements PaymentStrategy, Serializable {
 

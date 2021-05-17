@@ -42,7 +42,7 @@ public class Controls {
     public boolean error = false;
 
     private Work[] sWorks = new Work[setupWorks];
-   
+
     private Controls(WorkManager wm) {
         this.wm = wm;
     }
@@ -52,7 +52,7 @@ public class Controls {
     }
 
     public static Controls getControls() {
-        return control;  
+        return control;
     }
 
     public void setupInitialWorks() {
@@ -80,7 +80,7 @@ public class Controls {
 
     public void trigger() {
         if (completedCount > 0 || rejectedCount > 0 || error) {
-            releaseAll(); 
+            releaseAll();
             debug("Completed count => " + completedCount + " Rejected count:"+ rejectedCount + "error: " + error);
             throw new RuntimeException("Error while triggering the actual tests");
         }
@@ -161,7 +161,7 @@ public class Controls {
                 event.getException().printStackTrace();
             } else {
                 error = true;
-            } 
+            }
         }
     }
 
@@ -211,7 +211,7 @@ public class Controls {
         }
         public void run() {
            synchronized (this) {
-               try { 
+               try {
                    wait(TIME_OUT+BUFFER);
                } catch (Exception e) {
                    e.printStackTrace();

@@ -68,7 +68,7 @@ import com.sun.enterprise.util.io.FileUtils;
 
 /**
  * This is the main Launcher class designed for external and internal usage.
- * 
+ *
  * <p>
  * Each of the 3 kinds of server, domain, node-agent and instance, need to subclass this class.
  *
@@ -81,7 +81,7 @@ public abstract class GFLauncher {
     /**
      * Parameters provided by the caller of a launcher, either programmatically (for GF embedded) or as commandline
      * parameters (GF DAS or Instance).
-     * 
+     *
      */
     private GFLauncherInfo callerParameters;
 
@@ -582,10 +582,10 @@ public abstract class GFLauncher {
     }
 
     /**
-     * 
+     *
      * look for an option of this form: <code>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=9009</code> and
      * extract the suspend and port values.
-     * 
+     *
      */
     private void parseJavaConfigDebugOptions() {
         for (String option : domainXMLjavaConfigDebugOptions) {

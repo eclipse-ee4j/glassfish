@@ -15,9 +15,9 @@
  */
 
 /**
- *	This generated bean class Principal matches the DTD element principal
+ *    This generated bean class Principal matches the DTD element principal
  *
- *	Generated on Mon May 13 13:36:48 PDT 2002
+ *    Generated on Mon May 13 13:36:48 PDT 2002
  */
 
 package com.sun.enterprise.deployment.runtime.connector;
@@ -27,21 +27,21 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 /**
  * This class was based on the schema2beans generated one modified
  * to remove its dependencies on schema2beans libraries.
- 
+
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class Principal extends RuntimeDescriptor
 {
-    
+
     public static final String USER_NAME = "UserName";
     public static final String CREDENTIAL = "Credential";
     public static final String PASSWORD = "Password";
-    
+
     // This method verifies that the mandatory properties are set
     public boolean verify()
     {
-	return true;
+    return true;
     }
 
 }

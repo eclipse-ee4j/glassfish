@@ -29,18 +29,18 @@ import javax.naming.spi.ObjectFactory;
  * A naming RefAddr for proxying external JNDI context factories
  */
 public class ProxyRefAddr extends RefAddr {
-	/* Hashtable env that refers to the external JNDI context and
-	 * associated environment needed to create the context factory.
-	 */
-	Hashtable env;
+    /* Hashtable env that refers to the external JNDI context and
+     * associated environment needed to create the context factory.
+     */
+    Hashtable env;
 
-	public ProxyRefAddr(String addrType, Hashtable env) {
-		super(addrType);
+    public ProxyRefAddr(String addrType, Hashtable env) {
+        super(addrType);
 
-		this.env = env;
-	}
+        this.env = env;
+    }
 
-	public Object getContent() {
-		return env;
-	}
+    public Object getContent() {
+        return env;
+    }
 }

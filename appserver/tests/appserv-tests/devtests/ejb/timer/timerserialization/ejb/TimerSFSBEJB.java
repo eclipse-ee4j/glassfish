@@ -31,14 +31,14 @@ import javax.rmi.PortableRemoteObject;
 import java.rmi.RemoteException;
 
 public class TimerSFSBEJB
-    implements SessionBean 
+    implements SessionBean
 {
-	private SessionContext context;
+    private SessionContext context;
     private String timerName;
     private Context initialCtx;
     private Timer timer;
 
-	public void ejbCreate(String timerName) {
+    public void ejbCreate(String timerName) {
         this.timerName = timerName;
     }
 
@@ -46,31 +46,31 @@ public class TimerSFSBEJB
         return this.timerName;
     }
 
-	public void setSessionContext(SessionContext sc) {
-		this.context = sc;
+    public void setSessionContext(SessionContext sc) {
+        this.context = sc;
         try {
             this.initialCtx = new InitialContext();
         } catch (Throwable th) {
             th.printStackTrace();
         }
-	}
+    }
 
-	// business method to create a timer
-	public void createTimer(int ms)
+    // business method to create a timer
+    public void createTimer(int ms)
         throws RemoteException
     {
         try {
             InitialContext initialCtx = new InitialContext();
             TimerSLSBHome home = (TimerSLSBHome) initialCtx.lookup("java:comp/env/ejb/TimerSLSB");
-		    TimerSLSB slsb = (TimerSLSB) home.create();
-		    timer = slsb.createTimer(ms);
+            TimerSLSB slsb = (TimerSLSB) home.create();
+            timer = slsb.createTimer(ms);
             System.out.println ("PG-> after createTimer()");
         } catch (Exception ex) {
             throw new RemoteException("Exception during TimerSFSBEJB::createTimer", ex);
         }
-	}
+    }
 
-	public long getTimeRemaining() {
+    public long getTimeRemaining() {
             long timeRemaining = -1;
             try {
                 timeRemaining = timer.getTimeRemaining();
@@ -80,7 +80,7 @@ public class TimerSFSBEJB
             return timeRemaining;
         }
 
-	public TimerHandle getTimerHandle() {
+    public TimerHandle getTimerHandle() {
             TimerHandle handle = null;
             try {
                 handle = timer.getHandle();
@@ -90,7 +90,7 @@ public class TimerSFSBEJB
             return handle;
         }
 
-	public void cancelTimer() {
+    public void cancelTimer() {
             try {
                 timer.cancel();
             } catch(NoSuchObjectLocalException nsole) {
@@ -99,13 +99,13 @@ public class TimerSFSBEJB
     }
 
 
-	public void ejbRemove() {}
+    public void ejbRemove() {}
 
-	public void ejbActivate() {
+    public void ejbActivate() {
         System.out.println ("In TimerSFSB.activate()");
     }
 
-	public void ejbPassivate() {
+    public void ejbPassivate() {
         System.out.println ("In TimerSFSB.passivate()");
     }
 }

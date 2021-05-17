@@ -33,7 +33,7 @@ import static com.sun.enterprise.util.StringUtils.ok;
  * difficult. The command itself has to know how to print a success message properly instead of just putting such a
  * message inside an Exception object and throwing it. In such a system it is cleaner to do this: Error: throw failure
  * exception Success: throw success exception
- * 
+ *
  * @author bnevins
  */
 public class RemoteResponseManager implements ResponseManager {

@@ -84,6 +84,6 @@ public class AuthorizationIDControl extends BasicControl {
      * @param   criticality The control's criticality setting.
      */
     public AuthorizationIDControl(boolean criticality) {
-	super(OID, criticality, null);
+    super(OID, criticality, null);
     }
 }

@@ -27,5 +27,5 @@ import libclasspath2.ResourceHelper;
 @Remote
 public interface LookupSBRemote {
     public ResourceHelper.Result runTests(String[] tests, ResourceHelper.TestType testType) throws IOException;
-    
+
 }

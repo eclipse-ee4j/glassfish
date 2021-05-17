@@ -33,7 +33,7 @@ import javax.management.ObjectName;
 public class JVMInformationTest implements RemoteAdminQuicklookTest {
 
     private MBeanServerConnection mbsc;
-    
+
     private static final String BACKEND_MBEAN_ON = AdminService.PRIVATE_MBEAN_DOMAIN_NAME + ":" + "category=monitor,type=JVMInformationCollector,server=server";
     private long start, end;
     /** Creates a new instance of JVMInformationTest */
@@ -66,8 +66,8 @@ public class JVMInformationTest implements RemoteAdminQuicklookTest {
     public long getExecutionTime() {
         return ( end - start );
     }
-    
-    String getMemoryInfo() throws Exception 
+
+    String getMemoryInfo() throws Exception
     {
         final ObjectName on = new ObjectName(BACKEND_MBEAN_ON);
         final JVMInformationMBean mbean = (JVMInformationMBean)MBeanServerInvocationHandler.newProxyInstance(mbsc, on, com.sun.enterprise.admin.mbeans.jvm.JVMInformationMBean.class, false);
@@ -80,6 +80,6 @@ public class JVMInformationTest implements RemoteAdminQuicklookTest {
         System.out.println(mbean.getMemoryInformation(null));
         System.out.println(mbean.getClassInformation(null));
         System.out.println(mbean.getSummary(null));
-        
+
     }
 }

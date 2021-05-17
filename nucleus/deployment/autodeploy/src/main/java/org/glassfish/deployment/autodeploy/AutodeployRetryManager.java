@@ -44,44 +44,44 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * This class encapsulates logic to decide whether to retry the deployment of
  * such files on successive loops through
  * the autodeployer thread, reporting failure only if the candidate file has
- * failed to deploy earlier and has remained stable in size for a 
- * (configurable) period of time.  
+ * failed to deploy earlier and has remained stable in size for a
+ * (configurable) period of time.
  * <p>
  * The main public entry point are the {@link �} method and
- * the {@link reportSuccessfulDeployment}, 
+ * the {@link reportSuccessfulDeployment},
  * {@link reportFailedDeployment}, {@link reportSuccessfulUndeployment}, and
- * {@link reportUnsuccessfulUndeployment} methods.  
+ * {@link reportUnsuccessfulUndeployment} methods.
  * <p>
  * The client should invoke {@link shouldAttemptDeployment} when it has identified
  * a candidate file for deployment but before trying to deploy that file.  This
  * retry manager will return whether the caller should attempt to deploy the file,
  * at least based on whether there has been a previous unsuccessful attempt to
- * deploy it and, if so, whether the file seems to be stable in size or not.  
+ * deploy it and, if so, whether the file seems to be stable in size or not.
  * <p>
- * When the caller actually tries to deploy a file, it must invoke 
- * {@link reportSuccessfulDeployment} or {@link reportFailedDeployment) 
+ * When the caller actually tries to deploy a file, it must invoke
+ * {@link reportSuccessfulDeployment} or {@link reportFailedDeployment)
  * so that the retry manager keeps its information about the file up-to-date.
  * Similarly, when the caller tries to undeploy a file it must invoke
  * {@link reportSuccessfulUndeployment} or {@link reportFailedUndeployment}.
  * <P>
  * Internally for each file that has failed to deploy the retry manager records
- * the file's size and the timestamp of the most recent failure and the timestamp at 
+ * the file's size and the timestamp of the most recent failure and the timestamp at
  * which that file will be assumed to be fully copied.  At that time the file's
- * retry period will expire.  This retry expiration value is extended each time 
+ * retry period will expire.  This retry expiration value is extended each time
  * the file changes size since the last time it was checked.
  * <p>
- * If AutoDeployer previously reported failures to deploy the file and the 
- * file's size has been stable for its retry expiration time, then the 
+ * If AutoDeployer previously reported failures to deploy the file and the
+ * file's size has been stable for its retry expiration time, then the
  * {@link shouldAttemptDeployment} method returns true to trigger another attempt to
  * deploy the file.  If the autodeployer reports another failed deployment
- * then the retry manager concludes that the file is not simply a slow-copying 
- * file but is truly invalid.  In that case 
- * it throws an exception.  
+ * then the retry manager concludes that the file is not simply a slow-copying
+ * file but is truly invalid.  In that case
+ * it throws an exception.
  * <p>
  * Once the caller reports a successful deployment of a file by invoking
- * {@link reportSuccessfulDeployment} the retry manager discards any record of 
+ * {@link reportSuccessfulDeployment} the retry manager discards any record of
  * that file from its internal data structures.  Similarly the retry manager
- * stops monitoring a file once the autodeployer has made an attempt - 
+ * stops monitoring a file once the autodeployer has made an attempt -
  * successful or unsuccessful - to undeploy it.
  * <p>
  * An important change from v2 to v3 is the change in the default retry limit.
@@ -90,14 +90,14 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * will be packaged (some may be ZIPs, but others may be single files).  We
  * need to provide a balance between prompt reporting of a failed auto-deployment
  * vs. handling the case of a slow copy operation which, for a while, manifests
- * itself as a failed deployment.  
+ * itself as a failed deployment.
  *
  * @author tjquinn
  */
 @Service
 @Singleton
 public class AutodeployRetryManager implements PostConstruct {
-        
+
     /**
      *Specifies the default value for the retry limit.
      */
@@ -111,7 +111,7 @@ public class AutodeployRetryManager implements PostConstruct {
 
     @Inject
     private DasConfig activeDasConfig;
-    
+
     private int timeout;
 
     public static final Logger deplLogger =
@@ -129,7 +129,7 @@ public class AutodeployRetryManager implements PostConstruct {
     public void postConstruct() {
         setTimeout();
     }
-    
+
     /**
      *Retrieves the Info object describing the specified file.
      *@param File for which the Info object is requested
@@ -159,12 +159,12 @@ public class AutodeployRetryManager implements PostConstruct {
             if (loggable) {
                 if (result) {
                     msg = localStrings.getLocalString(
-                            "enterprise.deployment.autodeploy.try_stable_length", 
+                            "enterprise.deployment.autodeploy.try_stable_length",
                             "file {0} has stable length so it should open as a JAR",
                             file.getAbsolutePath());
                 } else {
                     msg = localStrings.getLocalString(
-                            "enterprise.deployment.autodeploy.no_try_unstable_length", 
+                            "enterprise.deployment.autodeploy.no_try_unstable_length",
                             "file {0} has an unstable length of {1}; do not retry yet",
                             file.getAbsolutePath(), String.valueOf(file.length()));
                 }
@@ -173,7 +173,7 @@ public class AutodeployRetryManager implements PostConstruct {
         } else {
             if (loggable) {
                 msg = localStrings.getLocalString(
-                        "enterprise.deployment.autodeploy.try_not_monitored", 
+                        "enterprise.deployment.autodeploy.try_not_monitored",
                         "file {0} should be opened as an archive because it is not being monitored as a slowly-growing file",
                         file.getAbsolutePath());
             }
@@ -195,23 +195,23 @@ public class AutodeployRetryManager implements PostConstruct {
     boolean recordFailedDeployment(File file) throws AutoDeploymentException {
         return recordFailedOpen(file);
     }
-    
+
     boolean recordSuccessfulDeployment(File file) {
         return recordSuccessfulOpen(file);
     }
-    
+
     boolean recordSuccessfulUndeployment(File file) {
         return endMonitoring(file);
     }
-    
+
     boolean recordFailedUndeployment(File file) {
         return endMonitoring(file);
     }
-    
+
     boolean endMonitoring(File file) {
         return (invalidFiles.remove(file) != null);
     }
-    
+
     /**
      *Records the fact that the autodeployer tried but failed to open this file
      *as an archive.
@@ -234,7 +234,7 @@ public class AutodeployRetryManager implements PostConstruct {
             invalidFiles.put(file, info);
             if (deplLogger.isLoggable(Level.FINE)) {
                 String msg = localStrings.getLocalString(
-                        "enterprise.deployment.autodeploy.begin_monitoring", 
+                        "enterprise.deployment.autodeploy.begin_monitoring",
                         "will monitor {0} waiting for its size to be stable size until {1}",
                         file.getAbsolutePath(), new Date(info.retryExpiration).toString());
                 deplLogger.log(Level.FINE, msg);
@@ -259,7 +259,7 @@ public class AutodeployRetryManager implements PostConstruct {
                  */
                 if (loggable) {
                     String msg = localStrings.getLocalString(
-                            "enterprise.deployment.autodeploy.continue_monitoring", 
+                            "enterprise.deployment.autodeploy.continue_monitoring",
                             "file {0} remains eligible for monitoring until {1}",
                             file.getAbsolutePath(), new Date(info.retryExpiration).toString());
                     deplLogger.log(Level.FINE, msg);
@@ -273,7 +273,7 @@ public class AutodeployRetryManager implements PostConstruct {
                 String msg = localStrings.getLocalString(
                         "enterprise.deployment.autodeploy.abort_monitoring",
                         "File {0} is no longer eligible for retry; its size has been stable for {1} second{1,choice,0#s|1#|1<s} but it is still unrecognized as an archive",
-                        file.getAbsolutePath(), 
+                        file.getAbsolutePath(),
                         timeout);
                 if (loggable) {
                     deplLogger.log(Level.FINE, msg);
@@ -293,14 +293,14 @@ public class AutodeployRetryManager implements PostConstruct {
     private boolean recordSuccessfulOpen(File file) {
         if (deplLogger.isLoggable(Level.FINE)) {
             String msg = localStrings.getLocalString(
-                    "enterprise.deployment.autodeploy.end_monitoring", 
+                    "enterprise.deployment.autodeploy.end_monitoring",
                     "File {0} opened successfully; no need to monitor it further",
                     file.getAbsolutePath());
             deplLogger.log(Level.FINE, msg);
         }
         return (invalidFiles.remove(file)) != null;
     }
-    
+
     private void setTimeout() {
         int newTimeout = timeout;
         String timeoutText = activeDasConfig.getAutodeployRetryTimeout();
@@ -313,7 +313,7 @@ public class AutodeployRetryManager implements PostConstruct {
             if (configuredTimeout > 1000) {
                 /*
                  * User probably thought the configured value was in milliseconds
-                 * instead of seconds.  
+                 * instead of seconds.
                  */
               deplLogger.log(Level.WARNING,
                              LARGE_TIMEOUT,
@@ -335,7 +335,7 @@ public class AutodeployRetryManager implements PostConstruct {
         }
         timeout = newTimeout;
     }
-    
+
     /**
      * Factory method that creates a new Info object for a given file.
      * @param f the file of interest
@@ -348,7 +348,7 @@ public class AutodeployRetryManager implements PostConstruct {
             return new JarInfo(f);
         }
     }
-        
+
     /**
      *Records pertinent information about a file judged to be invalid - that is,
      *unrecognizable as a legal archive:
@@ -359,7 +359,7 @@ public class AutodeployRetryManager implements PostConstruct {
      *</ul>
      */
     private abstract class Info {
-        
+
         /** File recorded in this Info instance */
         protected File file = null;
 
@@ -387,7 +387,7 @@ public class AutodeployRetryManager implements PostConstruct {
          * @return whether changes have been detected
          */
         protected abstract boolean update();
-        
+
         /**
          *Reports whether the retry period for this file has expired.
          *<p>
@@ -396,7 +396,7 @@ public class AutodeployRetryManager implements PostConstruct {
         private boolean hasRetryPeriodExpired() {
             return (System.currentTimeMillis() > retryExpiration);
         }
-        
+
         /**
          * Delays the time when retries for this file will expire.
          */
@@ -405,7 +405,7 @@ public class AutodeployRetryManager implements PostConstruct {
         }
 
     }
-    
+
     private class JarInfo extends Info {
 
         /** File length the previous time this file was reported as
@@ -420,7 +420,7 @@ public class AutodeployRetryManager implements PostConstruct {
 
         @Override
         protected boolean shouldOpen() {
-            return (file.length() == recordedLength);            
+            return (file.length() == recordedLength);
         }
 
         /**
@@ -447,11 +447,11 @@ public class AutodeployRetryManager implements PostConstruct {
         }
 
     }
-    
+
     private class DirectoryInfo extends Info {
-        
+
         private long whenScanned;
-        
+
         public DirectoryInfo(File f) {
             super(f);
             whenScanned = 0;
@@ -471,13 +471,13 @@ public class AutodeployRetryManager implements PostConstruct {
         @Override
         protected boolean update() {
             /*
-             * For a directory, scan all its files for one that's newer than 
+             * For a directory, scan all its files for one that's newer than
              * the last time we checked.
              */
-            
+
             /*
              * Record the start time of the scan rather than the finish time
-             * so we don't inadvertently miss files that were changed 
+             * so we don't inadvertently miss files that were changed
              * during the scan.
              */
             long newWhenScanned = System.currentTimeMillis();
@@ -488,7 +488,7 @@ public class AutodeployRetryManager implements PostConstruct {
             whenScanned = newWhenScanned;
             return hasChanged;
         }
-        
+
         /**
          * Reports whether the specified file is newer (or contains a newer
          * file) than the timestamp.

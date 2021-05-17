@@ -147,7 +147,7 @@ public final class MBeanInfoSupport {
                 String attrName = null;
                 final int numArgs = method.getParameterTypes().length;
                 if (managedOp != null) {
-                    AMXLoggerInfo.getLogger().log(Level.WARNING, AMXLoggerInfo.attributeCantBeOperation, 
+                    AMXLoggerInfo.getLogger().log(Level.WARNING, AMXLoggerInfo.attributeCantBeOperation,
                             new Object[]{intf.getName(), method.getName()});
                 } else if (numArgs == 0 && JMXUtil.isIsOrGetter(method)) {
                     attrName = JMXUtil.getAttributeName(method);
@@ -158,7 +158,7 @@ public final class MBeanInfoSupport {
                     setters.put(attrName, method);
                     //debug( "findInterfaceMethods: setter: " + attrName );
                 } else {
-                    AMXLoggerInfo.getLogger().log(Level.WARNING, AMXLoggerInfo.attributeNotGetterSetter, 
+                    AMXLoggerInfo.getLogger().log(Level.WARNING, AMXLoggerInfo.attributeNotGetterSetter,
                             new Object[]{intf.getName(), method.getName()});
                     // ignore
                 }
@@ -187,21 +187,21 @@ public final class MBeanInfoSupport {
         }
 
         /*
-        java.util.Iterator	iter	= null;
+        java.util.Iterator    iter    = null;
         trace( "-------------------- getterSetters -------------------" );
-        iter	= getterSetters.values().iterator();
+        iter    = getterSetters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getNameProp() + ", " );
         }
         trace( "-------------------- getters -------------------" );
-        iter	= getters.values().iterator();
+        iter    = getters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getNameProp() + ", " );
         }
         trace( "-------------------- setters -------------------" );
-        iter	= setters.values().iterator();
+        iter    = setters.values().iterator();
         while ( iter.hasNext() )
         {
         trace( ((Method)iter.next()).getNameProp() + ", " );

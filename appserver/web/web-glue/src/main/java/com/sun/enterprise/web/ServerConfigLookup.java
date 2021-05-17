@@ -53,74 +53,74 @@ public class ServerConfigLookup {
     /**
      * Get the session manager bean from domain.xml
      * return null if not defined or other problem
-     */  
-    public SessionManager getInstanceSessionManager() { 
+     */
+    public SessionManager getInstanceSessionManager() {
         if (configBean == null) {
             return null;
         }
-        
+
         WebContainer webContainerBean
             = configBean.getExtensionByType(WebContainer.class);
         if (webContainerBean == null) {
             return null;
         }
-        
+
         SessionConfig sessionConfigBean = webContainerBean.getSessionConfig();
         if (sessionConfigBean == null) {
             return null;
         }
-        
+
         return sessionConfigBean.getSessionManager();
-    }    
-    
+    }
+
     /**
      * Get the manager properties bean from domain.xml
      * return null if not defined or other problem
-     */  
+     */
     public ManagerProperties getInstanceSessionManagerManagerProperties() {
-        
+
         SessionManager smBean = getInstanceSessionManager();
         if (smBean == null) {
             return null;
         }
 
         return smBean.getManagerProperties();
-    } 
-    
+    }
+
     /**
      * Get the store properties bean from domain.xml
      * return null if not defined or other problem
-     */  
+     */
     public StoreProperties getInstanceSessionManagerStoreProperties() {
-        
+
         SessionManager smBean = getInstanceSessionManager();
         if (smBean == null) {
             return null;
         }
 
         return smBean.getStoreProperties();
-    } 
+    }
 
     /**
      * Get the session properties bean from server.xml
      * return null if not defined or other problem
-     */      
-    public SessionProperties getInstanceSessionProperties() { 
+     */
+    public SessionProperties getInstanceSessionProperties() {
         if (configBean == null) {
             return null;
         }
-        
+
         WebContainer webContainerBean
             = configBean.getExtensionByType(WebContainer.class);
         if (webContainerBean == null) {
             return null;
         }
-        
+
         SessionConfig sessionConfigBean = webContainerBean.getSessionConfig();
         if (sessionConfigBean == null) {
             return null;
         }
-        
+
         return sessionConfigBean.getSessionProperties();
     }
 
@@ -136,7 +136,7 @@ public class ServerConfigLookup {
     /**
      * Get the availability-enabled from domain.xml.
      * return false if not found
-     */   
+     */
     public boolean getAvailabilityEnabledFromConfig() {
         AvailabilityService as = this.getAvailabilityService();
         if (as == null) {
@@ -144,7 +144,7 @@ public class ServerConfigLookup {
                 _logger.log(Level.FINEST, LogFacade.AVAILABILITY_SERVICE_NOT_DEFINED);
             }
             return false;
-        }        
+        }
 
         if (as.getAvailabilityEnabled() == null) {
             return false;
@@ -156,14 +156,14 @@ public class ServerConfigLookup {
     /**
      * Geo the web-container-availability element from domain.xml.
      * return null if not found
-     */     
+     */
     private WebContainerAvailability getWebContainerAvailability() {
         AvailabilityService as = getAvailabilityService();
         return ((as != null)? as.getExtensionByType(WebContainerAvailability.class) : null);
     }
-    
+
     /**
-     * Get the String value of the property under web-container-availability 
+     * Get the String value of the property under web-container-availability
      * element from domain.xml whose name matches propName
      * return null if not found
      * @param propName
@@ -174,11 +174,11 @@ public class ServerConfigLookup {
     }
 
     /**
-     * Get the String value of the property under web-container-availability 
+     * Get the String value of the property under web-container-availability
      * element from domain.xml whose name matches propName
      * return defaultValue if not found
      * @param propName
-     */    
+     */
     protected String getWebContainerAvailabilityPropertyString(
                 String propName,
                 String defaultValue) {
@@ -201,7 +201,7 @@ public class ServerConfigLookup {
         }
 
         return defaultValue;
-    } 
+    }
 
 
     /**
@@ -273,7 +273,7 @@ public class ServerConfigLookup {
      * web-container-availability
      * web-module (if stand-alone)
      * return false if not found
-     */   
+     */
     public boolean calculateWebAvailabilityEnabledFromConfig(WebModule ctx) {
         boolean waEnabled = calculateWebAvailabilityEnabledFromConfig();
 
@@ -312,7 +312,7 @@ public class ServerConfigLookup {
      * return null if not found
      */
     public PersistenceType getPersistenceTypeFromConfig() {
-        String persistenceTypeString = null;      
+        String persistenceTypeString = null;
         PersistenceType persistenceType = null;
 
         WebContainerAvailability webContainerAvailabilityBean =
@@ -336,21 +336,21 @@ public class ServerConfigLookup {
         }
 
         return persistenceType;
-    }     
-    
+    }
+
     /**
      * Get the persistenceFrequency from domain.xml.
      * return null if not found
      */
-    public String getPersistenceFrequencyFromConfig() { 
+    public String getPersistenceFrequencyFromConfig() {
         WebContainerAvailability webContainerAvailabilityBean =
             getWebContainerAvailability();
         if (webContainerAvailabilityBean == null) {
             return null;
         }
-        return webContainerAvailabilityBean.getPersistenceFrequency();      
+        return webContainerAvailabilityBean.getPersistenceFrequency();
     }
-    
+
     /**
      * Get the persistenceScope from domain.xml.
      * return null if not found
@@ -361,9 +361,9 @@ public class ServerConfigLookup {
         if (webContainerAvailabilityBean == null) {
             return null;
         }
-        return webContainerAvailabilityBean.getPersistenceScope(); 
+        return webContainerAvailabilityBean.getPersistenceScope();
     }
-    
+
     public boolean getDisableJreplicaFromConfig() {
         WebContainerAvailability webContainerAvailabilityBean = getWebContainerAvailability();
         if (webContainerAvailabilityBean == null) {
@@ -376,7 +376,7 @@ public class ServerConfigLookup {
     /**
      * convert the input value to the appropriate Boolean value
      * if input value is null, return null
-     */     
+     */
     protected Boolean toBoolean(String value) {
         if (value.equalsIgnoreCase("true")
                 || value.equalsIgnoreCase("yes")

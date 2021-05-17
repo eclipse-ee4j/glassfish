@@ -34,9 +34,9 @@
   <target name="all" depends="clean,build,deploy,run,undeploy"/>
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="${wscompile.command}" />
+    </exec>
   </target>
 
   <target name="compile" depends="">
@@ -65,11 +65,11 @@
   <target name="wscompile-appclient" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -f:norpcstructures -keep -d output -s output -classpath . -model googleclient.model wscompile_config_appclient.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/com/sun/s1asdev/ejb/webservice/ksink/googleclient">
-       <fileset dir="output//com/sun/s1asdev/ejb/webservice/ksink/googleclient" 
+       <fileset dir="output//com/sun/s1asdev/ejb/webservice/ksink/googleclient"
         includes="DirectoryCategory.class, GoogleSearchResult.class, GoogleSearchService.class, GoogleSearchPort.class, ResultElement.class"/>
     </copy>
     <!-- <delete dir="output"/> -->
@@ -78,11 +78,11 @@
   <target name="wscompile-ejb" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -f:norpcstructures -keep -d output -s output -classpath . wscompile_config_ejb.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/com/sun/s1asdev/ejb/webservice/ksink/googleserver">
-       <fileset dir="output/com/sun/s1asdev/ejb/webservice/ksink/googleserver" 
+       <fileset dir="output/com/sun/s1asdev/ejb/webservice/ksink/googleserver"
         includes="DirectoryCategory.class, GoogleSearchResult.class, GoogleSearchPort.class, ResultElement.class"/>
     </copy>
     <delete dir="output"/>
@@ -91,37 +91,37 @@
   <target name="wscompile-web" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
             value="-import -f:norpcstructures -keep -d output -s output -model googleweb.model -classpath . wscompile_config_web.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb">
-       <fileset dir="output/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb" 
+       <fileset dir="output/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb"
         includes="DirectoryCategory.class, GoogleSearchResult.class, GoogleSearchPort.class, ResultElement.class"/>
     </copy>
     <delete dir="output"/>
   </target>
 
   <target name="assemble" depends="init-common, compile">
-    <!-- 
-	EJB module creation
+    <!--
+    EJB module creation
     -->
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch.wsdl"/>
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch_types.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="GoogleMapping_ejb.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="GoogleMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
-      <param name="ejbjar.classes" 
+      <param name="ejbjar.classes"
              value="GoogleMapping_ejb.xml,META-INF/wsdl/**,**/*.class" />
 
     </antcall>
-    <!-- 
-	War module creation 
+    <!--
+    War module creation
     -->
     <antcall target="build-war-file"/>
-    <!-- 
-	AppClient module creation
+    <!--
+    AppClient module creation
     -->
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch.wsdl"/>
@@ -129,36 +129,36 @@
       file="GoogleSearch_types.wsdl"/>
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch_partial.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="GoogleMapping_appclient.xml"/>
-    <copy todir="${build.classes.dir}" 
-	 file="googleclient.model"/>
+    <copy todir="${build.classes.dir}"
+     file="GoogleMapping_appclient.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="googleclient.model"/>
     <antcall target="appclient-jar-common">
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="googleclient.model,GoogleMapping_appclient.xml,META-INF/wsdl/**,**/*.class" />
 
     </antcall>
-    <!-- 
-	EAR file creation 
+    <!--
+    EAR file creation
     -->
     <antcall target="ear-common" />
     <copy todir="${build.classes.dir}/META-INF"
       file="${sun-application.xml}"/>
-    <jar destfile = "${assemble.dir}/${appname}App.ear" 
-	update="true">
+    <jar destfile = "${assemble.dir}/${appname}App.ear"
+    update="true">
       <fileset dir="${build.classes.dir}">
-	<include name="META-INF/sun-application.xml"/>
+    <include name="META-INF/sun-application.xml"/>
       </fileset>
     </jar>
-	
-  </target> 
+
+  </target>
 
   <target name="build-appclient-file" depends="init-common">
   </target>
 
   <target name="build-war-file" depends="init-common">
     <echo message="my build classes dir is:${build.classes.dir}"/>
-    <delete file="${war.file}"/>  
+    <delete file="${war.file}"/>
     <mkdir dir="${build.classes.dir}/tmp"/>
     <mkdir dir="${build.classes.dir}/tmp/WEB-INF"/>
     <copy todir="${build.classes.dir}/tmp/WEB-INF"
@@ -172,10 +172,10 @@
       file="GoogleSearch.wsdl"/>
     <copy todir="${build.classes.dir}/tmp/WEB-INF/wsdl"
       file="GoogleSearch_types.wsdl"/>
-    <copy todir="${build.classes.dir}/tmp" 
-	 file="GoogleMapping_web.xml"/>
-    <copy todir="${build.classes.dir}/tmp" 
-	 file="googleweb.model"/>
+    <copy todir="${build.classes.dir}/tmp"
+     file="GoogleMapping_web.xml"/>
+    <copy todir="${build.classes.dir}/tmp"
+     file="googleweb.model"/>
     <copy todir="${build.classes.dir}/tmp/WEB-INF/classes/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb">
         <fileset dir="${build.classes.dir}/com/sun/s1asdev/ejb/webservice/ksink/googleserverweb">
             <include name="**/*.class"/>
@@ -185,12 +185,12 @@
       <fileset dir="${build.classes.dir}/tmp" casesensitive="yes">
           <include name="**/**"/>
       </fileset>
-    </jar>	
+    </jar>
     <delete dir="${build.classes.dir}/tmp"/>
   </target>
 
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -221,7 +221,7 @@
 
    <target name="build-standalone" depends="init-common">
       <antcall target="run.wscompile">
-        <param name="wscompile.command" 
+        <param name="wscompile.command"
          value="-gen:client -keep -d ${build.classes.dir} -s ${build.classes.dir} -classpath . wscompile_config_standalone.xml"/>
       </antcall>
       <antcall target="compile-common">
@@ -241,7 +241,7 @@
         <pathelement location="${env.S1AS_HOME}/lib/appserv-rt.jar"/>
         <pathelement location="${env.S1AS_HOME}/lib/webservices-rt.jar"/>
         <pathelement location="${env.S1AS_HOME}/lib/webservices-tools.jar"/>
-	    <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
+        <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
         <pathelement location="${build.classes.dir}"/>
       </classpath>
 
@@ -249,10 +249,10 @@
       <sysproperty key="http.proxyPort" value="8080"/>
     </java>
    </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
   <target name="contactgoogle">
     <antcall target="runclient-common">
@@ -262,34 +262,34 @@
 
   <target name="gen-mapping-appclient" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping GoogleMapping_appclient.xml wscompile_config_appclient.xml"/>
     </antcall>
   </target>
 
   <target name="gen-mapping-ejb" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping GoogleMapping_ejb.xml wscompile_config_ejb.xml"/>
     </antcall>
   </target>
 
   <target name="gen-mapping-web" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping GoogleMapping_web.xml wscompile_config_web.xml"/>
     </antcall>
   </target>
 
     <target name="create-user">
         <antcall target="create-user-common">
-	    <param name="user" value="j2ee"/>
-	    <param name="password" value="j2ee"/>
-	    <param name="groups" value="staff"/>
+        <param name="user" value="j2ee"/>
+        <param name="password" value="j2ee"/>
+        <param name="groups" value="staff"/>
        </antcall>
       <antcall target="reconfig-common"/>
     </target>
- 
+
     <target name="delete-user">
       <!-- remove test users, just cleanup. -->
       <antcall target="delete-user-common">
@@ -302,10 +302,10 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes the WebServices test)
-			ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes the WebServices test)
+            ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
+    </echo>
     </target>
 </project>

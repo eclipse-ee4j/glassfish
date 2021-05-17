@@ -105,9 +105,9 @@
   <concat append="true"
           destfile="${glassfish.home}/domains/domain1/config/server.policy">
     <fileset file="${glassfish.home}/domains/domain1/config/server_policy.orig"/>
-    <fileset file="${basedir}/weld/numberguess/numberguess.policy"/>   
-    <fileset file="${basedir}/weld/extensions/extensions.policy"/>   
-    <fileset file="${basedir}/osgitest/basicosgi/security.policy"/>   
+    <fileset file="${basedir}/weld/numberguess/numberguess.policy"/>
+    <fileset file="${basedir}/weld/extensions/extensions.policy"/>
+    <fileset file="${basedir}/osgitest/basicosgi/security.policy"/>
   </concat>
 </target>
 
@@ -118,24 +118,24 @@
 </target>
 
 <target name="startDerby" depends="initprop">
-    <echo message="Starting Derby DB servers in the Network Mode"/>    
-    
+    <echo message="Starting Derby DB servers in the Network Mode"/>
+
     <java classname="org.apache.derby.drda.NetworkServerControl"
           classpathref="db.class.path" fork="true" spawn="true">
         <sysproperty key="derby.system.home" value="${derby.home}"/>
         <arg line="-h localhost -p ${db.port} start"/>
-    </java> 
+    </java>
     <echo message="Finished starting datbase"/>
 </target>
 
 <target name="stopDerby" depends="initprop">
     <echo message="Stopping Derby DB servers in the Network Mode"/>
-    
+
     <java classname="org.apache.derby.drda.NetworkServerControl"
           classpathref="db.class.path" fork="true">
         <sysproperty key="derby.system.home" value="${derby.home}"/>
         <arg line="shutdown -h localhost -p ${db.port}"/>
-    </java> 
+    </java>
     <echo message="Finished stopping datbase"/>
 </target>
 
@@ -151,7 +151,7 @@
     onerror="continue"
     print="yes"
     classpath="${db.class.path}">
-  </sql> 
+  </sql>
 </target>
 
 <target name="create-db" depends="initprop,delete-db"
@@ -162,7 +162,7 @@
     <echo>user=${db.user}</echo>
     <echo>password=${db.password}</echo>
     <echo>db.class.path=db.class.path</echo>
-    
+
     <sql driver="${db.driver}"
          encoding="utf-8"
          url="${db.url}"
@@ -175,19 +175,19 @@
          onerror="abort" >
         <transaction src="sql/create_${db.type}.sql"/>
         <transaction>
-		    select city from web_customer where cust_id=1;
-		    select * from web_customer where custname Like 'Alice_1';
-	    </transaction>
-	    
+            select city from web_customer where cust_id=1;
+            select * from web_customer where custname Like 'Alice_1';
+        </transaction>
+
     </sql>
-    
+
 </target>
-<target name="delete-db"  
+<target name="delete-db"
         description="Deletes the database tables." depends="initprop">
     <echo>driver=${db.driver}</echo>
     <echo>url=${db.url}</echo>
     <echo>user=${db.user}</echo>
-    <echo>password=${db.password}</echo>       
+    <echo>password=${db.password}</echo>
     <sql driver="${db.driver}"
          encoding="utf-8"
          url="${db.url}"
@@ -196,7 +196,7 @@
          classpathref="db.class.path"
          delimiter="${db.delimiter}"
          autocommit="true"
-         onerror="continue">       
+         onerror="continue">
         <transaction src="sql/drop_${db.type}.sql"/>
     </sql>
 </target>

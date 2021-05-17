@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -34,11 +34,11 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-interceptors-sessionID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB Sful sful;
 
     private static @EJB Sful sful0;
@@ -53,14 +53,14 @@ public class Client {
     private static @EJB Sful sful9;
 
     public void doTest() {
-	doTest1();
-	doTest2();
-	doTest3();
-	doTest4();
-	doTest5();
-	doTest6();
+    doTest1();
+    doTest2();
+    doTest3();
+    doTest4();
+    doTest5();
+    doTest6();
 
-	doTest7_8();
+    doTest7_8();
 
         doTest9();
         doTest10();
@@ -71,9 +71,9 @@ public class Client {
 
             System.out.println("invoking stateful");
             sful.hello();
-	    System.out.println("+++++++++++++++++++++++++++++++++++++++");
-	    System.out.println("+++++ InterceptorCallCount: " + sful.getCount());
-	    System.out.println("+++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++++++++++++++++++++++++++++++++++++");
+        System.out.println("+++++ InterceptorCallCount: " + sful.getCount());
+        System.out.println("+++++++++++++++++++++++++++++++++++++++");
             stat.addStatus("local test1" , stat.PASS);
         } catch(Exception e) {
             e.printStackTrace();
@@ -86,8 +86,8 @@ public class Client {
             sful.throwAppException("XYZ");
             stat.addStatus("local test2" , stat.FAIL);
         } catch (AppException appEx) {
-		System.out.println("Got expected AppException: " + appEx);
-        	stat.addStatus("local test2" , stat.PASS);
+        System.out.println("Got expected AppException: " + appEx);
+            stat.addStatus("local test2" , stat.PASS);
         } catch(Exception e) {
             e.printStackTrace();
             stat.addStatus("local test2" , stat.FAIL);
@@ -97,10 +97,10 @@ public class Client {
     private void doTest3() {
         try {
             String result = sful.computeMid(4, 10);
-	    System.out.println("[Test3]: Got: " + result);
+        System.out.println("[Test3]: Got: " + result);
             stat.addStatus("local test3" , stat.PASS);
         } catch (SwapArgumentsException swapEx) {
-	    System.out.println("Got unexpected Exception: " + swapEx);
+        System.out.println("Got unexpected Exception: " + swapEx);
             stat.addStatus("local test3" , stat.FAIL);
         } catch(Exception e) {
             e.printStackTrace();
@@ -111,11 +111,11 @@ public class Client {
     private void doTest4() {
         try {
             String result = sful.computeMid(23, 10);
-	    System.out.println("[Test4]: Got: " + result
-			    + " INSTEAD of SwapArgumentsException");
+        System.out.println("[Test4]: Got: " + result
+                + " INSTEAD of SwapArgumentsException");
             stat.addStatus("local test4" , stat.FAIL);
         } catch (SwapArgumentsException swapEx) {
-	    System.out.println("Got expected Exception: " + swapEx);
+        System.out.println("Got expected Exception: " + swapEx);
             stat.addStatus("local test4" , stat.PASS);
         } catch(Exception e) {
             e.printStackTrace();
@@ -126,11 +126,11 @@ public class Client {
     private void doTest5() {
         try {
             String result = sful.callDummy();
-	    System.out.println("[Test5]: Got: " + result
-			    + " INSTEAD of CallBlockedException");
+        System.out.println("[Test5]: Got: " + result
+                + " INSTEAD of CallBlockedException");
             stat.addStatus("local test5" , stat.FAIL);
         } catch (CallBlockedException callBlkEx) {
-	    System.out.println("Got expected Exception: " + callBlkEx);
+        System.out.println("Got expected Exception: " + callBlkEx);
             stat.addStatus("local test5" , stat.PASS);
         } catch(Exception e) {
             e.printStackTrace();
@@ -143,7 +143,7 @@ public class Client {
             sful.eatException();
             stat.addStatus("local test6" , stat.PASS);
         } catch(Exception e) {
-	    System.out.println("Got unexpected Exception: " + e);
+        System.out.println("Got unexpected Exception: " + e);
             e.printStackTrace();
             stat.addStatus("local test6" , stat.FAIL);
         }
@@ -151,40 +151,40 @@ public class Client {
 
     private void doTest7_8() {
         try {
-	    int sz = 20;
+        int sz = 20;
         Context ctx = new InitialContext();
-	    sful.resetLifecycleCallbackCounters();
-	    Sful[] sfuls = new Sful[sz];
-	    for (int i=0; i<sz; i++) {
-    		sfuls[i] = (Sful) ctx.lookup("com.sun.s1asdev.ejb.ejb30.interceptors.session.Sful");
-    		int prevIndex = (i ==0) ? 0 : i-1;
-    		System.out.println("Created sful["+i+"]: " + sfuls[i] + " ==> "
-    		        + sfuls[prevIndex].equals(sfuls[i]));
-		    sfuls[i].setID(i);
+        sful.resetLifecycleCallbackCounters();
+        Sful[] sfuls = new Sful[sz];
+        for (int i=0; i<sz; i++) {
+            sfuls[i] = (Sful) ctx.lookup("com.sun.s1asdev.ejb.ejb30.interceptors.session.Sful");
+            int prevIndex = (i ==0) ? 0 : i-1;
+            System.out.println("Created sful["+i+"]: " + sfuls[i] + " ==> "
+                    + sfuls[prevIndex].equals(sfuls[i]));
+            sfuls[i].setID(i);
             sfuls[i].getCount();
-	    }
-	    sleepFor(10);
-	    for (int i=0; i<sz; i++) {
-	        sfuls[i].getCount();
-	    }
-	    int passivationCount = sful.getPrePassivateCallbackCount();
-	    int activationCount = sful.getPostActivateCallbackCount();
-	    
+        }
+        sleepFor(10);
+        for (int i=0; i<sz; i++) {
+            sfuls[i].getCount();
+        }
+        int passivationCount = sful.getPrePassivateCallbackCount();
+        int activationCount = sful.getPostActivateCallbackCount();
+
         boolean status = (passivationCount > 0) && (activationCount> 0);
         System.out.println("passivation: " + passivationCount + "; "
-		    + "activation: " + activationCount);
-        stat.addStatus("local test7" , 
-		    (status == true) ? stat.PASS : stat.FAIL);
-        
+            + "activation: " + activationCount);
+        stat.addStatus("local test7" ,
+            (status == true) ? stat.PASS : stat.FAIL);
+
         boolean stateRestored = true;
         for (int i=0; i<sz; i++) {
             boolean ok = sfuls[i].isStateRestored();
             System.out.println("stateRestored[" + i + "]:" + ok);
             stateRestored = ok && status;
         }
-        stat.addStatus("local test8" , 
+        stat.addStatus("local test8" ,
                 (stateRestored == true) ? stat.PASS : stat.FAIL);
-        
+
         } catch(Exception e) {
             System.out.println("Got unexpected Exception: " + e);
                 e.printStackTrace();
@@ -199,7 +199,7 @@ public class Client {
             System.out.println("Test[" + testName + "]: " + map.get(testName));
             checkSetParamsStatus = checkSetParamsStatus && map.get(testName);
         }
-        stat.addStatus("local test9" , 
+        stat.addStatus("local test9" ,
                 (checkSetParamsStatus == true) ? stat.PASS : stat.FAIL);
     }
 
@@ -221,18 +221,18 @@ public class Client {
             failedCountStatus = false;
         }
 
-        stat.addStatus("local test10 " + trueStatus + " : " + sful.getAssertionFailedCount() , 
+        stat.addStatus("local test10 " + trueStatus + " : " + sful.getAssertionFailedCount() ,
                 ((trueStatus && failedCountStatus) == true) ? stat.PASS : stat.FAIL);
     }
 
     private static void sleepFor(int seconds) {
-	while (seconds-- > 0) {
-	    try {
-		System.out.println("" + seconds + " left...");
-		Thread.currentThread().sleep(1000);
-	    } catch (InterruptedException inEx) {
-	    }
-	}
+    while (seconds-- > 0) {
+        try {
+        System.out.println("" + seconds + " left...");
+        Thread.currentThread().sleep(1000);
+        } catch (InterruptedException inEx) {
+        }
+    }
     }
 
 }

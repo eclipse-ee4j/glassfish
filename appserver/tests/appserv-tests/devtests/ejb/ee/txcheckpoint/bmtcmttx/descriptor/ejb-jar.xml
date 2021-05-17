@@ -35,7 +35,7 @@
         <ejb-ref-type>Session</ejb-ref-type>
         <home>com.sun.s1asdev.ejb.ee.ejb.CMTSessionHome</home>
         <remote>com.sun.s1asdev.ejb.ee.ejb.CMTSession</remote>
-	<ejb-link>CMTSession</ejb-link>
+    <ejb-link>CMTSession</ejb-link>
       </ejb-ref>
       <security-identity>
         <use-caller-identity/>

@@ -38,15 +38,15 @@ import org.w3c.dom.Node;
  *  This class handles all information pertinent to CMP and BMP entity beans
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
 
     private EjbEntityDescriptor descriptor;
 
-    public EjbEntityNode() { 
-        super();      
-        registerElementHandler(new XMLElement(EjbTagNames.CMP_FIELD), CmpFieldNode.class);          
+    public EjbEntityNode() {
+        super();
+        registerElementHandler(new XMLElement(EjbTagNames.CMP_FIELD), CmpFieldNode.class);
         registerElementHandler(new XMLElement(EjbTagNames.QUERY), QueryNode.class);
     }
 
@@ -60,7 +60,7 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
     }
 
     /**
-     * @return an instance of an EjbCMPEntityDescriptor initialized with all the 
+     * @return an instance of an EjbCMPEntityDescriptor initialized with all the
      * fields already parsed.
      */
     private EjbCMPEntityDescriptor getCMPEntityDescriptor() {
@@ -74,11 +74,11 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
     @Override
     public void addDescriptor(Object  newDescriptor) {
         if (newDescriptor instanceof FieldDescriptor) {
-           getCMPEntityDescriptor().getPersistenceDescriptor().addCMPField((FieldDescriptor) newDescriptor);           
+           getCMPEntityDescriptor().getPersistenceDescriptor().addCMPField((FieldDescriptor) newDescriptor);
         } else  if (newDescriptor instanceof QueryDescriptor) {
             QueryDescriptor newQuery = (QueryDescriptor) newDescriptor;
            getCMPEntityDescriptor().getPersistenceDescriptor().setQueryFor(
-                        newQuery.getQueryMethodDescriptor(), newQuery);           
+                        newQuery.getQueryMethodDescriptor(), newQuery);
         } else {
             super.addDescriptor(newDescriptor);
         }
@@ -88,9 +88,9 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
-        table.put(EjbTagNames.PERSISTENCE_TYPE, "setPersistenceType");    
-        table.put(EjbTagNames.PRIMARY_KEY_CLASS, "setPrimaryKeyClassName");              
-        table.put(EjbTagNames.REENTRANT, "setReentrant");    
+        table.put(EjbTagNames.PERSISTENCE_TYPE, "setPersistenceType");
+        table.put(EjbTagNames.PRIMARY_KEY_CLASS, "setPrimaryKeyClassName");
+        table.put(EjbTagNames.REENTRANT, "setReentrant");
         return table;
     }
 
@@ -100,7 +100,7 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
             if (EjbTagNames.CMP_1_VERSION.equals(value)) {
                 getCMPEntityDescriptor().setCMPVersion(EjbCMPEntityDescriptor.CMP_1_1);
             } else if (EjbTagNames.CMP_2_VERSION.equals(value)) {
-                getCMPEntityDescriptor().setCMPVersion(EjbCMPEntityDescriptor.CMP_2_x);                
+                getCMPEntityDescriptor().setCMPVersion(EjbCMPEntityDescriptor.CMP_2_x);
             }
         } else if (EjbTagNames.ABSTRACT_SCHEMA_NAME.equals(element.getQName())) {
             getCMPEntityDescriptor().setAbstractSchemaName(value);
@@ -116,20 +116,20 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
         Node ejbNode = super.writeDescriptor(parent, nodeName, ejbDesc);
         writeDisplayableComponentInfo(ejbNode, ejbDesc);
         writeCommonHeaderEjbDescriptor(ejbNode, ejbDesc);
-        appendTextChild(ejbNode, EjbTagNames.PERSISTENCE_TYPE, ejbDesc.getPersistenceType());                   
-        appendTextChild(ejbNode, EjbTagNames.PRIMARY_KEY_CLASS, ejbDesc.getPrimaryKeyClassName());                  
-        appendTextChild(ejbNode, EjbTagNames.REENTRANT, ejbDesc.getReentrant());                  
-        
+        appendTextChild(ejbNode, EjbTagNames.PERSISTENCE_TYPE, ejbDesc.getPersistenceType());
+        appendTextChild(ejbNode, EjbTagNames.PRIMARY_KEY_CLASS, ejbDesc.getPrimaryKeyClassName());
+        appendTextChild(ejbNode, EjbTagNames.REENTRANT, ejbDesc.getReentrant());
+
         // cmp entity beans related tags
         if (ejbDesc instanceof EjbCMPEntityDescriptor) {
             EjbCMPEntityDescriptor cmpDesc = (EjbCMPEntityDescriptor) ejbDesc;
             if (cmpDesc.getCMPVersion()==EjbCMPEntityDescriptor.CMP_1_1) {
-                appendTextChild(ejbNode, EjbTagNames.CMP_VERSION, EjbTagNames.CMP_1_VERSION);                   
+                appendTextChild(ejbNode, EjbTagNames.CMP_VERSION, EjbTagNames.CMP_1_VERSION);
             } else {
-                appendTextChild(ejbNode, EjbTagNames.CMP_VERSION, EjbTagNames.CMP_2_VERSION);                   
+                appendTextChild(ejbNode, EjbTagNames.CMP_VERSION, EjbTagNames.CMP_2_VERSION);
             }
-            
-            appendTextChild(ejbNode, EjbTagNames.ABSTRACT_SCHEMA_NAME, cmpDesc.getAbstractSchemaName());                  
+
+            appendTextChild(ejbNode, EjbTagNames.ABSTRACT_SCHEMA_NAME, cmpDesc.getAbstractSchemaName());
             // cmp-field*
             CmpFieldNode cmpNode = new CmpFieldNode();
             for (Iterator fields = cmpDesc.getPersistenceDescriptor().getCMPFields().iterator();fields.hasNext();) {
@@ -137,34 +137,34 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
                 cmpNode.writeDescriptor(ejbNode, EjbTagNames.CMP_FIELD, aField);
             }
             if ( cmpDesc.getPrimaryKeyFieldDesc()!=null) {
-                appendTextChild(ejbNode, EjbTagNames.PRIMARY_KEY_FIELD, cmpDesc.getPrimaryKeyFieldDesc().getName());                
+                appendTextChild(ejbNode, EjbTagNames.PRIMARY_KEY_FIELD, cmpDesc.getPrimaryKeyFieldDesc().getName());
             }
         }
-        
+
         // env-entry*
         writeEnvEntryDescriptors(ejbNode, ejbDesc.getEnvironmentProperties().iterator());
-        
+
         // ejb-ref * and ejb-local-ref*
         writeEjbReferenceDescriptors(ejbNode, ejbDesc.getEjbReferenceDescriptors().iterator());
 
         // service-ref*
         writeServiceReferenceDescriptors(ejbNode, ejbDesc.getServiceReferenceDescriptors().iterator());
-        
+
         // resource-ref*
         writeResourceRefDescriptors(ejbNode, ejbDesc.getResourceReferenceDescriptors().iterator());
-        
+
         // resource-env-ref*
-        writeResourceEnvRefDescriptors(ejbNode, ejbDesc.getResourceEnvReferenceDescriptors().iterator());        
-        
+        writeResourceEnvRefDescriptors(ejbNode, ejbDesc.getResourceEnvReferenceDescriptors().iterator());
+
         // message-destination-ref*
         writeMessageDestinationRefDescriptors(ejbNode, ejbDesc.getMessageDestinationReferenceDescriptors().iterator());
 
         // persistence-context-ref*
         writeEntityManagerReferenceDescriptors(ejbNode, ejbDesc.getEntityManagerReferenceDescriptors().iterator());
-        
+
         // persistence-unit-ref*
         writeEntityManagerFactoryReferenceDescriptors(ejbNode, ejbDesc.getEntityManagerFactoryReferenceDescriptors().iterator());
-        
+
         // post-construct
         writeLifeCycleCallbackDescriptors(ejbNode, TagNames.POST_CONSTRUCT, ejbDesc.getPostConstructDescriptors());
 
@@ -176,7 +176,7 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
 
         // security-role-ref*
         writeRoleReferenceDescriptors(ejbNode, ejbDesc.getRoleReferences().iterator());
-        
+
         // security-identity
         writeSecurityIdentityDescriptor(ejbNode, ejbDesc);
 
@@ -189,9 +189,9 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
                 for (Iterator e=queriedMethods.iterator();e.hasNext();) {
                     queryNode.writeDescriptor(ejbNode, EjbTagNames.QUERY,
                         cmpDesc.getPersistenceDescriptor().getQueryFor((MethodDescriptor) e.next()));
-                }                            
+                }
             }
-        }            
+        }
         return ejbNode;
-    }    
+    }
 }

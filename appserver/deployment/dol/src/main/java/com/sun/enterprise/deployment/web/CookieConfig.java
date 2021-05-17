@@ -30,7 +30,7 @@ public interface CookieConfig {
     public void setDomain(String domain);
 
     public String getPath();
-    public void setPath(String path); 
+    public void setPath(String path);
 
     public String getComment();
     public void setComment(String comment);

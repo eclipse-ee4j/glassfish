@@ -55,7 +55,7 @@ import com.sun.jndi.ldap.BerEncoder;
  *       while (results != null && results.hasMore()) {
  *           SearchResult sr = (SearchResult) results.next();
  *
- *	     // Gets only real attributes
+ *         // Gets only real attributes
  *           Attributes realAttrs = sr.getAttributes();
  *
  * </pre>
@@ -79,6 +79,6 @@ public class RealAttributesOnlyControl extends BasicControl {
      * The control is always marked critical.
      */
     public RealAttributesOnlyControl() {
-	super(OID, true, null);
+    super(OID, true, null);
     }
 }

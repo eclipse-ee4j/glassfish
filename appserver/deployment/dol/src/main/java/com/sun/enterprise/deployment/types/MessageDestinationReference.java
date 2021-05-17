@@ -18,7 +18,7 @@ package com.sun.enterprise.deployment.types;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
 
-/** 
+/**
  * Protocol associated with defining an EJB Interface
  *
  * @author Kenneth Saks
@@ -30,7 +30,7 @@ public interface MessageDestinationReference extends MessageDestinationReference
     public static String PRODUCES = "Produces";
     public static String CONSUMES_AND_PRODUCES = "ConsumesProduces";
 
-    /** 
+    /**
      * @return the type of the message destination reference
      */
     public String getType();
@@ -54,13 +54,13 @@ public interface MessageDestinationReference extends MessageDestinationReference
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * message destination reference is declared. 
+     * message destination reference is declared.
      */
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * message destinaion reference is declared.  
+     * message destinaion reference is declared.
      */
     public BundleDescriptor getReferringBundleDescriptor();
 

@@ -31,11 +31,11 @@ import jakarta.servlet.ServletRequest;
  * @author  Administrator
  */
 public interface SessionLocker {
-    
+
     public void init(Context context);
-    
+
     public boolean lockSession(ServletRequest req) throws ServletException;
-    
+
     public void unlockSession(ServletRequest req);
-    
+
 }

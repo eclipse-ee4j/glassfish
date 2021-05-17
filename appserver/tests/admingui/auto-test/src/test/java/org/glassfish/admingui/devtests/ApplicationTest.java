@@ -26,7 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -69,7 +69,7 @@ public class ApplicationTest extends BaseSeleniumTestClass {
         driver.findElement(By.id("form:sheet1:section1:prop1:uploadRdBtn:uploadRdBtn_label"));
         File war = new File("src/test/resources/test.war");
         driver.findElement(By.id(ELEMENT_FILE_FIELD)).sendKeys(war.getAbsoluteFile().toString());
-        
+
         assertEquals("test", getValue(ELEMENT_CONTEXT_ROOT, "value"));
         assertEquals("test", getValue(ELEMENT_APP_NAME, "value"));
 
@@ -84,7 +84,7 @@ public class ApplicationTest extends BaseSeleniumTestClass {
         sleep(1000);
         int postCount = getTableRowCount(ELEMENT_DEPLOY_TABLE);
         assertTrue (preCount < postCount);
-        
+
         // Disable application
         String prefix = getTableRowByValue(ELEMENT_DEPLOY_TABLE, applicationName, "col1");
         assertEquals(applicationName, getText(prefix + "col1:link"));
@@ -104,7 +104,7 @@ public class ApplicationTest extends BaseSeleniumTestClass {
         clickByIdAction(clickId);
         assertTrue(driver.findElement(By.id(ELEMENT_STATUS)).isSelected());
         clickAndWait(ELEMENT_CANCEL_BUTTON);
-        
+
         // Undeploy application
         clickByIdAction(selectId);
         clickAndWait(ELEMENT_UNDEPLOY_BUTTON);

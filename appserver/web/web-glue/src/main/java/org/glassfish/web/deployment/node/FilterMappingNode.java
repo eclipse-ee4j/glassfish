@@ -44,7 +44,7 @@ import jakarta.servlet.DispatcherType;
  * This node handles all information relative to servlet-mapping xml tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class FilterMappingNode extends DeploymentDescriptorNode<ServletFilterMappingDescriptor> {
 
@@ -57,17 +57,17 @@ public class FilterMappingNode extends DeploymentDescriptorNode<ServletFilterMap
      */
     @Override
     public ServletFilterMappingDescriptor getDescriptor() {
-        
+
        if (descriptor==null) {
             descriptor = new ServletFilterMappingDescriptor();
         }
         return descriptor;
-    }    
-    
+    }
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -75,11 +75,11 @@ public class FilterMappingNode extends DeploymentDescriptorNode<ServletFilterMap
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.FILTER_NAME, "setName");
         return table;
-    }    
-    
+    }
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -122,12 +122,12 @@ public class FilterMappingNode extends DeploymentDescriptorNode<ServletFilterMap
         } else if (WebTagNames.DISPATCHER.equals(element.getQName())) {
             descriptor.addDispatcher(value);
         } else super.setElementValue(element, value);
-    }   
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
@@ -135,7 +135,7 @@ public class FilterMappingNode extends DeploymentDescriptorNode<ServletFilterMap
     @Override
     public Node writeDescriptor(Node parent, String nodeName, ServletFilterMappingDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        appendTextChild(myNode, WebTagNames.FILTER_NAME, descriptor.getName());                        
+        appendTextChild(myNode, WebTagNames.FILTER_NAME, descriptor.getName());
         for (String servletName : descriptor.getServletNames()) {
             appendTextChild(myNode, WebTagNames.SERVLET_NAME, servletName);
         }

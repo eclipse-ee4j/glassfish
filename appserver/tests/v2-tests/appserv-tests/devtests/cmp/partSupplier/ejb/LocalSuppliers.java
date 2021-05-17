@@ -25,6 +25,6 @@ import jakarta.ejb.*;
  */
 
 public interface LocalSuppliers extends jakarta.ejb.EJBLocalObject {
-    
+
 }
 

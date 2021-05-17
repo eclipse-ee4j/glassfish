@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+    <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+    </exec>
   </target>
 
   <target name="compile" depends="">
@@ -52,16 +52,16 @@
   <target name="assemble" depends="init-common, build, compile">
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="SimpleTest.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="DocLitMapping.xml"/>
+    <copy todir="${build.classes.dir}"
+     file="DocLitMapping.xml"/>
     <antcall target="ejb-jar-common">
-      <param name="ejbjar.classes" 
+      <param name="ejbjar.classes"
              value="DocLitMapping.xml,META-INF/wsdl/**,doclit/*.class" />
 
     </antcall>
-  </target> 
+  </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-jar-common"/>
     </target>
@@ -75,19 +75,19 @@
 
     <target name="run" depends="init-common">
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-jar-common"/>
-    </target>  
+    </target>
 
   <target name="wscompile-ejb" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d output -s output -classpath . wscompile_config.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/doclit">
-       <fileset dir="output/doclit" 
+       <fileset dir="output/doclit"
                 includes="SimpleTest.class"/>
     </copy>
     <delete dir="output"/>
@@ -98,23 +98,23 @@
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
       <!-- use model -->
-      <param name="wscompile.command" 
-       value="-gen -cp . -keep -d output -Xdebugmodel:anyRpcModel.txt -model DocLitMapping.xml wscompile_config.xml"/> 
+      <param name="wscompile.command"
+       value="-gen -cp . -keep -d output -Xdebugmodel:anyRpcModel.txt -model DocLitMapping.xml wscompile_config.xml"/>
 
       <!-- use mapping -->
-<!-- 
-      <param name="wscompile.command" 
-       value="-gen -cp . -keep -d output -Xdebugmodel:anyRpcModel.txt -mapping RpcLitMapping.xml wscompile_config.xml"/> 
+<!--
+      <param name="wscompile.command"
+       value="-gen -cp . -keep -d output -Xdebugmodel:anyRpcModel.txt -mapping RpcLitMapping.xml wscompile_config.xml"/>
 -->
     </antcall>
     <delete dir="output"/>
   </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes the WebServices test)
-			ant clean 
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes the WebServices test)
+            ant clean
+    </echo>
     </target>
 </project>

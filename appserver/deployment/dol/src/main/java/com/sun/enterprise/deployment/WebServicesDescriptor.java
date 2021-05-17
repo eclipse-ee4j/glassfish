@@ -36,8 +36,8 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
     private BundleDescriptor bundleDesc;
 
     private Collection<WebService> webServices;
-    /** 
-     * Default constructor. 
+    /**
+     * Default constructor.
      */
     public WebServicesDescriptor() {
         webServices = new HashSet<WebService>();
@@ -143,20 +143,20 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
         }
         return allEndpoints;
     }
-    
+
     public ArchiveType getModuleType() {
         if (bundleDesc!=null) {
-          return bundleDesc.getModuleType();  
-        } 
-        return null; 
+          return bundleDesc.getModuleType();
+        }
+        return null;
     }
 
-    
+
     //
     // Dummy RootDeploymentDescriptor implementations for methods that
     // do not apply to WebServicesDescriptor.
     //
-    public String getModuleID() { return ""; } 
+    public String getModuleID() { return ""; }
     public ClassLoader getClassLoader() { return null; }
     public boolean isApplication() {return false; }
 
@@ -164,7 +164,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
      * Returns a formatted String of the attributes of this object.
      */
     public void print(StringBuffer toStringBuffer) {
-	super.print(toStringBuffer);
+    super.print(toStringBuffer);
         if (hasWebServices()) {
             for (Iterator itr = getWebServices().iterator();itr.hasNext();) {
                 WebService aWebService = (WebService) itr.next();
@@ -173,5 +173,5 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
             }
         }
     }
-    
-}    
+
+}

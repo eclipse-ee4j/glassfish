@@ -27,7 +27,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6" xsi:schemaLoca
   </module>
   <!--
   <module>
-    <java>app-client-ic.jar</java> 
+    <java>app-client-ic.jar</java>
   </module>
   -->
   <module>

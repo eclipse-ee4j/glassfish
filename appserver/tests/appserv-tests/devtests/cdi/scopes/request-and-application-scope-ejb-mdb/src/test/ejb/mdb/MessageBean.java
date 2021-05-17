@@ -58,7 +58,7 @@ public class MessageBean implements MessageListener {
     TestApplicationScopedBean tasb;
     @Inject
     TestRequestScopedBean trsb;
-    
+
     @Inject BeanManager bm;
 
     public void onMessage(Message message) {
@@ -88,7 +88,7 @@ public class MessageBean implements MessageListener {
             if (trsb == null)
                 throw new Exception(
                         "Injection of request scoped Bean in MDB failed");
-            
+
             connection = qcFactory.createQueueConnection();
             QueueSession session = connection.createQueueSession(false,
                     Session.AUTO_ACKNOWLEDGE);

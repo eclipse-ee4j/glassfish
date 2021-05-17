@@ -86,7 +86,7 @@
     <exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file">
         <arg value="-v" />
     </exec>
-    
+
     <loadfile srcfile="pid.out.file" property="pid.out">
         <filterchain>
             <linecontains>
@@ -101,7 +101,7 @@
             <striplinebreaks />
         </filterchain>
     </loadfile>
-    
+
     <echo>Dumping the thread stack for Appserver instance with PID - "${pid.out}"</echo>
     <exec executable="${env.JAVA_HOME}/bin/jstack">
         <arg value="${pid.out}" />

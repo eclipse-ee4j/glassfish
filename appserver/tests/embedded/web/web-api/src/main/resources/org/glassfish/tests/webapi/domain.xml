@@ -36,7 +36,7 @@
     </jdbc-connection-pool>
   </resources>
   <servers>
-    <server name="server" config-ref="server-config"> 
+    <server name="server" config-ref="server-config">
       <resource-ref ref="jdbc/__TimerPool" />
       <resource-ref ref="jdbc/__default" />
     </server>
@@ -131,7 +131,7 @@
       </security-service>
       <monitoring-service>
         <module-monitoring-levels />
-      </monitoring-service>      
+      </monitoring-service>
       <transaction-service tx-log-dir="${com.sun.aas.instanceRoot}/logs" >
       </transaction-service>
       <network-config>
@@ -142,12 +142,12 @@
         <transports>
           <transport name="tcp"></transport>
         </transports>
-      </network-config>       
+      </network-config>
       <thread-pools>
           <thread-pool name="http-thread-pool" max-queue-size="4096"></thread-pool>
           <thread-pool name="thread-pool-1" max-thread-pool-size="200"/>
       </thread-pools>
-    </config> 
+    </config>
   </configs>
   <property name="administrative.domain.name" value="domain1"/>
 </domain>

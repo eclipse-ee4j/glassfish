@@ -16,20 +16,20 @@
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config" 
-                            dumpMessages="true">                           
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config"
+                            dumpMessages="true">
     <xwss:Timestamp/>
-    <xwss:RequireUsernameToken nonceRequired="false" passwordDigestRequired="false"/>   
+    <xwss:RequireUsernameToken nonceRequired="false" passwordDigestRequired="false"/>
     <xwss:RequireEncryption>
         <xwss:Target type="qname">{http://schemas.xmlsoap.org/soap/envelope/}Body</xwss:Target>
     </xwss:RequireEncryption>
     <xwss:RequireSignature>
         <xwss:Target type="qname">{http://schemas.xmlsoap.org/soap/envelope/}Body</xwss:Target>
-    </xwss:RequireSignature>     
+    </xwss:RequireSignature>
     <xwss:Encrypt keyEncryptionAlgorithm="RSA_v1dot5">
         <xwss:X509Token certificateAlias="s1as"/>
-	<xwss:Target type="uri">#username-token</xwss:Target>
-    </xwss:Encrypt>    
+    <xwss:Target type="uri">#username-token</xwss:Target>
+    </xwss:Encrypt>
     <xwss:Sign>
         <xwss:X509Token certificateAlias="s1as"/>
     </xwss:Sign>

@@ -509,7 +509,7 @@ public final class StringUtil
 
         return (strings);
     }
-    
+
 
     public static String toLines(final List<String> items)
     {

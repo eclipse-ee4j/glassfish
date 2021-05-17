@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  * This class is the super class for all integral and floating point types.
  *
  * @author  Michael Bouschen
@@ -32,15 +32,15 @@ public interface NumberType
 {
     /**
      * Converts the specified value into a value of this numeric type.
-     * E.g. an Integer is converted into a Double, if this represents 
+     * E.g. an Integer is converted into a Double, if this represents
      * the numeric type double.
      * @param value value to be converted
      * @return converted value
      */
     public Number getValue(Number value);
-    
+
     /**
-     * Returns -value. 
+     * Returns -value.
      * @param value value to be negated
      * @return -value
      */

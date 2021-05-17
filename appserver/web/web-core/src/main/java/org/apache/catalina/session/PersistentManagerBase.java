@@ -56,71 +56,71 @@ public abstract class PersistentManagerBase
     private class PrivilegedStoreClear
         implements PrivilegedExceptionAction<Void> {
 
-        PrivilegedStoreClear() {            
+        PrivilegedStoreClear() {
             // NOOP
         }
 
         public Void run() throws Exception{
            store.clear();
            return null;
-        }                       
-    }   
-     
+        }
+    }
+
      private class PrivilegedStoreRemove
         implements PrivilegedExceptionAction<Void> {
 
-        private String id;    
-            
-        PrivilegedStoreRemove(String id) {     
+        private String id;
+
+        PrivilegedStoreRemove(String id) {
             this.id = id;
         }
 
         public Void run() throws Exception{
            store.remove(id);
            return null;
-        }                       
-    }   
-     
+        }
+    }
+
     private class PrivilegedStoreLoad
         implements PrivilegedExceptionAction<Session> {
 
-        private String id;    
-            
-        PrivilegedStoreLoad(String id) {     
+        private String id;
+
+        PrivilegedStoreLoad(String id) {
             this.id = id;
         }
 
         public Session run() throws Exception{
            return store.load(id);
-        }                       
-    }   
-          
+        }
+    }
+
     private class PrivilegedStoreSave
         implements PrivilegedExceptionAction<Void> {
 
-        private Session session;    
-            
-        PrivilegedStoreSave(Session session) {     
+        private Session session;
+
+        PrivilegedStoreSave(Session session) {
             this.session = session;
         }
 
         public Void run() throws Exception{
            store.save(session);
            return null;
-        }                       
-    }   
-     
+        }
+    }
+
     private class PrivilegedStoreKeys
         implements PrivilegedExceptionAction<String[]> {
 
-        PrivilegedStoreKeys() {     
+        PrivilegedStoreKeys() {
             // NOOP
         }
 
         public String[] run() throws Exception{
            return store.keys();
-        }                       
-    }   
+        }
+    }
     // ----------------------------------------------------- Instance Variables
 
 
@@ -525,7 +525,7 @@ public abstract class PersistentManagerBase
         if (store == null)
             return;
 
-        try {     
+        try {
             if (SecurityUtil.isPackageProtectionEnabled()){
                 try{
                     AccessController.doPrivileged(new PrivilegedStoreClear());
@@ -541,8 +541,8 @@ public abstract class PersistentManagerBase
         }
 
     }
-    
-    
+
+
     /**
      * Invalidate all sessions that have expired.
      * Hercules: modified method
@@ -561,17 +561,17 @@ public abstract class PersistentManagerBase
             */
             // START CR 6363689
             if(!session.getIsValid() || session.hasExpired()) {
-            // END CR 6363689            
-                if(session.lockBackground()) { 
+            // END CR 6363689
+                if(session.lockBackground()) {
                     try {
                         session.expire();
                     } finally {
                         session.unlockBackground();
                     }
-                }                                
-	    }            
+                }
         }
-    }        
+        }
+    }
 
 
     /**
@@ -608,7 +608,7 @@ public abstract class PersistentManagerBase
                 removeFromInvalidatedSessions(id);
             }
         }
-    }        
+    }
 
 
     /**
@@ -675,12 +675,12 @@ public abstract class PersistentManagerBase
      *  processing this request
      */
     public Session findSession(String id) throws IOException {
-        
+
         //6406580 START
         if(!this.isSessionIdValid(id)) {
             return null;
         }
-        //6406580 END        
+        //6406580 END
 
         Session session = super.findSession(id);
         if (session != null)
@@ -690,8 +690,8 @@ public abstract class PersistentManagerBase
         session = swapIn(id);
         return (session);
 
-    }       
-    
+    }
+
     /**
      * Return the active Session, associated with this Manager, with the
      * specified session id (if any); otherwise return <code>null</code>.
@@ -716,27 +716,27 @@ public abstract class PersistentManagerBase
                 removeSuper(theSession);
                 //remove from store cache if it exists
                 if ((this.getStore() != null)
-                    && (this.getStore() instanceof StoreBase)) {                
+                    && (this.getStore() instanceof StoreBase)) {
                     ((StoreBase) this.getStore()).removeFromStoreCache(id);
                 }
                 theSession = null;
             } else {
                 return (theSession);
             }
-        } 
+        }
         //now do full findSession
-        theSession = findSession(id);   
+        theSession = findSession(id);
         return theSession;
 
-    }     
-    
+    }
+
     /**
      * used by subclasses of PersistentManagerBase
      * Hercules: added method
-     */    
+     */
     protected Session superFindSession(String id) throws IOException {
         return super.findSession(id);
-    }     
+    }
 
     /**
      * Remove this Session from the active Sessions for this Manager,
@@ -799,7 +799,7 @@ public abstract class PersistentManagerBase
             }
 
     }
-    
+
     /**
      * Remove this Session from the active Sessions for this Manager,
      * and from the Store.
@@ -809,7 +809,7 @@ public abstract class PersistentManagerBase
     public void remove(Session session) {
         remove(session, true);
     }
-    
+
     /**
      * Remove this Session from the active Sessions for this Manager,
      * and from the Store.
@@ -824,14 +824,14 @@ public abstract class PersistentManagerBase
         if (persistentRemove && store != null){
             removeSession(session.getIdInternal());
         }
-    }    
-    
+    }
+
     /**
      * Remove this Session from the active Sessions for this Manager,
      * and from the Store.
      *
      * @param id Session's id to be removed
-     */    
+     */
     private void removeSession(String id){
         try {
             if (SecurityUtil.isPackageProtectionEnabled()){
@@ -843,10 +843,10 @@ public abstract class PersistentManagerBase
                 }
             } else {
                  store.remove(id);
-            }               
+            }
         } catch (IOException e) {
             log.log(Level.SEVERE, LogFacade.REMOVING_SESSION_EXCEPTION, e);
-        }        
+        }
     }
 
 
@@ -862,25 +862,25 @@ public abstract class PersistentManagerBase
                                 Long.valueOf(System.currentTimeMillis()));
     }
 
-    
+
     /**
      * Removes the given session id from the map of invalidated session ids.
      *
      * @param sessionId The session id to remove
      */
-    public void removeFromInvalidatedSessions(String sessionId) {       
+    public void removeFromInvalidatedSessions(String sessionId) {
         invalidatedSessions.remove(sessionId);
-    }    
-    
+    }
+
 
     /**
      * @return true if the given session id is not contained in the map of
      * invalidated session ids, false otherwise
      */
-    public boolean isSessionIdValid(String sessionId) {       
+    public boolean isSessionIdValid(String sessionId) {
         return (!invalidatedSessions.containsKey(sessionId));
     }
-    // END SJSAS 6406580    
+    // END SJSAS 6406580
 
 
     /**
@@ -976,7 +976,7 @@ public abstract class PersistentManagerBase
 
         if (store == null)
             return null;
-        
+
         Session session = null;
         try {
             if (SecurityUtil.isPackageProtectionEnabled()){
@@ -993,12 +993,12 @@ public abstract class PersistentManagerBase
                     }
                 }
             } else {
-		if (version != null) {
+        if (version != null) {
                      session = ((StoreBase) store).load(id, version);
                 } else {
                      session = store.load(id);
                 }
-            }   
+            }
         } catch (ClassNotFoundException e) {
             String msg = MessageFormat.format(rb.getString(LogFacade.DESERILIZING_SESSION_EXCEPTION),
                                               new Object[] {id, e});
@@ -1016,7 +1016,7 @@ public abstract class PersistentManagerBase
             session.expire();
             removeSession(id);
              */
-            //6406580 END            
+            //6406580 END
             return (null);
         }
 
@@ -1089,7 +1089,7 @@ public abstract class PersistentManagerBase
                 }
             } else {
                  store.save(session);
-            }   
+            }
         } catch (IOException e) {
             log.log(Level.SEVERE,LogFacade.SERIALIZING_SESSION_EXCEPTION, new Object[] {session.getIdInternal(), e});
             throw e;
@@ -1155,7 +1155,7 @@ public abstract class PersistentManagerBase
         }
         if( ! initialized )
             init();
-        
+
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
@@ -1194,7 +1194,7 @@ public abstract class PersistentManagerBase
             }
             return;
         }
-        
+
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         setStarted(false);
 
@@ -1289,14 +1289,14 @@ public abstract class PersistentManagerBase
         }
 
     }
-    
-    
+
+
     /**
      * Swap idle sessions out to Store if too many are active
      * Hercules: modified method
      */
     protected void processMaxActiveSwaps() {
-        
+
         if (!isStarted() || getMaxActiveSessions() < 0)
             return;
 
@@ -1326,11 +1326,11 @@ public abstract class PersistentManagerBase
                     try {
                         swapOut(session);
                     } catch (java.util.ConcurrentModificationException e1) {
-                        // This is logged in writeSession()                           
+                        // This is logged in writeSession()
                     } catch (IOException e) {
                         // This is logged in writeSession()
                     } catch (Exception e) {
-                        // This is logged in writeSession()                        
+                        // This is logged in writeSession()
                     } finally {
                         session.unlockBackground();
                     }
@@ -1339,15 +1339,15 @@ public abstract class PersistentManagerBase
             }
         }
 
-    }        
-    
-    
+    }
+
+
     /**
      * Back up idle sessions.
      * Hercules: modified method
      */
     protected void processMaxIdleBackups() {
-        
+
         if (!isStarted() || maxIdleBackup < 0)
             return;
 
@@ -1359,12 +1359,12 @@ public abstract class PersistentManagerBase
             for (int i = 0; i < sessions.length; i++) {
                 StandardSession session = (StandardSession) sessions[i];
                 if (!session.isValid())
-                    continue;                
+                    continue;
                 int timeIdle = // Truncate, do not round up
                     (int) ((timeNow - session.getLastAccessedTime()) / 1000L);
-                if (timeIdle > maxIdleBackup) { 
+                if (timeIdle > maxIdleBackup) {
                     //if session cannot be background locked then skip it
-                    if (session.lockBackground()) {                         
+                    if (session.lockBackground()) {
                         if (log.isLoggable(Level.FINE)) {
                             log.log(Level.FINE, LogFacade.BACKUP_SESSION_TO_STORE, new Object[] {session.getIdInternal(),
                                     Integer.valueOf(timeIdle)});
@@ -1372,11 +1372,11 @@ public abstract class PersistentManagerBase
                         try {
                             writeSession(session);
                         } catch (java.util.ConcurrentModificationException e1) {
-                            // This is logged in writeSession()                            
+                            // This is logged in writeSession()
                         } catch (IOException e) {
                             // This is logged in writeSession()
                         } catch (Exception e) {
-                            // This is logged in writeSession()                                
+                            // This is logged in writeSession()
                         } finally {
                             session.unlockBackground();
                         }
@@ -1386,11 +1386,11 @@ public abstract class PersistentManagerBase
         }
 
     }
-    
+
     public String getMonitorAttributeValues() {
         //FIXME if desired for monitoring 'file'
         return "";
-    }    
+    }
 
 
 }

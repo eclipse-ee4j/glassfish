@@ -20,11 +20,11 @@ import org.glassfish.admin.amx.util.ClassUtil;
 
 public class ClassNameStringifier implements Stringifier
 {
-		public String
-	stringify( Object o )
-	{
-		final String	className	= (String)o;
-		
-		return( ClassUtil.getFriendlyClassname( className ) );
-	}
+        public String
+    stringify( Object o )
+    {
+        final String    className    = (String)o;
+
+        return( ClassUtil.getFriendlyClassname( className ) );
+    }
 }

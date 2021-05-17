@@ -34,7 +34,7 @@ import org.glassfish.grizzly.http.util.HttpUtils;
 /**
  * Allows the different SSICommand implementations to share data/talk to each
  * other
- * 
+ *
  * @author Bip Thelin
  * @author Amy Roh
  * @author Paul Speed

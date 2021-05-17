@@ -37,12 +37,12 @@ public class SfulDelegateBean
     public EntityManager getEM() {
         return extendedEM;
     }
-    
+
     public Person create(String name, String data) {
 
         Person p = new Person(name);
         p.setData(data);
-        
+
         extendedEM.persist(p);
         return p;
     }

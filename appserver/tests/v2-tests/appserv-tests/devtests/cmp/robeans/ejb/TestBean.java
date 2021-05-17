@@ -29,26 +29,26 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
  * initial data into the table and updating column 'NAME' when requested.
  * This allows to use java2db for the actual beans.
  * This bean does not access CMP beans.
- */ 
+ */
 public class TestBean implements SessionBean {
 
     private DataSource ds = null;
 
     // SessionBean methods
- 
+
     public void ejbCreate() throws CreateException {
         System.out.println("TestBean ejbCreate");
         try {
             ds = lookupDataSource();
- 
+
         } catch (NamingException ex) {
             throw new EJBException(ex.getMessage());
         }
-    }    
- 
+    }
+
     public void ejbActivate() {
         System.out.println("TestBean ejbActivate");
-    }    
+    }
 
     public void ejbPassivate() {
             ds = null;
@@ -57,7 +57,7 @@ public class TestBean implements SessionBean {
     public void ejbRemove() {
 
     }
-    
+
     public void setSessionContext(SessionContext sc) {
 
     }
@@ -77,19 +77,19 @@ public class TestBean implements SessionBean {
 
             System.out.println("DATASOURCE NAME: " + cfname);
             objref = initial.lookup(cfname);
-        } 
+        }
         return (DataSource) objref;
-    }    
+    }
 
     /** Insert values via jdbc call */
     public void insertValues (String table_name) {
-        String st = "INSERT INTO " + table_name + " VALUES ('" + 
+        String st = "INSERT INTO " + table_name + " VALUES ('" +
                 table_name + "', '" + table_name + "', '" + table_name + "')";
         System.out.println("INSERT STATEMENT: " + st);
         executeStatement(st);
 
         // Insert another row
-        st = "INSERT INTO " + table_name + " VALUES ('" + 
+        st = "INSERT INTO " + table_name + " VALUES ('" +
                 table_name + "1', '" + table_name + "1', '" + table_name + "1')";
         System.out.println("INSERT STATEMENT: " + st);
         executeStatement(st);
@@ -124,4 +124,4 @@ public class TestBean implements SessionBean {
         }
     }
 
-} 
+}

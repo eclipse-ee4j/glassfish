@@ -154,8 +154,8 @@ public abstract class CoordinatorResourcePOA extends org.omg.PortableServer.Serv
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:otsidl/CoordinatorResource:1.0", 
-    "IDL:omg.org/CosTransactions/SubtransactionAwareResource:1.0", 
+    "IDL:otsidl/CoordinatorResource:1.0",
+    "IDL:omg.org/CosTransactions/SubtransactionAwareResource:1.0",
     "IDL:omg.org/CosTransactions/Resource:1.0"};
 
   public String[] _all_interfaces (org.omg.PortableServer.POA poa, byte[] objectId)
@@ -163,13 +163,13 @@ public abstract class CoordinatorResourcePOA extends org.omg.PortableServer.Serv
     return (String[])__ids.clone ();
   }
 
-  public CoordinatorResource _this() 
+  public CoordinatorResource _this()
   {
     return CoordinatorResourceHelper.narrow(
     super._this_object());
   }
 
-  public CoordinatorResource _this(org.omg.CORBA.ORB orb) 
+  public CoordinatorResource _this(org.omg.CORBA.ORB orb)
   {
     return CoordinatorResourceHelper.narrow(
     super._this_object(orb));

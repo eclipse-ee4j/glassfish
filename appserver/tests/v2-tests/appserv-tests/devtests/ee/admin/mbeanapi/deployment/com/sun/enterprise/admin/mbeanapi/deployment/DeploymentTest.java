@@ -24,16 +24,16 @@ public class DeploymentTest extends BaseTest
 
     public DeploymentTest(final String user, final String password,
             final String host, final int port, final String archive,
-            final String name, final String contextRoot, 
+            final String name, final String contextRoot,
             final boolean enable)
     {
-		this(user, password, host, port, archive, name, contextRoot, enable, 
+        this(user, password, host, port, archive, name, contextRoot, enable,
                 "server");
-	}
-    
-	public DeploymentTest(final String user, final String password,
+    }
+
+    public DeploymentTest(final String user, final String password,
             final String host, final int port, final String archive,
-            final String name, final String contextRoot, 
+            final String name, final String contextRoot,
             final boolean enable, String appservTarget)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -41,7 +41,7 @@ public class DeploymentTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final DeployCmd deployCmd = cmdFactory.createDeployCmd(archive, name, 
+        final DeployCmd deployCmd = cmdFactory.createDeployCmd(archive, name,
                 contextRoot, enable, appservTarget);
 
         target = new PipeCmd(connectCmd, deployCmd);

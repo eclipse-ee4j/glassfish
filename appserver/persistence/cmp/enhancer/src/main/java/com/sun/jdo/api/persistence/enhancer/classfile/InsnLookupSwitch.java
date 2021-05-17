@@ -96,7 +96,7 @@ public class InsnLookupSwitch extends Insn {
    * Constructor for opc_lookupswitch
    */
   public InsnLookupSwitch (InsnTarget defaultOp, int[] matchesOp,
-			   InsnTarget[] targetsOp) {
+               InsnTarget[] targetsOp) {
     this(defaultOp, matchesOp, targetsOp, NO_OFFSET);
   }
 
@@ -104,15 +104,15 @@ public class InsnLookupSwitch extends Insn {
   /* package local methods */
 
   InsnLookupSwitch (InsnTarget defaultOp, int[] matchesOp,
-		    InsnTarget[] targetsOp, int offset) {
+            InsnTarget[] targetsOp, int offset) {
     super(opc_lookupswitch, offset);
 
-    this.defaultOp = defaultOp; 
+    this.defaultOp = defaultOp;
     this.matchesOp = matchesOp;
     this.targetsOp = targetsOp;
 
     if (defaultOp == null || targetsOp == null || matchesOp == null ||
-	targetsOp.length != matchesOp.length)
+    targetsOp.length != matchesOp.length)
         throw new InsnError ("attempt to create an opc_lookupswitch" +//NOI18N
                              " with invalid operands");//NOI18N
   }

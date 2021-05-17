@@ -18,7 +18,7 @@ package org.jvnet.libpam;
 
 /**
  * Exception in PAM invoactions.
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 public class PAMException extends Exception {

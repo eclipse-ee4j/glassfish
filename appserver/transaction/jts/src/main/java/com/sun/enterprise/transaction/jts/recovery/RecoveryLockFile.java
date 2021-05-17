@@ -47,11 +47,11 @@ import com.sun.jts.CosTransactions.RecoveryManager;
  * Records in the recovery lock file have the following format:
  * PREFIX INSTANCE_NAME TIMESTAMP
  * Where PREFIX can be one of:
- * - "O" means OWNED by this instance, i.e. non-delegated recovery 
- * - "B" means recovered BY the specified instance 
+ * - "O" means OWNED by this instance, i.e. non-delegated recovery
+ * - "B" means recovered BY the specified instance
  * - "F" means recovered FOR the specified instance
  * TIMESTAMP is the time of the recovery operation
- * 
+ *
 */
 
 public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTransactionRecoveryFence {
@@ -64,7 +64,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     private final static String FOR = "F";
     private final static String BY = "B";
     private final static String END_LINE = "\n";
-    
+
     // Single instance
     private static final RecoveryLockFile instance = new RecoveryLockFile();
 
@@ -193,7 +193,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     }
 
     /**
-     * Returns true if recovery file on the specified path contains information 
+     * Returns true if recovery file on the specified path contains information
      * that the specified instance started recovery after specified timestamp
      * either for itself or by another instance.
      */
@@ -226,7 +226,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
                         // skip all other lines
                         continue;
                     }
-                } 
+                }
             } finally {
                 lock.release();
             }
@@ -255,7 +255,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
 
     /**
      * Removes recovery data from the recovery lock files for both, the instance that the
-     * recovery is done for (i.e. for specified instance), and the current instance which the 
+     * recovery is done for (i.e. for specified instance), and the current instance which the
      * recovery is done by (in the lock file on the specified path)
      */
     private void doneRecovering(String logPath, String instance) {
@@ -298,9 +298,9 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
                         result = parts[1];
                         continue;
                     }
-    
+
                     list_out.add(line);
-                } 
+                }
 
                 reader.close();
                 reader = null;
@@ -340,7 +340,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
      * Writes into recovery lock file data about recovery for the running instance.
      */
     private void registerRecovery() {
-        // Remove any stale data 
+        // Remove any stale data
         doneRecovering(log_path, null, BY);
 
         // And mark that it's self-recovery
@@ -358,7 +358,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
         registerRecovery(logPath, instance_name, BY);
         registerRecovery(log_path, instance, FOR);
     }
-    
+
     /**
      * Writes data into recovery lock file on the specified path
      */

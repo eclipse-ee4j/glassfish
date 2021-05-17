@@ -85,10 +85,10 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
  * Utility class for convenience methods
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class DOLUtils {
-    
+
     public final static String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     public final static String SCHEMA_LOCATION_TAG = "xsi:schemaLocation";
 
@@ -120,19 +120,19 @@ public class DOLUtils {
 
     @LogMessageInfo(message = "DOLUtils: converting EJB to web bundle id {0}.", level="FINER")
     private static final String CONVERT_EJB_TO_WEB_ID = "AS-DEPLOYMENT-00017";
-    
+
     // The system property to control the precedence between GF DD
-    // and WLS DD when they are both present. When this property is 
+    // and WLS DD when they are both present. When this property is
     // set to true, GF DD will have higher precedence over WLS DD.
     private static final String GFDD_OVER_WLSDD = "gfdd.over.wlsdd";
 
-    // The system property to control whether we should just ignore 
+    // The system property to control whether we should just ignore
     // WLS DD. When this property is set to true, WLS DD will be ignored.
     private static final String IGNORE_WLSDD = "ignore.wlsdd";
 
     private static final String ID_SEPARATOR = "_";
 
-    
+
     /** no need to creates new DOLUtils */
     private DOLUtils() {
     }
@@ -181,7 +181,7 @@ public class DOLUtils {
             libraryURIs.add(Util.toURI(url));
         }
         return libraryURIs;
-    } 
+    }
 
    public static BundleDescriptor getCurrentBundleForContext(
        DeploymentContext context) {
@@ -193,7 +193,7 @@ public class DOLUtils {
                // standalone module
                return application.getStandaloneBundleDescriptor();
            } else {
-               // top level 
+               // top level
                return application;
            }
        } else {
@@ -202,7 +202,7 @@ public class DOLUtils {
        }
    }
 
-    public static boolean isRAConnectionFactory(ServiceLocator habitat, 
+    public static boolean isRAConnectionFactory(ServiceLocator habitat,
         String type, Application thisApp) {
         // first check if this is a connection factory defined in a resource
         // adapter in this application
@@ -210,7 +210,7 @@ public class DOLUtils {
             return true;
         }
 
-        // then check if this is a connection factory defined in a standalone 
+        // then check if this is a connection factory defined in a standalone
         // resource adapter
         Applications applications = habitat.getService(Applications.class);
         if (applications != null) {
@@ -220,12 +220,12 @@ public class DOLUtils {
                 ApplicationInfo appInfo = appRegistry.get(raApp.getName());
                 if (appInfo == null)
                     continue;
-                if (isRAConnectionFactory(type, appInfo.getMetaData(Application.class))) {   
+                if (isRAConnectionFactory(type, appInfo.getMetaData(Application.class))) {
                     return true;
-                }   
+                }
             }
         }
-        return false; 
+        return false;
     }
 
     private static boolean isRAConnectionFactory(String type, Application app) {
@@ -284,7 +284,7 @@ public class DOLUtils {
         return result;
     }
 
-    // returns true if GF DD should have higher precedence over 
+    // returns true if GF DD should have higher precedence over
     // WLS DD when both present in the same archive
     public static boolean isGFDDOverWLSDD() {
         return Boolean.valueOf(System.getProperty(GFDD_OVER_WLSDD));
@@ -292,12 +292,12 @@ public class DOLUtils {
 
     // returns true if we should ignore WLS DD in the archive
     public static boolean isIgnoreWLSDD() {
-        return Boolean.valueOf(System.getProperty(IGNORE_WLSDD)); 
+        return Boolean.valueOf(System.getProperty(IGNORE_WLSDD));
     }
 
     // process the list of the configuration files, and return the sorted
     // configuration file with precedence from high to low
-    // this list does not take consideration of what runtime files are 
+    // this list does not take consideration of what runtime files are
     // present in the current archive
     private static List<ConfigurationDeploymentDescriptorFile> sortConfigurationDDFiles(List<ConfigurationDeploymentDescriptorFile> ddFiles, ArchiveType archiveType, ReadableArchive archive) {
         ConfigurationDeploymentDescriptorFile wlsConfDD = null;
@@ -314,9 +314,9 @@ public class DOLUtils {
                 sunConfDD = ddFile;
             }
         }
-        List<ConfigurationDeploymentDescriptorFile> sortedConfDDFiles = new ArrayList<ConfigurationDeploymentDescriptorFile>(); 
+        List<ConfigurationDeploymentDescriptorFile> sortedConfDDFiles = new ArrayList<ConfigurationDeploymentDescriptorFile>();
 
-        // if there is external runtime alternate deployment descriptor 
+        // if there is external runtime alternate deployment descriptor
         // specified, just use that
         File runtimeAltDDFile = archive.getArchiveMetaData(
             DeploymentProperties.RUNTIME_ALT_DD, File.class);
@@ -330,27 +330,27 @@ public class DOLUtils {
             }
         }
 
-        // sort the deployment descriptor files by precedence order 
+        // sort the deployment descriptor files by precedence order
         // when they are present in the same archive
 
         if (Boolean.valueOf(System.getProperty(GFDD_OVER_WLSDD))) {
             // if this property set, it means we need to make GF deployment
-            // descriptors higher precedence 
+            // descriptors higher precedence
             if (gfConfDD != null) {
                 sortedConfDDFiles.add(gfConfDD);
             }
-            if (wlsConfDD != null) { 
+            if (wlsConfDD != null) {
                 sortedConfDDFiles.add(wlsConfDD);
             }
         } else if (Boolean.valueOf(System.getProperty(IGNORE_WLSDD))) {
-            // if this property set, it means we need to ignore 
-            // WLS deployment descriptors 
+            // if this property set, it means we need to ignore
+            // WLS deployment descriptors
             if (gfConfDD != null) {
                 sortedConfDDFiles.add(gfConfDD);
             }
         } else  {
             // the default will be WLS DD has higher precedence
-            if (wlsConfDD != null) { 
+            if (wlsConfDD != null) {
                 sortedConfDDFiles.add(wlsConfDD);
             }
             if (gfConfDD != null) {
@@ -366,7 +366,7 @@ public class DOLUtils {
     }
 
     public static void validateRuntimeAltDDPath(String runtimeAltDDPath) {
-        if (runtimeAltDDPath.indexOf(DescriptorConstants.GF_PREFIX) == -1) { 
+        if (runtimeAltDDPath.indexOf(DescriptorConstants.GF_PREFIX) == -1) {
             String msg = localStrings.getLocalString(
                 "enterprise.deployment.util.unsupportedruntimealtdd", "Unsupported external runtime alternate deployment descriptor [{0}].", new Object[] {runtimeAltDDPath});
             throw new IllegalArgumentException(msg);
@@ -375,13 +375,13 @@ public class DOLUtils {
 
     // process the list of the configuration files, and return the sorted
     // configuration file with precedence from high to low
-    // this list takes consideration of what runtime files are 
+    // this list takes consideration of what runtime files are
     // present in the current archive
     public static List<ConfigurationDeploymentDescriptorFile> processConfigurationDDFiles(List<ConfigurationDeploymentDescriptorFile> ddFiles, ReadableArchive archive, ArchiveType archiveType) throws IOException {
         File runtimeAltDDFile = archive.getArchiveMetaData(
             DeploymentProperties.RUNTIME_ALT_DD, File.class);
         if (runtimeAltDDFile != null && runtimeAltDDFile.exists() && runtimeAltDDFile.isFile()) {
-            // if there are external runtime alternate deployment descriptor 
+            // if there are external runtime alternate deployment descriptor
             // specified, the config DD files are already processed
             return sortConfigurationDDFiles(ddFiles, archiveType, archive);
         }
@@ -394,16 +394,16 @@ public class DOLUtils {
         return processedConfDDFiles;
     }
 
-    // read alternative runtime descriptor if there is an alternative runtime 
+    // read alternative runtime descriptor if there is an alternative runtime
     // DD packaged inside the archive
     public static void readAlternativeRuntimeDescriptor(ReadableArchive appArchive, ReadableArchive embeddedArchive, Archivist archivist, BundleDescriptor descriptor, String altDDPath) throws IOException, SAXException {
         String altRuntimeDDPath = null;
         ConfigurationDeploymentDescriptorFile confDD = null;
-        @SuppressWarnings("unchecked") 
+        @SuppressWarnings("unchecked")
         List<ConfigurationDeploymentDescriptorFile> archivistConfDDFiles = archivist.getConfigurationDDFiles();
-        for (ConfigurationDeploymentDescriptorFile ddFile : sortConfigurationDDFiles(archivistConfDDFiles, archivist.getModuleType(), embeddedArchive)) {        
+        for (ConfigurationDeploymentDescriptorFile ddFile : sortConfigurationDDFiles(archivistConfDDFiles, archivist.getModuleType(), embeddedArchive)) {
             String ddPath = ddFile.getDeploymentDescriptorPath();
-            if (ddPath.indexOf(DescriptorConstants.WLS) != -1 && 
+            if (ddPath.indexOf(DescriptorConstants.WLS) != -1 &&
                 appArchive.exists(DescriptorConstants.WLS + altDDPath)) {
                 // TODO: need to revisit this for WLS alt-dd pattern
                 confDD = ddFile;
@@ -412,7 +412,7 @@ public class DOLUtils {
                 appArchive.exists(DescriptorConstants.GF_PREFIX + altDDPath)) {
                 confDD = ddFile;
                 altRuntimeDDPath = DescriptorConstants.GF_PREFIX + altDDPath;
-            } else if (ddPath.indexOf(DescriptorConstants.S1AS_PREFIX) != -1 
+            } else if (ddPath.indexOf(DescriptorConstants.S1AS_PREFIX) != -1
                 && appArchive.exists(DescriptorConstants.S1AS_PREFIX + altDDPath)){
                 confDD = ddFile;
                 altRuntimeDDPath = DescriptorConstants.S1AS_PREFIX + altDDPath;
@@ -421,7 +421,7 @@ public class DOLUtils {
 
         if (confDD != null && altRuntimeDDPath != null) {
             // found an alternative runtime DD file
-            InputStream is = appArchive.getEntry(altRuntimeDDPath); 
+            InputStream is = appArchive.getEntry(altRuntimeDDPath);
             confDD.setXMLValidation(
                 archivist.getRuntimeXMLValidation());
             confDD.setXMLValidationLevel(
@@ -562,7 +562,7 @@ public class DOLUtils {
 
         sniffers.removeAll(sniffersToRemove);
 
-        // store the module sniffer information so we don't need to 
+        // store the module sniffer information so we don't need to
         // recalculate them later
         Hashtable sniffersTable = archive.getParentArchive().getExtraData(Hashtable.class);
         if (sniffersTable == null) {
@@ -617,33 +617,33 @@ public class DOLUtils {
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     public static boolean setElementValue(XMLElement element,
                                           String value,
-                                          Object o) {    
+                                          Object o) {
         if (SCHEMA_LOCATION_TAG.equals(element.getCompleteName())) {
             // we need to keep all the non j2ee/javaee schemaLocation tags
             StringTokenizer st = new StringTokenizer(value);
             StringBuffer sb = new StringBuffer();
             while (st.hasMoreElements()) {
                 String namespace = (String) st.nextElement();
-		String schema;
-		if (st.hasMoreElements()) {
-		    schema = (String) st.nextElement();
-		} else {
-		    schema = namespace;
-		    namespace = TagNames.JAKARTAEE_NAMESPACE;
-		}
-                if (namespace.equals(TagNames.J2EE_NAMESPACE)) 
+        String schema;
+        if (st.hasMoreElements()) {
+            schema = (String) st.nextElement();
+        } else {
+            schema = namespace;
+            namespace = TagNames.JAKARTAEE_NAMESPACE;
+        }
+                if (namespace.equals(TagNames.J2EE_NAMESPACE))
                     continue;
-                if (namespace.equals(TagNames.JAVAEE_NAMESPACE)) 
+                if (namespace.equals(TagNames.JAVAEE_NAMESPACE))
                     continue;
                 if (namespace.equals(TagNames.JAKARTAEE_NAMESPACE))
                     continue;
-                if (namespace.equals(W3C_XML_SCHEMA)) 
+                if (namespace.equals(W3C_XML_SCHEMA))
                     continue;
                 sb.append(namespace);
                 sb.append(" ");

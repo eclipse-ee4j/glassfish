@@ -38,12 +38,12 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
 
     /** DEFAULT_UPPER_BOUND is maximum value Long can attain */
     public static final long DEFAULT_MAX_BOUND = java.lang.Long.MAX_VALUE;
-        
+
     private MutableBoundedRangeStatisticImpl    mutableBoundedRangeStat = null;
     private long                                numberOfSamples;
     private long                                runningTotal;
     private String                              description = null;
-    
+
     /** Constructs an instance of MutableAverageRangeStatisticImpl that encapsulates the given Statistic.
      * The only parameter denotes the initial state of this statistic. It is
      * guaranteed that the initial state is preserved internally, so that one
@@ -54,14 +54,14 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
         mutableBoundedRangeStat = new MutableBoundedRangeStatisticImpl(initial);
         numberOfSamples = 0L;
         runningTotal = 0L;
-        description = initial.getDescription();        
+        description = initial.getDescription();
     }
-    
-    public Statistic modifiableView() {        
+
+    public Statistic modifiableView() {
         return this;
     }
-    
-    public Statistic unmodifiableView() {        
+
+    public Statistic unmodifiableView() {
         return ( new AverageRangeStatisticImpl(
             this.getCurrent(),               // this is the actual changing statistic
             this.getHighWaterMark(),         // highWaterMark may change per current
@@ -75,19 +75,19 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
             this.getStartTime(),             // changes if reset is called earlier
             this.numberOfSamples,       // this is the current number of samples
             this.runningTotal           // this is the current running total
-        ));        
-    }    
+        ));
+    }
 
     public void reset() {
         mutableBoundedRangeStat.reset();
         this.resetAverageStats();
     }
-    
+
     private void resetAverageStats() {
         numberOfSamples = 0L;
         runningTotal = 0L;
-    }    
-    
+    }
+
     public void setCount(long current) {
         mutableBoundedRangeStat.setCount(current);
         if(DEFAULT_MAX_BOUND - runningTotal < current) {
@@ -96,7 +96,7 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
         numberOfSamples++;
         runningTotal += current;
     }
-    
+
     public long getAverage() {
         if(numberOfSamples == 0) {
             return -1;
@@ -104,24 +104,24 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
             return runningTotal / numberOfSamples;
         }
     }
-    
+
     public long getCurrent() {
         return mutableBoundedRangeStat.getCurrent();
     }
-    
+
     public String getDescription() {
         return description;
         //return mutableBoundedRangeStat.getDescription();
     }
-    
+
     public long getHighWaterMark() {
         return mutableBoundedRangeStat.getHighWaterMark();
     }
-    
+
     public long getLastSampleTime() {
         return mutableBoundedRangeStat.getLastSampleTime();
     }
-    
+
     public long getLowWaterMark() {
         long result = mutableBoundedRangeStat.getLowWaterMark();
         if(result == DEFAULT_MAX_BOUND) {
@@ -129,17 +129,17 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
         }
         return result;
     }
-    
+
     public String getName() {
         return mutableBoundedRangeStat.getName();
     }
-    
+
     public long getStartTime() {
         return mutableBoundedRangeStat.getStartTime();
     }
-    
+
     public String getUnit() {
         return mutableBoundedRangeStat.getUnit();
     }
-    
+
 }

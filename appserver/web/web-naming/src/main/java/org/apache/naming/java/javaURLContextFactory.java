@@ -33,15 +33,15 @@ import org.apache.naming.ContextBindings;
  * <b>Important note</b> : This factory MUST be associated with the "java" URL
  * prefix, which can be done by either :
  * <ul>
- * <li>Adding a 
+ * <li>Adding a
  * java.naming.factory.url.pkgs=org.apache.catalina.util.naming property
  * to the JNDI properties file</li>
- * <li>Setting an environment variable named Context.URL_PKG_PREFIXES with 
- * its value including the org.apache.catalina.util.naming package name. 
- * More detail about this can be found in the JNDI documentation : 
+ * <li>Setting an environment variable named Context.URL_PKG_PREFIXES with
+ * its value including the org.apache.catalina.util.naming package name.
+ * More detail about this can be found in the JNDI documentation :
  * {@link javax.naming.spi.NamingManager#getURLContext(java.lang.String, java.util.Hashtable)}.</li>
  * </ul>
- * 
+ *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:08 $
  */
@@ -80,7 +80,7 @@ public class javaURLContextFactory
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
                                     Hashtable<?,?> environment)
         throws NamingException {
-        if ((ContextBindings.isThreadBound()) || 
+        if ((ContextBindings.isThreadBound()) ||
             (ContextBindings.isClassLoaderBound())) {
             return new SelectorContext(castEnvironment(environment));
         } else {
@@ -94,7 +94,7 @@ public class javaURLContextFactory
      */
     public Context getInitialContext(Hashtable<?,?> environment)
         throws NamingException {
-        if (ContextBindings.isThreadBound() || 
+        if (ContextBindings.isThreadBound() ||
             (ContextBindings.isClassLoaderBound())) {
             // Redirect the request to the bound initial context
             return new SelectorContext(castEnvironment(environment), true);

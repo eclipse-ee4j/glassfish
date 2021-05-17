@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
  * This class is responsible for handling the activation config elements.
  *
  * @author Kenneth Saks
- * @version 
+ * @version
  */
 public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationConfigDescriptor> {
 
@@ -41,7 +41,7 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
     public ActivationConfigNode() {
         super();
         registerElementHandler(new XMLElement(EjbTagNames.ACTIVATION_CONFIG),
-                               ActivationConfigNode.class, 
+                               ActivationConfigNode.class,
                                "setActivationConfigDescriptor");
     }
 
@@ -52,13 +52,13 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
     }
 
     @Override
-    public void setElementValue(XMLElement element, String value) {    
+    public void setElementValue(XMLElement element, String value) {
         if (EjbTagNames.ACTIVATION_CONFIG_PROPERTY_NAME.equals
             (element.getQName())) {
             propertyName = value;
         } else if(EjbTagNames.ACTIVATION_CONFIG_PROPERTY_VALUE.equals
                   (element.getQName())) {
-            EnvironmentProperty prop = 
+            EnvironmentProperty prop =
                 new EnvironmentProperty(propertyName, value, "");
             descriptor.getActivationConfig().add(prop);
             propertyName = null;
@@ -66,42 +66,42 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-                                ActivationConfigDescriptor descriptor) {        
+    public Node writeDescriptor(Node parent, String nodeName,
+                                ActivationConfigDescriptor descriptor) {
 
         Node activationConfigNode = null;
         Set activationConfig = descriptor.getActivationConfig();
 
         // ActionConfig must have at least one ActionConfigProperty
         // and ActionConfigProperty must have a pair of name/value
-        // so filter out the entries with blank name or value  
-        Set activationConfig2 = new HashSet(); 
+        // so filter out the entries with blank name or value
+        Set activationConfig2 = new HashSet();
         for(Iterator iter = activationConfig.iterator(); iter.hasNext();) {
             EnvironmentProperty next = (EnvironmentProperty) iter.next();
-            if ( ! next.getName().trim().equals("") && 
+            if ( ! next.getName().trim().equals("") &&
                  ! next.getValue().trim().equals("")) {
                 activationConfig2.add(next);
             }
         }
 
         if( activationConfig2.size() > 0 ) {
-            activationConfigNode = 
+            activationConfigNode =
                 appendChild(parent, nodeName);
             writeLocalizedDescriptions(activationConfigNode, descriptor);
-            
+
             for(Iterator iter = activationConfig2.iterator(); iter.hasNext();) {
-                Node activationConfigPropertyNode = 
-                    appendChild(activationConfigNode, 
+                Node activationConfigPropertyNode =
+                    appendChild(activationConfigNode,
                                 EjbTagNames.ACTIVATION_CONFIG_PROPERTY);
                 EnvironmentProperty next = (EnvironmentProperty) iter.next();
-                appendTextChild(activationConfigPropertyNode, 
-                                EjbTagNames.ACTIVATION_CONFIG_PROPERTY_NAME, 
+                appendTextChild(activationConfigPropertyNode,
+                                EjbTagNames.ACTIVATION_CONFIG_PROPERTY_NAME,
                                 next.getName());
                 appendTextChild(activationConfigPropertyNode,
-                                EjbTagNames.ACTIVATION_CONFIG_PROPERTY_VALUE, 
+                                EjbTagNames.ACTIVATION_CONFIG_PROPERTY_VALUE,
                                 next.getValue());
             }
-        } 
+        }
         return activationConfigNode;
     }
 }

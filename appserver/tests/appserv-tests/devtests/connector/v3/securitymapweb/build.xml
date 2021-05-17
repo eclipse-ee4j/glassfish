@@ -130,7 +130,7 @@
       <arg line="${as.props}"/>
       <arg line="domain.resources.connector-connection-pool.${poolname}.property.Password=${db.pwd}"/>
     </exec>
-   
+
      <exec executable="${ASADMIN}" failonerror="false">
       <arg line="set"/>
       <arg line="${as.props}"/>

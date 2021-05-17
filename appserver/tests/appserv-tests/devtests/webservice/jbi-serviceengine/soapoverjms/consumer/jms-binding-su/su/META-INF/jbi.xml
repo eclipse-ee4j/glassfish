@@ -28,5 +28,5 @@
                           service-name="tns:CalculatorService"
                           endpoint-name="Calculator"/>
 <javaesb:artifactstype>WSDL20</javaesb:artifactstype>
-	</services>
+    </services>
 </jbi>

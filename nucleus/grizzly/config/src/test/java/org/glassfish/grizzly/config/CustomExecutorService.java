@@ -25,12 +25,12 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Custom {@link ExecutorService} implementation.
- * 
+ *
  * @author Alexey Stashok
  */
 public class CustomExecutorService implements ExecutorService, ConfigAwareElement<ThreadPool> {
     private ExecutorService internalExecutorService;
-    
+
 
     @Override
     public void configure(ServiceLocator habitat, NetworkListener networkListener,
@@ -43,9 +43,9 @@ public class CustomExecutorService implements ExecutorService, ConfigAwareElemen
                 toInt(configuration.getMaxQueueSize()) >= 0 ?
                 new LinkedBlockingQueue<Runnable>(toInt(configuration.getMaxQueueSize())) :
                 new LinkedTransferQueue<Runnable>());
-        
+
     }
-    
+
     @Override
     public void shutdown() {
         internalExecutorService.shutdown();
@@ -110,7 +110,7 @@ public class CustomExecutorService implements ExecutorService, ConfigAwareElemen
     public void execute(Runnable command) {
         internalExecutorService.execute(command);
     }
-    
+
     private static int toInt(String s) {
         return Integer.parseInt(s);
     }

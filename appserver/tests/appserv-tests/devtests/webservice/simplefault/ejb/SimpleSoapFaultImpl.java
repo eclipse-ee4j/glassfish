@@ -25,38 +25,38 @@ package soapfault.ejb;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 
 /**
  *
  * @author dochez
  */
 public class SimpleSoapFaultImpl implements SessionBean {
-    
+
     SessionContext sc;
-    
+
     /** Creates a new instance of SimpleServerImpl */
     public SimpleSoapFaultImpl() {
     }
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In GoogleEJB::ejbCreate !!");
-}    
-    
+    System.out.println("In GoogleEJB::ejbCreate !!");
+}
+
     public String simpleMethod()
         throws SimpleSoapException, RemoteException {
-        
+
         throw new SimpleSoapException("I only raise exceptions !");
     }
-    
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

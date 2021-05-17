@@ -47,7 +47,7 @@ public interface LogService extends ConfigBeanProxy {
      * Gets the value of the file property.
      *
      * Can be used to rename or relocate server.log using absolute path.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -87,7 +87,7 @@ public interface LogService extends ConfigBeanProxy {
      * handler provided by the system, because of loosing precious log statements. The Server Initialization will take care
      * of installing the custom handler with the system formatter initialized. The user need to use JSR 047 Log Handler
      * Interface to implement the custom handler.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -105,7 +105,7 @@ public interface LogService extends ConfigBeanProxy {
      *
      * Can plug in a log filter to do custom filtering of log records. By default there is no log filter other than the log
      * level filtering provided by JSR 047 log API.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -122,7 +122,7 @@ public interface LogService extends ConfigBeanProxy {
      * Gets the value of the logToConsole property.
      *
      * logs will be sent to stderr when asadmin start-domain verbose is used
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
@@ -159,7 +159,7 @@ public interface LogService extends ConfigBeanProxy {
      * This is a new attribute to enable time based log rotation. The Log File will be rotated only if this value is
      * non-zero and the valid range is 60 minutes (1 hour) to 10*24*60 minutes (10 days). If the value is zero then the
      * files will be rotated based on size specified in log-rotation-limit-in-bytes.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "0")
@@ -179,7 +179,7 @@ public interface LogService extends ConfigBeanProxy {
      *
      * if true, will turn on alarms for the logger. The SEVERE and WARNING messages can be routed through the JMX framework
      * to raise SEVERE and WARNING alerts. Alarms are turned off by default.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
@@ -198,7 +198,7 @@ public interface LogService extends ConfigBeanProxy {
      * The number of hours since server start, for which error statistics should be retained in memory. The default and
      * minimum value is 5 hours. The maximum value allowed is 500 hours. Note that larger values will incur additional
      * memory overhead.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "5")

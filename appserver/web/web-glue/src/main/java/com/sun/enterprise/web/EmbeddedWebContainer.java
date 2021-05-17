@@ -52,7 +52,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
 
     @Inject
     private ServiceLocator services;
-    
+
     @Inject
     private ServerContext serverContext;
 
@@ -70,42 +70,42 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
      * The value of the 'file' attribute of the log-service element
      */
     private String logServiceFile;
-    
+
     /*
-     * The log level for org.apache.catalina.level as defined in logging.properties 
+     * The log level for org.apache.catalina.level as defined in logging.properties
      */
     private String logLevel;
 
     private FileLoggerHandlerFactory fileLoggerHandlerFactory;
-    
+
     void setWebContainer(WebContainer webContainer) {
         this.webContainer = webContainer;
     }
-        
+
     void setLogServiceFile(String logServiceFile) {
         this.logServiceFile = logServiceFile;
     }
-        
+
     void setLogLevel(String logLevel) {
         this.logLevel = logLevel;
     }
-            
+
     void setFileLoggerHandlerFactory(FileLoggerHandlerFactory fileLoggerHandlerFactory) {
         this.fileLoggerHandlerFactory = fileLoggerHandlerFactory;
     }
-    
+
     void setWebContainerFeatureFactory(WebContainerFeatureFactory webContainerFeatureFactory) {
         this.webContainerFeatureFactory = webContainerFeatureFactory;
     }
-    
+
     // --------------------------------------------------------- Public Methods
-    
+
     public void postConstruct() {
         invocationManager = services.getService(InvocationManager.class);
         injectionManager = services.getService(InjectionManager.class);
         validationNamingProxy = services.getService(NamedNamingObjectProxy.class, "ValidationNamingProxy");
     }
-    
+
     /**
      * Creates a virtual server.
      *
@@ -128,16 +128,16 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
 
         vs.configure(vsID, vsBean, vsDocroot, vsLogFile, vsMimeMap,
                      logServiceFile, logLevel);
-         
+
         ContainerListener listener = loadListener
             ("com.sun.enterprise.web.connector.extension.CatalinaListener");
         if ( listener != null ) {
-            vs.addContainerListener(listener);     
+            vs.addContainerListener(listener);
         }
 
         return vs;
     }
-    
+
     /**
      * Create a web module/application.
      *
@@ -149,7 +149,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
                                  String ctxPath,
                                  File location,
                                  String defaultContextXmlLocation,
-                                 String defaultWebXmlLocation, 
+                                 String defaultWebXmlLocation,
                                  boolean useDOLforDeployment,
                                  WebModuleConfig wmInfo) {
 
@@ -163,7 +163,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
         if (!configFile.exists()) {
             configFile = new File(location, Constants.WEB_CONTEXT_XML);
         }
-        
+
         WebModule context = new WebModule(services);
         context.setID(id);
         context.setWebContainer(webContainer);
@@ -185,16 +185,16 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
         if (configFile.exists()) {
             context.setConfigFile(configFile.getAbsolutePath());
         }
-            
+
         ContextConfig config;
-        if (useDOLforDeployment) {            
+        if (useDOLforDeployment) {
             config = new WebModuleContextConfig(services);
             ((WebModuleContextConfig)config).setDescriptor(
                 wmInfo.getDescriptor());
         } else {
             config = new ContextConfig();
         }
-        
+
         config.setDefaultContextXml(defaultContextXmlLocation);
         config.setDefaultWebXml(defaultWebXmlLocation);
         context.addLifecycleListener(config);
@@ -212,11 +212,11 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
         // TODO: monitoring should also hook in via WebModuleDecorator
         //context.addInstanceListener(
         //    "com.sun.enterprise.admin.monitor.callflow.WebContainerListener");
-        
+
         return context;
     }
 
-         
+
     /**
      * Util method to load classes that might get compiled after this class is
      * compiled.
@@ -232,8 +232,8 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
         }
         return null;
     }
-    
-   
+
+
     /**
      * Return the list of engines created (from Embedded API)
      */
@@ -243,10 +243,10 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
     }
 
     /**
-     * Returns the list of Connector objects associated with this 
+     * Returns the list of Connector objects associated with this
      * EmbeddedWebContainer.
      *
-     * @return The list of Connector objects associated with this 
+     * @return The list of Connector objects associated with this
      * EmbeddedWebContainer
      */
     public Connector[] getConnectors() {
@@ -265,7 +265,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
      */
     @Override
     public Connector createConnector(String address, int port,
-				     String protocol) {
+                     String protocol) {
 
         if (address != null) {
             /*
@@ -305,7 +305,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
         return (connector);
 
     }
-    
+
 
     /**
      * Create, configure, and return an Engine that will process all
@@ -324,7 +324,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
         // Default host will be set to the first host added
         engine.setLogger(super.getLogger());       // Inherited by all children
         engine.setRealm(null);         // Inherited by all children
-        
+
         //ContainerListener listener = loadListener
         //    ("com.sun.enterprise.admin.monitor.callflow.WebContainerListener");
         //if ( listener != null ) {
@@ -355,10 +355,10 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
          *
         protected void startChildren() {
 
-            
+
             new File(webContainer.getAppsWorkRoot()).mkdirs();
             new File(webContainer.getModulesWorkRoot()).mkdirs();
-            
+
             ArrayList<LifecycleStarter> starters
                 = new ArrayList<LifecycleStarter>();
 
@@ -373,7 +373,7 @@ public final class EmbeddedWebContainer extends Embedded implements PostConstruc
             }
 
             for (LifecycleStarter starter : starters) {
-                Throwable t = starter.waitDone(); 
+                Throwable t = starter.waitDone();
                 if (t != null) {
                     Lifecycle container = starter.getContainer();
                     String msg = rb.getString("embedded.startVirtualServerError");

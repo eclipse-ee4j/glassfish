@@ -87,7 +87,7 @@ public class InstanceReaderImpl implements InstanceReader {
 
     /**
      * This is used in quicescing. Timeouts after this interval and disables the
-     * instance in the load balancer. 
+     * instance in the load balancer.
      *
      * @return String           Disable time out in minutes
      */
@@ -174,10 +174,10 @@ public class InstanceReaderImpl implements InstanceReader {
     // --- VISITOR IMPLEMENTATION ---
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof InstanceVisitor) {
-			InstanceVisitor pv = (InstanceVisitor) v;
-			pv.visit(this);
-		}
+        if (v instanceof InstanceVisitor) {
+            InstanceVisitor pv = (InstanceVisitor) v;
+            pv.visit(this);
+        }
     }
 
     private String getResolvedHostName(String address) throws LbReaderException {

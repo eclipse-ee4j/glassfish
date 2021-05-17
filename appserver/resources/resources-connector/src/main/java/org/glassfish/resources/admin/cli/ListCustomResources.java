@@ -48,8 +48,8 @@ import java.util.List;
 @I18n("list.custom.resources")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-custom-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-custom-resources",
         description="List Custom Resource")
 })
 public class ListCustomResources implements AdminCommand {

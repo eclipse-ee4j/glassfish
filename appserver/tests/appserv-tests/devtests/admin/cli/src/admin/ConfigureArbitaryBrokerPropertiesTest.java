@@ -109,7 +109,7 @@ private void checkbrokerprops(String jmsport){
 public Object jmxCall(String jmsProviderPort, String objectName, String attributeName){
 /*
  * Commented out because building this code depends on having GlassFish already downloaded.
- * The admin devtest must build without having GlassFish present. 
+ * The admin devtest must build without having GlassFish present.
  try{
     AdminConnectionFactory acf = new AdminConnectionFactory();
     acf.setProperty(AdminConnectionConfiguration.imqAddress,    "localhost:" + jmsProviderPort);
@@ -132,7 +132,7 @@ public Object jmxCall(String jmsProviderPort, String objectName, String attribut
   }catch(Exception ex){
                 ex.printStackTrace();
  }
- * 
+ *
  */
      return null;
 }

@@ -25,7 +25,7 @@ import org.glassfish.api.admin.Progress;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-/** 
+/**
  * @author mmares
  */
 @Service(name = "progress-full-annotated")
@@ -35,12 +35,12 @@ import org.jvnet.hk2.annotations.Service;
 @ManagedJob
 @Progress(name="annotated", totalStepCount=10)
 public class ProgressFullAnnotCommand implements AdminCommand {
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ProgressSimpleCommand cmd = new ProgressSimpleCommand();
         cmd.noTotalSteps = true;
         cmd.execute(context);
     }
-    
+
 }

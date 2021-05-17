@@ -118,8 +118,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
     private boolean selfManaged_;
 
     private boolean blocked = false;
-    
-    
+
+
     public ConnectionPool(PoolInfo poolInfo, Hashtable env) throws PoolingException {
         this.poolInfo = poolInfo;
         setPoolConfiguration(env);
@@ -217,7 +217,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
         if(poolLifeCycleListener != null) {
             poolLifeCycleListener.connectionsFreed(steadyPoolSize);
         }
-        
+
         poolInitialized = true;
     }
 
@@ -258,7 +258,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
         int numResCreated = ds.addResource(alloc, 1);
         if(numResCreated > 0) {
             for(int i=0; i< numResCreated; i++) {
-                if(poolLifeCycleListener != null) { 
+                if(poolLifeCycleListener != null) {
                     poolLifeCycleListener.incrementNumConnFree(false, steadyPoolSize);
                 }
             }
@@ -348,8 +348,8 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
                 JavaEETransaction jtx = ((JavaEETransaction) txn);
                 Set resourcesSet = null;
                 if(jtx != null){
-	                resourcesSet = jtx.getResources(poolInfo);
-		        }
+                    resourcesSet = jtx.getResources(poolInfo);
+                }
                 //allow when the pool is not blocked or at-least one resource is
                 //already obtained in the current transaction.
                 if (!blocked || (resourcesSet != null && resourcesSet.size() > 0)) {
@@ -495,7 +495,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
         if(result != null){
             return result;
         }
-        
+
         result = prefetch(spec, alloc, tran);
         if (result != null) {
             return result;
@@ -986,12 +986,12 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
         setResourceStateToFree(h);  // mark as not busy
         state.touchTimestamp();
 
-        if (state.isUnenlisted() || (poolTxHelper.isNonXAResource(h) && 
-                poolTxHelper.isLocalTransactionInProgress() 
+        if (state.isUnenlisted() || (poolTxHelper.isNonXAResource(h) &&
+                poolTxHelper.isLocalTransactionInProgress()
                 && poolTxHelper.isLocalResourceEligibleForReuse(h))) {
             freeUnenlistedResource(h);
         }
-        
+
         if (poolLifeCycleListener != null && !h.getDestroyByLeakTimeOut()) {
             poolLifeCycleListener.connectionReleased(h.getId());
         }
@@ -1048,7 +1048,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
             notifyWaitingThreads();
         }
     }
-    
+
     protected boolean cleanupResource(ResourceHandle handle) {
         boolean cleanupSuccessful = true;
         // cleanup resource
@@ -1114,7 +1114,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
         if (poolLifeCycleListener != null) {
             poolLifeCycleListener.connectionValidationFailed(ds.getResourcesSize());
         }
-        
+
         emptyPool();
         try {
             createResources(allocator, steadyPoolSize);
@@ -1292,37 +1292,37 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
     }
 
     /**
-     * Reinitialize connections established in the connection pool and 
-     * bring the pool to steady pool size. 
-     * 
+     * Reinitialize connections established in the connection pool and
+     * bring the pool to steady pool size.
+     *
      * @throws com.sun.appserv.connectors.internal.api.PoolingException
      */
     public synchronized boolean flushConnectionPool() throws PoolingException {
 
-        logFine("Flush Connection Pool entered");        
-        
+        logFine("Flush Connection Pool entered");
+
         if(!poolInitialized) {
             _logger.log(Level.WARNING, "poolmgr.flush_noop_pool_not_initialized", getPoolInfo());
             String exString = localStrings.getString("poolmgr.flush_noop_pool_not_initialized",
                     poolInfo.toString());
             throw new PoolingException(exString);
         }
-        
+
         try {
             cancelResizerTask();
             ds.removeAll();
             scheduleResizerTask();
             increaseSteadyPoolSize(steadyPoolSize);
         } catch(PoolingException ex) {
-            _logger.log(Level.WARNING, "pool.flush_pool_failure", 
+            _logger.log(Level.WARNING, "pool.flush_pool_failure",
                     new Object[] {getPoolInfo(), ex.getMessage()});
             throw ex;
         }
-        logFine("Flush Connection Pool done");        
-            
+        logFine("Flush Connection Pool done");
+
         return true;
     }
-    
+
     /**
      * Reconfigure the Pool's properties. The reconfigConnectorConnectionPool
      * method in the ConnectorRuntime will use this method (through PoolManager)
@@ -1609,9 +1609,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
 
     public void reclaimConnection(ResourceHandle handle) {
         //all reclaimed connections must be killed instead of returning them
-        //to the pool 
+        //to the pool
         //Entity beans when used in bean managed transaction will face an issue
-        //since connections are destroyed during reclaim. Stateful session beans 
+        //since connections are destroyed during reclaim. Stateful session beans
         // will work fine.
         String msg = localStrings.getString("reclaim.leaked.connection", poolInfo);
         _logger.log(Level.INFO, msg);
@@ -1622,9 +1622,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener,
     }
 
     /**
-     * Get Connection Pool status by computing the free/used values of the 
-     * connections in the pool. Computations are based on whether the pool 
-     * is initialized or not when this method is invoked. 
+     * Get Connection Pool status by computing the free/used values of the
+     * connections in the pool. Computations are based on whether the pool
+     * is initialized or not when this method is invoked.
 
      * @return PoolStatus object
      */

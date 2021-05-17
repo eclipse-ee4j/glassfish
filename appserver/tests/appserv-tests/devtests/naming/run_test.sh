@@ -50,11 +50,11 @@ run_test_id(){
 }
 
 get_test_target(){
-	case $1 in
-		naming_all )
-			TARGET=all
-			export TARGET;;
-	esac
+    case $1 in
+        naming_all )
+            TARGET=all
+            export TARGET;;
+    esac
 }
 
 OPT=${1}

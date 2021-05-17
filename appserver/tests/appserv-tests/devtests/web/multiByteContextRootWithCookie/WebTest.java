@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import com.sun.ejte.ccl.reporter.*;
 
-/** 
+/**
  * Unit test for:
  *
  *  Multi-byte context root with session cookie
@@ -44,7 +44,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for Multi-Byte Context Root with Session Cookie");
@@ -67,11 +67,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	    stat.printSummary();
+        stat.printSummary();
     }
 
     public String doSetJsp() throws Exception {
-     
+
         String sessionId = null;
 
         URL url = new URL("http://" + host  + ":" + port + "/"
@@ -92,7 +92,7 @@ public class WebTest {
 
             sessionId = getCookieField(cookies, JSESSIONID);
             System.out.println("sessionId = " + sessionId);
-        } else {   
+        } else {
             System.err.println("Unexpected return code: " + responseCode);
         }
 
@@ -109,7 +109,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         //String cookie = sessionId + "; myid=123@456";
         String cookie = "$Version=1; " + sessionId + "; myid=\"123@456\"";
-        conn.setRequestProperty("Cookie", cookie); 
+        conn.setRequestProperty("Cookie", cookie);
         conn.connect();
         int responseCode = conn.getResponseCode();
 
@@ -121,10 +121,10 @@ public class WebTest {
             if (EXPECTED_RESPONSE.equals(line)) {
                 expected = true;
             } else {
-                System.err.println("Wrong response. Expected: " + 
+                System.err.println("Wrong response. Expected: " +
                                    EXPECTED_RESPONSE + ", received: " + line);
             }
-        } else {   
+        } else {
             System.err.println("Unexpected return code: " + responseCode);
         }
 

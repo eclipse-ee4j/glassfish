@@ -36,25 +36,25 @@ import java.rmi.RemoteException;
  */
 
 public class RpaBean implements SessionBean {
-    
+
     private String shopper = "anonymous";
     private int totalPrice = 0;
-    
+
     private int totalItems = 0;
-    
+
     private Vector items;
-    
+
     private Vector itemPrice;
-    
+
     private SessionContext sc = null;
-    
+
     /** Creates a new instance of ShoppingEJB */
     public void ejbCreate(String shopperName) {
         shopper = shopperName;
         items = new Vector();
         itemPrice = new Vector();
     }
-    
+
     public void addItem(java.lang.String item, int price) throws EJBException,
         RemoteException{
         items.add(item);
@@ -64,30 +64,30 @@ public class RpaBean implements SessionBean {
         System.out.println(" Shopping Cart: Shopper "+ shopper +" has bought "
             + item +" for price ="+ price +" .Total Items = "+totalItems +
             " .TotalPrice = " + totalPrice);
-        
+
         System.out.println("Caller Princial = "+sc.getCallerPrincipal());
     }
-    
-    public void deleteItem(java.lang.String item) throws EJBException, 
+
+    public void deleteItem(java.lang.String item) throws EJBException,
         RemoteException{
         int index = items.indexOf(item);
         items.remove(item);
         Integer price = (Integer) itemPrice.get(index);
-        System.out.println("Shopping Cart: Removing item "+ item +" @price "+ 
+        System.out.println("Shopping Cart: Removing item "+ item +" @price "+
             price.intValue());
         totalPrice -= price.shortValue();
-        itemPrice.remove(index);                    
+        itemPrice.remove(index);
         System.out.println(" Shopping Cart: Shopper "+ shopper +"  .Total Items = "+totalItems +
             " .TotalPrice = " + totalPrice);
         System.out.println("Caller Princial = "+sc.getCallerPrincipal());
     }
-    
+
     public double getTotalCost() throws EJBException{
         System.out.println("Caller Princial = "+sc.getCallerPrincipal());
 
         return totalPrice;
     }
-    
+
     public String[] getItems() throws EJBException{
         System.out.println("Caller Princial = "+sc.getCallerPrincipal());
 
@@ -99,24 +99,24 @@ public class RpaBean implements SessionBean {
         }
         return itemNames;
     }
-    
+
     public void ejbActivate() {
         System.out.println("In Rpa ejbActivate");
     }
-    
-    
+
+
     public void ejbPassivate() {
         System.out.println("In Rpa ejbPassivate");
     }
-    
-    
+
+
     public void ejbRemove()  {
         System.out.println("In Rpa ejbRemove");
     }
-    
-    
+
+
     public void setSessionContext(jakarta.ejb.SessionContext sessionContext) {
         sc = sessionContext;
     }
-    
+
 }

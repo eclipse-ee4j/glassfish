@@ -25,12 +25,12 @@
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <groupId>org.glassfish.main.webservices</groupId>
     <artifactId>webservices</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Web Services related modules</name>
-    
+
     <modules>
         <module>metro-fragments</module>
         <module>metro-glue</module>

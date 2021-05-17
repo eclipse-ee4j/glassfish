@@ -61,18 +61,18 @@ public class SlessEJB3 implements Sless3
     @Interceptors({InterceptorE.class, InterceptorF.class})
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB3-dcef")
     private void dcef() {}
-    
+
     @ExcludeDefaultInterceptors
     @ExcludeClassInterceptors
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB3-nothing")
     private void nothing() {}
 
-    @Interceptors({InterceptorE.class, InterceptorF.class})    
+    @Interceptors({InterceptorE.class, InterceptorF.class})
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB3-dcbaef")
     private void dcbaef() {}
 
     // total ordering overridden in deployment descriptor
-    @Interceptors({InterceptorE.class, InterceptorF.class})    
+    @Interceptors({InterceptorE.class, InterceptorF.class})
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB3-abcdef")
     private void abcdef() {}
 
@@ -91,7 +91,7 @@ public class SlessEJB3 implements Sless3
         Common.checkResults(ctx);
         return null;
     }
-    
+
     @AroundInvoke
     private Object aroundInvoke(InvocationContext ctx) throws Exception
     {
@@ -101,7 +101,7 @@ public class SlessEJB3 implements Sless3
         }
         return ctx.proceed();
     }
-    
+
     public void verify() {
         Common.checkResults("SlessEJB3", EXPECTED);
     }

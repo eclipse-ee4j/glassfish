@@ -36,7 +36,7 @@ public class FakeXAResource implements XAResource {
               flagToString(flags));
     }
 
-    
+
     public void forget(Xid xid) throws XAException {
         print("FakeXAResource.forget: " + xidToString(xid));
     }
@@ -53,7 +53,7 @@ public class FakeXAResource implements XAResource {
         print("FakeXAResource.prepare: " + xidToString(xid));
         return XAResource.XA_OK;
     }
-    
+
     public Xid[] recover(int flag) throws XAException {
         print("FakeXAResource.recover: " + flagToString(flag));
         return null;
@@ -66,7 +66,7 @@ public class FakeXAResource implements XAResource {
     public boolean setTransactionTimeout(int seconds) throws XAException {
         return false;
     }
-    
+
     public void start(Xid xid, int flags) throws XAException {
         print("FakeXAResource.start: " + xidToString(xid) + "," +
                 flagToString(flags));

@@ -122,9 +122,9 @@ public class ChangeMasterBrokerTest extends AdminBaseDevTest {
     public Object jmxCall(String jmsProviderPort, String objectName, String attrName){
 /*
  * Commented out because building this code depends on having GlassFish already downloaded.
- * The admin devtest must build without having GlassFish present. 
+ * The admin devtest must build without having GlassFish present.
         try{
- 
+
         AdminConnectionFactory acf = new AdminConnectionFactory();
         acf.setProperty(AdminConnectionConfiguration.imqAddress,    "localhost:" + jmsProviderPort);
         JMXConnector connector = acf.createConnection("admin","admin");
@@ -137,11 +137,11 @@ public class ChangeMasterBrokerTest extends AdminBaseDevTest {
        Object attrvalue =  mbsc.getAttribute(objName, attrName);
        connector.close();
        return attrvalue;
-            
+
       }catch(Exception ex){
                     ex.printStackTrace();
      }
- * 
+ *
  */
          return null;
     }

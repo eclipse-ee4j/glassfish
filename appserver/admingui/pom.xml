@@ -75,7 +75,7 @@
             </roles>
         </developer>
     </developers>
-    
+
     <modules>
         <module>dataprovider</module>
         <module>plugin-service</module>
@@ -85,7 +85,7 @@
         <module>cluster</module>
         <module>community-theme</module>
         <module>web</module>
-	<module>gf-admingui-connector</module>
+    <module>gf-admingui-connector</module>
         <module>jackson-jaxb</module>
         <module>jts</module>
         <module>jdbc</module>
@@ -151,7 +151,7 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.faces</artifactId>
-	    <scope>provided</scope>
+        <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.servlet</groupId>

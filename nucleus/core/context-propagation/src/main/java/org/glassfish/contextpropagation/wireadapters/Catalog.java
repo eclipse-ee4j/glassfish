@@ -29,7 +29,7 @@ import org.glassfish.contextpropagation.bootstrap.LoggerAdapter.MessageID;
 /**
  * Contains metadata that identifies the each context entry on a stream.
  * This information helps recover from an unrecoverable IO error when reading
- * context-propagation data from a stream. It makes it possible to skip a 
+ * context-propagation data from a stream. It makes it possible to skip a
  * corrupted context.
  */
 @SuppressWarnings("serial")
@@ -44,10 +44,10 @@ public class Catalog implements Serializable {
   public void add(short position) {
     positions.add(position);
   }
-  
+
   public void upItemNumber(int delta) { itemNumber += delta; }
 
-  public void prepareToRead() { 
+  public void prepareToRead() {
     itemNumber = 0;
     end = 0;
   }
@@ -59,13 +59,13 @@ public class Catalog implements Serializable {
         int endPosition = itemNumber + 1 < positions.size() ? positions.get(itemNumber + 1) : -1;
         ContextBootstrap.debug(MessageID.ATTEMPT_TO_SKIP_TO_NEXT_ITEM, itemNumber + 1, startPosition, endPosition);
         ois.reset();
-        for (int skipped = 0; 
+        for (int skipped = 0;
             skipped < startPosition;
             skipped += ois.skipBytes(startPosition - skipped));
         return true;
       } else {
         ContextBootstrap.debug(MessageID.ERROR_NO_MORE_ITEMS);
-        return false; 
+        return false;
       }
     } else {
       ContextBootstrap.debug(MessageID.NO_CATALOG);
@@ -140,7 +140,7 @@ public class Catalog implements Serializable {
 
   public void setMeta(long meta)  {
     start = (short) (meta >>> 16 & 0xFFFF);
-    end = (short) (meta & 0xFFFF);   
+    end = (short) (meta & 0xFFFF);
   }
 
   public void setPosisionsFrom(Catalog catalog) {

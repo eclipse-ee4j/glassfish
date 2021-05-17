@@ -70,7 +70,7 @@ import org.osgi.framework.ServiceReference;
 @TargetType({CommandTarget.CLUSTERED_INSTANCE, CommandTarget.STANDALONE_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
+        opType=RestEndpoint.OpType.POST,
         path="osgi",
         description="Remote OSGi Shell Access")
 })
@@ -93,7 +93,7 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
 
     @Param(name = "instance", optional = true)
     private String instance;
-    
+
     protected BundleContext ctx;
 
     @Inject
@@ -263,11 +263,11 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
                     } else {
                         CommandSession session = cp.createSession(in, out, err);
                         Object result = session.execute(cmd);
-                        
+
                         if (result instanceof String) {
                             out.println(result.toString());
                         }
-                        
+
                         session.close();
                     }
                 } else if("new".equals(sessionOp)) {
@@ -287,11 +287,11 @@ public class OSGiShellCommand implements AdminCommand, PostConstruct {
                     RemoteCommandSession remote = sessions.get(sessionId);
                     CommandSession session = remote.attach(in, out, err);
                     Object result = session.execute(cmd);
-                    
+
                     if (result instanceof String) {
                         out.println(result.toString());
                     }
-                    
+
                     remote.detach();
                 } else if("stop".equals(sessionOp)) {
                     RemoteCommandSession remote = sessions.remove(sessionId);

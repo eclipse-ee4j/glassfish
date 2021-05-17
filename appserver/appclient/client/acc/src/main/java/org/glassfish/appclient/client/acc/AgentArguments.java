@@ -30,12 +30,12 @@ import org.glassfish.appclient.client.CLIBootstrap;
 
 /**
  * Self-contained scanner for an agent argument string.
- * 
+ *
  * <p>
  * The agent arguments are a comma-separated sequence of <code>[keyword=]quoted-or-unquoted-string</code>. The
  * "keyword=" part is optional. A given keyword can appear multiple times, so after analysis each keyword can map to
  * potentially multiple values (as a List<String>).
- * 
+ *
  * <p>
  * This class organizes the agent arguments into named and anonymous values.
  */
@@ -50,7 +50,7 @@ public class AgentArguments {
      * (non-capturing group) with an optional comma (could be end-of-input so the comma is optional)
      */
     private static Pattern agentArgPattern = Pattern.compile("(?:([^=,]*?)=)?((?:\"([^\"]*)\")|[^,]+)", DOTALL);
-    
+
     /* groups matching interesting parts of the regex */
     private static final int KEYWORD = 1;
     private static final int QUOTED = 2;
@@ -66,7 +66,7 @@ public class AgentArguments {
 
     /**
      * Returns the list of values associated with the specified keyword.
-     * 
+     *
      * @param keyword the keyword whose values are needed
      * @return the values associated with the keyword; null if the keyword never appeared in the input
      */
@@ -76,7 +76,7 @@ public class AgentArguments {
 
     /**
      * Returns the unnamed values as a list of strings.
-     * 
+     *
      * @return List of Strings, one for each unnamed value in the scanned string
      */
     public List<String> unnamedValues() {
@@ -99,7 +99,7 @@ public class AgentArguments {
         if (args == null) {
             return;
         }
-        
+
         Matcher agentArgMatcher = agentArgPattern.matcher(args);
         while (agentArgMatcher.find()) {
             String keyword = agentArgMatcher.group(KEYWORD);
@@ -107,9 +107,9 @@ public class AgentArguments {
              * Either the quoted string group or the unquoted string group from the matcher will be valid.
              */
             String value = CLIBootstrap.decodeArg(agentArgMatcher.group(QUOTED) != null ? agentArgMatcher.group(QUOTED) : agentArgMatcher.group(UNQUOTED));
-            
+
             values.computeIfAbsent(keyword, e -> new ArrayList<>()).add(value);
         }
     }
-    
+
 }

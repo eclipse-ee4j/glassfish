@@ -24,7 +24,7 @@ import jakarta.ejb.FinderException;
 
 public interface AccountLocalHome extends jakarta.ejb.EJBLocalHome
 {
-	public AccountLocal createAccount (AccountDataObject dao)
-	throws jakarta.ejb.CreateException;
+    public AccountLocal createAccount (AccountDataObject dao)
+    throws jakarta.ejb.CreateException;
         public AccountLocal findByPrimaryKey(String id) throws jakarta.ejb.FinderException;
 }

@@ -24,7 +24,7 @@ import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
  * @author Jerome Dochez
  */
 public interface ServiceReferenceContainerContext {
-    
+
     public ServiceReferenceContainer[] getServiceRefContainers();
-    
+
 }

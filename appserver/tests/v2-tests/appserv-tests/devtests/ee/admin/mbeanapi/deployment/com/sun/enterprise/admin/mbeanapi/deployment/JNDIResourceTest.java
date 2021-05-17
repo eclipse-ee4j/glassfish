@@ -34,9 +34,9 @@ public class JNDIResourceTest extends BaseTest
     static final String kFactoryClass   = "a.b.c";
     static final String kObjectType     = "user";
 
-    public JNDIResourceTest(final String user, 
-        final String password, final String host, final int port, 
-        final String jndiName, final String jndiLookupName, 
+    public JNDIResourceTest(final String user,
+        final String password, final String host, final int port,
+        final String jndiName, final String jndiLookupName,
         final String resType, final String factoryClass)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -44,11 +44,11 @@ public class JNDIResourceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateJNDIResourceCmd createCmd = 
+        final CreateJNDIResourceCmd createCmd =
                 cmdFactory.createCreateJNDIResourceCmd(jndiName,
                         jndiLookupName, resType, factoryClass, getOptional());
 
-        final DeleteJNDIResourceCmd deleteCmd = 
+        final DeleteJNDIResourceCmd deleteCmd =
                 cmdFactory.createDeleteJNDIResourceCmd(jndiName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -71,14 +71,14 @@ public class JNDIResourceTest extends BaseTest
     public static void main(String[] args) throws Exception
     {
         new JNDIResourceTest(
-                "admin", "adminadmin", "localhost", 8686, 
+                "admin", "adminadmin", "localhost", 8686,
                 kJNDIName, kJNDILookupName, kResType, kFactoryClass).run();
     }
 
     private Map getOptional()
     {
         final Map optional = new HashMap();
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
             //kObjectType);
         return optional;
     }

@@ -73,7 +73,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
     </target>
-    
+
     <target name="runclient">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>
@@ -81,7 +81,7 @@
       </antcall>
 
 
-<!--restore the tokens back in file--> 
+<!--restore the tokens back in file-->
          <replace file="client/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="client/Client.java" token="${http.port}" value="HTTP_PORT"/>
     </target>

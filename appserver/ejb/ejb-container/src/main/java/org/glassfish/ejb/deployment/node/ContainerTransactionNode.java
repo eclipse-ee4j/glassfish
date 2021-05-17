@@ -34,12 +34,12 @@ import org.w3c.dom.Node;
  * This node is responsible for handling the container-transaction XML node
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ContainerTransactionNode extends DeploymentDescriptorNode {
 
     private String trans_attribute;
-    private String description;    
+    private String description;
     private Vector methods = new Vector();
 
     public ContainerTransactionNode() {
@@ -61,7 +61,7 @@ public class ContainerTransactionNode extends DeploymentDescriptorNode {
     @Override
     public boolean endElement(XMLElement element) {
         boolean doneWithNode = super.endElement(element);
-        
+
         if (doneWithNode) {
             ContainerTransaction ct =  new ContainerTransaction(trans_attribute, description);
             for (Iterator methodsIterator = methods.iterator();methodsIterator.hasNext();) {
@@ -70,7 +70,7 @@ public class ContainerTransactionNode extends DeploymentDescriptorNode {
                 EjbDescriptor ejb = bundle.getEjbByName(md.getEjbName(), true);
                 ejb.getMethodContainerTransactions().put(md, ct);
             }
-        }        
+        }
         return doneWithNode;
     }
 
@@ -78,28 +78,28 @@ public class ContainerTransactionNode extends DeploymentDescriptorNode {
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.DESCRIPTION.equals(element.getQName())) {
             description = value;
-        } 
+        }
         if (EjbTagNames.TRANSACTION_ATTRIBUTE.equals(element.getQName())) {
             trans_attribute = value;
         }
-    }        
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName name for the root element of this xml fragment
      * @param ejb the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, EjbDescriptor ejb) {    
-        
+    public Node writeDescriptor(Node parent, String nodeName, EjbDescriptor ejb) {
+
         Map methodToTransactions = ejb.getMethodContainerTransactions();
         MethodNode mn = new MethodNode();
         for (Object o : methodToTransactions.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             MethodDescriptor md = (MethodDescriptor) entry.getKey();
-            Node ctNode = super.writeDescriptor(parent, nodeName, ejb);            
+            Node ctNode = super.writeDescriptor(parent, nodeName, ejb);
             ContainerTransaction ct = (ContainerTransaction) entry.getValue();
             appendTextChild(ctNode, EjbTagNames.DESCRIPTION, ct.getDescription());
             mn.writeDescriptor(ctNode, EjbTagNames.METHOD, md, ejb.getName());

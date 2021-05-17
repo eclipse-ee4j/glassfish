@@ -50,7 +50,7 @@ public class Servlet extends HttpServlet {
         if (req.isUserInRole("j2ee") && !req.isUserInRole("guest")) {
             out.println("Hello World");
             if (req.getSession(false) != null &&
-                    Boolean.TRUE.equals(pconstruct.get())) { 
+                    Boolean.TRUE.equals(pconstruct.get())) {
                 out.println(req.getSession(false).getAttribute(
                     "deployment.ejb30.war.servlet"));
             }

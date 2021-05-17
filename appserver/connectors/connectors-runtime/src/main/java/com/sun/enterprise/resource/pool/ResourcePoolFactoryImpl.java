@@ -37,7 +37,7 @@ public class ResourcePoolFactoryImpl {
     //property to take care of switching off connection pooling in ACC
     //since 9.1
     private static final String SWITCH_OFF_ACC_CONNECTION_POOLING =
- 	"com.sun.enterprise.connectors.SwitchoffACCConnectionPooling";
+     "com.sun.enterprise.connectors.SwitchoffACCConnectionPooling";
     private static String switchOffACCConnectionPoolingProperty =
             System.getProperty(SWITCH_OFF_ACC_CONNECTION_POOLING);
 

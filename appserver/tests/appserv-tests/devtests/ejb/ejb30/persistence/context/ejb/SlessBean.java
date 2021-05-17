@@ -36,11 +36,11 @@ public class SlessBean implements Sless {
     private @PersistenceContext(unitName="em2") EntityManager emRemove;
 
     public void createPerson(String name) {
-        
+
         Person p = new Person(name);
 
         boolean containsP = emCreate.contains(p);
-        System.out.println("before persist containsP = " + containsP);        
+        System.out.println("before persist containsP = " + containsP);
         if( containsP ) {
             throw new EJBException("contains() should be false");
         }
@@ -63,7 +63,7 @@ public class SlessBean implements Sless {
                                "when calling close() on a container-managed " +
                                "EntityManager");
         }
-        
+
         // isOpen doesn't make any sense on a container-managed entity manager,
         // but it shouldn't throw an exception.
         emCreate.isOpen();
@@ -115,8 +115,8 @@ public class SlessBean implements Sless {
         if( results3.size() != 1) {
             throw new EJBException("wrong num results");
         }
-        
-        
+
+
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -133,7 +133,7 @@ public class SlessBean implements Sless {
         }
 
         System.out.println("Getting q1 from EM");
-        Query q1 = emFind.createQuery("SELECT OBJECT(p) FROM Person p WHERE p.name='" + name + "'"); 
+        Query q1 = emFind.createQuery("SELECT OBJECT(p) FROM Person p WHERE p.name='" + name + "'");
 
         System.out.println("Executing q1");
         Person p3 = (Person) q1.getSingleResult();
@@ -159,7 +159,7 @@ public class SlessBean implements Sless {
 
 
         System.out.println("Getting q2 from EM");
-        Query q2 = emFind.createQuery("SELECT OBJECT(p) FROM Person p WHERE p.name='" + name + "'"); 
+        Query q2 = emFind.createQuery("SELECT OBJECT(p) FROM Person p WHERE p.name='" + name + "'");
 
         try {
             q2.setFirstResult(-1);
@@ -218,7 +218,7 @@ public class SlessBean implements Sless {
             System.out.println("Got expected TransactionRequiredException " +
                                "when calling merge outside a transaction");
         }
-        
+
         try {
             emFind.remove(p);
             throw new EJBException("remove should have thrown an exception");
@@ -266,7 +266,7 @@ public class SlessBean implements Sless {
         if( !name.equals(p8.getName()) ) {
             throw new EJBException("finder results not equivalent");
         }
-        
+
         Query q4 = emFind.createNativeQuery("SELECT p.name FROM EJB30_PERSISTENCE_CONTEXT_PERSON p WHERE p.name LIKE '" + name + "'");
         String p9 = (String) q4.getSingleResult(); // ((Vector) q4.getSingleResult()).elementAt(0);
         System.out.println("Found " + p9);
@@ -279,7 +279,7 @@ public class SlessBean implements Sless {
         if( !name.equals(p10) ) {
             throw new EJBException("finder results not equivalent");
         }
-        
+
 
         Query q5 = emFind.createNativeQuery("SELECT p.name FROM EJB30_PERSISTENCE_CONTEXT_PERSON p WHERE p.name LIKE '" + name + "'", Person.class);
         Person p11 = (Person) q5.getSingleResult();
@@ -296,7 +296,7 @@ public class SlessBean implements Sless {
         }
 
         Query q6 = emFind.createNativeQuery("SELECT p.name FROM EJB30_PERSISTENCE_CONTEXT_PERSON p WHERE p.name LIKE '" + name + "'", "PersonSqlMapping");
-        
+
         Person p13 = (Person) q6.getSingleResult();
         System.out.println("Found " + p13);
         if( !name.equals(p13.getName()) ) {

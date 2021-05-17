@@ -20,9 +20,9 @@ import java.util.*;
 import jakarta.ejb.*;
 
 public interface CustomerLocalHome extends EJBLocalHome {
-    
+
     public CustomerLocal create (String id, String name) throws CreateException;
-    
+
     public CustomerLocal findByPrimaryKey (String id)
         throws FinderException;
 }

@@ -35,7 +35,7 @@ public class CommandParameters {
      */
     public void setOperand(String operand) {
         operands.clear();
-	operands.add(operand);
+    operands.add(operand);
     }
 
     /**
@@ -43,7 +43,7 @@ public class CommandParameters {
      * @param operand the command operand
      */
     public void addOperand(String operand) {
-	operands.add(operand);
+    operands.add(operand);
     }
 
     /**
@@ -57,7 +57,7 @@ public class CommandParameters {
      * Get the operands.
      */
     public List<String> getOperands() {
-	return new ArrayList<String>(operands);
+    return new ArrayList<String>(operands);
     }
 
     /**

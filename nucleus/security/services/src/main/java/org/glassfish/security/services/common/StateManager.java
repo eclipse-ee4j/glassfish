@@ -28,11 +28,11 @@ import org.jvnet.hk2.annotations.Service;
 public class StateManager {
     // private String current;
     private String current = "default";
-    
+
     public void setCurrent(String current) {
         this.current = current;
     }
-    
+
     public String getCurrent() {
         return current;
     }

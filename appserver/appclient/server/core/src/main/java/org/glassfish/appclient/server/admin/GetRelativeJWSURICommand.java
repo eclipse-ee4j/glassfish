@@ -45,8 +45,8 @@ import org.glassfish.hk2.api.PerLookup;
 @ExecuteOn(value={RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_get-relative-jws-uri", 
+        opType=RestEndpoint.OpType.GET,
+        path="_get-relative-jws-uri",
         description="Get Relative JWS URI",
         params={
             @RestParam(name="appname", value="$parent")
@@ -70,14 +70,14 @@ public class GetRelativeJWSURICommand implements AdminCommand {
 
     @Inject
     private AppClientDeployer appClientDeployer;
-    
+
     @Inject
     private Applications apps;
 
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        
+
         final Application app = apps.getApplication(appname);
         if (app != null) {
             Module appClient = app.getModule(modulename);

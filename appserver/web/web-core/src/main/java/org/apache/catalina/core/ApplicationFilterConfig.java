@@ -271,13 +271,13 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
             // END OF SJS WS 7.0 6236329
                 try{
                     SecurityUtil.doAsPrivilege("destroy",
-                                               filter); 
+                                               filter);
                     SecurityUtil.remove(filter);
                 } catch(java.lang.Exception ex){
                     String msg = rb.getString(LogFacade.DO_AS_PRIVILEGE);
                     log.log(Level.SEVERE, msg, ex);
                 }
-            } else { 
+            } else {
                 filter.destroy();
             }
 
@@ -327,13 +327,13 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
                 // END OF SJS WS 7.0 6236329
                     try{
                         SecurityUtil.doAsPrivilege("destroy",
-                                                   filter);  
+                                                   filter);
                         SecurityUtil.remove(filter);
                     } catch(java.lang.Exception ex){
                         String msg = rb.getString(LogFacade.DO_AS_PRIVILEGE);
                         log.log(Level.SEVERE, msg, ex);
                     }
-                } else { 
+                } else {
                     filter.destroy();
                 }
             }

@@ -55,7 +55,7 @@ public class EmbeddedWebAPIDefaultStartTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
     }
-    
+
     @Test
     public void testDefaultStart() throws Exception {
 
@@ -106,7 +106,7 @@ public class EmbeddedWebAPIDefaultStartTest {
         Assert.assertEquals("Hello World!", sb.toString());
 
         Thread.sleep(1000);
-        
+
         if (appName!=null)
             deployer.undeploy(appName);
     }
@@ -120,5 +120,5 @@ public class EmbeddedWebAPIDefaultStartTest {
             glassfish = null;
         }
     }
-    
+
 }

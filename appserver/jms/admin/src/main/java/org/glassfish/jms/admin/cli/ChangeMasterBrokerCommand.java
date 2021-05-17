@@ -62,8 +62,8 @@ import javax.management.openmbean.CompositeData;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="change-master-broker", 
+        opType=RestEndpoint.OpType.POST,
+        path="change-master-broker",
         description="change-master-broker")
 })
 public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCommand {
@@ -160,8 +160,8 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
 
        String oldMasterBrokerPort = JmsRaUtil.getJMSPropertyValue(oldMBServer);
        if(oldMasterBrokerPort == null) {
-	      SystemProperty sp = config.getSystemProperty("JMS_PROVIDER_PORT");
-	      if(sp != null) oldMasterBrokerPort = sp.getValue();
+          SystemProperty sp = config.getSystemProperty("JMS_PROVIDER_PORT");
+          if(sp != null) oldMasterBrokerPort = sp.getValue();
        }
        if(oldMasterBrokerPort == null) oldMasterBrokerPort = getDefaultJmsHost(jmsservice).getPort();
        String oldMasterBrokerHost = nodes.getNode(oldMBServer.getNodeRef()).getNodeHost();
@@ -208,7 +208,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
             parameters.set(setCommandStr, newMB );
 
             ActionReport subReport = report.addSubActionsReport();
-	        commandRunner.getCommandInvocation("set", subReport, context.getSubject()).parameters(parameters).execute();
+            commandRunner.getCommandInvocation("set", subReport, context.getSubject()).parameters(parameters).execute();
 
               if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
                     report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateConnectionPool",
@@ -238,7 +238,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
 
    private JmsHost getDefaultJmsHost(JmsService jmsService){
 
-	    JmsHost jmsHost = null;
+        JmsHost jmsHost = null;
             String defaultJmsHostName = jmsService.getDefaultJmsHost();
             List jmsHostsList = jmsService.getJmsHost();
 
@@ -248,7 +248,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
                if (tmpJmsHost != null && tmpJmsHost.getName().equals(defaultJmsHostName))
                      jmsHost = tmpJmsHost;
             }
-	    return jmsHost;
+        return jmsHost;
       }
 
      private CompositeData updateMasterBroker(String serverName, String oldMasterBroker, String newMasterBroker) throws Exception {
@@ -263,7 +263,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
              } catch (Exception e) {
                  String[] param = new String[] { mqInfo.getASInstanceName() };
                  String emsg = localStrings.getLocalString(
-                     "change.master.broker.cannotConnectOldMasterBroker", 
+                     "change.master.broker.cannotConnectOldMasterBroker",
                      "Unable to connect to the current master broker {0}. Likely reasons: the cluster might not be running, the server instance {0} associated with the current master broker or the current master broker might not be running.  Please check server logs.", param);
                  if (logger.isLoggable(Level.WARNING)) {
                      logger.log(Level.WARNING, emsg);
@@ -281,7 +281,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
 
              result = mbsc != null ? (CompositeData) mbsc.invoke(on, "changeMasterBroker", params, signature) : null;
          } catch (Exception e) {
-                     logAndHandleException(e, e.getMessage()); 
+                     logAndHandleException(e, e.getMessage());
          } finally {
                      try {
                          if(mqInfo != null) {
@@ -296,7 +296,7 @@ public class ChangeMasterBrokerCommand extends JMSDestination implements AdminCo
 
      /**
       * This is a copy from the super method except that
-      * it avoids a NPE in using e.getCause() and ensure 
+      * it avoids a NPE in using e.getCause() and ensure
       * the exception message is errorMsg not "" - these
       * eventually should be incoporated to the super method
       * post 5.0 release.

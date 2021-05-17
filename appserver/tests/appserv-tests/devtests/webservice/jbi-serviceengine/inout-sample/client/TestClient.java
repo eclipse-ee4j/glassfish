@@ -32,7 +32,7 @@ public class TestClient {
 
     public boolean found1 = false;
 
-	private static String testId = "jbi-serviceengine/inout-sample";
+    private static String testId = "jbi-serviceengine/inout-sample";
 
     public static void main (String[] args) {
         stat.addDescription(testId);
@@ -45,13 +45,13 @@ public class TestClient {
 
         String url = args[0];
         try {
-			//for(int i=0; i<1000; i++) {
+            //for(int i=0; i<1000; i++) {
             int code = invokeServlet(url);
-			//System.out.println("client ID : " + i);
+            //System.out.println("client ID : " + i);
             report(code);
-			//}
-	} catch (Exception e) {
-	    fail();
+            //}
+    } catch (Exception e) {
+        fail();
         }
     }
 
@@ -66,7 +66,7 @@ public class TestClient {
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.indexOf("Value is") != -1)
-		found1 = true;
+        found1 = true;
         }
         return code;
     }

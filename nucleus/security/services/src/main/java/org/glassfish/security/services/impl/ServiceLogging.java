@@ -23,15 +23,15 @@ import org.glassfish.logging.annotation.LoggerInfo;
  * The security service logging class.
  */
 public class ServiceLogging {
-	@LogMessagesResourceBundle
-	public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.security.services.LogMessages";
+    @LogMessagesResourceBundle
+    public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.security.services.LogMessages";
 
-	@LoggerInfo(subsystem="SECSVCS", description="Security Services Logger", publish=true)
-	public static final String SEC_SVCS_LOGGER = "jakarta.enterprise.security.services";
+    @LoggerInfo(subsystem="SECSVCS", description="Security Services Logger", publish=true)
+    public static final String SEC_SVCS_LOGGER = "jakarta.enterprise.security.services";
 
-	@LoggerInfo(subsystem="SECPROV", description="Security Provider Logger", publish=true)
-	public static final String SEC_PROV_LOGGER = "jakarta.enterprise.security.services.provider";
-	
-	@LoggerInfo(subsystem="SECCMDS", description="Security Services Command Logger", publish=true)
-	public static final String SEC_COMMANDS_LOGGER = "jakarta.enterprise.security.services.commands";
+    @LoggerInfo(subsystem="SECPROV", description="Security Provider Logger", publish=true)
+    public static final String SEC_PROV_LOGGER = "jakarta.enterprise.security.services.provider";
+
+    @LoggerInfo(subsystem="SECCMDS", description="Security Services Command Logger", publish=true)
+    public static final String SEC_COMMANDS_LOGGER = "jakarta.enterprise.security.services.commands";
 }

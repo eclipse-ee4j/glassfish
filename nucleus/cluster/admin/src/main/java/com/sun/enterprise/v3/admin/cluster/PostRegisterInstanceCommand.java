@@ -45,8 +45,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 @ExecuteOn(value={RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_post-register-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="_post-register-instance",
         description="_post-register-instance")
 })
 public class PostRegisterInstanceCommand extends RegisterInstanceCommandParameters implements AdminCommand {

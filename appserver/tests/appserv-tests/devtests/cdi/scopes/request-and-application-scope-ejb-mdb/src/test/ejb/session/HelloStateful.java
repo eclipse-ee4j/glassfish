@@ -34,9 +34,9 @@ public class HelloStateful implements Hello2 {
         System.out.println("Business method marked with @Remove called in " +
                            msg);
     }
-    
+
     @PreDestroy public void myPreDestroyMethod() {
-        System.out.println("PRE-DESTROY callback received in " + msg);        
+        System.out.println("PRE-DESTROY callback received in " + msg);
     }
 
 }

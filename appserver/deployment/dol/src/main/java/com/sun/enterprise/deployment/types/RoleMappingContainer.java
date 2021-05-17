@@ -22,12 +22,12 @@ import org.glassfish.deployment.common.SecurityRoleMapper;
  * This interface defines the behaviour of all Role Mapping container
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface RoleMappingContainer {
-    
-    /** 
-     * Return my mapping of rolename to users and groups on a particular 
+
+    /**
+     * Return my mapping of rolename to users and groups on a particular
      * server.
      */
     public SecurityRoleMapper getRoleMapper();

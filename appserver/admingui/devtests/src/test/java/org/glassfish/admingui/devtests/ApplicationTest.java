@@ -87,7 +87,7 @@ public class ApplicationTest extends BaseSeleniumTestClass {
         assertTrue (preCount < postCount);
 
         clickAndWait("propertyForm:deployTable:rowGroup1:0:col4:link", applicationName);
-        
+
         // Disable application
         selectTableRowByValue(ELEMENT_DEPLOY_TABLE, applicationName);
         clickAndWait(ELEMENT_DISABLE_BUTTON, TRIGGER_APPLICATION_DISABLED);

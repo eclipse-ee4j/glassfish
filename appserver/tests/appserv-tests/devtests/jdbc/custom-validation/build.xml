@@ -22,8 +22,8 @@
         <!ENTITY commonBuild SYSTEM "./../../../config/common.xml">
         <!ENTITY testproperties SYSTEM "./build.properties">
         <!ENTITY run SYSTEM "./../../../config/run.xml">
-	<!ENTITY jdbcxml SYSTEM "./../JdbcCommon.xml">
-	<!ENTITY jdbcProps SYSTEM "./../JdbcCommon.properties">
+    <!ENTITY jdbcxml SYSTEM "./../JdbcCommon.xml">
+    <!ENTITY jdbcProps SYSTEM "./../JdbcCommon.properties">
         ]>
 
 <project name="mix" default="usage" basedir=".">
@@ -74,8 +74,8 @@
             <param name="appclient.application.args" value="1"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="2"/>
@@ -105,8 +105,8 @@
             <param name="appclient.application.args" value="3"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="4"/>

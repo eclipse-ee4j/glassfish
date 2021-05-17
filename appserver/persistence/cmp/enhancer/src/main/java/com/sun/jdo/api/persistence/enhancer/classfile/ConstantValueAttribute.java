@@ -19,7 +19,7 @@ package com.sun.jdo.api.persistence.enhancer.classfile;
 import java.io.*;
 
 /**
- * ConstantValueAttribute represents a constant value attribute 
+ * ConstantValueAttribute represents a constant value attribute
  * in a class file.  These attributes are used as initialization
  * values for static fields.
  */
@@ -37,7 +37,7 @@ public class ConstantValueAttribute extends ClassAttribute {
     return constantValue;
   }
 
-  /** 
+  /**
    * Construct a constant value attribute
    */
   public ConstantValueAttribute(ConstUtf8 attrName, ConstValue value) {

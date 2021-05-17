@@ -32,11 +32,11 @@ import java.text.MessageFormat;
 public class UserError extends Throwable {
 
     /** Allows user to turn on stack traces for user errors - normally off */
-    private static final String SHOW_STACK_TRACES_PROPERTY_NAME = 
+    private static final String SHOW_STACK_TRACES_PROPERTY_NAME =
             UserError.class.getPackage().getName() + ".showUserErrorStackTraces";
-    
+
     /**
-     * Creates a new UserError instance having formatted the message with the 
+     * Creates a new UserError instance having formatted the message with the
      * arguments provided.
      *@param message the message string, presumably containing argument placeholders
      *@param args 0 or more arguments for substitution for the placeholders in the message string
@@ -66,7 +66,7 @@ public class UserError extends Throwable {
     /**
      *Sets whether or not the usage message should be displayed after the
      *error message is displayed to the user.
-     *@param showUsage the new setting 
+     *@param showUsage the new setting
      */
     public void setUsage(String usage) {
         this.usage = usage;

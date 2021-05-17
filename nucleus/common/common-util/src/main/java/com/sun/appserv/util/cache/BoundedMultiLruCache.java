@@ -112,7 +112,7 @@ public class BoundedMultiLruCache extends MultiLruCache {
     protected void itemRefreshed(CacheItem item, int oldSize) {
         super.itemRefreshed(item, oldSize);
 
-        /** reduce the cache by the size of the size of the previous value 
+        /** reduce the cache by the size of the size of the previous value
          *  and increment by the value being refreshed with.
          */
         decrementCurrentSize(oldSize);
@@ -156,7 +156,7 @@ public class BoundedMultiLruCache extends MultiLruCache {
     }
 
     /**
-     * get generic stats from subclasses 
+     * get generic stats from subclasses
      */
 
     /**

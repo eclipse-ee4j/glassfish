@@ -68,7 +68,7 @@ public final class SetMethodAction implements PrivilegedExceptionAction {
             if (prop.getResolvedValue() != null &&
                     prop.getResolvedValue().trim().length() != 0) {
                 Method meth = getMutatorMethod(propName, type);
-                
+
                 if (meth == null) {
                     //log WARNING, deployment can continue.
                     logger.log(Level.WARNING, "rardeployment.no_setter_method",

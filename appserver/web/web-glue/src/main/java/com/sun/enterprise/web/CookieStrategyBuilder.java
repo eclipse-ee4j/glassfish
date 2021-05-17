@@ -24,7 +24,7 @@ import org.jvnet.hk2.annotations.Service;
 
 @Service(name="cookie")
 public class CookieStrategyBuilder extends BasePersistenceStrategyBuilder {
-    
+
     public void initializePersistenceStrategy(
             Context ctx,
             SessionManager smBean,
@@ -43,12 +43,12 @@ public class CookieStrategyBuilder extends BasePersistenceStrategyBuilder {
 
         // START OF 6364900
         mgr.setSessionLocker(new PESessionLocker(ctx));
-        // END OF 6364900        
+        // END OF 6364900
 
         ctx.setManager(mgr);
 
         if (!((StandardContext)ctx).isSessionTimeoutOveridden()) {
-            mgr.setMaxInactiveInterval(sessionMaxInactiveInterval); 
-        }        
-    }    
+            mgr.setMaxInactiveInterval(sessionMaxInactiveInterval);
+        }
+    }
 }

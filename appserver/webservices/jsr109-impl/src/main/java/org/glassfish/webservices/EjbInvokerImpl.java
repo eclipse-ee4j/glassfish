@@ -28,7 +28,7 @@ import java.util.HashMap;
  * a Map of methods from class to proxy class
  */
 public class EjbInvokerImpl extends InvokerImpl {
-    
+
     private final HashMap<Method,Method> methodMap = new HashMap<Method,Method>();
 
     public EjbInvokerImpl(Class endpointImpl, Invoker core,

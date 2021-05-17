@@ -87,11 +87,11 @@ public class MailSessionFactory implements ObjectFactory {
      * @exception Exception if an error occurs during object creation
      */
     public Object getObjectInstance(Object refObj, Name name, Context context,
-				    Hashtable<?,?> env) throws Exception 
+                    Hashtable<?,?> env) throws Exception
     {
 
         // Return null if we cannot create an object of the requested type
-	final Reference ref = (Reference) refObj;
+    final Reference ref = (Reference) refObj;
         if (!ref.getClassName().equals(factoryType))
             return (null);
 
@@ -99,7 +99,7 @@ public class MailSessionFactory implements ObjectFactory {
         // Mail can read its default properties without throwing Security
         // exceptions
         return AccessController.doPrivileged( new PrivilegedAction<Session>() {
-		public Session run() {
+        public Session run() {
 
                     // Create the Jakarta Mail properties we will use
                     Properties props = new Properties();
@@ -117,8 +117,8 @@ public class MailSessionFactory implements ObjectFactory {
                     Session session = Session.getInstance(props, null);
                     return (session);
 
-		}
-	    } );
+        }
+        } );
 
     }
 

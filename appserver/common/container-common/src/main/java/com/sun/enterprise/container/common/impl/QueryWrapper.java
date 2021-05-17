@@ -91,7 +91,7 @@ public class QueryWrapper <T extends Query> implements Query {
     }
 
     public Query setMaxResults(int maxResults) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_MAX_RESULTS);
@@ -99,15 +99,15 @@ public class QueryWrapper <T extends Query> implements Query {
             if( maxResults < 0 ) {
                 throw new IllegalArgumentException("maxResult cannot be negative");
             }
-            
+
             queryDelegate.setMaxResults(maxResults);
-            
+
         } finally {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 
@@ -128,7 +128,7 @@ public class QueryWrapper <T extends Query> implements Query {
     }
 
     public Query setFirstResult(int startPosition) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_FIRST_RESULT);
@@ -137,15 +137,15 @@ public class QueryWrapper <T extends Query> implements Query {
                 throw new IllegalArgumentException
                         ("startPosition cannot be negative");
             }
-            
+
             queryDelegate.setFirstResult(startPosition);
-            
+
         } finally {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 
@@ -166,19 +166,19 @@ public class QueryWrapper <T extends Query> implements Query {
     }
 
     public Query setHint(String hintName, Object value) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_HINT);
             }
             queryDelegate.setHint(hintName, value);
-            
+
         } finally {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 
@@ -252,31 +252,31 @@ public class QueryWrapper <T extends Query> implements Query {
 
 
     public Query setParameter(String name, Object value) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_PARAMETER_STRING_OBJECT);
             }
             queryDelegate.setParameter(name, value);
-            
+
         } finally {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 
-    public Query setParameter(String name, Date value, 
+    public Query setParameter(String name, Date value,
                               TemporalType temporalType) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_PARAMETER_STRING_DATE_TEMPORAL_TYPE);
             }
             queryDelegate.setParameter(name, value, temporalType);
-            
+
         } finally {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
@@ -285,7 +285,7 @@ public class QueryWrapper <T extends Query> implements Query {
         return this;
     }
 
-    public Query setParameter(String name, Calendar value, 
+    public Query setParameter(String name, Calendar value,
                               TemporalType temporalType) {
         try {
             if(callFlowAgent.isEnabled()) {
@@ -301,7 +301,7 @@ public class QueryWrapper <T extends Query> implements Query {
     }
 
     public Query setParameter(int position, Object value) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_PARAMETER_INT_OBJECT);
@@ -316,9 +316,9 @@ public class QueryWrapper <T extends Query> implements Query {
         return this;
     }
 
-    public Query setParameter(int position, Date value, 
+    public Query setParameter(int position, Date value,
                               TemporalType temporalType) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_PARAMETER_INT_DATE_TEMPORAL_TYPE);
@@ -329,13 +329,13 @@ public class QueryWrapper <T extends Query> implements Query {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 
-    public Query setParameter(int position, Calendar value, 
+    public Query setParameter(int position, Calendar value,
                               TemporalType temporalType) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_PARAMETER_INT_CALENDAR_TEMPORAL_TYPE);
@@ -346,7 +346,7 @@ public class QueryWrapper <T extends Query> implements Query {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 
@@ -495,19 +495,19 @@ public class QueryWrapper <T extends Query> implements Query {
     }
 
     public Query setFlushMode(FlushModeType flushMode) {
-        
+
         try {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(EntityManagerQueryMethod.SET_FLUSH_MODE);
             }
             queryDelegate.setFlushMode(flushMode);
-            
+
         } finally {
             if(callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
-        
+
         return this;
     }
 

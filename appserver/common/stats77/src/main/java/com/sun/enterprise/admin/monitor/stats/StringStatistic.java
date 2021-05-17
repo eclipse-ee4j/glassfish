@@ -26,7 +26,7 @@ import org.glassfish.j2ee.statistics.Statistic;
  * specified direction, simply because there is no natural order. An example
  * of the values that an instance of this statistic type can assume is: A State
  * Statistic which can have "CONNECTED, CLOSED, DISCONNECTED" as the permissible
- * values and the current value can be any one of them (and them only). 
+ * values and the current value can be any one of them (and them only).
  * The permissible values
  * are upto a particular implementation.
  * @author Muralidhar Vempaty
@@ -35,9 +35,9 @@ import org.glassfish.j2ee.statistics.Statistic;
  * @version 1.0
  */
 public interface StringStatistic extends Statistic {
-    
+
     /**
      * Returns the String value of the statistic.
      */
-    public String getCurrent(); 
+    public String getCurrent();
 }

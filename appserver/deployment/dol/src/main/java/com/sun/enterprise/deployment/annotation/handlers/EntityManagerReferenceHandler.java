@@ -33,15 +33,15 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * This handler is responsible for handling the 
+ * This handler is responsible for handling the
  * jakarta.persistence.PersistenceUnit annotation.
  *
  */
 @Service
 @AnnotationHandlerFor(PersistenceContext.class)
-public class EntityManagerReferenceHandler 
+public class EntityManagerReferenceHandler
     extends AbstractResourceHandler {
-    
+
     public EntityManagerReferenceHandler() {
     }
 
@@ -59,7 +59,7 @@ public class EntityManagerReferenceHandler
             ResourceContainerContext[] rcContexts)
             throws AnnotationProcessorException {
 
-        AnnotatedElementHandler aeHandler = 
+        AnnotatedElementHandler aeHandler =
             ainfo.getProcessingContext().getHandler();
         if (aeHandler instanceof AppClientContext) {
             // application client does not support @PersistenceContext
@@ -98,16 +98,16 @@ public class EntityManagerReferenceHandler
             }
 
             emRefs = getEmReferenceDescriptors(logicalName, rcContexts);
-            
+
             InjectionTarget target = new InjectionTarget();
             target.setFieldName(f.getName());
-            target.setClassName(targetClassName);            
+            target.setClassName(targetClassName);
             target.setMetadataSource(MetadataSource.ANNOTATION);
 
             for (EntityManagerReferenceDescriptor emRef : emRefs) {
-                
+
                 emRef.addInjectionTarget(target);
-            
+
                 if (emRef.getName().length() == 0) { // a new one
                     processNewEmRefAnnotation(emRef, logicalName, emRefAn);
                 }
@@ -120,7 +120,7 @@ public class EntityManagerReferenceHandler
             String logicalName = emRefAn.name();
             if( logicalName.equals("") ) {
                 // Derive javabean property name.
-                String propertyName = 
+                String propertyName =
                     getInjectionMethodPropertyName(m, ainfo);
 
                 // prefixing with fully qualified type name
@@ -130,14 +130,14 @@ public class EntityManagerReferenceHandler
             validateInjectionMethod(m, ainfo);
 
             emRefs = getEmReferenceDescriptors(logicalName, rcContexts);
-            
+
             InjectionTarget target = new InjectionTarget();
             target.setMethodName(m.getName());
-            target.setClassName(targetClassName);                   
+            target.setClassName(targetClassName);
             target.setMetadataSource(MetadataSource.ANNOTATION);
 
             for (EntityManagerReferenceDescriptor emRef : emRefs) {
-                
+
                 emRef.addInjectionTarget(target);
 
                 if (emRef.getName().length() == 0) { // a new one
@@ -157,28 +157,28 @@ public class EntityManagerReferenceHandler
                     "TYPE-Level annotation symbol on class must specify name."));
                 return getDefaultFailedResult();
             }
-                               
+
             emRefs = getEmReferenceDescriptors(logicalName, rcContexts);
             for (EntityManagerReferenceDescriptor emRef : emRefs) {
                 if (emRef.getName().length() == 0) { // a new one
 
                     processNewEmRefAnnotation(emRef, logicalName, emRefAn);
-                                            
+
                 }
             }
-        } 
+        }
 
         return getDefaultProcessedResult();
     }
 
     /**
-     * Return EntityManagerReferenceDescriptors with given name 
+     * Return EntityManagerReferenceDescriptors with given name
      * if exists or a new one without name being set.
      */
-    private EntityManagerReferenceDescriptor[] 
-        getEmReferenceDescriptors(String logicalName, 
+    private EntityManagerReferenceDescriptor[]
+        getEmReferenceDescriptors(String logicalName,
                                    ResourceContainerContext[] rcContexts) {
-            
+
         EntityManagerReferenceDescriptor emRefs[] =
                 new EntityManagerReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
@@ -199,9 +199,9 @@ public class EntityManagerReferenceHandler
     private void processNewEmRefAnnotation
         (EntityManagerReferenceDescriptor emRef,
          String logicalName, PersistenceContext annotation) {
-        
+
         emRef.setName(logicalName);
-        
+
         if( !(annotation.unitName().equals("")) ) {
             emRef.setUnitName(annotation.unitName());
         }

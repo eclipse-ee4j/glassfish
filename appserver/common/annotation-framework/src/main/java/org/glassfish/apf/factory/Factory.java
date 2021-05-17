@@ -30,12 +30,12 @@ import org.glassfish.apf.AnnotationHandler;
 import org.glassfish.apf.impl.AnnotationProcessorImpl;
 import org.glassfish.apf.impl.AnnotationUtils;
 /**
- * The Factory is responsible for initializing a ready to use AnnotationProcessor. 
- * 
+ * The Factory is responsible for initializing a ready to use AnnotationProcessor.
+ *
  * @author Jerome Dochez
  */
 public abstract class Factory {
-    
+
     private static Set<String> skipAnnotationClassList = null;
     private static final String SKIP_ANNOTATION_CLASS_LIST_URL =
         "skip-annotation-class-list";
@@ -47,10 +47,10 @@ public abstract class Factory {
     /**
      * Return a empty AnnotationProcessor with no annotation handlers registered
      * @return initialized AnnotationProcessor instance
-     */ 
+     */
     public static AnnotationProcessorImpl getDefaultAnnotationProcessor() {
-        return new AnnotationProcessorImpl();        
-    }    
+        return new AnnotationProcessorImpl();
+    }
 
     // initialize the list of class files we should skip annotation processing
     private synchronized static void initSkipAnnotationClassList() {
@@ -70,12 +70,12 @@ public abstract class Factory {
                     skipAnnotationClassList.add(className.trim());
                 }
             } catch (IOException ioe) {
-                AnnotationUtils.getLogger().log(Level.WARNING, 
+                AnnotationUtils.getLogger().log(Level.WARNING,
                     ioe.getMessage(), ioe);
             } finally {
                 if (is != null) {
                     try {
-                        is.close(); 
+                        is.close();
                     } catch (IOException ioe2) {
                         // ignore
                     }
@@ -96,7 +96,7 @@ public abstract class Factory {
         if (skipAnnotationClassList == null) {
             initSkipAnnotationClassList();
         }
-        return skipAnnotationClassList.contains(cName); 
+        return skipAnnotationClassList.contains(cName);
     }
 
 }

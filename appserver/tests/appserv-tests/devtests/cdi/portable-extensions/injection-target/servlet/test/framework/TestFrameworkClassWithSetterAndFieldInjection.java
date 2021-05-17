@@ -25,11 +25,11 @@ import test.beans.TestNamedBean;
 
 
 public class TestFrameworkClassWithSetterAndFieldInjection {
-    
+
     @Inject TestNamedBean tnb;
 
     private TestBean tb;
-    
+
     private String msg = "";
 
     private boolean postConstructCalled = false;
@@ -42,8 +42,8 @@ public class TestFrameworkClassWithSetterAndFieldInjection {
     public TestFrameworkClassWithSetterAndFieldInjection(String magicKey){
         if(!magicKey.equals("test")) throw new RuntimeException();
     }
-    
-    
+
+
     @Inject
     public void setTestBean(@Preferred TestBean tb){
         System.out.println("Setter based injection " +
@@ -52,9 +52,9 @@ public class TestFrameworkClassWithSetterAndFieldInjection {
         if (tb == null) {
             msg += "Constructor injection in a test framework class failed";
         }
-        
+
     }
-    
+
     @PostConstruct
     private void beanPostConstruct() {
         this.postConstructCalled = true;

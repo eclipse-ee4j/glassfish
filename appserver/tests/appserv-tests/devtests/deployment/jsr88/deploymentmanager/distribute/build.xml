@@ -23,19 +23,19 @@
 
 <project name="distribute" default="all" basedir=".">
 
-	&commonBuild;    
+    &commonBuild;
 
-	<target name="private-all">
-		<ant dir="childtargetmoduleid" target="private-all">
-			<property name="build" value="${build}"/>
-		</ant>
-		<ant dir="getweburl" target="private-all">
-			<property name="build" value="${build}"/>
-		</ant>
-		<ant dir="clientconfiguration" target="private-all">
-			<property name="build" value="${build}"/>
-		</ant>
+    <target name="private-all">
+        <ant dir="childtargetmoduleid" target="private-all">
+            <property name="build" value="${build}"/>
+        </ant>
+        <ant dir="getweburl" target="private-all">
+            <property name="build" value="${build}"/>
+        </ant>
+        <ant dir="clientconfiguration" target="private-all">
+            <property name="build" value="${build}"/>
+        </ant>
 
-	</target>
+    </target>
 
 </project>

@@ -22,7 +22,7 @@ INSTRUCTIONS for running nucleus quicklook tests.
 
 To run all of the tests using the staged nucleus build in distributions/nucleus:
     mvn test
-    
+
 To run just one test:
     mvn -Dtest=MiscCommandsTest,NucleusStartStopTest test
 
@@ -30,10 +30,10 @@ To run just one test:
 
 To run tests based on your own install:
     mvn -Dnucleus.home=...somedirectory/nucleus test
-    
+
 To see the output of a test run, look in the target/surefire-reports directory.
-The TEST-TestSuite.xml file is especially useful. 
-    
+The TEST-TestSuite.xml file is especially useful.
+
 INSTRUCTIONS for adding tests.
 
 Copy one of the existing test files, such as MiscCommandsTest.java.  Then add
@@ -74,7 +74,7 @@ utilities are in the NucleusTestUtils class.
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -89,5 +89,5 @@ utilities are in the NucleusTestUtils class.
             </plugin>
         </plugins>
     </build>
-    
+
 </project>

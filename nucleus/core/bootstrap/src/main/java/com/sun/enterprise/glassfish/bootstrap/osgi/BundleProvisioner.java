@@ -578,7 +578,7 @@ public class BundleProvisioner {
                             if (startLevels.containsKey(uri)) {
                                 logger.log(Level.WARNING, LogFacade.CANT_SET_START_LEVEL,
                                         new Object[]{uri, startLevels.get(uri), startLevel});
-                                
+
                             } else {
                                 startLevels.put(uri, startLevel);
                             }

@@ -34,8 +34,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private static final int    MAX_SFSBS = 600;
@@ -50,13 +50,13 @@ public class Client {
         client.doTest();
         System.out.println("[sfsbcacheClient] DONE doTest()...");
         stat.printSummary("sfsbcache");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
-       
+
         System.out.println("[sfsbcacheClient] Inside init....");
         try {
             Context ic = new InitialContext();
@@ -66,7 +66,7 @@ public class Client {
 
             //Creating these many SFSBs will cause passivation
             SFSB sfsb = (SFSB) home.create("SFSB_");
-   
+
             sfsb.getName();
 
             sfsb.remove();
@@ -97,6 +97,6 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("ejbclient accessSFSB", stat.FAIL);
         }
-    }                 
+    }
 
 } //Client{}

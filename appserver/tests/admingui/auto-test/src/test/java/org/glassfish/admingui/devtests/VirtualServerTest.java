@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.assertEquals;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */

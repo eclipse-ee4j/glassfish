@@ -48,17 +48,17 @@ public class MultimodeCommand extends CLICommand {
 
     @Inject
     private ServiceLocator habitat;
-    
+
     @Inject
     private CLIContainer container;
-    
+
     @Param(optional = true, shortName = "f")
     private File file;
-    
+
     @Param(name = "printprompt", optional = true)
     private Boolean printPromptOpt;
     private boolean printPrompt;
-    
+
     @Param(optional = true)
     private String encoding;
     private boolean echo; // saved echo flag

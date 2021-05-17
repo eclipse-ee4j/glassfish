@@ -47,43 +47,43 @@ public class AdminObjectResourceDeleteTest extends TestCase {
         aor.setResAdapter("generic-ra");
         aor.setResType("connector.MyAdminObject");
         final ConfigContext configCtx =ConfigFactory.createConfigContext("domain.xml", new MyHandler());
-        final Resources r = (Resources) ServerBeansFactory.getDomainBean(configCtx).getResources(); 
+        final Resources r = (Resources) ServerBeansFactory.getDomainBean(configCtx).getResources();
         assertNotNull("Unexpected null Resources object", r);
         r.addAdminObjectResource(aor);
         assertEquals(aor, r.getAdminObjectResourceByJndiName("toby/aor"));
         configCtx.flush();
 
         // Construct the deleter:
-        final String xpath=aor.getXPath();      
+        final String xpath=aor.getXPath();
         assertEquals("/domain/resources/admin-object-resource[@jndi-name='toby/aor']", xpath);
-        ConfigDelete configDelete=ConfigChangeFactory.createConfigDelete(xpath); 
+        ConfigDelete configDelete=ConfigChangeFactory.createConfigDelete(xpath);
         assertEquals("delete xpath=/domain/resources/admin-object-resource[@jndi-name='toby/aor']", ""+configDelete);
-  
+
         final ConfigContext ctx2 = (ConfigContext)configCtx.clone();
         ctx2.updateFromConfigChange(configDelete);
-        
+
           // Demonstrate that its no longer there for ctx2
-        Resources r2 = (Resources) ServerBeansFactory.getDomainBean(ctx2).getResources(); 
+        Resources r2 = (Resources) ServerBeansFactory.getDomainBean(ctx2).getResources();
         assertNotNull("Unexpected null Resources object", r2);
         assertNull("Unexpected AdminObjectResource from ctx2", r2.getAdminObjectResourceByJndiName("toby/aor"));
- 
+
         // If we don't do a flush()/refresh() we find that the AdminObject is still available
         // from the original context
-        
-        r2 = (Resources) ServerBeansFactory.getDomainBean(configCtx).getResources(); 
+
+        r2 = (Resources) ServerBeansFactory.getDomainBean(configCtx).getResources();
         assertNotNull("Unexpected null Resources object", r2);
-        
+
         // WE DONT WANT THIS - THIS IS THE PROBLEM
         assertNotNull("Unexpected AdminObjectResource from configCtx", r2.getAdminObjectResourceByJndiName("toby/aor"));
 
-        
+
         // The flush()/refresh() is necessary to get the changed clone to write to disc
         // and the original to read from disc, thus communicating the change between them
         ctx2.flush();
       configCtx.refresh(true);
-        
+
           // and now its gone away!
-        r2 = (Resources) ServerBeansFactory.getDomainBean(configCtx).getResources(); 
+        r2 = (Resources) ServerBeansFactory.getDomainBean(configCtx).getResources();
         assertNotNull("Unexpected null Resources object", r2);
         assertNull("Unexpected AdminObjectResource from configCtx", r2.getAdminObjectResourceByJndiName("toby/aor"));
     }
@@ -120,5 +120,5 @@ public class AdminObjectResourceDeleteTest extends TestCase {
         return ts;
     }
 
-        
+
 }

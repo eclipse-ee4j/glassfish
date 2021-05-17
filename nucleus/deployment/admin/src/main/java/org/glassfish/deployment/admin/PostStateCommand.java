@@ -38,15 +38,15 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @PerLookup
-public class PostStateCommand implements AdminCommand, 
+public class PostStateCommand implements AdminCommand,
         AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
-    
+
     @Inject
     protected ServiceLocator habitat;
 
     private DeployCommandSupplementalInfo suppInfo;
     private Collection<? extends AccessCheck> accessChecks;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         suppInfo = context.getActionReport().getResultType(DeployCommandSupplementalInfo.class);
@@ -58,14 +58,14 @@ public class PostStateCommand implements AdminCommand,
     public Collection<? extends AccessCheck> getAccessChecks() {
         return accessChecks;
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
         final Logger logger = context.getLogger();
       try {
         logger.log(Level.INFO, "PostState starting: " + this.getClass().getName());
-                
+
         final ExtendedDeploymentContext dc;
         if (suppInfo == null) {
             throw new IllegalStateException("Internal Error: suppInfo was not set. Insure that it is set properly.");

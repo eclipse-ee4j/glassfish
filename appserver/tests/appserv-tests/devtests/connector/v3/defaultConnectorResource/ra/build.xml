@@ -35,7 +35,7 @@
 
     <jar jarfile="generic-ra.rar" basedir="."
          includes="generic-ra.jar, META-INF/ra.xml" />
-	 <echo message="inside all of ra build.xml"></echo>
+     <echo message="inside all of ra build.xml"></echo>
   </target>
 <!-- @Siva This deploy/undeploy target is never called as it is an embedded RA -->
   <target name="deploy" depends="init-common">

@@ -91,7 +91,7 @@ public class StandaloneProcessor {
     private ModuleType type = null;
     private Set<String> compClassNames = null;
     private static ServiceLocator serviceLocator = null;
-    
+
     /** Creates a new instance of StandaloneProcessor */
     public StandaloneProcessor() {
         this(ModuleType.EJB);
@@ -102,7 +102,7 @@ public class StandaloneProcessor {
         if (ModuleType.EJB.equals(type)) {
             bundleDescriptor = new EjbBundleDescriptorImpl();
             aeHandler = new EjbBundleContext((EjbBundleDescriptorImpl) bundleDescriptor);
-           
+
         } else if (ModuleType.WAR.equals(type)) {
             bundleDescriptor = new WebBundleDescriptorImpl();
             aeHandler = new WebBundleContext(
@@ -120,14 +120,14 @@ public class StandaloneProcessor {
     public void setComponentClassNames(Set compClassNames) {
         this.compClassNames = compClassNames;
     }
-    
+
     public static void main(String[] args) throws Exception {
         StandaloneProcessor processor = new StandaloneProcessor();
         processor.run(args);
         processor.generateEjbJarXmlFile(".");
         processor.generateWebServicesXmlFile(".");
     }
-    
+
     public int run(String[] args) throws Exception {
         for (String arg : args) {
             System.out.println("Annotation log is set to " + System.getProperty("annotation.log"));
@@ -135,7 +135,7 @@ public class StandaloneProcessor {
             if (logWhat!=null) {
                 AnnotationUtils.setLoggerTarget(logWhat);
                 initLogger();
-            }            
+            }
             AnnotationUtils.getLogger().info("processing " + arg);
             File f = new File(arg);
             if (f.exists()) {
@@ -157,7 +157,7 @@ public class StandaloneProcessor {
                                 (EjbBundleDescriptorImpl)bundleDescriptor;
                         scanner = serviceLocator.getService(EjbJarScanner.class);
                         scanner.process(archive, ejbBundleDesc, classLoader, null);
-                        
+
                     } else if (ModuleType.WAR.equals(type)) {
                         WebBundleDescriptor webBundleDesc =
                                 (WebBundleDescriptor)bundleDescriptor;
@@ -170,26 +170,26 @@ public class StandaloneProcessor {
                         }
                         scanner = serviceLocator.getService(WarScanner.class);
                         scanner.process(archive, webBundleDesc, classLoader, null);
-                        
+
                     } else if (ModuleType.CAR.equals(type)) {
                         String mainClassName = compClassNames.iterator().next();
-                        ApplicationClientDescriptor appClientDesc = 
+                        ApplicationClientDescriptor appClientDesc =
                                 (ApplicationClientDescriptor)bundleDescriptor;
                         appClientDesc.setMainClassName(mainClassName);
                         scanner = serviceLocator.getService(AppClientScanner.class);
                         scanner.process(archive, appClientDesc, classLoader, null);
-                        
+
                     }
 
                     AnnotationProcessor ap = serviceLocator.<SJSASFactory>getService(SJSASFactory.class).getAnnotationProcessor(false);
-                    
-                    
-                    // if the user indicated a directory for handlers, time to add the                    
+
+
+                    // if the user indicated a directory for handlers, time to add the
                     String handlersDir = System.getProperty("handlers.dir");
                     if (handlersDir!=null) {
                         addHandlers(ap, handlersDir);
                     }
-                    
+
                     ProcessingContext ctx = ap.createContext();
                     ctx.setErrorHandler(new StandaloneErrorHandler());
                     bundleDescriptor.setClassLoader(scanner.getClassLoader());
@@ -221,13 +221,13 @@ public class StandaloneProcessor {
     public void generateAppClientXmlFile(String dir) throws IOException {
          AppClientDeploymentDescriptorFile appClientdf = new AppClientDeploymentDescriptorFile();
          appClientdf.write(bundleDescriptor, dir);
-    
+
     }
 
     public void generateEjbJarXmlFile(String dir) throws IOException {
          EjbDeploymentDescriptorFile ejbdf = new EjbDeploymentDescriptorFile();
          ejbdf.write(bundleDescriptor, dir);
-    
+
     }
 
     public void generateWebXmlFile(String dir) throws IOException {
@@ -239,13 +239,13 @@ public class StandaloneProcessor {
          WebServicesDeploymentDescriptorFile ddf = new WebServicesDeploymentDescriptorFile(bundleDescriptor);
          ddf.write(bundleDescriptor, dir);
     }
-    
+
     private void addHandlers(AnnotationProcessor ap, String handlersDir) {
         try {
         System.out.println("Handlers dir set at " + handlersDir);
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.process(new File(handlersDir),null,null);
-        
+
         Set<Class> elements = scanner.getElements();
         for (Class handlerClass : elements) {
             Class[] interfaces = handlerClass.getInterfaces();
@@ -253,7 +253,7 @@ public class StandaloneProcessor {
                 if (interf.equals(org.glassfish.apf.AnnotationHandler.class)) {
                     AnnotationHandler handler = (AnnotationHandler) handlerClass.newInstance();
                     if (AnnotationUtils.shouldLog("handler")) {
-                        AnnotationUtils.getLogger().fine("Registering handler " + handlerClass 
+                        AnnotationUtils.getLogger().fine("Registering handler " + handlerClass
                                + " for type " + handler.getAnnotationType());
                     }
                     ap.pushAnnotationHandler(handler);
@@ -264,7 +264,7 @@ public class StandaloneProcessor {
             AnnotationUtils.getLogger().severe("Exception while registering handlers : " + e.getMessage());
         }
     }
-    
+
     private void initLogger() {
         try {
             FileHandler handler = new FileHandler("annotation.log");
@@ -274,7 +274,7 @@ public class StandaloneProcessor {
             logger.setLevel(Level.FINE);
             logger.addHandler(handler);} catch(Exception e) {
                 e.printStackTrace();
-            }       
+            }
     }
 
     private void prepareServiceLocator() {
@@ -282,7 +282,7 @@ public class StandaloneProcessor {
             // Bootstrap a hk2 environment.
             ModulesRegistry registry = new StaticModulesRegistry(getClass().getClassLoader());
             serviceLocator = registry.createServiceLocator("default");
-            
+
             StartupContext startupContext = new StartupContext();
 
             ServiceLocatorUtilities.addOneConstant(serviceLocator, startupContext);

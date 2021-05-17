@@ -40,7 +40,7 @@ public class GrizzlyApp implements ApplicationContainer {
 
     public static final class Adapter {
         final HttpHandler service;
-        final String contextRoot;        
+        final String contextRoot;
         public Adapter(String contextRoot, HttpHandler adapter) {
             this.service = adapter;
             this.contextRoot = contextRoot;

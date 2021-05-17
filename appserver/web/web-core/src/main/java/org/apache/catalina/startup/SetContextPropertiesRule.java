@@ -22,9 +22,9 @@ import org.apache.tomcat.util.digester.Rule;
 import org.xml.sax.Attributes;
 
 /**
- * Rule that uses the introspection utils to set properties of a context 
+ * Rule that uses the introspection utils to set properties of a context
  * (everything except "path").
- * 
+ *
  * @author Remy Maucherat
  */
 public class SetContextPropertiesRule extends Rule {
@@ -54,7 +54,7 @@ public class SetContextPropertiesRule extends Rule {
             if ("".equals(name)) {
                 name = attributes.getQName(i);
             }
-            if ("path".equals(name)) { 
+            if ("path".equals(name)) {
                 continue;
             }
             String value = attributes.getValue(i);

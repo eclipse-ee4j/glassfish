@@ -25,24 +25,24 @@ import org.glassfish.j2ee.statistics.CountStatistic;
  * @since   SJSAS8.1
  */
 public interface TimerServiceStats extends Stats {
-    
+
     // Statistics for all the timers in the system
-    
+
     /**
      * Total number of timers created in the system
      * @return CountStatistic
      */
     public CountStatistic getNumTimersCreated();
-    
+
     /**
      * Total number of timers delivered by the system
      * @return CountStatistic
      */
     public CountStatistic getNumTimersDelivered();
-    
+
     /**
      * Total number of timers removed from the system
      * @return CountStatistic
      */
-    public CountStatistic getNumTimersRemoved();    
+    public CountStatistic getNumTimersRemoved();
 }

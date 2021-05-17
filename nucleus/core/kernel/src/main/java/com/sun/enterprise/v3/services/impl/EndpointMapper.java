@@ -21,13 +21,13 @@ import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.container.EndpointRegistrationException;
 
 /**
- * registration interface to use with the Mapper classes. 
- * 
+ * registration interface to use with the Mapper classes.
+ *
  * @author Jeanfrancois Arcand
  */
 public interface EndpointMapper<E> {
-    
-    
+
+
     /**
      * Registers a new endpoint (proxy implementation) for a particular
      * context-root. All request coming with the context root will be dispatched
@@ -37,8 +37,8 @@ public interface EndpointMapper<E> {
      */
     public void registerEndpoint(String contextRoot, Collection<String> vsServers, E adapter,
                                  ApplicationContainer container) throws EndpointRegistrationException;
-    
-    
+
+
     /**
      * Removes the context-root from our list of endpoints.
      */
@@ -50,7 +50,7 @@ public interface EndpointMapper<E> {
      * @param endpoint {@link Endpoint}
      */
     public void registerEndpoint(Endpoint endpoint) throws EndpointRegistrationException;
-    
+
     /**
      * Removes the {@link Endpoint} from our list of endpoints.
      * @param endpoint {@link Endpoint}

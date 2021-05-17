@@ -28,7 +28,7 @@ public class InstanceLifecycleTest extends BaseTest
 
     public InstanceLifecycleTest(final String user, final String password,
             final String host, final int port, final String instanceName,
-            final String nodeAgentName, final String configName, 
+            final String nodeAgentName, final String configName,
             final Map optional)
     {
         final CmdChainCmd chain = new CmdChainCmd();
@@ -38,7 +38,7 @@ public class InstanceLifecycleTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
         final CreateInstanceCmd createInstanceCmd = cmdFactory.
-                createCreateInstanceCmd(instanceName, nodeAgentName, 
+                createCreateInstanceCmd(instanceName, nodeAgentName,
                         configName, optional);
         final StartInstanceCmd startInstanceCmd = cmdFactory.
                 createStartInstanceCmd(instanceName);

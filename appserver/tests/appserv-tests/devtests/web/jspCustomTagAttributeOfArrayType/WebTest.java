@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         WebTest webTest = new WebTest(args);
         webTest.doTest();
@@ -59,7 +59,7 @@ public class WebTest {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.err.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 stat.addStatus(TEST_NAME, stat.FAIL);
@@ -74,7 +74,7 @@ public class WebTest {
                 }
 
                 if (!EXPECTED.equals(lastLine)) {
-                    System.err.println("Wrong response body. Expected: " 
+                    System.err.println("Wrong response body. Expected: "
                                        + EXPECTED + ", received: " + lastLine);
                     stat.addStatus(TEST_NAME, stat.FAIL);
                 } else {

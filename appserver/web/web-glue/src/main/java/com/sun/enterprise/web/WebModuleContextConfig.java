@@ -72,10 +72,10 @@ public class WebModuleContextConfig extends ContextConfig {
     public final static int MESSAGE_DESTINATIONS = 11;
     public final static int MESSAGE_DESTINATION_REFS = 12;
     public final static int MIME_MAPPINGS = 13;
-    
+
     protected ServiceLocator services;
-        
-    
+
+
     /**
      * The DOL object representing the web.xml content.
     */
@@ -104,7 +104,7 @@ public class WebModuleContextConfig extends ContextConfig {
         }
     }
 
-    
+
     /**
      * Set the DOL object associated with this class.
      */
@@ -119,15 +119,15 @@ public class WebModuleContextConfig extends ContextConfig {
         return webBundleDescriptor;
     }
 
-    
+
     protected synchronized void configureResource()
             throws LifecycleException {
-        
-        List<ApplicationParameter> appParams = 
+
+        List<ApplicationParameter> appParams =
             context.findApplicationParameters();
         ContextParameter contextParam;
         synchronized (appParams) {
-            Iterator<ApplicationParameter> i = appParams.iterator(); 
+            Iterator<ApplicationParameter> i = appParams.iterator();
             while (i.hasNext()) {
                 ApplicationParameter appParam = i.next();
                 contextParam = new EnvironmentProperty(
@@ -143,7 +143,7 @@ public class WebModuleContextConfig extends ContextConfig {
         for (int i=0; i<envs.length; i++) {
             envEntry = new EnvironmentProperty(
                     envs[i].getName(), envs[i].getValue(),
-                    envs[i].getDescription(), envs[i].getType()); 
+                    envs[i].getDescription(), envs[i].getType());
             if (envs[i].getValue()!=null) {
                 envEntry.setValue(envs[i].getValue());
             }
@@ -176,7 +176,7 @@ public class WebModuleContextConfig extends ContextConfig {
             webBundleDescriptor
                     .addResourceReferenceDescriptor(resourceReference);
             resRefs.add(resourceReference);
-        }    
+        }
     }
 
 
@@ -231,15 +231,15 @@ public class WebModuleContextConfig extends ContextConfig {
             }
         }
     }
-    
-    
+
+
     /**
      * Always sets up an Authenticator regardless of any security constraints.
      */
     @Override
     protected synchronized void authenticatorConfig()
             throws LifecycleException {
-        
+
         LoginConfig loginConfig = context.getLoginConfig();
         if (loginConfig == null) {
             loginConfig = new LoginConfig("NONE", null, null, null);
@@ -363,8 +363,8 @@ public class WebModuleContextConfig extends ContextConfig {
             }
         }
     }
-    
-    
+
+
     /**
      * Process the default configuration file, if it exists.
      * The default config must be read with the container loader - so
@@ -381,7 +381,7 @@ public class WebModuleContextConfig extends ContextConfig {
      */
     @Override
     protected synchronized void stop() {
-        
+
         super.stop();
         ComponentEnvManager namingMgr = services.getService(
             com.sun.enterprise.container.common.spi.util.ComponentEnvManager.class);
@@ -397,7 +397,7 @@ public class WebModuleContextConfig extends ContextConfig {
                 String msg = rb.getString(LogFacade.UNBIND_NAME_SPACE_ERROR);
                 msg = MessageFormat.format(msg, context.getName());
                 logger.log(Level.WARNING, msg, ex);
-            }        
+            }
         }
     }
 

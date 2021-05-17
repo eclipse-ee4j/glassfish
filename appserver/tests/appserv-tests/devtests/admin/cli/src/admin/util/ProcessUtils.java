@@ -157,10 +157,10 @@ public final class ProcessUtils {
         pm.execute();
         String out = pm.getStdout() + pm.getStderr();
 
-        /* output is either 
-        (1) 
+        /* output is either
+        (1)
         INFO: No tasks running with the specified criteria.
-        (2) 
+        (2)
         Image Name                   PID Session Name     Session#    Mem Usage
         ========================= ====== ================ ======== ============
         java.exe                    3760 Console                 0     64,192 K
@@ -230,18 +230,18 @@ public final class ProcessUtils {
     private static boolean debug;
     public static boolean isWindows() {
         String osname = System.getProperty("os.name");
-        
+
         if(osname == null || osname.length() <= 0)
             return false;
-        
+
         // case insensitive compare...
-        osname	= osname.toLowerCase();
-        
+        osname    = osname.toLowerCase();
+
         if(osname.indexOf("windows") >= 0)
             return true;
-        
+
         return false;
-        
+
     }
 
     static boolean ok(String s) {

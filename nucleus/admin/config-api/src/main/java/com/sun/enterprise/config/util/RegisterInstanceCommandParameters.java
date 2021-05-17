@@ -22,7 +22,7 @@ import org.glassfish.api.admin.CommandParameters;
 
 /**
  * Parameters for the _register-instance command
- * 
+ *
  * @author Jennifer Chou
  */
 public class RegisterInstanceCommandParameters implements CommandParameters {

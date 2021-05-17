@@ -23,15 +23,15 @@ import javax.xml.stream.XMLInputFactory;
  */
 @jakarta.jws.WebService
 public class AddNumbers {
-    
+
     public int addNumbers (int number1, int number2) {
-        
+
         // verify the stax tck property is set on woodstox by default
         if (!(Boolean)XMLInputFactory.newFactory().getProperty("com.ctc.wstx.returnNullForDefaultNamespace")) {
             throw new IllegalStateException("Woodstox does not have required stax tck com.ctc.wstx.returnNullForDefaultNamespace property set.");
         }
-        
+
         return number1 + number2;
-    }    
+    }
 
 }

@@ -53,15 +53,15 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="__get-jmsdest", 
+        opType=RestEndpoint.OpType.GET,
+        path="__get-jmsdest",
         description="Get JMS Destinations",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="__get-jmsdest", 
+        opType=RestEndpoint.OpType.GET,
+        path="__get-jmsdest",
         description="Get JMS Destinations",
         params={
             @RestParam(name="target", value="$parent")

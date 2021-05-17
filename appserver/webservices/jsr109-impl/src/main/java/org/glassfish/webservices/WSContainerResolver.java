@@ -27,8 +27,8 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
  * @author Bhakti Mehta
  */
 public class WSContainerResolver extends ContainerResolver {
-   
-     
+
+
     private static final ThreadLocal<ServiceReferenceDescriptor> refs;
 
     static {
@@ -36,24 +36,24 @@ public class WSContainerResolver extends ContainerResolver {
         WSContainerResolver resolver = new WSContainerResolver();
         ContainerResolver.setInstance(resolver);
     }
-    
+
     private  WSContainerResolver() {
     }
 
-    
+
     public static void set(ServiceReferenceDescriptor ref) {
         refs.set(ref);
     }
-    
+
     public static void unset() {
         refs.set(null);
     }
-      
-    
+
+
     @Override
     public Container getContainer() {
         ServiceReferenceDescriptor svcRef = refs.get();
-        
+
         if (svcRef != null) {
             return new WSClientContainer(svcRef);
         } else {

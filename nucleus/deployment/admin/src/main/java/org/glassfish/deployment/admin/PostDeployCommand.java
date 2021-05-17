@@ -54,8 +54,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 @ExecuteOn(value={RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_postdeploy", 
+        opType=RestEndpoint.OpType.POST,
+        path="_postdeploy",
         description="_postdeploy")
 })
 @AccessRequired(resource=DeploymentCommandUtils.APPLICATION_RESOURCE_NAME, action="write")
@@ -77,7 +77,7 @@ public class PostDeployCommand extends DeployCommandParameters implements AdminC
         final DeploymentContext dc = suppInfo.deploymentContext();
         final DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
         final InterceptorNotifier notifier = new InterceptorNotifier(habitat, dc);
-        
+
 
         // if the target is DAS, we do not need to do anything more
         if (DeploymentUtils.isDASTarget(params.target)) {

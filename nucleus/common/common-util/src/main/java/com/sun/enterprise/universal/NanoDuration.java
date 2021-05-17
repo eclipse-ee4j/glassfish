@@ -21,7 +21,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 /**
  * Convert a nanosec duration into something readable
  * @author bnevins
- * Thread Safe.  
+ * Thread Safe.
  * Immutable
  */
 public final class NanoDuration {
@@ -68,7 +68,7 @@ public final class NanoDuration {
 
         return s;
     }
-    
+
     // possibly useful constants
     public final static double NSEC_PER_MICROSECOND = 1000;
     public final static double NSEC_PER_MILLISECOND = 1000 * 1000;

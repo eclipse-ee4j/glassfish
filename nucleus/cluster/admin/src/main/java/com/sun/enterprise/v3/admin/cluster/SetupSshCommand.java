@@ -63,7 +63,7 @@ public class SetupSshCommand implements AdminCommand {
     private Logger logger;
     private String realPass;
     TokenResolver resolver = new TokenResolver();
-    
+
     @Inject
     SSHLauncher sshL;
 
@@ -80,7 +80,7 @@ public class SetupSshCommand implements AdminCommand {
                 throw new CommandException(Strings.get("setup.ssh.unalias.error", sshpassword));
             }
         }
-        
+
         if (sshkeyfile == null) {
             //if user hasn't specified a key file and there is no key file at default
             //location, then generate one
@@ -116,16 +116,16 @@ public class SetupSshCommand implements AdminCommand {
             SSHUtil.validateKeyFile(sshpublickeyfile);
         }
     }
-    
+
     @Override
     public final void execute(AdminCommandContext context) {
         logger = context.getLogger();
 
         // initialize logger for SSHLauncher
         sshL.init(logger);
-        
+
         ActionReport report = context.getActionReport();
-        
+
         try {
             validate();
         } catch (CommandException ce) {
@@ -133,7 +133,7 @@ public class SetupSshCommand implements AdminCommand {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
         for (String node : hosts) {
             sshL.init(user, node, port, realPass, sshkeyfile, sshkeypassphrase, logger);
             if (generatekey ) {
@@ -165,8 +165,8 @@ public class SetupSshCommand implements AdminCommand {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
-        } 
-    } 
+        }
+    }
 
     private boolean isAbsolutePath(String path) {
         boolean ret = false;
@@ -174,7 +174,7 @@ public class SetupSshCommand implements AdminCommand {
         if (f.isAbsolute())
             ret = true;
         return ret;
-    } 
+    }
 
     /**
      * Get SSH key passphrase. Obtain real passphrase in case it is an alias.
@@ -182,7 +182,7 @@ public class SetupSshCommand implements AdminCommand {
     private String getSSHPassphrase() throws CommandException {
         // empty pass phrase
         String key = "";
-        
+
         if (sshkeypassphrase != null && !sshkeypassphrase.isEmpty()) {
             key = sshL.expandPasswordAlias(sshkeypassphrase);
 

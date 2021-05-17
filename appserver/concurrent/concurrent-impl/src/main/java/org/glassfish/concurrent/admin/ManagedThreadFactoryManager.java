@@ -46,7 +46,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 
 /**
  *
- * The managed thread factory manager allows you to create and delete 
+ * The managed thread factory manager allows you to create and delete
  * the managed-thread-factory config element
  */
 @Service (name=ServerTags.MANAGED_THREAD_FACTORY)
@@ -118,7 +118,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         }
 
         status = resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, ManagedThreadFactory.class);
-        
+
         return status;
     }
 
@@ -133,7 +133,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         }else{
             enabled = (String) attributes.get(ENABLED);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED); 
+        enabledValueForTarget = (String) attributes.get(ENABLED);
     }
 
     private ManagedThreadFactory createResource(Resources param, Properties properties) throws PropertyVetoException,
@@ -182,7 +182,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
 
     public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
             throws Exception {
-        
+
         if (jndiName == null) {
             String msg = localStrings.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
@@ -224,7 +224,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         try {
             // delete resource-ref
             resourceUtil.deleteResourceRef(jndiName, target);
-            
+
             // delete managed-thread-factory
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {

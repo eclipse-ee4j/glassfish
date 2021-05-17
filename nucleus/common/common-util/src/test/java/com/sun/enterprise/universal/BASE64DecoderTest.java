@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  * @author bnevins
  */
 public class BASE64DecoderTest {
-    /* 
+    /*
      * make sure the Universal base64 works
      */
     @Test

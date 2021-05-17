@@ -26,20 +26,20 @@ import com.sun.enterprise.deployment.node.appclient.AppClientNode;
  *
  * @author Jerome Dochez
  */
-public class AppClientDeploymentDescriptorFile extends DeploymentDescriptorFile {   
-    
+public class AppClientDeploymentDescriptorFile extends DeploymentDescriptorFile {
+
     /** Creates a new instance of AppClientDeploymentDescriptorFile */
     public AppClientDeploymentDescriptorFile() {
     }
-    
-    /** 
-     * @return the location of the DeploymentDescriptor file for a 
+
+    /**
+     * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
-     */    
+     */
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.APP_CLIENT_JAR_ENTRY;
-    }    
-    
+    }
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -47,7 +47,7 @@ public class AppClientDeploymentDescriptorFile extends DeploymentDescriptorFile 
      * @param the descriptor for which we need the node
      */
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-        return new AppClientNode();        
+        return new AppClientNode();
     }
-    
+
 }

@@ -31,105 +31,105 @@ public class SimpleSessionBean implements SessionBean
     private DataSource ds;
     public void setSessionContext(SessionContext context) {
         ctxt_ = context;
-	try {
-	    ic_ = new InitialContext();
+    try {
+        ic_ = new InitialContext();
         ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
-	} catch( NamingException ne ) {
-	    ne.printStackTrace();
-	}
+    } catch( NamingException ne ) {
+        ne.printStackTrace();
+    }
     }
 
     public void ejbCreate() throws CreateException {
     }
 
     public boolean test1() throws Exception {
-	//DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
-	Connection conn1 = null;
-	Statement stmt1 = null;
-	boolean passed = false;
-	//Get a connection with user,password = dbuser,dbpassword
-	//and access a table that only this principal can
-	//access
-	try {
-	    conn1 = ds.getConnection();
-	    stmt1 = conn1.createStatement();
-	    stmt1.executeQuery("SELECT * FROM DBUSERTABLE");
-	} catch( Exception e) {
-	    e.printStackTrace();
-	    return false;
-	} finally {
-	    if (stmt1 != null ) { 
-	        try { stmt1.close(); } catch(Exception e) {}
-	    }
-	    if (conn1 != null) { 
-	        try { conn1.close(); } catch( Exception e1 ) {}
-	    }
-	}
+    //DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
+    Connection conn1 = null;
+    Statement stmt1 = null;
+    boolean passed = false;
+    //Get a connection with user,password = dbuser,dbpassword
+    //and access a table that only this principal can
+    //access
+    try {
+        conn1 = ds.getConnection();
+        stmt1 = conn1.createStatement();
+        stmt1.executeQuery("SELECT * FROM DBUSERTABLE");
+    } catch( Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        if (stmt1 != null ) {
+            try { stmt1.close(); } catch(Exception e) {}
+        }
+        if (conn1 != null) {
+            try { conn1.close(); } catch( Exception e1 ) {}
+        }
+    }
 
-	//Now try querying a table owned by another principal and
-	//expect an exception
-	try {
-	    conn1 = ds.getConnection();
-	    stmt1 = conn1.createStatement();
-	    stmt1.executeQuery("SELECT * FROM PBPUBLICTABLE");
-	} catch( Exception e) {
-	    e.printStackTrace();
-	    return true;
-	} finally {
-	    if (stmt1 != null ) { 
-	        try { stmt1.close(); } catch(Exception e) {}
-	    }
-	    if (conn1 != null) { 
-	        try { conn1.close(); } catch( Exception e1 ) {}
-	    }
-	}
+    //Now try querying a table owned by another principal and
+    //expect an exception
+    try {
+        conn1 = ds.getConnection();
+        stmt1 = conn1.createStatement();
+        stmt1.executeQuery("SELECT * FROM PBPUBLICTABLE");
+    } catch( Exception e) {
+        e.printStackTrace();
+        return true;
+    } finally {
+        if (stmt1 != null ) {
+            try { stmt1.close(); } catch(Exception e) {}
+        }
+        if (conn1 != null) {
+            try { conn1.close(); } catch( Exception e1 ) {}
+        }
+    }
 
-	return false;
+    return false;
     }
 
     public boolean test2() throws Exception {
-	//DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
-	Connection conn1 = null;
-	Statement stmt1 = null;
-	boolean passed = false;
-	//Get a connection with user,password = pbpublic,pbpublic
-	//and access a table that only this principal can
-	//access
-	try {
-	    conn1 = ds.getConnection();
-	    stmt1 = conn1.createStatement();
-	    stmt1.executeQuery("SELECT * FROM PBPUBLICTABLE");
-	} catch( Exception e) {
-	    e.printStackTrace();
-	    return false;
-	} finally {
-	    if (stmt1 != null ) { 
-	        try { stmt1.close(); } catch(Exception e) {}
-	    }
-	    if (conn1 != null) { 
-	        try { conn1.close(); } catch( Exception e1 ) {}
-	    }
-	}
+    //DataSource ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
+    Connection conn1 = null;
+    Statement stmt1 = null;
+    boolean passed = false;
+    //Get a connection with user,password = pbpublic,pbpublic
+    //and access a table that only this principal can
+    //access
+    try {
+        conn1 = ds.getConnection();
+        stmt1 = conn1.createStatement();
+        stmt1.executeQuery("SELECT * FROM PBPUBLICTABLE");
+    } catch( Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        if (stmt1 != null ) {
+            try { stmt1.close(); } catch(Exception e) {}
+        }
+        if (conn1 != null) {
+            try { conn1.close(); } catch( Exception e1 ) {}
+        }
+    }
 
-	//Now try querying a table owned by another principal and
-	//expect an exception
-	try {
-	    conn1 = ds.getConnection();
-	    stmt1 = conn1.createStatement();
-	    stmt1.executeQuery("SELECT * FROM DBUSERTABLE");
-	} catch( Exception e) {
-	    e.printStackTrace();
-	    return true;
-	} finally {
-	    if (stmt1 != null ) { 
-	        try { stmt1.close(); } catch(Exception e) {}
-	    }
-	    if (conn1 != null) { 
-	        try { conn1.close(); } catch( Exception e1 ) {}
-	    }
-	}
+    //Now try querying a table owned by another principal and
+    //expect an exception
+    try {
+        conn1 = ds.getConnection();
+        stmt1 = conn1.createStatement();
+        stmt1.executeQuery("SELECT * FROM DBUSERTABLE");
+    } catch( Exception e) {
+        e.printStackTrace();
+        return true;
+    } finally {
+        if (stmt1 != null ) {
+            try { stmt1.close(); } catch(Exception e) {}
+        }
+        if (conn1 != null) {
+            try { conn1.close(); } catch( Exception e1 ) {}
+        }
+    }
 
-	return false;
+    return false;
     }
 
     public void ejbLoad() {}

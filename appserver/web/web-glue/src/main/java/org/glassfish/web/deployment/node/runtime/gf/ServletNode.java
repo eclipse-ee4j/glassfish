@@ -34,11 +34,11 @@ import org.glassfish.web.deployment.descriptor.WebComponentDescriptorImpl;
 import org.w3c.dom.Node;
 
 /**
- * This node is handling all runtime deployment descriptors 
+ * This node is handling all runtime deployment descriptors
  * relative to servlets
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ServletNode extends DeploymentDescriptorNode<WebComponentDescriptor> {
 
@@ -46,7 +46,7 @@ public class ServletNode extends DeploymentDescriptorNode<WebComponentDescriptor
 
     public ServletNode() {
         registerElementHandler(new XMLElement
-            (WebServicesTagNames.WEB_SERVICE_ENDPOINT), 
+            (WebServicesTagNames.WEB_SERVICE_ENDPOINT),
                                WebServiceEndpointRuntimeNode.class);
     }
 
@@ -60,10 +60,10 @@ public class ServletNode extends DeploymentDescriptorNode<WebComponentDescriptor
         }
         return descriptor;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -80,7 +80,7 @@ public class ServletNode extends DeploymentDescriptorNode<WebComponentDescriptor
             }
         } else super.setElementValue(element, value);
     }
-    
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -92,7 +92,7 @@ public class ServletNode extends DeploymentDescriptorNode<WebComponentDescriptor
      */
     @Override
     public Node writeDescriptor(Node parent, String nodeName, WebComponentDescriptor descriptor) {
-        WebServicesDescriptor webServices = 
+        WebServicesDescriptor webServices =
             descriptor.getWebBundleDescriptor().getWebServices();
 
         // only write servlet runtime elements if there is a runas identity
@@ -103,11 +103,11 @@ public class ServletNode extends DeploymentDescriptorNode<WebComponentDescriptor
             appendTextChild(servletNode, RuntimeTagNames.SERVLET_NAME, descriptor.getCanonicalName());
 
             if( descriptor.getRunAsIdentity() != null ) {
-                appendTextChild(servletNode, RuntimeTagNames.PRINCIPAL_NAME, 
+                appendTextChild(servletNode, RuntimeTagNames.PRINCIPAL_NAME,
                                 descriptor.getRunAsIdentity().getPrincipal());
             }
 
-            WebServiceEndpointRuntimeNode wsRuntime = 
+            WebServiceEndpointRuntimeNode wsRuntime =
                 new WebServiceEndpointRuntimeNode();
             wsRuntime.writeWebServiceEndpointInfo(servletNode, descriptor);
 

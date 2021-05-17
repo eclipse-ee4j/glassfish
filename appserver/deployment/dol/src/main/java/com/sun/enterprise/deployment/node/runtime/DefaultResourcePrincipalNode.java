@@ -24,11 +24,11 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import org.w3c.dom.Node;
 
 /**
- * This node handles the runtime deployment descriptor tag 
+ * This node handles the runtime deployment descriptor tag
  * default-resource-principal
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
 
@@ -37,14 +37,14 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
 
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         return null;
     }
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -55,11 +55,11 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
             passwd = value;
         } else super.setElementValue(element, value);
     }
-    
+
     /**
      * notification of the end of XML parsing for this node
      */
-    public void postParsing() {   
+    public void postParsing() {
         if (getParentNode().getDescriptor() instanceof ResourceReferenceDescriptor) {
             ((ResourceReferenceDescriptor) getParentNode().getDescriptor()).setResourcePrincipal(new ResourcePrincipal(name, passwd));
         } else {
@@ -74,11 +74,11 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, ResourcePrincipal rpDescriptor) {     
+     */
+    public Node writeDescriptor(Node parent, String nodeName, ResourcePrincipal rpDescriptor) {
         Node principalNode = super.writeDescriptor(parent, nodeName, null);
         appendTextChild(principalNode, RuntimeTagNames.NAME, rpDescriptor.getName());
-	appendTextChild(principalNode, RuntimeTagNames.PASSWORD, rpDescriptor.getPassword()); 
+    appendTextChild(principalNode, RuntimeTagNames.PASSWORD, rpDescriptor.getPassword());
         return principalNode;
-    }    
+    }
 }

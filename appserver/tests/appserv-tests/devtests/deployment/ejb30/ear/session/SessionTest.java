@@ -24,15 +24,15 @@ import org.testng.annotations.Test;
  * in DeploymentTest.
  *
  * @author: tjquinn
- * 
+ *
  */
 
 public class SessionTest extends DeploymentTest {
-    
+
     /** Creates a new instance of ExampleTest */
     public SessionTest() {
     }
-    
+
     /**
      *Runs the first step of the test: deploying and running the client.
      */
@@ -41,7 +41,7 @@ public class SessionTest extends DeploymentTest {
         deploy();
         runClient();
     }
-    
+
     /**
      *Runs the second step of the test, only after the first has run and
      *succeeded: redeploy the app and run the client again.

@@ -25,7 +25,7 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -34,15 +34,15 @@ public class MonitoringTest extends BaseSeleniumTestClass {
     private static final String MONITOR_LEVEL_OFF = "OFF";
     private static final String MONITOR_LEVEL_LOW = "LOW";
     private static final String MONITOR_LEVEL_HIGH = "HIGH";
-    
+
     private static final String MONITOR_LEVEL_COL_ID = "col3";
     private static final String MONITOR_COMP_COL_ID = "col2";
     private static final String MONITOR_COMP_SELECT_ID = "col1";
-    
+
     public static final String TARGET_SERVER_TYPE = "server";
     public static final String TARGET_STANDALONE_TYPE = "standalone";
     public static final String TARGET_CLUSTER_TYPE = "cluster";
-    
+
     private static final String MONITORING_APPLICATIONS_COMPONENT_DROPDOWN_ID = "propertyForm:propertyContentPage:propertySheet:viewPropertySection:ApplicationProp:ComponentView_list";
     private static final String MONITORING_APPLICATIONS_APPLICATION_DROPDOWN_ID = "propertyForm:propertyContentPage:propertySheet:viewPropertySection:ApplicationProp:View_list";
 
@@ -59,10 +59,10 @@ public class MonitoringTest extends BaseSeleniumTestClass {
         monitoringJvmStats("server", TARGET_SERVER_TYPE);
         monitoringWebContainerStats("server", TARGET_SERVER_TYPE);
         monitoringTransactionServiceStats("server", TARGET_SERVER_TYPE);
-        
+
 //        //This seems a bug to the glassfish v4 need to be resolved!
 //        monitoringSecurityStats("server", TARGET_SERVER_TYPE);
-        
+
         monitoringHttpServiceStats("server", TARGET_SERVER_TYPE);
     }
 
@@ -214,7 +214,7 @@ public class MonitoringTest extends BaseSeleniumTestClass {
         setMonitorLevel("Transaction Service", MONITOR_LEVEL_HIGH, false, target, targetType);
         goToMonitoringServerPage(target, targetType);
         verifyMonitoringStat("txnServiceStats", transactionServiceData, transactionServiceHeader);
-        
+
         setMonitorLevel("Transaction Service", MONITOR_LEVEL_OFF, false, target, targetType);
     }
 
@@ -276,7 +276,7 @@ public class MonitoringTest extends BaseSeleniumTestClass {
         assertEquals(statData, driver.findElement(By.id("propertyForm:propertyContentPage:basicTable:" + stat+ ":0:col2")).getText());
         clickByIdAction("propertyForm:propertyContentPage:basicTable:" + stat + ":_groupHeader:_groupPanelToggleButton:_groupPanelToggleButton_image");
     }
-    
+
     private void goToMonitoringApplicationsPage(String target, String targetType) {
         if (targetType.equals(TARGET_SERVER_TYPE)) {
             clickAndWait("treeForm:tree:applicationServer:applicationServer_link");
@@ -363,7 +363,7 @@ public class MonitoringTest extends BaseSeleniumTestClass {
             waitForAlertProcess("modalBody");
             waitforBtnDisable("propertyForm:deployTable:topActionsGroup1:button1");
         }
-        
+
         //start to deploy applications
         driver.get(baseUrl + "common/applications/uploadFrame.jsf");
         driver.findElement(By.id("form:sheet1:section1:prop1:uploadRdBtn:uploadRdBtn_label"));
@@ -372,7 +372,7 @@ public class MonitoringTest extends BaseSeleniumTestClass {
         //waitForCondition("document.getElementById('form:war:psection:nameProp:appName').value == '" + appName + "'", 300000);
         assertEquals(appName, getValue("form:war:psection:nameProp:appName", "value"));
         clickAndWait("form:title:topButtons:uploadButton");
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:applications:applications_link");
         String prefix = getTableRowByValue("propertyForm:deployTable", appName, "col1");

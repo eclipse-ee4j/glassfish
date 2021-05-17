@@ -27,19 +27,19 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 import org.glassfish.jdbc.devtests.v3.util.TablesUtil;
 
 /**
- * Devtest to test if application server removes a connection from pool 
+ * Devtest to test if application server removes a connection from pool
  * after using it for "maxconnectionusage" times.
- * 
- * Assumes that steady-pool-size = 1, max-pool-size = 1, 
+ *
+ * Assumes that steady-pool-size = 1, max-pool-size = 1,
  * max-connection-usage-count = 10 attributes are set on the pool.
- * 
+ *
  * @author shalini
  */
 public class MaxConnectionUsageTest implements SimpleTest {
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
-    
+
     /**
-     * Tests max-connection-usage assuming pool size = 1 and 
+     * Tests max-connection-usage assuming pool size = 1 and
      * DataSource is of type : javax.sql.DataSource
      * @param ds
      * @param out
@@ -67,27 +67,27 @@ public class MaxConnectionUsageTest implements SimpleTest {
         } catch (Exception e) {
             resultsMap.put("max-conn-usage-connection-sharing-test", false);
         }
-        
+
         TablesUtil.deleteTables(ds, out, tableName);
         HtmlUtil.printHR(out);
-        return resultsMap;                        
+        return resultsMap;
     }
 
     /**
      * Assuming pool has only one connection, calling maxConnUsageTest2(...) and
      * maxConnUsageTest3(...) 5 times each will ensure that "maxconnectionsusage=10"
-     * is met.  
+     * is met.
      * Further call to maxConnUsageTest2(...) will return a different connection
-     * 
+     *
      * If they are different, connection was dropped and created and test passes.
-     * 
+     *
      * @param ds
      * @param out
      * @param value
      * @param tableName
      * @return boolean status
      */
-    private boolean connectionSharingTest(DataSource ds, PrintWriter out, 
+    private boolean connectionSharingTest(DataSource ds, PrintWriter out,
             int value, String tableName) {
         String[] results = new String[10];
         out.println("<h4> Max Connection Usage - Connection Sharing Test </h4>");
@@ -96,7 +96,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
             if(i % 2 == 0) {
                 results[i] = maxConnUsageTest2(ds, out, value, tableName);
             } else {
-                results[i] = maxConnUsageTest3(ds, out, (i/2)+1, value, 
+                results[i] = maxConnUsageTest3(ds, out, (i/2)+1, value,
                         tableName);
             }
         }
@@ -110,10 +110,10 @@ public class MaxConnectionUsageTest implements SimpleTest {
                 break;
             }
         }
-        
+
         out.println("<br> Further call to maxConnUsageTest2");
         String tmpResult2 = maxConnUsageTest2(ds, out, value, tableName);
-        
+
         if(!tmpResult2.equalsIgnoreCase(tmpResult1) && status) {
             status = true;
         } else {
@@ -129,7 +129,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
 
     /**
      * Creates table needed for the Max Connection Usage devtest.
-     * 
+     *
      * @param ds
      * @param out
      * @param tableName
@@ -167,7 +167,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
     /**
      * Tests if the first and last physical connections are different.
      * Assuming maxconnectionusage property is 10 and connectionSharing ON, the
-     * physical connections con-1 and con-11 must be different.     
+     * physical connections con-1 and con-11 must be different.
      * @param ds
      * @param out
      * @return boolean result
@@ -218,7 +218,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
      * @param tableName
      * @return physicalConnectionString
      */
-    private String maxConnUsageTest2(DataSource ds, PrintWriter out, int value, 
+    private String maxConnUsageTest2(DataSource ds, PrintWriter out, int value,
             String tableName) {
         Connection physicalConnection = null;
         Connection conn = null;
@@ -228,7 +228,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
         try {
             conn = ds1.getConnection();
             stmt = conn.createStatement();
-            stmt.executeUpdate("insert into " + tableName + " values (" + 
+            stmt.executeUpdate("insert into " + tableName + " values (" +
                     value + ",'" + value + "')");
             physicalConnection = ds1.getConnection(conn);
             physicalConnectionString = physicalConnection.toString();
@@ -243,7 +243,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
             } catch (Exception e) {
                 HtmlUtil.printException(e, out);
             }
-          
+
             try {
                 if(conn != null) {
                     conn.close();
@@ -256,7 +256,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
     }
 
     /**
-     * Returns the physical connection's ID after testing if the entries inserted 
+     * Returns the physical connection's ID after testing if the entries inserted
      * using maxConnUsageTest2(....) method are persisted.
      * @param ds
      * @param out
@@ -265,7 +265,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
      * @param tableName
      * @return physicalConnectionString
      */
-    private String maxConnUsageTest3(DataSource ds, PrintWriter out, int count, 
+    private String maxConnUsageTest3(DataSource ds, PrintWriter out, int count,
             int value, String tableName) {
         Connection physicalConnection = null;
         Connection conn = null;
@@ -281,7 +281,7 @@ public class MaxConnectionUsageTest implements SimpleTest {
                 if(count == resultCount) {
                     physicalConnection = ds1.getConnection(conn);
                 } else {
-                    out.println("Expected count [" + count + 
+                    out.println("Expected count [" + count +
                             "] does not match [" + resultCount + "]");
                     break;
                 }
@@ -297,15 +297,15 @@ public class MaxConnectionUsageTest implements SimpleTest {
             } catch(Exception ex) {
                 HtmlUtil.printException(ex, out);
             }
-            
+
             try {
                 if(stmt != null) {
                     stmt.close();
-                } 
+                }
             } catch (Exception ex) {
                     HtmlUtil.printException(ex, out);
             }
-            
+
             try {
                 if(conn != null) {
                     conn.close();
@@ -316,5 +316,5 @@ public class MaxConnectionUsageTest implements SimpleTest {
         }
         return physicalConnection.toString();
     }
-    
+
 }

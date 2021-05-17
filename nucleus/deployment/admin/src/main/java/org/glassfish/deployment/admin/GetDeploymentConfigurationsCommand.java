@@ -53,7 +53,7 @@ import org.glassfish.api.admin.RestParam;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
+        opType=RestEndpoint.OpType.GET,
         path="_get-deployment-configurations",
         description="Get Deployment Configurations",
         params={@RestParam(name="appname", value="$parent")})
@@ -123,11 +123,11 @@ public class GetDeploymentConfigurationsCommand implements AdminCommand {
     {
         for (Map.Entry<String, String> pathEntry : snifferConfigs.entrySet()) {
             ActionReport.MessagePart childPart = part.addChild();
-            childPart.addProperty(DeploymentProperties.MODULE_NAME, 
+            childPart.addProperty(DeploymentProperties.MODULE_NAME,
                 moduleName);
-            childPart.addProperty(DeploymentProperties.DD_PATH, 
+            childPart.addProperty(DeploymentProperties.DD_PATH,
                 pathEntry.getKey());
-            childPart.addProperty(DeploymentProperties.DD_CONTENT, 
+            childPart.addProperty(DeploymentProperties.DD_CONTENT,
                 pathEntry.getValue());
         }
     }

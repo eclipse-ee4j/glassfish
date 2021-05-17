@@ -66,7 +66,7 @@ public interface Server {
 
     /**
      * Set the global naming resources.
-     * 
+     *
      * @param globalNamingResources The new global naming resources
      */
     public void setGlobalNamingResources

@@ -47,10 +47,10 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
      * {@inheritDoc}
      */
     public synchronized void deployResource(Object resource, String applicationName, String moduleName)
-            throws Exception {   
+            throws Exception {
         deployResource(resource);
     }
-    
+
     /**
      * {@inheritDoc}
      */

@@ -37,7 +37,7 @@ public class TimerSessionEJB implements TimerSession
     private QueueConnection connection;
 
     private QueueSession session;
-    
+
     @Resource(mappedName="jms/ejb_perf_timer1_TQueue")
     private Queue queue;
 
@@ -58,7 +58,7 @@ public class TimerSessionEJB implements TimerSession
     public void ejbTimeout(Timer timer) {
 
         timeoutCount++;
-        
+
         if( timeoutCount <= maxTimeouts ) {
             return;
         }
@@ -74,7 +74,7 @@ public class TimerSessionEJB implements TimerSession
 
             connection = qcFactory.createQueueConnection();
 
-            QueueSession session = 
+            QueueSession session =
                 connection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
             sender  = session.createSender(queue);
 
@@ -96,7 +96,7 @@ public class TimerSessionEJB implements TimerSession
             } catch(Exception e) {
                 e.printStackTrace();
             }
-	}
+    }
 
     }
 

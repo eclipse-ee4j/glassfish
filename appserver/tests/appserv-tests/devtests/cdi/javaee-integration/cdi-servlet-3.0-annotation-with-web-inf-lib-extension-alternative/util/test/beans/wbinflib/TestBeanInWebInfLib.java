@@ -28,11 +28,11 @@ import jakarta.persistence.PersistenceContext;
 public class TestBeanInWebInfLib {
     @Inject
     BeanManager bm;
-    
-//    @Inject //@TestDatabase 
+
+//    @Inject //@TestDatabase
 //    EntityManager emf_at_inj;
 
-    @PersistenceContext(unitName="pu1")  
+    @PersistenceContext(unitName="pu1")
     EntityManager emf_at_pu;
 
     //This test injection method would be called in the context of the servlet in WAR
@@ -45,22 +45,22 @@ public class TestBeanInWebInfLib {
         System.out.println("EMF injected in WEB-INF/lib bean is " + emf_at_pu);
         if (emf_at_pu == null)
             return "EMF injected via @PersistenceContext is not injected into " +
-            		"the TestBean packaged in WEB-INF/lib";
-        
+                    "the TestBean packaged in WEB-INF/lib";
+
         Set<Bean<?>> webinfLibBeans = bm.getBeans(TestBeanInWebInfLib.class, new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 2) //Bean and enabled Alternative
             return "TestBean in WEB-INF/lib is not available via the WEB-INF/lib "
                     + "Bean's BeanManager";
         System.out.println("***********************************************************");
         printBeans(webinfLibBeans, "BeanManager.getBeans(TestBeanInWebInfLib, Any):");
-        
+
         Set<Bean<?>> webinfLibAltBeans = bm.getBeans(TestAlternativeBeanInWebInfLib.class, new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 1) //enabled Alternative
             return "TestAlternativeBean in WEB-INF/lib is not available via the WEB-INF/lib "
                     + "Bean's BeanManager";
         printBeans(webinfLibAltBeans, "BeanManager.getBeans(TestAlternativeBeanInWebInfLib, Any):");
-        
-        
+
+
         Iterable<Bean<?>> accessibleBeans = ((org.jboss.weld.manager.BeanManagerImpl) bm).getAccessibleBeans();
         printBeans(accessibleBeans, "BeanManagerImpl.getAccessibleBeans:");
 

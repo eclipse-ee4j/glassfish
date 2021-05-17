@@ -141,7 +141,7 @@ public interface ResourcePool {
     public void removePoolLifeCycleListener();
 
     /**
-     * Flush Connection pool by reinitializing the connections 
+     * Flush Connection pool by reinitializing the connections
      * established in the pool.
      * @return boolean indicating whether flush operation was successful or not
      * @throws com.sun.appserv.connectors.internal.api.PoolingException

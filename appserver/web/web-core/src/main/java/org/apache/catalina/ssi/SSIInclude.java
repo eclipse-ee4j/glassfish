@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 /**
  * Implements the Server-side #include command
- * 
+ *
  * @author Bip Thelin
  * @author Paul Speed
  * @author Dan Sandberg
@@ -48,7 +48,7 @@ public final class SSIInclude implements SSICommand {
                         || paramName.equalsIgnoreCase("virtual")) {
                     boolean virtual = paramName.equalsIgnoreCase("virtual");
                     lastModified = ssiMediator.getFileLastModified(
-                    		 substitutedValue, virtual);
+                             substitutedValue, virtual);
                     String text = ssiMediator.getFileText(substitutedValue,
                             virtual);
                     writer.write(text);

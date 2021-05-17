@@ -30,9 +30,9 @@ import java.sql.SQLException;
  * @author  lwhite
  */
 public interface SchemaUpdater {
-    
+
     public void doSchemaCheck() throws IOException;
-    
-    public boolean doTablesExist() throws SQLException, ClassNotFoundException;   
-    
+
+    public boolean doTablesExist() throws SQLException, ClassNotFoundException;
+
 }

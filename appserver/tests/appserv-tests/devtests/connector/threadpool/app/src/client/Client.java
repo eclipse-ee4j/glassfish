@@ -28,22 +28,22 @@ public class Client   {
 
     private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
-    
+
     public Client (String[] args) {
         //super(args);
     }
-    
+
     public static void main(String[] args) {
         Client client = new Client(args);
         client.doTest();
     }
-    
+
     public String doTest() {
         stat.addDescription("This is to test connector ThreadPool "+
-	             "contracts.");
-        
+                 "contracts.");
+
         String res = "NOT RUN";
-	debug("Starting the thread pool test=> Please wait...");
+    debug("Starting the thread pool test=> Please wait...");
         boolean pass = false;
         try {
             res  = " TEST PASSED";
@@ -58,14 +58,14 @@ public class Client   {
 
         stat.printSummary("Connector-ThreadPool");
 
-        
+
         debug("EXITING... STATUS = " + res);
         return res;
     }
-    
+
     private void test() throws Exception {
         Object o = (new InitialContext()).lookup("WorkTest");
-        WorkTestHome  home = (WorkTestHome) 
+        WorkTestHome  home = (WorkTestHome)
             PortableRemoteObject.narrow(o, WorkTestHome.class);
         WorkTest wt = home.create();
         wt.executeTest();

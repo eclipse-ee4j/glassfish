@@ -67,10 +67,10 @@ class Log {
      */
     // private static String logPath = null;
     private String logPath = null;
-	/*
-		Logger to log transaction messages
-	*/
-	static Logger _logger = LogDomains.getLogger(Log.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+    static Logger _logger = LogDomains.getLogger(Log.class, LogDomains.TRANSACTION_LOGGER);
 
     /**Default Log constructor.
      *
@@ -147,10 +147,10 @@ class Log {
         // If the log open failed, report the error.
 
         catch( LogException le ) {
-			_logger.log(Level.SEVERE,"jts.log_error",le);
-			 String msg = LogFormatter.getLocalizedMessage(_logger,"jts.log_error",
-			 			new java.lang.Object[] {le.toString()});
-			 throw  (org.omg.CORBA.INTERNAL) (new org.omg.CORBA.INTERNAL(msg)).initCause(le);
+            _logger.log(Level.SEVERE,"jts.log_error",le);
+             String msg = LogFormatter.getLocalizedMessage(_logger,"jts.log_error",
+                         new java.lang.Object[] {le.toString()});
+             throw  (org.omg.CORBA.INTERNAL) (new org.omg.CORBA.INTERNAL(msg)).initCause(le);
         }
 
         return logFile;

@@ -28,7 +28,7 @@
     <groupId>org.glassfish.main.deployment</groupId>
     <artifactId>jsr-88</artifactId>
     <packaging>pom</packaging>
-    <name>JSR-88 JAR and dist. fragment</name>  
+    <name>JSR-88 JAR and dist. fragment</name>
     <modules>
         <module>sun-as-jsr88-dm</module>
         <module>sun-as-jsr88-dm-frag</module>

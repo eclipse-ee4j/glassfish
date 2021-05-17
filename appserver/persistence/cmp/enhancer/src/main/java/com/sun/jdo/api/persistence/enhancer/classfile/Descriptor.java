@@ -27,8 +27,8 @@ import java.util.Map;
  */
 
 public class Descriptor implements VMConstants {
-  /** 
-   * Return the number of words of arguments to the method 
+  /**
+   * Return the number of words of arguments to the method
    * based on the method signature
    */
   public static int countMethodArgWords(String sig) {
@@ -43,24 +43,24 @@ public class Descriptor implements VMConstants {
       case 'I': /* int */
       case 'F': /* float */
       case 'Z': /* boolean */
-	count++;
-	break;
+    count++;
+    break;
       case 'J': /* long */
       case 'D': /* double */
-	count += 2;
-	break;
+    count += 2;
+    break;
       case 'L':
-	count++;
-	idx = sig.indexOf(';', idx);
-	break;
+    count++;
+    idx = sig.indexOf(';', idx);
+    break;
       case '[':
-	count++;
-	while (sig.charAt(idx) == '[' || sig.charAt(idx) == ']')
-	  idx++;
-	if (sig.charAt(idx) == 'L')
-	  idx = sig.indexOf(';', idx);
-	/* else, let idx++ at loop iteration skip primitive descriptor */
-	break;
+    count++;
+    while (sig.charAt(idx) == '[' || sig.charAt(idx) == ']')
+      idx++;
+    if (sig.charAt(idx) == 'L')
+      idx = sig.indexOf(';', idx);
+    /* else, let idx++ at loop iteration skip primitive descriptor */
+    break;
       default:
           throw new InsnError("missing case");//NOI18N
       }
@@ -68,7 +68,7 @@ public class Descriptor implements VMConstants {
     return count;
   }
 
-  /** 
+  /**
    * Return the number of words of return value for the method
    * based on the method signature
    */
@@ -124,12 +124,12 @@ public class Descriptor implements VMConstants {
   }
 
   /**
-   * Given a StringBuffer, a method descriptor, and a index to the 
+   * Given a StringBuffer, a method descriptor, and a index to the
    * start of an argument descriptor, append the arguments to the
    * string buffer in reverse order.
    */
-  private static void reverseArgSig(StringBuffer buf, String methodSig, 
-				    int idx) {
+  private static void reverseArgSig(StringBuffer buf, String methodSig,
+                    int idx) {
     char c = methodSig.charAt(idx);
     if (c == ')')
       return;
@@ -148,10 +148,10 @@ public class Descriptor implements VMConstants {
       break;
     case '[':
       while (methodSig.charAt(idx) == '[' || methodSig.charAt(idx) == ']')
-	idx++;
+    idx++;
       if (methodSig.charAt(idx) != 'L') {
-	idx++;
-	break;
+    idx++;
+    break;
       }
       /* fall through */
     case 'L':
@@ -166,7 +166,7 @@ public class Descriptor implements VMConstants {
       buf.append(methodSig.charAt(startIdx++));
   }
 
-  /** 
+  /**
    * Return the number of words of a field based on its signature.
    */
   //@olsen: added method
@@ -202,23 +202,23 @@ public class Descriptor implements VMConstants {
       case 'B':
         return T_BOOLEAN;
       case 'C':
-	return T_CHAR;
+    return T_CHAR;
       case 'Z':
-	return T_BYTE;
+    return T_BYTE;
       case 'S':
-	return T_SHORT;
+    return T_SHORT;
       case 'I':
-	return T_INT;
+    return T_INT;
       case 'J':
-	return T_LONG;
+    return T_LONG;
       case 'F':
-	return T_FLOAT;
+    return T_FLOAT;
       case 'D':
-	return T_DOUBLE;
+    return T_DOUBLE;
       case '[':
-	return TC_OBJECT;
+    return TC_OBJECT;
       case 'L':
-	return TC_OBJECT;
+    return TC_OBJECT;
       default:
           throw new InsnError("bad signature char");//NOI18N
     }
@@ -283,41 +283,41 @@ public class Descriptor implements VMConstants {
       case 'Z':
       case 'S':
       case 'I':
-	tp = T_INT;
-	break;
+    tp = T_INT;
+    break;
       case 'F':
-	tp = T_FLOAT;
-	break;
+    tp = T_FLOAT;
+    break;
       case 'J':
-	tp = T_LONG;
-	break;
+    tp = T_LONG;
+    break;
       case 'D':
-	tp = T_DOUBLE;
-	break;
+    tp = T_DOUBLE;
+    break;
       case '?':
-	tp = T_UNKNOWN;
-	break;
+    tp = T_UNKNOWN;
+    break;
       case 'W':
-	tp = T_WORD;
-	break;
+    tp = T_WORD;
+    break;
       case 'X':
-	tp = T_TWOWORD;
-	break;
+    tp = T_TWOWORD;
+    break;
       case 'A':
-	/* This isn't a real type, but any object refrence */
-	tp = TC_OBJECT;
-	break;
+    /* This isn't a real type, but any object refrence */
+    tp = TC_OBJECT;
+    break;
       case '[':
-	tp = TC_OBJECT;
-	while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']')
-	  idx++;
-	if (stackSig.charAt(idx) != 'L')
-	    break;
-	/* fall through */
+    tp = TC_OBJECT;
+    while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']')
+      idx++;
+    if (stackSig.charAt(idx) != 'L')
+        break;
+    /* fall through */
       case 'L':
-	tp = TC_OBJECT;
-	idx = stackSig.indexOf(';', idx);
-	break;
+    tp = TC_OBJECT;
+    idx = stackSig.indexOf(';', idx);
+    break;
       default:
           throw new InsnError("bad signature char");//NOI18N
       }
@@ -344,9 +344,9 @@ public class Descriptor implements VMConstants {
       break;
     case '[':
       while (stackSig.charAt(idx) == '[' || stackSig.charAt(idx) == ']')
-	idx++;
+    idx++;
       if (stackSig.charAt(idx) != 'L')
-	break;
+    break;
       /* fall through */
     case 'L':
       idx = stackSig.indexOf(';', idx);
@@ -374,45 +374,45 @@ public class Descriptor implements VMConstants {
       char c;
       switch(c = sig.charAt(idx)) {
       case '[':
-	/* An array - skip through the [] pairs, copying to buf if not null */
-	while ((c = sig.charAt(idx)) == '[' || c == ']') {
-	  idx++;
-	  if (buf != null)
-	    buf.append(c);
-	}
+    /* An array - skip through the [] pairs, copying to buf if not null */
+    while ((c = sig.charAt(idx)) == '[' || c == ']') {
+      idx++;
+      if (buf != null)
+        buf.append(c);
+    }
 
-	/* If the next char isnt 'L', the next char is a simple type and
-	   will be handled by the default 1 char translation */
-	if (sig.charAt(idx) != 'L')
-	  break;
-	/* fall through to type name translation */
+    /* If the next char isnt 'L', the next char is a simple type and
+       will be handled by the default 1 char translation */
+    if (sig.charAt(idx) != 'L')
+      break;
+    /* fall through to type name translation */
       case 'L':
-	/* This is a type name */
-	idx++;
-	int endIdx = sig.indexOf(';', idx);
-	String typeName = sig.substring(idx, endIdx);
-	String mapTo = (String) classTranslations.get(typeName);
-	if (mapTo != null) {
-	  /* This type needs translation - allocate the string buffer
-	     now if needed and copy in all up to this type name. */
-	  if (buf == null) {
-	    buf = new StringBuffer(sig.length() + 20);
-	    buf.append(sig.substring(0,idx-1));
-	  }
-	  typeName = mapTo;
-	}
+    /* This is a type name */
+    idx++;
+    int endIdx = sig.indexOf(';', idx);
+    String typeName = sig.substring(idx, endIdx);
+    String mapTo = (String) classTranslations.get(typeName);
+    if (mapTo != null) {
+      /* This type needs translation - allocate the string buffer
+         now if needed and copy in all up to this type name. */
+      if (buf == null) {
+        buf = new StringBuffer(sig.length() + 20);
+        buf.append(sig.substring(0,idx-1));
+      }
+      typeName = mapTo;
+    }
 
-	if (buf != null) {
-	  buf.append('L');
-	  buf.append(typeName);
-	}
-	idx = endIdx;
-	c = ';';
-	break;
+    if (buf != null) {
+      buf.append('L');
+      buf.append(typeName);
+    }
+    idx = endIdx;
+    c = ';';
+    break;
       }
 
       if (buf != null)
-	buf.append(c);
+    buf.append(c);
     }
     return (buf == null) ? sig : (buf.toString());
   }
@@ -425,13 +425,13 @@ public class Descriptor implements VMConstants {
    * else the translated string.
    */
   public static String translateClass(
-	String cls, Map classTranslations) {
+    String cls, Map classTranslations) {
     if (cls.charAt(0) == '[')
       return remapTypes(cls, classTranslations);
     else {
       String mapTo = (String) classTranslations.get(cls);
       if (mapTo != null)
-	return mapTo;
+    return mapTo;
       return cls;
     }
   }
@@ -457,43 +457,43 @@ public class Descriptor implements VMConstants {
       switch (c) {
       case 'B':
           sigElement = "byte";//NOI18N
-	break;
+    break;
       case 'C':
           sigElement = "char";//NOI18N
-	break;
+    break;
       case 'Z':
           sigElement = "boolean";//NOI18N
-	break;
+    break;
       case 'S':
           sigElement = "short";//NOI18N
-	break;
+    break;
       case 'I':
           sigElement = "int";//NOI18N
-	break;
+    break;
       case 'F':
           sigElement = "float";//NOI18N
-	break;
+    break;
       case 'J':
           sigElement = "long";//NOI18N
-	break;
+    break;
       case 'D':
           sigElement = "double";//NOI18N
-	break;
+    break;
       case 'V':
-	/* void isn't really valid as a field signature but this method
-	   might be useful in implementing method signature conversion and
-	   void is a valid return type. */
+    /* void isn't really valid as a field signature but this method
+       might be useful in implementing method signature conversion and
+       void is a valid return type. */
           sigElement = "void";//NOI18N
-	break;
+    break;
       case '[':
-	idx++;
-	arrayDims++;
-	moreSig = true;
-	break;
+    idx++;
+    arrayDims++;
+    moreSig = true;
+    break;
       case 'L':
-	int nextIdx = vmSig.indexOf(';', idx);
-	sigElement = vmSig.substring(idx+1,nextIdx).replace('/','.');
-	break;
+    int nextIdx = vmSig.indexOf(';', idx);
+    sigElement = vmSig.substring(idx+1,nextIdx).replace('/','.');
+    break;
       default:
           throw new InsnError("bad signature char");//NOI18N
       }
@@ -506,7 +506,7 @@ public class Descriptor implements VMConstants {
     /* array types need a little more work */
     StringBuffer buf = new StringBuffer(sigElement.length() + 2 * arrayDims);
     buf.append(sigElement);
-    while (arrayDims-- > 0) 
+    while (arrayDims-- > 0)
         buf.append("[]");//NOI18N
 
     return buf.toString();
@@ -529,10 +529,10 @@ public class Descriptor implements VMConstants {
     boolean firstArg = true;
     while (methodSig.charAt(idx) != ')') {
       if (firstArg)
-	firstArg = false;
+    firstArg = false;
       else
           buf.append(", ");//NOI18N
-	
+
       buf.append(userFieldSig(methodSig, idx));
       idx = nextSigElement(methodSig, idx);
     }

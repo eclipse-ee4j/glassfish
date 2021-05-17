@@ -38,7 +38,7 @@ import org.glassfish.concurrent.runtime.deployer.DefaultManagedThreadFactory;
 
 /**
  * List Managed Thread Factory Resources command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @ExecuteOn(value={RuntimeType.DAS})
@@ -48,17 +48,17 @@ import org.glassfish.concurrent.runtime.deployer.DefaultManagedThreadFactory;
 @I18n("list.managed.thread.factories")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-managed-thread-factories", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-managed-thread-factories",
         description="List Managed Thread Factories")
 })
 public class ListManagedThreadFactories implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListManagedThreadFactories.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListManagedThreadFactories.class);
 
     @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target ;
-    
+
     @Inject
     private Domain domain;
 

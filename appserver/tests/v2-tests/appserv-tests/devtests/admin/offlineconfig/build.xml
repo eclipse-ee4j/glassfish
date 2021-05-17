@@ -17,7 +17,7 @@
 
 -->
 
-<project name="OfflineConfig admin devtests" default="all" basedir=".">  
+<project name="OfflineConfig admin devtests" default="all" basedir=".">
 
 <!-- ========== Initialize Properties =================================== -->
 
@@ -36,24 +36,24 @@
         <pathelement location="${j2ee.jar}"/>
         <pathelement location="${junit.jar}"/>
        <pathelement location="${testng.jar}"/>
-    </path> 
+    </path>
     <path id="test.run.classpath">
        <pathelement location="${component.tests.classes.dir}"/>
        <path refid="test.compile.classpath"/>
 <!--
        <pathelement location="${schema2beans.jar}"/>
-       <pathelement location="${jmxri.jar}"/> 
-       <pathelement location="/export/ias/sqe-pe/codecoverage/jcov/lib/jcov.jar"/> 
+       <pathelement location="${jmxri.jar}"/>
+       <pathelement location="/export/ias/sqe-pe/codecoverage/jcov/lib/jcov.jar"/>
 -->
     </path>
 
 
     <!-- init. Initialization involves creating publishing directories and
-         OS specific targets. --> 
+         OS specific targets. -->
     <target name="init-tests" description="${component.name} initialization">
         <tstamp>
             <format property="start.time" pattern="MM/dd/yyyy hh:mm aa"/>
-        </tstamp>    
+        </tstamp>
         <echo message="Building component ${component.name}"/>
         <mkdir dir="${component.tests.classes.dir}"/>
         <delete dir="${tests.workfiles.dir}"/>
@@ -76,11 +76,11 @@
 
 <target name="build" depends="init-tests">
   <echo message="Compiling {component.name}"/>
-  <javac srcdir="${testsrc.dir}" 
+  <javac srcdir="${testsrc.dir}"
          destdir="${component.tests.classes.dir}"
-         debug="${javac.debug}" 
+         debug="${javac.debug}"
          optimize="${javac.optimize}"
-         source="${javac.source}" 
+         source="${javac.source}"
          deprecation="${javac.deprecation}"
          failonerror="true"
          classpathref="test.compile.classpath">
@@ -88,33 +88,33 @@
   <!--   <include name="**/*Test.java"/>
      <include name="**/*Tests.java"/>            -->
   </javac>
-	
+
 </target>
 
 
 <target name="run-tests" depends="build">
-  <java fork="true" failonerror="true" 
+  <java fork="true" failonerror="true"
       classname="com.sun.enterprise.admin.config.OfflineConfigTest" >
-<!--	<jvmarg value="-Djcov.file=${jcov.file}"/> 
+<!--    <jvmarg value="-Djcov.file=${jcov.file}"/>
 -->
       <arg line="-testpath ${tests.workfiles.dir}" />
         <jvmarg value="-Xdebug"/>
-	<jvmarg value="-Xnoagent"/>
-	<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=25001"/>  
+    <jvmarg value="-Xnoagent"/>
+    <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=25001"/>
       <classpath refid="test.run.classpath"/>
   </java>
 </target>
 
 <target name="offline-commander" depends="build">
-  <java fork="true" failonerror="true" 
+  <java fork="true" failonerror="true"
       classname="com.sun.enterprise.admin.config.OfflineCommander" >
-<!--	<jvmarg value="-Djcov.file=${jcov.file}"/> 
+<!--    <jvmarg value="-Djcov.file=${jcov.file}"/>
 -->
       <arg line="-testpath ${tests.workfiles.dir}" />
-      
+
         <jvmarg value="-Xdebug"/>
-	<jvmarg value="-Xnoagent"/>
-	<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=25001"/>  
+    <jvmarg value="-Xnoagent"/>
+    <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=25001"/>
 
       <classpath refid="test.run.classpath"/>
   </java>
@@ -124,7 +124,7 @@
         <path refid="test.run.classpath"/>
         <pathelement location="${testng.jar}"/>
     </path>
-    
+
     <target name="run-tests-ng"
             description="run examples with java"
             depends="build" >
@@ -137,4 +137,4 @@
     </target>
 
 </project>
-	
+

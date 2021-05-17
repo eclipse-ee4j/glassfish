@@ -58,7 +58,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 3796");
         new WebTest(args).doTest();
@@ -66,7 +66,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -88,7 +88,7 @@ public class WebTest {
 
         /*
          * Create session
-         */        
+         */
         String url = "http://" + host + ":" + port + contextRoot
                      + "/CreateSession";
         System.out.println("Connecting to: " + url);
@@ -109,19 +109,19 @@ public class WebTest {
             throw new Exception("Session cookie does not have any JVMROUTE");
         }
 
-	String clientCookie = sessionCookieHeader.replace("Path", "$Path").replace("HttpOnly", "$HttpOnly");
+    String clientCookie = sessionCookieHeader.replace("Path", "$Path").replace("HttpOnly", "$HttpOnly");
         /*
          * Resume session
-         */        
+         */
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String getRequestLine = "GET " + contextRoot + "/CheckSession" +
             " HTTP/1.0\n";
-        System.out.println("\nConnecting to: " + getRequestLine); 
+        System.out.println("\nConnecting to: " + getRequestLine);
         os.write(getRequestLine.getBytes());
         os.write(("Cookie: " + clientCookie + "\n").getBytes());
         os.write("\n".getBytes());
-        
+
         sessionCookieHeader = null;
         InputStream is = null;
         BufferedReader bis = null;

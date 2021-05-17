@@ -21,29 +21,29 @@ import java.util.HashMap;
 import java.security.SecureRandom;
 /**
  * Implements a special purpose cache.
- * 
+ *
  * @author <a href="mailto:remm@apache.org">Remy Maucherat</a>
  * @version $Revision: 1.3 $
  */
 public class ResourceCache {
-    
-    
+
+
     // ----------------------------------------------------------- Constructors
-    
-    
+
+
     public ResourceCache() {
     }
-    
-    
+
+
     // ----------------------------------------------------- Instance Variables
-      
-    
+
+
     /**
      * Random generator used to determine elements to free.
      */
     protected SecureRandom random = new SecureRandom();
-    
-    
+
+
     /**
      * Cache.
      * Path -> Cache entry.
@@ -106,7 +106,7 @@ public class ResourceCache {
 
     /**
      * Return the access count.
-     * Note: Update is not synced, so the number may not be completely 
+     * Note: Update is not synced, so the number may not be completely
      * accurate.
      */
     public long getAccessCount() {
@@ -156,7 +156,7 @@ public class ResourceCache {
 
     /**
      * Return the number of cache hits.
-     * Note: Update is not synced, so the number may not be completely 
+     * Note: Update is not synced, so the number may not be completely
      * accurate.
      */
     public long getHitsCount() {
@@ -246,7 +246,7 @@ public class ResourceCache {
                         }
                     }
                 }
-                long entryAccessRatio = 
+                long entryAccessRatio =
                     ((cache[entryPos].accessCount * 100) / accessCount);
                 if (entryAccessRatio < desiredEntryAccessRatio) {
                     toRemove[entriesFound] = entryPos;
@@ -329,7 +329,7 @@ public class ResourceCache {
             cacheSize -= removedEntry.size;
             return true;
         } else if (notFoundCache.remove(name) != null) {
-            
+
             cacheSize--;
             return true;
         }
@@ -411,7 +411,7 @@ public class ResourceCache {
         if ((pos != -1) && (name.equals(oldCache[pos].name))) {
             CacheEntry[] newCache = new CacheEntry[cache.length - 1];
             System.arraycopy(oldCache, 0, newCache, 0, pos);
-            System.arraycopy(oldCache, pos + 1, newCache, pos, 
+            System.arraycopy(oldCache, pos + 1, newCache, pos,
                              oldCache.length - pos - 1);
             cache = newCache;
             return oldCache[pos];

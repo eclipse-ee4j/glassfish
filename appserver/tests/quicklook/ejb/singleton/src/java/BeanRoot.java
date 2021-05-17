@@ -35,21 +35,21 @@ public class BeanRoot implements BeanRootInterface{
 
     String MESSAGE_POST = "PostBeanRoot";
     String MESSAGE_HELLO = "HelloBeanRoot";
-    
+
     @PostConstruct
     public void afterConstruct() {
         if (msg != null && !msg.getMessage().contains(MESSAGE_POST)){
-	  msg.appendMessage(MESSAGE_POST);
-	}
+      msg.appendMessage(MESSAGE_POST);
+    }
         String h = bl.sayHello();
         System.out.println("** BeanRoot: Hello from beanLeaf: " + h);
     }
-    
+
     public String sayHello() {
         if (msg != null && !msg.getMessage().contains(MESSAGE_HELLO)){
-	  msg.appendMessage(MESSAGE_HELLO);
-	}
+      msg.appendMessage(MESSAGE_HELLO);
+    }
         return "Hello from: " + this.getClass().getName() + "; " + System.identityHashCode(this);
     }
-    
+
 }

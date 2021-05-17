@@ -55,12 +55,12 @@ import org.glassfish.config.support.TargetType;
 /**
  * Create Audit Module Command
  *
- * Usage: create-audit-module --classname classnme [--terse=false] 
- *        [--echo=false] [--interactive=true] [--host localhost] 
- *        [--port 4848|4849] [--secure | -s] [--user admin_user] 
+ * Usage: create-audit-module --classname classnme [--terse=false]
+ *        [--echo=false] [--interactive=true] [--host localhost]
+ *        [--port 4848|4849] [--secure | -s] [--user admin_user]
  *        [--passwordfile file_name] [--property (name=value)
  *        [:name=value]*] [--target target(Default server)] audit_module_name
- *  
+ *
  * domain.xml element example
  * <audit-module classname="com.foo.security.Audit" name="AM">
  *     <property name="auditOn" value="false"/>
@@ -75,19 +75,19 @@ import org.glassfish.config.support.TargetType;
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(CreateAuditModule.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(CreateAuditModule.class);
 
     @Param(name="classname")
     String className;
 
     @Param(name="auditmodulename", primary=true)
     String auditModuleName;
-    
+
     @Param(optional=true, name="property", separator=':')
-    java.util.Properties properties;   
-    
+    java.util.Properties properties;
+
     @Param(name = "target", optional = true, defaultValue =
         SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
@@ -103,14 +103,14 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
 
     @AccessRequired.NewChild(type=AuditModule.class)
     private SecurityService securityService = null;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         securityService = chooseSecurityService(context.getActionReport());
         return (securityService != null);
     }
 
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are paramter names and the values the parameter values
@@ -120,36 +120,36 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-       
+
         // check if there exists an audit module by the specified name
         // if so return failure.
         List<AuditModule> ams = securityService.getAuditModule();
         for (AuditModule am : ams) {
             if (am.getName().equals(auditModuleName)) {
                 report.setMessage(localStrings.getLocalString(
-                    "create.audit.module.duplicatefound", 
+                    "create.audit.module.duplicatefound",
                     "AuditModule named {0} exists. " +
                     "Cannot add duplicate AuditModule.", auditModuleName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
         }
-        
+
         // No duplicate audit modules found. So add one.
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
-                public Object run(SecurityService param) 
+                public Object run(SecurityService param)
                 throws PropertyVetoException, TransactionFailure {
                 AuditModule newAuditModule = param.createChild(AuditModule.class);
-                    populateAuditModuleElement(newAuditModule);                    
+                    populateAuditModuleElement(newAuditModule);
                     param.getAuditModule().add(newAuditModule);
                     return newAuditModule;
                 }
             }, securityService);
 
         } catch(TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString("create.audit.module.fail", 
+            report.setMessage(localStrings.getLocalString("create.audit.module.fail",
                     "Creation of AuditModule {0} failed", auditModuleName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
@@ -158,8 +158,8 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         //report.setMessage(localStrings.getLocalString("create.audit.module.success",
         //    "Creation of AuditModule {0} completed successfully", auditModuleName));
-    }       
-    
+    }
+
     private SecurityService chooseSecurityService(final ActionReport report) {
         config = CLIUtil.chooseConfig(domain, target, report);
         if (config == null) {
@@ -167,8 +167,8 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         }
         return config.getSecurityService();
     }
-    
-    private void populateAuditModuleElement(AuditModule newAuditModule) 
+
+    private void populateAuditModuleElement(AuditModule newAuditModule)
     throws PropertyVetoException, TransactionFailure {
         newAuditModule.setName(auditModuleName);
         newAuditModule.setClassname(className);
@@ -176,9 +176,9 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
             for (Object propname: properties.keySet()) {
                 Property newprop = newAuditModule.createChild(Property.class);
                 newprop.setName((String) propname);
-                newprop.setValue(properties.getProperty((String) propname));            
-                newAuditModule.getProperty().add(newprop);    
+                newprop.setValue(properties.getProperty((String) propname));
+                newAuditModule.getProperty().add(newprop);
             }
         }
-    }    
+    }
 }

@@ -48,13 +48,13 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     //app client 1.2
     public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.2//EN";
     public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/application-client_1_2.dtd";
-    
+
     //app client 1.3
     public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.3//EN";
     public final static String SYSTEM_ID = "http://java.sun.com/dtd/application-client_1_3.dtd";
-    
+
     public final static String SCHEMA_ID_14 = "application-client_1_4.xsd";
-    
+
     public final static String SCHEMA_ID_15 = "application-client_5.xsd";
     public final static String SCHEMA_ID_16 = "application-client_6.xsd";
     public final static String SCHEMA_ID_17 = "application-client_7.xsd";
@@ -62,7 +62,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     public final static String SCHEMA_ID = "application-client_9.xsd";
     public final static String SPEC_VERSION = "9";
     private final static List<String> systemIDs = initSystemIDs();
- 
+
     public final static XMLElement tag = new XMLElement(ApplicationClientTagNames.APPLICATION_CLIENT_TAG);
 
     private static List<String> initSystemIDs() {
@@ -77,18 +77,18 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     }
 
     public AppClientNode() {
-	registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), 
-                                                             EnvEntryNode.class, "addEnvironmentProperty");     
-        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);     
+    registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY),
+                                                             EnvEntryNode.class, "addEnvironmentProperty");
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
         JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
         registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-                                                             ResourceRefNode.class, "addResourceReferenceDescriptor");   
-	    registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), 
-                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");               
+                                                             ResourceRefNode.class, "addResourceReferenceDescriptor");
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
+                                                            ResourceEnvRefNode.class, "addResourceEnvReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class, "addMessageDestinationReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.PERSISTENCE_UNIT_REF), EntityManagerFactoryReferenceNode.class, "addEntityManagerFactoryReferenceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION),
@@ -106,8 +106,8 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
 
     /**
      * register this node as a root node capable of loading entire DD files
-     * 
-     * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
     @Override
@@ -116,7 +116,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
         publicIDToDTD.put(PUBLIC_DTD_ID_12, SYSTEM_ID_12);
         return tag.getQName();
     }
-    
+
     @Override
     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, final Map<String, List<Class>> versionUpgrades) {
         final Map<String,Class> result = new HashMap<String,Class>();
@@ -126,8 +126,8 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     }
 
     @Override
-    public void addDescriptor(Object  newDescriptor) {       
-        if (newDescriptor instanceof EjbReference) {            
+    public void addDescriptor(Object  newDescriptor) {
+        if (newDescriptor instanceof EjbReference) {
             DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
             (getDescriptor()).addEjbReferenceDescriptor(
                         (EjbReference) newDescriptor);
@@ -145,7 +145,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
-        table.put(ApplicationClientTagNames.CALLBACK_HANDLER, "setCallbackHandler");        
+        table.put(ApplicationClientTagNames.CALLBACK_HANDLER, "setCallbackHandler");
         return table;
     }
 
@@ -179,13 +179,13 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     }
 
     @Override
-    public Node writeDescriptor(Node parent, 
+    public Node writeDescriptor(Node parent,
         ApplicationClientDescriptor appclientDesc) {
-        Node appclientNode = super.writeDescriptor(parent, appclientDesc);      
+        Node appclientNode = super.writeDescriptor(parent, appclientDesc);
 
-	// env-entry*
+    // env-entry*
         writeEnvEntryDescriptors(appclientNode, appclientDesc.getEnvironmentProperties().iterator());
-        
+
         // ejb-ref * and ejb-local-ref*
         writeEjbReferenceDescriptors(appclientNode, appclientDesc.getEjbReferenceDescriptors().iterator());
 
@@ -194,7 +194,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
 
         // resource-ref*
         writeResourceRefDescriptors(appclientNode, appclientDesc.getResourceReferenceDescriptors().iterator());
-        
+
         // resource-env-ref*
         writeResourceEnvRefDescriptors(appclientNode, appclientDesc.getResourceEnvReferenceDescriptors().iterator());
 
@@ -206,13 +206,13 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
 
         // post-construct
         writeLifeCycleCallbackDescriptors(appclientNode, TagNames.POST_CONSTRUCT, appclientDesc.getPostConstructDescriptors());
-        
+
         // pre-destroy
         writeLifeCycleCallbackDescriptors(appclientNode, TagNames.PRE_DESTROY, appclientDesc.getPreDestroyDescriptors());
 
         // datasource-definition*
         writeResourceDescriptors(appclientNode, appclientDesc.getResourceDescriptors(JavaEEResourceType.DSD).iterator());
-        
+
         // mail-session*
         writeResourceDescriptors(appclientNode, appclientDesc.getResourceDescriptors(JavaEEResourceType.MSD).iterator());
 
@@ -226,15 +226,15 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
 
          // message-destination*
         writeMessageDestinations
-           (appclientNode, appclientDesc.getMessageDestinations().iterator());      
-        
-	return appclientNode;
-              
+           (appclientNode, appclientDesc.getMessageDestinations().iterator());
+
+    return appclientNode;
+
     }
 
     @Override
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-    
+
 }

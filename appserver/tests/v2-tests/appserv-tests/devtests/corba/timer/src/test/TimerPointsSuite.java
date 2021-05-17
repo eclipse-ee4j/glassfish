@@ -48,19 +48,19 @@ import com.sun.corba.ee.spi.orbutil.generic.Pair ;
 public class TimerPointsSuite {
     @Test()
     public void testXMLParser() {
-	// We should be running this test from the corba/timer directory.
-	String fileName = "src/test/timing.xml" ;
+    // We should be running this test from the corba/timer directory.
+    String fileName = "src/test/timing.xml" ;
 
-	Pair<String,TimerFactory> result = null ;
-	try {
-	    // Parse the XML file.
-	    result = TimerPointSourceGenerator.parseDescription( fileName ) ;
+    Pair<String,TimerFactory> result = null ;
+    try {
+        // Parse the XML file.
+        result = TimerPointSourceGenerator.parseDescription( fileName ) ;
 
-	    // Try to generate the source file
-	    TimerPointSourceGenerator.generateSourceFile( "gen", result ) ;
-	} catch (IOException ioexc) {
-	    ioexc.printStackTrace() ;
-	    Assert.fail( "IOException: " + ioexc ) ;
-	}
+        // Try to generate the source file
+        TimerPointSourceGenerator.generateSourceFile( "gen", result ) ;
+    } catch (IOException ioexc) {
+        ioexc.printStackTrace() ;
+        Assert.fail( "IOException: " + ioexc ) ;
+    }
     }
 }

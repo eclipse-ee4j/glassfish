@@ -61,7 +61,7 @@ public final class EJBMetaDataImpl implements jakarta.ejb.EJBMetaData, Serializa
     }
 
     /**
-     * 
+     *
      */
     @Override
     public Class getHomeInterfaceClass() {
@@ -69,7 +69,7 @@ public final class EJBMetaDataImpl implements jakarta.ejb.EJBMetaData, Serializa
     }
 
     /**
-     * 
+     *
      */
     @Override
     public Class getRemoteInterfaceClass() {
@@ -97,7 +97,7 @@ public final class EJBMetaDataImpl implements jakarta.ejb.EJBMetaData, Serializa
     }
 
     /**
-     * 
+     *
      */
     @Override
     public boolean isSession() {

@@ -40,16 +40,16 @@
             <scope>test</scope>
         </dependency>
 
-	<dependency>
-		<groupId>com.elf</groupId>
-		<artifactId>glassfish</artifactId>
-		<version>1.0-SNAPSHOT</version>
+    <dependency>
+        <groupId>com.elf</groupId>
+        <artifactId>glassfish</artifactId>
+        <version>1.0-SNAPSHOT</version>
         <scope>provided</scope>
-	</dependency>
+    </dependency>
 
     </dependencies>
     <build>
-		<defaultGoal>install</defaultGoal>
+        <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>

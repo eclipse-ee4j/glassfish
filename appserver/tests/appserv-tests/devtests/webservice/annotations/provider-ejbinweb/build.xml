@@ -28,7 +28,7 @@
     <property name="client-src-name" value="client/Client.java"/>
     <basename file="${src-name}" property="server" suffix=".java"/>
     <dirname file="${src-name}" property="directory"/>
-    <basename file="${directory}" property="pkg-name"/> 
+    <basename file="${directory}" property="pkg-name"/>
     <target name="all" depends="clean">
         <exec executable="${env.S1AS_HOME}/bin/wsimport">
             <arg line="-keep -d ${env.APS_HOME}/build/module/classes endpoint/wsdl/HelloImplService.wsdl"/>
@@ -37,9 +37,9 @@
         <war destfile="${env.S1AS_HOME}/domains/domain1/autodeploy/${server}.war" needxmlfile="false">
             <webinf dir="${pkg-name}"
                     includes="*.xml **/*.wsdl **/*.xsd"/>
-            <classes dir="${env.APS_HOME}/build/module/classes" 
+            <classes dir="${env.APS_HOME}/build/module/classes"
                      includes="${pkg-name}/**"/>
-        </war>  
+        </war>
         <waitfor maxwait="100" maxwaitunit="second">
             <or>
                 <available file="${env.S1AS_HOME}/domains/domain1/autodeploy/${server}.war_deployed"/>
@@ -56,7 +56,7 @@
         <fail if="deploy_failed" message="Deployment failed"/>
         <antcall target="compile-client"/>
         <exec executable="${env.S1AS_HOME}/bin/wsimport">
-            <arg line="-keep -d ${env.APS_HOME}/build/module/classes http://${http.host}:${http.port}/${server}/${server}Service?WSDL"/>	
+            <arg line="-keep -d ${env.APS_HOME}/build/module/classes http://${http.host}:${http.port}/${server}/${server}Service?WSDL"/>
         </exec>
         <antcall target="unjar-client-utils"/>
         <antcall target="internal-run"/>
@@ -86,6 +86,6 @@
 
     <target name="report-failure">
         <echo message="Test failed"/>
-    </target>   	
-    
+    </target>
+
 </project>

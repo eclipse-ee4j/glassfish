@@ -29,10 +29,10 @@
     <packaging>jar</packaging>
     <name>GlassFish API Exporter Module Fragment</name>
     <description>This bundle attached itself as a fragment to api-exporter bundle</description>
-    
+
     <!--
         Since DynamicImport-Package resolution happens incremantally, that can lead to minor performance issues,
-        so we attach this fragment to api-exporter bundle. This bundle statically imports packages. Since it 
+        so we attach this fragment to api-exporter bundle. This bundle statically imports packages. Since it
         optionally imports them, even if some package is absent, it is not an issue. Please note,
         any package imported by this bundle is also visible to "Common Class Loader."
     -->
@@ -46,7 +46,7 @@
             </roles>
         </developer>
     </developers>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -60,7 +60,7 @@
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>GlassFish-Application-Common-Module</Fragment-Host>
                             <Bundle-Name>${project.name}</Bundle-Name>
-                            <!-- This is the most important attribute of this bundle 
+                            <!-- This is the most important attribute of this bundle
                                  We currently import all EE8 APIs. We could include some appserver pkgs as well.
                                  Tune this as per performance requirement.
                             -->
@@ -360,7 +360,7 @@ com.sun.xml.ws.transport.http.servlet; \
 org.apache.jasper.servlet; \
                     resolution:=optional
                             </Import-Package>
-                            <Bundle-Description>${project.description}</Bundle-Description> 
+                            <Bundle-Description>${project.description}</Bundle-Description>
                         </manifestEntries>
                     </archive>
                 </configuration>

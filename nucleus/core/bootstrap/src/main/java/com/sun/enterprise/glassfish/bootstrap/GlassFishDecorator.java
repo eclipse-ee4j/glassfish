@@ -23,7 +23,7 @@ import org.glassfish.embeddable.GlassFishException;
 
 /**
  * A decorator for GlassFish
- * 
+ *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class GlassFishDecorator implements GlassFish {

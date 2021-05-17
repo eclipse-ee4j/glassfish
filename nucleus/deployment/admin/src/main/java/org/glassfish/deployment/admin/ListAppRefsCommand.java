@@ -49,8 +49,8 @@ import org.glassfish.api.admin.RestEndpoints;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_list-app-refs", 
+        opType=RestEndpoint.OpType.GET,
+        path="_list-app-refs",
         description="_list-app-refs")
 })
 public class ListAppRefsCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
@@ -64,14 +64,14 @@ public class ListAppRefsCommand implements AdminCommand, AdminCommandSecurity.Ac
     @Param(optional=true, defaultValue="all")
     String state;
 
-    @Inject 
+    @Inject
     Domain domain;
 
     @Inject
     Applications applications;
 
     private List<ApplicationRef> appRefs;
-    
+
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
@@ -81,23 +81,23 @@ public class ListAppRefsCommand implements AdminCommand, AdminCommandSecurity.Ac
         }
         return accessChecks;
     }
-    
-    
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);    
+
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);
 
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         ActionReport.MessagePart part = report.getTopMessagePart();
         part.setMessage(target);
         part.setChildrenType("application");
         for (ApplicationRef appRef : appRefs) {
-            if (state.equals("all") || 
-               (state.equals("running") && 
+            if (state.equals("all") ||
+               (state.equals("running") &&
                 Boolean.valueOf(appRef.getEnabled())) ||
-               (state.equals("non-running") && 
+               (state.equals("non-running") &&
                 !Boolean.valueOf(appRef.getEnabled())) ) {
                 if (isApplicationOfThisType(appRef.getRef(), type)) {
                     ActionReport.MessagePart childPart = part.addChild();

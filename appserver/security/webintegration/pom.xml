@@ -70,7 +70,7 @@
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>config-api</artifactId>
             <version>${project.version}</version>
-        </dependency>   
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-api</artifactId>
@@ -113,8 +113,8 @@
         <dependency>
   <groupId>org.glassfish.external</groupId>
   <artifactId>management-api</artifactId>
-	</dependency>
-	<dependency>
+    </dependency>
+    <dependency>
   <groupId>org.glassfish.gmbal</groupId>
   <artifactId>gmbal</artifactId>
         </dependency>
@@ -137,7 +137,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-				<probe-provider-class-names>com.sun.web.security.LoginProbeProvider</probe-provider-class-names>
+                <probe-provider-class-names>com.sun.web.security.LoginProbeProvider</probe-provider-class-names>
                         </manifestEntries>
                     </archive>
                 </configuration>

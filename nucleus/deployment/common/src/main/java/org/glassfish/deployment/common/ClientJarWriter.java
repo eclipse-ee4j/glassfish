@@ -49,16 +49,16 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  * <p>
  * Deployers will use the {@link ClientArtifactsManager} to record files which
  * they generate that need to be included in the downloadable client JAR. Examples
- * are EJB stubs, web services artifacts, and JARs related to app clients.  
+ * are EJB stubs, web services artifacts, and JARs related to app clients.
  * Once all deployers have run through the prepare phase this class can be used to
- * create the client JAR, collecting those client artifacts into the 
+ * create the client JAR, collecting those client artifacts into the
  * generated JAR, and adding the generated client JAR to the list of files
  * related to this application that are available for download.
- * 
+ *
  * @author tjquinn
  */
 public class ClientJarWriter {
-    
+
     public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
     @LogMessageInfo(message = "Exception caught:  {0}", level="WARNING")
@@ -67,14 +67,14 @@ public class ClientJarWriter {
     private final String LINE_SEP = System.getProperty("line.separator");
     private final ExtendedDeploymentContext deploymentContext;
     private final String name;
-    
+
     private Map<URI,JarFile> jarFiles = new HashMap<URI,JarFile>();
-    
+
     public ClientJarWriter(final ExtendedDeploymentContext deploymentContext) {
         this.deploymentContext = deploymentContext;
         name = VersioningUtils.getUntaggedName(deploymentContext.getCommandParameters(DeployCommandParameters.class).name());
     }
-    
+
     public void run() throws IOException {
         /*
          * Only generate the JAR if we would not already have done so.
@@ -83,7 +83,7 @@ public class ClientJarWriter {
             deplLogger.log(Level.FINE, "Skipping possible client JAR generation because it would already have been done");
             return;
         }
-        
+
         final Artifacts downloadableArtifacts =
                 DeploymentUtils.downloadableArtifacts(deploymentContext);
         final Artifacts generatedArtifacts =
@@ -97,11 +97,11 @@ public class ClientJarWriter {
             generatedArtifacts.addArtifact(clientJarFile.toURI(), clientJarFile.getName());
         }
     }
-    
+
     private boolean isArtifactsPresent() {
         return deploymentContext.getCommandParameters(OpsParams.class).origin.isArtifactsPresent();
     }
-    
+
     private File createClientJARIfNeeded(final ExtendedDeploymentContext deploymentContext,
             final String appName) throws IOException {
         final ClientArtifactsManager clientArtifactsManager =
@@ -109,14 +109,14 @@ public class ClientJarWriter {
         if (clientArtifactsManager.isEmpty()) {
             return null;
         }
-        
+
         /*
-         * Make sure the scratch directories are there.  
+         * Make sure the scratch directories are there.
          */
         deploymentContext.prepareScratchDirs();
-        
+
         final String generatedClientJARName = generatedClientJARNameAndType(appName);
-        final File generatedClientJARFile = new File(deploymentContext.getScratchDir("xml"), 
+        final File generatedClientJARFile = new File(deploymentContext.getScratchDir("xml"),
                 generatedClientJARName);
         /*
          * The app client deployer might have already created the generated JAR
@@ -131,14 +131,14 @@ public class ClientJarWriter {
                 throw new IOException(ex);
             }
         }
-        
+
         /*
          * We need our own copy of the artifacts collection because we might
          * need to add the manifest to it if a manifst is not already in the collection.
          * The client artifacts manager returns an unalterable collection.
          */
         final Collection<Artifacts.FullAndPartURIs> artifacts = new ArrayList<Artifacts.FullAndPartURIs>(clientArtifactsManager.artifacts());
-        
+
         OutputJarArchive generatedClientJAR = new OutputJarArchive();
         try {
             try {
@@ -167,7 +167,7 @@ public class ClientJarWriter {
         }
         return generatedClientJARFile;
     }
-    
+
     private File mergeContentsToClientArtifactsManager(
             final File generatedClientJARFile,
             final ClientArtifactsManager clientArtifactsManager) throws IOException, URISyntaxException {
@@ -199,16 +199,16 @@ public class ClientJarWriter {
             existingGeneratedJAR.close();
         }
     }
-    
+
     private boolean isManifestPresent(final Collection<Artifacts.FullAndPartURIs> artifacts) {
         boolean isManifestPresent = false;
-        
+
         for (Artifacts.FullAndPartURIs a : artifacts) {
             isManifestPresent |= a.getPart().toASCIIString().equals(JarFile.MANIFEST_NAME);
         }
         return isManifestPresent;
     }
-    
+
     private void addManifest(final Collection<Artifacts.FullAndPartURIs> artifacts) throws IOException {
         final File mfFile = File.createTempFile("clientmf", ".MF");
         final OutputStream mfOS = new BufferedOutputStream(new FileOutputStream(mfFile));
@@ -221,7 +221,7 @@ public class ClientJarWriter {
         }
         artifacts.add(new Artifacts.FullAndPartURIs(mfFile.toURI(), JarFile.MANIFEST_NAME, true /* isTemporary */));
     }
-    
+
     private static String generatedClientJARNameAndType(final String earName) {
         return generatedClientJARPrefix(earName) + ".jar";
     }
@@ -251,7 +251,7 @@ public class ClientJarWriter {
                 }
                 previousSlash = artPath.indexOf('/', previousSlash + 1);
             }
-            
+
             OutputStream os = generatedClientJARArchive.putNextEntry(artifact.getPart().toASCIIString());
             InputStream is = null;
             try {
@@ -300,5 +300,5 @@ public class ClientJarWriter {
             deplLogger.log(Level.FINER, copiedFiles.toString());
         }
     }
-    
+
 }

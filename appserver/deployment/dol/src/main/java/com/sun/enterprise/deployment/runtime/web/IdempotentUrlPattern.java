@@ -19,8 +19,8 @@ package com.sun.enterprise.deployment.runtime.web;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 
 public class IdempotentUrlPattern extends RuntimeDescriptor {
-    public static final String URL_PATTERN = "UrlPattern"; 
-    public static final String NUM_OF_RETRIES = "NumOfRetries"; 
+    public static final String URL_PATTERN = "UrlPattern";
+    public static final String NUM_OF_RETRIES = "NumOfRetries";
 
     public IdempotentUrlPattern() {}
 }

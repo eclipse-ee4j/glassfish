@@ -286,7 +286,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>

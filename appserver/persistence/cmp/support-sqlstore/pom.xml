@@ -27,7 +27,7 @@
     </parent>
     <artifactId>cmp-support-sqlstore</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>support-sqlstore module for cmp</name>
 
     <developers>
@@ -87,7 +87,7 @@
             <artifactId>cmp-internal-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
+        <dependency>
             <groupId>org.glassfish.main.persistence.cmp</groupId>
             <artifactId>cmp-model</artifactId>
             <version>${project.version}</version>
@@ -97,7 +97,7 @@
             <artifactId>antlr</artifactId>
             <version>${antlr.version}</version>
         </dependency>
-        <dependency> 
+        <dependency>
         <!-- We depend on repackaged antlr, but antlr-maven-plugin checks for this dependency to be present -->
             <groupId>antlr</groupId>
             <artifactId>antlr</artifactId>

@@ -80,8 +80,8 @@
             <param name="appclient.application.args" value="1"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="2"/>
@@ -111,8 +111,8 @@
             <param name="appclient.application.args" value="3"/>
         </antcall>
 
-	<antcall target="stop-derby"/>
-	<antcall target="start-derby"/>
+    <antcall target="stop-derby"/>
+    <antcall target="start-derby"/>
 
         <antcall target="runclient-common">
             <param name="appclient.application.args" value="4"/>

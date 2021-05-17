@@ -22,7 +22,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -35,7 +35,7 @@ public class JVMReportTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:applicationServer:applicationServer_link");
         assertEquals("JVM Report",getText("propertyForm:propertySheet:serverGeneralPropSheet:jvmProp:jvmlink"));
         String winHandleBefore = driver.getWindowHandle();
-        
+
         clickAndWait("propertyForm:propertySheet:serverGeneralPropSheet:jvmProp:jvmlink");
         for(String winHandle : driver.getWindowHandles()){
             driver.switchTo().window(winHandle);
@@ -43,7 +43,7 @@ public class JVMReportTest extends BaseSeleniumTestClass {
         isElementPresent("propertyForm:propertyContentPage:propertySheet:viewPropertySection:ViewProp:View");
         assertTrue(getText("propertyForm:propertyContentPage:propertySheet:reportPropertySection:ReportProp:Report").contains("Operating System Information"));
         driver.close();
-        
+
         driver.switchTo().window(winHandleBefore);
     }
 }

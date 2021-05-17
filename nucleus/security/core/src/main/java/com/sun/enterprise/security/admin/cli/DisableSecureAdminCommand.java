@@ -42,7 +42,7 @@ asadmin -s delete-protocol sec-admin-listener
 asadmin -s delete-protocol admin-http-redirect
 asadmin -s delete-protocol pu-protocol
 }
- * 
+ *
  * @author Tim Quinn
  */
 @Service(name = "disable-secure-admin")
@@ -51,8 +51,8 @@ asadmin -s delete-protocol pu-protocol
 @ExecuteOn({RuntimeType.DAS,RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="disable-secure-admin", 
+        opType=RestEndpoint.OpType.POST,
+        path="disable-secure-admin",
         description="disable-secure-admin")
 })
 @AccessRequired(resource="domain/secure-admin", action="disable")

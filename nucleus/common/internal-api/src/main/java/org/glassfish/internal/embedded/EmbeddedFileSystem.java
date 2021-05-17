@@ -31,7 +31,7 @@ public class EmbeddedFileSystem implements PreDestroy {
     /**
      * EmbeddedFileSystem builder class. Clients must use one these builder instances
      * to create an EmbeddedFileSystem instance.
-     * 
+     *
      */
     public static class Builder {
         boolean autoDelete=false;

@@ -34,7 +34,7 @@ public class WebTest {
         = new SimpleReporterAdapter("appserv-tests");
 
     private static String EXPECTED_RESPONSE = null;
-    private static final String EXPECTED_RESPONSE_LOCALHOST = 
+    private static final String EXPECTED_RESPONSE_LOCALHOST =
         "RemoteHost=localhost";
 
     static{
@@ -68,7 +68,7 @@ public class WebTest {
 
     public void doTest() {
 
-        try { 
+        try {
             testRemoteAddress();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {

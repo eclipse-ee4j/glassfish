@@ -21,7 +21,7 @@ package com.sun.enterprise.server.logging;
  *
  */
 public interface LogEventListener {
-    
+
     /**
      * Callback listener that will receive event notifications
      * when a log message is published to the server log file.

@@ -23,7 +23,7 @@ import javax.management.*;
 import java.io.IOException;
 
 /**
-	@deprecated Direct access to JMX attributes and methods,
+    @deprecated Direct access to JMX attributes and methods,
     These are "straight JMX" with no intervening processing whatsoever.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
@@ -31,25 +31,25 @@ import java.io.IOException;
 public interface StdAttributesAccess
 {
     /** Direct access to the MBeanServer, calls conn.getAttribute(objectName, name) */
-	public Object		getAttribute( String name )
-							throws InstanceNotFoundException, ReflectionException,
-							MBeanException, AttributeNotFoundException, IOException;
-                           
+    public Object        getAttribute( String name )
+                            throws InstanceNotFoundException, ReflectionException,
+                            MBeanException, AttributeNotFoundException, IOException;
+
     /** Direct access to the MBeanServer, calls conn.getAttributes(objectName, names) */
-	public AttributeList	getAttributes( String[] names )
-								throws InstanceNotFoundException, ReflectionException,
-								IOException;
-	
+    public AttributeList    getAttributes( String[] names )
+                                throws InstanceNotFoundException, ReflectionException,
+                                IOException;
+
     /** Direct access to the MBeanServer, calls conn.setAttribute(objectName, attr) */
-	public void				setAttribute( Attribute attr )
-								throws InstanceNotFoundException, ReflectionException,
-                         		MBeanException, AttributeNotFoundException, InvalidAttributeValueException,
-                         		IOException;
-                         		
+    public void                setAttribute( Attribute attr )
+                                throws InstanceNotFoundException, ReflectionException,
+                                 MBeanException, AttributeNotFoundException, InvalidAttributeValueException,
+                                 IOException;
+
     /** Direct access to the MBeanServer, calls conn.setAttributes(objectName, attrs) */
-	public AttributeList	setAttributes( AttributeList attrs )
-								throws InstanceNotFoundException, ReflectionException,
-								IOException;
+    public AttributeList    setAttributes( AttributeList attrs )
+                                throws InstanceNotFoundException, ReflectionException,
+                                IOException;
 
     /**  Direct access to the MBeanServer, calls conn.invoke(objectName, methodName, params, signature) */
     public Object     invoke(String methodName, Object[] params, String[] signature )

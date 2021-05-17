@@ -25,7 +25,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-/** 
+/**
  * This class represents the types java.math.BigDecimal and java.math.BigInteger.
  *
  *
@@ -43,7 +43,7 @@ public class MathType
     {
         super(name, clazz, enumType, typetab);
     }
-    
+
     /**
      * A numeric wrapper class type defines an ordering.
      */
@@ -54,7 +54,7 @@ public class MathType
 
     /**
      * Converts the specified value into a value of this numeric type.
-     * E.g. an Integer is converted into a BigDecimal, if this represents 
+     * E.g. an Integer is converted into a BigDecimal, if this represents
      * the type BigDecimal.
      * @param value value to be converted
      * @return converted value
@@ -89,12 +89,12 @@ public class MathType
             else if (value instanceof Number)
                 ret = BigInteger.valueOf(((Number)value).longValue());
         }
-        
+
         return ret;
     }
 
     /**
-     * Returns -value. 
+     * Returns -value.
      * @param value value to be negated
      * @return -value
      */
@@ -128,8 +128,8 @@ public class MathType
             else if (value instanceof Number)
                 ret = BigInteger.valueOf(-((Number)value).longValue());
         }
-        
+
         return ret;
     }
-    
+
 }

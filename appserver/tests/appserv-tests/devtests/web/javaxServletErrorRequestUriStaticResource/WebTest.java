@@ -47,7 +47,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 4882996");
         WebTest webTest = new WebTest(args);
@@ -68,7 +68,7 @@ public class WebTest {
             }
         }
 
-	stat.printSummary();
+    stat.printSummary();
     }
 
     public void doTest() throws Exception {
@@ -111,8 +111,8 @@ public class WebTest {
             if (line == null ||
                     (!line.equals("http://" + host + ":" + port +
                             contextRoot + "/404handler.jsp") &&
-                    !line.equals("http://" + 
-                            InetAddress.getLocalHost().getHostName() + 
+                    !line.equals("http://" +
+                            InetAddress.getLocalHost().getHostName() +
                             ":" + port + contextRoot +
                             "/404handler.jsp"))) {
                 throw new Exception("Unexpected response");

@@ -156,14 +156,14 @@ public final class CreateHTTPLoadBalancerCommand extends LBCommandsBase
     final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(CreateHTTPLoadBalancerCommand.class);
 
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         //final Logger logger = context.getLogger();
 
         report = context.getActionReport();
 
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);        
+        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
         if (load_balancer_name == null) {
             String msg = localStrings.getLocalString("NullLBName", "Load balancer name cannot be null");
@@ -195,8 +195,8 @@ public final class CreateHTTPLoadBalancerCommand extends LBCommandsBase
         }
 
         boolean isCluster = tgt.isCluster(target);
-        String lbConfigName = load_balancer_name + "_LB_CONFIG";        
-        
+        String lbConfigName = load_balancer_name + "_LB_CONFIG";
+
         if(!isCluster){
             if((lbpolicy!=null) || (lbpolicymodule!=null)){
                 String msg = localStrings.getLocalString("NotCluster",

@@ -61,7 +61,7 @@ public abstract class AbstractAttributeHandler extends AbstractHandler {
 
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(AbstractAttributeHandler.class);
-    
+
     /**
      * Process Annotation with given EjbContexts.
      * @param ainfo
@@ -98,9 +98,9 @@ public abstract class AbstractAttributeHandler extends AbstractHandler {
      *
      * @param ainfo the annotation information
      */
-    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo) 
+    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
             throws AnnotationProcessorException {
-        
+
         AnnotatedElement ae = ainfo.getAnnotatedElement();
         Annotation annotation = ainfo.getAnnotation();
 
@@ -132,7 +132,7 @@ public abstract class AbstractAttributeHandler extends AbstractHandler {
             Class clazz = (Class)ainfo.getAnnotatedElement();
             if (!clazz.getName().equals(context.getComponentClassName())) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    log(Level.WARNING, ainfo, 
+                    log(Level.WARNING, ainfo,
                         localStrings.getLocalString(
                         "enterprise.deployment.annotation.handlers.typeinhernotsupp",
                         "The annotation symbol inheritance is not supported."));
@@ -140,7 +140,7 @@ public abstract class AbstractAttributeHandler extends AbstractHandler {
                 return getDefaultProcessedResult();
             }
         }
-                
+
         EjbContext[] ejbContexts = null;
         EjbInterceptorContext ejbInterceptorContext = null;
         if (aeHandler instanceof EjbContext) {

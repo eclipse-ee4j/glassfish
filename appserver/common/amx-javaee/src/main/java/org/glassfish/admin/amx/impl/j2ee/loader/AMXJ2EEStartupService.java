@@ -108,7 +108,7 @@ public final class AMXJ2EEStartupService
     }
 
     @Override
-    public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {       
+    public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
         return ConfigSupport.sortAndDispatch(propertyChangeEvents, new PropertyChangeHandler(propertyChangeEvents), logger);
     }
 

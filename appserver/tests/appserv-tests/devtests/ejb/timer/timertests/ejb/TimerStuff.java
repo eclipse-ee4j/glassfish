@@ -66,10 +66,10 @@ public interface TimerStuff {
     void assertTimerNotActive(TimerHandle handle) throws RemoteException;
 
     void sendMessageAndCreateTimer() throws RemoteException, Exception;
-    void recvMessageAndCreateTimer(boolean expectMessage) 
+    void recvMessageAndCreateTimer(boolean expectMessage)
         throws RemoteException, Exception;
-    void sendMessageAndCreateTimerAndRollback() 
+    void sendMessageAndCreateTimerAndRollback()
         throws RemoteException, Exception;
-    void recvMessageAndCreateTimerAndRollback(boolean expectMessage) 
+    void recvMessageAndCreateTimerAndRollback(boolean expectMessage)
         throws RemoteException, Exception;
 }

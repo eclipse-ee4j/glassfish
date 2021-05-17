@@ -67,8 +67,8 @@ import org.glassfish.config.support.TargetType;
 CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-file-groups", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-file-groups",
         description="list-file-groups")
 })
 public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -100,7 +100,7 @@ public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauth
 
     @AccessRequired.To("read")
     private AuthRealm fileAuthRealm;
-    
+
     private SecurityService securityService;
 
     @Override
@@ -117,7 +117,7 @@ public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauth
                 "list.file.group.filerealmnotfound",
                 "File realm {0} does not exist", authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;                                            
+            return false;
         }
         /*
          * The realm might have been defaulted, so capture the actual name.
@@ -125,8 +125,8 @@ public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauth
         authRealmName = fileAuthRealm.getName();
         return true;
     }
-    
-    
+
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -148,7 +148,7 @@ public class ListFileGroup implements AdminCommand, AdminCommandSecurity.Preauth
                 // in the right cause of this situation
                 return;
             }
-            
+
             Enumeration groups = null;
             if (fileUserName != null) {
                 fr.getUser(fileUserName);

@@ -33,10 +33,10 @@
                 </or>
             </waitfor>
             <antcall target="${target-to-run}"/>
-	    <antcall target="report"/>
-	    <antcall target="mail"/>
+        <antcall target="report"/>
+        <antcall target="mail"/>
 <!--
-	    <antcall target="stopAS"/>
+        <antcall target="stopAS"/>
 -->
         </sequential>
     </parallel>
@@ -66,10 +66,10 @@
     <echo> === EMBEDDED STARTING === </echo>
     <glassfish-embedded-start/>
 <!--
-    <glassfish-embedded-start1> 
-		instanceRoot="${env.S1AS_HOME}/domains/domain1"
-		installRoot="${env.S1AS_HOME}"
-		configFile="${env.S1AS_HOME}/domains/domain1/config/domain.xml"/>
+    <glassfish-embedded-start1>
+        instanceRoot="${env.S1AS_HOME}/domains/domain1"
+        installRoot="${env.S1AS_HOME}"
+        configFile="${env.S1AS_HOME}/domains/domain1/config/domain.xml"/>
     </glassfish-embedded-start1>
 -->
  </target>

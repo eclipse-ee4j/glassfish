@@ -27,7 +27,7 @@ import org.glassfish.hk2.runlevel.RunLevel;
 
 /**
  * The meta annotation representing the {@link PostStartup} RunLevel.
- * 
+ *
  * @author Jeff Trent
  * @see {@link RunLevelService} in Hk2
  */

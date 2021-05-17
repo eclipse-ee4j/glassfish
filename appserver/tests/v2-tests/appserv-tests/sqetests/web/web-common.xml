@@ -21,7 +21,7 @@
 <!--
 <property file="web-common.properties"/>
 -->
-<property name="com.sun.aas.pointbaseRoot" 
+<property name="com.sun.aas.pointbaseRoot"
     value="${env.S1AS_HOME}/pointbase"/>
 
 <property name="com.sun.aas.webServicesLib" value="${env.S1AS_HOME}"/>
@@ -36,7 +36,7 @@
 <property name="earDD" value="application.xml,sun-application.xml"/>
 <property name="warDD" value="sun-web.xml,web.xml"/>
 <property name="jarDD" value="ejb-jar.xml,sun-ejb-jar.xml"/>
-<property name="clientDD"    
+<property name="clientDD"
     value="application-client.xml,sun-application-client.xml"/>
 
 <!-- change this property to use a compiler other than javac. -->
@@ -62,7 +62,7 @@
 <property name="war"         value="${appname}.war"/>
 <property name="jar"         value="${appname}.jar"/>
 <property name="ejbjar"      value="${appname}Ejb.jar"/>
-<property name="clientjar"   value="${appname}Client.jar"/>  
+<property name="clientjar"   value="${appname}Client.jar"/>
 <property name="verify.file" value="../${ear}"/>
 <property name="deploy.file" value="../${ear}"/>
 
@@ -70,7 +70,7 @@
 <property name="apptype"     value="application"/>
 
 <!-- classpath jar files location. -->
-<property name="sample.classpath.dir" 
+<property name="sample.classpath.dir"
     value="${com.sun.aas.installRoot}/lib"/>
 <property name="optional.taskdef.jar" value="sun-appserv-ant.jar"/>
 
@@ -90,7 +90,7 @@
     <!-- define these properties if samples dont define  -->
     <property name="classpath.prefix" value="."/>
     <property name="classpath.suffix" value="."/>
-    <property name="build.classpath" 
+    <property name="build.classpath"
       value="${classpath.prefix}:${build.classesdir}:${sunone.cpath}:${classpath.suffix}:${env.APS_HOME}/lib/reporter.jar"/>
 </target>
 
@@ -99,7 +99,7 @@
       <fileset dir="${com.sun.aas.installRoot}/lib" includes="*.jar" />
       <fileset dir="${com.sun.aas.webServicesLib}" includes="*.jar"/>
     </path>
-    <pathconvert pathsep=":" property="sunone.cpath" 
+    <pathconvert pathsep=":" property="sunone.cpath"
         refid="sample_classpath_jars"/>
 </target>
 
@@ -116,9 +116,9 @@
     <mkdir dir="${build.classesdir}"/>
     <echo message="Compiling source files" />
     <javac srcdir="."
-           destdir="${build.classesdir}" 
+           destdir="${build.classesdir}"
            classpath="${build.classpath}"/>
-</target> 
+</target>
 
 
 
@@ -173,9 +173,9 @@
 <!-- Assemble WAR module.                                    -->
 <!-- ======================================================= -->
 <target name="check_warfile">
-<available file="${build.classesdir}/${war.pkg}/" type="dir" 
+<available file="${build.classesdir}/${war.pkg}/" type="dir"
            property="warfiles.present"/>
-<available file="${src}/docroot" type="dir" 
+<available file="${src}/docroot" type="dir"
            property="docroot.present"/>
 </target>
 
@@ -192,11 +192,11 @@
 </target>
 
 <target name="copy_ejbjar_war" if="ejbjar.done">
-<copy file="${assemble.ejbjar}/${ejbjar}" 
+<copy file="${assemble.ejbjar}/${ejbjar}"
       tofile="${assemble.war}/WEB-INF/lib/${ejbjar}"/>
 </target>
 
-<target name="create_war_common" 
+<target name="create_war_common"
       depends="clean_war_common,check_warfile,copy_docroot,copy_warfiles,copy_ejbjar_war">
 <mkdir dir="${assemble.war}"/>
 <copy todir="${assemble.war}/WEB-INF/">
@@ -215,7 +215,7 @@
 </target>
 
 <target name="copy_ejbjar" if="ejbjar.done">
-<copy file="${assemble.ejbjar}/${ejbjar}" 
+<copy file="${assemble.ejbjar}/${ejbjar}"
       tofile="${assemble.ear}/${ejbjar}"/>
 </target>
 
@@ -224,7 +224,7 @@
 </target>
 
 <target name="copy_clientjar" if="clientjar.done">
- <copy file="${assemble.clientjar}/${clientjar}" 
+ <copy file="${assemble.clientjar}/${clientjar}"
        tofile="${assemble.ear}/${clientjar}"/>
 </target>
 
@@ -271,7 +271,7 @@
 <target name="clientjar_common" depends="clean_clientjar_common">
 <mkdir dir="${assemble.clientjar}"/>
 <copy todir="${assemble.clientjar}/${app.pkg}">
-  <fileset dir="${build.classesdir}/${app.pkg}/" 
+  <fileset dir="${build.classesdir}/${app.pkg}/"
            includes="**/*Client.class" excludes="**/servlet/"/>
 </copy>
 <mkdir dir="${assemble.clientjar}/META-INF"/>
@@ -279,7 +279,7 @@
   <fileset dir="." includes="${clientDD}"/>
 </copy>
 <jar jarfile="../${clientjar}"
-   basedir="${assemble.clientjar}" 
+   basedir="${assemble.clientjar}"
    manifest="MANIFEST.MF"/>
 <move file="../${clientjar}" todir="${assemble.clientjar}"/>
 <property name="clientjar.done" value="true"/>
@@ -289,7 +289,7 @@
 <target name="create_jar_common" depends="clean_jar_common">
 <mkdir dir="${assemble.jar}"/>
 <copy todir="${assemble.jar}/${app.pkg}">
-  <fileset dir="${build.classesdir}/${app.pkg}/" 
+  <fileset dir="${build.classesdir}/${app.pkg}/"
            includes="**/*.class"/>
 </copy>
 <jar jarfile="../${jar}"
@@ -298,24 +298,24 @@
 <copy file="${assemble.jar}/${jar}" tofile="../${jar}"/>
 </target>
 
-  <target name="deploy_common" depends="init-common">         
+  <target name="deploy_common" depends="init-common">
    <echo message="Deploying ${deploy.file}."/>
-  
+
 <echo message="Deploying ${appname}."/>
 <exec executable="${ASADMIN}">
 <arg line="deploy"/>
     <arg line="${as.props}"/>
     <arg line="--name ${appname} --type ${apptype}"/>
     <arg line="--retrieve ${assemble}"/>
-    <arg line="--instance ${appserver.instance.name}"/>	    
+    <arg line="--instance ${appserver.instance.name}"/>
     <arg line="${deploy.file}"/>
 </exec>
 </target>
-  
+
 
 <target name="runclient_common" depends="init-common">
 <exec executable="${APPCLIENT}">
-    <env key="VMARGS" 
+    <env key="VMARGS"
         value="-Dtest.results=${env.APS_HOME}/test_results.xml"/>
     <arg line="-client ${assemble}/${appname}Client.jar"/>
     <arg line="-name ${display_name}"/>
@@ -344,7 +344,7 @@
 <target name="keydel_common" depends="setup_env,init-common">
 <antcall target="delete-user-common">
 <param name="user" value="${app.user}"/>
-</antcall>    
+</antcall>
 </target>
 
 <!-- ======================================================= -->
@@ -361,9 +361,9 @@
     <arg line="--precompiledjsp true"/>
     <arg line="--upload true"/>
     <arg line="--retrieve ${assemble.dir}"/>
-    <arg line="--instance ${appserver.instance.name}"/>	
+    <arg line="--instance ${appserver.instance.name}"/>
  </exec>
- </target>    
+ </target>
 
 <!-- ======================================================= -->
 <!-- Uninstall targets.                                      -->
@@ -373,9 +373,9 @@
 <exec executable="${ASADMIN}">
     <arg line="undeploy"/>
     <arg line="${as.props}"/>
-    <arg line="--type ${apptype}"/>        
-    <arg line="--instance ${appserver.instance.name}"/>	
-    <arg line="${appname}"/>	
+    <arg line="--type ${apptype}"/>
+    <arg line="--instance ${appserver.instance.name}"/>
+    <arg line="${appname}"/>
  </exec>
 
 </target>
@@ -387,13 +387,13 @@
 <echo message="Doing admin task ${admin.command}"/>
 <echo message="Operand ${operand.props}"/>
 <exec executable="${ASADMIN}">
-    <arg line="${admin.command} ${as.props} ${operand.props}" />        
-</exec>    
+    <arg line="${admin.command} ${as.props} ${operand.props}" />
+</exec>
 </target>
 
 <target name="reconfig_common" depends="setup_env">
 <echo message="Reconfiguring server ${sunone.instance}"/>
-<antcall target="reconfig-common"/>   
+<antcall target="reconfig-common"/>
 </target>
 
 <target name="javadocs_common" depends="init_common">
@@ -406,17 +406,17 @@
 </target>
 
 
-<!-- ======================================================= --> 
-<!-- CleanUp Pointbase table Targets.                        --> 
 <!-- ======================================================= -->
-<target name="sql_common" depends="init-common"> 
- <java classname="com.pointbase.tools.toolsCommander" 
+<!-- CleanUp Pointbase table Targets.                        -->
+<!-- ======================================================= -->
+<target name="sql_common" depends="init-common">
+ <java classname="com.pointbase.tools.toolsCommander"
        classpath="${db.classpath}"
        fork="true"
- > 
-   <arg line="${db.driver} ${db.url} ${db.file} ${db.user} ${db.pwd}" /> 
+ >
+   <arg line="${db.driver} ${db.url} ${db.file} ${db.user} ${db.pwd}" />
  </java>
-     
+
     <!-- <sql  driver="${db.driver}"
 url="${db.url}"
 userid="${db.user}"
@@ -440,10 +440,10 @@ classpath="${db.classpath}"/>-->
 <property name="ds.class" value="com.pointbase.jdbc.jdbcDataSource" />
 <antcall target="admin_command_common">
   <param name="admin.command"
-    value="create-jdbc-connection-pool 
+    value="create-jdbc-connection-pool
       --datasourceclassname ${ds.class}
       --instance ${sunone.instance}" />
-  <param name="operand.props" 
+  <param name="operand.props"
 value="${conpool.name}" />
 </antcall>
 <antcall target="admin_command_common">
@@ -469,7 +469,7 @@ value="${conpool.name}" />
 <target name="create-jdbc-resource_common">
 <antcall target="admin_command_common">
   <param name="admin.command"
-    value="create-jdbc-resource 
+    value="create-jdbc-resource
      --connectionpoolid ${conpool.name}
      --instance ${sunone.instance}" />
   <param name="operand.props"
@@ -480,7 +480,7 @@ value="${conpool.name}" />
 <target name="delete-jdbc-connection-pool_common">
 <antcall target="admin_command_common">
   <param name="admin.command"
-    value="delete-jdbc-connection-pool 
+    value="delete-jdbc-connection-pool
       --instance ${sunone.instance}" />
   <param name="operand.props"
     value="${conpool.name}" />
@@ -490,7 +490,7 @@ value="${conpool.name}" />
 <target name="delete-jdbc-resource_common">
 <antcall target="admin_command_common">
   <param name="admin.command"
-    value="delete-jdbc-resource  
+    value="delete-jdbc-resource
       --instance ${sunone.instance}" />
   <param name="operand.props"
     value="${jdbc.resource.name}" />
@@ -519,19 +519,19 @@ value="${conpool.name}" />
 <target name="create-persistence-resource_common" depends="setup_env">
 <antcall target="admin_command_common">
   <param name="admin.command"
-    value="create-persistence-resource 
+    value="create-persistence-resource
       --instance ${sunone.instance}" />
   <param name="operand.props"
     value="${pm.resource.name}" />
 </antcall>
 <antcall target="admin_command_common">
   <param name="admin.command" value="set" />
-  <param name="operand.props" 
+  <param name="operand.props"
 value="${resources.dottedname.prefix}.persistence-manager-factory-resource.${pm.resource.name}.factory_class=${pm.factory.class}"/>
 </antcall>
 <antcall target="admin_command_common">
   <param name="admin.command" value="set" />
-  <param name="operand.props" 
+  <param name="operand.props"
     value="${resources.dottedname.prefix}.persistence-manager-factory-resource.${pm.resource.name}.jdbc_resource_jndi_name=${jdbc.resource.name}" />
 </antcall>
 </target>
@@ -539,9 +539,9 @@ value="${resources.dottedname.prefix}.persistence-manager-factory-resource.${pm.
 <target name="delete-persistence-resource_common" depends="setup_env">
 <antcall target="admin_command_common">
   <param name="admin.command"
-    value="delete-persistence-resource 
+    value="delete-persistence-resource
       --instance ${sunone.instance}" />
-  <param name="operand.props" 
+  <param name="operand.props"
     value="${pm.resource.name}" />
 </antcall>
 </target>

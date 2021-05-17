@@ -50,7 +50,7 @@ echo create pool jdbc-reconfig-test-pool-1
 echo create resource jdbc/jdbc-reconfig-test-resource-1
 ./bin/asadmin create-jdbc-resource --connectionpoolid=jdbc-reconfig-test-pool-1 jdbc/jdbc-reconfig-test-resource-1
 
-echo create pool jdbc-reconfig-test-pool-2 
+echo create pool jdbc-reconfig-test-pool-2
 ./bin/asadmin create-jdbc-connection-pool --datasourceclassname=org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource --restype=javax.sql.ConnectionPoolDataSource --property="Password=rpassword:User=ruser:DatabaseName=$databaseshome/reconfig-db:serverName=localhost" jdbc-reconfig-test-pool-2
 
 echo create resource jdbc/jdbc-reconfig-test-resource-2
@@ -79,7 +79,7 @@ echo "\nasadmin set resources.jdbc-connection-pool.jdbc-dev-test-pool.max-wait-t
 ./bin/asadmin set resources.jdbc-connection-pool.jdbc-dev-test-pool.max-wait-time-in-millis=1000
 
 echo "\nGET http://localhost:8080/v3_jdbc_dev_tests/ReconfigTestServlet?maxPoolSize=40\&throwException=true\&testId=1 \n"
-GET http://localhost:8080/v3_jdbc_dev_tests/ReconfigTestServlet?maxPoolSize=40\&throwException=true\&testId=1 > $reconfigResult 
+GET http://localhost:8080/v3_jdbc_dev_tests/ReconfigTestServlet?maxPoolSize=40\&throwException=true\&testId=1 > $reconfigResult
 echo "\n"
 
 #asadmin set max-pool-size to 10 before running test for the second time

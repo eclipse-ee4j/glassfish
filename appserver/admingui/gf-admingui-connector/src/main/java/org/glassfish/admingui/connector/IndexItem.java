@@ -24,34 +24,34 @@ import java.util.List;
 
 
 /**
- *  <p>	This class is configured via XML (i.e. a console-config.xml file).
- *  	This is done via the HK2 <code>ConfigParser</code>.</p>
+ *  <p>    This class is configured via XML (i.e. a console-config.xml file).
+ *      This is done via the HK2 <code>ConfigParser</code>.</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen    (ken.paulsen@sun.com)
  */
 @Configured(name="indexitem")
 public class IndexItem {
 
     /**
-     *	<p> Accessor for child {@link TOCItem}s.</p>
+     *    <p> Accessor for child {@link TOCItem}s.</p>
      */
     public List<IndexItem> getIndexItems() {
-	return this.indexItems;
+    return this.indexItems;
     }
 
     /**
-     *	<p> {@link IntegrationPoint}s setter.</p>
+     *    <p> {@link IntegrationPoint}s setter.</p>
      */
     @Element("indexitem")
     public void setIndexItems(List<IndexItem> indexItems) {
-	this.indexItems = indexItems;
+    this.indexItems = indexItems;
     }
 
     /**
      *
      */
     public String getTarget() {
-	return this.target;
+    return this.target;
     }
 
     /**
@@ -59,7 +59,7 @@ public class IndexItem {
      */
     @Attribute(required=true)
     void setTarget(String target) {
-	this.target = target;
+    this.target = target;
     }
 
 
@@ -67,7 +67,7 @@ public class IndexItem {
      *
      */
     public String getText() {
-	return this.text;
+    return this.text;
     }
 
     /**
@@ -75,7 +75,7 @@ public class IndexItem {
      */
     @Attribute(required=true)
     void setText(String text) {
-	this.text = text;
+    this.text = text;
     }
 
     public String getHtmlFileForTarget() {

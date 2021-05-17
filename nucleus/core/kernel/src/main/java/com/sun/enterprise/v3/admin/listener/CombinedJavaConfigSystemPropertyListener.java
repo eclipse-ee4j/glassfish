@@ -58,12 +58,12 @@ import org.jvnet.hk2.config.types.Property;
  *  properties (including the Java VM options).  Most of the effort involves the jvm-options
  *  list, but restart is also required for any changes to the java-config.
  *  <p>
- *  This class is implemented so that the server restart is NOT required if a deployer wants to deploy 
+ *  This class is implemented so that the server restart is NOT required if a deployer wants to deploy
  *  an application and the application depends on a particular Java system property
  *  (-D) to be specified. As of now, the deployer specifies the system property
  *  and deploys the application and the application should find it when it does
  *  System.getProperty("property-name"). Here is the complete algorithm:
- * 
+ *
  *  <ol>
  *    <li> If any of the attributes of the java-config element (JavaConfig) change,
  *         this listener flags it as server-restart-required kind of change.
@@ -94,31 +94,31 @@ import org.jvnet.hk2.config.types.Property;
 public final class CombinedJavaConfigSystemPropertyListener implements PostConstruct, ConfigListener {
     @Inject
     ServiceLocator habitat;
-    
+
     @Inject
     Transactions transactions;
-    
+
     /* The following objects are not injected so that this
      * ConfigListener doesn't become a listener for those objects.
-     */   
+     */
     private Domain domain; //note: this should be current, and does contain the already modified values!
-    private Cluster cluster; 
+    private Cluster cluster;
     private Config config; // this is the server's Config
     private Server server;
-    
-    // The JavaConfig cannot be injected because it might not be the right 
+
+    // The JavaConfig cannot be injected because it might not be the right
     // one that gets injected.  The JavaConfig is obtained from the Config
     // in postConstruct below.
     private JavaConfig jc;
 
-    
+
     volatile List<String> oldProps;
     /* Implementation note: See 6028*/
-    
+
     volatile Map<String,String>  oldAttrs;
-    
+
     static final Logger logger = KernelLoggerInfo.getLogger();
-    
+
     @Override
     public void postConstruct() {
         domain = habitat.getService(Domain.class);
@@ -128,7 +128,7 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
         jc = config.getJavaConfig();
         if (jc != null) {
             // register to listen for config events on the JavaConfig
-            ((ObservableBean)ConfigSupport.getImpl(jc)).addListener(this);            
+            ((ObservableBean)ConfigSupport.getImpl(jc)).addListener(this);
         }
         if (jc != null && jc.getJvmOptions() != null) {
             oldProps = new ArrayList<String>(jc.getJvmOptions()); //defensive copy
@@ -136,7 +136,7 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
         }
         transactions.addListenerForType(SystemProperty.class, this);
     }
-        
+
     /**
         Get attributes as a Map so that we can do an easy compare of old vs new and
         also emit a useful change message.
@@ -159,20 +159,20 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
         values.put( "NativeLibraryPathSuffix", jc.getNativeLibraryPathSuffix() );
         values.put( "BytecodePreprocessors", jc.getBytecodePreprocessors() );
         values.put( "EnvClasspathIgnored", jc.getEnvClasspathIgnored() );
-        
+
         return values;
     }
-    
+
     /* force serial behavior; don't allow more than one thread to make a mess here */
     @Override
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         // ignore a REMOVE and an ADD of the same value
-        
+
         final UnprocessedChangeEvents unp = ConfigSupport.sortAndDispatch(events, new Changed() {
             @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> tc, T t) {
                 NotProcessed result = null;
-                
+
                 if (tc == Profiler.class) {
                     result = new NotProcessed("Creation or changes to a profiler require restart");
                 }
@@ -180,23 +180,23 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
                     result = new NotProcessed("Addition of properties to JavaConfig requires restart");
                 }
                 else if (tc == JavaConfig.class && t instanceof JavaConfig) {
-                    final JavaConfig njc = (JavaConfig) t; 
+                    final JavaConfig njc = (JavaConfig) t;
                     logFine(type, njc);
-                    
+
                     // we must *always* check the jvm options, no way to know except by comparing,
                     // plus we should send an appropriate message back for each removed/added item
                     final List<String> curProps = new ArrayList<String>( njc.getJvmOptions() );
                     final boolean jvmOptionsWereChanged = ! oldProps.equals(curProps);
                     final List<String> reasons = handle(oldProps, curProps);
                     oldProps = curProps;
-                    
+
                     // something in the JavaConfig itself changed
                     // to do this well, we ought to keep a list of attributes, so we can make a good message
                     // saying exactly which attribute what changed
                     final Map<String,String> curAttrs = collectAttrs(njc);
                     reasons.addAll( handleAttrs( oldAttrs, curAttrs ) );
                     oldAttrs = curAttrs;
-                    
+
                     result = reasons.isEmpty() ? null : new NotProcessed( CombinedJavaConfigSystemPropertyListener.toString(reasons) );
                 }
                 else if (tc == SystemProperty.class && t instanceof SystemProperty) {
@@ -205,10 +205,10 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
                     ConfigBeanProxy proxy = sp.getParent();
                     ConfigView p = ConfigSupport.getImpl(proxy);
 
-                    
-                    if (p == ConfigSupport.getImpl(server) || 
-                            p == ConfigSupport.getImpl(config) || 
-                            (cluster != null && p == ConfigSupport.getImpl(cluster)) || 
+
+                    if (p == ConfigSupport.getImpl(server) ||
+                            p == ConfigSupport.getImpl(config) ||
+                            (cluster != null && p == ConfigSupport.getImpl(cluster)) ||
                             p == ConfigSupport.getImpl(domain)) {
                         // check to see if this system property is referenced by any of the options
                         String pname = sp.getName();
@@ -225,8 +225,8 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
                         } else if (cluster != null && proxy instanceof Cluster && p == ConfigSupport.getImpl(cluster)) {
                             return addToCluster(sp);
                         } else if (proxy instanceof Server && p == ConfigSupport.getImpl(server)) {
-                            return addToServer(sp);                           
-                        }  
+                            return addToServer(sp);
+                        }
                     } else if (type == TYPE.REMOVE) {
                         if (proxy instanceof Domain) {
                             return removeFromDomain(sp);
@@ -249,7 +249,7 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
         , logger);
          return unp;
     }
-    
+
     private void logFine(TYPE ct, JavaConfig njc) {
         final Level level = Level.FINE;
         if (logger.isLoggable(level)) {
@@ -264,20 +264,20 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
             }
         }
     }
-    
+
     private List<String>
     handleAttrs( final Map<String,String> old, final Map<String,String> cur) {
         if ( old.size() != cur.size() ) {
             throw new IllegalArgumentException();
         }
-        
+
         // find all the differences and generate helpful messages
         final List<String> reasons = new ArrayList<String>();
         for(final Map.Entry<String,String> olde : old.entrySet() ) {
             final String key = olde.getKey();
             final String oldValue = olde.getValue();
             final String curValue = cur.get(key);
-            
+
             final boolean changed = (oldValue == null && curValue != null) ||
                                     (oldValue != null && curValue == null) ||
                                     (oldValue != null && ! oldValue.equals(curValue));
@@ -289,21 +289,21 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
     }
 
 
-    
+
     private List<String> handle(List<String> old, List<String> cur) {
         NotProcessed np = null;
-        
+
         final Set<String> added = new HashSet<String>(cur);
         added.removeAll(old);
-        
+
         final Set<String> removed = new HashSet<String>(old);
         removed.removeAll(cur);
-        
+
         return getNotProcessed(removed, added);
     }
     //using C-style ;)
     private static final String SYS_PROP_REGEX = "=";
-    
+
     //TODO need to handle system property substitution here
     private String[] nvp(final String s) {
         final String[] nv = s.split(SYS_PROP_REGEX);
@@ -315,26 +315,26 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
         value = TranslatedConfigView.getTranslatedValue(value).toString();
         return new String[] { name, value };
     }
-    
+
     static final String DPREFIX = "-D";
-    
+
     private static String stripPrefix(final String s)
     {
         return s.startsWith(DPREFIX) ? s.substring(DPREFIX.length()) : s;
     }
-    
+
     private List<String> getNotProcessed(
         final Set<String> removals,
         final Set<String> additions)
     {
-        //look at the list, clear and/or add system properties 
+        //look at the list, clear and/or add system properties
         // otherwise they require server restart
-        
+
         final List<String> reasons = new ArrayList<String>();
         for( final String removed : removals) {
             final String[] nv = nvp(removed);
             final String name  = nv[0];
-            
+
             if (possiblyDynamicallyReconfigurable(removed)) {
                 System.clearProperty(stripPrefix(name));
             }
@@ -358,13 +358,13 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
                 reasons.add(msg);
             }
         }
-        
+
         // process any remaining additions
         for( final String added : additions) {
             final String[] nv = nvp(added);
             final String   name  = nv[0];
             final String   newValue = nv[1];
-            
+
             if (possiblyDynamicallyReconfigurable(added)) {
                 System.setProperty( stripPrefix(name), newValue );
             }
@@ -372,10 +372,10 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
                 reasons.add( "Addition of: '" + added + "' cannot take effect without server restart" );
             }
         }
-        
+
         return reasons;
     }
-    
+
     private static String toString( final List<String> items ) {
         final StringBuffer buf = new StringBuffer();
         final String delim = ", ";
@@ -385,11 +385,11 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
             }
             buf.append(s);
         }
-        
+
         return buf.toString();
     }
 
-    
+
     /** Determines with some confidence level if a particular String denotes
      *  a system property that can be set in the current JVM's (i.e. the JVM where
      *  this method's code runs) System. Anything that does not start with
@@ -398,11 +398,11 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
      */
     private boolean possiblyDynamicallyReconfigurable(String s) {
         if (s.startsWith(DPREFIX) && !s.startsWith("-Djava.")
-            && !s.startsWith("-Djavax.")) 
+            && !s.startsWith("-Djavax."))
             return true;
         return false;
     }
-  
+
     /*
      * Deterines whether the given property name, pname, is references by any
      * of the values in the values list. A reference is of the form ${pname}.
@@ -411,14 +411,14 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
     static private boolean referencesProperty(String pname, Collection<String> values) {
         String ref = "${" + pname + "}";
         for (String v : values) {
-            if ((v != null) && (v.contains(ref))) 
+            if ((v != null) && (v.contains(ref)))
                 return true;
         }
         return false;
     }
-        /* 
+        /*
      * Notification events can come out of order, i.e., a create-system-properties
-     * on an existing property sends an ADD or the new one, a CHANGE, followed by 
+     * on an existing property sends an ADD or the new one, a CHANGE, followed by
      * a REMOVE of the old one. So we need to check if the property is still
      * there.
      */
@@ -507,7 +507,7 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
         Cluster c = domain.getClusterForInstance(server.getName());
         return c != null ? hasSystemProperty(c.getSystemProperty(), sp) : false;
     }
-    
+
     private SystemProperty getServerSystemProperty(String spName) {
         return getSystemProperty(server.getSystemProperty(), spName);
     }
@@ -529,10 +529,10 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
     private boolean hasSystemProperty(List<SystemProperty> ssps, SystemProperty sp) {
         return getSystemProperty(ssps, sp.getName()) != null;
     }
-    
+
     /*
      * Return the SystemProperty from the list of system properties with the
-     * given name. If the property is not there, or the list is null, return 
+     * given name. If the property is not there, or the list is null, return
      * null.
      */
     private SystemProperty getSystemProperty(List<SystemProperty> ssps, String spName) {
@@ -543,7 +543,7 @@ public final class CombinedJavaConfigSystemPropertyListener implements PostConst
                 }
             }
         }
-        return null;       
+        return null;
     }
 
 }

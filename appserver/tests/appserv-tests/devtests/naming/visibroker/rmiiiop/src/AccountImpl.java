@@ -17,7 +17,7 @@
 // AccountImpl.java
 
 public class AccountImpl extends Bank.AccountPOA {
-  
+
   public AccountImpl(Bank.AccountData data) {
     _name = data.getName();
     _balance = data.getBalance();

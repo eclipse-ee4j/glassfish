@@ -19,5 +19,5 @@ package com.sun.s1asdev.cdi.hello.mdb;
 public interface Hello1 {
 
     public void hello(String s);
-    
+
 }

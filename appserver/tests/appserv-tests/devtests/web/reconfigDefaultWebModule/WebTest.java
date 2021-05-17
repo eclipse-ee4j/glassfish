@@ -21,7 +21,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 

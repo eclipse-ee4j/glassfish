@@ -47,8 +47,8 @@ import org.glassfish.hk2.api.PostConstruct;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-client-stubs", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-client-stubs",
         description="Get Client Stubs",
         params={
             @RestParam(name="appname", value="$parent")
@@ -69,7 +69,7 @@ public class GetClientStubsCommand implements AdminCommand, AdminCommandSecurity
 
     @Param(primary=true)
     private String localDir;
-    
+
     @AccessRequired.To("read")
     private Application matchingApp = null;
 
@@ -88,7 +88,7 @@ public class GetClientStubsCommand implements AdminCommand, AdminCommandSecurity
             new Object[] {appname}));
         return false;
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

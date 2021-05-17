@@ -15,7 +15,7 @@
  */
 
 /*
- * @(#)MQRMIClientSocketFactory.java	1.5 06/29/07
+ * @(#)MQRMIClientSocketFactory.java    1.5 06/29/07
  */
 
 /*
@@ -43,57 +43,57 @@ public class MQRMIClientSocketFactory extends SslRMIClientSocketFactory {
     String hostname = null;
 
     public MQRMIClientSocketFactory(String hostname, boolean isBrokerHostTrusted,
-					boolean useSSL)  {
-	this.isBrokerHostTrusted = isBrokerHostTrusted;
-	this.hostname = hostname;
-	this.useSSL = useSSL;
+                    boolean useSSL)  {
+    this.isBrokerHostTrusted = isBrokerHostTrusted;
+    this.hostname = hostname;
+    this.useSSL = useSSL;
     }
 
     public Socket createSocket(String host, int port) throws IOException {
-	Socket s = null;
-	String socketHost = hostname;
+    Socket s = null;
+    String socketHost = hostname;
 
-	/*
-	 * If the factory is not configured for any specific host, use whatever
-	 * is passed in to createSocket.
-	 *
-	 * The wildcard "*" here is something that could be set on the server
-	 * side. It is the constant jmsserver.Globals.HOSTNAME_ALL but we don't
-	 * want to introduce any server side compile time dependencies here.
-	 * Remember that this factory is created by the server.
-	 */
-	if ((socketHost == null) || (socketHost.equals("*")))  {
-	    socketHost = host;
-	}
+    /*
+     * If the factory is not configured for any specific host, use whatever
+     * is passed in to createSocket.
+     *
+     * The wildcard "*" here is something that could be set on the server
+     * side. It is the constant jmsserver.Globals.HOSTNAME_ALL but we don't
+     * want to introduce any server side compile time dependencies here.
+     * Remember that this factory is created by the server.
+     */
+    if ((socketHost == null) || (socketHost.equals("*")))  {
+        socketHost = host;
+    }
 
-	try  {
-	    if (useSSL)  {
-	        s = (Socket)makeSSLSocket(socketHost, port);
-	    } else  {
-	        s = RMISocketFactory.getDefaultSocketFactory().
-			createSocket(socketHost, port);
-	    }
-	} catch (Exception e)  {
-	    throw new IOException(e.toString());
-	}
+    try  {
+        if (useSSL)  {
+            s = (Socket)makeSSLSocket(socketHost, port);
+        } else  {
+            s = RMISocketFactory.getDefaultSocketFactory().
+            createSocket(socketHost, port);
+        }
+    } catch (Exception e)  {
+        throw new IOException(e.toString());
+    }
 
-	return (s);
+    return (s);
     }
 
     public String toString()  {
         return ("hostname="
-		+ hostname 
-		+ ",isBrokerHostTrusted=" 
-		+ isBrokerHostTrusted 
-		+ ",useSSL=" 
-		+ useSSL);
+        + hostname
+        + ",isBrokerHostTrusted="
+        + isBrokerHostTrusted
+        + ",useSSL="
+        + useSSL);
     }
 
     public boolean equals(Object obj)  {
         if (!(obj instanceof MQRMIClientSocketFactory))  {
             return (false);
         }
-    
+
         MQRMIClientSocketFactory that = (MQRMIClientSocketFactory)obj;
 
         if (this.hostname != null)  {

@@ -49,7 +49,7 @@ import org.glassfish.api.admin.AdminCommandSecurity;
 
 /**
  * List Resource Refs Command
- * 
+ *
  */
 @TargetType(value = { CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE,
         CommandTarget.CLUSTERED_INSTANCE })

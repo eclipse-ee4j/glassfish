@@ -27,29 +27,29 @@ import java.util.List;
  */
 public class WebServiceHandlerChain extends Descriptor {
 
-    // List of handlers associated with this endpoint. 
+    // List of handlers associated with this endpoint.
     // Handler order is important and must be preserved.
     private LinkedList<WebServiceHandler> handlers;
 
     private String protocolBinding = null;
     private String serviceNamePattern = null;
     private String portNamePattern = null;
-    
+
     // copy constructor
     public WebServiceHandlerChain(WebServiceHandlerChain other) {
-	super(other);
+    super(other);
         this.protocolBinding = other.protocolBinding;
         this.serviceNamePattern = other.serviceNamePattern;
         this.portNamePattern = other.portNamePattern;
-	if (other.handlers != null) {
+    if (other.handlers != null) {
             handlers = new LinkedList();
-	    for (Iterator i = other.handlers.iterator(); i.hasNext();) {
-		WebServiceHandler wsh = (WebServiceHandler)i.next();
-		handlers.addLast(new WebServiceHandler(wsh));
-	    }
-	} else {
-	    handlers = null;
-	}
+        for (Iterator i = other.handlers.iterator(); i.hasNext();) {
+        WebServiceHandler wsh = (WebServiceHandler)i.next();
+        handlers.addLast(new WebServiceHandler(wsh));
+        }
+    } else {
+        handlers = null;
+    }
     }
 
     public WebServiceHandlerChain() {
@@ -60,29 +60,29 @@ public class WebServiceHandlerChain extends Descriptor {
         protocolBinding = bindingId;
 
     }
-    
+
     public String getProtocolBindings() {
         return protocolBinding;
     }
-    
+
     public void setServiceNamePattern(String pattern) {
         serviceNamePattern = pattern;
 
     }
-    
+
     public String getServiceNamePattern() {
         return serviceNamePattern;
     }
-    
+
     public void setPortNamePattern(String pattern) {
         portNamePattern = pattern;
 
     }
-    
+
     public String getPortNamePattern() {
         return portNamePattern;
     }
-    
+
     /**
      *@return true if this endpoint has at least one handler in its
      * handler chain.

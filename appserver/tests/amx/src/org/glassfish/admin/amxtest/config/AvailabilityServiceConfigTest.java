@@ -66,7 +66,7 @@ public class AvailabilityServiceConfigTest
             final String save = asc.getAutoManageHAStore();
             asc.setAutoManageHAStore("" + true);
             assertTrue("getAutoManageHAStore() was supposed to return true.", asc.getAutoManageHAStore().equals("true"));
-            
+
             asc.setAutoManageHAStore("" + false);
             assertFalse("getAutoManageHAStore() was supposed to return false.", asc.getAutoManageHAStore().equals("false"));
             asc.setAutoManageHAStore(save);
@@ -160,13 +160,13 @@ public class AvailabilityServiceConfigTest
             asc.setHAStoreHealthcheckEnabled("" + false);
             assertFalse("getHAStoreHealthcheckEnabled() was supposed to return false.",
                 AttributeResolverHelper.resolveBoolean( asc, asc.getHAStoreHealthcheckEnabled()));
-                
+
             asc.setHAStoreHealthcheckEnabled("" + true);
             assertTrue("getHAStoreHealthcheckEnabled() was supposed to return true.",
                 AttributeResolverHelper.resolveBoolean( asc, asc.getHAStoreHealthcheckEnabled()));
             asc.setHAStoreHealthcheckEnabled( save );
         }
-	}
+    }
 }
 
 

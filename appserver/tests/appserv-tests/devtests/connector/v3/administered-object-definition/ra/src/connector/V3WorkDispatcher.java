@@ -43,7 +43,7 @@ public class V3WorkDispatcher extends WorkDispatcher {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         try {
             MessageEndpoint ep = factory.createEndpoint(new FakeXAResource());
             int numOfMessages = 1;
@@ -72,7 +72,7 @@ public class V3WorkDispatcher extends WorkDispatcher {
             debug("V3WorkDispatcher calling DONE()");
             done();
             debug("V3WorkDispatcher finished calling DONE()");
-            
+
         }
     }
 }

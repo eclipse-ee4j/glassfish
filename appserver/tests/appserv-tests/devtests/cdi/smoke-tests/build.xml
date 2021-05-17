@@ -30,7 +30,7 @@
     &commonBuild;
     &commonRun;
     &reporting;
-    
+
     <property name="smoke-target" value="all"/>
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
@@ -109,7 +109,7 @@
                 </else>
             </if>
             <ant dir="simple-ejb-cdi" target="${smoke-target}"/>
-        
+
         <!--
         Not running until
         https://issues.jboss.org/browse/WELD-1345 is fixed. (fixed in 2.0.0.Beta5)
@@ -131,15 +131,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the smoke tests)
-		ant clean (cleans all the smoke tests)
-		ant build (builds all the smoke tests)
-		ant setup (sets up all resources for smoke tests)
-		ant deploy (deploys all the smoke apps)
-		ant run (Executes all the smoke tests)
-		ant undeploy (undeploys all the  smoke apps)
-		ant unsetup (unsets all resources for smoke tests)
-	</echo>
+    <echo> Usage:
+        ant all (Executes all the smoke tests)
+        ant clean (cleans all the smoke tests)
+        ant build (builds all the smoke tests)
+        ant setup (sets up all resources for smoke tests)
+        ant deploy (deploys all the smoke apps)
+        ant run (Executes all the smoke tests)
+        ant undeploy (undeploys all the  smoke apps)
+        ant unsetup (unsets all resources for smoke tests)
+    </echo>
     </target>
 </project>

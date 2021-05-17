@@ -35,7 +35,7 @@
      <res-ref-name>jms/MyQueueConnectionFactory</res-ref-name>
      <res-type>jakarta.jms.QueueConnectionFactory</res-type>
      <res-auth>Container</res-auth>
-     <res-sharing-scope>Shareable</res-sharing-scope> 
+     <res-sharing-scope>Shareable</res-sharing-scope>
   </resource-ref>
   <message-destination-ref>
      <description>intra-war destination</description>

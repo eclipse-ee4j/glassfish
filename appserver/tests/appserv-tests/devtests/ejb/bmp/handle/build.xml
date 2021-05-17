@@ -28,11 +28,11 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant mix (Executes the ejb-bm-handle mix tests)
-			ant all (Executes all the ejb-bmp-handle tests)
-	</echo>
+    <echo>
+        Usage:
+            ant mix (Executes the ejb-bm-handle mix tests)
+            ant all (Executes all the ejb-bmp-handle tests)
+    </echo>
     </target>
 </project>
 

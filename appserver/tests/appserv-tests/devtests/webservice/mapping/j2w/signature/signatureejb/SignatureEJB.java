@@ -17,7 +17,7 @@
 package signatureejb;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -33,55 +33,55 @@ public class SignatureEJB implements SessionBean {
     private MyDateValueType[] myDates;
 
     public SignatureEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In SignatureEJB::ejbCreate !!");
+    System.out.println("In SignatureEJB::ejbCreate !!");
     }
 
     public void SetTestDate(java.util.Date testDate) {
-	System.out.println("In SignatureEJB::setTestDate = " + testDate);
+    System.out.println("In SignatureEJB::setTestDate = " + testDate);
         date = testDate;
     }
 
     public java.util.Date GetTestDate() {
-	System.out.println("In SignatureEJB::getTestDate !!");
+    System.out.println("In SignatureEJB::getTestDate !!");
         return date;
     }
 
     public void setMyDateValueType(MyDateValueType mytestdate) {
-	System.out.println("In SignatureEJB::setMyDateValueType: date = " 
+    System.out.println("In SignatureEJB::setMyDateValueType: date = "
             + mytestdate.getDate() + " ; whine = " + mytestdate.getWhine());
         myDate = mytestdate;
     }
 
     public MyDateValueType getMyDateValueType() {
-	System.out.println("In SignatureEJB::getMyDateValueType !!");
+    System.out.println("In SignatureEJB::getMyDateValueType !!");
         return myDate;
     }
 
     public void setMyDateValueTypes(MyDateValueType[] mytestdates) {
-	System.out.println("In SignatureEJB::setMyDateValueTypes: dates.size = " 
+    System.out.println("In SignatureEJB::setMyDateValueTypes: dates.size = "
             + mytestdates.length);
         myDates = mytestdates;
     }
 
     public MyDateValueType[] getMyDateValueTypes() {
-	System.out.println("In SignatureEJB::getMyDateValueTypes !!");
+    System.out.println("In SignatureEJB::getMyDateValueTypes !!");
         return myDates;
     }
 
     public String SayHello(String msg) {
-	System.out.println("In SignatureEJB::SayHello !!");
+    System.out.println("In SignatureEJB::SayHello !!");
         return "Hello! " + msg;
     }
-        
+
     public void setSessionContext(SessionContext sc) {
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

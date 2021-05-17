@@ -30,7 +30,7 @@ public class EjbContainerListener {
     public void foo(@ProbeParam("method")Method m, @ProbeParam("beanName")String beanName) {
         System.out.println("Got callback for: " + beanName);
     }
-    
+
     @ProbeListener("ejb:container::entry")
     public void foo2(@ProbeParam("beanName")String beanName,
                      @ProbeParam("$appName")String applicationName,

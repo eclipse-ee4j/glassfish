@@ -50,12 +50,12 @@ public class ProviderManager {
     private ProviderManager() {}
 
     public synchronized static ProviderManager getProviderManager() {
-	    if (providerManager  == null ) {
-	        providerManager = new ProviderManager();
+        if (providerManager  == null ) {
+            providerManager = new ProviderManager();
         }
-	    return providerManager;
+        return providerManager;
     }
-    
+
     public TransientContext getTransientContext() {
         return rootContext;
     }

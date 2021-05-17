@@ -184,7 +184,7 @@ public class JdbcConnection implements Connection {
     }
 
     /////////////////////////////////////////////
-    // THE FOLLOWING APIS ARE NEW FROM JDK 1.4 //        
+    // THE FOLLOWING APIS ARE NEW FROM JDK 1.4 //
     /////////////////////////////////////////////
 
     /////////////  BEGIN  JDK 1.4  //////////////
@@ -330,27 +330,27 @@ public class JdbcConnection implements Connection {
     }
 
     /////////////  END  JDK 1.4  //////////////
-    
+
     public int getNetworkTimeout() throws SQLException {
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public void abort(Executor executor)  throws SQLException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public String getSchema() throws SQLException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
     public void setSchema(String schema) throws SQLException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 new feature.");
     }
-    
+
 
     void associateConnection(JdbcManagedConnection newMc)
             throws ResourceException {

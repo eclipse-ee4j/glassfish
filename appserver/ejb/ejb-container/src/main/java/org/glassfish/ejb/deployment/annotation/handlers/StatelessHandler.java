@@ -36,7 +36,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(Stateless.class)
 public class StatelessHandler extends AbstractEjbHandler {
-    
+
     /** Creates a new instance of StatelessHandler */
     public StatelessHandler() {
     }

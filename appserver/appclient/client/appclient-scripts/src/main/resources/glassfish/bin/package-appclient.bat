@@ -20,7 +20,7 @@ set _AS_INSTALL=%~dp0..
 call "%_AS_INSTALL%\config\asenv.bat"
 REM
 REM  Run with the user-specified Java, if any.
-REM  
+REM
 if "%AS_JAVA%x" == "x" goto UsePath
 set JAVA="%AS_JAVA%\bin\java"
 goto run

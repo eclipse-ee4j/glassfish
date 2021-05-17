@@ -87,7 +87,7 @@ public final class BookStoreServlet extends HttpServlet {
                     request.getParameter("authors"), request.getParameter("price"));
             operations.printBooksTable(ds, writer);
             generateNewBookForm(writer);
-            
+
         }
 
         writer.println("<p/><a href=\'BookStoreServlet\'>My Home</a>");

@@ -19,7 +19,7 @@ package org.glassfish.resourcebase.resources.api;
 /**
  *
  * @author PRASHANTH ABBAGANI
- * 
+ *
  * Holds the status code/msg (including the exception) of the appropriate resource
  * create/delete functionality
  */
@@ -33,34 +33,34 @@ public class ResourceStatus {
     String message;
     Throwable exception;
     boolean alreadyExists = false;
-    
+
     public ResourceStatus(int status, String message) {
         this.status = status;
         this.message = message;
     }
-    
+
     public ResourceStatus(int status, String message, boolean alreadyExists) {
         this.status = status;
         this.message = message;
         this.alreadyExists = alreadyExists;
     }
-    
+
     public int getStatus() {
         return status;
     }
-    
+
     public String getMessage() {
         return message;
     }
-    
+
     public boolean isAlreadyExists() {
         return alreadyExists;
     }
-    
+
     public Throwable getException(){
         return exception;
     }
-    
+
     public void setException (Throwable t) {
         exception = t;
     }

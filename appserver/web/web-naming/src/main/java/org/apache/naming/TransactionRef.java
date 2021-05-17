@@ -39,7 +39,7 @@ public class TransactionRef
     /**
      * Default factory for this reference.
      */
-    public static final String DEFAULT_FACTORY = 
+    public static final String DEFAULT_FACTORY =
         org.apache.naming.factory.Constants.DEFAULT_TRANSACTION_FACTORY;
 
 
@@ -56,9 +56,9 @@ public class TransactionRef
 
     /**
      * Resource Reference.
-     * 
+     *
      * @param factory the factory
-     * @param factoryLocation the factory location 
+     * @param factoryLocation the factory location
      */
     public TransactionRef(String factory, String factoryLocation) {
         super("jakarta.transaction.UserTransaction", factory, factoryLocation);
@@ -72,7 +72,7 @@ public class TransactionRef
 
 
     /**
-     * Retrieves the class name of the factory of the object to which this 
+     * Retrieves the class name of the factory of the object to which this
      * reference refers.
      */
     public String getFactoryClassName() {

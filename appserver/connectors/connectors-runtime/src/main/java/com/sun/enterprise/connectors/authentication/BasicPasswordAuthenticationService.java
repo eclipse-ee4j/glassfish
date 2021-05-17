@@ -114,10 +114,10 @@ public class BasicPasswordAuthenticationService
     private Principal doMap(String principalName, List groupNames,
             String roleName, RuntimeSecurityMap runtimeSecurityMap) {
 
-        // Policy: 
+        // Policy:
         // user_1, user_2, ... user_n
         // group_1/role_1, group_2/role_2, ... group_n/role_n
-        // user contains * 
+        // user contains *
         // role/group contains *
 
         HashMap userNameSecurityMap = (HashMap) runtimeSecurityMap.getUserMap();
@@ -135,7 +135,7 @@ public class BasicPasswordAuthenticationService
             }
         }
 
-        // If ejb, use isCallerInRole  
+        // If ejb, use isCallerInRole
         if (isContainerContextAEJBContainerObject() && roleName == null) {
             ComponentInvocation componentInvocation =
                     ConnectorRuntime.getRuntime().getInvocationManager().getCurrentInvocation();

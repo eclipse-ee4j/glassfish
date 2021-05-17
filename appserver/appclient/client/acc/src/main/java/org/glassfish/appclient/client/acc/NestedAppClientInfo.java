@@ -43,7 +43,7 @@ import org.glassfish.deployment.common.ModuleExploder;
  * Represents an app client that is nested inside an enterprise app.
  *
  * Note that this could be either an undeployed ear that contains one or more
- * embedded app clients or the generated jar file from the back-end that 
+ * embedded app clients or the generated jar file from the back-end that
  * intentionally resembles an application archive because of other files that
  * had to be packaged with the app client.
  *
@@ -56,10 +56,10 @@ public class NestedAppClientInfo extends AppClientInfo {
 
     /** display name specified (if any) on the command line to use in selecting the desired client main class */
     private String displayNameFromCommandLine;
-    
+
     public NestedAppClientInfo(
-            boolean isJWS, Logger logger, File archive, 
-            Archivist archivist, String mainClassFromCommandLine, 
+            boolean isJWS, Logger logger, File archive,
+            Archivist archivist, String mainClassFromCommandLine,
             String displayNameFromCommandLine) {
 //        super(isJWS, logger, archive, archivist, mainClassFromCommandLine);
         super(isJWS, logger, mainClassFromCommandLine);
@@ -83,11 +83,11 @@ public class NestedAppClientInfo extends AppClientInfo {
 
         /*
          *There could be one or more app clients embedded in the enterprise app
-         *in the archive.  Choose which one to run based on the user's 
+         *in the archive.  Choose which one to run based on the user's
          *command-line input.
          */
-        Set<ApplicationClientDescriptor> embeddedAppClients = 
-            (Set<ApplicationClientDescriptor>) 
+        Set<ApplicationClientDescriptor> embeddedAppClients =
+            (Set<ApplicationClientDescriptor>)
                 app.getBundleDescriptors(ApplicationClientDescriptor.class);
 
         /*
@@ -109,7 +109,7 @@ public class NestedAppClientInfo extends AppClientInfo {
                     embeddedAppClients, mainClassFromCommandLine);
         } else {
             selectedAppClientDescriptor = chooseFromEmbeddedAppClients(
-                    embeddedAppClients, mainClassFromCommandLine, 
+                    embeddedAppClients, mainClassFromCommandLine,
                     displayNameFromCommandLine);
 
             /*
@@ -133,11 +133,11 @@ public class NestedAppClientInfo extends AppClientInfo {
     }
 
     private ApplicationClientDescriptor chooseFromEmbeddedAppClients(
-            Set<ApplicationClientDescriptor> embeddedAppClients, 
-            String mainClassFromCommandLine, 
+            Set<ApplicationClientDescriptor> embeddedAppClients,
+            String mainClassFromCommandLine,
             String displayNameFromCommandLine) {
         ApplicationClientDescriptor result = null;
-        
+
         /*
          *There are at least two app clients embedded in the ear.
          *
@@ -146,9 +146,9 @@ public class NestedAppClientInfo extends AppClientInfo {
          *using the user-provided main class name.  If there are other
          *app clients with the same main class those are ignored.
          *
-         *On the other hand, if the user specified the target display name 
+         *On the other hand, if the user specified the target display name
          *then the logic below makes sure that exactly one app client
-         *has that display name.  
+         *has that display name.
          *
          */
         for (ApplicationClientDescriptor candidate : embeddedAppClients) {
@@ -192,10 +192,10 @@ public class NestedAppClientInfo extends AppClientInfo {
         }
         return result;
     }
-        
+
     private ApplicationClientDescriptor useFirstEmbeddedAppClient(Set<ApplicationClientDescriptor> embeddedAppClients, String mainClassNameFromCommandLine) {
         ApplicationClientDescriptor result = null;
-        
+
         /*
          *If the size is 1 then there is sure to be a non-null .next.
          *Still, may as well be sure.

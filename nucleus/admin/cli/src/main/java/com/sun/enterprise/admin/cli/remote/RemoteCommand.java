@@ -222,7 +222,7 @@ public class RemoteCommand extends CLICommand {
             cookieManager = new CookieManager(new ClientCookieStore(new CookieManager().getCookieStore(), sessionCache),
                     CookiePolicy.ACCEPT_ALL);
 
-            // XXX: If this is an interactive command we don't want to 
+            // XXX: If this is an interactive command we don't want to
             // keep reloading the cookie store.
             try {
                 ((ClientCookieStore) cookieManager.getCookieStore()).load();
@@ -252,7 +252,7 @@ public class RemoteCommand extends CLICommand {
         }
 
         /*
-         * Looks for the SESSIONID cookie in the cookie store and 
+         * Looks for the SESSIONID cookie in the cookie store and
          * determines if the cookie has expired (based on the
          * Max-Age and the time in which the file was last modified.)
          * The assumption, based on how we write cookies, is that
@@ -313,7 +313,7 @@ public class RemoteCommand extends CLICommand {
                 console.printf("   Domain: %s%n", cookie.getDomain());
                 console.printf("   Path: %s%n", cookie.getPath());
             }
-             * 
+             *
              */
 
             // Get the last modified time of the session cache file.

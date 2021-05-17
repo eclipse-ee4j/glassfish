@@ -30,18 +30,18 @@ import org.glassfish.ejb.deployment.descriptor.runtime.PrefetchDisabledDescripto
 import org.w3c.dom.Node;
 
 /**
- * This node handles the cmp runtime deployment descriptors 
+ * This node handles the cmp runtime deployment descriptors
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor> {
 
     protected IASEjbCMPEntityDescriptor descriptor;
 
     public CmpNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.FINDER), FinderNode.class);   
-        registerElementHandler(new XMLElement(RuntimeTagNames.PREFETCH_DISABLED), PrefetchDisabledNode.class);   
+        registerElementHandler(new XMLElement(RuntimeTagNames.FINDER), FinderNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.PREFETCH_DISABLED), PrefetchDisabledNode.class);
     }
 
     @Override
@@ -56,16 +56,16 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
     }
 
     @Override
-    protected Map getDispatchTable() {  
-	Map dispatchTable = super.getDispatchTable();
-	dispatchTable.put(RuntimeTagNames.MAPPING_PROPERTIES, "setMappingProperties");
+    protected Map getDispatchTable() {
+    Map dispatchTable = super.getDispatchTable();
+    dispatchTable.put(RuntimeTagNames.MAPPING_PROPERTIES, "setMappingProperties");
         // deprecated element, will be ignored at reading
         dispatchTable.put(RuntimeTagNames.IS_ONE_ONE_CMP, null);
-	return dispatchTable;
+    return dispatchTable;
     }
 
     @Override
-    public void addDescriptor(Object newDescriptor) {    
+    public void addDescriptor(Object newDescriptor) {
         getDescriptor();
         if (descriptor == null) {
             DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment.backend.addDescriptorFailure",
@@ -77,11 +77,11 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
         }
          else if (newDescriptor instanceof PrefetchDisabledDescriptor) {
             descriptor.setPrefetchDisabledDescriptor((PrefetchDisabledDescriptor)newDescriptor);
-        } else super.addDescriptor(descriptor);        
+        } else super.addDescriptor(descriptor);
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, IASEjbCMPEntityDescriptor ejbDescriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, IASEjbCMPEntityDescriptor ejbDescriptor) {
         Node cmpNode = super.writeDescriptor(parent, nodeName, ejbDescriptor);
         appendTextChild(cmpNode, RuntimeTagNames.MAPPING_PROPERTIES, ejbDescriptor.getMappingProperties());
         Map finders = ejbDescriptor.getOneOneFinders();
@@ -98,7 +98,7 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
         PrefetchDisabledDescriptor prefetchDisabledDesc =  ejbDescriptor.getPrefetchDisabledDescriptor();
         if (prefetchDisabledDesc != null) {
             PrefetchDisabledNode prefetchDisabledNode = new PrefetchDisabledNode();
-            prefetchDisabledNode.writeDescriptor(cmpNode, 
+            prefetchDisabledNode.writeDescriptor(cmpNode,
                 RuntimeTagNames.PREFETCH_DISABLED, prefetchDisabledDesc);
         }
 

@@ -24,7 +24,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -45,10 +45,10 @@ public class NetworkConfigTest extends BaseSeleniumTestClass {
             select.selectByVisibleText("http-listener-1");
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:port:port", "1234");
             clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", listenerName, "col1");
             assertEquals(listenerName, getText(prefix + "col1:link"));
-            
+
             String clickId = prefix + "col1:link";
             clickByIdAction(clickId);
 
@@ -78,7 +78,7 @@ public class NetworkConfigTest extends BaseSeleniumTestClass {
             clickAndWait("propertyForm:configs:topActionsGroup1:newButton");
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:NameProp:Name", configName);
             clickAndWait("propertyForm:propertyContentPage:topButtons:okButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", configName, "col1");
             assertEquals(configName, getText(prefix + "col1:link"));
         }
@@ -98,13 +98,13 @@ public class NetworkConfigTest extends BaseSeleniumTestClass {
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:BufferSizeBytes:BufferSizeBytes", "1000");
             setFieldValue("propertyForm:propertySheet:propertSectionTextField:AcceptorThreads:AcceptorThreads", "-1");
             clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", transportName, "col1");
             assertEquals(transportName, getText(prefix + "col1:link"));
 
             String clickId = prefix + "col1:link";
             clickByIdAction(clickId);
-            
+
             assertTrue(getText("propertyForm:propertySheet:propertSectionTextField:name:name").equals(transportName));
             Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:ByteBufferType:ByteBufferType")));
             assertTrue(select1.getFirstSelectedOption().getAttribute("value").equals("DIRECT"));
@@ -155,7 +155,7 @@ public class NetworkConfigTest extends BaseSeleniumTestClass {
             }
 
             clickAndWait("propertyForm:propertyContentPage:topButtons:newButton");
-            
+
             String prefix = getTableRowByValue("propertyForm:configs", protocol, "col1");
             assertEquals(protocol, getText(prefix + "col1:link"));
 

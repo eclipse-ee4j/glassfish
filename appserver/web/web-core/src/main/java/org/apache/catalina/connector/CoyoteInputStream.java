@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 
 /**
  * This class handles reading bytes.
- * 
+ *
  * @author Remy Maucherat
  * @author Jean-Francois Arcand
  */
@@ -52,8 +52,8 @@ public class CoyoteInputStream
     public CoyoteInputStream(InputBuffer ib) {
         this.ib = ib;
     }
-    
-    
+
+
     // --------------------------------------------------------- Public Methods
 
 
@@ -64,8 +64,8 @@ public class CoyoteInputStream
         throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-    
-    
+
+
     // -------------------------------------------------------- Package Methods
 
 
@@ -81,18 +81,18 @@ public class CoyoteInputStream
 
 
     public int read()
-        throws IOException {      
+        throws IOException {
 
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
 
         }
-    
+
         if (SecurityUtil.isPackageProtectionEnabled()){
-            
+
             try{
-                Integer result = 
+                Integer result =
                     AccessController.doPrivileged(
                         new PrivilegedExceptionAction<Integer>(){
 
@@ -113,7 +113,7 @@ public class CoyoteInputStream
             }
         } else {
             return ib.readByte();
-        }   
+        }
     }
 
     public int available() throws IOException {
@@ -124,7 +124,7 @@ public class CoyoteInputStream
 
         if (SecurityUtil.isPackageProtectionEnabled()){
             try{
-                Integer result = 
+                Integer result =
                     AccessController.doPrivileged(
                         new PrivilegedExceptionAction<Integer>(){
 
@@ -145,7 +145,7 @@ public class CoyoteInputStream
             }
         } else {
            return ib.available();
-        }           
+        }
     }
 
     public int read(final byte[] b) throws IOException {
@@ -156,12 +156,12 @@ public class CoyoteInputStream
 
         if (SecurityUtil.isPackageProtectionEnabled()){
             try{
-                Integer result = 
+                Integer result =
                     AccessController.doPrivileged(
                         new PrivilegedExceptionAction<Integer>(){
 
                             public Integer run() throws IOException{
-                                Integer integer = 
+                                Integer integer =
                                     Integer.valueOf(ib.read(b, 0, b.length));
                                 return integer;
                             }
@@ -178,7 +178,7 @@ public class CoyoteInputStream
             }
         } else {
             return ib.read(b, 0, b.length);
-        }          
+        }
     }
 
 
@@ -189,15 +189,15 @@ public class CoyoteInputStream
         if (ib == null) {
             throw new IllegalStateException(rb.getString(LogFacade.OBJECT_INVALID_SCOPE_EXCEPTION));
         }
-        
+
         if (SecurityUtil.isPackageProtectionEnabled()){
             try{
-                Integer result = 
+                Integer result =
                     AccessController.doPrivileged(
                         new PrivilegedExceptionAction<Integer>(){
 
                             public Integer run() throws IOException{
-                                Integer integer = 
+                                Integer integer =
                                     Integer.valueOf(ib.read(b, off, len));
                                 return integer;
                             }
@@ -214,10 +214,10 @@ public class CoyoteInputStream
             }
         } else {
             return ib.read(b, off, len);
-        }        
+        }
     }
 
-    
+
     public int readLine(byte[] b, int off, int len) throws IOException {
         // Disallow operation if the object has gone out of scope
         if (ib == null) {
@@ -259,7 +259,7 @@ public class CoyoteInputStream
     }
 
 
-    /** 
+    /**
      * Close the stream
      * Since we re-cycle, we can't allow the call to super.close()
      * which would permanently disable us.
@@ -291,6 +291,6 @@ public class CoyoteInputStream
             }
         } else {
              ib.close();
-        }            
+        }
     }
 }

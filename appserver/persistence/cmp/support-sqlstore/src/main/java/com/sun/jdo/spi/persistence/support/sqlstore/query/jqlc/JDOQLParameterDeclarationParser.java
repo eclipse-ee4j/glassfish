@@ -27,7 +27,7 @@ import org.glassfish.ejb.deployment.descriptor.QueryParser;
 import org.glassfish.persistence.common.I18NHelper;
 
 /** Helper class to support parsing of JDOQL parameter declarations.
- * 
+ *
  * Created on October 16, 2002
  * @author  Michael Bouschen
  */
@@ -43,7 +43,7 @@ public class JDOQLParameterDeclarationParser
     /**
      * Returns an iterator over the parameter types of the specified JDOQL
      * parameter declartion. The types are represented by their name, thus
-     * the Iterator's next method returns Strings. 
+     * the Iterator's next method returns Strings.
      * @param text the JDOQL parameter declaration
      * @return an iterator over parameter types
      * @exception JDOQueryException indicates a parse error
@@ -52,7 +52,7 @@ public class JDOQLParameterDeclarationParser
     {
         return new ParameterTypeIterator(parse(text));
     }
-    
+
     /**
      * Internal method parsing the JDOQL parameter declaration.
      * @param text the JDOQL parameter declaration
@@ -86,12 +86,12 @@ public class JDOQLParameterDeclarationParser
 
         return paramsAST;
     }
-    
+
    /**
     * Iterator over the parameter types. The next method returns the type
     * of the next parameter represented as String.
     */
-    private static class ParameterTypeIterator 
+    private static class ParameterTypeIterator
         implements Iterator
     {
         // current parameter declaration node
@@ -118,11 +118,11 @@ public class JDOQLParameterDeclarationParser
         {
             return (current != null);
         }
-        
+
         /**
          * Returns the next element in the iteration. For this Iterator it
          * returns the String representation of the type of the next
-         * parameter declaration. 
+         * parameter declaration.
          * @return the type of the next parameter declaration.
          * @exception NoSuchElementException iteration has no more elements.
          */
@@ -148,7 +148,7 @@ public class JDOQLParameterDeclarationParser
 
             return typeRepr;
         }
-        
+
         /**
          * Not supported.
          * @exception UnsupportedOperationException remove is not supported
@@ -160,7 +160,7 @@ public class JDOQLParameterDeclarationParser
          * Internal method to calculate the string representation of a type
          * node.
          * @param ast the type node
-         * @return the string representation 
+         * @return the string representation
          */
         private String getTypeRepr(AST ast)
         {
@@ -179,12 +179,12 @@ public class JDOQLParameterDeclarationParser
             return ast.getText();
         }
     }
-    
+
     /**
      * Method main for testing purposes. Parameter args is expected to a
      * an array of parameter declaration String. One parameter declaration
      * may declare multiple parameters according to the JDOQL parameter
-     * declaration syntax. Calling  
+     * declaration syntax. Calling
      * java com...jqlc.ParameterDeclarationHelper "int a, String b"
      * will print
      * <br><code>
@@ -201,7 +201,7 @@ public class JDOQLParameterDeclarationParser
         for (int i = 0; i < args.length; i++) {
             String text = args[i];
             System.out.println("Parameter types for >" + text + "<");
-            for (Iterator types = helper.parameterTypeIterator(text); 
+            for (Iterator types = helper.parameterTypeIterator(text);
                  types.hasNext();) {
                 System.out.println("  " + types.next());
             }

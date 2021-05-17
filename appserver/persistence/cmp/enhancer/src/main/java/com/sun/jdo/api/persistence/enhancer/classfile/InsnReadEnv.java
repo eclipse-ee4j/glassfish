@@ -96,7 +96,7 @@ class InsnReadEnv {
     byte byte3 = byteCodes[currPc++];
     byte byte4 = byteCodes[currPc++];
     return (byte1 << 24) | ((byte2 & 0xff) << 16) |
-	    ((byte3  & 0xff) << 8) | (byte4 & 0xff);
+        ((byte3  & 0xff) << 8) | (byte4 & 0xff);
   }
 
   /**

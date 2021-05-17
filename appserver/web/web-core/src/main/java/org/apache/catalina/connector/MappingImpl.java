@@ -34,24 +34,24 @@ public class MappingImpl implements HttpServletMapping, Serializable {
     private String matchValue;
 
     private String pattern;
-    
+
     private String servletName;
 
-    private MappingMatch mappingMatch;   
-    
+    private MappingMatch mappingMatch;
+
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
     public MappingImpl(MappingData mappingData) {
         if (null == mappingData) {
             throw new NullPointerException(rb.getString(LogFacade.MAPPING_ERROR_EXCEPTION));
         }
-        
+
         // Trim leading "/"
         matchValue = (null != mappingData.matchedPath) &&
                      (mappingData.matchedPath.length() >= 2) ? mappingData.matchedPath.substring(1) : "";
         pattern = null != mappingData.descriptorPath ? mappingData.descriptorPath : "";
         servletName = null != mappingData.servletName ? mappingData.servletName : "";
-        
+
         switch (mappingData.mappingType) {
             case MappingData.CONTEXT_ROOT:
                 mappingMatch = MappingMatch.CONTEXT_ROOT;
@@ -92,7 +92,7 @@ public class MappingImpl implements HttpServletMapping, Serializable {
         }
 
     }
-    
+
     @Override
     public String getMatchValue() {
         return matchValue;
@@ -107,9 +107,9 @@ public class MappingImpl implements HttpServletMapping, Serializable {
     public String getServletName() {
         return servletName;
     }
-    
-    
-    
+
+
+
     @Override
     public MappingMatch getMappingMatch() {
         return mappingMatch;
@@ -154,12 +154,12 @@ public class MappingImpl implements HttpServletMapping, Serializable {
 
     @Override
     public String toString() {
-        return "MappingImpl{" + "matchValue=" + matchValue 
-                + ", pattern=" + pattern 
-                + ", servletName=" + servletName 
+        return "MappingImpl{" + "matchValue=" + matchValue
+                + ", pattern=" + pattern
+                + ", servletName=" + servletName
                 + ", mappingMatch=" + mappingMatch + '}';
     }
 
 
-    
+
 }

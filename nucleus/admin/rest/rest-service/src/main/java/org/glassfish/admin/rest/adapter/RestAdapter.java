@@ -68,7 +68,7 @@ import org.jvnet.hk2.annotations.Optional;
 
 /**
  * Adapter for REST interface
- * 
+ *
  * @author Rajeshwar Patil, Ludovic Champenois
  * @author sanjeeb.sahoo@oracle.com
  */

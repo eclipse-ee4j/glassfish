@@ -186,7 +186,7 @@ public class AppTest extends TestCase {
             Thread.sleep(40000);
             t.delistResource(tx, new TestResourceHandle(theResource), XAResource.TMSUCCESS);
 
-            utx.commit(); 
+            utx.commit();
             //System.out.println("**WRONG: UTX commit successful <===");
             System.out.println("**UTX commit successful after <===" + (System.currentTimeMillis() - now) + "millis");
             assert (true);
@@ -604,7 +604,7 @@ public class AppTest extends TestCase {
     public void testBegin() {
         System.out.println("**Testing TM begin ===>");
         try {
-            System.out.println("**Status before begin: " 
+            System.out.println("**Status before begin: "
                     + JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()));
 
             t.begin();
@@ -622,7 +622,7 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             System.out.println("**Calling TM commit ===>");
@@ -641,13 +641,13 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             System.out.println("**Calling TM rollback ===>");
             t.rollback();
-            System.out.println("**Status after rollback: " 
-                    + JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()) 
+            System.out.println("**Status after rollback: "
+                    + JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus())
                     + " <===");
             assert (true);
         } catch (Exception ex) {
@@ -706,7 +706,7 @@ public class AppTest extends TestCase {
             System.out.println("**Calling TM resume ===>");
             t.resume(tx);
 
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(tx.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(tx.getStatus()),
                 "Active");
 
             System.out.println("**Calling TX commit ===>");
@@ -780,7 +780,7 @@ public class AppTest extends TestCase {
             System.out.println("**Starting transaction ....");
             utx.begin();
 
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(utx.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(utx.getStatus()),
                 "Active");
 
             System.out.println("**Calling UTX rollback ===>");
@@ -1139,7 +1139,7 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             // Create and set invMgr
@@ -1150,7 +1150,7 @@ public class AppTest extends TestCase {
             theResourceR = enlistForRollback(tx, rollbackErrorCode);
 
             t.delistResource(tx, new TestResourceHandle(theResourceP), XAResource.TMSUCCESS);
-            
+
             System.out.println("**Calling TM commit ===>");
             t.commit();
             String status = JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus());
@@ -1215,11 +1215,11 @@ public class AppTest extends TestCase {
 
     public void testCommitOnePhaseWithRlbExc6() {
         System.out.println("================= **Testing XA Exception on start ===>");
-        int falures[] = {XAException.XAER_RMFAIL, 
-                XAException.XAER_RMERR, 
-                XAException.XAER_NOTA, 
-                XAException.XAER_INVAL, 
-                XAException.XAER_PROTO, 
+        int falures[] = {XAException.XAER_RMFAIL,
+                XAException.XAER_RMERR,
+                XAException.XAER_NOTA,
+                XAException.XAER_INVAL,
+                XAException.XAER_PROTO,
                 XAException.XAER_DUPID};
         boolean result = true;
         for (int failure : falures) {
@@ -1282,7 +1282,7 @@ public class AppTest extends TestCase {
         _testCommitOnePhaseWithExc(errorCode, exType, setRollbackOnly, isHeuristic, false, false);
     }
 
-    private boolean _testCommitOnePhaseWithExc(int errorCode, Class exType, 
+    private boolean _testCommitOnePhaseWithExc(int errorCode, Class exType,
             boolean setRollbackOnly, boolean isHeuristic, boolean failAtEnlist, boolean returnStatus) {
         boolean rc = true;
 
@@ -1294,7 +1294,7 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             // Create and set invMgr
@@ -1321,7 +1321,7 @@ public class AppTest extends TestCase {
             }
 
             t.delistResource(tx, new TestResourceHandle(theResource), XAResource.TMSUCCESS);
-            
+
             if (setRollbackOnly) {
                 System.out.println("**Calling TM setRollbackOnly ===>");
                 t.setRollbackOnly();
@@ -1488,7 +1488,7 @@ public class AppTest extends TestCase {
         try {
             System.out.println("**Starting transaction ....");
             t.begin();
-            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()), 
+            assertEquals (JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus()),
                 "Active");
 
             // Create and set invMgr
@@ -1510,7 +1510,7 @@ public class AppTest extends TestCase {
 
             t.delistResource(tx, new TestResourceHandle(theResource1), XAResource.TMSUCCESS);
             t.delistResource(tx, new TestResourceHandle(theResource2), XAResource.TMSUCCESS);
-            
+
             System.out.println("**Calling TM commit ===>");
             t.commit();
             String status = JavaEETransactionManagerSimplified.getStatusAsString(t.getStatus());
@@ -1624,12 +1624,12 @@ public class AppTest extends TestCase {
     }
 
     static class TestResource implements XAResource {
-    
+
       // allow only one resource in use at a time
       private boolean inUse;
       private boolean _forgetCalled = false;
       private boolean _isHeuristic = false;
-    
+
       private int commitErrorCode = 9999;
       private int rollbackErrorCode = 9999;
       private int prepareErrorCode = 9999;
@@ -1642,12 +1642,12 @@ public class AppTest extends TestCase {
 
       private static long id0 = System.currentTimeMillis();
       private long id = ++id0;
-    
+
       TestResource() {}
 
       TestResource(Transaction tx) {
          this.tx = tx;
-         
+
       }
 
       TestResource(Transaction tx, long id) {
@@ -1660,23 +1660,23 @@ public class AppTest extends TestCase {
         this.commitErrorCode = errorCode;
         setHeuristic(errorCode);
       }
-    
+
       public void setStartErrorCode(int errorCode) {
         this.startErrorCode = errorCode;
       }
-    
+
       public void setRollbackErrorCode(int errorCode) {
         this.rollbackErrorCode = errorCode;
         setHeuristic(errorCode);
       }
-    
+
       public void setPrepareErrorCode(int errorCode) {
         this.prepareErrorCode = errorCode;
       }
-    
+
       private void setHeuristic(int errorCode) {
           if (errorCode == XAException.XA_HEURCOM ||
-                errorCode == XAException.XA_HEURHAZ || 
+                errorCode == XAException.XA_HEURHAZ ||
                 errorCode == XAException.XA_HEURMIX ||
                 errorCode == XAException.XA_HEURRB) {
              _isHeuristic = true;
@@ -1692,13 +1692,13 @@ public class AppTest extends TestCase {
           throw new XAException(commitErrorCode);
         }
       }
-    
+
       public boolean isSameRM(XAResource xaresource)
         throws XAException {
           return xaresource == this || this.id == ((TestResource)xaresource).id;
       }
-    
-    
+
+
       public void rollback(Xid xid)
             throws XAException {
           System.out.println("in XA rollback");
@@ -1708,7 +1708,7 @@ public class AppTest extends TestCase {
           throw new XAException(rollbackErrorCode);
         }
       }
-    
+
       public int prepare(Xid xid)
             throws XAException {
           System.out.println("in XA prepare");
@@ -1719,12 +1719,12 @@ public class AppTest extends TestCase {
         }
           return XAResource.XA_OK;
       }
-    
+
       public boolean setTransactionTimeout(int i)
             throws XAException {
           return true;
        }
-    
+
        public int getTransactionTimeout()
             throws XAException {
             return 0;
@@ -1734,7 +1734,7 @@ public class AppTest extends TestCase {
             _forgetCalled = true;
             inUse = false;
         }
-    
+
        public void start(Xid xid, int flags)
             throws XAException {
               if (inUse)
@@ -1745,14 +1745,14 @@ public class AppTest extends TestCase {
                 throw new XAException(startErrorCode);
               }
        }
-    
-    
+
+
          public void end(Xid xid, int flags)
             throws XAException {
               inUse = false;
         }
-    
-    
+
+
        public Xid[] recover(int flags)
             throws XAException {
             return null;
@@ -1791,53 +1791,53 @@ public class AppTest extends TestCase {
 
          return status;
        }
-    
+
     }
-  
+
     static class TestResourceHandle extends ResourceHandle {
         private XAResource resource;
-        private static PoolManagerImpl poolMgr = new PoolManagerImpl(); 
+        private static PoolManagerImpl poolMgr = new PoolManagerImpl();
 
         public TestResourceHandle(XAResource resource) {
           super(null,new ResourceSpec("testResource",0) ,null,null);
           this.resource = resource;
         }
-  
+
         public boolean isTransactional() {
           return true;
         }
-  
+
         public boolean isShareable() {
           return true;
         }
-  
+
         public boolean supportsXA() {
           return true;
         }
-         
+
         public ResourceAllocator getResourceAllocator() {
           return null;
         }
-  
+
         public Object getResource() {
           return resource;
         }
-  
+
         public XAResource getXAResource() {
           return resource;
         }
-  
+
         public Object getUserConnection() {
           return null;
         }
-  
+
         public ClientSecurityInfo getClientSecurityInfo() {
           return null;
         }
-  
+
         public void fillInResourceObjects(Object userConnection, XAResource xares) {
         }
-  
+
         public void enlistedInTransaction(Transaction tran) throws IllegalStateException {
             poolMgr.resourceEnlisted(tran, this);
         }

@@ -20,7 +20,7 @@ import jakarta.security.auth.message.MessageInfo;
 import com.sun.xml.ws.api.message.Packet;
 
 /**
- * 
+ *
  */
 public interface PacketMessageInfo extends MessageInfo {
 

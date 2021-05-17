@@ -78,9 +78,9 @@ class SubCoordinator extends CoordinatorImpl {
     boolean             dying = false;
     boolean             temporary = false;
     int                 hash = 0;
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(SubCoordinator.class,LogDomains.TRANSACTION_LOGGER);
 
 
@@ -144,8 +144,8 @@ class SubCoordinator extends CoordinatorImpl {
 
         if (!tranState.setState(TransactionState.STATE_ACTIVE)) {
             LogicErrorException exc = new LogicErrorException(
-					 LogFormatter.getLocalizedMessage(_logger,
-					 "jts.invalid_state_change"));
+                     LogFormatter.getLocalizedMessage(_logger,
+                     "jts.invalid_state_change"));
             throw exc;
         } else {
             // Inform the RecoveryManager of the existence of this transaction.
@@ -221,15 +221,15 @@ class SubCoordinator extends CoordinatorImpl {
 
         if (!tranState.setState(TransactionState.STATE_ACTIVE)) {
             LogicErrorException exc = new LogicErrorException(
-					LogFormatter.getLocalizedMessage(_logger,
-					"jts.invalid_state_change"));
+                    LogFormatter.getLocalizedMessage(_logger,
+                    "jts.invalid_state_change"));
             throw exc;
         } else if (!RecoveryManager.addCoordinator(globalTID,
                                                    tranState.localTID,
                                                    this, 0)) {
             LogicErrorException exc = new LogicErrorException(
-					LogFormatter.getLocalizedMessage(_logger,
-					"jts.transaction_id_already_in_use"));
+                    LogFormatter.getLocalizedMessage(_logger,
+                    "jts.transaction_id_already_in_use"));
             throw exc;
         }
     }
@@ -383,16 +383,16 @@ class SubCoordinator extends CoordinatorImpl {
         // Return the parents status.  If there is none, this is an error;
         // return no transaction status (may want to raise a LogicError here).
 
-		if (tranState != null) {
-			CoordinatorImpl parent = nestingInfo.getParent(false); 
-			if (parent != null) { 
-				result = parent.get_status();
-			}
-		} else {
-			INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-				MinorCode.Completed, CompletionStatus.COMPLETED_NO); 
-			throw exc; 
-		}
+        if (tranState != null) {
+            CoordinatorImpl parent = nestingInfo.getParent(false);
+            if (parent != null) {
+                result = parent.get_status();
+            }
+        } else {
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
+                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            throw exc;
+        }
 
         return result;
     }
@@ -1371,13 +1371,13 @@ class SubCoordinator extends CoordinatorImpl {
             // If the SubCoordinator is in the wrong state, return immediately.
 
             if (!tranState.setState(TransactionState.STATE_COMMITTING)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-							"commit");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 							"jts.transaction_wrong_state",
-											new java.lang.Object[] {
-											"commit"});
-					 throw  new org.omg.CORBA.INTERNAL(msg);
+                    _logger.log(Level.SEVERE,"jts.transaction_wrong_state",
+                            "commit");
+                     String msg = LogFormatter.getLocalizedMessage(_logger,
+                                             "jts.transaction_wrong_state",
+                                            new java.lang.Object[] {
+                                            "commit"});
+                     throw  new org.omg.CORBA.INTERNAL(msg);
             }
 
             // Get the reference of the parent Coordinator.
@@ -1395,15 +1395,15 @@ class SubCoordinator extends CoordinatorImpl {
             try {
                 participants.distributeSubcommit(parent);
             } catch (Throwable exc) {
-				_logger.log(Level.SEVERE,"jts.exception_on_resource_operation",
+                _logger.log(Level.SEVERE,"jts.exception_on_resource_operation",
                         new java.lang.Object[] { exc.toString(),
-						"commit"});
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 							"jts.exception_on_resource_operation",
-											new java.lang.Object[]
-											{exc.toString(),
-											"commit"});
-				 throw  new org.omg.CORBA.INTERNAL(msg);
+                        "commit"});
+                 String msg = LogFormatter.getLocalizedMessage(_logger,
+                                             "jts.exception_on_resource_operation",
+                                            new java.lang.Object[]
+                                            {exc.toString(),
+                                            "commit"});
+                 throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -1415,13 +1415,13 @@ class SubCoordinator extends CoordinatorImpl {
             // Set the state
 
             if (!tranState.setState(TransactionState.STATE_COMMITTED)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-							"commit");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 							"jts.transaction_wrong_state",
-											new java.lang.Object[] {
-											"commit"});
-					 throw  new org.omg.CORBA.INTERNAL(msg);
+                    _logger.log(Level.SEVERE,"jts.transaction_wrong_state",
+                            "commit");
+                     String msg = LogFormatter.getLocalizedMessage(_logger,
+                                             "jts.transaction_wrong_state",
+                                            new java.lang.Object[] {
+                                            "commit"});
+                     throw  new org.omg.CORBA.INTERNAL(msg);
             }
 
             // Remove our reference from the parents set of children
@@ -1502,8 +1502,8 @@ class SubCoordinator extends CoordinatorImpl {
 
             if (!temporary &&
                     !tranState.setState(TransactionState.STATE_ROLLING_BACK)) {
-	        if(_logger.isLoggable(Level.FINE)) {
-		    _logger.log(Level.FINE,
+            if(_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE,
                          "SubCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                 }
 
@@ -1537,8 +1537,8 @@ class SubCoordinator extends CoordinatorImpl {
             // Remove our reference from the parents set of children
             if (!temporary &&
                     !tranState.setState(TransactionState.STATE_ROLLED_BACK)) {
-	        if(_logger.isLoggable(Level.FINE)) {
-		    _logger.log(Level.FINE,
+            if(_logger.isLoggable(Level.FINE)) {
+            _logger.log(Level.FINE,
                          "SubCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                 }
             }
@@ -1695,7 +1695,7 @@ class SubCoordinator extends CoordinatorImpl {
         }
     }
     */
-    
+
     /**
      * Gets the object normally responsible for terminating this Coordinator.
      *

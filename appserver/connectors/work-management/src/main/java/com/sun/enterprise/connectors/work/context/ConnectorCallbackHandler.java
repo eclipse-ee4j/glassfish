@@ -84,7 +84,7 @@ public class ConnectorCallbackHandler implements CallbackHandler {
             action = "Check whether the callback in question is supported by application server.",
             publish = true)
     private static final String RAR_UNSUPPORT_CALLBACK = "AS-RAR-05012";
-    
+
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 
         Callback[] mappedCallbacks = callbacks;
@@ -165,7 +165,7 @@ public class ConnectorCallbackHandler implements CallbackHandler {
                 }
             }
 
-            //TODO V3 what happens for Public/Private Credentials of Mapped case (Case II) 
+            //TODO V3 what happens for Public/Private Credentials of Mapped case (Case II)
             for (Callback callback : mappedCallbacks) {
                 if (callback instanceof CallerPrincipalCallback) {
                     CallerPrincipalCallback cpc = (CallerPrincipalCallback) callback;

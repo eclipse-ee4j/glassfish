@@ -791,7 +791,7 @@ public final class Main
     //XXX use common logger later
     private void printMessage(String msg)
     {
-	  logger.finest("TP PCClassGen: " + msg); // NOI18N
+      logger.finest("TP PCClassGen: " + msg); // NOI18N
     }
 
     private void printError(String msg, Throwable ex)

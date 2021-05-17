@@ -44,7 +44,7 @@ import org.jvnet.hk2.annotations.Service;
  * <p>
  * As specified by the LoginModule contract, the login method creates lists of principals or credentials to be added to
  * the Subject during commit. Only if commit is invoked does the module actually add them to the Subject.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -129,7 +129,7 @@ public class AdminLoginModule implements LoginModule {
         }
 
         /*
-        * Make sure this login module has some way of authenticating this user.  
+        * Make sure this login module has some way of authenticating this user.
         * Otherwise we don't need it to be invoked during commit or logout.
         */
         isAuthenticated = false;
@@ -215,13 +215,13 @@ public class AdminLoginModule implements LoginModule {
     /*
     * If the admin client sent the unique domain identifier in a header then
     * that should mean the request came from another GlassFish server in this
-    * domain. Make sure that the value, if present, matches the one in 
-    * this server's domain config.  If they do not match then reject the 
+    * domain. Make sure that the value, if present, matches the one in
+    * this server's domain config.  If they do not match then reject the
     * message - it came from a domain other than this server's.
-    * 
-    * Note that we don't insist that every request have the domain identifier.  For 
+    *
+    * Note that we don't insist that every request have the domain identifier.  For
     * example, requests from asadmin will not include the domain ID.  But if
-    * the domain ID is present in the request it needs to match the 
+    * the domain ID is present in the request it needs to match the
     * configured ID.
     */
     private static class SpecialAdminIndicatorChecker {
@@ -298,12 +298,12 @@ public class AdminLoginModule implements LoginModule {
             /*
              * There are three ways certs can be attached to the request:
              * 1. A non-GlassFish client (a human) actually sent a cert.
-             * 
+             *
              * 2. One server is sending another server a request.  In this case
              * the cert's DN should be among the secure-admin-principals.
-             * 
-             * 3. The request came from the console and secure admin is enabled, 
-             * in which case (because the console runs in the DAS 
+             *
+             * 3. The request came from the console and secure admin is enabled,
+             * in which case (because the console runs in the DAS
              * and sends ReST requests over the net to the DAS) the request
              * will have both the DAS's cert and the user's username and password.
              */

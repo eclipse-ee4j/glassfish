@@ -24,28 +24,28 @@ public interface Output extends DebugSink
     /**
     Output a message without a newline.
 
-    @param o	the Object to output
+    @param o    the Object to output
      */
     public void print(Object o);
 
     /**
     Output a message with a newline.
 
-    @param o	the Object to output
+    @param o    the Object to output
      */
     public void println(Object o);
 
     /**
     Output a message to error output
 
-    @param o	the Object to output
+    @param o    the Object to output
      */
     public void printError(Object o);
 
     /**
     Output a debug error message if getDebug() is currently true.
 
-    @param o	the Object to output
+    @param o    the Object to output
      */
     public void printDebug(Object o);
 

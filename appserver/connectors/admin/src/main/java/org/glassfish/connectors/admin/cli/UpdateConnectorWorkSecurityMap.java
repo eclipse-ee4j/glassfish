@@ -47,8 +47,8 @@ import jakarta.inject.Inject;
 @I18n("update.connector.work.security.map")
 @RestEndpoints({
     @RestEndpoint(configBean=WorkSecurityMap.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="update-connector-work-security-map", 
+        opType=RestEndpoint.OpType.POST,
+        path="update-connector-work-security-map",
         description="Update",
         params={
             @RestParam(name="id", value="$parent")

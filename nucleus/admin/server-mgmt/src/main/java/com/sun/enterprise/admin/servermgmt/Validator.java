@@ -39,7 +39,7 @@ public class Validator {
 
     /**
      * Constructs new Validator object.
-     * 
+     *
      * @param name Name of an entry that is used in case of validation errors. If the name is null "" is used instead.
      * @param type
      */
@@ -57,7 +57,7 @@ public class Validator {
 
     /**
      * Checks the validity of the given value for the entry. This method does basic checks such as null ness & type.
-     * 
+     *
      * @param obj
      * @Throws InvalidConfigException
      */

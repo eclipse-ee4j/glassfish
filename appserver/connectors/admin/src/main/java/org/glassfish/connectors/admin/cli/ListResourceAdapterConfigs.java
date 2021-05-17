@@ -53,13 +53,13 @@ import jakarta.inject.Inject;
 @I18n("list.resource.adapter.configs")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-resource-adapter-configs", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-resource-adapter-configs",
         description="list-resource-adapter-configs")
 })
 public class ListResourceAdapterConfigs implements AdminCommand {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListResourceAdapterConfigs.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListResourceAdapterConfigs.class);
 
     @Param(name="raname", optional=true)
     private String raName;

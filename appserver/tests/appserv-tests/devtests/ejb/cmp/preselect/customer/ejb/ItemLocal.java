@@ -22,5 +22,5 @@ import jakarta.ejb.*;
 public interface ItemLocal extends EJBLocalObject, java.io.Serializable {
     public String getId();
     public double getPrice();
-    public void modifyPrice(double newPrice);    
+    public void modifyPrice(double newPrice);
 }

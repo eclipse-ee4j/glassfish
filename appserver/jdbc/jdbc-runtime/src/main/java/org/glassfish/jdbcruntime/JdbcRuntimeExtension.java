@@ -81,7 +81,7 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
                 }
             }
         }
-        
+
         System.out.println("JdbcRuntimeExtension,  getAllSystemRAResourcesAndPools = " + resources);
         return resources;
     }

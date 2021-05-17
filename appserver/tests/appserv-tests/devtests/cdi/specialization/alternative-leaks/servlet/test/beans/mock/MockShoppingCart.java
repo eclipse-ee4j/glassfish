@@ -27,11 +27,11 @@ import test.beans.nonmock.ShoppingCart;
 
 public class MockShoppingCart  extends ShoppingCart{
     public static boolean mockShoppingCartInvoked = false;
-    
+
     public void addItem(String s) {
         mockShoppingCartInvoked = true;
         System.out.println("MockShoppingCart::addItem called");
-        
+
     }
 
 }

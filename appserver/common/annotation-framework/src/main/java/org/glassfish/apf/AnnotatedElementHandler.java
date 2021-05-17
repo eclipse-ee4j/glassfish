@@ -21,17 +21,17 @@ import java.lang.reflect.AnnotatedElement;
 
 
 /**
- * Provides notification when the annotation processor is visiting a 
+ * Provides notification when the annotation processor is visiting a
  * new AnnotatedElement.
  *
  * @author Jerome Dochez
  */
 public interface AnnotatedElementHandler {
-  
+
     /**
-     * Before annotations for an annotated element are processed, the 
+     * Before annotations for an annotated element are processed, the
      * startElement is called with the annotated element value and its type
-     * 
+     *
      * @param type the annotated element type (class, field, method...)
      * @param element the annotated element we are starting to visit.
      *
@@ -39,7 +39,7 @@ public interface AnnotatedElementHandler {
      */
     public void startElement(ElementType type, AnnotatedElement element)
         throws AnnotationProcessorException;
-    
+
     /**
      * After annotations for an annotated element are processed, the
      * endElement is called with the annotated element value and its type
@@ -51,5 +51,5 @@ public interface AnnotatedElementHandler {
      */
     public void endElement(ElementType type, AnnotatedElement element)
         throws AnnotationProcessorException;
-    
+
 }

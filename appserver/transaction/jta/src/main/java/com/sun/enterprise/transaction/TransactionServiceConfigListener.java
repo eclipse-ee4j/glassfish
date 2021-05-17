@@ -44,7 +44,7 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
 
 /**
- * ConfigListener class for TransactionService and TransactionService 
+ * ConfigListener class for TransactionService and TransactionService
  * monitoring level changes
  *
  * @author Marina Vatkina
@@ -63,7 +63,7 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
     private JavaEETransactionManager tm;
 
     // Sting Manager for Localization
-    private static StringManager sm 
+    private static StringManager sm
            = StringManager.getManager(TransactionServiceConfigListener.class);
 
     /**
@@ -97,11 +97,11 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
             Object newValue = event.getNewValue();
             boolean accepted = true;
 
-            _logger.log(Level.FINE, "Got TransactionService change event ==== {0} {1} {2} {3}", 
+            _logger.log(Level.FINE, "Got TransactionService change event ==== {0} {1} {2} {3}",
                     new Object[]{event.getSource(), eventName, oldValue, newValue});
 
             if (oldValue != null && oldValue.equals(newValue)) {
-                _logger.log(Level.FINE, "Event {0} did not change existing value of {1}", 
+                _logger.log(Level.FINE, "Event {0} did not change existing value of {1}",
                         new Object[]{eventName, oldValue});
                 continue;
             }
@@ -109,12 +109,12 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
            if (event.getSource() instanceof ModuleMonitoringLevels) {
                 if (eventName.equals(ServerTags.TRANSACTION_SERVICE)) {
                     String newlevel = newValue.toString();
-                    _logger.log(Level.FINE, "Changing transaction monitoring level"); 
+                    _logger.log(Level.FINE, "Changing transaction monitoring level");
                     if ("OFF".equals(newlevel)) {
                         tm.setMonitoringEnabled(false);
                     } else if ("LOW".equals(newlevel) || "HIGH".equals(newlevel)) {
                         tm.setMonitoringEnabled(true);
-                    } 
+                    }
                 } // else skip
            } else if (eventName.equals(ServerTags.TIMEOUT_IN_SECONDS)) {
                 try {
@@ -127,7 +127,7 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
             } else if (eventName.equals(ServerTags.KEYPOINT_INTERVAL)
                     || eventName.equals(ServerTags.RETRY_TIMEOUT_IN_SECONDS)) {
                 tm.handlePropertyUpdate(eventName, newValue);
-                _logger.log(Level.FINE, "{0} reconfig event processed for new value: {1}", 
+                _logger.log(Level.FINE, "{0} reconfig event processed for new value: {1}",
                         new Object[]{eventName, newValue});
 
             } else if (event.getPropertyName().equals("value")) {
@@ -162,7 +162,7 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
                 unprocessedEvents.add(new UnprocessedChangeEvent(event, msg));
             }
         }
-        return (unprocessedEvents.size() > 0) 
+        return (unprocessedEvents.size() > 0)
                 ? new UnprocessedChangeEvents(unprocessedEvents) : null;
     }
 

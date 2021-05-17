@@ -86,7 +86,7 @@ public class PoolTxHelper {
 
     /**
      * Check whether a local transaction is in progress.
-     * 
+     *
      * @return true if a local transaction is in progress.
      */
     public boolean isLocalTransactionInProgress() {

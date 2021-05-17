@@ -111,14 +111,14 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
      postRegisterModifyMBeanInfo( final MBeanInfo info )
      {
      final MBeanOperationInfo[]  ops = info.getOperations();
-	    
+
      final int   idx = JMXUtil.findMBeanOperationInfo( info, "queryServerLog", null);
-	    
+
      final MBeanOperationInfo    op  = ops[idx];
      ops[idx]    = new MBeanOperationInfo( op.getName(), op.getDescription(),
      op.getSignature(), Map.class.getName(),
      MBeanOperationInfo.INFO );
-	    
+
      return JMXUtil.newMBeanInfo( info, ops );
      }
      */
@@ -471,7 +471,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         /*unimplemented();
          final List<String>  names   =
          TypeCast.checkList( getLogMBean().getLoggerNames(), String.class );
-	    
+
          return names.toArray( EMPTY_STRING_ARRAY ); */
     }
 
@@ -480,7 +480,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
         /*
          final List<String>  names   = TypeCast.checkList(
          getLogMBean().getLoggerNamesUnder( loggerName ), String.class );
-	    
+
          return names.toArray( EMPTY_STRING_ARRAY );
          */
         return null;
@@ -638,7 +638,7 @@ public final class LoggingImpl extends AMXImplBase //implements /*Logging,*/ Log
             }
         }
     }
-    
+
     public void
     testEmitLogMessage( final String level, final String message )
     {

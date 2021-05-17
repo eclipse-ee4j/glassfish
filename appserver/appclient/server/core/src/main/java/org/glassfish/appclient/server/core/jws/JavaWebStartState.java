@@ -46,7 +46,7 @@ public class JavaWebStartState {
      * <p>
      * The specified action must match a valid transition from the
      * current state.
-     * 
+     *
      * @param action the Action the server is notifying us about
      * @param task the work to perform
      */
@@ -116,7 +116,7 @@ public class JavaWebStartState {
     }
 
     private StateValue currentStateValue = StateValue.STOPPED;
-    
+
     /** the valid transitions for this state engine */
     private final Map<StateValue, Map<Action, Transition>> validTransitions = initValidTransitions();
 

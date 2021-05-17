@@ -46,11 +46,11 @@ import java.sql.*;
 public class ServletTest extends HttpServlet{
 
     private String status = "virtual-server-send-error-property-broken-webapp::FAIL";
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("[Servlet.init]");        
-        
+        System.out.println("[Servlet.init]");
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,16 +58,16 @@ public class ServletTest extends HttpServlet{
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         PrintWriter out = response.getWriter();
         out.println(status);
         response.setContentType("text/html");
-        
+
         status = "virtual-server-send-error-property-broken-webapp:::FAIL";
         out.println(status);
-        
+
     }
 
 }

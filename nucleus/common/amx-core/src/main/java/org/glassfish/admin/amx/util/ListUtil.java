@@ -47,7 +47,7 @@ public final class ListUtil
     {
         return new ArrayList<T>();
     }
-    
+
     public static List<String> asStringList(final Object value)
     {
         List<String> values = null;
@@ -222,8 +222,8 @@ public final class ListUtil
 
         return (list);
     }
-    
-    
+
+
     /**
     Return a new List in reverse order. Because the List is new,
     it works on any list, modifiable or not.

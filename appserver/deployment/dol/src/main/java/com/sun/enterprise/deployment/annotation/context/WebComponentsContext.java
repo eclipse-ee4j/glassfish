@@ -43,7 +43,7 @@ public class WebComponentsContext extends AnnotationContext
             componentClassName = webComps[0].getWebComponentImplementation();
         }
     }
-   
+
     /**
      * Create a new instance of WebComponentContext.
      * Note that, for performance, we don't make a safe copy of array here.
@@ -59,9 +59,9 @@ public class WebComponentsContext extends AnnotationContext
     public WebComponentContext[] getWebComponentContexts() {
         return webCompContexts;
     }
-    
+
     public void endElement(ElementType type, AnnotatedElement element) {
-        
+
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();

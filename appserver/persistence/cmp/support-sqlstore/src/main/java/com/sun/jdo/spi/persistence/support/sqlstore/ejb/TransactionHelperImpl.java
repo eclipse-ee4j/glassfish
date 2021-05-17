@@ -27,25 +27,25 @@ import jakarta.transaction.*;
 import com.sun.jdo.api.persistence.model.ClassLoaderStrategy;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
-/** This is an abstract class which is a generic implementation of the 
+/** This is an abstract class which is a generic implementation of the
 * TransactionHelper interface. Each concrete implementation that extends
 * this class is used for information about the distributed
-* transaction environment.  
+* transaction environment.
 *
-* The class that extends this class must implement <code>getTransaction</code> 
+* The class that extends this class must implement <code>getTransaction</code>
 * and <code>getUserTransaction</code> methods and replace any other method
 * implementation if it is necessary.
 *
-* Such class must register itself by a static method at class initialization time.  
+* Such class must register itself by a static method at class initialization time.
 * For example,
 * <blockquote><pre>
 * import com.sun.jdo.spi.persistence.support.sqlstore.ejb.*;
 * class blackHerringTransactionHelper extends TransactionHelperImpl {
 *    static EJBHelper.register(new blackHerringTransactionHelper());
 *    ...
-* } 
+* }
 * </pre></blockquote>
-*/  
+*/
 abstract public class TransactionHelperImpl
     implements TransactionHelper {
 
@@ -63,7 +63,7 @@ abstract public class TransactionHelperImpl
 
     /** Identifies the managed environment behavior.
      * @return true as this implementation represents the managed environment.
-     */  
+     */
     public boolean isManaged() {
         return true;
     }
@@ -79,7 +79,7 @@ abstract public class TransactionHelperImpl
      * internal HashMap until the Transaction completes. If there is no transaction
      * associated with the current thread, this method returns null.
      * @return the Transaction instance for the calling thread
-     */ 
+     */
     abstract public Transaction getTransaction();
 
     /** Returns the UserTransaction associated with the calling thread.  If there
@@ -107,21 +107,21 @@ abstract public class TransactionHelperImpl
      * with the hashed one if it exists. The replacement is necessary only if
      * the JNDI lookup always returns a new instance. Otherwise this method
      * returns the object passed to it as an argument.
-     *   
+     *
      * PersistenceManagerFactory is uniquely identified by
      * ConnectionFactory.hashCode() if ConnectionFactory is
      * not null; otherwise by ConnectionFactoryName.hashCode() if
      * ConnectionFactoryName is not null; otherwise
      * by the combination of URL.hashCode() + userName.hashCode() +
      * password.hashCode() + driverName.hashCode();
-     *   
+     *
      * @param   pmf     PersistenceManagerFactory instance to be replaced
      * @return  the PersistenceManagerFactory known to the runtime
      */
     public PersistenceManagerFactory replaceInternalPersistenceManagerFactory(
-	PersistenceManagerFactory pmf) {
+    PersistenceManagerFactory pmf) {
 
-	return pmf;
+    return pmf;
     }
 
     /** Called at the beginning of the Transaction.beforeCompletion() to
@@ -135,7 +135,7 @@ abstract public class TransactionHelperImpl
      * The third element is jakarta.transaction.Transaction object that has been
      * associated with the given instance of PersistenceManager.
      * The return value is passed unchanged to the postInvoke method.
-     *   
+     *
      * @param   component       an array of Objects
      * @return  implementation-specific Object
      */
@@ -147,7 +147,7 @@ abstract public class TransactionHelperImpl
      * de-register the component with the app server if necessary.
      * The parameter is the return value from preInvoke, and can be any
      * Object.
-     *   
+     *
      * @param   im      implementation-specific Object
      */
     public void postInvoke(Object im) {
@@ -163,7 +163,7 @@ abstract public class TransactionHelperImpl
     * @throws jakarta.transaction.RollbackException.
     * @throws jakarta.transaction.SystemException
     */
-    public void registerSynchronization(Transaction jta, Synchronization sync) 
+    public void registerSynchronization(Transaction jta, Synchronization sync)
         throws RollbackException, SystemException {
 
         jta.registerSynchronization(sync);
@@ -171,18 +171,18 @@ abstract public class TransactionHelperImpl
 
     /** Called in a managed environment to get a Connection from the application
      * server specific resource. In a non-managed environment returns null as
-     * it should not be called. 
+     * it should not be called.
      * This is a generic implementation for the case of javax.sql.DataSource as
      * the resource type.
      *
-     * @param resource the application server specific resource. 
+     * @param resource the application server specific resource.
      * @param username the resource username. If null, Connection is requested
-     * without username and password validation. 
+     * without username and password validation.
      * @param password the password for the resource username.
-     * @return a Connection. 
+     * @return a Connection.
      * @throws java.sql.SQLException.
-     */  
-    public java.sql.Connection getConnection(Object resource, String username, 
+     */
+    public java.sql.Connection getConnection(Object resource, String username,
                 char[] password) throws java.sql.SQLException {
         java.sql.Connection rc = null;
         if (resource instanceof javax.sql.DataSource) {
@@ -197,7 +197,7 @@ abstract public class TransactionHelperImpl
     }
 
     /** Called in a managed environment to get a non-transactional Connection
-     * from the application server specific resource. 
+     * from the application server specific resource.
      *
      * @param resource the application server specific resource.
      * @param username the resource username. If null, Connection is requested
@@ -213,7 +213,7 @@ abstract public class TransactionHelperImpl
     /** Called in a managed environment to access a TransactionManager
      * for managing local transaction boundaries and registering synchronization
      * for call backs during completion of a local transaction.
-     * 
+     *
      * @return jakarta.transaction.TransactionManager
      */
     abstract public TransactionManager getLocalTransactionManager();
@@ -226,42 +226,42 @@ abstract public class TransactionHelperImpl
         return stmt;
     }
 
-    /** 
-     * Set environment specific default values for the given PersistenceManagerFactory. 
+    /**
+     * Set environment specific default values for the given PersistenceManagerFactory.
      * In most app servers optimistic and retainValues flags should be false.
      * For any other settings this method should be overritten.
-     *  
-     * @param pmf the PersistenceManagerFactory. 
-     */ 
+     *
+     * @param pmf the PersistenceManagerFactory.
+     */
     public void setPersistenceManagerFactoryDefaults(PersistenceManagerFactory pmf) {
         pmf.setOptimistic(false);
         pmf.setRetainValues(false);
     }
 
-    /** 
+    /**
      * Returns name prefix for DDL files extracted from the info instance by the
      * application server specific code.
-     *   
+     *
      * @param info the instance to use for the name generation.
-     * @return name prefix as String. 
-     */   
-    public String getDDLNamePrefix(Object info) { 
+     * @return name prefix as String.
+     */
+    public String getDDLNamePrefix(Object info) {
         return DEFAULT_STRING;
     }
 
     /**
-     * @inheritDoc 
-     */ 
+     * @inheritDoc
+     */
     public void registerApplicationLifeCycleEventListener(
             ApplicationLifeCycleEventListener listener) {
-        
+
     }
-    
+
     /**
-     * @inheritDoc 
-     */ 
+     * @inheritDoc
+     */
     public void notifyApplicationUnloaded(ClassLoader cl) {
-        
+
     }
-    
+
 }

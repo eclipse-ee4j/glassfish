@@ -24,7 +24,7 @@ import java.rmi.RemoteException;
 public interface LocalEntity
     extends EJBLocalObject
 {
- 
+
   /**
    * Returns the Name of a student.
    * exception RemoteException
@@ -39,7 +39,7 @@ public interface LocalEntity
    public void setName(String name);
 
    public void localEntityGetEJBObject();
-          
+
    public void localEntityGetEJBLocalObject();
 
    public void localEntityGetEJBHome();

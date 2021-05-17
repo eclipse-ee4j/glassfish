@@ -28,24 +28,24 @@ import org.glassfish.cditest.user.api.model.User;
  * <p>
  * Manage user-related data
  * </p>
- * 
+ *
  * <p>
  * A service that implements this interface is responsible for managing
  * user-related master-data
  * </p>
- * 
+ *
  * @author kane
- * 
+ *
  * @see User
  */
 public interface UserService
 {
-    
+
     /**
      * <p>
      * Get a {@link User} by the user id
      * </p>
-     * 
+     *
      * @param userid
      *            The userid to search for
      * @return A {@link User} object or <code>null</code> if no user was found
@@ -56,16 +56,16 @@ public interface UserService
      * <p>
      * Add a new user
      * </p>
-     * 
+     *
      * <p>
      * The implementation must ensure that the provided user object is persisted
      * before returning the assigned persistent user ID.
      * </p>
-     * 
+     *
      * @param user
      *            The user object to persist
      * @return The newly created persistent ID of the user object
-     * 
+     *
      * @see User
      */
     public Long addUser(User user) throws EJBException;

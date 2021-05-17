@@ -47,14 +47,14 @@
     <ant dir="bankadmin" target="setup-norestart" />
   </target>
 
-  
+
   <target name="run-test" >
     <ant dir="bankadmin" target="run-test" />
   </target>
 
-  
+
   <target name="usage">
-      <antcall target="usage-common"/> 
+      <antcall target="usage-common"/>
   </target>
 
 

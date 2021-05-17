@@ -84,14 +84,14 @@
   </target>
 
 
- 
 
 
-  
+
+
   <target name="clean" >
       <delete dir="${build}" />
       <delete dir="${env.APS_HOME}/build" />
-      <delete dir="${dist}" />    
+      <delete dir="${dist}" />
       <delete dir="${assemble}" />
       <delete dir="${assemble.dir}" />
       <delete file="${ear.name}" />
@@ -191,7 +191,7 @@
           onerror="abort" >
           <transaction src="${sql.script}"/>
       </sql>
-  </target>  
+  </target>
 
   <target name="delete-db"
       description="Deletes the database tables." >
@@ -221,39 +221,39 @@
           <equals arg1="${db.ping.result}" arg2="0" />
       </condition>
   </target>
-  
+
   <target name="start-db"
       unless="db.running"
       description="Starts the Derby databse server."
       depends="ping-db">
-  				
+
       <sun-appserv-admin
       explicitcommand="start-database" />
   </target>
-  
+
   <target name="stop-db"
       description="Stops the Derby database server."
       depends="ping-db"
       if="db.running">
       <sun-appserv-admin
       explicitcommand="stop-database" />
-  </target>  
-  
+  </target>
+
   <target name="admin_command_common">
       <echo message="Doing admin task ${admin.command}"/>
-      <sun-appserv-admin 
+      <sun-appserv-admin
       command="${admin.command}"
-      user="${admin.user}" 
-      passwordfile="${admin.password.file}" 
-      host="${admin.host}" 
-      port="${admin.port}" 
+      user="${admin.user}"
+      passwordfile="${admin.password.file}"
+      host="${admin.host}"
+      port="${admin.port}"
       asinstalldir="${j2ee.home}" />
   </target>
-  
+
   <target name="create-jdbc-resource_common">
       <antcall target="admin_command_common">
           <param name="admin.command"
-          value="create-jdbc-resource 
+          value="create-jdbc-resource
           --connectionpoolid ${conpool.name} ${jdbc.resource.name}" />
       </antcall>
   </target>

@@ -24,56 +24,56 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
-/** 
+/**
  * Provides statistical information about the HttpService HTTP-level keep-alive
  * system
  */
 public interface PWCKeepAliveStats extends Stats {
-    
-    /** 
+
+    /**
      * Number of connections in keep-alive mode
      * @return number of connections
-     */    
+     */
     public CountStatistic getCountConnections();
-    
-    /** 
+
+    /**
      * Maximum number of connections allowed in keep-alive mode simultaneously
      * @return Max number of connections allowed
-     */    
+     */
     public CountStatistic getMaxConnections();
-    
-    /** 
-     * The number of times a request was successfully received from a 
+
+    /**
+     * The number of times a request was successfully received from a
      * connection that had been kept alive
      * @return hits
-     */    
+     */
     public CountStatistic getCountHits();
-    
-    /** 
+
+    /**
      * The number of times the server had to close a connection because the
      * KeepAliveCount exceeded the MaxKeepAliveConnections
      * @return connections
-     */    
+     */
     public CountStatistic getCountFlushes();
-    
-    /** 
-     * The number of times the server could not hand off the connection to a 
+
+    /**
+     * The number of times the server could not hand off the connection to a
      * keep-alive thread, possibly due to too many persistent connections
      * @return refusals
-     */    
+     */
     public CountStatistic getCountRefusals();
-    
-    /** 
-     * The number of times the server terminated keep-alive connections as the 
+
+    /**
+     * The number of times the server terminated keep-alive connections as the
      * client connections timed out, without any activity
      * @return connections timed out
-     */    
+     */
     public CountStatistic getCountTimeouts();
-    
-    /** 
+
+    /**
      * The time (in seconds) before idle keep-alive connections are closed
      * @return time in seconds
-     */    
+     */
     public CountStatistic getSecondsTimeouts();
-    
+
 }

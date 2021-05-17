@@ -28,13 +28,13 @@ import org.jvnet.hk2.config.Element;
 
 /**
  * The configuration that is used by a security service to identify the
- * set of security providers which are created and consumed by the service. 
+ * set of security providers which are created and consumed by the service.
  */
 @Configured
 public interface SecurityProvider extends ConfigBeanProxy {
     /**
      * Gets the name of the security provider.
-     * The name represents the qualifier @Named given to the security provider. 
+     * The name represents the qualifier @Named given to the security provider.
      */
     @Attribute
     @NotNull

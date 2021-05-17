@@ -21,10 +21,10 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -32,7 +32,7 @@ public class WebTest {
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Double content-length header");
 
         String host = args[0];
@@ -41,15 +41,15 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             goGet(host, port, "EXPIRED", contextRoot + "/ServletTest" );
-            
+
         } catch (Throwable t) {
         } finally{
             if (count != EXPECTED_COUNT){
                 stat.addStatus("web-doubleContentLength", stat.FAIL);
-            }           
+            }
         }
 
         stat.printSummary("web/doubleContentLength---> expect 2 PASS");
@@ -73,7 +73,7 @@ public class WebTest {
         } catch (Exception e) {
             // Web server sometimes sends the response with 400 status
             // code right after the second content-length header in which
-            // case next os.write will cause an exception. 
+            // case next os.write will cause an exception.
         }
 
         InputStream is = s.getInputStream();
@@ -89,11 +89,11 @@ public class WebTest {
                     stat.addStatus("web-doubleContentLength", stat.PASS);
                     count++;
                     break;
-                } 
+                }
                 lineNum++;
             }
         } catch( Exception ex){
          }
    }
-  
+
 }

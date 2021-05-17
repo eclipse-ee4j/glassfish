@@ -38,7 +38,7 @@ public class Client {
     public static void main(String[] args) {
 
         try {
-	    stat.addDescription("OrderApp");
+        stat.addDescription("OrderApp");
             Context initial = new InitialContext();
 
             Object objref = initial.lookup("java:comp/env/ejb/Request");
@@ -49,12 +49,12 @@ public class Client {
 
             createData(request);
             printData(request);
-	    stat.addStatus("ejbclient OrderApp", stat.PASS);
+        stat.addStatus("ejbclient OrderApp", stat.PASS);
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient OrderApp", stat.FAIL);
+        stat.addStatus("ejbclient OrderApp", stat.FAIL);
         }
          stat.printSummary("OrderApp");
     }
@@ -116,10 +116,10 @@ public class Client {
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient OrderApp", stat.FAIL);
+        stat.addStatus("ejbclient OrderApp", stat.FAIL);
         }
     }
-    
+
     private static MessageFormat mf = new MessageFormat(": {0, number, $#,##0.##}");
 
     private static void printData(Request request) {
@@ -133,7 +133,7 @@ public class Client {
                     + mf.format(new Object[] {new Double(price)}));
 
             printCostOfOrders(request);
- 
+
             System.out.println("\nAdding 5% discount");
             request.adjustOrderDiscount(5);
             printCostOfOrders(request);
@@ -146,7 +146,7 @@ public class Client {
             if (price0 == null) {
                 System.out.println("\nNo parts found");
             } else {
-                System.out.println("\nAverage price of all parts" 
+                System.out.println("\nAverage price of all parts"
                         + mf.format(new Object[] {price0}));
             }
 
@@ -156,8 +156,8 @@ public class Client {
                 System.out.println("\nNo parts found for Vendor "
                         + vendorRequest.vendorId);
             } else {
-                System.out.println("\nTotal price of parts for Vendor " 
-                        + vendorRequest.vendorId + "" 
+                System.out.println("\nTotal price of parts for Vendor "
+                        + vendorRequest.vendorId + ""
                         + mf.format(new Object[] {price0}));
             }
 
@@ -187,19 +187,19 @@ public class Client {
         }
     }
 
-    private static void printCostOfOrders(Request request) 
+    private static void printCostOfOrders(Request request)
             throws java.rmi.RemoteException {
 
         Integer orderId = new Integer(1111);
         double price = request.getOrderPrice(orderId);
-        System.out.println("Cost of Order " + orderId 
+        System.out.println("Cost of Order " + orderId
                 + mf.format(new Object[] {new Double(price)}));
 
         orderId = new Integer(4312);
         price = request.getOrderPrice(orderId);
-        System.out.println("Cost of Order " + orderId 
+        System.out.println("Cost of Order " + orderId
                 + mf.format(new Object[] {new Double(price)}));
 
     }
-    
+
 }

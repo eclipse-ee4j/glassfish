@@ -33,10 +33,10 @@ public class Jira extends MonTest {
     void runTests(TestDriver driver) {
         setDriver(driver);
         report(true, "Hello from JIRA Tests!");
-		/* turn off this intermittent test for now.
+        /* turn off this intermittent test for now.
 
                       test14389();
-		*/
+        */
 
         test21646();
         test16313();
@@ -315,7 +315,7 @@ public class Jira extends MonTest {
                 report(false, "LogListener.getFile() returned null");
                 return;
             }
-            
+
             report(logfile.exists(), prepend + "logfile exists");
             report(logfile.isFile(), prepend + "logfile is-a-file");
             report(logfile.canRead(), prepend + "logfile is readable");

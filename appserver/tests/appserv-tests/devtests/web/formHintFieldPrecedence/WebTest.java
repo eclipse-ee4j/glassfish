@@ -24,8 +24,8 @@ import com.sun.ejte.ccl.reporter.*;
  * <locale-charset-info>, which has been deprecated.
  *
  * In its sun-web.xml, this web module specifies two parameter-encoding
- * elements, each with a form-hint-field attribute: the value of the 
- * form-hint-field attribute of the <parameter-encoding> subelement of 
+ * elements, each with a form-hint-field attribute: the value of the
+ * form-hint-field attribute of the <parameter-encoding> subelement of
  * <sun-web-app> is 'sunWebAppFromHintField', whereas the value of the
  * form-hint-field attribute of the <parameter-encoding> subelement of
  * <locale-charset-info> is 'localeCharsetInfoFormHintField'.
@@ -69,7 +69,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription(TEST_NAME);
         WebTest webTest = new WebTest(args);
@@ -77,8 +77,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);

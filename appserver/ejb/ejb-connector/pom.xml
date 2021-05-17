@@ -27,13 +27,13 @@
     </parent>
     <artifactId>gf-ejb-connector</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>EJB Container connector for Glassfish</name>
 
     <properties>
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
-    
+
     <developers>
         <developer>
             <id>dochez</id>
@@ -44,7 +44,7 @@
                 <role>lead</role>
             </roles>
         </developer>
-    </developers> 
+    </developers>
     <dependencies>
         <dependency>
             <groupId>jakarta.ejb</groupId>

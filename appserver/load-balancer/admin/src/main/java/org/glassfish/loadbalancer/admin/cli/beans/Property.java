@@ -15,9 +15,9 @@
  */
 
 /**
- *	This generated bean class Property matches the schema element property
+ *    This generated bean class Property matches the schema element property
  *
- *	Generated on Thu May 06 00:44:23 PDT 2004
+ *    Generated on Thu May 06 00:44:23 PDT 2004
  */
 package org.glassfish.loadbalancer.admin.cli.beans;
 
@@ -28,9 +28,9 @@ import java.util.*;
 public class Property extends org.netbeans.modules.schema2beans.BaseBean {
 
     static Vector comparators = new Vector();
-    static public final String NAME = "Name";	// NOI18N
-    static public final String VALUE = "Value";	// NOI18N
-    static public final String DESCRIPTION = "Description";	// NOI18N
+    static public final String NAME = "Name";    // NOI18N
+    static public final String VALUE = "Value";    // NOI18N
+    static public final String DESCRIPTION = "Description";    // NOI18N
 
     public Property() {
         this(Common.USE_DEFAULT_VALUES);
@@ -94,11 +94,11 @@ public class Property extends org.netbeans.modules.schema2beans.BaseBean {
         boolean restrictionFailure = false;
         // Validating property name
         if (getName() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getName() == null", "name", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getName() == null", "name", this);    // NOI18N
         }
         // Validating property value
         if (getValue() == null) {
-            throw new org.netbeans.modules.schema2beans.ValidateException("getValue() == null", "value", this);	// NOI18N
+            throw new org.netbeans.modules.schema2beans.ValidateException("getValue() == null", "value", this);    // NOI18N
         }
         // Validating property description
         if (getDescription() != null) {
@@ -112,12 +112,12 @@ public class Property extends org.netbeans.modules.schema2beans.BaseBean {
         Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
-        str.append("Description");	// NOI18N
-        str.append(indent + "\t");	// NOI18N
-        str.append("<");	// NOI18N
+        str.append("Description");    // NOI18N
+        str.append(indent + "\t");    // NOI18N
+        str.append("<");    // NOI18N
         s = this.getDescription();
-        str.append((s == null ? "null" : s.trim()));	// NOI18N
-        str.append(">\n");	// NOI18N
+        str.append((s == null ? "null" : s.trim()));    // NOI18N
+        str.append(">\n");    // NOI18N
         this.dumpAttributes(DESCRIPTION, 0, str, indent);
 
     }
@@ -125,8 +125,8 @@ public class Property extends org.netbeans.modules.schema2beans.BaseBean {
     @Override
     public String dumpBeanNode() {
         StringBuffer str = new StringBuffer();
-        str.append("Property\n");	// NOI18N
-        this.dump(str, "\n  ");	// NOI18N
+        str.append("Property\n");    // NOI18N
+        this.dump(str, "\n  ");    // NOI18N
         return str.toString();
     }
 }

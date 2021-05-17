@@ -185,8 +185,8 @@ public class FlashlightProbeProviderFactory
     }
 
     public <T> T getProbeProvider(String moduleProviderName, String moduleName,
-    		String probeProviderName, String invokerId,
-    		Class<T> providerClazz)
+            String probeProviderName, String invokerId,
+            Class<T> providerClazz)
             throws InstantiationException, IllegalAccessException {
 
         String origProbeProviderName = probeProviderName;
@@ -196,7 +196,7 @@ public class FlashlightProbeProviderFactory
         FlashlightProbeProvider genericProvider = null;
         if (invokerId != null) {
             getProbeProvider( moduleProviderName,  moduleName,
-    		 probeProviderName, null, providerClazz);
+             probeProviderName, null, providerClazz);
             genericProvider = new FlashlightProbeProvider(
                 moduleProviderName, moduleName, probeProviderName, providerClazz);
             genericProvider = ppRegistry.getProbeProvider(genericProvider);
@@ -313,9 +313,9 @@ public class FlashlightProbeProviderFactory
     private void createProbe(String origProbeProviderName, FlashlightProbeProvider genericProvider,
             FlashlightProbeProvider provider, String probeName, boolean self, boolean hidden,
             Method m, String moduleProviderName, String moduleName,
-    		String probeProviderName, String invokerId,
-    		Class providerClazz, boolean stateful, boolean statefulReturn,
-    		boolean statefulException, String profileNames) {
+            String probeProviderName, String invokerId,
+            Class providerClazz, boolean stateful, boolean statefulReturn,
+            boolean statefulException, String profileNames) {
 
             String[] probeParamNames = FlashlightUtils.getParamNames(m);
             FlashlightProbe probe = ProbeFactory.createProbe(
@@ -421,9 +421,9 @@ public class FlashlightProbeProviderFactory
     }
 
     @Override
-	public String toString() {
-		return ObjectAnalyzer.toString(this);
-	}
+    public String toString() {
+        return ObjectAnalyzer.toString(this);
+    }
 
 
     private void handleDTrace(FlashlightProbeProvider provider) {
@@ -436,8 +436,8 @@ public class FlashlightProbeProviderFactory
         // We set the DTrace Method object inside the probe just this once to avoid
         // having to discover it anew over and over and over again at runtime...
 
-		if(allHidden(provider))
-			return;  // no need to waste time if they are all hidden
+        if(allHidden(provider))
+            return;  // no need to waste time if they are all hidden
 
         DTraceContract dt = FlashlightUtils.getDtraceEngine();
 
@@ -516,7 +516,7 @@ public class FlashlightProbeProviderFactory
             logger.fine("probeProviderClass = " + providerClass);
         }
         FlashlightProbeProvider flProvider = new FlashlightProbeProvider(
-            		moduleProviderName, moduleName, probeProviderName, providerClazz);
+                    moduleProviderName, moduleName, probeProviderName, providerClazz);
 
         for (org.glassfish.flashlight.xml.XmlProbe probe : probes) {
             String probeName = probe.getProbeName();
@@ -610,7 +610,7 @@ public class FlashlightProbeProviderFactory
         }
         return false;
     }
-    
+
     private String [] splitProfileNames(String profileNamesAll) {
         if (profileNamesAll == null)
             return null;

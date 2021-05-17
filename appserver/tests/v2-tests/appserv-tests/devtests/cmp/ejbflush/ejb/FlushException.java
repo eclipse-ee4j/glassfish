@@ -18,23 +18,23 @@ package test;
 
 public class FlushException extends Exception {
 
-	String flushEx;
+    String flushEx;
 
-	public FlushException() {
-		super();             // call superclass constructor
-	}
+    public FlushException() {
+        super();             // call superclass constructor
+    }
 
-	public FlushException(String flushException) {
-		super(flushException);
-		flushEx = flushException;
-	}
+    public FlushException(String flushException) {
+        super(flushException);
+        flushEx = flushException;
+    }
 
-	public String getError()
-  	{
-    		return flushEx;
-  	}
+    public String getError()
+      {
+            return flushEx;
+      }
 
 }
 
-		
+
 

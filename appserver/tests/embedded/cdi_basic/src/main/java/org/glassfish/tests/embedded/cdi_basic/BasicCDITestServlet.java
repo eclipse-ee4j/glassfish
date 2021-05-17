@@ -39,15 +39,15 @@ public class BasicCDITestServlet extends HttpServlet {
                          HttpServletResponse httpServletResponse) throws ServletException, IOException {
         PrintWriter out = httpServletResponse.getWriter();
         out.println("Hi from BasicCDITestServlet");
-	if(tb == null) {
-	  out.println("TestBean not injected.");
-	} else if(trsb == null) {
-	  out.println("TestRequestScopeBean not injected.");
-	} else {
-	  out.println("TestBean injected. [" + tb + "]");
-	  out.println("TestRequestScopeBean injected. [ " + trsb + "]");
-	  out.println("All CDI beans have been injected.");
-	}
+    if(tb == null) {
+      out.println("TestBean not injected.");
+    } else if(trsb == null) {
+      out.println("TestRequestScopeBean not injected.");
+    } else {
+      out.println("TestBean injected. [" + tb + "]");
+      out.println("TestRequestScopeBean injected. [ " + trsb + "]");
+      out.println("All CDI beans have been injected.");
+    }
         out.flush();
         out.close();
     }

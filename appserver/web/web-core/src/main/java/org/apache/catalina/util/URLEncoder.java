@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  *
  * This class is very similar to the java.net.URLEncoder class.
  *
- * Unfortunately, with java.net.URLEncoder there is no way to specify to the 
+ * Unfortunately, with java.net.URLEncoder there is no way to specify to the
  * java.net.URLEncoder which characters should NOT be encoded.
  *
  * This code was moved from DefaultServlet.java
@@ -63,7 +63,7 @@ public class URLEncoder {
     }
 
     public void addSafeCharacter( char c ) {
-	safeCharacters.set( c );
+    safeCharacters.set( c );
     }
 
     public String encode( String path ) {

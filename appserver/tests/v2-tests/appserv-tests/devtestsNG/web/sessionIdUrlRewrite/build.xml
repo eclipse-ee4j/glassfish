@@ -57,7 +57,7 @@
          <antcall target="common-build-war">
              <param name="hasWebclient" value="yes"/>
          </antcall>
-     </target> 
+     </target>
 
      <target name="deploy" depends="init-common">
          <antcall target="common-deploy-war"/>
@@ -98,9 +98,9 @@
       <delete dir="test-report"/>
     </target>
 
-       
+
     <target name="undeploy" depends="init-common">
         <antcall target="common-undeploy-war"/>
-    </target>   
+    </target>
 
 </project>

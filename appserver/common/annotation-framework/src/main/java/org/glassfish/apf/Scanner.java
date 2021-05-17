@@ -23,8 +23,8 @@ import java.util.Set;
 import java.io.File;
 import java.io.IOException;
 
-/** 
- * This interface is responsible for scanning the binary location 
+/**
+ * This interface is responsible for scanning the binary location
  * provided and provide each binary file through a pull interfaces
  *
  * @author Jerome Dochez
@@ -33,7 +33,7 @@ import java.io.IOException;
 public interface Scanner<T> {
 
     /**
-     * Scan the archive file and gather a list of classes 
+     * Scan the archive file and gather a list of classes
      * that should be processed for anntoations
      * @param archiveFile the archive file for scanning
      * @param bundleDesc the bundle descriptor associated with this archive
@@ -42,25 +42,25 @@ public interface Scanner<T> {
     public void process(File archiveFile, T bundleDesc,
             ClassLoader classLoader) throws IOException;
 
-    
+
     /**
-     * Returns a ClassLoader capable of loading classes from the 
+     * Returns a ClassLoader capable of loading classes from the
      * underlying medium
      * @return a class loader capable of loading the classes
      */
     public ClassLoader getClassLoader();
-    
+
     /**
      * Return a complete set of classes available from this location.
-     * @return the complete set of classes 
+     * @return the complete set of classes
      */
     public Set<Class> getElements();
-    
+
     /**
-     * Sometimes, annotations processing requires more than a single class, 
-     * especially when such classes end up being a Java Component (Java Beans, 
-     * Java EE). The implementation returned from the getComponent will be 
-     * responsible for defining the complete view of this component starting 
+     * Sometimes, annotations processing requires more than a single class,
+     * especially when such classes end up being a Java Component (Java Beans,
+     * Java EE). The implementation returned from the getComponent will be
+     * responsible for defining the complete view of this component starting
      * from it's implementation class.
      * @param componentImpl class of the component.
      */
@@ -71,5 +71,5 @@ public interface Scanner<T> {
      * @return types the archive resulting types
      */
     public Types getTypes();
-    
+
 }

@@ -28,8 +28,8 @@ import org.testng.Assert;
  */
 @Test (groups={"pulse"})
 public class BasicAuthTestNG {
-    
-    
+
+
     private static final String TEST_NAME =
         "security-basicauth-web";
 
@@ -41,7 +41,7 @@ public class BasicAuthTestNG {
     int port = new Integer(portS).intValue();
 
     String testName;
-        
+
     /**
      * Must be invoked with (host,port) args.
      * Nothing else is parameterized, this is intended as
@@ -69,10 +69,10 @@ public class BasicAuthTestNG {
             Assert.assertFalse(true, testName);
         }
     }
-    
+
     @Test (groups = {"pulse"})
     public void testAuthGroupMappedUser() {
-        
+
         // GET with a user who maps through group
         testName="BASIC auth: Group mapped user, testuser42";
         //log(testName);
@@ -87,7 +87,7 @@ public class BasicAuthTestNG {
             Assert.assertFalse(true, testName);
         }
     }
-    
+
     @Test (groups = {"pulse"})
     public void testAuthNotAuthorizedUser() {
 
@@ -105,8 +105,8 @@ public class BasicAuthTestNG {
             Assert.assertFalse(true, testName);
         }
     }
-    
-    @Test (groups = {"pulse"}) 
+
+    @Test (groups = {"pulse"})
     public void testAuthNotValidPassword() {
 
         // GET with a valid user,bad password
@@ -141,7 +141,7 @@ public class BasicAuthTestNG {
         os.write("GET /basicauth/Test.jsp HTTP/1.0\n".getBytes());
         os.write(auth.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;
@@ -157,9 +157,9 @@ public class BasicAuthTestNG {
         s.close();
         throw new Exception("String not found: "+result);
     }
-    
+
     private void log(String mesg) {
         System.out.println(mesg);
     }
-  
+
 }

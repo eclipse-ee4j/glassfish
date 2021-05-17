@@ -31,7 +31,7 @@ public class TestAlternativeBeanInWebInfLib extends TestBeanInWebInfLib {
         System.out.println("*************** testinjection in alternative bean in web-inf/lib called");
         return "Alternative";
     }
-    
+
     public static void clearStatus(){
         ALTERNATIVE_BEAN_HAS_BEEN_CALLED = false;
     }

@@ -18,7 +18,7 @@ package org.glassfish.admin.rest.generator;
 
 /**
  * Exception during generation process.
- * 
+ *
  * @author Mitesh Meswani
  */
 public class GeneratorException extends RuntimeException {

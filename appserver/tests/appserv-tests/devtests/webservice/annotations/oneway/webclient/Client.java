@@ -31,7 +31,7 @@ public class Client extends HttpServlet {
         HelloService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-		throws jakarta.servlet.ServletException {
+        throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
@@ -39,7 +39,7 @@ public class Client extends HttpServlet {
               throws jakarta.servlet.ServletException {
            String ret="Oneway works";
            try {
-                
+
                 Hello port = service.getHelloPort();
 
                 port.sayHello("All");

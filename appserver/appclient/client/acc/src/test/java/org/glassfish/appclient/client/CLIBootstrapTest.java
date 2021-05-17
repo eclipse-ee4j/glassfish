@@ -36,7 +36,7 @@ public class CLIBootstrapTest {
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-        
+
     }
 
     @AfterClass
@@ -75,20 +75,20 @@ public class CLIBootstrapTest {
     public void testChooseJavaASJAVAAsBad() {
         runTestUsingBadLocation("AS_JAVA");
     }
-    
+
     @Ignore
     @Test
     public void testChooseJAVAHOMEAsBad() {
         runTestUsingBadLocation("JAVA_HOME");
     }
-    
+
     private void runTestUsingBadLocation(final String envVarName) {
         try {
             final CLIBootstrap boot = new CLIBootstrap();
             System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName,
                         "shouldnotexistanywhere");
             CLIBootstrap.JavaInfo javaInfo = boot.initJava();
-            
+
         } catch (UserError ex) {
             /*
              * We expect this exception because we tried to use a non-sensical

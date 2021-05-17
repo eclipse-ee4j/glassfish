@@ -26,7 +26,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 public class TestServlet extends HttpServlet {
-   
+
     @EJB
     private BeanRootInterface root;
 
@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException  {
         super.init(config);
         sc = config.getServletContext();
-	message = msg.getMessage();
+    message = msg.getMessage();
         System.out.println("servlet init: message="+message);
     }
 
@@ -48,64 +48,64 @@ public class TestServlet extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
-	String EXPECTED_RESULT ="PostBeanRootPostBeanLeafHelloBeanLeaf";
+    String EXPECTED_RESULT ="PostBeanRootPostBeanLeafHelloBeanLeaf";
         boolean status = false;
 
-	try {
+    try {
 
-	  String testcase = request.getParameter("tc");
-	  out.println("testcase = " + testcase);
-	  out.println("TestServlet");  
-	  out.println("contextPath=" + request.getContextPath ());
+      String testcase = request.getParameter("tc");
+      out.println("testcase = " + testcase);
+      out.println("TestServlet");
+      out.println("contextPath=" + request.getContextPath ());
 
-	  if (testcase != null) {
+      if (testcase != null) {
 
-	    if ("InjectLookup".equals(testcase)){
-	      // EJB injection check
-	      // out.println("injected root: " + root);
-	      String hello = root.sayHello();
-	      out.println("Hello from injected bean: " + hello);
-            
-	      // EJB lookup check
-	      InitialContext ic = new InitialContext();
-	      // "java"glabal[/<app-name>]/<module-name>/<bean-name>" 
+        if ("InjectLookup".equals(testcase)){
+          // EJB injection check
+          // out.println("injected root: " + root);
+          String hello = root.sayHello();
+          out.println("Hello from injected bean: " + hello);
+
+          // EJB lookup check
+          InitialContext ic = new InitialContext();
+          // "java"glabal[/<app-name>]/<module-name>/<bean-name>"
               // app-name -- name of ear file (option)
               // module-name -- name of war or jar file
               // bean-name -- name of ejb
-	      BeanRootInterface root2 = (BeanRootInterface) ic.lookup("java:global/singleton/singletonEJB/BeanRoot");
+          BeanRootInterface root2 = (BeanRootInterface) ic.lookup("java:global/singleton/singletonEJB/BeanRoot");
 
-	      // out.println("global root: " + root2);
-	      String hello2 = root2.sayHello();
-	      out.println("Hello from lookup bean: " + hello2);
+          // out.println("global root: " + root2);
+          String hello2 = root2.sayHello();
+          out.println("Hello from lookup bean: " + hello2);
 
-	      if (hello.equals(hello2)){
-		status = true;
-	      }
-	    } else if ("Startup".equals(testcase)){
+          if (hello.equals(hello2)){
+        status = true;
+          }
+        } else if ("Startup".equals(testcase)){
               // deployment check for startup
-	      out.println("message by deployment: " + message);
-	      if (message != null && message.equals(EXPECTED_RESULT)){
-		status = true;
-	      }
-	    }
-	  }
+          out.println("message by deployment: " + message);
+          if (message != null && message.equals(EXPECTED_RESULT)){
+        status = true;
+          }
+        }
+      }
 
         } catch (Throwable th) {
             th.printStackTrace(out);
-        } finally { 
-	    if (status){
-	      out.println("Test:Pass");
-	    } else {
-	      out.println("Test:Fail");
-	    }
+        } finally {
+        if (status){
+          out.println("Test:Pass");
+        } else {
+          out.println("Test:Fail");
+        }
             out.close();
         }
-    } 
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {

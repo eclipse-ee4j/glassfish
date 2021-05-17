@@ -28,7 +28,7 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
 
 /**
  * Warning: there is lots of file twiddling going on in this class. It is the nature of the beast.
- * 
+ *
  * @author Byron Nevins
  */
 public class WindowsService extends NonSMFServiceAdapter {

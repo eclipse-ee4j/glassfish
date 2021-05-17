@@ -25,7 +25,7 @@ import java.util.Properties;
  * @author Jerome Dochez
  */
 public interface PropertyManager {
-    
+
     public Properties getPropertiesFromFile(String file) throws IOException;
-    
+
 }

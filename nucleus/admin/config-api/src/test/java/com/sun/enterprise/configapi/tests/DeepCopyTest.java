@@ -141,7 +141,7 @@ public class DeepCopyTest extends ConfigApiTest {
 
             Assert.assertEquals(dom, child.parent());
             assertParenting(child);
-        }        
+        }
     }
 
     final DomDocument document = getDocument(getHabitat());

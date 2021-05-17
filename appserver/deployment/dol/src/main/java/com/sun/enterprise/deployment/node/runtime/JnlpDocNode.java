@@ -27,33 +27,33 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
  * We need this node in order to support the <jnlp-doc href="path-to-custom-JNLP-doc"/>
  * notation.  The DTD file describes the href attribute although the doc has not
  * historically mentioned it.  Instead the doc has said to place the path to
- * the custom JNLP as the text value of the <jnlp-doc> element.  
- * 
+ * the custom JNLP as the text value of the <jnlp-doc> element.
+ *
  * @author tjquinn
  */
 public class JnlpDocNode extends DeploymentDescriptorNode<JavaWebStartAccessDescriptor> {
     protected JavaWebStartAccessDescriptor descriptor;
-    
+
     public JnlpDocNode() {
-        
+
     }
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     @Override
     public JavaWebStartAccessDescriptor getDescriptor() {
-	if (descriptor==null) {
-	    XMLNode parentNode = getParentNode();
+    if (descriptor==null) {
+        XMLNode parentNode = getParentNode();
             if (parentNode != null) {
                 Object parentDescriptor = parentNode.getDescriptor();
                 if (parentDescriptor != null && (parentDescriptor instanceof JavaWebStartAccessDescriptor) ) {
                     descriptor = (JavaWebStartAccessDescriptor) parentDescriptor;
                 }
             }
-	} 
-	return descriptor;
     }
-    
+    return descriptor;
+    }
+
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
         if (attributeName.getQName().equals("href")) {
@@ -70,6 +70,6 @@ public class JnlpDocNode extends DeploymentDescriptorNode<JavaWebStartAccessDesc
             getDescriptor().setJnlpDocument(value);
         }
     }
-    
-    
+
+
 }

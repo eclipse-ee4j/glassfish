@@ -19,7 +19,7 @@ package com.sun.enterprise.deployment.web;
 import java.util.Set;
 
     /** I am an interface representing the API to an object
-    ** which represents the information about a web resource collection. 
+    ** which represents the information about a web resource collection.
     ** @author Danny Coward
     */
 

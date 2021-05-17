@@ -35,7 +35,7 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Example2</web-resource-name>
@@ -45,7 +45,7 @@
         </web-resource-collection>
         <auth-constraint/>
     </security-constraint>
-    
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Covered1</web-resource-name>
@@ -74,5 +74,5 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    
+
 </web-app>

@@ -67,7 +67,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
     private Set<ManagedBeanDescriptor> managedBeans = new HashSet<ManagedBeanDescriptor>();
 
-    // Physical entity manager factory corresponding to the unit name of 
+    // Physical entity manager factory corresponding to the unit name of
     // each module-level persistence unit.  Only available at runtime.
     private Map<String, EntityManagerFactory> entityManagerFactories =
             new HashMap<String, EntityManagerFactory>();
@@ -81,7 +81,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
     private String compatValue;
 
-    private boolean keepState = false; 
+    private boolean keepState = false;
 
     protected HashMap<String, RootXMLNode> rootNodes = new HashMap<String, RootXMLNode>();
 
@@ -628,7 +628,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
             return moduleID;
         }
         if (application != null && !application.isVirtual()) {
-            return application.getRegistrationName() + "#" + 
+            return application.getRegistrationName() + "#" +
                 getModuleDescriptor().getArchiveUri();
         } else {
             return moduleID;

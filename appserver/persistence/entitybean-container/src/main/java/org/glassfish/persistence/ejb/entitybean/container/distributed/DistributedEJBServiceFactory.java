@@ -17,10 +17,10 @@
 package org.glassfish.persistence.ejb.entitybean.container.distributed;
 
 public class DistributedEJBServiceFactory
-    implements DistributedEJBService 
+    implements DistributedEJBService
 {
 
-    private static DistributedEJBService distributedEJBService 
+    private static DistributedEJBService distributedEJBService
             = new DistributedEJBServiceFactory();
 
     private static DistributedReadOnlyBeanService _distributedReadOnlyBeanService

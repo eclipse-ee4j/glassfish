@@ -104,7 +104,7 @@ public class SecurityUtils {
      * @param str1 <code>String</code>
      * @param str2 <code>String</code>
      * @return true    if the two strings are equal
-     *         false	otherwise
+     *         false    otherwise
      */
     static private boolean isEqual(String str1, String str2) {
         if (str1 == null) {
@@ -120,7 +120,7 @@ public class SecurityUtils {
      * @param pC1 <code>PasswordCredential</code>
      * @param pC2 <code>PasswordCredential</code>
      * @return true    if the two PasswordCredentials are equal
-     *         false	otherwise
+     *         false    otherwise
      */
     static public boolean isPasswordCredentialEqual(PasswordCredential pC1, PasswordCredential pC2) {
         if (pC1 == pC2)

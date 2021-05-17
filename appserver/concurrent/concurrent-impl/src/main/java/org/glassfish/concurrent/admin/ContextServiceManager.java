@@ -46,7 +46,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 
 /**
  *
- * The context service manager allows you to create and delete 
+ * The context service manager allows you to create and delete
  * the context-service config element
  */
 @Service (name=ServerTags.CONTEXT_SERVICE)
@@ -117,7 +117,7 @@ public class ContextServiceManager implements ResourceManager {
         }
 
         status = resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, ContextService.class);
-        
+
         return status;
     }
 
@@ -131,7 +131,7 @@ public class ContextServiceManager implements ResourceManager {
         }else{
             enabled = (String) attributes.get(ENABLED);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED); 
+        enabledValueForTarget = (String) attributes.get(ENABLED);
     }
 
     private ContextService createResource(Resources param, Properties properties) throws PropertyVetoException,
@@ -179,7 +179,7 @@ public class ContextServiceManager implements ResourceManager {
 
     public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
             throws Exception {
-        
+
         if (jndiName == null) {
             String msg = localStrings.getLocalString("context.service.noJndiName", "No JNDI name defined for context service.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
@@ -221,7 +221,7 @@ public class ContextServiceManager implements ResourceManager {
         try {
             // delete resource-ref
             resourceUtil.deleteResourceRef(jndiName, target);
-            
+
             // delete context-service
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {

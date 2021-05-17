@@ -22,7 +22,7 @@ import org.glassfish.web.util.HtmlEntityEncoder;
 import java.io.PrintWriter;
 /**
  * Implements the Server-side #set command
- * 
+ *
  * @author Paul Speed
  * @author Dan Sandberg
  * @author David Becker

@@ -83,18 +83,18 @@ public class SecurityConfigUpgradeService implements ConfigurationUpgrade, PostC
         try {
             t = new Transaction();
             final Domain domain_w = t.enroll(domain);
-            
+
             /*
              * Create the security configurations element and add it to the domain.
              */
             final SecurityConfigurations sc_w = domain_w.createChild(SecurityConfigurations.class);
             domain_w.getExtensions().add(sc_w);
-            
+
             /*
              * Create and add the authentication service.
              */
             final AuthenticationService as_w = addAuthenticationService(sc_w);
-            
+
             /*
              * Next, add the two providers and their children.
              */

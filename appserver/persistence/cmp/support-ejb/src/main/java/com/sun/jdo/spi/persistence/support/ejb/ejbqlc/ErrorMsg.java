@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
-/** 
+/**
  * This is a helper class to report error messages from the EJBQL compiler.
  * @author  Michael Bouschen
  * @author  Shing Wai Chan
@@ -36,10 +36,10 @@ public class ErrorMsg
     /** I18N support. */
     private final static ResourceBundle msgs = I18NHelper.loadBundle(
         ErrorMsg.class);
-    
+
     /** The logger */
     private static Logger logger = LogHelperQueryCompilerEJB.getLogger();
-    
+
     /**
      * This method throws an EJBQLException indicating an user error.
      * @param line line number
@@ -69,7 +69,7 @@ public class ErrorMsg
         }
         throw ex;
     }
-    
+
     /**
      * This method throws an EJBQLException indicating an user error.
      * @param text error message
@@ -81,7 +81,7 @@ public class ErrorMsg
     {
         throw new EJBQLException(text, cause);
     }
-    
+
     /**
      * This method throws an EJBQLException indicating an user error.
      * @param text error message
@@ -92,14 +92,14 @@ public class ErrorMsg
     {
         throw new EJBQLException(text);
     }
-    
+
     /**
-     * This method throws an UnsupportedOperationException indicating an 
+     * This method throws an UnsupportedOperationException indicating an
      * unsupported feature.
      * @param line line number
      * @param col column number
      * @param text message
-     * @exception UnsupportedOperationException describes the unsupported 
+     * @exception UnsupportedOperationException describes the unsupported
      * feature.
      */
     public static void unsupported(int line, int col, String text)
@@ -123,10 +123,10 @@ public class ErrorMsg
             Object args[] = {text};
             ex = new UnsupportedOperationException(I18NHelper.getMessage(
                 msgs, "EXC_PositionInfoMsg", args)); //NOI18N
-        }   
+        }
         throw ex;
     }
-    
+
     /**
      * This method is called in the case of an fatal internal error.
      * @param text error message

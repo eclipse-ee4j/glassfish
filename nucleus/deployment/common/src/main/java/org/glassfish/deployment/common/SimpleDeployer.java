@@ -26,11 +26,11 @@ import org.glassfish.api.deployment.OpsParams;
 
 
 /**
- * Convenient superclass for Deployers which only do prepare and 
+ * Convenient superclass for Deployers which only do prepare and
  * clean up and do not actually load/unload application
  *
  */
-public abstract class SimpleDeployer <T extends Container, 
+public abstract class SimpleDeployer <T extends Container,
         U extends ApplicationContainer> implements Deployer<T, U> {
 
     /**
@@ -69,7 +69,7 @@ public abstract class SimpleDeployer <T extends Container,
     }
 
     /**
-     * No-op 
+     * No-op
      */
     public U load(T container, DeploymentContext context) {
         return null;
@@ -112,7 +112,7 @@ public abstract class SimpleDeployer <T extends Container,
     }
 
     // methods for implementation clsses to override
-    abstract protected void generateArtifacts(DeploymentContext dc) 
+    abstract protected void generateArtifacts(DeploymentContext dc)
         throws DeploymentException;
     abstract protected void cleanArtifacts(DeploymentContext dc)
         throws DeploymentException;

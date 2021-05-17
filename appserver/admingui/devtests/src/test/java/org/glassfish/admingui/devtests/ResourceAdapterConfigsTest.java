@@ -44,7 +44,7 @@ public class ResourceAdapterConfigsTest extends BaseSeleniumTestClass {
         assertTrue(isTextPresent("jmsra"));
         clickAndWait(getLinkIdByLinkText("propertyForm:poolTable", "jmsra"), TRIGGER_EDIT_RESOURCE_ADAPTER_CONFIG);
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCE_ADAPTER_CONFIGS);
-        
+
         // Remove config
         deleteRow("propertyForm:poolTable:topActionsGroup1:button1", "propertyForm:poolTable", "jmsra");
     }

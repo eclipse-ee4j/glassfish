@@ -48,8 +48,8 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=HttpService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-protocol-finders", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-protocol-finders",
         description="list-protocol-finders")
 })
 public class ListProtocolFinders implements AdminCommand {

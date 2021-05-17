@@ -50,7 +50,7 @@ public class ConnectorsHandlers {
 
 
     /**
-     *	<p> This handler creates a ConnectorConnection Pool to be used in the wizard
+     *    <p> This handler creates a ConnectorConnection Pool to be used in the wizard
      */
     @Handler(id = "gf.getConnectorConnectionPoolWizard", input = {
         @HandlerInput(name = "fromStep2", type = Boolean.class),
@@ -81,7 +81,7 @@ public class ConnectorsHandlers {
             if (poolName != null) {
                 poolName = poolName.trim();
             }
-            if (resAdapter != null && !(resAdapter.equals(""))) {               
+            if (resAdapter != null && !(resAdapter.equals(""))) {
                 Map extra = (Map) handlerCtx.getFacesContext().getExternalContext().getSessionMap().get("wizardPoolExtra");
                 extra.put("resourceAdapterName", resAdapter);
                 extra.put("name", poolName);
@@ -96,7 +96,7 @@ public class ConnectorsHandlers {
     }
 
     /**
-     *	<p> updates the wizard map
+     *    <p> updates the wizard map
      */
     @Handler(id = "gf.updateConnectorConnectionPoolWizard",
         input = {
@@ -117,9 +117,9 @@ public class ConnectorsHandlers {
         extra.put("previousDefinition", (String) handlerCtx.getInputValue("currentDef"));
         extra.put("previousResAdapter", (String) handlerCtx.getInputValue("currentAdapter"));
     }
-    
+
     /**
-     *	<p> updates the wizard map properties on step 2
+     *    <p> updates the wizard map properties on step 2
      */
     @Handler(id = "updateConnectorConnectionPoolWizardStep2")
     public static void updateConnectorConnectionPoolWizardStep2(HandlerContext handlerCtx) {
@@ -134,9 +134,9 @@ public class ConnectorsHandlers {
         attrs.put("connectiondefinitionname", definition);
         attrs.put("resourceAdapterName", resAdapter);
     }
-      
+
     /**
-     *	<p> This handler creates a Admin Object Resource
+     *    <p> This handler creates a Admin Object Resource
      */
     @Handler(id = "gf.getAdminObjectResourceWizard", input = {
     @HandlerInput(name = "reload", type = Boolean.class),
@@ -181,9 +181,9 @@ public class ConnectorsHandlers {
         attrMap.put("className", className);
         handlerCtx.setOutputValue("valueMap", attrMap);
     }
-    
+
     /**
-     *	<p> If the RAR is an embedded rar, we don't wan to show the .rar extension.
+     *    <p> If the RAR is an embedded rar, we don't wan to show the .rar extension.
      *  <p> eg. myjca.ear containing myTest.rar  will be shown as myjca.ear#myTest
      */
     @Handler(id = "filterOutRarExtension",
@@ -232,4 +232,4 @@ public class ConnectorsHandlers {
 
 
 }
- 
+

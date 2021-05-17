@@ -45,7 +45,7 @@ public final class AppServRegistry {
             com.sun.xml.ws.transport.tcp.util.TCPConstants.LoggingDomain + ".server");
 
     private static final AppServRegistry instance = new AppServRegistry();
-    
+
     public static AppServRegistry getInstance() {
         return instance;
     }

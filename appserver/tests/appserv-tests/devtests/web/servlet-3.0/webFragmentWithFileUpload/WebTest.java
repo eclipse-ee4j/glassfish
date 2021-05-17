@@ -20,7 +20,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static final SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -57,23 +57,23 @@ public class WebTest {
         OutputStream os = null;
         InputStream is = null;
         BufferedReader br = null;
-        
+
         String get = "GET " + contextRoot + urlPattern + " HTTP/1.0\r\n" + "Connection: keep-alive\r\n";
         System.out.println(get);
-        
+
         try {
             sock = new Socket(host, port);
             os = sock.getOutputStream();
             os.write(get.getBytes());
             os.write("\r\n".getBytes());
-            
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
             int i = 0;
             String line = null;
             String viewId = null;
             String sessionId = null;
-            
+
             //get session id and JSF view id
             while ((line = br.readLine()) != null) {
                 if(line.startsWith("Set-Cookie")) {
@@ -86,7 +86,7 @@ public class WebTest {
                     break;
                 }
             }
-            
+
             // Write header for the uploaded text file
             ByteArrayOutputStream ba = new ByteArrayOutputStream();
             ba.write("--AaB03x\r\n".getBytes());
@@ -95,14 +95,14 @@ public class WebTest {
             ba.write("--AaB03x\r\n".getBytes());
             ba.write("Content-Disposition: form-data; name=\"form:file\"; filename=\"test.txt\"\r\n".getBytes());
             ba.write("Content-Type: application/octet-stream\r\n\r\n".getBytes());
-            
+
             // Write content of the uploaded text file
             is = new FileInputStream (dir + "test.txt");
             int c;
             while ((c = is.read()) != -1) {
                 ba.write(c);
             }
-            
+
             ba.write("\r\n--AaB03x\r\n".getBytes());
             ba.write("Content-Disposition: form-data; name=\"form:j_idt4\"\r\n\r\n".getBytes());
             ba.write("upload\r\n".getBytes());
@@ -115,7 +115,7 @@ public class WebTest {
             ba.write("--AaB03x--\r\n".getBytes());
             byte[] data = ba.toByteArray();
             System.out.println(ba.toString());
-            
+
             // Compose the post request header
             StringBuilder postHeader = new StringBuilder();
             postHeader.append("POST " + contextRoot + urlPattern + " HTTP/1.1\r\n");
@@ -125,17 +125,17 @@ public class WebTest {
             postHeader.append("Content-Length: " + data.length + "\r\n");
             postHeader.append("Cookie: JSESSIONID=" + sessionId + "\r\n\r\n");
             System.out.println(postHeader);
-            
+
             os.write(postHeader.toString().getBytes());
             os.write(data);
-            
+
             while ((line = br.readLine()) != null) {
                 if (line.contains(EXPECTED_RESPONSE)) {
                     stat.addStatus(TEST_NAME, stat.PASS);
                     return;
                 }
             }
-            
+
             System.out.println("Wrong response. Expected: " +
                                EXPECTED_RESPONSE + ", received: " + line);
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -163,12 +163,12 @@ public class WebTest {
             }
             try {
                 if (sock != null) {
-                    sock.close(); 
+                    sock.close();
                 }
             } catch(IOException ex) {
                 // ignore
             }
         }
-        
+
     }
 }

@@ -31,7 +31,7 @@
     <packaging>ear</packaging>
 
     <name>CDI PreDestroyScoping EAR</name>
-    
+
     <build>
         <plugins>
             <plugin>

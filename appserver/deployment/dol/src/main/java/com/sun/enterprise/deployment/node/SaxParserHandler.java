@@ -43,15 +43,15 @@ import java.util.logging.Level;
  * This class implements all the callbacks for the SAX Parser in JAXP 1.1
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 @Service
 @PerLookup
 public class SaxParserHandler extends DefaultHandler {
     public static final String JAXP_SCHEMA_LANGUAGE =
         "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-    public static final String JAXP_SCHEMA_SOURCE = 
-        "http://java.sun.com/xml/jaxp/properties/schemaSource";    
+    public static final String JAXP_SCHEMA_SOURCE =
+        "http://java.sun.com/xml/jaxp/properties/schemaSource";
     public static final String W3C_XML_SCHEMA =
         "http://www.w3.org/2001/XMLSchema";
 
@@ -72,7 +72,7 @@ public class SaxParserHandler extends DefaultHandler {
         public final Collection<String>           mElementsPreservingWhiteSpace;
         private final Map<String, List<Class>> mVersionUpgradeClasses;
         private final Map<String, List<VersionUpgrade>> mVersionUpgrades;
-        
+
         MappingStuff() {
             mRootNodesMutable  = new ConcurrentHashMap<String,Class>();
             mRootNodes         = Collections.unmodifiableMap( mRootNodesMutable );
@@ -86,15 +86,15 @@ public class SaxParserHandler extends DefaultHandler {
             mVersionUpgrades = new ConcurrentHashMap<String, List<VersionUpgrade>>();
         }
     }
-    
+
     private static final MappingStuff _mappingStuff = new MappingStuff();
-    
+
     private final List<XMLNode> nodes = new ArrayList<XMLNode>();
     public XMLNode topNode = null;
     protected String publicID=null;
     private StringBuffer elementData=null;
     private Map<String, String> prefixMapping=null;
-    
+
     private boolean stopOnXMLErrors = false;
 
     private boolean pushedNamespaceContext=false;
@@ -103,8 +103,8 @@ public class SaxParserHandler extends DefaultHandler {
     private Stack elementStack = new Stack();
 
     private static final LocalStringManagerImpl localStrings=
-	    new LocalStringManagerImpl(SaxParserHandler.class);    
-    
+        new LocalStringManagerImpl(SaxParserHandler.class);
+
     protected static Map<String,String> getMapping() {
         return _mappingStuff.mMapping;
     }
@@ -130,11 +130,11 @@ public class SaxParserHandler extends DefaultHandler {
       _mappingStuff.mVersionUpgrades.put(key, versionUpgradeList);
       return versionUpgradeList;
     }
-    
+
     protected static Collection<String> getElementsAllowingEmptyValues() {
         return _mappingStuff.mElementsAllowingEmptyValues;
     }
-    
+
     protected static Collection<String> getElementsPreservingWhiteSpace() {
         return _mappingStuff.mElementsPreservingWhiteSpace;
     }
@@ -222,7 +222,7 @@ public class SaxParserHandler extends DefaultHandler {
                     if (namespaceResolution != null) {
                       fileName = getSchemaURLFor(namespaceResolution);
                     } else {
-                      fileName = getSchemaURLFor(systemID.substring(systemID.lastIndexOf('/')+1));                    
+                      fileName = getSchemaURLFor(systemID.substring(systemID.lastIndexOf('/')+1));
                     }
                     // if this is not a request for a schema located in our repository, we fail the deployment
                     if (fileName==null) {
@@ -243,34 +243,34 @@ public class SaxParserHandler extends DefaultHandler {
             throw new SAXException(ioe);
         }
     }
-    
+
     /**
      * Sets if the parser should stop parsing and generate an SAXPArseException
      * when the xml parsed contains errors in regards to validation
      */
     public void setStopOnError(boolean stop) {
-	stopOnXMLErrors = stop;
+    stopOnXMLErrors = stop;
     }
-	
-    
+
+
     public void error(SAXParseException spe) throws SAXParseException {
         DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.invalidDescriptorFailure",
-            new Object[] {errorReportingString , String.valueOf(spe.getLineNumber()), 
+            new Object[] {errorReportingString , String.valueOf(spe.getLineNumber()),
                           String.valueOf(spe.getColumnNumber()), spe.getLocalizedMessage()});
-	 if (stopOnXMLErrors) {
-	     throw spe;
-	 }
-    } 
-    
+     if (stopOnXMLErrors) {
+         throw spe;
+     }
+    }
+
     public void fatalError(SAXParseException spe) throws SAXParseException {
         DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.invalidDescriptorFailure",
-            new Object[] {errorReportingString , String.valueOf(spe.getLineNumber()), 
+            new Object[] {errorReportingString , String.valueOf(spe.getLineNumber()),
                           String.valueOf(spe.getColumnNumber()), spe.getLocalizedMessage()});
-	if (stopOnXMLErrors) {        
-	    throw spe;
-	}
+    if (stopOnXMLErrors) {
+        throw spe;
     }
-    
+    }
+
     /**
      * @return the input stream for a DTD public ID
      */
@@ -286,9 +286,9 @@ public class SaxParserHandler extends DefaultHandler {
             return null;
         }
      }
-    
+
     /**
-     * @return an URL for the schema location for a schema indentified by the 
+     * @return an URL for the schema location for a schema indentified by the
      * passed parameter
      * @param schemaSystemID the system id for the schema
      */
@@ -296,29 +296,29 @@ public class SaxParserHandler extends DefaultHandler {
         File f = getSchemaFileFor(schemaSystemID);
         if (f!=null) {
             return f.toURI().toURL().toString();
-        } else { 
+        } else {
             return null;
         }
     }
-    
+
     /**
-     * @return a File pointer to the localtion of the schema indentified by the 
+     * @return a File pointer to the localtion of the schema indentified by the
      * passed parameter
      * @param schemaSystemID the system id for the schema
      */
     public static File getSchemaFileFor(String schemaSystemID) throws IOException {
-	if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+    if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
             DOLUtils.getDefaultLogger().fine("Getting Schema " + schemaSystemID);
-	}
+    }
         String schemaLoc = DTDRegistry.SCHEMA_LOCATION.replace('/', File.separatorChar);
         File f = new File(schemaLoc +File.separatorChar+ schemaSystemID);
         if (!f.exists()) {
             DOLUtils.getDefaultLogger().fine("Cannot find schema " + schemaSystemID);
             return null;
         }
-	return f;
+    return f;
     }
-    
+
 
     /**
      * Determine whether the syatemID starts with a known namespace.
@@ -362,11 +362,11 @@ public class SaxParserHandler extends DefaultHandler {
                          java.lang.String publicId,
                          java.lang.String systemId)
                          throws SAXException {
-	if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-	    DOLUtils.getDefaultLogger().fine("Received notation " + name + " :=: "  + publicId + " :=: " + systemId);
-	}
+    if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+        DOLUtils.getDefaultLogger().fine("Received notation " + name + " :=: "  + publicId + " :=: " + systemId);
     }
-    
+    }
+
 
     public void startPrefixMapping(String prefix,
                                String uri)
@@ -375,9 +375,9 @@ public class SaxParserHandler extends DefaultHandler {
         if (prefixMapping==null) {
             prefixMapping = new HashMap<String, String>();
         }
-        
-        // We need one namespace context per element, but any prefix mapping 
-        // callbacks occur *before* startElement is called.  So, push a 
+
+        // We need one namespace context per element, but any prefix mapping
+        // callbacks occur *before* startElement is called.  So, push a
         // context on the first startPrefixMapping callback per element.
         if( !pushedNamespaceContext ) {
             namespaces.pushContext();
@@ -390,7 +390,7 @@ public class SaxParserHandler extends DefaultHandler {
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
         if( !pushedNamespaceContext ) {
-            // We need one namespae context per element, so push a context 
+            // We need one namespae context per element, so push a context
             // if there weren't any prefix mappings defined.
             namespaces.pushContext();
         }
@@ -439,25 +439,25 @@ public class SaxParserHandler extends DefaultHandler {
           }
         }
 
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {        
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
             DOLUtils.getDefaultLogger().finer("start of element " + uri + " with local name "+ localName + " and " + qName);
         }
         XMLNode node=null;
         elementData=new StringBuffer();
-        
+
         if (nodes.isEmpty()) {
             // this must be a root element...
             Class rootNodeClass = _mappingStuff.mRootNodes.get(localName);
             if (rootNodeClass==null) {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                        new Object[] {localName , " not supported !"});                
-	        if (stopOnXMLErrors) {
+                        new Object[] {localName , " not supported !"});
+            if (stopOnXMLErrors) {
                     throw new IllegalArgumentException(localStrings.getLocalString("invalid.root.element", "{0} Element [{1}] is not a valid root element", new Object[]{errorReportingString, localName}));
                 }
             } else {
                 try {
                     node = (XMLNode) rootNodeClass.newInstance();
-                    if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {                        
+                    if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                         DOLUtils.getDefaultLogger().fine("Instanciating " + node);
                     }
                     if (node instanceof RootXMLNode) {
@@ -480,21 +480,21 @@ public class SaxParserHandler extends DefaultHandler {
         if (node!=null) {
             XMLElement element = new XMLElement(qName, namespaces);
             if (node.handlesElement(element)) {
-		node.startElement(element, attributes);
+        node.startElement(element, attributes);
             } else {
                 if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {                           DOLUtils.getDefaultLogger().fine("Asking for new handler for " + element + " to " + node);
                 }
                 XMLNode newNode = node.getHandlerFor(element);
-                if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {                
+                if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                     DOLUtils.getDefaultLogger().fine("Got " + newNode);
                 }
                 nodes.add(newNode);
                 addPrefixMapping(newNode);
-		newNode.startElement(element, attributes);
+        newNode.startElement(element, attributes);
             }
-        }        
+        }
     }
-    
+
     public void endElement(String uri, String localName, String qName) {
 
         String lastElement = null;
@@ -565,15 +565,15 @@ public class SaxParserHandler extends DefaultHandler {
             } else if (element.getQName().equals(
                 TagNames.ENVIRONMENT_PROPERTY_VALUE)) {
                 Object envEntryDesc = topNode.getDescriptor();
-                if (envEntryDesc != null && 
+                if (envEntryDesc != null &&
                     envEntryDesc instanceof EnvironmentProperty) {
-                    EnvironmentProperty envProp = 
-                        (EnvironmentProperty)envEntryDesc;   
+                    EnvironmentProperty envProp =
+                        (EnvironmentProperty)envEntryDesc;
                     // we need to preserve white space for env-entry-value
-                    // if the env-entry-type is java.lang.String or 
+                    // if the env-entry-type is java.lang.String or
                     // java.lang.Character
-                    if (envProp.getType() != null && 
-                        (envProp.getType().equals("java.lang.String") || 
+                    if (envProp.getType() != null &&
+                        (envProp.getType().equals("java.lang.String") ||
                          envProp.getType().equals("java.lang.Character"))) {
                         topNode.setElementValue(element,
                                         elementData.toString());
@@ -601,11 +601,11 @@ public class SaxParserHandler extends DefaultHandler {
             elementData=null;
         }
         if (topNode.endElement(element)) {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {        
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Removing top node " + topNode);
-            }                
+            }
             nodes.remove(nodes.size()-1);
-        } 
+        }
 
         namespaces.popContext();
         pushedNamespaceContext=false;
@@ -621,22 +621,22 @@ public class SaxParserHandler extends DefaultHandler {
           }
         }
     }
-    
+
     public void characters(char[] ch, int start, int stop) {
         if (elementData!=null) {
             elementData = elementData.append(ch,start, stop);
         }
-    }   
-    
+    }
+
     public XMLNode getTopNode() {
         return topNode;
     }
-    
+
     public void setTopNode(XMLNode node) {
         topNode = node;
         nodes.add(node);
     }
-    
+
     private void addPrefixMapping(XMLNode node) {
         if (prefixMapping != null) {
             for (Map.Entry<String, String> entry : prefixMapping.entrySet()) {
@@ -653,21 +653,21 @@ public class SaxParserHandler extends DefaultHandler {
     public void setErrorReportingString(String s) {
         errorReportingString = s;
     }
-       
+
     /**
      * Indicates whether the element name is one for which empty values should
      * be recorded.
      * <p>
-     * If there were many tags that support empty values, it might make sense to 
+     * If there were many tags that support empty values, it might make sense to
      * have a constant list that contains all those tag names.  Then this method
      * would search the list for the target elementName.  Because this code
      * is potentially invoked for many elements that do not support empty values,
-     * and because the list is very small at the moment, the current 
-     * implementation uses an inelegant but fast equals test.  
+     * and because the list is very small at the moment, the current
+     * implementation uses an inelegant but fast equals test.
      * <p>
-     * If the set of tags that should support empty values grows a little, 
-     * extending the expression to 
-     * 
+     * If the set of tags that should support empty values grows a little,
+     * extending the expression to
+     *
      * elementName.equals(TAG_1) || elementName.equals(TAG_2) || ...
      *
      * might make sense.  If the set of such tags grows sufficiently large, then

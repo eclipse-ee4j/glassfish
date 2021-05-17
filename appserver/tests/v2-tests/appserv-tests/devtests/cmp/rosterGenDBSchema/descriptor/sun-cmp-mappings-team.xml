@@ -21,10 +21,10 @@
 <sun-cmp-mappings>
   <sun-cmp-mapping>
     <!-- Test that we can generate dbschema at deployment. -->
-	<!-- It could be missing (though that would fail a DTD validation). -->
+    <!-- It could be missing (though that would fail a DTD validation). -->
     <!-- schema>RosterSchema</schema-->
-	<!-- Or, it could be an empty element (passing validation). -->
-	<schema/>
+    <!-- Or, it could be an empty element (passing validation). -->
+    <schema/>
     <entity-mapping>
       <ejb-name>LeagueEJB</ejb-name>
       <table-name>LEAGUE</table-name>

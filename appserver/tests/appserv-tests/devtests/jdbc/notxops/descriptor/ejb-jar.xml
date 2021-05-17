@@ -62,12 +62,12 @@
     <container-transaction>
       <method>
         <ejb-name>SimpleSessionEJB</ejb-name>
-	<method-name>updateDb</method-name>
+    <method-name>updateDb</method-name>
       </method>
       <trans-attribute>RequiresNew</trans-attribute>
     </container-transaction>
     -->
   </assembly-descriptor>
-      
+
 </ejb-jar>
 

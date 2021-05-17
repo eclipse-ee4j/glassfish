@@ -30,7 +30,7 @@ import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 /**
  * handler to get instance's host and port information which is used to
  * form the http url for osgi-console.
- * 
+ *
  * @author mohit
  */
 public class OSGIConsoleHandlers {
@@ -70,7 +70,7 @@ public class OSGIConsoleHandlers {
         Node node = domain.getNodeNamed(server.getNodeRef());
         String host = node.getNodeHost();
         String consoleUrl = "http://" + host + ":" + port + consolePath;
-        
+
         handlerCtx.setOutputValue("consoleUrl", consoleUrl);
     }
 

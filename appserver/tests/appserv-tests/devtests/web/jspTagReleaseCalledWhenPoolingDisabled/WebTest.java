@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         WebTest webTest = new WebTest(args);

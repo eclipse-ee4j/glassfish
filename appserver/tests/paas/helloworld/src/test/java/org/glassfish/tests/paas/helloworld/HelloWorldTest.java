@@ -41,70 +41,70 @@ import java.util.regex.*;
 
 public class HelloWorldTest {
 
-	@Test
-	public void test() throws Exception {
+    @Test
+    public void test() throws Exception {
 
-		// Bootstrap GlassFish DAS in embedded mode.
-		GlassFish glassfish = bootstrap();
+        // Bootstrap GlassFish DAS in embedded mode.
+        GlassFish glassfish = bootstrap();
 
-		// Deploy the PaaS app and verify it.
-		runTests(glassfish);
+        // Deploy the PaaS app and verify it.
+        runTests(glassfish);
 
-		// Re-deploy the PaaS app and verify it.
-		String testScenarios = System.getProperty("test.scenarios");
-		if (testScenarios == null
-				|| "all".contains(testScenarios.toLowerCase())) {
-			runTests(glassfish);
-		}
+        // Re-deploy the PaaS app and verify it.
+        String testScenarios = System.getProperty("test.scenarios");
+        if (testScenarios == null
+                || "all".contains(testScenarios.toLowerCase())) {
+            runTests(glassfish);
+        }
 
-		// 5. Stop the GlassFish DAS
-		glassfish.dispose();
-	}
+        // 5. Stop the GlassFish DAS
+        glassfish.dispose();
+    }
 
-	private void get(String urlStr, String result) throws Exception {
-		URL url = new URL(urlStr);
-		URLConnection yc = url.openConnection();
-		System.out.println("\nURLConnection [" + yc + "] : ");
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				yc.getInputStream()));
-		String line = null;
-		boolean found = false;
-		while ((line = in.readLine()) != null) {
-			System.out.println(line);
-			if (line.indexOf(result) != -1) {
-				found = true;
-			}
-		}
-		Assert.assertTrue(found);
-		System.out.println("\n***** SUCCESS **** Found [" + result
-				+ "] in the response.*****\n");
-	}
+    private void get(String urlStr, String result) throws Exception {
+        URL url = new URL(urlStr);
+        URLConnection yc = url.openConnection();
+        System.out.println("\nURLConnection [" + yc + "] : ");
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream()));
+        String line = null;
+        boolean found = false;
+        while ((line = in.readLine()) != null) {
+            System.out.println(line);
+            if (line.indexOf(result) != -1) {
+                found = true;
+            }
+        }
+        Assert.assertTrue(found);
+        System.out.println("\n***** SUCCESS **** Found [" + result
+                + "] in the response.*****\n");
+    }
 
-	private void runTests(GlassFish glassfish) throws Exception {
-		// 2. Deploy the PaaS application.
-		File archive = new File(System.getProperty("basedir")
-				+ "/target/helloworld.war");
+    private void runTests(GlassFish glassfish) throws Exception {
+        // 2. Deploy the PaaS application.
+        File archive = new File(System.getProperty("basedir")
+                + "/target/helloworld.war");
 
-		Assert.assertTrue(archive.exists());
-		Deployer deployer = null;
-		String appName = null;
-		try {
-			deployer = glassfish.getDeployer();
-			appName = deployer.deploy(archive);
+        Assert.assertTrue(archive.exists());
+        Deployer deployer = null;
+        String appName = null;
+        try {
+            deployer = glassfish.getDeployer();
+            appName = deployer.deploy(archive);
 
-			System.err.println("Deployed [" + appName + "]");
-			Assert.assertNotNull(appName);
+            System.err.println("Deployed [" + appName + "]");
+            Assert.assertNotNull(appName);
 
-			CommandRunner commandRunner = glassfish.getCommandRunner();
-			CommandResult result = commandRunner.run("list-services");
-			System.out.println("\nlist-services command output [ "
-					+ result.getOutput() + "]");
+            CommandRunner commandRunner = glassfish.getCommandRunner();
+            CommandResult result = commandRunner.run("list-services");
+            System.out.println("\nlist-services command output [ "
+                    + result.getOutput() + "]");
 
-			// 3. Access the app to make sure PaaS app is correctly provisioned.
-			String HTTP_PORT = (System.getProperty("http.port") != null) ? System
-					.getProperty("http.port") : "28080";
+            // 3. Access the app to make sure PaaS app is correctly provisioned.
+            String HTTP_PORT = (System.getProperty("http.port") != null) ? System
+                    .getProperty("http.port") : "28080";
 
-			List<String> ips = getLBIPAddress(glassfish);
+            List<String> ips = getLBIPAddress(glassfish);
 
                         //wait for instances to come up
                         //Thread.sleep(60000);
@@ -112,84 +112,84 @@ public class HelloWorldTest {
                         for (String ip:ips) {
                             get("http://" + ip + ":" + HTTP_PORT
                                         + "/helloworld/hi.jsp",
-					"PaaS says Hello World!");
+                    "PaaS says Hello World!");
                         }
 
-			// 4. Undeploy the PaaS application.
-		} finally {
-			if (appName != null) {
-				deployer.undeploy(appName);
-				System.err.println("Undeployed [" + appName + "]");
-				try {
-					boolean undeployClean = false;
-					CommandResult commandResult = glassfish.getCommandRunner()
-							.run("list-services");
-					if (commandResult.getOutput().contains("Nothing to list.")) {
-						undeployClean = true;
-					}
-					Assert.assertTrue(undeployClean);
-				} catch (Exception e) {
-					System.err.println("Couldn't verify whether undeploy succeeded");
-				}
+            // 4. Undeploy the PaaS application.
+        } finally {
+            if (appName != null) {
+                deployer.undeploy(appName);
+                System.err.println("Undeployed [" + appName + "]");
+                try {
+                    boolean undeployClean = false;
+                    CommandResult commandResult = glassfish.getCommandRunner()
+                            .run("list-services");
+                    if (commandResult.getOutput().contains("Nothing to list.")) {
+                        undeployClean = true;
+                    }
+                    Assert.assertTrue(undeployClean);
+                } catch (Exception e) {
+                    System.err.println("Couldn't verify whether undeploy succeeded");
+                }
 
-			}
-		}
+            }
+        }
 
-	}
+    }
 
-	private GlassFish bootstrap() throws Exception {
-		GlassFishProperties glassFishProperties = new GlassFishProperties();
-		glassFishProperties.setInstanceRoot(System.getenv("S1AS_HOME")
-				+ "/domains/domain1");
-		glassFishProperties.setConfigFileReadOnly(false);
-		GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish(
-				glassFishProperties);
-		PrintStream sysout = System.out;
-		glassfish.start();
-		System.setOut(sysout);
-		return glassfish;
-	}
+    private GlassFish bootstrap() throws Exception {
+        GlassFishProperties glassFishProperties = new GlassFishProperties();
+        glassFishProperties.setInstanceRoot(System.getenv("S1AS_HOME")
+                + "/domains/domain1");
+        glassFishProperties.setConfigFileReadOnly(false);
+        GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish(
+                glassFishProperties);
+        PrintStream sysout = System.out;
+        glassfish.start();
+        System.setOut(sysout);
+        return glassfish;
+    }
 
-	private List<String> getLBIPAddress(GlassFish glassfish) {
+    private List<String> getLBIPAddress(GlassFish glassfish) {
                 List<String> lbIPs = new ArrayList<String>();
-		String IPAddressPattern = "(([01]?\\d*|2[0-4]\\d|25[0-5])\\."
-				        + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-				        + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-				        + "([0-9]?\\d\\d?|2[0-4]\\d|25[0-5]))";
-		try {
-			CommandRunner commandRunner = glassfish.getCommandRunner();
-			String result = commandRunner
-					.run("list-services", "--type", "LOAD_BALANCER",
-							"--output", "IP-ADDRESS").getOutput().toString();
-			if (result.contains("Nothing to list.")) {
-				result = commandRunner
-						.run("list-services", "--type", "JavaEE", "--output",
-								"IP-ADDRESS").getOutput().toString();
+        String IPAddressPattern = "(([01]?\\d*|2[0-4]\\d|25[0-5])\\."
+                        + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+                        + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+                        + "([0-9]?\\d\\d?|2[0-4]\\d|25[0-5]))";
+        try {
+            CommandRunner commandRunner = glassfish.getCommandRunner();
+            String result = commandRunner
+                    .run("list-services", "--type", "LOAD_BALANCER",
+                            "--output", "IP-ADDRESS").getOutput().toString();
+            if (result.contains("Nothing to list.")) {
+                result = commandRunner
+                        .run("list-services", "--type", "JavaEE", "--output",
+                                "IP-ADDRESS").getOutput().toString();
 
                                 System.out.println("#####" + result);
-				Pattern p = Pattern.compile(IPAddressPattern);
-				Matcher m = p.matcher(result);
+                Pattern p = Pattern.compile(IPAddressPattern);
+                Matcher m = p.matcher(result);
                                 while (m.find()) {
                                     lbIPs.add(m.group(1));
                                 }
 
                                 System.out.println("LB IPs = " + lbIPs.toString());
-			} else {
-				Pattern p = Pattern.compile(IPAddressPattern);
-				Matcher m = p.matcher(result);
+            } else {
+                Pattern p = Pattern.compile(IPAddressPattern);
+                Matcher m = p.matcher(result);
                                 while (m.find()) {
                                     lbIPs.add(m.group(1));
                                 }
 
                                 System.out.println("LB IPs = " + lbIPs.toString());
-			}
+            }
 
-		} catch (Exception e) {
-			System.out.println("Regex has thrown an exception "
-					+ e.getMessage());
-			lbIPs.add("localhost");
-		}
-		return lbIPs;
-	}
+        } catch (Exception e) {
+            System.out.println("Regex has thrown an exception "
+                    + e.getMessage());
+            lbIPs.add("localhost");
+        }
+        return lbIPs;
+    }
 
 }

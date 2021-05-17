@@ -102,7 +102,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
         try {
             asock = socket.accept();
             assert asock instanceof SSLSocket;
-            
+
             if(clientAuthNeed) {
                 ((SSLSocket) asock).setNeedClientAuth(clientAuthNeed);
             } else {
@@ -119,7 +119,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
         if (!(sock instanceof SSLSocket)) {
             throw new IllegalArgumentException("The Socket has to be SSLSocket");
         }
-        
+
         ((SSLSocket) sock).startHandshake();
     }
 
@@ -161,9 +161,9 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
                 } // while
                 cipher = requestedCiphers.substring(fromIndex);
             }
-            
+
             assert cipher != null;
-            
+
             cipher = cipher.trim();
             if (cipher.length() > 0) {
                 /*
@@ -326,7 +326,7 @@ public abstract class JSSESocketFactory extends ServerSocketFactory {
         if (!(ssocket instanceof SSLServerSocket)) {
             throw new IllegalArgumentException("The ServerSocket has to be SSLServerSocket");
         }
-        
+
         SSLServerSocket socket = (SSLServerSocket) ssocket;
         if (attributes.get("ciphers") != null) {
             socket.setEnabledCipherSuites(enabledCiphers);

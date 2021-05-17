@@ -37,7 +37,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -49,15 +49,15 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
-         <antcall target="runclient-local"/> 
-	<antcall target="run-standalone-client"/>
+         <antcall target="runclient-local"/>
+    <antcall target="run-standalone-client"/>
     </target>
 
     <target name="runclient-local" depends="init-common">
@@ -65,8 +65,8 @@
         <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks" />
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-  	<!-- dummy user added as appclient throwing login window -->	
-	<arg value="-textauth"/>
+      <!-- dummy user added as appclient throwing login window -->
+    <arg value="-textauth"/>
         <arg value="-user"/>
         <arg value="temp"/>
         <arg value="-password"/>
@@ -75,7 +75,7 @@
     </target>
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
   <!-- =============================================== -->
     <!-- Target to run the standalone client without ACC -->
@@ -93,7 +93,7 @@
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
         <jvmarg value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks"/>
         <jvmarg value="-Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks"/>
-	<jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
+    <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>

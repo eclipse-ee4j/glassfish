@@ -22,10 +22,10 @@
 
 <confirmation>
     <orderID>
-		"1234"
-	</orderID>
+        "1234"
+    </orderID>
 
     <ship-date>
-		"01-01-2001"
-	</ship-date>
+        "01-01-2001"
+    </ship-date>
 </confirmation>

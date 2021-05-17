@@ -29,7 +29,7 @@ import java.util.logging.Level;
  * @author Jerome Dochez
  */
 public class DefaultErrorHandler implements ErrorHandler {
-    
+
     Logger logger;
 
     /**
@@ -38,7 +38,7 @@ public class DefaultErrorHandler implements ErrorHandler {
     public DefaultErrorHandler() {
         logger = AnnotationUtils.getLogger();
     }
-    
+
     /**
      * Creates a new ErrorHandler with the provided looger;
      */
@@ -49,11 +49,11 @@ public class DefaultErrorHandler implements ErrorHandler {
     /**
      * Receive notication of a fine error message
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing 
-     */ 
+     * @throws any exception to stop the annotation processing
+     */
     public void fine(AnnotationProcessorException ape) throws
             AnnotationProcessorException {
-        
+
         if (logger.isLoggable(Level.FINE)){
             AnnotationInfo info = ape.getLocator();
             if (info==null){
@@ -62,20 +62,20 @@ public class DefaultErrorHandler implements ErrorHandler {
                 logger.fine(AnnotationUtils.getLocalString(
                     "enterprise.deployment.annotation.error",
                     "{2}\n symbol: {0}\n location: {1}\n\n",
-                    new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));            
+                    new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
             }
         }
-        
+
     }
-    
+
     /**
      * Receive notification of a warning
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing 
+     * @throws any exception to stop the annotation processing
      */
     public void warning(AnnotationProcessorException ape) throws
             AnnotationProcessorException {
-        
+
         if (logger.isLoggable(Level.WARNING)){
             AnnotationInfo info = ape.getLocator();
             if (info==null){
@@ -84,19 +84,19 @@ public class DefaultErrorHandler implements ErrorHandler {
                 logger.warning(AnnotationUtils.getLocalString(
                     "enterprise.deployment.annotation.error",
                     "{2}\n symbol: {0}\n location: {1}\n\n",
-                    new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));            
+                    new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
             }
         }
     }
-    
+
     /**
      * Receive notification of an error
      * @param ape The error information
      * @throws amy exception to stop the annotation processing
      */
-    public void error(AnnotationProcessorException ape) throws 
+    public void error(AnnotationProcessorException ape) throws
             AnnotationProcessorException {
-        
+
         AnnotationInfo info = ape.getLocator();
         if (info==null){
             logger.severe(ape.getMessage());
@@ -104,7 +104,7 @@ public class DefaultErrorHandler implements ErrorHandler {
             logger.severe(AnnotationUtils.getLocalString(
                 "enterprise.deployment.annotation.error",
                 "{2}\n symbol: {0} location: {1}\n\n",
-                new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));            
+                new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
         }
     }
 }

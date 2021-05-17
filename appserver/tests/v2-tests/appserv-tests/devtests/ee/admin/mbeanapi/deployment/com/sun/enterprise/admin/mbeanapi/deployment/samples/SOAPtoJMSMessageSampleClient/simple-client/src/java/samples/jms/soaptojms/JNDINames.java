@@ -21,10 +21,10 @@ public class JNDINames {
   private JNDINames() { } //Prevents instantiation
 
   // JNDI names of topic resources
-  public static final String TOPIC_CONNECTION_FACTORY =                   
+  public static final String TOPIC_CONNECTION_FACTORY =
                    "jms/TopicConnectionFactory";
 
-  public static final String TEST_MDB_TOPIC =                        
+  public static final String TEST_MDB_TOPIC =
                          "jms/TestTopic";
 
 }

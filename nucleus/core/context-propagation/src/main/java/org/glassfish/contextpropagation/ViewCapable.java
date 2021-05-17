@@ -20,7 +20,7 @@ package org.glassfish.contextpropagation;
  * Custom work contexts should implement this interface and store any data
  * to be propagated in the View instance that is provided to its factory.
  * Concrete instances are produced by the ContextViewFactory. They must
- * implement a public constructor that takes a single View argument. Instances 
+ * implement a public constructor that takes a single View argument. Instances
  * must cache the view and use it to store artifacts to be propagated.
  */
 public interface ViewCapable {

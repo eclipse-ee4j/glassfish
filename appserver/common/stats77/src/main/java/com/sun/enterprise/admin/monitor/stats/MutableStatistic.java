@@ -24,9 +24,9 @@ import java.io.Serializable;
  * java.io.Serializable, so that its subclasses can be serialized to facilitate
  * working with other management clients.
  * Refer to the package description
- * to understand the intent of this interface. 
+ * to understand the intent of this interface.
  * <P>
- * Methods of this class should be called judiciously by the component that is 
+ * Methods of this class should be called judiciously by the component that is
  * gathering the statistics.
  * @author Kedar Mhaswade
  * @since S1AS8.0
@@ -35,7 +35,7 @@ import java.io.Serializable;
 
 public interface MutableStatistic extends Serializable {
 
-    /** 
+    /**
      * Returns a read-only view of this Statistic. An implementing class has
      * to return the instances of Statistic interfaces defined in {@link javax.management.j2ee.statistic}
      * and {@link com.sun.enterprise.admin.monitor.stats} packages.
@@ -54,8 +54,8 @@ public interface MutableStatistic extends Serializable {
      * @return      an instance of Statistic interface that should not be cached.
      */
     public Statistic modifiableView();
-    
-    /** 
+
+    /**
      * Resets the encapsulated Statistic interface to its initial value. The idea being, if (after
      * creation of the instance) the state changes, the initial state can be easily regained by
      * calling this method. Note that the time of last sampling changes to the instant

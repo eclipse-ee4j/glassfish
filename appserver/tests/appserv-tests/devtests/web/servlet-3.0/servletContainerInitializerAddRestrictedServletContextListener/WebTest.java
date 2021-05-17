@@ -55,7 +55,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for IT 8565");
 
@@ -71,7 +71,7 @@ public class WebTest {
     }
 
     private void doTest() throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot + "/test";
         HttpURLConnection conn = (HttpURLConnection)
             (new URL(url)).openConnection();

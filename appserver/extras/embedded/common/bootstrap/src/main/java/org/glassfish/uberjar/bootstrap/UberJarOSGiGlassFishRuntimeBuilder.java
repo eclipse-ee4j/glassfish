@@ -106,7 +106,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
         } catch (URISyntaxException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
-         
+
         // XXX : Commented out by Prasad , we are again looking for instance root here. Why ?
         // String instanceRoot = props.getProperty(Constants.INSTALL_ROOT_PROP_NAME);
         String installRoot = bsOptions.getInstallRoot();

@@ -79,23 +79,23 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             setEnv(gfProps.getProperties());
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
             final ServiceTracker hk2Tracker = new ServiceTracker(getBundleContext(), Main.class.getName(), null);
-            
+
             hk2Tracker.open();
             final Main main = (Main) hk2Tracker.waitForService(0);
             hk2Tracker.close();
-            
+
             final ModulesRegistry mr = ModulesRegistry.class.cast(getBundleContext().getService(getBundleContext().getServiceReference(ModulesRegistry.class.getName())));
             ServiceLocator serviceLocator = main.createServiceLocator(mr, startupContext, null, null);
             final ModuleStartup gfKernel = main.findStartupService(mr, serviceLocator, null, startupContext);
             GlassFish glassFish = createGlassFish(gfKernel, serviceLocator, gfProps.getProperties());
             gfs.add(glassFish);
-            
+
             return glassFish;
         } catch (BootException | InterruptedException ex) {
             throw new GlassFishException(ex);
         } catch (MultiException ex) {
             GlassFishException e = null;
-            
+
             String bundleMessage = "";
             try {
                 bundleMessage = findBundleMessage(ex);
@@ -127,7 +127,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             if (e == null) {
                 throw ex;
             }
-            
+
             throw e;
         }
     }
@@ -143,10 +143,10 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             bundleBuilder.append("\n");
         }
     }
-    
+
     private String findBundleMessage(MultiException ex) {
         for (Throwable error : ex.getErrors()) {
-            
+
             Throwable currentThrowable = error;
             while (currentThrowable != null) {
                 if (currentThrowable instanceof BundleException) {
@@ -155,7 +155,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
                 currentThrowable = currentThrowable.getCause();
             }
         }
-        
+
         return null;
     }
 

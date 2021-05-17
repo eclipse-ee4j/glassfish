@@ -29,7 +29,7 @@ import java.util.List;
  * This node handles all the role mapping information
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class SecurityRoleMappingNode extends RuntimeDescriptorNode {
 
@@ -38,20 +38,20 @@ public class SecurityRoleMappingNode extends RuntimeDescriptorNode {
         return new SecurityRoleMapping();
     }
 
-    
+
     public SecurityRoleMappingNode() {
         registerElementHandler(
             new XMLElement(RuntimeTagNames.PRINCIPAL_NAME),
             PrincipalNameNode.class, "addPrincipalName");
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     *                                               
-     * @param element the xml element                
+     *
+     * @param element the xml element
      * @param value it's associated value
-     */    
-    public void setElementValue(XMLElement element, String value) {   
+     */
+    public void setElementValue(XMLElement element, String value) {
         SecurityRoleMapping srm = (SecurityRoleMapping) getDescriptor();
         if (RuntimeTagNames.ROLE_NAME.equals(element.getQName())) {
             srm.setRoleName(value);
@@ -64,11 +64,11 @@ public class SecurityRoleMappingNode extends RuntimeDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, SecurityRoleMapping descriptor) {  
+     */
+    public Node writeDescriptor(Node parent, String nodeName, SecurityRoleMapping descriptor) {
         Node roleMapping = appendChild(parent, nodeName);
 
         //role-name
@@ -77,15 +77,15 @@ public class SecurityRoleMappingNode extends RuntimeDescriptorNode {
         //principal-name+
         PrincipalNameNode principal = new PrincipalNameNode();
         List<PrincipalNameDescriptor> principals = descriptor.getPrincipalNames();
-	    for (int i = 0; i < principals.size(); i++) {
+        for (int i = 0; i < principals.size(); i++) {
             principal.writeDescriptor(
                 roleMapping, RuntimeTagNames.PRINCIPAL_NAME, principals.get(i));
-	    }
+        }
 
         //group+
         List<String> groups = descriptor.getGroupNames();
         for (int i = 0; i < groups.size(); i++) {
-	        appendTextChild(roleMapping, RuntimeTagNames.GROUP_NAME, groups.get(i));
+            appendTextChild(roleMapping, RuntimeTagNames.GROUP_NAME, groups.get(i));
         }
         return roleMapping;
     }

@@ -42,8 +42,8 @@ public class EjbContainerStarter
     EjbContainerUtil ejbContainerUtilImpl;
 
     public void postConstruct() {
-    }    
-    
+    }
+
     public void preDestroy() {
         if (ejbContainerUtilImpl instanceof PreDestroy) {
             ((PreDestroy)ejbContainerUtilImpl).preDestroy();

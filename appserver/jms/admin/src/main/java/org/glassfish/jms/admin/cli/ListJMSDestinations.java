@@ -59,15 +59,15 @@ import org.glassfish.api.admin.*;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jmsdest", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jmsdest",
         description="List JMS Destinations",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jmsdest", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jmsdest",
         description="List JMS Destinations",
         params={
             @RestParam(name="id", value="$parent")
@@ -206,13 +206,13 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
     }
     private String toStringLabel(String type)  {
 
-	    if (type.equals(DESTINATION_TYPE_QUEUE))  {
-	        return("queue");
-	    } else if (type.equals(DESTINATION_TYPE_TOPIC))  {
-	        return("topic");
-	    } else  {
-	        return("unknown");
-	    }
+        if (type.equals(DESTINATION_TYPE_QUEUE))  {
+            return("queue");
+        } else if (type.equals(DESTINATION_TYPE_TOPIC))  {
+            return("topic");
+        } else  {
+            return("unknown");
+        }
     }
 
     }

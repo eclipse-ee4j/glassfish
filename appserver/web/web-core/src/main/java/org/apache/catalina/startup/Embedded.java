@@ -128,7 +128,7 @@ public class Embedded  extends StandardService {
         setLogger(logger);
         setRealm(realm);
         setSecurityProtection();
-        
+
     }
 
 
@@ -387,8 +387,8 @@ public class Embedded  extends StandardService {
     public Engine[] getEngines() {
         return engines;
     }
-    
-    
+
+
     /**
      * Create, configure, and return a new TCP/IP socket connector
      * based on the specified properties.
@@ -401,8 +401,8 @@ public class Embedded  extends StandardService {
      */
     public Connector createConnector(InetAddress address, int port,
                                      boolean secure) {
-	return createConnector(address != null? address.toString() : null,
-			       port, secure);
+    return createConnector(address != null? address.toString() : null,
+                   port, secure);
     }
 
     public Connector createConnector(String address, int port,
@@ -418,42 +418,42 @@ public class Embedded  extends StandardService {
 
     public Connector createConnector(InetAddress address, int port,
                                      String protocol) {
-	return createConnector(address != null? address.toString() : null,
-			       port, protocol);
+    return createConnector(address != null? address.toString() : null,
+                   port, protocol);
     }
 
     public Connector createConnector(String address, int port,
-				     String protocol) {
+                     String protocol) {
 
         Connector connector = null;
 
-	if (address != null) {
-	    /*
-	     * InetAddress.toString() returns a string of the form
-	     * "<hostname>/<literal_IP>". Get the latter part, so that the
-	     * address can be parsed (back) into an InetAddress using
-	     * InetAddress.getByName().
-	     */
-	    int index = address.indexOf('/');
-	    if (index != -1) {
-		address = address.substring(index + 1);
-	    }
-	}
+    if (address != null) {
+        /*
+         * InetAddress.toString() returns a string of the form
+         * "<hostname>/<literal_IP>". Get the latter part, so that the
+         * address can be parsed (back) into an InetAddress using
+         * InetAddress.getByName().
+         */
+        int index = address.indexOf('/');
+        if (index != -1) {
+        address = address.substring(index + 1);
+        }
+    }
 
-	if (log.isLoggable(Level.FINE)) {
+    if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Creating connector for address='" +
                     ((address == null) ? "ALL" : address) +
                     "' port='" + port + "' protocol='" + protocol + "'");
-	}
+    }
 
         try {
 
-            Class clazz = 
+            Class clazz =
                 Class.forName("org.apache.catalina.connector.Connector");
             connector = (Connector) clazz.newInstance();
 
             if (address != null) {
-                IntrospectionUtils.setProperty(connector, "address", 
+                IntrospectionUtils.setProperty(connector, "address",
                                                "" + address);
             }
             IntrospectionUtils.setProperty(connector, "port", "" + port);
@@ -468,8 +468,8 @@ public class Embedded  extends StandardService {
                 try {
                     Class serverSocketFactoryClass = Class.forName
                        ("org.apache.catalina.connector.CoyoteServerSocketFactory");
-                    ServerSocketFactory factory = 
-                        (ServerSocketFactory) 
+                    ServerSocketFactory factory =
+                        (ServerSocketFactory)
                         serverSocketFactoryClass.newInstance();
                     connector.setFactory(factory);
                 } catch (Exception e) {
@@ -519,7 +519,7 @@ public class Embedded  extends StandardService {
         context.setDebug(debug);
         context.setDocBase(docBase);
         context.setPath(path);
-        
+
         ContextConfig config = new ContextConfig();
         config.setCustomAuthenticators(authenticators);
         config.setDebug(debug);
@@ -1004,7 +1004,7 @@ public class Embedded  extends StandardService {
                 }
             }
         }
-        // last resort - for minimal/embedded cases. 
+        // last resort - for minimal/embedded cases.
         if(catalinaHome==null) {
             catalinaHome=System.getProperty("user.dir");
         }
@@ -1034,7 +1034,7 @@ public class Embedded  extends StandardService {
                 }
             }
             System.setProperty("catalina.base", catalinaBase);
-        } 
+        }
 
     }
 

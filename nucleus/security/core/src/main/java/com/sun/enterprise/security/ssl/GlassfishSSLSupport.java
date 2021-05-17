@@ -36,7 +36,7 @@ import javax.net.ssl.SSLSocket;
 public class GlassfishSSLSupport implements SSLSupport {
 
     private final static Logger logger = SecurityLoggerInfo.getLogger();
-    
+
     /**
      * A mapping table to determine the number of effective bits in the key
      * when using a cipher suite containing the specified cipher name.  The
@@ -54,7 +54,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         new CipherData("_WITH_AES_128_", 128),
         new CipherData("_WITH_AES_256_", 256)
     };
-    
+
     private final SSLSocket socket;
     private final SSLEngine engine;
     private SSLSession session;

@@ -152,7 +152,7 @@ list_test_ids(){
 }
 
 kill_clean(){
-  if [ ${#1} -ne 0 ] ; then kill -9 $1 ; fi 
+  if [ ${#1} -ne 0 ] ; then kill -9 $1 ; fi
 }
 
 post_test_run(){

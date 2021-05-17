@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 
 /**
  * To designate a class as monitorable so that it is published in the MonitoringRegistry
- * 
+ *
  * @author Harpreet Singh
  */
 @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD })

@@ -34,7 +34,7 @@ import javax.management.remote.JMXServiceURL;
 
 
 public class SimpleBMPClient {
- 
+
     private static long count = 0;
     private static final Object lock = new Integer(10);
     private long totalIterations = 0;
@@ -84,7 +84,7 @@ public class SimpleBMPClient {
         for (int i = 0; i < threads.length; i++) {
             threads[i].start();
         }
-//        System.out.println("Started at : " + 
+//        System.out.println("Started at : " +
 
         TimerTask task = new TimerTask() {
             public void run() {
@@ -102,7 +102,7 @@ public class SimpleBMPClient {
             System.out.println("-----------------------------------------------------------------------------------");
             System.out.println("Total getConnection() : " + totalCount + ", monitoring-count : " + monitoringCount);
             System.out.println("-----------------------------------------------------------------------------------");
-      
+
             if(totalCount == monitoringCount){
                 stat.addStatus(testSuite + " Perf-test : ", stat.PASS);
             }else{
@@ -112,7 +112,7 @@ public class SimpleBMPClient {
                 e.printStackTrace();
             }
             stat.printSummary();
-           
+
             }
         };
         Timer timer = new Timer();

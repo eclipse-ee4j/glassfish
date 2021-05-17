@@ -17,11 +17,11 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies the statistics provided by a stateful session bean. 
+ * Specifies the statistics provided by a stateful session bean.
  */
 public interface StatefulSessionBeanStats extends SessionBeanStats {
     /**
-     * Number of beans that are in the passive state. 
+     * Number of beans that are in the passive state.
      */
     RangeStatistic getPassiveCount();
 }

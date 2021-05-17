@@ -35,7 +35,7 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the format attribute, which specifies the format of the access log.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "%client.name% %auth-user-name% %datetime% %request% %status% %response.length%")
@@ -62,14 +62,14 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
      *
      * @param value allowed object is {@link String }
      * @throws PropertyVetoException if a listener vetoes the change
-     * 
+     *
      */
     void setRotationPolicy(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the rotation-interval-in-minutes attribute. The time interval in minutes between two successive
      * rotations of the access logs.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "1440")
@@ -88,7 +88,7 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the rotation-suffix attribute. The suffix to be added to the access-log name after rotation.
      * Acceptable values include those supported by java.text.SimpleDateFormat and "%YYYY;%MM;%DD;-%hh;h%mm;m%ss;s".
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "yyyy-MM-dd")
@@ -104,7 +104,7 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the rotation-enabled attribute. The flag for enabling the access-log rotation
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
@@ -121,7 +121,7 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
     /**
      * Size in bytes of the buffer where access log calls are stored. If the value is less than 5120, a warning message is
      * issued, and the value is set to 5120
-     * 
+     *
      * @return the buffer-size
      */
     @Attribute(defaultValue = "32768")
@@ -133,7 +133,7 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
      * Number of seconds before the log is written to the disk. The access log is written when the buffer is full or when
      * the interval expires. If the value is 0, the buffer is always written even if it is not full. This means that each
      * time the server is accessed, the log message is stored directly to the file
-     * 
+     *
      * @return the write interval in seconds
      */
     @Attribute(defaultValue = "300")
@@ -143,10 +143,10 @@ public interface AccessLog extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the maximum number of rotated access log files that are to be kept.
-     * 
+     *
      * <p>
      * A negative value must be interpreted as no limit.
-     * 
+     *
      * @return the max number of log files
      */
     @NotNull

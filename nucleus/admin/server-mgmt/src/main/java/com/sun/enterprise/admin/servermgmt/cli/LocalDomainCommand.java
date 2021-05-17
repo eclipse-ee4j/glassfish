@@ -26,7 +26,7 @@ import org.glassfish.api.admin.*;
 /**
  * A class that's supposed to capture all the behavior common to operation on a "local" domain. It's supposed to act as
  * the abstract base class that provides more functionality to the commands that operate on a local domain.
- * 
+ *
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  * @author Byron Nevins (bnevins@dev.java.net)
  */
@@ -43,8 +43,8 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
 
     /*
      * The prepare method must ensure that the superclass' implementation of
-     * the method is called.  
-     * The reason we override here is that we can get into trouble with layers 
+     * the method is called.
+     * The reason we override here is that we can get into trouble with layers
      * of NPE possibilities.  So here the ServerDirs object is initialized
      * right away.  It will return null for all non-boolean method calls.  But
      * we never have to do a null-check on the ServerDirs object itself.
@@ -81,7 +81,7 @@ public abstract class LocalDomainCommand extends LocalServerCommand {
 
     /**
      * We need this so that @Param values for domainname can be remembered later when the ServerDirs object is made.
-     * 
+     *
      * @param name the user-specified domain name.
      */
     protected final void setDomainName(String name) {

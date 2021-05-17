@@ -54,5 +54,5 @@ public interface HttpRedirect extends ConfigBeanProxy, PropertyBag {
 
     @SuppressWarnings({"UnusedDeclaration"})
     void setSecure(String value);
-    
+
 }

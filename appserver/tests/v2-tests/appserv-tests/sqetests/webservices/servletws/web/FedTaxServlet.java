@@ -21,15 +21,15 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import javax.naming.*;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.namespace.QName;
 import jakarta.servlet.SingleThreadModel;
 
-public class FedTaxServlet implements 
-			SingleThreadModel, ServiceLifecycle {
+public class FedTaxServlet implements
+            SingleThreadModel, ServiceLifecycle {
 
     public FedTaxServlet() {
         System.out.println("FedTaxServlet() instantiated");
@@ -44,7 +44,7 @@ public class FedTaxServlet implements
     }
 
     public double getFedTax(double income, double deductions) {
-	System.out.println("getStateTax invoked from servlet endpoint");
-	 return ((income -  deductions) * 0.2);
+    System.out.println("getStateTax invoked from servlet endpoint");
+     return ((income -  deductions) * 0.2);
     }
 }

@@ -36,8 +36,8 @@ import java.util.Set;
  * objects, so the added allocation overhead is tolerable. This
  * implementaton directly extends java.util.HashMap.
  *
- * @author	Markus Fuchs
- * @see		java.util.HashMap
+ * @author    Markus Fuchs
+ * @see        java.util.HashMap
  * @see     java.lang.ref.WeakReference
  */
 
@@ -122,7 +122,7 @@ public class WeakValueHashMap extends HashMap {
         // clean up calls on different operations.
         processQueue();
 
-        WeakValue oldValue = 
+        WeakValue oldValue =
             (WeakValue)super.put(key, WeakValue.create(key, value, queue));
         return getReferenceObject(oldValue);
     }
@@ -183,9 +183,9 @@ public class WeakValueHashMap extends HashMap {
          * Creates a new weak reference without adding it to a
          * ReferenceQueue.
          */
-	private static WeakValue create(Object value) {
-	    if (value == null) return null;
-	    else return new WeakValue(value);
+    private static WeakValue create(Object value) {
+        if (value == null) return null;
+        else return new WeakValue(value);
         }
 
         private WeakValue(Object key, Object value, ReferenceQueue queue) {
@@ -196,10 +196,10 @@ public class WeakValueHashMap extends HashMap {
         /**
          * Creates a new weak reference and adds it to the given queue.
          */
-        private static WeakValue create(Object key, Object value, 
+        private static WeakValue create(Object key, Object value,
                                         ReferenceQueue queue) {
-	    if (value == null) return null;
-	    else return new WeakValue(key, value, queue);
+        if (value == null) return null;
+        else return new WeakValue(key, value, queue);
         }
 
         /**
@@ -236,15 +236,15 @@ public class WeakValueHashMap extends HashMap {
         }
     }
 
-    /** 
+    /**
      * Internal class for entries. This class wraps/unwraps the
      * values of the Entry objects returned from the underlying map.
      */
     private class Entry implements Map.Entry {
         private Map.Entry ent;
-        private Object value;	/* Strong reference to value, so that the
-				   GC will leave it alone as long as this
-				   Entry exists */
+        private Object value;    /* Strong reference to value, so that the
+                   GC will leave it alone as long as this
+                   Entry exists */
 
         Entry(Map.Entry ent, Object value) {
             this.ent = ent;
@@ -260,7 +260,7 @@ public class WeakValueHashMap extends HashMap {
         }
 
         public Object setValue(Object value) {
-            // This call changes the map. Please see the comment on 
+            // This call changes the map. Please see the comment on
             // the put method for the correctness remark.
             Object oldValue = this.value;
             this.value = value;
@@ -358,8 +358,8 @@ public class WeakValueHashMap extends HashMap {
             } else if (hv.equals(ev)) {
                 WeakValueHashMap.this.remove(ek);
                 return true;
-            }                
-                
+            }
+
             return false;
         }
 
@@ -408,36 +408,36 @@ public class WeakValueHashMap extends HashMap {
     public Collection values() {
         // delegates to entrySet, because super method returns
         // WeakValues instead of value objects
-	if (values == null) {
-	    values = new AbstractCollection() {
-		public Iterator iterator() {
-		    return new Iterator() {
-			private Iterator i = entrySet().iterator();
+    if (values == null) {
+        values = new AbstractCollection() {
+        public Iterator iterator() {
+            return new Iterator() {
+            private Iterator i = entrySet().iterator();
 
-			public boolean hasNext() {
-			    return i.hasNext();
-			}
+            public boolean hasNext() {
+                return i.hasNext();
+            }
 
-			public Object next() {
-			    return ((Entry)i.next()).getValue();
-			}
+            public Object next() {
+                return ((Entry)i.next()).getValue();
+            }
 
-			public void remove() {
-			    i.remove();
-			}
+            public void remove() {
+                i.remove();
+            }
                     };
                 }
 
-		public int size() {
-		    return WeakValueHashMap.this.size();
-		}
+        public int size() {
+            return WeakValueHashMap.this.size();
+        }
 
-		public boolean contains(Object v) {
-		    return WeakValueHashMap.this.containsValue(v);
-		}
-	    };
-	}
-	return values;
+        public boolean contains(Object v) {
+            return WeakValueHashMap.this.containsValue(v);
+        }
+        };
+    }
+    return values;
     }
 
 }

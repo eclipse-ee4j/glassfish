@@ -45,7 +45,7 @@ public class ServiceInitializerFilter extends BaseFilter {
     private final ServiceLocator locator;
     private volatile LazyServiceInitializer targetInitializer = null;
     private final List<ActiveDescriptor<?>> initializerImplList;
-    
+
     protected final Logger logger;
 
     private final ServiceInitializerListener listener;
@@ -56,7 +56,7 @@ public class ServiceInitializerFilter extends BaseFilter {
     public ServiceInitializerFilter(final ServiceInitializerListener listener,
             final ServiceLocator habitat, final Logger logger) {
         this.locator = habitat;
-        
+
         initializerImplList =
                 habitat.getDescriptors(BuilderHelper.createContractFilter(LazyServiceInitializer.class.getName()));
 
@@ -73,20 +73,20 @@ public class ServiceInitializerFilter extends BaseFilter {
     public NextAction handleAccept(final FilterChainContext ctx) throws IOException {
         final NIOConnection nioConnection = (NIOConnection) ctx.getConnection();
         final SelectableChannel channel = nioConnection.getChannel();
-        
+
         // The LazyServiceInitializer's name we're looking for should be equal
         // to either listener or protocol name
         final String listenerName = listener.getName();
         final String protocolName = listener.getNetworkListener().getProtocol();
-        
+
         if (targetInitializer == null) {
             synchronized (LOCK_OBJ) {
                 if (targetInitializer == null) {
                     LazyServiceInitializer targetInitializerLocal = null;
                     for (final ActiveDescriptor<?> initializer : initializerImplList) {
                         String serviceName = initializer.getName();
-                        
-                        
+
+
                         if (serviceName != null &&
                                 (listenerName.equalsIgnoreCase(serviceName) ||
                                 protocolName.equalsIgnoreCase(serviceName))) {
@@ -110,7 +110,7 @@ public class ServiceInitializerFilter extends BaseFilter {
 
                         return ctx.getStopAction();
                     }
-                    
+
                     targetInitializer = targetInitializerLocal;
                 }
             }

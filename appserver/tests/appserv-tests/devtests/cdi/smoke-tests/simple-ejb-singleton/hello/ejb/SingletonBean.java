@@ -34,7 +34,7 @@ public class SingletonBean {
 
     @Inject
     Foo foo;
-    
+
     @Inject
     TestBean tb;
 

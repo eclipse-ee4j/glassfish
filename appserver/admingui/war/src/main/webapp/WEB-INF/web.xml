@@ -74,25 +74,25 @@
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet>
-	<servlet-name>DownloadServlet</servlet-name>
-	<servlet-class>org.glassfish.admingui.common.servlet.DownloadServlet</servlet-class>
-	<init-param>
-	    <param-name>ContentSources</param-name>
-	    <param-value>
+    <servlet-name>DownloadServlet</servlet-name>
+    <servlet-class>org.glassfish.admingui.common.servlet.DownloadServlet</servlet-class>
+    <init-param>
+        <param-name>ContentSources</param-name>
+        <param-value>
                 org.glassfish.admingui.common.servlet.LBConfigContentSource,
                 org.glassfish.admingui.common.servlet.ClientStubsContentSource,
                 org.glassfish.admingui.common.servlet.LogFilesContentSource
                 org.glassfish.admingui.common.servlet.LogViewerContentSource
-	    </param-value>
-	</init-param>
-	<init-param>
-		<param-name>contentSourceId</param-name>
-		<param-value>LBConfig</param-value>
-	</init-param>
+        </param-value>
+    </init-param>
+    <init-param>
+        <param-name>contentSourceId</param-name>
+        <param-value>LBConfig</param-value>
+    </init-param>
     </servlet>
     <servlet-mapping>
-	<servlet-name>DownloadServlet</servlet-name>
-	<url-pattern>/download/*</url-pattern>
+    <servlet-name>DownloadServlet</servlet-name>
+    <url-pattern>/download/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FacesServlet</servlet-name>
@@ -150,7 +150,7 @@
         <web-resource-collection>
             <web-resource-name>public</web-resource-name>
             <url-pattern>/theme/com/*</url-pattern>
-            <url-pattern>/theme/org/*</url-pattern>        
+            <url-pattern>/theme/org/*</url-pattern>
             <url-pattern>/resource/*</url-pattern>
             <url-pattern>/theme/META-INF/*</url-pattern>
             <http-method>GET</http-method>

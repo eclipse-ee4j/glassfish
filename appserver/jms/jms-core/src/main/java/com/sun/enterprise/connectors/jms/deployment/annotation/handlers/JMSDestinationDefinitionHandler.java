@@ -187,38 +187,38 @@ public class JMSDestinationDefinitionHandler extends AbstractResourceHandler {
             if (descriptor instanceof JMSDestinationDefinitionDescriptor) {
             JMSDestinationDefinitionDescriptor desc = (JMSDestinationDefinitionDescriptor)descriptor;
                 if (desc.getName().equals(defn.name())) {
-    
+
                     if (desc.getInterfaceName() == null) {
                         desc.setInterfaceName(defn.interfaceName());
                     }
-    
+
                     if (desc.getClassName() == null) {
                         if (isValid(defn.className())) {
                             desc.setClassName(defn.className());
                         }
                     }
-    
+
                     if (desc.getDescription() == null) {
                         if (isValid(defn.description())) {
                             desc.setDescription(defn.description());
                         }
                     }
-    
+
                     if (desc.getResourceAdapter() == null) {
                         if (isValid(defn.resourceAdapter())) {
                             desc.setResourceAdapter(defn.resourceAdapter());
                         }
                     }
-    
+
                     if (desc.getDestinationName() == null) {
                         if (isValid(defn.destinationName())) {
                             desc.setDestinationName(defn.destinationName());
                         }
                     }
-    
+
                     Properties properties = desc.getProperties();
                     String[] defnProperties = defn.properties();
-    
+
                     if (defnProperties.length > 0) {
                         for (String property : defnProperties) {
                             int index = property.indexOf("=");

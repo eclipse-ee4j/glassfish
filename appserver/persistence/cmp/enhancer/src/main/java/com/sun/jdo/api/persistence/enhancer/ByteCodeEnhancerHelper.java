@@ -84,7 +84,7 @@ public class ByteCodeEnhancerHelper
      *  @param  zip_in    The zip input stream.
      *  @param  zip_out   The zip output stream.
      *
-     * 
+     *
      *
      *  @exception  EnhancerUserException  If something went wrong.
      *  @exception  EnhancerFatalError     If something went wrong.

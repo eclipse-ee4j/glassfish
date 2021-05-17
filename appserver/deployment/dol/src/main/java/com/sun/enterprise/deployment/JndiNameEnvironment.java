@@ -24,13 +24,13 @@ import java.util.Set;
     * Objects implementing this interface allow their
     * environment properties, ejb references and resource
     * references to be read.
-    * 
+    *
     *@author Danny Coward
     */
 
 public interface JndiNameEnvironment {
 
-    /** 
+    /**
      * Return a set of environment properties.
      *
      * @return java.util.Set of EnvironmentProperty objects
@@ -38,74 +38,74 @@ public interface JndiNameEnvironment {
     public Set getEnvironmentProperties();
 
 
-    /** 
+    /**
      * Return the env-entry with the given name
      *
      * @return EnvironmentProperty descriptor
      */
     public EnvironmentProperty getEnvironmentPropertyByName(String name);
-	
-    /** 
+
+    /**
      * Return a set of ejb reference descriptors.
      *
      * @return java.util.Set of EjbReferenceDescriptor objects
      */
     public Set getEjbReferenceDescriptors();
 
-/** 
+/**
      * Return a set of service reference descriptors.
      *
      * @return java.util.Set of ServiceReferenceDescriptor objects
      */
-	
+
     public Set getServiceReferenceDescriptors();
-    
-     
-    /** 
-     * Return the Service reference descriptor corresponding to 
+
+
+    /**
+     * Return the Service reference descriptor corresponding to
      * the given name.
      *
      * @return ServiceReferenceDescriptor object
      */
     public ServiceReferenceDescriptor getServiceReferenceByName(String name);
-    
-    /** 
+
+    /**
      * Return a set of resource reference descriptors.
      *
      * @return java.util.Set of ResourceReferenceDescriptor objects
      */
-	
+
     public Set getResourceReferenceDescriptors();
-    
-     
-    /** 
+
+
+    /**
      * Return a set of resource environment reference descriptors.
      *
      * @return java.util.Set of ResourceEnvReferenceDescriptor objects
      */
-	
+
     public Set getResourceEnvReferenceDescriptors();
 
 
-    /** 
-     * Return the resource environment reference descriptor corresponding to 
+    /**
+     * Return the resource environment reference descriptor corresponding to
      * the given name.
      *
      * @return ResourceEnvReferenceDescriptor object
      */
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name);
 
-    /** 
+    /**
      * Return a set of message destination reference descriptors.
      *
      * @return java.util.Set of MessageDestinationReferenceDescriptor objects
      */
-	
+
     public Set getMessageDestinationReferenceDescriptors();
 
 
-    /** 
-     * Return the message destination reference descriptor corresponding to 
+    /**
+     * Return the message destination reference descriptor corresponding to
      * the given name.
      *
      * @return MessageDestinationReferenceDescriptor object

@@ -19,7 +19,7 @@
  * @author     $Author: tcfujii $
  * @version    $Revision: 1.3 $ $Date: 2005/12/25 04:13:35 $
  */
- 
+
 package com.sun.ejb.containers.util.pool;
 
 import java.io.PrintStream;
@@ -29,39 +29,39 @@ public class PoolException
     extends RuntimeException
 {
     Throwable throwable = null;
-    
+
     public PoolException() {
         super();
     }
-    
+
     public PoolException(String message) {
         super(message);
     }
-    
+
     public PoolException(String message, Throwable throwable) {
         super(message);
         this.throwable = throwable;
     }
-    
+
     public Throwable getThrowable() {
-    	return this.throwable;
+        return this.throwable;
     }
-    
+
     public void printStackTrace() {
-    	printStackTrace(new PrintWriter(System.err));
+        printStackTrace(new PrintWriter(System.err));
     }
-    
+
     public void printStackTrace(PrintStream ps) {
-    	printStackTrace(new PrintWriter(ps));
+        printStackTrace(new PrintWriter(ps));
     }
-    
+
     public void printStackTrace(PrintWriter pw) {
-    	if (throwable != null) {
+        if (throwable != null) {
             pw.println("PoolException: " + getMessage());
             throwable.printStackTrace(pw);
-    	} else {
+        } else {
             super.printStackTrace(pw);
-    	}
+        }
     }
-    
+
 }

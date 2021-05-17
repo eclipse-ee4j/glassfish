@@ -27,34 +27,34 @@ import com.sun.enterprise.config.serverbeans.Domain;
  * The base security service factory class.
  */
 public class ServiceFactory {
-	/**
-	 * Get the security service configuration for the specified service type.
-	 * 
-	 * Attempt to obtain the service configuration marked as default
-	 * otherwise use the first configured service instance.
-	 * 
-	 * @param domain The current Domain configuration object
-	 * @param type The type of the security service configuration
-	 * 
-	 * @return null when no service configurations are found
-	 */
-	public static <T extends SecurityConfiguration> T getSecurityServiceConfiguration(Domain domain, Class<T> type) {
-		T config = null;
+    /**
+     * Get the security service configuration for the specified service type.
+     *
+     * Attempt to obtain the service configuration marked as default
+     * otherwise use the first configured service instance.
+     *
+     * @param domain The current Domain configuration object
+     * @param type The type of the security service configuration
+     *
+     * @return null when no service configurations are found
+     */
+    public static <T extends SecurityConfiguration> T getSecurityServiceConfiguration(Domain domain, Class<T> type) {
+        T config = null;
 
-		// Look for security service configurations
-		SecurityConfigurations secConfigs = domain.getExtensionByType(SecurityConfigurations.class);
-		if (secConfigs != null) {
-			// Look for the service configuration marked default
-			config = secConfigs.getDefaultSecurityServiceByType(type);
-			if (config == null) {
-				// Obtain the first service configuration listed
-				List<T> configs = secConfigs.getSecurityServicesByType(type);
-				if (!configs.isEmpty())
-					config = configs.get(0);
-			}
-		}
+        // Look for security service configurations
+        SecurityConfigurations secConfigs = domain.getExtensionByType(SecurityConfigurations.class);
+        if (secConfigs != null) {
+            // Look for the service configuration marked default
+            config = secConfigs.getDefaultSecurityServiceByType(type);
+            if (config == null) {
+                // Obtain the first service configuration listed
+                List<T> configs = secConfigs.getSecurityServicesByType(type);
+                if (!configs.isEmpty())
+                    config = configs.get(0);
+            }
+        }
 
-		// Return the service configuration
-		return config;
-	}
+        // Return the service configuration
+        return config;
+    }
 }

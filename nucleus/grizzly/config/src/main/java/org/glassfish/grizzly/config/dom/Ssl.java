@@ -281,7 +281,7 @@ public interface Ssl extends ConfigBeanProxy, PropertyBag {
      * @since 2.1.2
      */
     void setRenegotiateOnClientAuthWant(boolean renegotiateClientAuthWant);
-    
+
     /**
      * Handshake mode
      */

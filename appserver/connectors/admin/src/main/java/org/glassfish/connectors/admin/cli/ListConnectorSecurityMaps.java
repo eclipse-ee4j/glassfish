@@ -55,8 +55,8 @@ import org.jvnet.hk2.config.Dom;
 @I18n("list.connector.security.maps")
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-connector-security-maps", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-connector-security-maps",
         description="List Connector Security Maps")
 })
 public class ListConnectorSecurityMaps extends ConnectorSecurityMap implements AdminCommand {
@@ -154,7 +154,7 @@ public class ListConnectorSecurityMaps extends ConnectorSecurityMap implements A
             report.setFailureCause(e);
             return;
         }
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 
@@ -203,7 +203,7 @@ public class ListConnectorSecurityMaps extends ConnectorSecurityMap implements A
             partBPU.setMessage(localStrings.getLocalString(
                     "list.connector.security.maps.username",
                     "\t\t"+"User Name = "+bp.getUserName(), bp.getUserName()));
-            
+
         if (bp.getPassword() != null && !bp.getPassword().isEmpty()) {
             final String rawPassword = ConfigBean.unwrap(bp).rawAttribute("password");
             final String passwordOutput = RelativePathResolver.getAlias(rawPassword) == null ? "****" : rawPassword;
@@ -212,6 +212,6 @@ public class ListConnectorSecurityMaps extends ConnectorSecurityMap implements A
                         "list.connector.security.maps.password",
                         "\t\t"+"Password = "+passwordOutput, passwordOutput));
         }
-        
+
     }
 }

@@ -50,7 +50,7 @@ public class HASingleSignOnEntryMetadata implements Serializable {
             byte[] principalBytes, String authType,
             String userName, String realmName,
             long lastAccessTime, long maxIdleTime) {
-        
+
         this.id = id;
         this.version = version;
         this.principalBytes = ((principalBytes != null) ? ((byte[])principalBytes.clone()) : null);

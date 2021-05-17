@@ -38,8 +38,8 @@ public class CreateVirtualServerTest extends BaseTest
     static final String kLogFile    = "${com.sun.aas.instanceRoot}/logs/server.log";
     static final String kHTTPListeners      = "http-listener-1";
 
-    public CreateVirtualServerTest(final String user, 
-        final String password, final String host, final int port, 
+    public CreateVirtualServerTest(final String user,
+        final String password, final String host, final int port,
         final String vsName, final String configName, final String hosts)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -47,7 +47,7 @@ public class CreateVirtualServerTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final VirtualServerCmd createCmd = 
+        final VirtualServerCmd createCmd =
                 cmdFactory.createVirtualServerCmd(vsName, configName,
                         hosts, getOptional(), VirtualServerCmd.kCreateMode);
 
@@ -66,7 +66,7 @@ public class CreateVirtualServerTest extends BaseTest
     public static void main(String[] args) throws Exception
     {
         new CreateVirtualServerTest(
-                "admin", "password", "localhost", 8686, 
+                "admin", "password", "localhost", 8686,
                 kName, kConfigName, kHosts).run();
     }
 

@@ -44,7 +44,7 @@ public interface ConverterRemote extends EJBObject {
      * @param yen yen amount to be converted to euro.
      */
     public BigDecimal yenToEuro(BigDecimal yen) throws RemoteException;
-    
+
     public String myCallerPrincipal() throws RemoteException;
-    
+
 }

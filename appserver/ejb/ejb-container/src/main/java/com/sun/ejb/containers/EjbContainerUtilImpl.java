@@ -87,13 +87,13 @@ public class EjbContainerUtilImpl
     private static Logger _logger = LogDomains.getLogger(EjbContainerUtilImpl.class, LogDomains.EJB_LOGGER);
 
     private ThreadPoolExecutor defaultThreadPoolExecutor;
-    
+
     @Inject
     private ServiceLocator services;
 
     @Inject
     private ServerContext serverContext;
-    
+
     @Inject
     JavaEEIOUtils javaEEIOUtils;
 
@@ -168,10 +168,10 @@ public class EjbContainerUtilImpl
         }
 
         defaultThreadPoolExecutor = createThreadPoolExecutor(DEFAULT_THREAD_POOL_NAME);
-        
+
         //avoid starting JDK timer in application class loader.  The life of _timer
         //field is longer than deployed apps, and any reference to app class loader
-        //in JDK timer thread will cause class loader leak.  Issue 17468 
+        //in JDK timer thread will cause class loader leak.  Issue 17468
         ClassLoader originalClassLoader = null;
         try {
             originalClassLoader = Utility.setContextClassLoader(ejbImplClassLoader);
@@ -206,16 +206,16 @@ public class EjbContainerUtilImpl
     }
 
     public static boolean isInitialized() {
-        return (_me != null);        
+        return (_me != null);
     }
 
     public static EjbContainerUtil getInstance() {
         if (_me == null) {
-            // This situation shouldn't happen. Print the error message 
+            // This situation shouldn't happen. Print the error message
             // and the stack trace to know how did we get here.
 
             // Create the instance first to access the logger.
-            _logger.log(Level.WARNING, 
+            _logger.log(Level.WARNING,
                     "Internal error: EJBContainerUtilImpl is null, creating ...",
                     new Throwable());
             _me = Globals.getDefaultHabitat().getService(
@@ -301,10 +301,10 @@ public class EjbContainerUtilImpl
             txData = new TxData();
             tx.setContainerData(txData);
         }
-        
+
         return txData;
     }
-    
+
     public  ContainerSynchronization getContainerSync(Transaction jtx)
         throws RollbackException, SystemException
     {
@@ -350,19 +350,19 @@ public class EjbContainerUtilImpl
     }
 
     public Object getActiveTxCache(Transaction jtx) {
-    	JavaEETransaction tx = (JavaEETransaction) jtx;
+        JavaEETransaction tx = (JavaEETransaction) jtx;
         TxData txData = getTxData(tx);
-        
+
         return txData.activeTxCache;
     }
 
     public void setActiveTxCache(Transaction jtx, Object cache) {
-    	JavaEETransaction tx = (JavaEETransaction) jtx;
+        JavaEETransaction tx = (JavaEETransaction) jtx;
         TxData txData = getTxData(tx);
-        
+
         txData.activeTxCache = cache;
     }
-    
+
     public Agent getCallFlowAgent() {
         return callFlowAgent;
     }
@@ -396,7 +396,7 @@ public class EjbContainerUtilImpl
         Vector beans;
         Object activeTxCache;
     }
-    
+
     public EjbTimerService getEjbTimerService(String target) {
         EjbTimerService ejbt = null;
         if (target == null) {
@@ -479,11 +479,11 @@ public class EjbContainerUtilImpl
         }
         return result;
     }
-    
+
     public ThreadPoolExecutor getThreadPoolExecutor(String poolName) {
         if(poolName == null) {
             return defaultThreadPoolExecutor;
-        } 
+        }
         return null;
 //        TODO retrieve the named ThreadPoolExecutor
     }

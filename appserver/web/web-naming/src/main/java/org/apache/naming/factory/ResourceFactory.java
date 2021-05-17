@@ -28,7 +28,7 @@ import org.apache.naming.ResourceRef;
 
 /**
  * Object factory for Resources.
- * 
+ *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:07 $
  */
@@ -54,23 +54,23 @@ public class ResourceFactory
 
     /**
      * Crete a new DataSource instance.
-     * 
+     *
      * @param obj The reference object describing the DataSource
      */
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
                                     Hashtable<?,?> environment)
         throws Exception {
-        
+
         if (obj instanceof ResourceRef) {
             Reference ref = (Reference) obj;
             ObjectFactory factory = null;
             RefAddr factoryRefAddr = ref.get(Constants.FACTORY);
             if (factoryRefAddr != null) {
                 // Using the specified factory
-                String factoryClassName = 
+                String factoryClassName =
                     factoryRefAddr.getContent().toString();
                 // Loading factory
-                ClassLoader tcl = 
+                ClassLoader tcl =
                     Thread.currentThread().getContextClassLoader();
                 Class<?> factoryClass = null;
                 if (tcl != null) {
@@ -107,7 +107,7 @@ public class ResourceFactory
                         System.getProperty("javax.sql.DataSource.Factory",
                                            Constants.DBCP_DATASOURCE_FACTORY);
                     try {
-                        factory = (ObjectFactory) 
+                        factory = (ObjectFactory)
                             Class.forName(javaxSqlDataSourceFactoryClassName)
                             .newInstance();
                     } catch(Throwable t) {
@@ -118,7 +118,7 @@ public class ResourceFactory
                         System.getProperty("jakarta.mail.Session.Factory",
                                            "org.apache.naming.factory.MailSessionFactory");
                     try {
-                        factory = (ObjectFactory) 
+                        factory = (ObjectFactory)
                             Class.forName(mailSessionFactoryClassName)
                             .newInstance();
                     } catch(Throwable t) {
@@ -133,7 +133,7 @@ public class ResourceFactory
                     ("Cannot create resource instance");
             }
         }
-        
+
         return null;
 
     }

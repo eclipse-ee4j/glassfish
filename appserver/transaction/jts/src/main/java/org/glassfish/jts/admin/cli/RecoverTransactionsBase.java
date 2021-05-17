@@ -33,7 +33,7 @@ public class RecoverTransactionsBase {
     static StringManager localStrings =
             StringManager.getManager(RecoverTransactionsBase.class);
 
-    static Logger _logger = LogDomains.getLogger(RecoverTransactionsBase.class, 
+    static Logger _logger = LogDomains.getLogger(RecoverTransactionsBase.class,
             LogDomains.TRANSACTION_LOGGER);
 
     @Inject
@@ -45,7 +45,7 @@ public class RecoverTransactionsBase {
     @Param(name = "server_name", primary = true)
     String serverToRecover;
 
-    String validate(String destinationServer, boolean validateAllParams) { 
+    String validate(String destinationServer, boolean validateAllParams) {
         if (_logger.isLoggable(Level.INFO)) {
             _logger.info("==> validating target: " + destinationServer + " ... server: " + serverToRecover);
         }

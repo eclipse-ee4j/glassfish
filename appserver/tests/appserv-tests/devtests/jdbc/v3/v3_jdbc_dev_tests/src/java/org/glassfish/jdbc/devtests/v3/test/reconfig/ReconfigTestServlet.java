@@ -37,7 +37,7 @@ import javax.sql.DataSource;
 public class ReconfigTestServlet extends HttpServlet {
     @Resource(name = "jdbc/jdbc-dev-test-resource", mappedName = "jdbc/jdbc-dev-test-resource")
     DataSource ds;
-    
+
     @Resource(name = "jdbc/jdbc-reconfig-test-resource-1", mappedName = "jdbc/jdbc-reconfig-test-resource-1")
     DataSource dsReconfig1;
 
@@ -46,13 +46,13 @@ public class ReconfigTestServlet extends HttpServlet {
 
     @Resource(name = "jdbc/res1", mappedName = "jdbc/res1")
     DataSource dsRes1;
-    
+
     @Override
     protected void doGet(HttpServletRequest arg0, HttpServletResponse arg1) throws ServletException, IOException {
         processRequest(arg0, arg1);
     }
 
-    /** 
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -92,7 +92,7 @@ public class ReconfigTestServlet extends HttpServlet {
                     mapReconfig = reconfigTest.resourceAttributeChangeTest(dsReconfig2, out, throwException);
                     break;
                 case 4: //Resource attribute change test with another datasource
-                    
+
                     out.println("<h1>Reconfig Resource Attribute Test with DS : dsRes1</h1>");
                     mapReconfig = reconfigTest.resourceAttributeChangeTest(dsRes1, out, throwException);
                     break;
@@ -118,7 +118,7 @@ public class ReconfigTestServlet extends HttpServlet {
         }
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      */
     public String getServletInfo() {
@@ -126,7 +126,7 @@ public class ReconfigTestServlet extends HttpServlet {
                 "JDBC Resource";
     }
 
-    /** 
+    /**
     * Handles the HTTP <code>POST</code> method.
     * @param request servlet request
     * @param response servlet response

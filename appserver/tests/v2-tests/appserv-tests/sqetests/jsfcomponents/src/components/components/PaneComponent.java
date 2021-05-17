@@ -155,7 +155,7 @@ public class PaneComponent extends UIComponentBase {
     private UIComponent findParentForRendererType(UIComponent component, String rendererType) {
         Object facetParent = null;
         UIComponent currentComponent = component;
-        
+
         // Search for an ancestor that is the specified renderer type;
         // search includes the facets.
         while (null != (currentComponent = currentComponent.getParent())) {

@@ -24,11 +24,11 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.kernel.KernelLoggerInfo;
 
 public class LifecycleEventContextImpl implements LifecycleEventContext {
-    
+
     private ServerContext ctx;
 
     private static final Logger logger = KernelLoggerInfo.getLogger();
-    
+
     /**
      * public constructor
      */
@@ -42,22 +42,22 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     public String[] getCmdLineArgs() {
         return ctx.getCmdLineArgs();
     }
-    
+
     /**
      * Get server installation root
      */
     public String getInstallRoot() {
         return ctx.getInstallRoot().getPath();
     }
-    
+
     /**
      * Get the server instance name
      */
     public String getInstanceName() {
         return ctx.getInstanceName();
     }
-    
-    /** 
+
+    /**
      * Get the initial naming context.
      */
     public InitialContext getInitialContext() {
@@ -67,23 +67,23 @@ public class LifecycleEventContextImpl implements LifecycleEventContext {
     /**
      * Writes the specified message to a server log file.
      *
-     * @param msg 	a <code>String</code> specifying the 
-     *			message to be written to the log file
+     * @param msg     a <code>String</code> specifying the
+     *            message to be written to the log file
      */
     public void log(String message) {
         logger.info(message);
     }
-    
+
     /**
      * Writes an explanatory message and a stack trace
      * for a given <code>Throwable</code> exception
      * to the server log file.
      *
-     * @param message 		a <code>String</code> that 
-     *				describes the error or exception
+     * @param message         a <code>String</code> that
+     *                describes the error or exception
      *
-     * @param throwable 	the <code>Throwable</code> error 
-     *				or exception
+     * @param throwable     the <code>Throwable</code> error
+     *                or exception
      */
     public void log(String message, Throwable throwable) {
         logger.log(Level.INFO, message, throwable);

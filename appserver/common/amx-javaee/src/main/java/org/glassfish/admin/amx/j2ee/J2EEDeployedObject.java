@@ -48,7 +48,7 @@ public interface J2EEDeployedObject extends J2EEManagedObject, StateManageable
     @ManagedAttribute
     public String getserver();
 
- 	@ManagedAttribute
+     @ManagedAttribute
     @Description( "Get the ObjectName of the corresponding config MBean, if any" )
     public ObjectName getCorrespondingConfig();
 }

@@ -80,7 +80,7 @@ public class AdminRESTConfigUpgrade
                         "Skipping config %s. getAdminListener threw: %s",
                         config.getName(), ise.getLocalizedMessage()));
                 lr.setLoggerName(getClass().getName());
-                EarlyLogHandler.earlyMessages.add(lr);                
+                EarlyLogHandler.earlyMessages.add(lr);
                 continue;
             }
             Protocols ps = config.getNetworkConfig().getProtocols();

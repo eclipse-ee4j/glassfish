@@ -25,10 +25,10 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * This class defines a Visitor API for the DOL connector descriptor. 
+ * This class defines a Visitor API for the DOL connector descriptor.
  *
  * @author  Sheetal Vartak
- * @version 
+ * @version
  */
 @Contract
 public interface ConnectorVisitor extends ComponentVisitor {
@@ -37,7 +37,7 @@ public interface ConnectorVisitor extends ComponentVisitor {
      * visits an connector descriptor
      * @param an connector descriptor
      */
-    public void accept(ConnectorDescriptor descriptor);    
+    public void accept(ConnectorDescriptor descriptor);
 
 }
 

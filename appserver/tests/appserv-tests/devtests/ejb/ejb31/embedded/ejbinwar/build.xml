@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -75,15 +75,15 @@
         </delete>
 
         <move file="${build.classes.dir}/tmp" tofile="${assemble.dir}/tmp"/>
-    </target> 
-    
+    </target>
+
     <target name="run" depends="init-common">
         <antcall target="run_war"/>
         <antcall target="run_dir"/>
     </target>
- 
+
     <target name="run_war" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
@@ -93,7 +93,7 @@
 
     <target name="run_war_installed_instance" depends="init-common">
        <antcall  target="start-database"/>
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/${appname}-web.war:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
@@ -114,7 +114,7 @@
     </target>
 
     <target name="run_dir" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${assemble.dir}/tmp:${assemble.dir}/${appname}-pu.jar:${embedded.classpath}:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">

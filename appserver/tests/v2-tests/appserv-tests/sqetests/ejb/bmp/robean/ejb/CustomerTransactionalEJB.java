@@ -69,9 +69,9 @@ public class CustomerTransactionalEJB implements jakarta.ejb.EntityBean {
     public String ejbCreate() {
         return null;
     }
-    
-    public void ejbPostCreate() {       
-    }  
+
+    public void ejbPostCreate() {
+    }
 
     public void ejbRemove() {
     }
@@ -95,7 +95,7 @@ public class CustomerTransactionalEJB implements jakarta.ejb.EntityBean {
             conn.close();
         } catch (SQLException e) {
             System.out.println("SQLException occurred in ejbLoad() method");
-        }   
+        }
     }
 
     public void ejbActivate() {

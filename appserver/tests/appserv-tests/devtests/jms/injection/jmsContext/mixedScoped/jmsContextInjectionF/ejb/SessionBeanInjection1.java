@@ -32,7 +32,7 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
     private static String preIdentical = "fingerPrint";
     private static String requestScope = "around RequestScoped";
 
-    @EJB 
+    @EJB
     SessionBeanInjectionRemote2 bean2;
 
     @Resource(mappedName = "jms/jms_unit_test_Queue")
@@ -63,17 +63,17 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
             System.out.println("The context variables used in the first call are NOT in request scope.");
             return false;
         }
-            
+
         if (context2.indexOf(requestScope) != -1){
             System.out.println("The context variables used in the second call are in request scope.");
         }else{
             System.out.println("The context variables used in the second call are NOT in request scope.");
             return false;
         }
-        
+
         String context1Annotation = context1.substring(context1.indexOf(preIdentical),context1.indexOf(requestScope));
         String context2Annotation = context2.substring(context2.indexOf(preIdentical),context2.indexOf(requestScope));
-        
+
         if(context1Annotation.equals(context2Annotation)){
             System.out.println("The context variables in the first and second calls to context.send() injected are using identical annotations.");
         }else{

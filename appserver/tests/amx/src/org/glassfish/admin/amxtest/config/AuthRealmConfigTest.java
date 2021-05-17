@@ -110,7 +110,7 @@ public final class AuthRealmConfigTest
     public synchronized void
     testAddRemoveUpdateUser()
             throws Exception {
-    
+
         warning( "testAddRemoveUpdateUser.AuthRealmConfigTest(): NO API exists to add/remove users" );
         /*
         final Map<String, AuthRealmConfig> arcMap = getTestableAuthRealms();

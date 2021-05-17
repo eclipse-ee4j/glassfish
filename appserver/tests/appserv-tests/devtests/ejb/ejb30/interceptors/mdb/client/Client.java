@@ -52,7 +52,7 @@ public class Client {
 
     private int numMessages = 2;
     public Client(String[] args) {
-        
+
         if( args.length == 1 ) {
             numMessages = new Integer(args[0]).intValue();
         }
@@ -62,10 +62,10 @@ public class Client {
         try {
             setup();
             if (doTest("java:comp/env/jms/MsgBeanQueue", numMessages)) {
-		stat.addStatus("cmt main", stat.PASS);
-	    } else {
-		stat.addStatus("cmt main", stat.FAIL);
-	    }
+        stat.addStatus("cmt main", stat.PASS);
+        } else {
+        stat.addStatus("cmt main", stat.FAIL);
+        }
         } catch(Throwable t) {
             stat.addStatus("cmt main", stat.FAIL);
             t.printStackTrace();
@@ -76,18 +76,18 @@ public class Client {
 
     public void setup() throws Exception {
         context = new InitialContext();
-        
-        QueueConnectionFactory queueConFactory = 
+
+        QueueConnectionFactory queueConFactory =
             (QueueConnectionFactory) context.lookup
             ("java:comp/env/FooCF");
-            
+
         queueCon = queueConFactory.createQueueConnection();
 
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         // Producer will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(null);        
+        queueSender = queueSession.createSender(null);
 
         clientQueue = (jakarta.jms.Queue)
             context.lookup("java:comp/env/jms/MsgBeanClientQueue");
@@ -108,18 +108,18 @@ public class Client {
         }
     }
 
-    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
-            System.out.println("Sending message " + i + " to " + queue + 
+            System.out.println("Sending message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
             queueSender.send(queue, msg);
-            System.out.println("Sent message " + i + " to " + queue + 
+            System.out.println("Sent message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
         }
     }
 
-    public boolean doTest(String destName, int num) 
+    public boolean doTest(String destName, int num)
         throws Exception {
 
         Destination dest = (Destination) context.lookup(destName);
@@ -133,9 +133,9 @@ public class Client {
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);
         if( recvdmessage != null ) {
-	    String receivedMsg = ((TextMessage)recvdmessage).getText();
+        String receivedMsg = ((TextMessage)recvdmessage).getText();
             System.out.println("Received message : " + receivedMsg);
-	    return receivedMsg.equals("mdb() invoked. Interceptor count: 1");
+        return receivedMsg.equals("mdb() invoked. Interceptor count: 1");
         } else {
             System.out.println("timeout after " + TIMEOUT + " seconds");
             throw new JMSException("timeout" + TIMEOUT + " seconds");

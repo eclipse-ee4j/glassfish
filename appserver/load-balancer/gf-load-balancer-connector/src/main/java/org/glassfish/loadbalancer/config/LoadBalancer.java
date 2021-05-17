@@ -79,7 +79,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the lbConfigName property.
      *
      * Name of the lb-config used by this load balancer
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -131,7 +131,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      *              {@link String }
      */
     public void setDevicePort(String value) throws PropertyVetoException;
-    
+
     /**
      * Gets the value of the auto apply enabled property.
      *
@@ -148,7 +148,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    @Deprecated 
+    @Deprecated
     public void setAutoApplyEnabled(String value) throws PropertyVetoException;
 
     /**

@@ -30,5 +30,5 @@ public interface AnnotationTypesProvider {
     public Class<? extends Annotation>[] getAnnotationTypes();
 
     public Class getType(String typename) throws ClassNotFoundException;
-    
+
 }

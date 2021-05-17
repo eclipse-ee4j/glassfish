@@ -52,7 +52,7 @@ public class ContextAccessController {
 
     /**
      * Set a security token for a context. Can be set only once.
-     * 
+     *
      * @param name Name of the context
      * @param token Security token
      */
@@ -65,7 +65,7 @@ public class ContextAccessController {
 
     /**
      * Remove a security token for a context.
-     * 
+     *
      * @param name Name of the context
      * @param token Security token
      */
@@ -78,9 +78,9 @@ public class ContextAccessController {
 
     /**
      * Check a submitted security token. The submitted token must be equal to
-     * the token present in the repository. If no token is present for the 
+     * the token present in the repository. If no token is present for the
      * context, then returns true.
-     * 
+     *
      * @param name Name of the context
      * @param token Submitted security token
      */
@@ -93,7 +93,7 @@ public class ContextAccessController {
 
     /**
      * Allow writing to a context.
-     * 
+     *
      * @param name Name of the context
      * @param token Security token
      */
@@ -105,7 +105,7 @@ public class ContextAccessController {
 
     /**
      * Set whether or not a context is writable.
-     * 
+     *
      * @param name Name of the context
      */
     public static void setReadOnly(Object name) {
@@ -115,7 +115,7 @@ public class ContextAccessController {
 
     /**
      * Returns if a context is writable.
-     * 
+     *
      * @param name Name of the context
      */
     public static boolean isWritable(Object name) {

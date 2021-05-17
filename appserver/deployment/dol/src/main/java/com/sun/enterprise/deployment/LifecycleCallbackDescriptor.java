@@ -38,7 +38,7 @@ public class LifecycleCallbackDescriptor extends Descriptor {
         POST_CONSTRUCT,
         PRE_DESTROY,
         PRE_PASSIVATE,
-        POST_ACTIVATE 
+        POST_ACTIVATE
 
     }
 
@@ -47,7 +47,7 @@ public class LifecycleCallbackDescriptor extends Descriptor {
     }
 
     public String getLifecycleCallbackClass() {
-        if (lifecycleCallbackClass == null || 
+        if (lifecycleCallbackClass == null ||
             lifecycleCallbackClass.trim().equals("")) {
             return defaultLifecycleCallbackClass;
         } else {
@@ -73,11 +73,11 @@ public class LifecycleCallbackDescriptor extends Descriptor {
 
     /**
      * Given a classloader, find the Method object corresponding to this
-     * lifecycle callback.  
+     * lifecycle callback.
      *
      * @throw Exception if no method found
      */
-    public Method getLifecycleCallbackMethodObject(ClassLoader loader) 
+    public Method getLifecycleCallbackMethodObject(ClassLoader loader)
         throws Exception {
 
         Method method = null;
@@ -88,7 +88,7 @@ public class LifecycleCallbackDescriptor extends Descriptor {
 
         // according to the ejb interceptors spec the around invoke and life cycle methods can be on the super class.
         Class clazz = loader.loadClass(getLifecycleCallbackClass());
-        
+
         while ( method == null && ! clazz.equals( Object.class ) ) {
             for(Method next : clazz.getDeclaredMethods()) {
                 if( next.getName().equals(lifecycleCallbackMethod) ) {

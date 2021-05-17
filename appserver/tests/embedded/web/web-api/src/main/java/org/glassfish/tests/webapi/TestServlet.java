@@ -29,20 +29,20 @@ public class TestServlet
   extends HttpServlet
 {
   public String msg_listener = null;
-  
+
   public void init(ServletConfig config)
     throws ServletException
   {
     super.init(config);
-    
+
     this.msg_listener = TestListener.msg;
   }
-  
+
   protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
     throws ServletException, IOException
   {
     System.out.println("Servlet TestServlet doGet called");
-    
+
     String msg_servlet = null;
     try
     {
@@ -61,7 +61,7 @@ public class TestServlet
     out.println("Servlet Msg = " + msg_servlet);
     out.flush();
     out.close();
-    
+
     System.out.println("Servlet TestServlet doGet DONE");
   }
 }

@@ -54,4 +54,4 @@ public class LicenseDescriptor extends Descriptor {
         else if(licenseRequired.equals("false"))
             this.licenseRequired =Boolean.FALSE;
     }
-}	
+}

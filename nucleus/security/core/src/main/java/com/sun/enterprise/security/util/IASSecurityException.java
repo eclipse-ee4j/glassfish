@@ -32,7 +32,7 @@ import java.lang.*;
 public class IASSecurityException extends Exception
 {
   private boolean noMsg;
-  
+
   /**
    * Constructor.
    *

@@ -31,7 +31,7 @@
     <artifactId>normalScopeWithFinal</artifactId>
     <version>6.1.1-SNAPSHOT</version>
 
-    <name>GlassFish Normal Scoped Bean With Final Methods</name>  
+    <name>GlassFish Normal Scoped Bean With Final Methods</name>
 
     <build>
         <plugins>

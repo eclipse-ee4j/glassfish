@@ -153,7 +153,7 @@ public class SetupSshRemoteTest extends SshBaseDevTest {
         //clean up the password file
         removePasswords("SSH");
         stopDomain();
-	stat.printSummary();
+    stat.printSummary();
     }
 
     private boolean testKeyDistributionWithoutKeyGeneration() {
@@ -244,7 +244,7 @@ public class SetupSshRemoteTest extends SshBaseDevTest {
     /*
      * In-order to run this test, one needs to generate the public-private key first, enable this test and run it. Pre-generated id_dsa and id_dsa.pub keys are
      * being removed.
-     */    
+     */
     private void testEncryptedKey() {
         //pass correct ssh password for each test
         addPassword(PasswordValue.RIGHT, PasswordType.SSH_PASS);

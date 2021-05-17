@@ -23,7 +23,7 @@ public class MyTest {
 
     public String toString() {
         Log log = LogFactory.getLog(MyTest.class);
-	return "SUCCESS";
+    return "SUCCESS";
     }
 }
 

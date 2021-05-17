@@ -27,6 +27,6 @@ public interface Hello extends EJBObject {
     String sayHello() throws RemoteException;
 
     String assertValidRemoteObject()
-	throws RemoteException;
+    throws RemoteException;
 
 }

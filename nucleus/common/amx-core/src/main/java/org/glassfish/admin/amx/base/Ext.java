@@ -33,7 +33,7 @@ public interface Ext extends AMXProxy, Singleton, Utility
 {
     @ManagedAttribute
     public Realms getRealms();
- 
+
 }
 
 

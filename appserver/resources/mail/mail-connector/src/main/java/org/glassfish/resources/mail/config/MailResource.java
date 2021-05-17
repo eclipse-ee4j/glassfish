@@ -54,7 +54,7 @@ import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
 @ResourceTypeOrder(deploymentOrder= ResourceDeploymentOrder.MAIL_RESOURCE)
 @UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=MailResource.class)
 /**
- * The mail-resource element describes a jakarta.mail.Session resource 
+ * The mail-resource element describes a jakarta.mail.Session resource
  */
 public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
 
@@ -133,7 +133,7 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      * Gets the value of the host property.
      *
      * ip V6 or V4 address or hostname
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -235,9 +235,9 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      *              {@link String }
      */
     public void setDescription(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

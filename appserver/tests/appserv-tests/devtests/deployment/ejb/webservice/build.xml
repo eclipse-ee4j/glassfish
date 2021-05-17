@@ -25,36 +25,36 @@
 
     &commonBuild;
     <property name="archivedir" value="${build}/archives"/>
-	
+
     <property name="testName" value="SayHelloWS"/>
     <target name="prepare" depends="init">
-		<property name="wsdl" value="${build}/META-INF/wsdl"/>
-		<mkdir dir="${build}" />
-		<mkdir dir="${wsdl}"/>
-		<property name="portable.jar" value="${archivedir}/sayhello-portable.jar"/>
-		<property name="all.jar" value="${archivedir}/sayhello.jar"/>
-		<property name="deployplan.jar" value="${archivedir}/sayhello-deployplan.jar"/>
+        <property name="wsdl" value="${build}/META-INF/wsdl"/>
+        <mkdir dir="${build}" />
+        <mkdir dir="${wsdl}"/>
+        <property name="portable.jar" value="${archivedir}/sayhello-portable.jar"/>
+        <property name="all.jar" value="${archivedir}/sayhello.jar"/>
+        <property name="deployplan.jar" value="${archivedir}/sayhello-deployplan.jar"/>
     </target>
-	
+
     <target name="compile" depends="prepare">
-		<javac srcdir="helloservice" destdir="${build}">
+        <javac srcdir="helloservice" destdir="${build}">
                  <classpath refid="gfv3.classpath"/>
                 </javac>
-		<echo message="invoking wscompile to generate wsdl file"/>
-		<exec executable="${WSCOMPILE}">
-			<arg line="-define config-interface.xml -d ${build} -nd ${wsdl} -classpath ${build} -mapping ${build}/mapping.xml"/>
-	 	</exec>					
+        <echo message="invoking wscompile to generate wsdl file"/>
+        <exec executable="${WSCOMPILE}">
+            <arg line="-define config-interface.xml -d ${build} -nd ${wsdl} -classpath ${build} -mapping ${build}/mapping.xml"/>
+         </exec>
     </target>
-	
+
     <target name="assemble" depends="compile">
-		<copy file="ejb-jar.xml" todir="${build}/META-INF"/>
-		<copy file="webservices.xml" todir="${build}/META-INF"/>
-		<jar destfile="${portable.jar}" basedir="${build}"/>
-		<copy file="sun-ejb-jar.xml" todir="${build}/META-INF" failonerror="false"/>
-		<jar destfile="${all.jar}" basedir="${build}"/>
-		<jar destfile="${deployplan.jar}">
-		        <fileset dir="${basedir}" includes="sun-ejb-jar.xml"/>
-		</jar>
+        <copy file="ejb-jar.xml" todir="${build}/META-INF"/>
+        <copy file="webservices.xml" todir="${build}/META-INF"/>
+        <jar destfile="${portable.jar}" basedir="${build}"/>
+        <copy file="sun-ejb-jar.xml" todir="${build}/META-INF" failonerror="false"/>
+        <jar destfile="${all.jar}" basedir="${build}"/>
+        <jar destfile="${deployplan.jar}">
+                <fileset dir="${basedir}" includes="sun-ejb-jar.xml"/>
+        </jar>
     </target>
 
     <target name="deploy.asadmin" depends="prepare">
@@ -62,10 +62,10 @@
             <param name="arg.list" value="--name ${testName} ${all.jar}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-	<echo message="Create client webservices artifacts"/>
-	<exec executable="${WSCOMPILE}">
-	    <arg line="-gen:client -keep -d ${build} -classpath ${build} config-interface.xml"/>
-	</exec>
+    <echo message="Create client webservices artifacts"/>
+    <exec executable="${WSCOMPILE}">
+        <arg line="-gen:client -keep -d ${build} -classpath ${build} config-interface.xml"/>
+    </exec>
     </target>
 
     <target name="redeploy.asadmin" depends="prepare">
@@ -73,10 +73,10 @@
             <param name="arg.list" value="--name ${testName} ${all.jar}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-	<echo message="Create client webservices artifacts"/>
-	<exec executable="${WSCOMPILE}">
-	    <arg line="-gen:client -keep -d ${build} -classpath ${build} config-interface.xml"/>
-	</exec>
+    <echo message="Create client webservices artifacts"/>
+    <exec executable="${WSCOMPILE}">
+        <arg line="-gen:client -keep -d ${build} -classpath ${build} config-interface.xml"/>
+    </exec>
     </target>
 
     <target name="undeploy.asadmin">
@@ -149,7 +149,7 @@
         <javaWithResult
             fork="true"
             failonerror="false"
-            jvm="${JAVA}"	
+            jvm="${JAVA}"
             classname="staticstubclient.SayHelloClient"
             output="${build}/${log.id}.output.log"
             resultproperty="result">

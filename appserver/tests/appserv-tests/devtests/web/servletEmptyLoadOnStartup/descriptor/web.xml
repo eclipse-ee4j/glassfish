@@ -24,7 +24,7 @@
         <servlet-name>TestServlet</servlet-name>
         <servlet-class>TestServlet</servlet-class>
         <load-on-startup/>
-    </servlet>  
+    </servlet>
 
    <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>

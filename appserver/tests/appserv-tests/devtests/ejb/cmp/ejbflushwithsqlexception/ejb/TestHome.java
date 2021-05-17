@@ -20,6 +20,6 @@ import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface TestHome extends EJBHome {
- 
+
     Test create() throws RemoteException, CreateException;
 }

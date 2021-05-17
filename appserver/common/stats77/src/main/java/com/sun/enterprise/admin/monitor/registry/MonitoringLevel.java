@@ -29,18 +29,18 @@ public class MonitoringLevel {
     public static final MonitoringLevel HIGH = new MonitoringLevel("HIGH");
 
     private final String name;
-    
+
     /**
      * Constructor
      */
     private MonitoringLevel(String name ) {
         this.name = name;
     }
-    
+
     public String toString() {
         return ( name );
     }
-	
+
     /**
      * Returns an instance of MonitoringLevel for the given String.
      * The given String has to correspond to one of the public fields declared
@@ -65,24 +65,24 @@ public class MonitoringLevel {
 
     /**
      * Checks two MonitoringLevel objects for equality.
-     * 
+     *
      * <p>Checks that <i>obj</i> is a MonitoringLevel, and has the same name as
      * this object.
-     * 
+     *
      * @param obj the object we are testing for equality with this object.
      * @return true if obj is a MonitoringLevel, and has the same name as this
      * MonitoringLevel object.
      */
     public boolean equals(Object obj) {
-	if (obj == this)
-	    return true;
+    if (obj == this)
+        return true;
 
-	if (! (obj instanceof MonitoringLevel))
-	    return false;
+    if (! (obj instanceof MonitoringLevel))
+        return false;
 
-	MonitoringLevel that = (MonitoringLevel) obj;
+    MonitoringLevel that = (MonitoringLevel) obj;
 
-	return (this.name.equals(that.name));
+    return (this.name.equals(that.name));
     }
 
     /**
@@ -94,7 +94,7 @@ public class MonitoringLevel {
      * @return Hash code value for this object.
      */
     public int hashCode() {
-	return this.name.hashCode();
+    return this.name.hashCode();
     }
 
 }

@@ -24,14 +24,14 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Definition of some utility behavior that needs to be invoked from config classes in admin/config-api but implemented
  * elsewhere (in a module with dependencies that we do not want to add to admin/config-api).
- * 
+ *
  * @author Tim Quinn
  */
 public interface SecureAdminHelper {
 
     /**
      * Returns the DN for the given DN or alias value.
-     * 
+     *
      * @param value the user-specified value
      * @param isAlias whether the value is an alias or the DN itself
      * @return the DN
@@ -43,7 +43,7 @@ public interface SecureAdminHelper {
      * implementations of this method should not make sure that the username and the password pointed to by the alias
      * actually match a valid admin user in the admin realm. That check is done by the normal authorization logic when the
      * username and the actual password are used.
-     * 
+     *
      * @param username
      * @param passwordAlias
      * @throws Exception if eiher the username or the password alias is not valid
@@ -52,7 +52,7 @@ public interface SecureAdminHelper {
 
     /**
      * Reports whether any admin user exists which has an empty password.
-     * 
+     *
      * @return true if any admin user exists with an empty password; false otherwise
      * @throws Exception
      */

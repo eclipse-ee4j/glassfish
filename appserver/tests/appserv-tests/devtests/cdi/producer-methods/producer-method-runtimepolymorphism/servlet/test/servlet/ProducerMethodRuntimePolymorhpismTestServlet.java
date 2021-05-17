@@ -46,7 +46,7 @@ public class ProducerMethodRuntimePolymorhpismTestServlet extends HttpServlet {
     @Inject
     @Preferred_CreatedViaInjection
     PaymentStrategy payInject2;
-    
+
     @Inject
     CreditCardPaymentStrategy ccps;// This should be the request-scoped
                                    // instance.
@@ -68,18 +68,18 @@ public class ProducerMethodRuntimePolymorhpismTestServlet extends HttpServlet {
 
         if (!(payCreate instanceof PaymentStrategy))
             msg += "Bean runtime polymorphism in producer method " +
-            		"in Preferences failed";
+                    "in Preferences failed";
         if (!(payInject instanceof PaymentStrategy))
             msg += "Bean runtime polymorphism in producer method(dep injection " +
-            		"in method parameters in Preferences failed";
+                    "in method parameters in Preferences failed";
 
         if (areInjectedInstancesEqual(ccps, payInject))
             msg += "Use of @New to create new Dependent object while injecting " +
-            		"in producer method failed";
+                    "in producer method failed";
 
         if (!areInjectedInstancesEqual(payInject, payInject2))
             msg += "Session-scoped producer method created Bean injected in " +
-            		"different injection points are not equal";
+                    "different injection points are not equal";
 
         writer.write(msg + "\n");
     }

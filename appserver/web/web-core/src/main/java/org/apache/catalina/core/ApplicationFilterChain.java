@@ -75,12 +75,12 @@ final class ApplicationFilterChain implements FilterChain {
     /**
      * Filters.
      */
-    private ApplicationFilterConfig[] filters = 
+    private ApplicationFilterConfig[] filters =
         new ApplicationFilterConfig[0];
 
 
     /**
-     * The int which is used to maintain the current position 
+     * The int which is used to maintain the current position
      * in the filter chain.
      */
     private int pos = 0;
@@ -100,22 +100,22 @@ final class ApplicationFilterChain implements FilterChain {
 
     /**
      * The wrapper around the servlet instance to be executed by this chain.
-     */    
+     */
     private StandardWrapper wrapper = null;
 
 
     /**
-     * Static class array used when the SecurityManager is turned on and 
+     * Static class array used when the SecurityManager is turned on and
      * <code>doFilter</code is invoked.
      */
-    private static Class<?>[] classType = new Class[]{ServletRequest.class, 
+    private static Class<?>[] classType = new Class[]{ServletRequest.class,
                                                    ServletResponse.class,
                                                    FilterChain.class};
-                                                   
+
     /**
-     * Static class array used when the SecurityManager is turned on and 
+     * Static class array used when the SecurityManager is turned on and
      * <code>service</code is invoked.
-     */                                                 
+     */
     /* IASRI 4665318
     private static Class<?>[] classTypeUsedInService = new Class[]{
                                                          ServletRequest.class,
@@ -145,7 +145,7 @@ final class ApplicationFilterChain implements FilterChain {
             try {
                 java.security.AccessController.doPrivileged(
                     new java.security.PrivilegedExceptionAction<Void>() {
-                        public Void run() 
+                        public Void run()
                             throws ServletException, IOException {
                             internalDoFilter(req,res);
                             return null;
@@ -168,7 +168,7 @@ final class ApplicationFilterChain implements FilterChain {
         }
     }
 
-    private void internalDoFilter(ServletRequest request, 
+    private void internalDoFilter(ServletRequest request,
                                   ServletResponse response)
             throws IOException, ServletException {
 
@@ -192,11 +192,11 @@ final class ApplicationFilterChain implements FilterChain {
                 filter = filterConfig.getFilter();
                 support.fireInstanceEvent(BEFORE_FILTER_EVENT,
                                           filter, request, response);
-                
+
                 if( SecurityUtil.isPackageProtectionEnabled() ) {
                     final ServletRequest req = request;
                     final ServletResponse res = response;
-                    Principal principal = 
+                    Principal principal =
                         ((HttpServletRequest) req).getUserPrincipal();
                     Object[] filterType = new Object[3];
 
@@ -205,7 +205,7 @@ final class ApplicationFilterChain implements FilterChain {
                     filterType[2] = this;
                     SecurityUtil.doAsPrivilege
                         ("doFilter", filter, classType, filterType, principal);
-                } else {  
+                } else {
                     filter.doFilter(request, response, this);
                 }
 
@@ -243,27 +243,27 @@ final class ApplicationFilterChain implements FilterChain {
                                       servlet, request, response);
             if ((request instanceof HttpServletRequest) &&
                 (response instanceof HttpServletResponse)) {
-                    
+
                 // START SJS WS 7.0 6236329
                 //if( System.getSecurityManager() != null) {
                 if ( SecurityUtil.executeUnderSubjectDoAs() ){
                 // END OF SJS WS 7.0 6236329
                     final ServletRequest req = request;
                     final ServletResponse res = response;
-                    Principal principal = 
+                    Principal principal =
                         ((HttpServletRequest) req).getUserPrincipal();
 
                     Object[] serviceType = new Object[2];
                     serviceType[0] = req;
                     serviceType[1] = res;
-                    
+
                     SecurityUtil.doAsPrivilege("service",
                                                servlet,
-                                               classTypeUsedInService, 
+                                               classTypeUsedInService,
                                                serviceType,
-                                               principal);                                                   
+                                               principal);
                     serviceType = null;
-                } else {  
+                } else {
                     servlet.service((HttpServletRequest) request,
                                     (HttpServletResponse) response);
                 }

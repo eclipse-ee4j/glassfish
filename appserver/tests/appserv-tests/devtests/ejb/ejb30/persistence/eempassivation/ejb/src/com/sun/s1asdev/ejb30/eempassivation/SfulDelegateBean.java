@@ -93,7 +93,7 @@ implements SfulDelegate {
         System.out.println("**ejbPASSIVATE() called...");
         passivationCount++;
     }
-    
+
     @PostActivate
     public void postActivate() {
         System.out.println("**ejbActivate() called...");
@@ -103,7 +103,7 @@ implements SfulDelegate {
     public int getPassivationCount() {
         return passivationCount;
     }
-    
+
     public int getActivationCount() {
         return activateCount;
     }

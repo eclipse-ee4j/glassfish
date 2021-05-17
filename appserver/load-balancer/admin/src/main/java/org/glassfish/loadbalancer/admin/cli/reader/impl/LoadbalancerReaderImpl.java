@@ -170,17 +170,17 @@ public class LoadbalancerReaderImpl implements LoadbalancerReader {
     // --- VISITOR IMPLEMENTATION ---
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof LoadbalancerVisitor) {
-			LoadbalancerVisitor cv = (LoadbalancerVisitor) v;
-			cv.visit(this);
-		}
+        if (v instanceof LoadbalancerVisitor) {
+            LoadbalancerVisitor cv = (LoadbalancerVisitor) v;
+            cv.visit(this);
+        }
     }
 
     @Override
     public LbConfig getLbConfig() {
         return _lbConfig;
     }
-    
+
     // --- PRIVATE VARS -----
     private LbConfig _lbConfig = null;
     private Domain _domain = null;

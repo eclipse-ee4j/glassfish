@@ -19,7 +19,7 @@
 
 <project name="jdbc_connector" basedir="${gjc.home}" default="build">
   <property name="pkg.dir" value="com/sun/gjc/spi"/>
- 
+
   <target name="clean">
     <ant antfile="build.xml" dir="${gjc.home}/bin" target="clean"/>
   </target>
@@ -37,5 +37,5 @@
 
   <target name="build14" depends="compile14"/>
 
-	<target name="build" depends="build13, build14"/>
+    <target name="build" depends="build13, build14"/>
 </project>

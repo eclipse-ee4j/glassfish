@@ -76,7 +76,7 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
     public void process(ReadableArchive readableArchive, WebBundleDescriptor webBundleDesc,
             ClassLoader classLoader, Parser parser) throws IOException {
 
-        this.archiveFile =  new File(readableArchive.getURI()); 
+        this.archiveFile =  new File(readableArchive.getURI());
         this.classLoader = classLoader;
         setParser(parser);
 
@@ -98,7 +98,7 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
         }
 
         File webinf = new File(archiveFile, "WEB-INF");
-        
+
         if (webBundleDesc instanceof WebFragmentDescriptor) {
             WebFragmentDescriptor webFragmentDesc = (WebFragmentDescriptor)webBundleDesc;
             File lib = new File(webinf, "lib");
@@ -116,7 +116,7 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
         } else {
             File classes = new File(webinf, "classes");
             if (classes.exists()) {
-                addScanDirectory(classes);   
+                addScanDirectory(classes);
             }
         }
         scanXmlDefinedClassesIfNecessary(webBundleDesc);
@@ -127,7 +127,7 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
     // We will also scan any servlets/filters/listeners classes specified
     // in web.xml additionally if those classes are not resided in the wars.
     private void scanXmlDefinedClassesIfNecessary(
-            WebBundleDescriptor webBundleDesc) 
+            WebBundleDescriptor webBundleDesc)
             throws IOException {
 
         ClassLoader commonCL = clh.getCommonClassLoader();
@@ -172,4 +172,4 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
         return (commonCL.getResource(resourceName) != null);
     }
 }
- 
+

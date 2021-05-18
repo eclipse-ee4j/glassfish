@@ -1266,6 +1266,21 @@
             </build>
         </profile>
         <profile>
+            <id>fast</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+            </properties>
+        </profile>
+        <profile>
+            <id>fastest</id>
+            <properties>
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.javadoc.skip>true</maven.javadoc.skip>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+        <profile>
             <id>findbugs</id>
             <activation>
                 <activeByDefault>false</activeByDefault>

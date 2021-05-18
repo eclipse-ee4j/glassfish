@@ -52,6 +52,7 @@
                 </property>
             </activation>
             <modules>
+                <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
             </modules>
@@ -68,6 +69,7 @@
                 </property>
             </activation>
             <modules>
+                <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
             </modules>
@@ -107,14 +109,6 @@
 
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.4</version>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>

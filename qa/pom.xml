@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main</groupId>
+        <artifactId>glassfish-main-aggregator</artifactId>
+        <version>6.1.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>glassfish-qa-config</artifactId>
+    <name>Code Quality Verification Tools - Configuration</name>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-compile</id>
+                            <phase>none</phase>
+                        </execution>
+                        <execution>
+                            <id>default-testCompile</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-test</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-testResources</id>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

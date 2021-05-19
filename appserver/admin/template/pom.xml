@@ -29,6 +29,14 @@
     <name>Appserver template</name>
     <description>Appserver template</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.admin</groupId>
+            <artifactId>nucleus-domain</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -36,7 +44,7 @@
                 <executions>
                     <execution>
                         <id>unpack</id>
-                        <phase>validate</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
